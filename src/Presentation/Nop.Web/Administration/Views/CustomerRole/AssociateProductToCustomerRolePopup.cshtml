@@ -96,7 +96,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <input type="button" id="search-products" class="btn btn-primary btn-search" value="@T("Admin.Common.Search")" />
+                                <button type="button" id="search-products" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
                             </div>
                         </div>
                     </div>
@@ -145,7 +145,7 @@
                                         field: "Name",
                                         title: "@T("Admin.Common.Select")",
                                         width: 50,
-                                        template: '<input type="button" value="@T("Admin.Common.Select")" onclick="selectAssociatedProduct(#=Id#)" class="btn btn-default" />'
+                                        template: '<button type="button" onclick="selectAssociatedProduct(#=Id#)" class="btn btn-default">@T("Admin.Common.Select")</button>'
                                     },{
                                         field: "Name",
                                         title: "@T("Admin.Catalog.Products.Fields.Name")"

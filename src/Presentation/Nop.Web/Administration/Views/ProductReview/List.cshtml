@@ -16,8 +16,8 @@
         @T("Admin.Catalog.ProductReviews")
     </h1>
     <div class="pull-right">
-        <input type="button" id="approve-selected" class="btn bg-green" value="@T("Admin.Catalog.ProductReviews.ApproveSelected")" />
-        <input type="button" id="disapprove-selected" class="btn bg-navy" value="@T("Admin.Catalog.ProductReviews.DisapproveSelected")" />
+        <button type="button" id="approve-selected" class="btn bg-green">@T("Admin.Catalog.ProductReviews.ApproveSelected")</button>
+        <button type="button" id="disapprove-selected" class="btn bg-navy">@T("Admin.Catalog.ProductReviews.DisapproveSelected")</button>
         <button type="button" id="delete-selected" class="btn bg-red">
             <i class="fa fa-trash-o"></i>
             @T("Admin.Catalog.ProductReviews.DeleteSelected")
@@ -79,7 +79,7 @@
                                     </script>
 
                                     <span id="search-product-friendly-name"></span>
-                                    <input type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;" value="@T("Admin.Common.Clear")"/>
+                                    <button type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
                                     @Html.TextBoxFor(model => model.SearchProductId, new {autocomplete = "off", style = "display:none;"})
 
                                     <script>
@@ -103,7 +103,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-8 col-md-offset-4">
-                                    <input type="button" id="search-productreviews" class="btn btn-primary btn-search" value="@T("Admin.Common.Search")" />
+                                    <button type="button" id="search-productreviews" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
                                 </div>
                             </div>
                         </div>

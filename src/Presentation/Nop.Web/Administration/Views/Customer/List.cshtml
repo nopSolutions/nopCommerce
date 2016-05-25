@@ -36,10 +36,10 @@
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     <li><input type="submit" name="exportxml-all" value="@T("Admin.Common.ExportToXml.All")" /></li>
-                    <li><input type="button" id="exportxml-selected" value="@T("Admin.Common.ExportToXml.Selected")" /></li>
+                    <li><button type="button" id="exportxml-selected">@T("Admin.Common.ExportToXml.Selected")</button></li>
                     <li class="divider"></li>
                     <li><input type="submit" name="exportexcel-all" value="@T("Admin.Common.ExportToExcel.All")" /></li>
-                    <li><input type="button" id="exportexcel-selected" value="@T("Admin.Common.ExportToExcel.Selected")" /></li>
+                    <li><button type="button" id="exportexcel-selected">@T("Admin.Common.ExportToExcel.Selected")</button></li>
                 </ul>
             </div>
         </div>
@@ -183,7 +183,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-7 col-md-offset-5">
-                                <input type="button" id="search-customers" class="btn btn-primary btn-search" value="@T("Admin.Common.Search")" />
+                                <button type="button" id="search-customers" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
                             </div>
                         </div>
                     </div>

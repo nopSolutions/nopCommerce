@@ -32,10 +32,10 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
                         <li><input type="submit" name="exportxml-all" value="@T("Admin.Common.ExportToXml.All")" /></li>
-                        <li><input type="button" id="exportxml-selected" value="@T("Admin.Common.ExportToXml.Selected")"/></li>
+                        <li><button type="button" id="exportxml-selected">@T("Admin.Common.ExportToXml.Selected")</button></li>
                         <li class="divider"></li>
                         <li><input type="submit" name="exportexcel-all" value="@T("Admin.Common.ExportToExcel.All")" /></li>
-                        <li><input type="button" id="exportexcel-selected" value="@T("Admin.Common.ExportToExcel.Selected")" /></li>
+                        <li><button type="button" id="exportexcel-selected">@T("Admin.Common.ExportToExcel.Selected")</button></li>
                     </ul>
                 </div>
             }
@@ -50,7 +50,7 @@
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     <li><input type="submit" name="pdf-invoice-all" value="@T("Admin.Orders.PdfInvoices.All")" /></li>
-                    <li><input type="button" id="pdf-invoice-selected" value="@T("Admin.Orders.PdfInvoices.Selected")" /></li>
+                    <li><button type="button" id="pdf-invoice-selected">@T("Admin.Orders.PdfInvoices.Selected")</button></li>
                 </ul>
             </div>
         </div>
@@ -110,7 +110,7 @@
                                     <div class="col-md-8">
                                         <input type="text" id="search-product-name" autocomplete="off" class="form-control" />
                                         <span id="search-product-friendly-name"></span>
-                                        <input type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;" value="@T("Admin.Common.Clear")" />
+                                        <button type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
 
                                         @Html.TextBoxFor(model => model.ProductId, new { autocomplete = "off", style = "display:none;" })
                                         <script type="text/javascript">
@@ -230,7 +230,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-7 col-md-offset-5">
-                                <input type="button" id="search-orders" class="btn btn-primary btn-search" value="@T("Admin.Common.Search")"/>
+                                <button type="button" id="search-orders" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
                             </div>
                         </div>
                     </div>

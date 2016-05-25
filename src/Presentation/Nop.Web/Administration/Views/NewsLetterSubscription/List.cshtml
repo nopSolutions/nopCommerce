@@ -19,7 +19,7 @@
         </h1>
         <div class="pull-right">
             <input type="submit" name="exportcsv" class="btn bg-green" value="@T("Admin.Common.ExportToCsv")" />
-            <input type="button" name="importcsv" class="btn bg-olive" value="@T("Admin.Common.ImportFromCsv")" data-toggle="modal" data-target="#importcsv-window" />
+            <button type="button" name="importcsv" class="btn bg-olive" data-toggle="modal" data-target="#importcsv-window">@T("Admin.Common.ImportFromCsv")</button>
         </div>
     </div>
 
@@ -80,7 +80,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-8 col-md-offset-4">
-                                        <input type="button" id="search-subscriptions" class="btn btn-primary btn-search" value="@T("Admin.Common.Search")" />
+                                        <button type="button" id="search-subscriptions" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
                                     </div>
                                 </div>
                             </div>
