@@ -22,11 +22,11 @@
             <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Orders.Shipments.BackToOrder").Text, "Edit", new { id = Model.OrderId })</small>
         </h1>
         <div class="pull-right">
-            <button type="submit" name="shipment-save" class="btn bg-blue" value="@T("Admin.Common.Save")">
+            <button type="submit" id="shipment-save" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")">
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
-            <button type="submit" name="shipment-save-continue" class="btn bg-blue" value="@T("Admin.Common.SaveContinue")">
+            <button type="submit" id="shipment-save-continue" name="save-continue" class="btn bg-blue" value="@T("Admin.Common.SaveContinue")">
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
