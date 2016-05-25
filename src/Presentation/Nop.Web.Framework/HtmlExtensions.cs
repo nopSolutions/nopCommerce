@@ -494,12 +494,13 @@ namespace Nop.Web.Framework
         /// <param name="selectedYear">Selected year</param>
         /// <param name="localizeLabels">Localize labels</param>
         /// <param name="htmlAttributes">HTML attributes</param>
+		/// <param name="wrapTags">Wrap HTML select controls with span tags for styling/layout</param>
         /// <returns></returns>
         public static MvcHtmlString DatePickerDropDowns(this HtmlHelper html,
             string dayName, string monthName, string yearName,
             int? beginYear = null, int? endYear = null,
             int? selectedDay = null, int? selectedMonth = null, int? selectedYear = null,
-            bool localizeLabels = true, object htmlAttributes = null)
+            bool localizeLabels = true, object htmlAttributes = null, bool wrapTags = false)
         {
             var daysList = new TagBuilder("select");
             var monthsList = new TagBuilder("select");
@@ -573,7 +574,19 @@ namespace Nop.Web.Framework
             monthsList.InnerHtml = months.ToString();
             yearsList.InnerHtml = years.ToString();
 
-            return MvcHtmlString.Create(string.Concat(daysList, monthsList, yearsList));
+            if (wrapTags) 
+            {
+                string wrapDaysList = "<span class=\"days-list select-wrapper\">" + daysList + "</span>";
+                string wrapMonthsList = "<span class=\"months-list select-wrapper\">" + monthsList + "</span>";
+                string wrapYearsList = "<span class=\"years-list select-wrapper\">" + yearsList + "</span>";
+
+                return MvcHtmlString.Create(string.Concat(wrapDaysList, wrapMonthsList, wrapYearsList));
+            }
+            else
+            {
+                return MvcHtmlString.Create(string.Concat(daysList, monthsList, yearsList));
+            }
+
         }
 
         public static MvcHtmlString Widget(this HtmlHelper helper, string widgetZone, object additionalData = null, string area = null)
