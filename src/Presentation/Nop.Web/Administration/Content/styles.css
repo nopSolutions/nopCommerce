@@ -590,6 +590,38 @@ ul.common-list {
     font-size: 20px;
 }
 
+.throbber-header{
+    font-size: 145%;
+}
+.throbber{
+    display: none;
+}
+.throbber .curtain{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #3e4d45;
+    opacity: 0.9;
+    filter: alpha(opacity=90);
+    z-index: 9999;
+}
+.throbber .curtain-content{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+}
+.throbber .curtain-content div{
+    text-align: center;
+    padding: 250px;
+    color: #FFF;
+}
+
+
 @media (max-width: 1200px) {
     .form-horizontal img.ico-help {
          display: none;

@@ -83,32 +83,44 @@
 }
 <!DOCTYPE html>
 <html @(supportRtl ? Html.Raw("dir=\"rtl\"") : null)>
-<head>
-    <title>@adminPageTitle</title>
-    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    @Html.NopHeadCustom()
-    @Html.NopCssFiles(this.Url, ResourceLocation.Head)
-    @Html.NopScripts(this.Url, ResourceLocation.Head)
-</head>
-<body class="hold-transition skin-blue sidebar-mini">
-    @*<div id="ajaxBusy">
-        <span>&nbsp;</span>
-    </div>*@
-    <div class="wrapper">
-        @if (IsSectionDefined("header"))
-        {
-            @RenderSection("header")
-        }
-        else
-        {
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    $("#restart-application").click(function (e) {
-                        showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Header.RestartApplication.Progress").Text))');
+    <head>
+        <title>@adminPageTitle</title>
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        @Html.NopHeadCustom()
+        @Html.NopCssFiles(this.Url, ResourceLocation.Head)
+        @Html.NopScripts(this.Url, ResourceLocation.Head)
+    </head>
+    <body class="hold-transition skin-blue sidebar-mini">
+        <div class="throbber">
+            <div class="curtain">
+            </div>
+            <div class="curtain-content">
+                <div>
+                    <h1 class="throbber-header">Wait...</h1>
+                    <p>
+                        <img src="@Url.Content("~/administration/content/images/throbber-synchronizing.gif")" alt="" />
+                    </p>
+                </div>
+            </div>
+        </div>
+        @*<div id="ajaxBusy">
+                <span>&nbsp;</span>
+            </div>*@
+        <div class="wrapper">
+            @if (IsSectionDefined("header"))
+            {
+                @RenderSection("header")
+            }
+            else
+            {
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $("#restart-application").click(function (e) {
+                            showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Header.RestartApplication.Progress").Text))');
+                        });
                     });
-                });
-            </script>
+                </script>
 
                 <div class="main-header">
                     <a href="@Url.Content("~/admin")" class="logo">
@@ -186,53 +198,52 @@
                         </div>
                     </div>
                 </div>
-        }
-        @if (IsSectionDefined("headermenu"))
+            }
+            @if (IsSectionDefined("headermenu"))
             {
-            @RenderSection("headermenu")
-        }
-        else
-        {
-            <div class="main-sidebar">
-                <div class="sidebar">
-                    <!-- search form -->
-                    <div class="sidebar-form">
-                        <div id="search-box">
-                            <input type="text" class="form-control admin-search-box typeahead" placeholder="@T("Admin.Menu.Search")">
+                @RenderSection("headermenu")
+            }
+            else
+            {
+                <div class="main-sidebar">
+                    <div class="sidebar">
+                        <!-- search form -->
+                        <div class="sidebar-form">
+                            <div id="search-box">
+                                <input type="text" class="form-control admin-search-box typeahead" placeholder="@T("Admin.Menu.Search")">
+                            </div>
                         </div>
+                        <script>
+                            $(document).ready(function () {
+                                Admin.Search.init();
+                            });
+                        </script>
+                        @Html.Partial("Menu")
                     </div>
-                    <script>
-                        $(document).ready(function() {
-                            Admin.Search.init();
-                        });
-                    </script>
-                    @Html.Partial("Menu")
+                </div>
+            }
+            <div class="content-wrapper">
+                @Html.Partial("Notifications")
+                <div>
+                    @RenderBody()
                 </div>
             </div>
-        }
-        <div class="content-wrapper">
-            @Html.Partial("Notifications")
-            <div>
-                @RenderBody()
+            <div class="main-footer">
+                <div class="pull-right hidden-xs">
+                    <b>nopCommerce version @NopVersion.CurrentVersion</b>
+                </div>
+                @*<strong>
+                        @T("Content.CopyrightNotice", DateTime.Now.Year, EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Name)
+                    </strong>*@
+                @if (!EngineContext.Current.Resolve<StoreInformationSettings>().HidePoweredByNopCommerce)
+                {
+                    @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
+                        Please find more info at http://www.nopcommerce.com/copyrightremoval.aspx*@
+                    <text>Powered by <a href="http://www.nopcommerce.com/?utm_source=admin-panel&utm_medium=footer&utm_campaign=admin-panel" target="_blank">nopCommerce</a></text>
+                }
             </div>
         </div>
-        <div class="main-footer">
-            <div class="pull-right hidden-xs">
-                <b>nopCommerce version @NopVersion.CurrentVersion</b>
-            </div>
-            @*<strong>
-                @T("Content.CopyrightNotice", DateTime.Now.Year, EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Name)
-            </strong>*@
-            @if (!EngineContext.Current.Resolve<StoreInformationSettings>().HidePoweredByNopCommerce)
-            {
-                @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer? 
-                    Please find more info at http://www.nopcommerce.com/copyrightremoval.aspx*@
-                <text>Powered by <a href="http://www.nopcommerce.com/?utm_source=admin-panel&utm_medium=footer&utm_campaign=admin-panel" target="_blank">nopCommerce</a></text>
-            }
-        </div>
-    </div>
-    @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
-    @Html.NopScripts(this.Url, ResourceLocation.Foot)
-</body>
+        @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
+        @Html.NopScripts(this.Url, ResourceLocation.Foot)
+    </body>
 </html>
-
