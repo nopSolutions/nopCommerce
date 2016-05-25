@@ -49,26 +49,27 @@ namespace Nop.Web.Framework
 
                     //default tab
                     tabStrip.AppendLine("<li class=\"active\">");
-                    tabStrip.AppendLine(
-                        string.Format(
-                            "<a data-tab-name=\"{0}-{1}-tab\" href=\"#{0}-{1}-tab\" data-toggle=\"tab\">{2}</a>",
-                            name, "standard", "Standard"));
+                    tabStrip.AppendLine(string.Format("<a data-tab-name=\"{0}-{1}-tab\" href=\"#{0}-{1}-tab\" data-toggle=\"tab\">{2}</a>",
+                            name, 
+                            "standard",
+                            EngineContext.Current.Resolve<ILocalizationService>().GetResource("Admin.Common.Standard")));
                     tabStrip.AppendLine("</li>");
 
+                    var languageService = EngineContext.Current.Resolve<ILanguageService>();
                     foreach (var locale in helper.ViewData.Model.Locales)
                     {
                         //languages
-                        var language = EngineContext.Current.Resolve<ILanguageService>().GetLanguageById(locale.LanguageId);
+                        var language = languageService.GetLanguageById(locale.LanguageId);
                         if (language == null)
                             throw new Exception("Language cannot be loaded");
 
                         tabStrip.AppendLine("<li>");
                         var urlHelper = new UrlHelper(helper.ViewContext.RequestContext);
                         var iconUrl = urlHelper.Content("~/Content/images/flags/" + language.FlagImageFileName);
-                        tabStrip.AppendLine(
-                            string.Format(
-                                "<a data-tab-name=\"{0}-{1}-tab\" href=\"#{0}-{1}-tab\" data-toggle=\"tab\"><img alt='' src='{2}'>{3}</a>",
-                                name, HttpUtility.HtmlEncode(language.Name).ToLower(), iconUrl,
+                        tabStrip.AppendLine(string.Format("<a data-tab-name=\"{0}-{1}-tab\" href=\"#{0}-{1}-tab\" data-toggle=\"tab\"><img alt='' src='{2}'>{3}</a>",
+                                name, 
+                                HttpUtility.HtmlEncode(language.Name).ToLower(),
+                                iconUrl,
                                 HttpUtility.HtmlEncode(language.Name)));
 
                         tabStrip.AppendLine("</li>");
@@ -84,12 +85,11 @@ namespace Nop.Web.Framework
                     for (int i = 0; i < helper.ViewData.Model.Locales.Count; i++)
                     {
                         //languages
-                        var language =
-                            EngineContext.Current.Resolve<ILanguageService>()
-                                .GetLanguageById(helper.ViewData.Model.Locales[i].LanguageId);
+                        var language = languageService.GetLanguageById(helper.ViewData.Model.Locales[i].LanguageId);
 
                         tabStrip.AppendLine(string.Format("<div class=\"tab-pane\" id=\"{0}-{1}-tab\">",
-                                            name, HttpUtility.HtmlEncode(language.Name).ToLower()));
+                            name, 
+                            HttpUtility.HtmlEncode(language.Name).ToLower()));
                         tabStrip.AppendLine(localizedTemplate(i).ToHtmlString());
                         tabStrip.AppendLine("</div>");
                     }
