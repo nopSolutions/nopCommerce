@@ -104,6 +104,10 @@ table.adminContent {
     display: block;
 }
 
+.dropdown-toggle.bg-purple {
+    border-left: 1px solid #AA89CE;
+}
+
 .k-button:hover, .k-button:focus, .k-button.k-state-focused {
     background-color: #e7e7e7;
     background-image: none;
