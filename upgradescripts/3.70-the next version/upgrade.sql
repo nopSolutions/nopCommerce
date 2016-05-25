@@ -569,6 +569,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon">
     <Value>General settings</Value>
   </LocaleResource>
+  <LocaleResource Name="Permission.ManageExternalAuthenticationMethods">
+    <Value>Admin area. Manage External Authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods">
+    <Value>External authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods.BackToList">
+    <Value>back to extenal authentication method list</Value>
+  </LocaleResource>
 </Language>
 '
 

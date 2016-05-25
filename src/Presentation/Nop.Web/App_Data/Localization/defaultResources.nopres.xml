@@ -4084,10 +4084,10 @@
     <Value>The email account has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods">
-    <Value>External authentication methods</Value>
+    <Value>External authentication</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods.BackToList">
-    <Value>back to authentication method list</Value>
+    <Value>back to extenal authentication method list</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods.Configure">
     <Value>Configure</Value>
