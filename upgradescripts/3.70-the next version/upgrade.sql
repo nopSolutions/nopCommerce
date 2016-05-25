@@ -581,6 +581,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed">
     <Value>All plugins and themes</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Methods.Description">
+    <Value>Shipping methods used by offline shipping rate compuration providers (e.g. "Fixed Rate Shipping" or "Shipping by weight").</Value>
+  </LocaleResource>
 </Language>
 '
 
