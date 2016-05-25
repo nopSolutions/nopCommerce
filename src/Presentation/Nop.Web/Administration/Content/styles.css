@@ -627,6 +627,11 @@ ul.common-list {
     color: #FFF;
 }
 
+/*override font-awesome styles*/
+.fa {
+    padding-right: 5px !important;
+}
+
 /*AJAX loading*/
 #ajaxBusy{
     display: none;
