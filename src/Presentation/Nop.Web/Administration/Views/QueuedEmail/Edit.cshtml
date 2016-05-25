@@ -16,7 +16,10 @@
             <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.System.QueuedEmails.BackToList").Text, "List")</small>
         </h1>
         <div class="pull-right">
-            <input type="submit" name="requeue" class="btn bg-green" value="@T("Admin.System.QueuedEmails.Requeue")" />
+            <button type="submit" name="requeue" class="btn bg-green" value="@T("Admin.System.QueuedEmails.Requeue")">
+                <i class="fa fa-clone"></i>
+                @T("Admin.System.QueuedEmails.Requeue")
+            </button>
             <button type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")">
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
