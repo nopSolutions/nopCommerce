@@ -28,7 +28,10 @@
                 @T("Admin.Catalog.Products.List.DownloadPDF")
             </button>
             <div class="btn-group">
-                <button type="button" class="btn btn-success">@T("Admin.Common.Export")</button>
+                <button type="button" class="btn btn-success">
+                    <i class="fa fa-exchange"></i>
+                    @T("Admin.Common.Export")
+                </button>
                 <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                     <span class="caret"></span>
                     <span class="sr-only">&nbsp;</span>
@@ -44,7 +47,10 @@
             @if (!Model.IsLoggedInAsVendor)
             {
                 //a vendor cannot import products
-                <input type="button" name="importexcel" class="btn bg-olive" value="@T("Admin.Common.Import")" data-toggle="modal" data-target="#importexcel-window" />
+                <button type="button" name="importexcel" class="btn bg-olive" data-toggle="modal" data-target="#importexcel-window">
+                    <i class="fa fa-exchange"></i>
+                    @T("Admin.Common.Import")
+                </button>
             }
             <button type="button" id="delete-selected" class="btn bg-red">
                 <i class="fa fa-trash-o"></i>
