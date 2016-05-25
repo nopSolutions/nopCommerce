@@ -1809,8 +1809,14 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.SubjectToAcl.Hint">
     <Value>Determines whether the category is subject to ACL (access control list).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Imported">
+    <Value>Categories have been imported successfully.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Info">
     <Value>Category Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.List.ImportFromExcelTip">
+    <Value>Imported categories are distinguished by ID. If the ID already exists, then its corresponding category will be updated. For new categories ID do not need to specify</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.List.SearchCategoryName">
     <Value>Category name</Value>
@@ -2004,8 +2010,14 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.SubjectToAcl.Hint">
     <Value>Determines whether the manufacturer is subject to ACL (access control list).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Imported">
+    <Value>Manufacturers have been imported successfully.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Info">
     <Value>Manufacturer Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.List.ImportFromExcelTip">
+    <Value>Imported manufacturers are distinguished by ID. If the ID already exists, then its corresponding manufacturer will be updated. For new manufacturers ID do not need to specify</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchManufacturerName">
     <Value>Manufacturer name</Value>
@@ -8940,6 +8952,9 @@
   <LocaleResource Name="Admin.Home">
     <Value>Home</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Menu.Search">
+    <Value>Search</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.NopCommerceNews">
     <Value>NopCommerce News</Value>
   </LocaleResource>
@@ -14816,20 +14831,5 @@
   </LocaleResource>
   <LocaleResource Name="Wishlist.YourWishlistURL">
     <Value>Your wishlist URL for sharing</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Category.List.ImportFromExcelTip">
-    <Value>Imported categories are distinguished by ID. If the ID already exists, then its corresponding category will be updated. For new categories ID do not need to specify</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturer.List.ImportFromExcelTip">
-    <Value>Imported manufacturers are distinguished by ID. If the ID already exists, then its corresponding manufacturer will be updated. For new manufacturers ID do not need to specify</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Category.Imported">
-    <Value>Categories have been imported successfully.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturer.Imported">
-    <Value>Manufacturers have been imported successfully.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Menu.Search">
-    <Value>Search</Value>
   </LocaleResource>
 </Language>

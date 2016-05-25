@@ -592,7 +592,7 @@ namespace Nop.Admin.Controllers
                     ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
                     return RedirectToAction("List");
                 }
-                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturer.Imported"));
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Imported"));
                 return RedirectToAction("List");
             }
             catch (Exception exc)

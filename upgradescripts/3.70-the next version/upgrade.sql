@@ -164,16 +164,16 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.SendEmail.SendImmediately.Hint">
     <Value>Send message immediately.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Category.List.ImportFromExcelTip">
+  <LocaleResource Name="Admin.Catalog.Categories.List.ImportFromExcelTip">
     <Value>Imported categories are distinguished by ID. If the ID already exists, then its corresponding category will be updated. For new categories ID do not need to specify</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturer.List.ImportFromExcelTip">
+  <LocaleResource Name="Admin.Catalog.Manufacturers.List.ImportFromExcelTip">
     <Value>Imported manufacturers are distinguished by ID. If the ID already exists, then its corresponding manufacturer will be updated. For new manufacturers ID do not need to specify</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Category.Imported">
+  <LocaleResource Name="Admin.Catalog.Categories.Imported">
     <Value>Categories have been imported successfully.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturer.Imported">
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Imported">
     <Value>Manufacturers have been imported successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.AllSettings.SearchSettingName">
