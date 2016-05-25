@@ -489,7 +489,6 @@
     <Content Include="Content\images\admin-menu-bg.gif" />
     <Content Include="Content\images\ajax-loading.gif" />
     <Content Include="Content\images\blue_button_bg.gif" />
-    <Content Include="Content\images\active-true.gif" />
     <Content Include="Content\images\error-message.gif" />
     <Content Include="Content\images\google-maps.gif" />
     <Content Include="Content\images\grey_button_bg.gif" />
@@ -510,7 +509,6 @@
     <Content Include="Content\images\throbber-synchronizing.gif" />
     <Content Include="Content\images\logo.gif" />
     <Content Include="Content\images\success-message.gif" />
-    <Content Include="Content\images\active-false.gif" />
     <Content Include="Content\images\warnings-ajax-loader.gif" />
     <Content Include="Content\images\warnings-cross.png" />
     <Content Include="Content\images\warnings-tick.png" />
