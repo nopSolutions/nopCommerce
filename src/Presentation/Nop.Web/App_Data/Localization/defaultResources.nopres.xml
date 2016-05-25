@@ -2985,9 +2985,6 @@
   <LocaleResource Name="Admin.Catalog.Products.List.SearchWarehouse.Hint">
     <Value>Search by a specific warehouse.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Manage">
-    <Value>Manage products</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Manufacturers">
     <Value>Manufacturer mappings</Value>
   </LocaleResource>

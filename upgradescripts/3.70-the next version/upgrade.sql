@@ -605,6 +605,9 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement">
     <Value>Content management</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Manage">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
