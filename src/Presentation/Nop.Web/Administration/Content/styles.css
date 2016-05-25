@@ -200,6 +200,7 @@ td.k-state-focused.k-state-selected{
 .k-numeric-wrap.k-state-disabled .k-input, 
 .k-picker-wrap.k-state-disabled .k-input{    
     background-color: #eee;
+    cursor: not-allowed
 }
 
 .k-numerictextbox .k-link.k-state-selected {
