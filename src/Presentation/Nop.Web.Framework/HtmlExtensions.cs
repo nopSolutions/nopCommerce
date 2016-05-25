@@ -59,6 +59,8 @@ namespace Nop.Web.Framework
                     {
                         //languages
                         var language = EngineContext.Current.Resolve<ILanguageService>().GetLanguageById(locale.LanguageId);
+                        if (language == null)
+                            throw new Exception("Language cannot be loaded");
 
                         tabStrip.AppendLine("<li>");
                         var urlHelper = new UrlHelper(helper.ViewContext.RequestContext);
