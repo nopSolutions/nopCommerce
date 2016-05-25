@@ -29,7 +29,10 @@
             {
                 <input type="submit" name="resend-activation-message" class="btn bg-olive" value="@T("Admin.Customers.Customers.ReSendActivationMessage")" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
             }
-            <span id="customer-delete" class="btn bg-red">@T("Admin.Common.Delete")</span>
+            <span id="customer-delete" class="btn bg-red">
+                <i class="fa fa-trash"></i>
+                @T("Admin.Common.Delete")
+            </span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)

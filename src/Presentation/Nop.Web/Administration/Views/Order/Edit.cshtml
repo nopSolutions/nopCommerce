@@ -25,7 +25,10 @@
             }
             @if (!Model.IsLoggedInAsVendor)
             {
-                <span id="order-delete" class="btn bg-red">@T("Admin.Common.Delete")</span>
+                <span id="order-delete" class="btn bg-red">
+                    <i class="fa fa-trash"></i>
+                    @T("Admin.Common.Delete")
+                </span>
             }
             <input type="submit" id="btnRefreshPage" style="display: none" />
             <script type="text/javascript">

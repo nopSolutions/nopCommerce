@@ -41,7 +41,10 @@
                 //a vendor cannot import products
                 <input type="button" name="importexcel" class="btn bg-olive" value="@T("Admin.Common.Import")" data-toggle="modal" data-target="#importexcel-window" />
             }
-            <input type="button" id="delete-selected" class="btn bg-red" value="@T("Admin.Common.Delete.Selected")" />
+            <button id="delete-selected" class="btn bg-red">
+                <i class="fa fa-trash"></i>
+                @T("Admin.Common.Delete.Selected")
+            </button>
         </div>
     </div>
 

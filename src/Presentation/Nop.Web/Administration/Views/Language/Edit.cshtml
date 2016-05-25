@@ -21,7 +21,10 @@
             <input type="submit" name="save-continue" class="btn bg-blue" value="@T("Admin.Common.SaveContinue")" />
             <a href="@Url.Action("ExportXml", new { id = Model.Id })" class="btn bg-green">@T("Admin.Configuration.Languages.Export")</a>
             <input type="button" class="btn bg-olive" value="@T("Admin.Configuration.Languages.Import")" data-toggle="modal" data-target="#importxml-window" />
-            <span id="language-delete" class="btn bg-red">@T("Admin.Common.Delete")</span>
+            <span id="language-delete" class="btn bg-red">
+                <i class="fa fa-trash"></i>
+                @T("Admin.Common.Delete")
+            </span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)

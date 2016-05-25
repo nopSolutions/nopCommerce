@@ -19,8 +19,14 @@
             @T("Admin.System.Log")
         </h1>
         <div class="pull-right">
-            <input type="button" id="delete-selected" class="btn bg-red" value="@T("Admin.System.Log.DeleteSelected")" />
-            <input type="submit" name="clearall" class="btn bg-red" value="@T("Admin.System.Log.ClearLog")" onclick="return confirm('@T("Admin.Common.AreYouSure")'); " />
+            <button id="delete-selected" class="btn bg-red">
+                <i class="fa fa-trash"></i>
+                @T("Admin.System.Log.DeleteSelected")
+            </button>
+            <button type="submit" name="clearall" class="btn bg-red" onclick="return confirm('@T("Admin.Common.AreYouSure")');" value="@T("Admin.System.Log.ClearLog")">
+                <i class="fa fa-trash"></i>
+                @T("Admin.System.Log.ClearLog")
+            </button>
         </div>
     </div>
 

@@ -58,7 +58,10 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-6 col-md-offset-6">
-                                                <input type="submit" name="delete-guests" class="btn bg-red" value="@T("Admin.Common.Delete")"/>
+                                                <button type="submit" name="delete-guests" class="btn bg-red">
+                                                    <i class="fa fa-trash"></i>
+                                                    @T("Admin.Common.Delete")
+                                                </button>
                                             </div>
                                         </div>
                                         @if (Model.DeleteGuests.NumberOfDeletedCustomers.HasValue)
@@ -91,7 +94,10 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-6 col-md-offset-6">
-                                                <input type="submit" name="delete-abondoned-carts" class="btn bg-red" value="@T("Admin.Common.Delete")"/>
+                                                <button type="submit" name="delete-abondoned-carts" class="btn bg-red">
+                                                    <i class="fa fa-trash"></i>
+                                                    @T("Admin.Common.Delete")
+                                                </button>
                                             </div>
                                         </div>
                                         @if (Model.DeleteAbandonedCarts.NumberOfDeletedItems.HasValue)
@@ -132,7 +138,10 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-6 col-md-offset-6">
-                                                <input type="submit" name="delete-exported-files" class="btn bg-red" value="@T("Admin.Common.Delete")"/>
+                                                <button type="submit" name="delete-exported-files" class="btn bg-red">
+                                                    <i class="fa fa-trash"></i>
+                                                    @T("Admin.Common.Delete")
+                                                </button>
                                             </div>
                                         </div>
                                         @if (Model.DeleteExportedFiles.NumberOfDeletedFiles.HasValue)

@@ -17,7 +17,10 @@
             <small>@Html.ActionLink("(" + T("Admin.System.Log.BackToList") + ")", "List")</small>
         </h1>
         <div class="pull-right">
-            <span id="log-delete" class="btn bg-red">@T("Admin.Common.Delete")</span>
+            <span id="log-delete" class="btn bg-red">
+                <i class="fa fa-trash"></i>
+                @T("Admin.Common.Delete")
+            </span>
         </div>
     </div>
 
