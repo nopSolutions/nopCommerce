@@ -121,7 +121,7 @@
                             <label class="control-label">@T("Admin.ContentManagement.MessageTemplates.Test")</label>
                         </div>
                         <div class="col-md-9">
-                            <input type="button" class="btn btn-primary" value="@T("Admin.ContentManagement.MessageTemplates.Test")" onclick="setLocation('@(Url.Action("TestTemplate", new {id = Model.Id, languageId = Model.Locales[item].LanguageId}))')" />
+                            <button type="button" class="btn btn-primary" onclick="setLocation('@(Url.Action("TestTemplate", new {id = Model.Id, languageId = Model.Locales[item].LanguageId}))')">@T("Admin.ContentManagement.MessageTemplates.Test")</button>
                         </div>
                     </div>
                     @Html.HiddenFor(model => model.Locales[item].LanguageId)
@@ -171,7 +171,7 @@
                             <label class="control-label">@T("Admin.ContentManagement.MessageTemplates.Test")</label>
                         </div>
                         <div class="col-md-9">
-                            <input type="button" class="btn btn-primary" value="@T("Admin.ContentManagement.MessageTemplates.Test")" onclick="setLocation('@(Url.Action("TestTemplate", new {id = Model.Id}))')" />
+                            <button type="button" class="btn btn-primary" onclick="setLocation('@(Url.Action("TestTemplate", new {id = Model.Id}))')">@T("Admin.ContentManagement.MessageTemplates.Test")</button>
                         </div>
                     </div>
                 </div>

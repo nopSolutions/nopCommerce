@@ -128,7 +128,7 @@
                             @Html.NopEditorFor(model => model.GiftCardCouponCode)
                             @Html.ValidationMessageFor(model => model.GiftCardCouponCode)
                             <div class="input-group-btn">
-                                <input type="button" id="generateCouponCode" class="btn btn-info" value="@T("Admin.GiftCards.Fields.GiftCardCouponCode.Generate")" />
+                                <button type="button" id="generateCouponCode" class="btn btn-info">@T("Admin.GiftCards.Fields.GiftCardCouponCode.Generate")</button>
                                 <script type="text/javascript">
                                     $(document).ready(function() {
                                         $('#generateCouponCode').click(function() {
