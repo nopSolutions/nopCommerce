@@ -142,9 +142,9 @@
                                         }
                                         @if (Model.ShippedDateUtc.HasValue)
                                         {
-                                            <input type="submit" value="@T("Admin.Common.Edit")" onclick="toggleShippedDate(true);return false; " id="btnEditShippedDate" class="btn btn-primary" />
-                                            <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveShippedDate" name="saveshippeddate" class="btn btn-primary" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                                            <input type="submit" value="@T("Admin.Common.Cancel")" onclick=" toggleShippedDate(false);return false; " id="btnCancelShippedDate" class="btn bg-teal" />
+                                            <input type="submit" value="@T("Admin.Common.Edit")" onclick="toggleShippedDate(true);return false;" id="btnEditShippedDate" class="btn btn-primary" />
+                                            <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveShippedDate" name="saveshippeddate" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                                            <input type="submit" value="@T("Admin.Common.Cancel")" onclick="toggleShippedDate(false);return false;" id="btnCancelShippedDate" class="btn bg-teal" />
                                         }
                                     </div>
                                 </div>
@@ -175,9 +175,9 @@
                                         @if (Model.DeliveryDateUtc.HasValue)
                                         {
 
-                                            <input type="submit" value="@T("Admin.Common.Edit")" onclick=" toggleDeliveryDate(true);return false; " id="btnEditDeliveryDate" class="btn btn-primary" />
-                                            <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveDeliveryDate" name="savedeliverydate" class="btn btn-primary" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                                            <input type="submit" value="@T("Admin.Common.Cancel")" onclick=" toggleDeliveryDate(false);return false; " id="btnCancelDeliveryDate" class="btn bg-teal" />
+                                            <input type="submit" value="@T("Admin.Common.Edit")" onclick="toggleDeliveryDate(true);return false;" id="btnEditDeliveryDate" class="btn btn-primary" />
+                                            <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveDeliveryDate" name="savedeliverydate" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                                            <input type="submit" value="@T("Admin.Common.Cancel")" onclick="toggleDeliveryDate(false);return false;" id="btnCancelDeliveryDate" class="btn bg-teal" />
                                         }
                                     </div>
                                 </div>

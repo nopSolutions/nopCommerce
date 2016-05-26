@@ -336,10 +336,10 @@
                                 @if (!Model.IsLoggedInAsVendor)
                                 {
                                     <td style="width: 10%;">
-                                        <input type="submit" name="btnEditOrderItem@(item.Id)" value="@T("Admin.Common.Edit")" onclick="toggleOrderItemEdit@(item.Id)(true);return false; " id="btnEditOrderItem@(item.Id)" class="btn btn-sm btn-primary"/>
-                                        <input type="submit" name="btnDeleteOrderItem@(item.Id)" value="@T("Admin.Common.Delete")" id="btnDeleteOrderItem@(item.Id)" class="btn btn-sm bg-red" onclick="return confirm('@T("Admin.Common.AreYouSure")'); "/>
-                                        <input type="submit" name="btnSaveOrderItem@(item.Id)" value="@T("Admin.Common.Save")" id="btnSaveOrderItem@(item.Id)" class="btn btn-sm btn-primary" style="display: none;" onclick="return confirm('@T("Admin.Common.AreYouSure")'); "/>
-                                        <input type="submit" name="btnCancelOrderItem@(item.Id)" value="@T("Admin.Common.Cancel")" onclick="toggleOrderItemEdit@(item.Id)(false);return false; " id="btnCancelOrderItem@(item.Id)" class="btn btn-sm bg-teal" style="display: none;"/>
+                                        <input type="submit" name="btnEditOrderItem@(item.Id)" value="@T("Admin.Common.Edit")" onclick="toggleOrderItemEdit@(item.Id)(true);return false;" id="btnEditOrderItem@(item.Id)" class="btn btn-sm btn-primary"/>
+                                        <input type="submit" name="btnDeleteOrderItem@(item.Id)" value="@T("Admin.Common.Delete")" id="btnDeleteOrderItem@(item.Id)" class="btn btn-sm bg-red" onclick="return confirm('@T("Admin.Common.AreYouSure")');"/>
+                                        <input type="submit" name="btnSaveOrderItem@(item.Id)" value="@T("Admin.Common.Save")" id="btnSaveOrderItem@(item.Id)" class="btn btn-sm btn-primary" style="display: none;" onclick="return confirm('@T("Admin.Common.AreYouSure")');"/>
+                                        <input type="submit" name="btnCancelOrderItem@(item.Id)" value="@T("Admin.Common.Cancel")" onclick="toggleOrderItemEdit@(item.Id)(false);return false;" id="btnCancelOrderItem@(item.Id)" class="btn btn-sm bg-teal" style="display: none;"/>
                                     </td>
                                 }
                                 </tr>
@@ -360,7 +360,7 @@
             {
                 <div class="form-group">
                     <div class="col-md-12">
-                        <input type="submit" id="btnAddNewProduct" name="btnAddNewProduct" value="@T("Admin.Orders.Products.AddNew")" onclick=" javascript:setLocation('@(Url.Action("AddProductToOrder", "Order", new {orderId = Model.Id}))'); return false; " class="btn btn-primary" />
+                        <input type="submit" id="btnAddNewProduct" name="btnAddNewProduct" value="@T("Admin.Orders.Products.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddProductToOrder", "Order", new {orderId = Model.Id}))'); return false;" class="btn btn-primary" />
                     </div>
                 </div>
             }
