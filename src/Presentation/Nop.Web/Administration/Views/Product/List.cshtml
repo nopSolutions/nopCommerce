@@ -7,9 +7,9 @@
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
     //page title
-    ViewBag.Title = T("Admin.Catalog.Products.Manage").Text;
+    ViewBag.Title = T("Admin.Catalog.Products").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Manage products");
+    Html.SetActiveMenuItemSystemName("Products");
 }
 
 @using (Html.BeginForm())
@@ -17,7 +17,7 @@
     @Html.AntiForgeryToken()
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.Catalog.Products.Manage")
+            @T("Admin.Catalog.Products")
         </h1>
         <div class="pull-right">
             <a href="@Url.Action("Create")" class="btn bg-blue">

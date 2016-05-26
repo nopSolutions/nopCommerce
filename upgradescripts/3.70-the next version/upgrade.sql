@@ -566,6 +566,48 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.AddButton">
     <Value>Add (reduce) reward points</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon">
+    <Value>General settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageExternalAuthenticationMethods">
+    <Value>Admin area. Manage External Authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods">
+    <Value>External authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods.BackToList">
+    <Value>back to extenal authentication method list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed">
+    <Value>All plugins and themes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Methods.Description">
+    <Value>Shipping methods used by offline shipping rate compuration providers (e.g. "Fixed Rate Shipping" or "Shipping by weight").</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts">
+    <Value>Email accounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails">
+    <Value>Message queue</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions">
+    <Value>Newsletter subscribers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes">
+    <Value>Product attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes">
+    <Value>Checkout attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes">
+    <Value>Specification attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement">
+    <Value>Content management</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Manage">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

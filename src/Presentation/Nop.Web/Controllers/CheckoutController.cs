@@ -924,7 +924,7 @@ namespace Nop.Web.Controllers
             if (_orderSettings.OnePageCheckoutEnabled)
                 return RedirectToRoute("CheckoutOnePage");
 
-            if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
+            if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                 return new HttpUnauthorizedResult();
 
             //Check whether payment workflow is required

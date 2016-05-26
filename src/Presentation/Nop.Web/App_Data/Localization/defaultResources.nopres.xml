@@ -1222,7 +1222,7 @@
     <Value>Attributes</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes">
-    <Value>Checkout Attributes</Value>
+    <Value>Checkout attributes</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Added">
     <Value>The new attribute has been added successfully.</Value>
@@ -1414,7 +1414,7 @@
     <Value>You need to save the checkout attribute before you can add values for this checkout attribute page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes">
-    <Value>Product Attributes</Value>
+    <Value>Product attributes</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.Added">
     <Value>The new attribute has been added successfully.</Value>
@@ -1519,7 +1519,7 @@
     <Value>Published</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes">
-    <Value>Specification Attributes</Value>
+    <Value>Specification attributes</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Added">
     <Value>The new attribute has been added successfully.</Value>
@@ -2985,9 +2985,6 @@
   <LocaleResource Name="Admin.Catalog.Products.List.SearchWarehouse.Hint">
     <Value>Search by a specific warehouse.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Manage">
-    <Value>Manage products</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Manufacturers">
     <Value>Manufacturer mappings</Value>
   </LocaleResource>
@@ -3985,7 +3982,7 @@
     <Value>The currency has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts">
-    <Value>Email Accounts</Value>
+    <Value>Email accounts</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Added">
     <Value>The new email account has been added successfully.</Value>
@@ -4084,10 +4081,10 @@
     <Value>The email account has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods">
-    <Value>External authentication methods</Value>
+    <Value>External authentication</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods.BackToList">
-    <Value>back to authentication method list</Value>
+    <Value>back to extenal authentication method list</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods.Configure">
     <Value>Configure</Value>
@@ -4504,7 +4501,7 @@
     <Value>Configure</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed">
-    <Value>All plugins and themes directory</Value>
+    <Value>All plugins and themes</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Category">
     <Value>Category</Value>
@@ -5533,7 +5530,7 @@
     <Value>Set the page size for topics in forums e.g. '10' topics per page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon">
-    <Value>General and miscellaneous settings</Value>
+    <Value>General settings</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AdminAreaAllowedIpAddresses">
     <Value>Admin area allowed IP</Value>
@@ -6786,6 +6783,9 @@
   <LocaleResource Name="Admin.Configuration.Shipping.Methods.Deleted">
     <Value>The shipping method has been deleted successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Methods.Description">
+    <Value>Shipping methods used by offline shipping rate compuration providers (e.g. "Fixed Rate Shipping" or "Shipping by weight").</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Methods.EditMethodDetails">
     <Value>Edit shipping method details</Value>
   </LocaleResource>
@@ -7042,7 +7042,7 @@
     <Value>The settings have been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement">
-    <Value>Content Management</Value>
+    <Value>Content management</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog">
     <Value>Blog</Value>
@@ -10240,7 +10240,7 @@
     <Value>The discount has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions">
-    <Value>Newsletter Subscribers</Value>
+    <Value>Newsletter subscribers</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Active">
     <Value>Active</Value>
@@ -10888,7 +10888,7 @@
     <Value>{0} customers were deleted</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails">
-    <Value>Message Queue</Value>
+    <Value>Message queue</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails.BackToList">
     <Value>back to message queue</Value>
