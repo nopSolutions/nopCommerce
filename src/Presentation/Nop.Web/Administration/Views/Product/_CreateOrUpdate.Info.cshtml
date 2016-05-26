@@ -1191,70 +1191,66 @@
                 <div class="col-md-9">
                     @if (Model.ProductWarehouseInventoryModels.Count > 0)
                     {
-                        <div class="box box-default box-solid">
-                            <div class="box-body no-padding">
-                                <table class="table table-hover table-bordered text-center">
-                                    <thead>
-                                        <tr>
-                                            <th>
-                                                @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse")
-                                            </th>
-                                            <th>
-                                                @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.WarehouseUsed")
-                                            </th>
-                                            <th>
-                                                @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.StockQuantity")
-                                            </th>
-                                            <th>
-                                                @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.ReservedQuantity")
-                                            </th>
-                                            <th>
-                                                @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.PlannedQuantity")
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var item in Model.ProductWarehouseInventoryModels)
-                                        {
-                                            <tr>
-                                                <td style="width: 40%;">
-                                                    <div style="padding-left: 10px; padding-right: 10px;">
-                                                        @item.WarehouseName
-                                                    </div>
-                                                </td>
-                                                <td style="width: 10%;">
-                                                    <input type="checkbox" id="warehouse_used_@(item.WarehouseId)" name="warehouse_used_@(item.WarehouseId)" value="@item.WarehouseId" checked="@item.WarehouseUsed" />
-                                                    <script type="text/javascript">
-                                                        $(document).ready(function() {
-                                                            $("#warehouse_used_@(item.WarehouseId)").change(toggleWarehouseUsed_@(item.WarehouseId));
-                                                            toggleWarehouseUsed_@(item.WarehouseId)();
-                                                        });
+                        <table class="table table-hover table-bordered text-center">
+                            <thead>
+                            <tr>
+                                <th>
+                                    @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse")
+                                </th>
+                                <th>
+                                    @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.WarehouseUsed")
+                                </th>
+                                <th>
+                                    @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.StockQuantity")
+                                </th>
+                                <th>
+                                    @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.ReservedQuantity")
+                                </th>
+                                <th>
+                                    @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.PlannedQuantity")
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var item in Model.ProductWarehouseInventoryModels)
+                            {
+                                <tr>
+                                    <td style="width: 40%;">
+                                        <div style="padding-left: 10px; padding-right: 10px;">
+                                            @item.WarehouseName
+                                        </div>
+                                    </td>
+                                    <td style="width: 10%;">
+                                    <input type="checkbox" id="warehouse_used_@(item.WarehouseId)" name="warehouse_used_@(item.WarehouseId)" value="@item.WarehouseId" checked="@item.WarehouseUsed"/>
+                                    <script type="text/javascript">
+                                        $(document).ready(function() {
+                                            $("#warehouse_used_@(item.WarehouseId)").change(toggleWarehouseUsed_@(item.WarehouseId));
+                                            toggleWarehouseUsed_@(item.WarehouseId)();
+                                        });
 
-                                                        function toggleWarehouseUsed_@(item.WarehouseId)() {
-                                                            if ($('#warehouse_used_@(item.WarehouseId)').is(':checked')) {
-                                                                $('#warehouse_qty_@(item.WarehouseId)').prop('disabled', false);
-                                                                $('#warehouse_reserved_@(item.WarehouseId)').prop('disabled', false);
-                                                            } else {
-                                                                $('#warehouse_qty_@(item.WarehouseId)').prop('disabled', true);
-                                                                $('#warehouse_reserved_@(item.WarehouseId)').prop('disabled', true);
-                                                            }
-                                                        }
-                                                    </script>
-                                                <td style="width: 20%;">
-                                                    <input id="warehouse_qty_@(item.WarehouseId)" name="warehouse_qty_@(item.WarehouseId)" type="text" value="@item.StockQuantity" class="form-control" />
-                                                </td>
-                                                <td style="width: 20%;">
-                                                    <input id="warehouse_reserved_@(item.WarehouseId)" name="warehouse_reserved_@(item.WarehouseId)" type="text" value="@item.ReservedQuantity" class="form-control" />
-                                                </td>
-                                                <td style="width: 10%;">
-                                                    @item.PlannedQuantity
-                                                </td>
-                                            </tr>
+                                        function toggleWarehouseUsed_@(item.WarehouseId)() {
+                                            if ($('#warehouse_used_@(item.WarehouseId)').is(':checked')) {
+                                                $('#warehouse_qty_@(item.WarehouseId)').prop('disabled', false);
+                                                $('#warehouse_reserved_@(item.WarehouseId)').prop('disabled', false);
+                                            } else {
+                                                $('#warehouse_qty_@(item.WarehouseId)').prop('disabled', true);
+                                                $('#warehouse_reserved_@(item.WarehouseId)').prop('disabled', true);
+                                            }
                                         }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                                    </script>
+                                    <td style="width: 20%;">
+                                        <input id="warehouse_qty_@(item.WarehouseId)" name="warehouse_qty_@(item.WarehouseId)" type="text" value="@item.StockQuantity" class="form-control"/>
+                                    </td>
+                                    <td style="width: 20%;">
+                                        <input id="warehouse_reserved_@(item.WarehouseId)" name="warehouse_reserved_@(item.WarehouseId)" type="text" value="@item.ReservedQuantity" class="form-control"/>
+                                    </td>
+                                    <td style="width: 10%;">
+                                        @item.PlannedQuantity
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
                         <p>
                             <em>@T("Admin.Catalog.Products.ProductWarehouseInventory.Description1")</em>
                         </p>

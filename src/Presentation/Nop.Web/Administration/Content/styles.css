@@ -310,6 +310,17 @@ table td .form-group {
     margin-top: 2px;
 }
 
+.table-bordered>thead {
+    border-bottom: none;
+}
+
+.table-bordered>thead>tr>th, .table-bordered>tbody>tr>th, 
+.table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, 
+.table-bordered>tbody>tr>td, .table-bordered>tfoot>tr>td {
+    border: 1px solid #E0E0E0;
+    border-top: 1px solid #E0E0E0 !important;
+}
+
 .form-horizontal span.required {
     float: right;
     margin-top: 8px;
