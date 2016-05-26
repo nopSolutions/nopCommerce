@@ -760,7 +760,9 @@
                 </script>
             </div>
             <div class="panel-footer">
-                <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("AddressCreate", new { customerId = Model.Id })'" value='@T("Admin.Customers.Customers.Addresses.AddButton")'></button>
+                <button type="button" class="btn btn-primary" onclick="location.href = '@Url.Action("AddressCreate", new {customerId = Model.Id})'">
+                    @T("Admin.Customers.Customers.Addresses.AddButton")
+                </button>
             </div>
         </div>
     </div>

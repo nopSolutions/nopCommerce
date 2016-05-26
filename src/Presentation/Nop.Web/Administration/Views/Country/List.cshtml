@@ -16,8 +16,14 @@
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
-        <input type="button" id="publish-selected" class="btn bg-teal" value="@T("Admin.Configuration.Countries.PublishSelected")" />
-        <input type="button" id="unpublish-selected" class="btn bg-navy" value="@T("Admin.Configuration.Countries.UnpublishSelected")" />
+        <button type="button" id="publish-selected" class="btn bg-teal">
+            <i class="fa fa-check-square-o"></i>
+            @T("Admin.Configuration.Countries.PublishSelected")
+        </button>
+        <button type="button" id="unpublish-selected" class="btn bg-navy" value="@T("Admin.Configuration.Countries.UnpublishSelected")">
+            <i class="fa fa-minus-square-o"></i>
+            @T("Admin.Configuration.Countries.UnpublishSelected")
+        </button>
         <a href="@Url.Action("ExportCsv")" class="btn bg-green">
             <i class="fa fa-exchange"></i>
             @T("Admin.Configuration.Countries.ExportToCsv")

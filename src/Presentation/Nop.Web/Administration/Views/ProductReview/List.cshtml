@@ -16,8 +16,14 @@
         @T("Admin.Catalog.ProductReviews")
     </h1>
     <div class="pull-right">
-        <button type="button" id="approve-selected" class="btn bg-green">@T("Admin.Catalog.ProductReviews.ApproveSelected")</button>
-        <button type="button" id="disapprove-selected" class="btn bg-navy">@T("Admin.Catalog.ProductReviews.DisapproveSelected")</button>
+        <button type="button" id="approve-selected" class="btn bg-green">
+            <i class="fa fa-check-square-o"></i>
+            @T("Admin.Catalog.ProductReviews.ApproveSelected")
+        </button>
+        <button type="button" id="disapprove-selected" class="btn bg-navy">
+            <i class="fa fa-minus-square-o"></i>
+            @T("Admin.Catalog.ProductReviews.DisapproveSelected")
+        </button>
         <button type="button" id="delete-selected" class="btn bg-red">
             <i class="fa fa-trash-o"></i>
             @T("Admin.Catalog.ProductReviews.DeleteSelected")
@@ -103,7 +109,10 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-8 col-md-offset-4">
-                                    <button type="button" id="search-productreviews" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
+                                    <button type="button" id="search-productreviews" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
                                 </div>
                             </div>
                         </div>

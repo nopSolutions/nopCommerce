@@ -39,10 +39,10 @@
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     <li><input type="submit" name="exportxml-all" value="@T("Admin.Common.ExportToXml.All")" /></li>
-                    <li><button type="button" id="exportxml-selected" value="@T("Admin.Common.ExportToXml.Selected")" /></li>
+                    <li><button type="button" id="exportxml-selected">@T("Admin.Common.ExportToXml.Selected")</button></li>
                     <li class="divider"></li>
                     <li><input type="submit" name="exportexcel-all" value="@T("Admin.Common.ExportToExcel.All")" /></li>
-                    <li><button type="button" id="exportexcel-selected" value="@T("Admin.Common.ExportToExcel.Selected")" /></li>
+                    <li><button type="button" id="exportexcel-selected">@T("Admin.Common.ExportToExcel.Selected")</button></li>
                 </ul>
             </div>
             @if (!Model.IsLoggedInAsVendor)
@@ -158,7 +158,10 @@
                         </div>
                         <div class="row">
                             <div class="col-md-7 col-md-offset-5">
-                                <button type="button" id="search-products" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
+                                <button type="button" id="search-products" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
                             </div>
                         </div>
                     </div>
