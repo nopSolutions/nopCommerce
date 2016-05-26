@@ -89,7 +89,7 @@
                                 <div class="input-group">
                                     @Html.NopEditorFor(model => model.TrackingNumber)
                                     <span class="input-group-btn">
-                                        <input type="submit" name="settrackingnumber" value="@T("Admin.Orders.Shipments.TrackingNumber.Button")" class="btn btn-info btn-flat" />
+                                        <input type="submit" name="settrackingnumber" value="@T("Admin.Orders.Shipments.TrackingNumber.Button")" class="btn btn-info" />
                                         @if (!string.IsNullOrEmpty(Model.TrackingNumberUrl))
                                         {
                                             <a href="@Model.TrackingNumberUrl" target="_blank" class="tracking-url">@T("Admin.Orders.Shipments.TrackingNumber.ViewOnline")</a>
@@ -106,7 +106,7 @@
                                 <div class="input-group">
                                     @Html.NopEditorFor(model => model.AdminComment)
                                     <span class="input-group-btn">
-                                        <input type="submit" name="setadmincomment" value="@T("Admin.Orders.Shipments.AdminComment.Button")" class="btn btn-info btn-flat" />
+                                        <input type="submit" name="setadmincomment" value="@T("Admin.Orders.Shipments.AdminComment.Button")" class="btn btn-info" />
                                     </span>
                                 </div>
                             </div>
@@ -138,7 +138,7 @@
                                     <div class="input-group-btn">
                                         @if (Model.CanShip)
                                         {
-                                            <input type="submit" name="setasshipped" value="@T("Admin.Orders.Shipments.ShippedDate.Button")" id="setasshipped" class="btn btn-info" />
+                                            <input type="submit" name="setasshipped" value="@T("Admin.Orders.Shipments.ShippedDate.Button")" id="setasshipped" class="btn btn-info btn-flat" />
                                         }
                                         @if (Model.ShippedDateUtc.HasValue)
                                         {
@@ -170,7 +170,7 @@
                                     <div class="input-group-btn">
                                         @if (Model.CanDeliver)
                                         {
-                                            <input type="submit" name="setasdelivered" value="@T("Admin.Orders.Shipments.DeliveryDate.Button")" id="setasdelivered" class="btn btn-info" />
+                                            <input type="submit" name="setasdelivered" value="@T("Admin.Orders.Shipments.DeliveryDate.Button")" id="setasdelivered" class="btn btn-info btn-flat" />
                                         }
                                         @if (Model.DeliveryDateUtc.HasValue)
                                         {
