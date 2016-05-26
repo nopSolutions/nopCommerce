@@ -477,8 +477,8 @@
     <Content Include="Content\adminLTE\skins\_all-skins.min.css" />
     <Content Include="Content\bootstrap\bootstrap-3.3.5.css" />
     <Content Include="Content\bootstrap\bootstrap-3.3.5.min.css" />
-    <Content Include="Content\fontAwesome\font-awesome-4.4.0.css" />
-    <Content Include="Content\fontAwesome\font-awesome-4.4.0.min.css" />
+    <Content Include="Content\fontAwesome\font-awesome-4.6.3.css" />
+    <Content Include="Content\fontAwesome\font-awesome-4.6.3.min.css" />
     <Content Include="Content\images\logo-mini.png" />
     <Content Include="Content\images\logo.png" />
     <Content Include="Content\images\search-icon.png" />
