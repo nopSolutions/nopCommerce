@@ -731,6 +731,10 @@ ul.common-list {
 }
 
 @media (max-width: 767px) {
+    .main-header {
+        max-height: 200px;
+    }
+
     .main-sidebar, .left-side {
         padding-top: 155px;
     }
