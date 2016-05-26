@@ -481,6 +481,7 @@
     <Content Include="Content\fontAwesome\font-awesome-4.4.0.min.css" />
     <Content Include="Content\images\logo-mini.png" />
     <Content Include="Content\images\logo.png" />
+    <Content Include="Content\images\search-icon.png" />
     <Content Include="db_backups\placeholder.txt" />
     <Content Include="Content\images\ajax_loader_small.gif" />
     <Content Include="Content\images\ajax-loading.gif" />

@@ -639,6 +639,11 @@ ul.common-list {
     color: #FFF;
 }
 
+.admin-search-box {
+    background: url(images/search-icon.png) no-repeat 97%;
+    padding-right: 30px;
+}
+
 /*override font-awesome styles*/
 .fa {
     padding-right: 5px !important;
