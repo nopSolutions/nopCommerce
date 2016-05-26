@@ -55,6 +55,10 @@ namespace Nop.Plugin.Payments.PayPalDirect
             this._currencySettings = currencySettings;
             this._webHelper = webHelper;
             this._orderTotalCalculationService = orderTotalCalculationService;
+
+            //Ensure connections to PayPal are TLS 1.2
+            //See https://www.paypal-knowledge.com/infocenter/index?page=content&widgetview=true&id=FAQ1914&viewlocale=en_US
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
         }
 
         #endregion
