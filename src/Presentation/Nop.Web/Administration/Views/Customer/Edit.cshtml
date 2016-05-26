@@ -24,25 +24,25 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            <button type="button" class="btn bg-olive" value="@T("Admin.Customers.Customers.SendEmail")" data-toggle="modal" data-target="#sendemail-window">
-                <i class="fa fa-envelope-o"></i>
+            <button type="button" class="btn bg-green" value="@T("Admin.Customers.Customers.SendEmail")" data-toggle="modal" data-target="#sendemail-window">
+                <i class="fa fa-at"></i>
                 @T("Admin.Customers.Customers.SendEmail")
             </button>
-            <button type="button" class="btn bg-olive" value="@T("Admin.Customers.Customers.SendPM")" data-toggle="modal" data-target="#sendprivatemessage-window">
+            <button type="button" class="btn bg-green" value="@T("Admin.Customers.Customers.SendPM")" data-toggle="modal" data-target="#sendprivatemessage-window">
                 <i class="fa fa-envelope-o"></i>
                 @T("Admin.Customers.Customers.SendPM")
             </button>
             @if (Model.AllowSendingOfWelcomeMessage)
             {
-                <button type="submit" name="send-welcome-message" class="btn bg-olive" value="@T("Admin.Customers.Customers.SendWelcomeMessage")" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
-                    <i class="fa fa-envelope-o"></i>
+                <button type="submit" name="send-welcome-message" class="btn bg-green" value="@T("Admin.Customers.Customers.SendWelcomeMessage")" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+                    <i class="fa fa-smile-o"></i>
                     @T("Admin.Customers.Customers.SendWelcomeMessage")
                 </button>
             }
             @if (Model.AllowReSendingOfActivationMessage)
             {
-                <button type="submit" name="resend-activation-message" class="btn bg-olive" value="@T("Admin.Customers.Customers.ReSendActivationMessage")" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
-                    <i class="fa fa-envelope-o"></i>
+                <button type="submit" name="resend-activation-message" class="btn bg-green" value="@T("Admin.Customers.Customers.ReSendActivationMessage")" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+                    <i class="fa fa-check-circle"></i>
                     @T("Admin.Customers.Customers.SendWelcomeMessage")
                 </button>
             }
