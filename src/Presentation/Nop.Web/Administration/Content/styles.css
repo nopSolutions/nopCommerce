@@ -701,6 +701,18 @@ ul.common-list {
     padding: 5px 0;
 }
 
+.sidebar-mini.sidebar-collapse .sidebar-menu>li:hover>.treeview-menu {
+    top: 44px;
+    left: 50px;
+    width: 200px;
+}
+
+.sidebar-mini.sidebar-collapse .sidebar-menu>li:hover>a>span:not(.pull-right) {
+    width: 209px;
+    padding-left: 25px;
+    margin-left: -12px;
+}
+
 @media (max-width: 1200px) {
     .form-horizontal img.ico-help {
          display: none;
