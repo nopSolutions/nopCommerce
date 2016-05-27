@@ -486,7 +486,6 @@
     <Content Include="Content\images\ajax_loader_small.gif" />
     <Content Include="Content\images\ajax-loading.gif" />
     <Content Include="Content\images\google-maps.gif" />
-    <Content Include="Content\images\ico-help.gif" />
     <Content Include="Content\images\throbber-synchronizing.gif" />
     <Content Include="Content\images\warnings-ajax-loader.gif" />
     <Content Include="Content\styles.css" />
