@@ -79,6 +79,7 @@ CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
 	@PriceMax			decimal(18, 4) = null,
 	@Keywords			nvarchar(4000) = null,
 	@SearchDescriptions bit = 0, --a value indicating whether to search by a specified "keyword" in product descriptions
+	@SearchManufacturerPartNumber bit = 0, -- a value indicating whether to search by a specified "keyword" in manufacturer part number
 	@SearchSku			bit = 0, --a value indicating whether to search by a specified "keyword" in product SKU
 	@SearchProductTags  bit = 0, --a value indicating whether to search by a specified "keyword" in product tags
 	@UseFullTextSearch  bit = 0,
@@ -273,6 +274,16 @@ BEGIN
 				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
 			ELSE
 				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0 '
+		END
+
+		--manufacturer part number (exact match)
+		IF @SearchManufacturerPartNumber = 1
+		BEGIN
+			SET @sql = @sql + '
+			UNION
+			SELECT p.Id
+			FROM Product p with (NOLOCK)
+			WHERE p.[ManufacturerPartNumber] = @OriginalKeywords '
 		END
 
 		--SKU (exact match)

@@ -164,16 +164,16 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.SendEmail.SendImmediately.Hint">
     <Value>Send message immediately.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Category.List.ImportFromExcelTip">
+  <LocaleResource Name="Admin.Catalog.Categories.List.ImportFromExcelTip">
     <Value>Imported categories are distinguished by ID. If the ID already exists, then its corresponding category will be updated. For new categories ID do not need to specify</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturer.List.ImportFromExcelTip">
+  <LocaleResource Name="Admin.Catalog.Manufacturers.List.ImportFromExcelTip">
     <Value>Imported manufacturers are distinguished by ID. If the ID already exists, then its corresponding manufacturer will be updated. For new manufacturers ID do not need to specify</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Category.Imported">
+  <LocaleResource Name="Admin.Catalog.Categories.Imported">
     <Value>Categories have been imported successfully.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturer.Imported">
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Imported">
     <Value>Manufacturers have been imported successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.AllSettings.SearchSettingName">
@@ -454,7 +454,160 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.ImportProductImagesUsingHash.Hint">
     <Value>Check to use fast HASHBYTES (hash sum) database function to compare pictures when importing products. Please note that this functionality is not supported by some database.</Value>
-  </LocaleResource>  
+  </LocaleResource> 
+  <LocaleResource Name="Admin.System.SystemInfo.UTCTime">
+    <Value>Coordinated Universal Time (UTC)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.UTCTime.Hint">
+    <Value>Coordinated Universal Time (UTC).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.CurrentUserTime">
+    <Value>Current user time</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.CurrentUserTime.Hint">
+    <Value>Current user time (based on specified datetime and timezone settings).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.Earning.Hint1">
+    <Value>Each</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.Earning.Hint2">
+    <Value>spent will earn</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.Earning.Hint3">
+    <Value>reward points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2">
+    <Value>1 reward point =</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.SwitchToTreeView">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Treeview">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.Note1">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.Note2">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.UpdateTotals">
+    <Value>Do not to forget to update order totals after adding this product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchIncludeSubCategories">
+    <Value>Search sub categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Export">
+    <Value>Export</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.PdfInvoices">
+    <Value>Print PDF invoices</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.PdfInvoices.All">
+    <Value>Print PDF invoices (all found)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.PdfInvoices.Selected">
+    <Value>Print PDF invoices (selected)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.PdfInvoice.All">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.PdfInvoice.Selected">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlips">
+    <Value>Print packaging slips</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlips.All">
+    <Value>Print packaging slips (all found)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlips.Selected">
+    <Value>Print packaging slips (selected)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlip.All">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlip.Selected">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.ApiKey">
+    <Value>Australia Post API Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.ApiKey.Hint">
+    <Value>Specify Australia Post API Key.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.GatewayUrl">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.GatewayUrl.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.HideDeliveryInformation">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.HideDeliveryInformation.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Import">
+    <Value>Import</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.StoreStatistics">
+    <Value></Value>
+  </LocaleResource>
+    <LocaleResource Name="Admin.Menu.Search">
+    <Value>Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.AddTitle">
+    <Value>Add (reduce) points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsValue.Hint">
+    <Value>Enter points to add. Negative values are also supported (reduce points).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.AddButton">
+    <Value>Add (reduce) reward points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon">
+    <Value>General settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageExternalAuthenticationMethods">
+    <Value>Admin area. Manage External Authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods">
+    <Value>External authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods.BackToList">
+    <Value>back to extenal authentication method list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed">
+    <Value>All plugins and themes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Methods.Description">
+    <Value>Shipping methods used by offline shipping rate compuration methods (e.g. "Fixed Rate Shipping" or "Shipping by weight").</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts">
+    <Value>Email accounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails">
+    <Value>Message queue</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions">
+    <Value>Newsletter subscribers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes">
+    <Value>Product attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes">
+    <Value>Checkout attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes">
+    <Value>Specification attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement">
+    <Value>Content management</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Manage">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1579,5 +1732,656 @@ GO
  BEGIN
  	INSERT [Setting] ([Name], [Value], [StoreId])
  	VALUES (N'forumsettings.maxvotesperday', N'30', 0)
+ END
+ GO
+
+IF EXISTS (
+		SELECT *
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[ProductLoadAllPaged]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
+DROP PROCEDURE [ProductLoadAllPaged]
+GO
+
+CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
+(
+	@CategoryIds		nvarchar(MAX) = null,	--a list of category IDs (comma-separated list). e.g. 1,2,3
+	@ManufacturerId		int = 0,
+	@StoreId			int = 0,
+	@VendorId			int = 0,
+	@WarehouseId		int = 0,
+	@ProductTypeId		int = null, --product type identifier, null - load all products
+	@VisibleIndividuallyOnly bit = 0, 	--0 - load all products , 1 - "visible indivially" only
+	@MarkedAsNewOnly	bit = 0, 	--0 - load all products , 1 - "marked as new" only
+	@ProductTagId		int = 0,
+	@FeaturedProducts	bit = null,	--0 featured only , 1 not featured only, null - load all products
+	@PriceMin			decimal(18, 4) = null,
+	@PriceMax			decimal(18, 4) = null,
+	@Keywords			nvarchar(4000) = null,
+	@SearchDescriptions bit = 0, --a value indicating whether to search by a specified "keyword" in product descriptions
+	@SearchManufacturerPartNumber bit = 0, -- a value indicating whether to search by a specified "keyword" in manufacturer part number
+	@SearchSku			bit = 0, --a value indicating whether to search by a specified "keyword" in product SKU
+	@SearchProductTags  bit = 0, --a value indicating whether to search by a specified "keyword" in product tags
+	@UseFullTextSearch  bit = 0,
+	@FullTextMode		int = 0, --0 - using CONTAINS with <prefix_term>, 5 - using CONTAINS and OR with <prefix_term>, 10 - using CONTAINS and AND with <prefix_term>
+	@FilteredSpecs		nvarchar(MAX) = null,	--filter by specification attribute options (comma-separated list of IDs). e.g. 14,15,16
+	@LanguageId			int = 0,
+	@OrderBy			int = 0, --0 - position, 5 - Name: A to Z, 6 - Name: Z to A, 10 - Price: Low to High, 11 - Price: High to Low, 15 - creation date
+	@AllowedCustomerRoleIds	nvarchar(MAX) = null,	--a list of customer role IDs (comma-separated list) for which a product should be shown (if a subjet to ACL)
+	@PageIndex			int = 0, 
+	@PageSize			int = 2147483644,
+	@ShowHidden			bit = 0,
+	@OverridePublished	bit = null, --null - process "Published" property according to "showHidden" parameter, true - load only "Published" products, false - load only "Unpublished" products
+	@LoadFilterableSpecificationAttributeOptionIds bit = 0, --a value indicating whether we should load the specification attribute option identifiers applied to loaded products (all pages)
+	@FilterableSpecificationAttributeOptionIds nvarchar(MAX) = null OUTPUT, --the specification attribute option identifiers applied to loaded products (all pages). returned as a comma separated list of identifiers
+	@TotalRecords		int = null OUTPUT
+)
+AS
+BEGIN
+	
+	/* Products that filtered by keywords */
+	CREATE TABLE #KeywordProducts
+	(
+		[ProductId] int NOT NULL
+	)
+
+	DECLARE
+		@SearchKeywords bit,
+		@OriginalKeywords nvarchar(4000),
+		@sql nvarchar(max),
+		@sql_orderby nvarchar(max)
+
+	SET NOCOUNT ON
+	
+	--filter by keywords
+	SET @Keywords = isnull(@Keywords, '')
+	SET @Keywords = rtrim(ltrim(@Keywords))
+	SET @OriginalKeywords = @Keywords
+	IF ISNULL(@Keywords, '') != ''
+	BEGIN
+		SET @SearchKeywords = 1
+		
+		IF @UseFullTextSearch = 1
+		BEGIN
+			--remove wrong chars (' ")
+			SET @Keywords = REPLACE(@Keywords, '''', '')
+			SET @Keywords = REPLACE(@Keywords, '"', '')
+			
+			--full-text search
+			IF @FullTextMode = 0 
+			BEGIN
+				--0 - using CONTAINS with <prefix_term>
+				SET @Keywords = ' "' + @Keywords + '*" '
+			END
+			ELSE
+			BEGIN
+				--5 - using CONTAINS and OR with <prefix_term>
+				--10 - using CONTAINS and AND with <prefix_term>
+
+				--clean multiple spaces
+				WHILE CHARINDEX('  ', @Keywords) > 0 
+					SET @Keywords = REPLACE(@Keywords, '  ', ' ')
+
+				DECLARE @concat_term nvarchar(100)				
+				IF @FullTextMode = 5 --5 - using CONTAINS and OR with <prefix_term>
+				BEGIN
+					SET @concat_term = 'OR'
+				END 
+				IF @FullTextMode = 10 --10 - using CONTAINS and AND with <prefix_term>
+				BEGIN
+					SET @concat_term = 'AND'
+				END
+
+				--now let's build search string
+				declare @fulltext_keywords nvarchar(4000)
+				set @fulltext_keywords = N''
+				declare @index int		
+		
+				set @index = CHARINDEX(' ', @Keywords, 0)
+
+				-- if index = 0, then only one field was passed
+				IF(@index = 0)
+					set @fulltext_keywords = ' "' + @Keywords + '*" '
+				ELSE
+				BEGIN		
+					DECLARE @first BIT
+					SET  @first = 1			
+					WHILE @index > 0
+					BEGIN
+						IF (@first = 0)
+							SET @fulltext_keywords = @fulltext_keywords + ' ' + @concat_term + ' '
+						ELSE
+							SET @first = 0
+
+						SET @fulltext_keywords = @fulltext_keywords + '"' + SUBSTRING(@Keywords, 1, @index - 1) + '*"'					
+						SET @Keywords = SUBSTRING(@Keywords, @index + 1, LEN(@Keywords) - @index)						
+						SET @index = CHARINDEX(' ', @Keywords, 0)
+					end
+					
+					-- add the last field
+					IF LEN(@fulltext_keywords) > 0
+						SET @fulltext_keywords = @fulltext_keywords + ' ' + @concat_term + ' ' + '"' + SUBSTRING(@Keywords, 1, LEN(@Keywords)) + '*"'	
+				END
+				SET @Keywords = @fulltext_keywords
+			END
+		END
+		ELSE
+		BEGIN
+			--usual search by PATINDEX
+			SET @Keywords = '%' + @Keywords + '%'
+		END
+		--PRINT @Keywords
+
+		--product name
+		SET @sql = '
+		INSERT INTO #KeywordProducts ([ProductId])
+		SELECT p.Id
+		FROM Product p with (NOLOCK)
+		WHERE '
+		IF @UseFullTextSearch = 1
+			SET @sql = @sql + 'CONTAINS(p.[Name], @Keywords) '
+		ELSE
+			SET @sql = @sql + 'PATINDEX(@Keywords, p.[Name]) > 0 '
+
+
+		--localized product name
+		SET @sql = @sql + '
+		UNION
+		SELECT lp.EntityId
+		FROM LocalizedProperty lp with (NOLOCK)
+		WHERE
+			lp.LocaleKeyGroup = N''Product''
+			AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
+			AND lp.LocaleKey = N''Name'''
+		IF @UseFullTextSearch = 1
+			SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
+		ELSE
+			SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0 '
+	
+
+		IF @SearchDescriptions = 1
+		BEGIN
+			--product short description
+			SET @sql = @sql + '
+			UNION
+			SELECT p.Id
+			FROM Product p with (NOLOCK)
+			WHERE '
+			IF @UseFullTextSearch = 1
+				SET @sql = @sql + 'CONTAINS(p.[ShortDescription], @Keywords) '
+			ELSE
+				SET @sql = @sql + 'PATINDEX(@Keywords, p.[ShortDescription]) > 0 '
+
+
+			--product full description
+			SET @sql = @sql + '
+			UNION
+			SELECT p.Id
+			FROM Product p with (NOLOCK)
+			WHERE '
+			IF @UseFullTextSearch = 1
+				SET @sql = @sql + 'CONTAINS(p.[FullDescription], @Keywords) '
+			ELSE
+				SET @sql = @sql + 'PATINDEX(@Keywords, p.[FullDescription]) > 0 '
+
+
+
+			--localized product short description
+			SET @sql = @sql + '
+			UNION
+			SELECT lp.EntityId
+			FROM LocalizedProperty lp with (NOLOCK)
+			WHERE
+				lp.LocaleKeyGroup = N''Product''
+				AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
+				AND lp.LocaleKey = N''ShortDescription'''
+			IF @UseFullTextSearch = 1
+				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
+			ELSE
+				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0 '
+				
+
+			--localized product full description
+			SET @sql = @sql + '
+			UNION
+			SELECT lp.EntityId
+			FROM LocalizedProperty lp with (NOLOCK)
+			WHERE
+				lp.LocaleKeyGroup = N''Product''
+				AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
+				AND lp.LocaleKey = N''FullDescription'''
+			IF @UseFullTextSearch = 1
+				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
+			ELSE
+				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0 '
+		END
+
+		--manufacturer part number (exact match)
+		IF @SearchManufacturerPartNumber = 1
+		BEGIN
+			SET @sql = @sql + '
+			UNION
+			SELECT p.Id
+			FROM Product p with (NOLOCK)
+			WHERE p.[ManufacturerPartNumber] = @OriginalKeywords '
+		END
+
+		--SKU (exact match)
+		IF @SearchSku = 1
+		BEGIN
+			SET @sql = @sql + '
+			UNION
+			SELECT p.Id
+			FROM Product p with (NOLOCK)
+			WHERE p.[Sku] = @OriginalKeywords '
+		END
+
+		IF @SearchProductTags = 1
+		BEGIN
+			--product tags (exact match)
+			SET @sql = @sql + '
+			UNION
+			SELECT pptm.Product_Id
+			FROM Product_ProductTag_Mapping pptm with(NOLOCK) INNER JOIN ProductTag pt with(NOLOCK) ON pt.Id = pptm.ProductTag_Id
+			WHERE pt.[Name] = @OriginalKeywords '
+
+			--localized product tags
+			SET @sql = @sql + '
+			UNION
+			SELECT pptm.Product_Id
+			FROM LocalizedProperty lp with (NOLOCK) INNER JOIN Product_ProductTag_Mapping pptm with(NOLOCK) ON lp.EntityId = pptm.ProductTag_Id
+			WHERE
+				lp.LocaleKeyGroup = N''ProductTag''
+				AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
+				AND lp.LocaleKey = N''Name''
+				AND lp.[LocaleValue] = @OriginalKeywords '
+		END
+
+		--PRINT (@sql)
+		EXEC sp_executesql @sql, N'@Keywords nvarchar(4000), @OriginalKeywords nvarchar(4000)', @Keywords, @OriginalKeywords
+
+	END
+	ELSE
+	BEGIN
+		SET @SearchKeywords = 0
+	END
+
+	--filter by category IDs
+	SET @CategoryIds = isnull(@CategoryIds, '')	
+	CREATE TABLE #FilteredCategoryIds
+	(
+		CategoryId int not null
+	)
+	INSERT INTO #FilteredCategoryIds (CategoryId)
+	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@CategoryIds, ',')	
+	DECLARE @CategoryIdsCount int	
+	SET @CategoryIdsCount = (SELECT COUNT(1) FROM #FilteredCategoryIds)
+
+	--filter by customer role IDs (access control list)
+	SET @AllowedCustomerRoleIds = isnull(@AllowedCustomerRoleIds, '')	
+	CREATE TABLE #FilteredCustomerRoleIds
+	(
+		CustomerRoleId int not null
+	)
+	INSERT INTO #FilteredCustomerRoleIds (CustomerRoleId)
+	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@AllowedCustomerRoleIds, ',')
+	
+	--paging
+	DECLARE @PageLowerBound int
+	DECLARE @PageUpperBound int
+	DECLARE @RowsToReturn int
+	SET @RowsToReturn = @PageSize * (@PageIndex + 1)	
+	SET @PageLowerBound = @PageSize * @PageIndex
+	SET @PageUpperBound = @PageLowerBound + @PageSize + 1
+	
+	CREATE TABLE #DisplayOrderTmp 
+	(
+		[Id] int IDENTITY (1, 1) NOT NULL,
+		[ProductId] int NOT NULL
+	)
+
+	SET @sql = '
+	INSERT INTO #DisplayOrderTmp ([ProductId])
+	SELECT p.Id
+	FROM
+		Product p with (NOLOCK)'
+	
+	IF @CategoryIdsCount > 0
+	BEGIN
+		SET @sql = @sql + '
+		LEFT JOIN Product_Category_Mapping pcm with (NOLOCK)
+			ON p.Id = pcm.ProductId'
+	END
+	
+	IF @ManufacturerId > 0
+	BEGIN
+		SET @sql = @sql + '
+		LEFT JOIN Product_Manufacturer_Mapping pmm with (NOLOCK)
+			ON p.Id = pmm.ProductId'
+	END
+	
+	IF ISNULL(@ProductTagId, 0) != 0
+	BEGIN
+		SET @sql = @sql + '
+		LEFT JOIN Product_ProductTag_Mapping pptm with (NOLOCK)
+			ON p.Id = pptm.Product_Id'
+	END
+	
+	--searching by keywords
+	IF @SearchKeywords = 1
+	BEGIN
+		SET @sql = @sql + '
+		JOIN #KeywordProducts kp
+			ON  p.Id = kp.ProductId'
+	END
+	
+	SET @sql = @sql + '
+	WHERE
+		p.Deleted = 0'
+	
+	--filter by category
+	IF @CategoryIdsCount > 0
+	BEGIN
+		SET @sql = @sql + '
+		AND pcm.CategoryId IN (SELECT CategoryId FROM #FilteredCategoryIds)'
+		
+		IF @FeaturedProducts IS NOT NULL
+		BEGIN
+			SET @sql = @sql + '
+		AND pcm.IsFeaturedProduct = ' + CAST(@FeaturedProducts AS nvarchar(max))
+		END
+	END
+	
+	--filter by manufacturer
+	IF @ManufacturerId > 0
+	BEGIN
+		SET @sql = @sql + '
+		AND pmm.ManufacturerId = ' + CAST(@ManufacturerId AS nvarchar(max))
+		
+		IF @FeaturedProducts IS NOT NULL
+		BEGIN
+			SET @sql = @sql + '
+		AND pmm.IsFeaturedProduct = ' + CAST(@FeaturedProducts AS nvarchar(max))
+		END
+	END
+	
+	--filter by vendor
+	IF @VendorId > 0
+	BEGIN
+		SET @sql = @sql + '
+		AND p.VendorId = ' + CAST(@VendorId AS nvarchar(max))
+	END
+	
+	--filter by warehouse
+	IF @WarehouseId > 0
+	BEGIN
+		--we should also ensure that 'ManageInventoryMethodId' is set to 'ManageStock' (1)
+		--but we skip it in order to prevent hard-coded values (e.g. 1) and for better performance
+		SET @sql = @sql + '
+		AND  
+			(
+				(p.UseMultipleWarehouses = 0 AND
+					p.WarehouseId = ' + CAST(@WarehouseId AS nvarchar(max)) + ')
+				OR
+				(p.UseMultipleWarehouses > 0 AND
+					EXISTS (SELECT 1 FROM ProductWarehouseInventory [pwi]
+					WHERE [pwi].WarehouseId = ' + CAST(@WarehouseId AS nvarchar(max)) + ' AND [pwi].ProductId = p.Id))
+			)'
+	END
+	
+	--filter by product type
+	IF @ProductTypeId is not null
+	BEGIN
+		SET @sql = @sql + '
+		AND p.ProductTypeId = ' + CAST(@ProductTypeId AS nvarchar(max))
+	END
+	
+	--filter by "visible individually"
+	IF @VisibleIndividuallyOnly = 1
+	BEGIN
+		SET @sql = @sql + '
+		AND p.VisibleIndividually = 1'
+	END
+	
+	--filter by "marked as new"
+	IF @MarkedAsNewOnly = 1
+	BEGIN
+		SET @sql = @sql + '
+		AND p.MarkAsNew = 1
+		AND (getutcdate() BETWEEN ISNULL(p.MarkAsNewStartDateTimeUtc, ''1/1/1900'') and ISNULL(p.MarkAsNewEndDateTimeUtc, ''1/1/2999''))'
+	END
+	
+	--filter by product tag
+	IF ISNULL(@ProductTagId, 0) != 0
+	BEGIN
+		SET @sql = @sql + '
+		AND pptm.ProductTag_Id = ' + CAST(@ProductTagId AS nvarchar(max))
+	END
+	
+	--"Published" property
+	IF (@OverridePublished is null)
+	BEGIN
+		--process according to "showHidden"
+		IF @ShowHidden = 0
+		BEGIN
+			SET @sql = @sql + '
+			AND p.Published = 1'
+		END
+	END
+	ELSE IF (@OverridePublished = 1)
+	BEGIN
+		--published only
+		SET @sql = @sql + '
+		AND p.Published = 1'
+	END
+	ELSE IF (@OverridePublished = 0)
+	BEGIN
+		--unpublished only
+		SET @sql = @sql + '
+		AND p.Published = 0'
+	END
+	
+	--show hidden
+	IF @ShowHidden = 0
+	BEGIN
+		SET @sql = @sql + '
+		AND p.Deleted = 0
+		AND (getutcdate() BETWEEN ISNULL(p.AvailableStartDateTimeUtc, ''1/1/1900'') and ISNULL(p.AvailableEndDateTimeUtc, ''1/1/2999''))'
+	END
+	
+	--min price
+	IF @PriceMin is not null
+	BEGIN
+		SET @sql = @sql + '
+		AND (
+				(
+					--special price (specified price and valid date range)
+					(p.SpecialPrice IS NOT NULL AND (getutcdate() BETWEEN isnull(p.SpecialPriceStartDateTimeUtc, ''1/1/1900'') AND isnull(p.SpecialPriceEndDateTimeUtc, ''1/1/2999'')))
+					AND
+					(p.SpecialPrice >= ' + CAST(@PriceMin AS nvarchar(max)) + ')
+				)
+				OR 
+				(
+					--regular price (price isnt specified or date range isnt valid)
+					(p.SpecialPrice IS NULL OR (getutcdate() NOT BETWEEN isnull(p.SpecialPriceStartDateTimeUtc, ''1/1/1900'') AND isnull(p.SpecialPriceEndDateTimeUtc, ''1/1/2999'')))
+					AND
+					(p.Price >= ' + CAST(@PriceMin AS nvarchar(max)) + ')
+				)
+			)'
+	END
+	
+	--max price
+	IF @PriceMax is not null
+	BEGIN
+		SET @sql = @sql + '
+		AND (
+				(
+					--special price (specified price and valid date range)
+					(p.SpecialPrice IS NOT NULL AND (getutcdate() BETWEEN isnull(p.SpecialPriceStartDateTimeUtc, ''1/1/1900'') AND isnull(p.SpecialPriceEndDateTimeUtc, ''1/1/2999'')))
+					AND
+					(p.SpecialPrice <= ' + CAST(@PriceMax AS nvarchar(max)) + ')
+				)
+				OR 
+				(
+					--regular price (price isnt specified or date range isnt valid)
+					(p.SpecialPrice IS NULL OR (getutcdate() NOT BETWEEN isnull(p.SpecialPriceStartDateTimeUtc, ''1/1/1900'') AND isnull(p.SpecialPriceEndDateTimeUtc, ''1/1/2999'')))
+					AND
+					(p.Price <= ' + CAST(@PriceMax AS nvarchar(max)) + ')
+				)
+			)'
+	END
+	
+	--show hidden and ACL
+	IF @ShowHidden = 0
+	BEGIN
+		SET @sql = @sql + '
+		AND (p.SubjectToAcl = 0 OR EXISTS (
+			SELECT 1 FROM #FilteredCustomerRoleIds [fcr]
+			WHERE
+				[fcr].CustomerRoleId IN (
+					SELECT [acl].CustomerRoleId
+					FROM [AclRecord] acl with (NOLOCK)
+					WHERE [acl].EntityId = p.Id AND [acl].EntityName = ''Product''
+				)
+			))'
+	END
+	
+	--show hidden and filter by store
+	IF @StoreId > 0
+	BEGIN
+		SET @sql = @sql + '
+		AND (p.LimitedToStores = 0 OR EXISTS (
+			SELECT 1 FROM [StoreMapping] sm with (NOLOCK)
+			WHERE [sm].EntityId = p.Id AND [sm].EntityName = ''Product'' and [sm].StoreId=' + CAST(@StoreId AS nvarchar(max)) + '
+			))'
+	END
+	
+	--filter by specification attribution options
+	SET @FilteredSpecs = isnull(@FilteredSpecs, '')	
+	CREATE TABLE #FilteredSpecs
+	(
+		SpecificationAttributeOptionId int not null
+	)
+	INSERT INTO #FilteredSpecs (SpecificationAttributeOptionId)
+	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@FilteredSpecs, ',')
+	DECLARE @SpecAttributesCount int	
+	SET @SpecAttributesCount = (SELECT COUNT(1) FROM #FilteredSpecs)
+	IF @SpecAttributesCount > 0
+	BEGIN
+		--do it for each specified specification option
+		DECLARE @SpecificationAttributeOptionId int
+		DECLARE cur_SpecificationAttributeOption CURSOR FOR
+		SELECT [SpecificationAttributeOptionId]
+		FROM [#FilteredSpecs]
+		OPEN cur_SpecificationAttributeOption
+		FETCH NEXT FROM cur_SpecificationAttributeOption INTO @SpecificationAttributeOptionId
+		WHILE @@FETCH_STATUS = 0
+		BEGIN
+			SET @sql = @sql + '
+			AND p.Id in (select psam.ProductId from [Product_SpecificationAttribute_Mapping] psam with (NOLOCK) where psam.AllowFiltering = 1 and psam.SpecificationAttributeOptionId = ' + CAST(@SpecificationAttributeOptionId AS nvarchar(max)) + ')'
+			--fetch next identifier
+			FETCH NEXT FROM cur_SpecificationAttributeOption INTO @SpecificationAttributeOptionId
+		END
+		CLOSE cur_SpecificationAttributeOption
+		DEALLOCATE cur_SpecificationAttributeOption
+	END
+	
+	--sorting
+	SET @sql_orderby = ''	
+	IF @OrderBy = 5 /* Name: A to Z */
+		SET @sql_orderby = ' p.[Name] ASC'
+	ELSE IF @OrderBy = 6 /* Name: Z to A */
+		SET @sql_orderby = ' p.[Name] DESC'
+	ELSE IF @OrderBy = 10 /* Price: Low to High */
+		SET @sql_orderby = ' p.[Price] ASC'
+	ELSE IF @OrderBy = 11 /* Price: High to Low */
+		SET @sql_orderby = ' p.[Price] DESC'
+	ELSE IF @OrderBy = 15 /* creation date */
+		SET @sql_orderby = ' p.[CreatedOnUtc] DESC'
+	ELSE /* default sorting, 0 (position) */
+	BEGIN
+		--category position (display order)
+		IF @CategoryIdsCount > 0 SET @sql_orderby = ' pcm.DisplayOrder ASC'
+		
+		--manufacturer position (display order)
+		IF @ManufacturerId > 0
+		BEGIN
+			IF LEN(@sql_orderby) > 0 SET @sql_orderby = @sql_orderby + ', '
+			SET @sql_orderby = @sql_orderby + ' pmm.DisplayOrder ASC'
+		END
+		
+		--name
+		IF LEN(@sql_orderby) > 0 SET @sql_orderby = @sql_orderby + ', '
+		SET @sql_orderby = @sql_orderby + ' p.[Name] ASC'
+	END
+	
+	SET @sql = @sql + '
+	ORDER BY' + @sql_orderby
+	
+	--PRINT (@sql)
+	EXEC sp_executesql @sql
+
+	DROP TABLE #FilteredCategoryIds
+	DROP TABLE #FilteredSpecs
+	DROP TABLE #FilteredCustomerRoleIds
+	DROP TABLE #KeywordProducts
+
+	CREATE TABLE #PageIndex 
+	(
+		[IndexId] int IDENTITY (1, 1) NOT NULL,
+		[ProductId] int NOT NULL
+	)
+	INSERT INTO #PageIndex ([ProductId])
+	SELECT ProductId
+	FROM #DisplayOrderTmp
+	GROUP BY ProductId
+	ORDER BY min([Id])
+
+	--total records
+	SET @TotalRecords = @@rowcount
+	
+	DROP TABLE #DisplayOrderTmp
+
+	--prepare filterable specification attribute option identifier (if requested)
+	IF @LoadFilterableSpecificationAttributeOptionIds = 1
+	BEGIN		
+		CREATE TABLE #FilterableSpecs 
+		(
+			[SpecificationAttributeOptionId] int NOT NULL
+		)
+		INSERT INTO #FilterableSpecs ([SpecificationAttributeOptionId])
+		SELECT DISTINCT [psam].SpecificationAttributeOptionId
+		FROM [Product_SpecificationAttribute_Mapping] [psam] with (NOLOCK)
+		WHERE [psam].[AllowFiltering] = 1
+		AND [psam].[ProductId] IN (SELECT [pi].ProductId FROM #PageIndex [pi])
+
+		--build comma separated list of filterable identifiers
+		SELECT @FilterableSpecificationAttributeOptionIds = COALESCE(@FilterableSpecificationAttributeOptionIds + ',' , '') + CAST(SpecificationAttributeOptionId as nvarchar(4000))
+		FROM #FilterableSpecs
+
+		DROP TABLE #FilterableSpecs
+ 	END
+
+	--return products
+	SELECT TOP (@RowsToReturn)
+		p.*
+	FROM
+		#PageIndex [pi]
+		INNER JOIN Product p with (NOLOCK) on p.Id = [pi].[ProductId]
+	WHERE
+		[pi].IndexId > @PageLowerBound AND 
+		[pi].IndexId < @PageUpperBound
+	ORDER BY
+		[pi].IndexId
+	
+	DROP TABLE #PageIndex
+END
+GO
+
+
+--new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'adminareasettings.popupgridpagesize')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'adminareasettings.popupgridpagesize', N'10', 0)
  END
  GO

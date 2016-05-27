@@ -1,6 +1,8 @@
 ﻿@{
     //page title
     ViewBag.Title = T("Admin.Configuration.Countries").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Countries");
 }
 
 @Html.AntiForgeryToken()
@@ -9,11 +11,26 @@
         @T("Admin.Configuration.Countries")
     </h1>
     <div class="pull-right">
-        <a href="@Url.Action("Create")" class="btn btn-default">@T("Admin.Common.AddNew")</a>
-        <input type="button" id="publish-selected" class="btn btn-default" value="@T("Admin.Configuration.Countries.PublishSelected")" />
-        <input type="button" id="unpublish-selected" class="btn btn-default" value="@T("Admin.Configuration.Countries.UnpublishSelected")" />
-        <a href="@Url.Action("ExportCsv")" class="btn btn-default">@T("Admin.Configuration.Countries.ExportToCsv")</a>
-        <input type="submit" name="importcsv" class="btn btn-default" value="@T("Admin.Configuration.Countries.ImportFromCsv")" data-toggle="modal" data-target="#importcsv-window" />
+        <a href="@Url.Action("Create")" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+        <button type="button" id="publish-selected" class="btn bg-teal">
+            <i class="fa fa-check-square-o"></i>
+            @T("Admin.Configuration.Countries.PublishSelected")
+        </button>
+        <button type="button" id="unpublish-selected" class="btn bg-navy">
+            <i class="fa fa-minus-square-o"></i>
+            @T("Admin.Configuration.Countries.UnpublishSelected")
+        </button>
+        <a href="@Url.Action("ExportCsv")" class="btn bg-green">
+            <i class="fa fa-exchange"></i>
+            @T("Admin.Configuration.Countries.ExportToCsv")
+        </a>
+        <button type="submit" name="importcsv" class="btn bg-olive" data-toggle="modal" data-target="#importcsv-window">
+            <i class="fa fa-exchange"></i>
+            @T("Admin.Configuration.Countries.ImportFromCsv")
+        </button>
     </div>
 </div>
 
@@ -70,44 +87,44 @@
                                     }, {
                                         field: "Name",
                                         title: "@T("Admin.Configuration.Countries.Fields.Name")",
-                                        width: 300
+                                        width: 200
                                     }, {
                                         field: "AllowsBilling",
                                         title: "@T("Admin.Configuration.Countries.Fields.AllowsBilling")",
                                         width: 100,
                                         headerAttributes: { style: "text-align:center" },
                                         attributes: { style: "text-align:center" },
-                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowsBilling#.gif" />'
+                                        template: '# if(AllowsBilling) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                     }, {
                                         field: "AllowsShipping",
                                         title: "@T("Admin.Configuration.Countries.Fields.AllowsShipping")",
-                                        width: 100,
+                                        width: 150,
                                         headerAttributes: { style: "text-align:center" },
                                         attributes: { style: "text-align:center" },
-                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowsShipping#.gif" />'
+                                        template: '# if(AllowsShipping) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                     }, {
                                         field: "TwoLetterIsoCode",
                                         title: "@T("Admin.Configuration.Countries.Fields.TwoLetterIsoCode")",
-                                        width: 100
+                                        width: 150
                                     }, {
                                         field: "ThreeLetterIsoCode",
                                         title: "@T("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode")",
-                                        width: 100
+                                        width: 150
                                     }, {
                                         field: "NumericIsoCode",
                                         title: "@T("Admin.Configuration.Countries.Fields.NumericIsoCode")",
-                                        width: 100
+                                        width: 150
                                     }, {
                                         field: "SubjectToVat",
                                         title: "@T("Admin.Configuration.Countries.Fields.SubjectToVat")",
                                         width: 100,
                                         headerAttributes: { style: "text-align:center" },
                                         attributes: { style: "text-align:center" },
-                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=SubjectToVat#.gif" />'
+                                        template: '# if(SubjectToVat) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                     }, {
                                         field: "NumberOfStates",
                                         title: "@T("Admin.Configuration.Countries.Fields.NumberOfStates")",
-                                        width: 100
+                                        width: 150
                                     }, {
                                         field: "DisplayOrder",
                                         title: "@T("Admin.Configuration.Countries.Fields.DisplayOrder")",
@@ -118,7 +135,7 @@
                                         width: 100,
                                         headerAttributes: { style: "text-align:center" },
                                         attributes: { style: "text-align:center" },
-                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                                        template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                     }, {
                                         field: "Id",
                                         title: "@T("Admin.Common.Edit")",
@@ -263,7 +280,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" class="btn btn-primary" value="@T("Admin.Common.ImportFromCsv")" />
+                        <button type="submit" class="btn btn-primary">
+                            @T("Admin.Common.ImportFromCsv")
+                        </button>
                     </div>
                 </div>
             }

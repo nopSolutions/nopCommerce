@@ -4,6 +4,8 @@
 
     //page title
     ViewBag.Title = T("Admin.Catalog.LowStockReport").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Low stock report");
 }
 
 @Html.AntiForgeryToken()
@@ -65,7 +67,7 @@
                                     title: "@T("Admin.Catalog.Products.Fields.Name")",
                                     width: 300,
                                     //if not a grouped product, then display
-                                    template: "#:Name# # if(Attributes !== null) {# <br /><i> #=Attributes# </i> #} #"
+                                    template: "#:Name# # if(Attributes !== null) {# <div><i> #=Attributes# </i></div> #} #"
                                 }, {
                                     field: "ManageInventoryMethod",
                                     title: "@T("Admin.Catalog.Products.Fields.ManageInventoryMethod")",
@@ -80,7 +82,7 @@
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                                    template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "Id",
                                     title: "@T("Admin.Common.Edit")",

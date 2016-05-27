@@ -4,6 +4,8 @@
 
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Blog.Comments").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Blog comments");
 
     int? filterByBlogPostId = ViewBag.FilterByBlogPostId;
 }
@@ -14,7 +16,10 @@
         @T("Admin.ContentManagement.Blog.Comments")
     </h1>
     <div class="pull-right">
-        <input type="button" id="delete-selected" class="btn btn-default" value="@T("Admin.ContentManagement.Blog.Comments.DeleteSelected")"/>
+        <button type="button" id="delete-selected" class="btn bg-red">
+            <i class="fa fa-trash-o"></i>
+            @T("Admin.ContentManagement.Blog.Comments.DeleteSelected")
+        </button>
     </div>
 </div>
 

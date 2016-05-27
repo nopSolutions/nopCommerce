@@ -125,7 +125,7 @@
                                 @Html.NopLabelFor(model => model.Username)
                             </div>
                             <div class="col-md-9">
-                                @Model.Username
+                                @Html.NopDisplayFor(model => model.Username)
                                 @Html.HiddenFor(model => model.Username)
                             </div>
                         </div>
@@ -150,7 +150,9 @@
                             <div class="input-group-btn">
                                 @if (Model.Id > 0)
                                 {
-                                    <input type="submit" name="changepassword" class="btn btn-info" value="@T("Admin.Customers.Customers.Fields.Password.Change")" />
+                                    <button type="submit" name="changepassword" class="btn btn-info">
+                                        @T("Admin.Customers.Customers.Fields.Password.Change")
+                                    </button>
                                 }
                             </div>
                         </div>
@@ -447,8 +449,10 @@
                             @Html.NopLabelFor(model => model.AffiliateId)
                         </div>
                         <div class="col-md-9">
-                            <a href="@Url.Action("Edit", "Affiliate", new { id = Model.AffiliateId })">@Model.AffiliateName - @T("Admin.Common.View")</a>
-                            <input type="submit" name="remove-affiliate" class="btn btn-default" value="@T("Admin.Customers.Customers.Fields.Affiliate.Remove")" />
+                            <a href="@Url.Action("Edit", "Affiliate", new {id = Model.AffiliateId})">@Model.AffiliateName - @T("Admin.Common.View")</a>
+                            <button type="submit" name="remove-affiliate" class="btn bg-red">
+                                @T("Admin.Customers.Customers.Fields.Affiliate.Remove")
+                            </button>
                         </div>
                     </div>
                 }
@@ -461,8 +465,12 @@
                         <div class="col-md-9">
                             @Html.NopEditorFor(model => model.VatNumber)
                             (@string.Format(T("Admin.Customers.Customers.Fields.VatNumberStatus").Text, Model.VatNumberStatusNote))
-                            <input type="submit" name="markVatNumberAsValid" class="btn btn-default" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsValid")" />
-                            <input type="submit" name="markVatNumberAsInvalid" class="btn btn-default" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsInvalid")" />
+                            <button type="submit" name="markVatNumberAsValid" class="btn btn-primary">
+                                @T("Admin.Customers.Customers.Fields.VatNumber.MarkAsValid")
+                            </button>
+                            <button type="submit" name="markVatNumberAsInvalid" class="btn bg-red">
+                                @T("Admin.Customers.Customers.Fields.VatNumber.MarkAsInvalid")
+                            </button>
                             @Html.ValidationMessageFor(model => model.VatNumber)
                         </div>
                     </div>
@@ -506,7 +514,7 @@
                             @Html.NopLabelFor(model => model.LastIpAddress)
                         </div>
                         <div class="col-md-9">
-                            @Html.DisplayFor(model => model.LastIpAddress)
+                            @Html.NopDisplayFor(model => model.LastIpAddress)
                         </div>
                     </div>
                 }
@@ -517,7 +525,7 @@
                             @Html.NopLabelFor(model => model.CreatedOn)
                         </div>
                         <div class="col-md-9">
-                            @Html.DisplayFor(model => model.CreatedOn)
+                            @Html.NopDisplayFor(model => model.CreatedOn)
                         </div>
                     </div>
                 }
@@ -528,7 +536,7 @@
                             @Html.NopLabelFor(model => model.LastActivityDate)
                         </div>
                         <div class="col-md-9">
-                            @Html.DisplayFor(model => model.LastActivityDate)
+                            @Html.NopDisplayFor(model => model.LastActivityDate)
                         </div>
                     </div>
                 }
@@ -539,7 +547,7 @@
                             @Html.NopLabelFor(model => model.LastVisitedPage)
                         </div>
                         <div class="col-md-9">
-                            @Html.DisplayFor(model => model.LastVisitedPage)
+                            @Html.NopDisplayFor(model => model.LastVisitedPage)
                         </div>
                     </div>
                 }
@@ -583,7 +591,7 @@
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
-                <div id="order-grid"></div>
+                <div id="order-grid" class="order-list"></div>
 
                 <script>
                     $(document).ready(function () {
@@ -633,7 +641,13 @@
                             }, {
                                 field: "OrderStatus",
                                 title: "@T("Admin.Customers.Customers.Orders.OrderStatus")",
-                                width: 200
+                                width: 200,
+                                template: '<span class="order-status ' +
+                                                    '# if(OrderStatusId == 10) {# order-status-pending #} #' +
+                                                    '# if(OrderStatusId == 20) {# order-status-processing #} #' +
+                                                    '# if(OrderStatusId == 30) {# order-status-complete #} #' +
+                                                    '# if(OrderStatusId == 40) {# order-status-cancelled #} #' +
+                                                    '">#=OrderStatus#</span>'
                             }, {
                                 field: "PaymentStatus",
                                 title: "@T("Admin.Customers.Customers.Orders.PaymentStatus")",
@@ -754,7 +768,9 @@
                 </script>
             </div>
             <div class="panel-footer">
-                <input type="button" class="btn btn-default" onclick="location.href='@Url.Action("AddressCreate", new { customerId = Model.Id })'" value='@T("Admin.Customers.Customers.Addresses.AddButton")' />
+                <button type="button" class="btn btn-primary" onclick="location.href = '@Url.Action("AddressCreate", new {customerId = Model.Id})'">
+                    @T("Admin.Customers.Customers.Addresses.AddButton")
+                </button>
             </div>
         </div>
     </div>
@@ -810,7 +826,7 @@
                                 title: "@T("Admin.CurrentCarts.Product")",
                                 width:500,
                                 template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>' +
-                                    '# if(AttributeInfo && AttributeInfo.length > 0) {# <br />#=AttributeInfo# #} #'
+                                    '# if(AttributeInfo && AttributeInfo.length > 0) {# <div>#=AttributeInfo#</div> #} #'
                             }, {
                                 field: "Quantity",
                                 title: "@T("Admin.CurrentCarts.Quantity")",
@@ -892,7 +908,7 @@
                                 title: "@T("Admin.CurrentCarts.Product")",
                                 width:500,
                                 template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>' +
-                                    '# if(AttributeInfo && AttributeInfo.length > 0) {# <br />#=AttributeInfo# #} #'
+                                    '# if(AttributeInfo && AttributeInfo.length > 0) {# <div>#=AttributeInfo#</div> #} #'
                             }, {
                                 field: "Quantity",
                                 title: "@T("Admin.CurrentCarts.Quantity")",
@@ -1002,12 +1018,14 @@
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
-                @T("Admin.Customers.Customers.Impersonate.Description1")
-                <br />
-                @T("Admin.Customers.Customers.Impersonate.Description2")
-                <br />
-                <br />
-                <input type="submit" name="impersonate" class="btn btn-default" value="@T("Admin.Customers.Customers.Impersonate.Button")" />
+                <ul class="common-list">
+                    <li>@T("Admin.Customers.Customers.Impersonate.Description1")</li>
+                    <li>@T("Admin.Customers.Customers.Impersonate.Description2")</li>
+                </ul>
+                <button type="submit" name="impersonate" class="btn btn-primary">
+                    <i class="fa fa-shopping-cart"></i>
+                    @T("Admin.Customers.Customers.Impersonate.Button")
+                </button>
             </div>
         </div>
     </div>
@@ -1192,7 +1210,7 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                 </div>
                 <div class="form-group">
                     <div class="col-md-9 col-md-offset-3">
-                        <input type="button" id="addRewardPoints" class="btn btn-default" value="@T("Admin.Customers.Customers.RewardPoints.AddButton")" />
+                        <button type="button" id="addRewardPoints" class="btn btn-primary">@T("Admin.Customers.Customers.RewardPoints.AddButton")</button>
                     </div>
                 </div>
             </div>

@@ -6,6 +6,8 @@
 
     //page title
     ViewBag.Title = T("Admin.Promotions.newsLetterSubscriptions").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Newsletter subscriptions");
 }
 
 @using (Html.BeginForm())
@@ -16,67 +18,79 @@
             @T("Admin.Promotions.NewsLetterSubscriptions")
         </h1>
         <div class="pull-right">
-            <input type="submit" name="exportcsv" class="btn btn-default" value="@T("Admin.Common.ExportToCsv")" />
-            <input type="button" name="importcsv" class="btn btn-default" value="@T("Admin.Common.ImportFromCsv")" data-toggle="modal" data-target="#importcsv-window" />
-        </div>
+            <button type="submit" name="exportcsv" class="btn bg-green">
+                <i class="fa fa-exchange"></i>
+                @T("Admin.Common.ExportToCsv")
+            </button>
+            <button type="button" name="importcsv" class="btn bg-olive" data-toggle="modal" data-target="#importcsv-window">
+                <i class="fa fa-exchange"></i>
+                @T("Admin.Common.ImportFromCsv")
+            </button>        </div>
     </div>
 
     <div class="content">
         <div class="form-horizontal">
             <div class="panel-group">
-                <div class="panel panel-default">
+                <div class="panel panel-default panel-search">
                     <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.StartDate)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.StartDate)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.EndDate)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.EndDate)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SearchEmail)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SearchEmail)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.ActiveId)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopDropDownList("ActiveId", Model.ActiveList)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.StoreId)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopDropDownList("StoreId", Model.AvailableStores)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.CustomerRoleId)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopDropDownList("CustomerRoleId", Model.AvailableCustomerRoles)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-9 col-md-offset-3">
-                                <input type="button" id="search-subscriptions" class="btn btn-default" value="@T("Admin.Common.Search")" />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.StartDate)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopEditorFor(model => model.StartDate)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.EndDate)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopEditorFor(model => model.EndDate)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.SearchEmail)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopEditorFor(model => model.SearchEmail)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.ActiveId)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopDropDownList("ActiveId", Model.ActiveList)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.StoreId)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopDropDownList("StoreId", Model.AvailableStores)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.CustomerRoleId)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopDropDownList("CustomerRoleId", Model.AvailableCustomerRoles)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-8 col-md-offset-4">
+                                        <button type="button" id="search-subscriptions" class="btn btn-primary btn-search">
+                                            <i class="fa fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -160,7 +174,7 @@
                                             width: 100,
                                             headerAttributes: { style: "text-align:center" },
                                             attributes: { style: "text-align:center" },
-                                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Active#.gif" />'
+                                            template: '# if(Active) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                         }, {
                                             field: "StoreName",
                                             title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.Store")",
@@ -254,7 +268,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" class="btn btn-primary" value="@T("Admin.Common.ImportFromCsv")" />
+                        <button type="submit" class="btn btn-primary">
+                            @T("Admin.Common.ImportFromCsv")
+                        </button>
                     </div>
                 </div>
             }

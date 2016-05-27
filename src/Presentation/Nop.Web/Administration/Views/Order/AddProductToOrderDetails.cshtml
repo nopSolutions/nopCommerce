@@ -5,6 +5,8 @@
 @{
     //page title
     ViewBag.Title = string.Format(T("Admin.Orders.Products.AddNew.Title2").Text, Model.Name, Model.OrderId);
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Orders");
 }
 
 @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
@@ -18,7 +20,7 @@
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @string.Format(T("Admin.Orders.Products.AddNew.Title2").Text, Model.Name, Model.OrderId)
-            <small>@Html.ActionLink("(" + T("Admin.Orders.Products.AddNew.BackToList") + ")", "AddProductToOrder", new { orderId = Model.OrderId })</small>
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Orders.Products.AddNew.BackToList").Text, "AddProductToOrder", new { orderId = Model.OrderId })</small>
         </h1>
         <div class="pull-right">
             &nbsp;
@@ -29,11 +31,12 @@
         @if (Model.Warnings.Count > 0)
         {
             <div class="callout callout-danger">
-                @foreach (var warning in Model.Warnings)
+                <ul>
+                    @foreach (var warning in Model.Warnings)
                     {
-                    @warning
-                    <br />
-                }
+                        <li>@warning</li>
+                    }
+                </ul>
             </div>
         }
 
@@ -99,13 +102,13 @@
                             <div class="form-group">
                                 <div class="col-md-9 col-md-offset-3">
                                     <p>
-                                        <strong>@T("Admin.Orders.Products.AddNew.Note2")</strong>
+                                        <strong>@T("Admin.Orders.Products.AddNew.UpdateTotals")</strong>
                                     </p>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-9 col-md-offset-3">
-                                    <input type="submit" class="btn btn-default" value="@T("Admin.Orders.Products.AddNew")"/>
+                                    <button type="submit" class="btn btn-primary">@T("Admin.Orders.Products.AddNew")</button>
                                 </div>
                             </div>
                         </div>

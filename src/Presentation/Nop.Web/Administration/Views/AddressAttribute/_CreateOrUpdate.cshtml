@@ -179,7 +179,7 @@
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPreSelected#.gif" />'
+                                    template: '# if(IsPreSelected) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "DisplayOrder",
                                     title: "@T("Admin.Address.AddressAttributes.Values.Fields.DisplayOrder")",
@@ -199,7 +199,9 @@
                     </script>
                 </div>
                 <div class="panel-footer">
-                    <input type="submit" id="btnAddNewValue" value="@T("Admin.Address.AddressAttributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "AddressAttribute", new { addressAttributeId = Model.Id, btnId = "btnRefresh", formId = "addressattribute-form" }))', 800, 400, true); return false;" class="btn btn-default" />
+                    <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "AddressAttribute", new {addressAttributeId = Model.Id, btnId = "btnRefresh", formId = "addressattribute-form"}))', 800, 400, true); return false;" class="btn btn-primary">
+                        @T("Admin.Address.AddressAttributes.Values.AddNew")
+                    </button>
                     <input type="submit" id="btnRefresh" style="display: none" />
                     <script type="text/javascript">
                         $(document).ready(function () {

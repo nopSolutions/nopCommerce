@@ -561,7 +561,7 @@ namespace Nop.Admin.Controllers
             {
                 var bytes = _exportManager.ExportManufacturersToXlsx(_manufacturerService.GetAllManufacturers(showHidden: true).Where(p=>!p.Deleted));
                  
-                return File(bytes, MimeTypes.TextXls, "manufacturers.xlsx");
+                return File(bytes, MimeTypes.TextXlsx, "manufacturers.xlsx");
             }
             catch (Exception exc)
             {
@@ -592,7 +592,7 @@ namespace Nop.Admin.Controllers
                     ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
                     return RedirectToAction("List");
                 }
-                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturer.Imported"));
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Imported"));
                 return RedirectToAction("List");
             }
             catch (Exception exc)

@@ -39,7 +39,26 @@ namespace Nop.Web.Framework.UI
         void AppendPageCssClassParts(string part);
         string GeneratePageCssClasses();
 
+        /// <summary>
+        /// Specify "edit page" URL
+        /// </summary>
+        /// <param name="url">URL</param>
         void AddEditPageUrl(string url);
+        /// <summary>
+        /// Get "edit page" URL
+        /// </summary>
+        /// <returns>URL</returns>
         string GetEditPageUrl();
+
+        /// <summary>
+        /// Specify system name of admin menu item that should be selected (expanded)
+        /// </summary>
+        /// <param name="systemName">System name</param>
+        void SetActiveMenuItemSystemName(string systemName);
+        /// <summary>
+        /// Get system name of admin menu item that should be selected (expanded)
+        /// </summary>
+        /// <returns>System name</returns>
+        string GetActiveMenuItemSystemName();
     }
 }

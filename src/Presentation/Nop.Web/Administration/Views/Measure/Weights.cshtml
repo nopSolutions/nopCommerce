@@ -1,6 +1,8 @@
 ﻿@{
     //page title
     ViewBag.Title = T("Admin.Configuration.Measures.Weights").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Weights");
 }
 
 @Html.AntiForgeryToken()
@@ -123,15 +125,15 @@
                                     }, {
                                         field: "IsPrimaryWeight",
                                         title: "@T("Admin.Configuration.Measures.Weights.Fields.IsPrimaryWeight")",
-                                        width: 100,
+                                        width: 150,
                                         headerAttributes: { style: "text-align:center" },
                                         attributes: { style: "text-align:center" },
-                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPrimaryWeight#.gif" />'
+                                        template: '# if(IsPrimaryWeight) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                     }, {
                                         field: "Id",
                                         title: "@T("Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight")",
                                         width: 150,
-                                        template: '<a onclick="markAsPrimaryWeight(#=Id#)" class="btn btn-default">@T("Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight")</a>'
+                                        template: '<a onclick="markAsPrimaryWeight(#=Id#)" class="btn bg-green">@T("Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight")</a>'
                                     }, {
                                         command: [
                                             {

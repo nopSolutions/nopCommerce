@@ -142,8 +142,8 @@
       <HintPath>..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="StackExchange.Redis.StrongName, Version=1.0.316.0, Culture=neutral, PublicKeyToken=c219ff1ca8c2ce46, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\StackExchange.Redis.StrongName.1.0.488\lib\net45\StackExchange.Redis.StrongName.dll</HintPath>
+    <Reference Include="StackExchange.Redis.StrongName, Version=1.1.0.0, Culture=neutral, PublicKeyToken=c219ff1ca8c2ce46, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\StackExchange.Redis.StrongName.1.1.603\lib\net45\StackExchange.Redis.StrongName.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
@@ -439,6 +439,7 @@
     <Content Include="App_Data\Localization\Installation\installation.hr-HR.xml" />
     <Content Include="App_Data\Localization\Installation\installation.hu.xml" />
     <Content Include="App_Data\Localization\Installation\installation.hy-am.xml" />
+    <Content Include="App_Data\Localization\Installation\installation.id.xml" />
     <Content Include="App_Data\Localization\Installation\installation.is.xml" />
     <Content Include="App_Data\Localization\Installation\installation.it.xml" />
     <Content Include="App_Data\Localization\Installation\installation.jp.xml" />
@@ -1091,9 +1092,11 @@
     <Content Include="Content\tinymce\skins\lightgray\skin.min.css" />
     <Content Include="Content\tinymce\themes\modern\theme.min.js" />
     <Content Include="Content\tinymce\tinymce.min.js" />
+    <Content Include="Content\typeahead\typeahead.css" />
+    <Content Include="Scripts\admin.navigation.js" />
+    <Content Include="Scripts\admin.search.js" />
     <Content Include="Scripts\adminLTE\app.js" />
     <Content Include="Scripts\adminLTE\app.min.js" />
-    <Content Include="Scripts\adminLTE\demo.js" />
     <Content Include="Scripts\bootstrap\bootstrap-3.3.4.js" />
     <Content Include="Scripts\bootstrap\bootstrap-3.3.4.min.js" />
     <Content Include="Scripts\bootstrap\npm.js" />
@@ -1677,6 +1680,7 @@
     <Content Include="Scripts\tagEditor\jquery.caret.min.js" />
     <Content Include="Scripts\tagEditor\jquery.tag-editor.js" />
     <Content Include="Scripts\tagEditor\jquery.tag-editor.min.js" />
+    <Content Include="Scripts\typeahead\typeahead.bundle.min.js" />
     <Content Include="Themes\DefaultClean\Content\css\ie8.css" />
     <Content Include="Themes\DefaultClean\Content\css\styles.css" />
     <Content Include="Themes\DefaultClean\Content\css\styles.rtl.css" />
@@ -2057,6 +2061,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Roxy_Fileman\tmp\" />
+    <Folder Include="obj\" />
     <Folder Include="Plugins\bin\" />
   </ItemGroup>
   <ItemGroup>

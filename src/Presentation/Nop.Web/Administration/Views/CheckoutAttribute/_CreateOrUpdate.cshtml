@@ -335,7 +335,7 @@
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPreSelected#.gif" />'
+                                    template: '# if(IsPreSelected) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "DisplayOrder",
                                     title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.DisplayOrder")",
@@ -355,7 +355,11 @@
                     </script>
                 </div>
                 <div class="panel-footer">
-                    <input type="submit" id="btnAddNewValue" value="@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "CheckoutAttribute", new { checkoutAttributeId = Model.Id, btnId = "btnRefresh", formId = "checkoutattribute-form" }))', 800, 500, true); return false;" class="btn btn-default" />
+                    <button type="submit" id="btnAddNewValue"
+                            onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "CheckoutAttribute", new {checkoutAttributeId = Model.Id, btnId = "btnRefresh", formId = "checkoutattribute-form"}))', 800, 500, true); return false;" 
+                            class="btn btn-primary">
+                        @T("Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew")
+                    </button>
                     <input type="submit" id="btnRefresh" style="display: none" />
                     <script type="text/javascript">
                         $(document).ready(function () {
@@ -515,21 +519,24 @@
                                                 case AttributeControlType.ImageSquares:
                                                     foreach (var value in Model.ConditionModel.ConditionAttributes[i].Values)
                                                     {
-                                                        <div>
-                                                            @Html.RadioButtonFor(model => Model.ConditionModel.ConditionAttributes[i].SelectedValueId, value.Value,
-                                                        value.Selected ? new { @checked = true } : null)
-                                                            @Html.LabelFor(model => Model.ConditionModel.ConditionAttributes[i].SelectedValueId, value.Text)
+                                                        <div class="radio">
+                                                            <label>
+                                                                @Html.RadioButtonFor(model => Model.ConditionModel.ConditionAttributes[i].SelectedValueId, value.Value,
+                                                                    value.Selected ? new {@checked = true} : null)
+                                                                @value.Text
+                                                            </label>
                                                         </div>
                                                     }
                                                     break;
                                                 case AttributeControlType.Checkboxes:
                                                     for (var j = 0; j < Model.ConditionModel.ConditionAttributes[i].Values.Count; j++)
                                                     {
-                                                        <div>
-                                                            @Html.HiddenFor(model => Model.ConditionModel.ConditionAttributes[i].Values[j].Value)
-                                                            @Html.CheckBoxFor(model => Model.ConditionModel.ConditionAttributes[i].Values[j].Selected)
-                                                            @Html.LabelFor(model => Model.ConditionModel.ConditionAttributes[i].Values[j].Selected,
-                                                        Model.ConditionModel.ConditionAttributes[i].Values[j].Text)
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                @Html.HiddenFor(model => Model.ConditionModel.ConditionAttributes[i].Values[j].Value)
+                                                                @Html.CheckBoxFor(model => Model.ConditionModel.ConditionAttributes[i].Values[j].Selected)
+                                                                @Model.ConditionModel.ConditionAttributes[i].Values[j].Text
+                                                            </label>
                                                         </div>
                                                     }
                                                     break;

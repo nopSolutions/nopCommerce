@@ -31,6 +31,7 @@ namespace Nop.Web.Framework.UI
         private readonly List<string> _headCustomParts;
         private readonly List<string> _pageCssClassParts;
         private string _editPageUrl;
+        private string _activeAdminMenuSystemName;
         #endregion
 
         #region Ctor
@@ -462,13 +463,39 @@ namespace Nop.Web.Framework.UI
         }
 
 
+        /// <summary>
+        /// Specify "edit page" URL
+        /// </summary>
+        /// <param name="url">URL</param>
         public virtual void AddEditPageUrl(string url)
         {
             _editPageUrl = url;
         }
+        /// <summary>
+        /// Get "edit page" URL
+        /// </summary>
+        /// <returns>URL</returns>
         public virtual string GetEditPageUrl()
         {
             return _editPageUrl;
+        }
+
+
+        /// <summary>
+        /// Specify system name of admin menu item that should be selected (expanded)
+        /// </summary>
+        /// <param name="systemName">System name</param>
+        public virtual void SetActiveMenuItemSystemName(string systemName)
+        {
+            _activeAdminMenuSystemName = systemName;
+        }
+        /// <summary>
+        /// Get system name of admin menu item that should be selected (expanded)
+        /// </summary>
+        /// <returns>System name</returns>
+        public virtual string GetActiveMenuItemSystemName()
+        {
+            return _activeAdminMenuSystemName;
         }
 
         #endregion

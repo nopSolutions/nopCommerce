@@ -1,10 +1,20 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Nop.Core.Plugins
 {
     public static class PluginExtensions
     {
+
+        private static readonly List<string> SupportedLogoImageExtensions = new List<string>
+        {
+            "jpg",
+            "png",
+            "gif"
+        };
+
         public static string GetLogoUrl(this PluginDescriptor pluginDescriptor, IWebHelper webHelper)
         {
             if (pluginDescriptor == null)
@@ -19,14 +29,14 @@ namespace Nop.Core.Plugins
             }
 
             var pluginDirectory = pluginDescriptor.OriginalAssemblyFile.Directory;
-            var logoLocalPath = Path.Combine(pluginDirectory.FullName, "logo.jpg");
-            if (!File.Exists(logoLocalPath))
-            {
-                return null;
-            }
 
-            string logoUrl = string.Format("{0}plugins/{1}/logo.jpg", webHelper.GetStoreLocation(), pluginDirectory.Name);
+           var logoExtension = SupportedLogoImageExtensions.FirstOrDefault(ext => File.Exists(Path.Combine(pluginDirectory.FullName, "logo." + ext)));
+
+            if (string.IsNullOrWhiteSpace(logoExtension)) return null; //No logo file was found with any of the supported extensions.
+
+            string logoUrl = string.Format("{0}plugins/{1}/logo.{2}", webHelper.GetStoreLocation(), pluginDirectory.Name, logoExtension);
             return logoUrl;
         }
+
     }
 }

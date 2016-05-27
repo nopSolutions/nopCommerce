@@ -3,6 +3,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.System.Log.ViewLogDetails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Log");
 }
 
 @using (Html.BeginForm())
@@ -11,10 +13,13 @@
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.System.Log.ViewLogDetails")
-            <small>@Html.ActionLink("(" + T("Admin.System.Log.BackToList") + ")", "List")</small>
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.System.Log.BackToList").Text, "List")</small>
         </h1>
         <div class="pull-right">
-            <span id="log-delete" class="btn btn-default">@T("Admin.Common.Delete")</span>
+            <span id="log-delete" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Common.Delete")
+            </span>
         </div>
     </div>
 
@@ -29,7 +34,7 @@
                                 @Html.NopLabelFor(model => model.LogLevel)
                             </div>
                             <div class="col-md-9">
-                                @Html.DisplayFor(model => model.LogLevel)
+                                @Html.NopDisplayFor(model => model.LogLevel)
                             </div>
                         </div>
                         <div class="form-group">
@@ -37,7 +42,7 @@
                                 @Html.NopLabelFor(model => model.ShortMessage)
                             </div>
                             <div class="col-md-9">
-                                @Html.DisplayFor(model => model.ShortMessage)
+                                @Html.NopDisplayFor(model => model.ShortMessage)
                             </div>
                         </div>
                         <div class="form-group">
@@ -45,7 +50,7 @@
                                 @Html.NopLabelFor(model => model.FullMessage)
                             </div>
                             <div class="col-md-9">
-                                @Html.DisplayFor(model => model.FullMessage)
+                                @Html.NopDisplayFor(model => model.FullMessage)
                             </div>
                         </div>
                         <div class="form-group">
@@ -53,7 +58,7 @@
                                 @Html.NopLabelFor(model => model.IpAddress)
                             </div>
                             <div class="col-md-9">
-                                @Html.DisplayFor(model => model.IpAddress)
+                                @Html.NopDisplayFor(model => model.IpAddress)
                             </div>
                         </div>
                         <div class="form-group">
@@ -72,7 +77,7 @@
                                 @Html.NopLabelFor(model => model.PageUrl)
                             </div>
                             <div class="col-md-9">
-                                @Html.DisplayFor(model => model.PageUrl)
+                                @Html.NopDisplayFor(model => model.PageUrl)
                             </div>
                         </div>
                         <div class="form-group">
@@ -80,7 +85,7 @@
                                 @Html.NopLabelFor(model => model.ReferrerUrl)
                             </div>
                             <div class="col-md-9">
-                                @Html.DisplayFor(model => model.ReferrerUrl)
+                                @Html.NopDisplayFor(model => model.ReferrerUrl)
                             </div>
                         </div>
                         <div class="form-group">
@@ -88,7 +93,7 @@
                                 @Html.NopLabelFor(model => model.CreatedOn)
                             </div>
                             <div class="col-md-9">
-                                @Html.DisplayFor(model => model.CreatedOn)
+                                @Html.NopDisplayFor(model => model.CreatedOn)
                             </div>
                         </div>
                     </div>

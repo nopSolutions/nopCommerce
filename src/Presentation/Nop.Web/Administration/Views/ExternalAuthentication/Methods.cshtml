@@ -1,6 +1,8 @@
 ﻿@{
     //page title
     ViewBag.Title = T("Admin.Configuration.ExternalAuthenticationMethods").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("External authentication methods");
 }
 
 @Html.AntiForgeryToken()
@@ -100,7 +102,7 @@
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsActive#.gif" />'
+                                    template: '# if(IsActive) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "SystemName",
                                     title: "@T("Admin.Configuration.ExternalAuthenticationMethods.Configure")",

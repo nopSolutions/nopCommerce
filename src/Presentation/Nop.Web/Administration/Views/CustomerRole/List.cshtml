@@ -1,6 +1,8 @@
 ﻿@{
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerRoles").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Customer roles");
 }
 
 @Html.AntiForgeryToken()
@@ -9,7 +11,10 @@
         @T("Admin.Customers.CustomerRoles")
     </h1>
     <div class="pull-right">
-        <a href="@Url.Action("Create")" class="btn btn-default">@T("Admin.Common.AddNew")</a>
+        <a href="@Url.Action("Create")" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
     </div>
 </div>
 
@@ -68,32 +73,32 @@
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=FreeShipping#.gif" />'
+                                    template: '# if(FreeShipping) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "TaxExempt",
                                     title: "@T("Admin.Customers.CustomerRoles.Fields.TaxExempt")",
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=TaxExempt#.gif" />'
+                                    template: '# if(TaxExempt) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "Active",
                                     title: "@T("Admin.Customers.CustomerRoles.Fields.Active")",
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Active#.gif" />'
+                                    template: '# if(Active) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "IsSystemRole",
                                     title: "@T("Admin.Customers.CustomerRoles.Fields.IsSystemRole")",
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsSystemRole#.gif" />'
+                                    template: '# if(IsSystemRole) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "PurchasedWithProductName",
                                     title: "@T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct")",
-                                    width: 100
+                                    width: 200
                                 }, {
                                     field: "Id",
                                     title: "@T("Admin.Common.Edit")",

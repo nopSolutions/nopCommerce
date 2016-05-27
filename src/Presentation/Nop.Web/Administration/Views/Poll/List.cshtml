@@ -4,6 +4,8 @@
 
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Polls").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Polls");
 }
 
 @Html.AntiForgeryToken()
@@ -12,7 +14,10 @@
         @T("Admin.ContentManagement.Polls")
     </h1>
     <div class="pull-right">
-        <a href="@Url.Action("Create")" class="btn btn-default">@T("Admin.Common.AddNew")</a>
+        <a href="@Url.Action("Create")" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
     </div>
 </div>
 
@@ -77,14 +82,14 @@
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                                    template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "ShowOnHomePage",
                                     title: "@T("Admin.ContentManagement.Polls.Fields.ShowOnHomePage")",
-                                    width: 100,
+                                    width: 150,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=ShowOnHomePage#.gif" />'
+                                    template: '# if(ShowOnHomePage) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "StartDate",
                                     title: "@T("Admin.ContentManagement.Polls.Fields.StartDate")",

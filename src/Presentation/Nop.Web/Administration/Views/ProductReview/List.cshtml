@@ -6,6 +6,8 @@
 
     //page title
     ViewBag.Title = T("Admin.Catalog.ProductReviews").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Product reviews");
 }
 
 @Html.AntiForgeryToken()
@@ -14,87 +16,105 @@
         @T("Admin.Catalog.ProductReviews")
     </h1>
     <div class="pull-right">
-        <input type="button" id="approve-selected" class="btn btn-default" value="@T("Admin.Catalog.ProductReviews.ApproveSelected")" />
-        <input type="button" id="disapprove-selected" class="btn btn-default" value="@T("Admin.Catalog.ProductReviews.DisapproveSelected")" />
-        <input type="button" id="delete-selected" class="btn btn-default" value="@T("Admin.Catalog.ProductReviews.DeleteSelected")" />
+        <button type="button" id="approve-selected" class="btn bg-green">
+            <i class="fa fa-check-square-o"></i>
+            @T("Admin.Catalog.ProductReviews.ApproveSelected")
+        </button>
+        <button type="button" id="disapprove-selected" class="btn bg-navy">
+            <i class="fa fa-minus-square-o"></i>
+            @T("Admin.Catalog.ProductReviews.DisapproveSelected")
+        </button>
+        <button type="button" id="delete-selected" class="btn bg-red">
+            <i class="fa fa-trash-o"></i>
+            @T("Admin.Catalog.ProductReviews.DeleteSelected")
+        </button>
     </div>
 </div>
 
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default">
+            <div class="panel panel-default panel-search">
                 <div class="panel-body">
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.CreatedOnFrom)
-                        </div>
-                        <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.CreatedOnFrom)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.CreatedOnTo)
-                        </div>
-                        <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.CreatedOnTo)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.SearchText)
-                        </div>
-                        <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.SearchText)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.SearchProductId)
-                        </div>
-                        <div class="col-md-9">
-                            <input type="text" class="text-box single-line form-control" id="search-product-name" autocomplete="off" />
-                            <span id="search-product-friendly-name"></span>
-                            <input type="button" id="search-product-clear" class="btn btn-default" style="display: none;" value="@T("Admin.Common.Clear")" />
-                            @Html.TextBoxFor(model => model.SearchProductId, new { autocomplete = "off", style = "display:none;" })
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.CreatedOnFrom)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopEditorFor(model => model.CreatedOnFrom)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.CreatedOnTo)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopEditorFor(model => model.CreatedOnTo)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.SearchText)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopEditorFor(model => model.SearchText)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.SearchProductId)
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" id="search-product-name" autocomplete="off"/>
+                                    <script type="text/javascript">
+                                        $(document).ready(function() {
+                                            $('#search-product-name').autocomplete({
+                                                delay: 500,
+                                                minLength: 3,
+                                                source: '@(Url.Action("ProductSearchAutoComplete"))',
+                                                select: function(event, ui) {
+                                                    $('#@Html.FieldIdFor(model => model.SearchProductId)').val(ui.item.productid);
+                                                    $('#search-product-friendly-name').text(ui.item.label);
+                                                    $('#search-product-clear').show();
+                                                    return false;
+                                                }
+                                            });
+                                        });
+                                    </script>
 
-                            <script type="text/javascript">
-                                $(document).ready(function() {
-                                    $('#search-product-name').autocomplete({
-                                        delay: 500,
-                                        minLength: 3,
-                                        source: '@(Url.Action("ProductSearchAutoComplete"))',
-                                        select: function(event, ui) {
-                                            $('#@Html.FieldIdFor(model => model.SearchProductId)').val(ui.item.productid);
-                                            $('#search-product-friendly-name').text(ui.item.label);
-                                            $('#search-product-clear').show();
+                                    <span id="search-product-friendly-name"></span>
+                                    <button type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
+                                    @Html.TextBoxFor(model => model.SearchProductId, new {autocomplete = "off", style = "display:none;"})
+
+                                    <script>
+                                        //remove button
+                                        $('#search-product-clear').click(function() {
+                                            $('#@Html.FieldIdFor(model => model.SearchProductId)').val('0');
+                                            $('#search-product-friendly-name').text('');
+                                            $('#search-product-clear').hide();
                                             return false;
-                                        }
-                                    });
-
-                                    //remove button
-                                    $('#search-product-clear').click(function() {
-                                        $('#@Html.FieldIdFor(model => model.SearchProductId)').val('0');
-                                        $('#search-product-friendly-name').text('');
-                                        $('#search-product-clear').hide();
-                                        return false;
-                                    });
-                                });
-                            </script>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.SearchStoreId)
-                        </div>
-                        <div class="col-md-9">
-                            @Html.NopDropDownListFor(model => model.SearchStoreId, Model.AvailableStores)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-9 col-md-offset-3">
-                            <input type="button" id="search-productreviews" class="btn btn-default" value="@T("Admin.Common.Search")" />
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.SearchStoreId)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopDropDownListFor(model => model.SearchStoreId, Model.AvailableStores)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <button type="button" id="search-productreviews" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -180,7 +200,7 @@
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsApproved#.gif" />'
+                                    template: '# if(IsApproved) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "CreatedOn",
                                     title: "@T("Admin.Catalog.ProductReviews.Fields.CreatedOn")",

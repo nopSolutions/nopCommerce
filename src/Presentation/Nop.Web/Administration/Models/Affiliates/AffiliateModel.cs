@@ -42,6 +42,8 @@ namespace Nop.Admin.Models.Affiliates
 
             [NopResourceDisplayName("Admin.Affiliates.Orders.OrderStatus")]
             public string OrderStatus { get; set; }
+            [NopResourceDisplayName("Admin.Affiliates.Orders.OrderStatus")]
+            public int OrderStatusId { get; set; }
 
             [NopResourceDisplayName("Admin.Affiliates.Orders.PaymentStatus")]
             public string PaymentStatus { get; set; }

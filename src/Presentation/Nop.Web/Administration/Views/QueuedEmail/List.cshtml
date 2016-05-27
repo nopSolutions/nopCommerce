@@ -6,6 +6,8 @@
 
     //page title
     ViewBag.Title = T("Admin.System.QueuedEmails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Queued emails");
 }
 
 @using (Html.BeginForm())
@@ -16,80 +18,95 @@
             @T("Admin.System.QueuedEmails")
         </h1>
         <div class="pull-right">
-            <input type="button" id="delete-selected" class="btn btn-default" value="@T("Admin.System.QueuedEmails.DeleteSelected")" />
-            <input type="submit" name="delete-all" class="btn btn-default" value="@T("Admin.System.QueuedEmails.DeleteAll")" onclick="return confirm('@T("Admin.Common.AreYouSure")'); " />
+            <button type="button" id="delete-selected" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.System.QueuedEmails.DeleteSelected")
+            </button>
+            <button type="submit" name="delete-all" class="btn bg-red" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.System.QueuedEmails.DeleteAll")
+            </button>
         </div>
     </div>
 
     <div class="content">
         <div class="form-horizontal">
             <div class="panel-group">
-                <div class="panel panel-default">
+                <div class="panel panel-default panel-search">
                     <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SearchStartDate)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SearchStartDate)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SearchEndDate)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SearchEndDate)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SearchFromEmail)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SearchFromEmail)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SearchToEmail)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SearchToEmail)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SearchLoadNotSent)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SearchLoadNotSent)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SearchMaxSentTries)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SearchMaxSentTries)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.GoDirectlyToNumber)
-                            </div>
-                            <div class="col-md-9">
-                                <div class="input-group input-group-short">
-                                    @Html.NopEditorFor(model => model.GoDirectlyToNumber)
-                                    <span class="input-group-btn">
-                                        <input type="submit" id="go-to-email-by-number" class="btn btn-info btn-flat" value="@T("Admin.Common.Go")" />
-                                    </span>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.SearchStartDate)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopEditorFor(model => model.SearchStartDate)
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-9 col-md-offset-3">
-                                <input type="button" id="search-queuedemails" class="btn btn-default" value="@T("Admin.Common.Search")" />
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.SearchEndDate)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopEditorFor(model => model.SearchEndDate)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.SearchFromEmail)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopEditorFor(model => model.SearchFromEmail)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.SearchToEmail)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopEditorFor(model => model.SearchToEmail)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.SearchLoadNotSent)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopEditorFor(model => model.SearchLoadNotSent)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.SearchMaxSentTries)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopEditorFor(model => model.SearchMaxSentTries)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.GoDirectlyToNumber)
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="input-group input-group-short">
+                                            @Html.NopEditorFor(model => model.GoDirectlyToNumber)
+                                            <span class="input-group-btn">
+                                                <button type="submit" id="go-to-email-by-number" name="go-to-email-by-number" class="btn btn-info btn-flat">
+                                                    @T("Admin.Common.Go")
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-8 col-md-offset-4">
+                                        <button type="button" id="search-queuedemails" class="btn btn-primary btn-search">
+                                            <i class="fa fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -144,7 +161,7 @@
                                         }, {
                                             field: "Id",
                                             title: "@T("Admin.System.QueuedEmails.Fields.Id")",
-                                            width: 50
+                                            width: 150
                                         }, {
                                             field: "Subject",
                                             title: "@T("Admin.System.QueuedEmails.Fields.Subject")",
@@ -160,13 +177,13 @@
                                         }, {
                                             field: "CreatedOn",
                                             title: "@T("Admin.System.QueuedEmails.Fields.CreatedOn")",
-                                            width: 100,
+                                            width: 200,
                                             type: "date",
                                             format: "{0:G}"
                                         }, {
                                             field: "DontSendBeforeDate",
                                             title: "@T("Admin.System.QueuedEmails.Fields.DontSendBeforeDate")",
-                                            width: 100,
+                                            width: 200,
                                             type: "date",
                                             format: "{0:G}"
                                         }, {
@@ -178,7 +195,7 @@
                                         }, {
                                             field: "PriorityName",
                                             title: "@T("Admin.System.QueuedEmails.Fields.Priority")",
-                                            width: 100
+                                            width: 150
                                         }, {
                                             field: "Id",
                                             title: "@T("Admin.Common.Edit")",
@@ -213,6 +230,14 @@
                                             return false;
                                         }
                                     });
+                            
+
+                                $("#@Html.FieldIdFor(model => model.GoDirectlyToNumber)").keydown(function (event) {
+                                    if (event.keyCode === 13) {
+                                        $("#go-to-email-by-number").click();
+                                        return false;
+                                    }
+                                });
 
                                 //"delete selected" button
                                 $('#delete-selected').click(function(e) {

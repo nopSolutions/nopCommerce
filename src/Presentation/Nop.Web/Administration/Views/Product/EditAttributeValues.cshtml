@@ -3,6 +3,8 @@
 @{
     //page title
     ViewBag.Title = string.Format(T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductAttributeName, Model.ProductName);
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Products");
 }
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "productattribute-form" }))
@@ -11,7 +13,7 @@
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @string.Format(T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductAttributeName, Model.ProductName)
-            <small>@Html.ActionLink("(" + T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.BackToProduct") + ")", "Edit", "Product", new {Id = Model.ProductId}, null)</small>
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.BackToProduct").Text, "Edit", "Product", new {Id = Model.ProductId}, null)</small>
         </h1>
         <div class="pull-right">
             &nbsp;
@@ -79,7 +81,7 @@
                                     {
                                         field: "AttributeValueTypeName",
                                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AttributeValueType")",
-                                        width: 150
+                                        width: 200
                                     }, {
                                         field: "Name",
                                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name")",
@@ -99,10 +101,10 @@
                                     }, {
                                         field: "IsPreSelected",
                                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.IsPreSelected")",
-                                        width: 100,
+                                        width: 150,
                                         headerAttributes: { style: "text-align:center" },
                                         attributes: { style: "text-align:center" },
-                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPreSelected#.gif" />'
+                                        template: '# if(IsPreSelected) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                     }, {
                                         field: "PictureThumbnailUrl",
                                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture")",
@@ -111,7 +113,7 @@
                                     }, {
                                         field: "DisplayOrder",
                                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.DisplayOrder")",
-                                        width: 100
+                                        width: 150
                                     }, {
                                         field: "Id",
                                         title: "@T("Admin.Common.Edit")",
@@ -128,7 +130,9 @@
                     </script>
                 </div>
                 <div class="panel-footer">
-                    <input type="submit" id="btnAddNewValue" value="@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "Product", new { productAttributeMappingId = Model.ProductAttributeMappingId, btnId = "btnRefresh", formId = "productattribute-form" }))', 800, 750, true); return false;" class="btn btn-default" />
+                    <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "Product", new {productAttributeMappingId = Model.ProductAttributeMappingId, btnId = "btnRefresh", formId = "productattribute-form"}))', 800, 750, true); return false;" class="btn btn-primary">
+                        @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AddNew")
+                    </button>
                     <input type="submit" id="btnRefresh" style="display: none" />
                     <script type="text/javascript">
                         $(document).ready(function () {

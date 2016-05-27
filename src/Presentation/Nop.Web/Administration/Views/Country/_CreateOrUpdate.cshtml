@@ -224,7 +224,7 @@
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                                    template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "DisplayOrder",
                                     title: "@T("Admin.Configuration.Countries.States.Fields.DisplayOrder")",
@@ -245,7 +245,11 @@
                 </div>
                 <div class="panel-footer">
                     <div width="100%">
-                        <input type="submit" id="btnAddNewState" value="@T("Admin.Configuration.Countries.States.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("StateCreatePopup", "Country", new { countryId = Model.Id, btnId = "btnRefresh", formId = "country-form" }))', 800, 450, true); return false;" class="btn btn-default" />
+                        <button type="submit" id="btnAddNewState"
+                                onclick="javascript:OpenWindow('@(Url.Action("StateCreatePopup", "Country", new {countryId = Model.Id, btnId = "btnRefresh", formId = "country-form"}))', 800, 450, true); return false;"
+                                class="btn btn-primary">
+                            @T("Admin.Configuration.Countries.States.AddNew")
+                        </button>
                         <input type="submit" id="btnRefresh" style="display: none" />
                         <script type="text/javascript">
                             $(document).ready(function () {

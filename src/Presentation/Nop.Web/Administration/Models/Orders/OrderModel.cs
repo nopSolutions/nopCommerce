@@ -132,6 +132,8 @@ namespace Nop.Admin.Models.Orders
         //payment info
         [NopResourceDisplayName("Admin.Orders.Fields.PaymentStatus")]
         public string PaymentStatus { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.PaymentStatus")]
+        public int PaymentStatusId { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.PaymentMethod")]
         public string PaymentMethod { get; set; }
 
@@ -169,6 +171,8 @@ namespace Nop.Admin.Models.Orders
         public bool PickUpInStore { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.ShippingStatus")]
         public string ShippingStatus { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.ShippingStatus")]
+        public int ShippingStatusId { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.ShippingAddress")]
         public AddressModel ShippingAddress { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.ShippingMethod")]
@@ -421,19 +425,19 @@ namespace Nop.Admin.Models.Orders
             {
                 public bool IsGiftCard { get; set; }
 
-                [NopResourceDisplayName("Products.GiftCard.RecipientName")]
+                [NopResourceDisplayName("Admin.GiftCards.Fields.RecipientName")]
                 [AllowHtml]
                 public string RecipientName { get; set; }
-                [NopResourceDisplayName("Products.GiftCard.RecipientEmail")]
+                [NopResourceDisplayName("Admin.GiftCards.Fields.RecipientEmail")]
                 [AllowHtml]
                 public string RecipientEmail { get; set; }
-                [NopResourceDisplayName("Products.GiftCard.SenderName")]
+                [NopResourceDisplayName("Admin.GiftCards.Fields.SenderName")]
                 [AllowHtml]
                 public string SenderName { get; set; }
-                [NopResourceDisplayName("Products.GiftCard.SenderEmail")]
+                [NopResourceDisplayName("Admin.GiftCards.Fields.SenderEmail")]
                 [AllowHtml]
                 public string SenderEmail { get; set; }
-                [NopResourceDisplayName("Products.GiftCard.Message")]
+                [NopResourceDisplayName("Admin.GiftCards.Fields.Message")]
                 [AllowHtml]
                 public string Message { get; set; }
 

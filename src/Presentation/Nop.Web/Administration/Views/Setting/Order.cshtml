@@ -3,6 +3,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Order").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Order settings");
 }
 
 @using (Html.BeginForm())
@@ -13,7 +15,10 @@
             @T("Admin.Configuration.Settings.Order")
         </h1>
         <div class="pull-right">
-            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")"/>
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
         </div>
     </div>
 
@@ -255,11 +260,14 @@
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
-                <p>
-                    @T("Admin.Configuration.Settings.Order.ReturnRequestsDescription1")
-                    <br />
-                    @T("Admin.Configuration.Settings.Order.ReturnRequestsDescription2")
-                </p>   
+                <ul class="common-list">
+                    <li>
+                        @T("Admin.Configuration.Settings.Order.ReturnRequestsDescription1")
+                    </li>
+                    <li>
+                        @T("Admin.Configuration.Settings.Order.ReturnRequestsDescription2")
+                    </li>
+                </ul>   
                 <div class="form-group">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.ReturnRequestsEnabled_OverrideForStore, model => model.ReturnRequestsEnabled, Model.ActiveStoreScopeConfiguration)

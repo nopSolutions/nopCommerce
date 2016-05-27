@@ -2905,7 +2905,7 @@ namespace Nop.Admin.Controllers
             {
                 var bytes = _exportManager.ExportProductsToXlsx(products);
                  
-                return File(bytes, MimeTypes.TextXls, "products.xlsx");
+                return File(bytes, MimeTypes.TextXlsx, "products.xlsx");
             }
             catch (Exception exc)
             {
@@ -2937,7 +2937,7 @@ namespace Nop.Admin.Controllers
 
             var bytes = _exportManager.ExportProductsToXlsx(products);
               
-            return File(bytes, MimeTypes.TextXls, "products.xlsx");
+            return File(bytes, MimeTypes.TextXlsx, "products.xlsx");
         }
 
         [HttpPost]

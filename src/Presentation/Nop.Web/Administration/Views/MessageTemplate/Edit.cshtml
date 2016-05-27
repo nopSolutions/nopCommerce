@@ -3,6 +3,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.ContentManagement.MessageTemplates.EditMessageTemplateDetails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Message templates");
 }
 
 @using (Html.BeginForm())
@@ -11,13 +13,25 @@
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.ContentManagement.MessageTemplates.EditMessageTemplateDetails") - @Model.Name 
-            <small>@Html.ActionLink("(" + T("Admin.ContentManagement.MessageTemplates.BackToList") + ")", "List")</small>
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.ContentManagement.MessageTemplates.BackToList").Text, "List")</small>
         </h1>
         <div class="pull-right">
-            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
-            <input type="submit" name="save-continue" class="btn btn-default" value="@T("Admin.Common.SaveContinue")" />
-            <input type="submit" name="message-template-copy" class="btn btn-default" value="@T("Admin.ContentManagement.MessageTemplates.Copy")"  onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
-            <span id="message-template-delete" class="btn btn-default">@T("Admin.Common.Delete")</span>
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <button type="submit" name="message-template-copy" class="btn bg-green" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+                <i class="fa fa-clone"></i>
+                @T("Admin.ContentManagement.MessageTemplates.Copy")
+            </button>
+            <span id="message-template-delete" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Common.Delete")
+            </span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)

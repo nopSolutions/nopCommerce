@@ -3,6 +3,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.News").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("News settings");
 }
 
 @using (Html.BeginForm())
@@ -13,7 +15,10 @@
             @T("Admin.Configuration.Settings.News")
         </h1>
         <div class="pull-right">
-            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
         </div>
     </div>
 
