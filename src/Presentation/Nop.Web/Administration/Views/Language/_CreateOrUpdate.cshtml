@@ -394,14 +394,14 @@
 
                         $("".concat("#@Html.FieldIdFor(model => model.Search.SearchResourceName),",
                             "#@Html.FieldIdFor(model => model.Search.SearchResourceValue)")).keydown(function(event) {
-                                if (event.keyCode === 13) {
-                                    $("#search-resources").click();
-                                    return false;
-                                }
-                            });
+                            if (event.keyCode === 13) {
+                                $("#search-resources").click();
+                                return false;
+                            }
+                        });
                     </script>
                 </div>
             </div>
-                        }
+        }
     </div>
 }
