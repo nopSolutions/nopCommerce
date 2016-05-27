@@ -1,7 +1,7 @@
 namespace Nop.Core.Domain.Customers
 {
     /// <summary>
-    /// Represents the customer name fortatting enumeration
+    /// Represents the customer name formatting enumeration
     /// </summary>
     public enum CustomerNameFormat
     {
