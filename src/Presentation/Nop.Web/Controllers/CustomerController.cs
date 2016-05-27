@@ -1228,7 +1228,7 @@ namespace Nop.Web.Controllers
                 _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id, 0, null, 0, 1).Count == 0;
             model.HideDownloadableProducts = _customerSettings.HideDownloadableProductsTab;
             model.HideBackInStockSubscriptions = _customerSettings.HideBackInStockSubscriptionsTab;
-
+            model.HideMyProductReviews = _customerSettings.HideMyProductReviewsTab;
             model.SelectedTab = (CustomerNavigationEnum)selectedTabId;
 
             return PartialView(model);

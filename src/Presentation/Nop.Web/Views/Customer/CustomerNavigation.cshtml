@@ -77,6 +77,16 @@
                                                                                  else
                                                                                  {<text>inactive</text>}">@T("Account.ForumSubscriptions")</a></li>
             }
+            @if (!Model.HideMyProductReviews)
+            {
+                <li>
+                    <a href="@Url.RouteUrl("MyProductReviews")" class="@if (Model.SelectedTab == CustomerNavigationEnum.MyProductReviews)
+                                                                                   {<text>active</text>}
+                                                                                   else
+                                                                                   {<text>inactive</text>}">@T("Account.MyProductReviews")</a>
+                                                                            </li>
+            }
+
             @Html.Widget("account_navigation_after")
         </ul>
     </div>

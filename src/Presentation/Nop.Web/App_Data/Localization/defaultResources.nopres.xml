@@ -471,6 +471,9 @@
   <LocaleResource Name="Account.MyAccount">
     <Value>My account</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.MyProductReviews">
+    <Value>My product reviews</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Navigation">
     <Value>My account</Value>
   </LocaleResource>
@@ -12980,6 +12983,21 @@
   </LocaleResource>
   <LocaleResource Name="Messages.Order.TotalDiscount">
     <Value>Discount:</Value>
+  </LocaleResource>
+  <LocaleResource Name="MyProductReviews.ProductName">
+    <Value>Product name</Value>
+  </LocaleResource>
+  <LocaleResource Name="MyProductReviews.DateReviewed">
+    <Value>Date reviewed</Value>
+  </LocaleResource>
+  <LocaleResource Name="MyProductReviews.ApprovalStatus">
+    <Value>Approval status</Value>
+  </LocaleResource>
+  <LocaleResource Name="MyProductReviews.ApprovalStatus.Approved">
+    <Value>Approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="MyProductReviews.ApprovalStatus.Pending">
+    <Value>Pending</Value>
   </LocaleResource>
   <LocaleResource Name="News">
     <Value>News</Value>

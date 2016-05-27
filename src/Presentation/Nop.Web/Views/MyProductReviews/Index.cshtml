@@ -1,0 +1,78 @@
+﻿@model MyProductReviewsListModel
+@using Nop.Web.Models.MyProductReviews;
+
+@using Nop.Web.Models.Customer;
+@using Nop.Core;
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
+}
+@section left
+{
+    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.Info })
+}
+
+<div class="page account-page my-product-reviews-list-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Account.MyProductReviews")</h1>
+    </div>
+    <div class="page-body">
+
+
+        @if (Model.ProductReviews.Count > 0)
+        {
+            using (Html.BeginRouteForm("MyProductReviews", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="table-wrapper">
+                    <table class="data-table" id="my-product-reviews-table">
+                        <colgroup>
+                            <col />
+                            <col />
+                            <col />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th class="productname">
+                                    @T("MyProductReviews.ProductName")
+                                </th>
+                                <th class="datereviewed">
+                                    @T("MyProductReviews.DateReviewed")
+                                </th>
+                                <th class="approvalstatus">
+                                    @T("MyProductReviews.ApprovalStatus")
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.ProductReviews.Count; i++)
+                    {
+                        var item = Model.ProductReviews[i];
+                                <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                                    <td class="productname">
+                                        @item.ProductName
+                                    </td>
+                                    <td class="datereviewed">
+                                        @item.DateReviewed
+                                    </td>
+                                    <td class="approvalstatus">
+                                        @item.CurrentApprovalStatus
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                var pager = Html.Pager(Model.PagerModel);
+                if (!MvcHtmlString.IsNullOrEmpty(pager))
+                {
+                    <div class="pager">
+                        @pager
+                    </div>
+                }
+            }
+        }
+    </div>
+</div>

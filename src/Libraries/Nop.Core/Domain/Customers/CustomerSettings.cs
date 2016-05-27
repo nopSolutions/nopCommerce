@@ -246,6 +246,11 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public bool AcceptPrivacyPolicyEnabled { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether 'My product reviews' is enabled
+        /// </summary>
+        public bool HideMyProductReviewsTab { get; set; }
+
         #endregion
     }
 }
