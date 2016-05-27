@@ -670,49 +670,6 @@ ul.common-list {
     padding-left: 20px;
 }
 
-.sidebar-menu {
-    overflow: visible;
-}
-
-.sidebar-mini .sidebar-menu > li:not(.active):hover > a > span:not(.pull-right),
-.sidebar-mini .sidebar-menu > li:not(.active):hover > .treeview-menu {
-    display: block !important;
-    position: absolute;
-    width: 200px;
-    left: 50px;
-}
-
-.sidebar-mini .sidebar-menu > li:not(.active):hover > a > span:not(.pull-right) {
-    width: 180px;
-}
-
-.sidebar-mini .sidebar-menu > li:not(.active):hover > a > span {
-    top: 0;
-    margin-left: -12px;
-    padding: 12px 5px 12px 0;
-    background-color: inherit;
-}
-
-.sidebar-mini .sidebar-menu > li:not(.active):hover > .treeview-menu {
-    top: 0;
-    margin-left: 0;
-    left: 185px;
-    z-index: 100;
-    padding: 5px 0;
-}
-
-.sidebar-mini.sidebar-collapse .sidebar-menu>li:hover>.treeview-menu {
-    top: 44px;
-    left: 50px;
-    width: 200px;
-}
-
-.sidebar-mini.sidebar-collapse .sidebar-menu>li:hover>a>span:not(.pull-right) {
-    width: 209px;
-    padding-left: 25px;
-    margin-left: -12px;
-}
-
 @media (max-width: 1200px) {
     .form-horizontal img.ico-help {
          display: none;
