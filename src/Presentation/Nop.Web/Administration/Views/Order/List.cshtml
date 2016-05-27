@@ -395,12 +395,19 @@
                                 $("".concat("#@Html.FieldIdFor(model => model.BillingEmail),",
                                     "#@Html.FieldIdFor(model => model.BillingLastName),",
                                     "#@Html.FieldIdFor(model => model.OrderNotes),",
-                                    "#@Html.FieldIdFor(model => model.GoDirectlyToNumber)")).keydown(function (event) {
+                                    "#@Html.FieldIdFor(model => model.OrderGuid)")).keydown(function (event) {
                                         if (event.keyCode === 13) {
-                                            $("#go-to-order-by-number").click();
+                                            $("#search-orders").click();
                                             return false;
                                         }
                                     });
+
+                                $("#@Html.FieldIdFor(model => model.GoDirectlyToNumber)").keydown(function(event) {
+                                    if (event.keyCode === 13) {
+                                        $("#go-to-order-by-number").click();
+                                        return false;
+                                    }
+                                });
 
                                 $('#mastercheckbox').click(function () {
                                     $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
