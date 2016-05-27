@@ -1175,7 +1175,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 byte[] bytes = _exportManager.ExportOrdersToXlsx(orders);
-                return File(bytes, MimeTypes.TextXls, "orders.xlsx");
+                return File(bytes, MimeTypes.TextXlsx, "orders.xlsx");
             }
             catch (Exception exc)
             {
@@ -1207,7 +1207,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 byte[] bytes = _exportManager.ExportOrdersToXlsx(orders);
-                return File(bytes, MimeTypes.TextXls, "orders.xlsx");
+                return File(bytes, MimeTypes.TextXlsx, "orders.xlsx");
             }
             catch (Exception exc)
             {
