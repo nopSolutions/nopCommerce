@@ -229,6 +229,14 @@
                                         }
                                     });
                             
+
+                                $("#@Html.FieldIdFor(model => model.GoDirectlyToNumber)").keydown(function (event) {
+                                    if (event.keyCode === 13) {
+                                        $("#go-to-email-by-number").click();
+                                        return false;
+                                    }
+                                });
+
                                 //"delete selected" button
                                 $('#delete-selected').click(function(e) {
                                     e.preventDefault();
