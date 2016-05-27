@@ -18,9 +18,14 @@
             @T("Admin.Promotions.NewsLetterSubscriptions")
         </h1>
         <div class="pull-right">
-            <input type="submit" name="exportcsv" class="btn bg-green" value="@T("Admin.Common.ExportToCsv")" />
-            <button type="button" name="importcsv" class="btn bg-olive" data-toggle="modal" data-target="#importcsv-window">@T("Admin.Common.ImportFromCsv")</button>
-        </div>
+            <button type="submit" name="exportcsv" class="btn bg-green">
+                <i class="fa fa-exchange"></i>
+                @T("Admin.Common.ExportToCsv")
+            </button>
+            <button type="button" name="importcsv" class="btn bg-olive" data-toggle="modal" data-target="#importcsv-window">
+                <i class="fa fa-exchange"></i>
+                @T("Admin.Common.ImportFromCsv")
+            </button>        </div>
     </div>
 
     <div class="content">
