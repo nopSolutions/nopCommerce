@@ -1,13 +1,18 @@
 ﻿@model ShipmentModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Orders.Shipments.ViewDetails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Shipments");
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
+
     <script type="text/javascript">
-        $(document).ready(function () {
+        $(document).ready(function() {
             toggleShippedDate(false);
             toggleDeliveryDate(false);
         });
@@ -19,8 +24,7 @@
                 $('#btnEditShippedDate').hide();
                 $('#btnSaveShippedDate').show();
                 $('#btnCancelShippedDate').show();
-            }
-            else {
+            } else {
                 $('#lblShippedDate').show();
                 $('#divShippedDate').hide();
                 $('#btnEditShippedDate').show();
@@ -36,8 +40,7 @@
                 $('#btnEditDeliveryDate').hide();
                 $('#btnSaveDeliveryDate').show();
                 $('#btnCancelDeliveryDate').show();
-            }
-            else {
+            } else {
                 $('#lblDeliveryDate').show();
                 $('#divDeliveryDate').hide();
                 $('#btnEditDeliveryDate').show();
@@ -46,43 +49,47 @@
             }
         }
     </script>
+
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Orders.Shipments.ViewDetails") - @Model.Id
-            <small>@Html.ActionLink("(" + T("Admin.Orders.Shipments.BackToOrder") + ")", "Edit", new { id = Model.OrderId })</small>
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Orders.Shipments.BackToOrder").Text, "Edit", new { id = Model.OrderId })</small>
         </h1>
         <div class="pull-right">
-            <a href="@Url.Action("PdfPackagingSlip", new {shipmentId = Model.Id})" class="btn btn-default">@T("Admin.Orders.Shipments.PrintPackagingSlip")</a>
-            <span id="shipment-delete" class="btn btn-default">@T("Admin.Common.Delete")</span>
+            <a href="@Url.Action("PdfPackagingSlip", new {shipmentId = Model.Id})" class="btn bg-purple">
+                <i class="fa fa-download"></i>
+                @T("Admin.Orders.Shipments.PrintPackagingSlip")
+            </a>
+            <span id="shipment-delete" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Common.Delete")
+            </span>
         </div>
     </div>
 
     <div class="content">
         @Html.ValidationSummary(false)
-
         <div class="form-horizontal">
             <div class="panel-group">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="form-group">
-                            <div class="col-sm-3">
+                            <div class="col-md-3">
                                 @Html.NopLabelFor(model => model.OrderId)
                             </div>
-                            <div class="col-sm-9">
-                                <p>
-                                    <a href="@Url.Action("Edit", "Order", new {Id = Model.OrderId})">@Model.OrderId - @T("Admin.Common.View")</a>
-                                </p>
+                            <div class="col-md-9">
+                                <a href="@Url.Action("Edit", "Order", new {Id = Model.OrderId})">@Model.OrderId - @T("Admin.Common.View")</a>
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-3">
+                            <div class="col-md-3">
                                 @Html.NopLabelFor(model => model.TrackingNumber)
                             </div>
-                            <div class="col-sm-9">
+                            <div class="col-md-9">
                                 <div class="input-group">
                                     @Html.NopEditorFor(model => model.TrackingNumber)
                                     <span class="input-group-btn">
-                                        <input type="submit" name="settrackingnumber" value="@T("Admin.Orders.Shipments.TrackingNumber.Button")" class="btn btn-info btn-flat" />
+                                        <input type="submit" name="settrackingnumber" value="@T("Admin.Orders.Shipments.TrackingNumber.Button")" class="btn btn-info" />
                                         @if (!string.IsNullOrEmpty(Model.TrackingNumberUrl))
                                         {
                                             <a href="@Model.TrackingNumberUrl" target="_blank" class="tracking-url">@T("Admin.Orders.Shipments.TrackingNumber.ViewOnline")</a>
@@ -92,33 +99,35 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-3">
+                            <div class="col-md-3">
                                 @Html.NopLabelFor(model => model.AdminComment)
                             </div>
-                            <div class="col-sm-9">
+                            <div class="col-md-9">
                                 <div class="input-group">
                                     @Html.NopEditorFor(model => model.AdminComment)
                                     <span class="input-group-btn">
-                                        <input type="submit" name="setadmincomment" value="@T("Admin.Orders.Shipments.AdminComment.Button")" class="btn btn-info btn-flat" />
+                                        <input type="submit" name="setadmincomment" value="@T("Admin.Orders.Shipments.AdminComment.Button")" class="btn btn-info" />
                                     </span>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-3">
+                            <div class="col-md-3">
                                 @Html.NopLabelFor(model => model.TotalWeight)
                             </div>
-                            <div class="col-sm-9">
-                                <p>@Model.TotalWeight</p>
+                            <div class="col-md-9">
+                                @Html.NopDisplayFor(model => model.TotalWeight)
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-3">
+                            <div class="col-md-3">
                                 @Html.NopLabelFor(model => model.ShippedDate)
                             </div>
-                            <div class="col-sm-9">
+                            <div class="col-md-9">
                                 <div class="input-group input-group-short">
-                                    <p id="lblShippedDate" class="input-group-text">@Model.ShippedDate</p>
+                                    <div id="lblShippedDate" class="input-group-text">
+                                        @Html.NopDisplayFor(model => model.ShippedDate)
+                                    </div>
                                     @if (Model.ShippedDateUtc.HasValue)
                                     {
                                         <div id="divShippedDate" style="display: inline-block;">
@@ -129,26 +138,28 @@
                                     <div class="input-group-btn">
                                         @if (Model.CanShip)
                                         {
-                                            <input type="submit" name="setasshipped" value="@T("Admin.Orders.Shipments.ShippedDate.Button")" id="setasshipped" class="btn btn-info" />
+                                            <input type="submit" name="setasshipped" value="@T("Admin.Orders.Shipments.ShippedDate.Button")" id="setasshipped" class="btn btn-info btn-flat" />
                                         }
                                         @if (Model.ShippedDateUtc.HasValue)
                                         {
-                                            <input type="submit" value="@T("Admin.Common.Edit")" onclick="oggleShippedDate(true);return false; " id="btnEditShippedDate" class="btn bg-light-blue" />
-                                            <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveShippedDate" name="saveshippeddate" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                                            <input type="submit" value="@T("Admin.Common.Cancel")" onclick=" toggleShippedDate(false);return false; " id="btnCancelShippedDate" class="btn bg-teal" />
+                                            <input type="submit" value="@T("Admin.Common.Edit")" onclick="toggleShippedDate(true);return false;" id="btnEditShippedDate" class="btn btn-primary" />
+                                            <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveShippedDate" name="saveshippeddate" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                                            <input type="submit" value="@T("Admin.Common.Cancel")" onclick="toggleShippedDate(false);return false;" id="btnCancelShippedDate" class="btn bg-teal" />
                                         }
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-3">
+                            <div class="col-md-3">
                                 @Html.NopLabelFor(model => model.DeliveryDate)
                             </div>
 
-                            <div class="col-sm-9">
+                            <div class="col-md-9">
                                 <div class="input-group input-group-short">
-                                    <p id="lblDeliveryDate" class="input-group-text">@Model.DeliveryDate</p>
+                                    <div id="lblDeliveryDate" class="input-group-text">
+                                        @Html.NopDisplayFor(model => model.DeliveryDate)
+                                    </div>
                                     @if (Model.DeliveryDateUtc.HasValue)
                                     {
                                         <div id="divDeliveryDate" style="display: inline-block;">
@@ -159,14 +170,14 @@
                                     <div class="input-group-btn">
                                         @if (Model.CanDeliver)
                                         {
-                                            <input type="submit" name="setasdelivered" value="@T("Admin.Orders.Shipments.DeliveryDate.Button")" id="setasdelivered" class="btn btn-info" />
+                                            <input type="submit" name="setasdelivered" value="@T("Admin.Orders.Shipments.DeliveryDate.Button")" id="setasdelivered" class="btn btn-info btn-flat" />
                                         }
                                         @if (Model.DeliveryDateUtc.HasValue)
                                         {
 
-                                            <input type="submit" value="@T("Admin.Common.Edit")" onclick=" toggleDeliveryDate(true);return false; " id="btnEditDeliveryDate" class="btn bg-light-blue" />
-                                            <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveDeliveryDate" name="savedeliverydate" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                                            <input type="submit" value="@T("Admin.Common.Cancel")" onclick=" toggleDeliveryDate(false);return false; " id="btnCancelDeliveryDate" class="btn bg-teal" />
+                                            <input type="submit" value="@T("Admin.Common.Edit")" onclick="toggleDeliveryDate(true);return false;" id="btnEditDeliveryDate" class="btn btn-primary" />
+                                            <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveDeliveryDate" name="savedeliverydate" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                                            <input type="submit" value="@T("Admin.Common.Cancel")" onclick="toggleDeliveryDate(false);return false;" id="btnCancelDeliveryDate" class="btn bg-teal" />
                                         }
                                     </div>
                                 </div>

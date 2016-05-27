@@ -1,7 +1,10 @@
 ﻿@{
     //page title
     ViewBag.Title = T("Admin.System.Templates.Category").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Category templates");
 }
+
 @Html.AntiForgeryToken()
 <div class="content-header clearfix">
     <h1 class="pull-left">

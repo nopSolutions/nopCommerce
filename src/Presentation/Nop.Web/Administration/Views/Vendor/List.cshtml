@@ -1,40 +1,51 @@
 ﻿@model VendorListModel
+
 @{
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
     //page title
     ViewBag.Title = T("Admin.Vendors").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Vendors");
 }
+
 @Html.AntiForgeryToken()
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Vendors")
     </h1>
     <div class="pull-right">
-        <a href="@Url.Action("Create")" class="btn btn-default">@T("Admin.Common.AddNew")</a>
+        <a href="@Url.Action("Create")" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
     </div>
 </div>
 
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default">
+            <div class="panel panel-default panel-search">
                 <div class="panel-body">
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SearchName)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.SearchName)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            &nbsp;
-                        </div>
-                        <div class="col-sm-9">
-                            <input type="button" id="search-vendors" class="btn btn-default" value="@T("Admin.Common.Search")" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.SearchName)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopEditorFor(model => model.SearchName)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <button type="button" id="search-vendors" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -42,7 +53,6 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="vendors-grid"></div>
 
                     <script>
@@ -96,7 +106,7 @@
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Active#.gif" />'
+                                    template: '# if(Active) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "Id",
                                     title: "@T("Admin.Common.Edit")",

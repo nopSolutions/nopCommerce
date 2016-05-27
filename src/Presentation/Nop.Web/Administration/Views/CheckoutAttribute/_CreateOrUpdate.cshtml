@@ -1,5 +1,4 @@
 ﻿@model CheckoutAttributeModel
-
 @using Nop.Core.Domain.Catalog;
 
 @Html.ValidationSummary(false)
@@ -7,73 +6,52 @@
 
 <script>
     $(document).ready(function() {
-        $("#checkoutattribute-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
+        bindBootstrapTabSelectEvent('checkoutattribute-edit');
     });
 </script>
 
 <div class="content">
     <div class="form-horizontal">
-        <div id="checkoutattribute-edit">
-            <ul>
-                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Attributes.CheckoutAttributes.Info")
-                </li>
-                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Attributes.CheckoutAttributes.Values")
-                </li>
-                <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Attributes.CheckoutAttributes.Stores")
-                </li>
+        <div id="checkoutattribute-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Catalog.Attributes.CheckoutAttributes.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-values", @T("Admin.Catalog.Attributes.CheckoutAttributes.Values"))
+                @Html.RenderBootstrapTabHeader("tab-stores", @T("Admin.Catalog.Attributes.CheckoutAttributes.Stores"))
                 @if (Model.ConditionAllowed)
                 {
-                    <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
-                        @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition")
-                    </li>
+                    @Html.RenderBootstrapTabHeader("tab-condition", @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition"))
                 }
             </ul>
-            <div>
-                @TabInfo()
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-values", @TabValues())
+                @Html.RenderBootstrapTabContent("tab-stores", @TabStores())
+                @if (Model.ConditionAllowed)
+                {
+                    @Html.RenderBootstrapTabContent("tab-condition", @TabCondition())
+                }
             </div>
-            <div>
-                @TabValues()
-            </div>
-            <div>
-                @TabStores()
-            </div>
-            @if (Model.ConditionAllowed)
-            {
-                <div>
-                    @TabCondition()
-                </div>
-            }
         </div>
     </div>
 </div>
 
 @{
-            //custom tabs
-            var eventMessage = new AdminTabStripCreated(this.Html, "checkoutattribute-edit");
-            EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
-            foreach (var eventBlock in eventMessage.BlocksToRender)
-            {
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "checkoutattribute-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
         @eventBlock
     }
 }
 
-@*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
-        {
+{
     <script type="text/javascript">
-        $(document).ready(function () {
+        $(document).ready(function() {
 
             $("#@Html.FieldIdFor(model => model.IsTaxExempt)").click(toggleTax);
             $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").change(toggleAttributeControlType);
@@ -111,7 +89,7 @@
             $('#pnlValidationFileAllowedExtensions').show();
             $('#pnlDefaultValue').hide();
         } else {
-                    $('#pnlValidationMinLength').hide();
+                $('#pnlValidationMinLength').hide();
         $('#pnlValidationMaxLength').hide();
         $('#pnlValidationFileMaximumSize').hide();
         $('#pnlValidationFileAllowedExtensions').hide();
@@ -121,96 +99,97 @@
     </script>
 
     <div class="panel-group">
-        <div class="panel panel-default">
-            @(Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("checkoutattribute-localized",
-            @<div class="panel-body">
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.Locales[item].Name)
+        @(Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("checkoutattribute-localized",
+            @<div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Locales[item].Name)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Locales[item].Name)
+                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                        </div>
                     </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.Locales[item].Name)
-                        @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Locales[item].TextPrompt)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Locales[item].TextPrompt)
+                            @Html.ValidationMessageFor(model => model.Locales[item].TextPrompt)
+                        </div>
                     </div>
+                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.Locales[item].TextPrompt)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.Locales[item].TextPrompt)
-                        @Html.ValidationMessageFor(model => model.Locales[item].TextPrompt)
-                    </div>
-                </div>
-                @Html.HiddenFor(model => model.Locales[item].LanguageId)
             </div>
     ,
-            @<div class="panel-body">
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.Name)
+            @<div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Name)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Name)
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
                     </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.Name)
-                        @Html.ValidationMessageFor(model => model.Name)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.TextPrompt)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.TextPrompt)
-                        @Html.ValidationMessageFor(model => model.TextPrompt)
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.TextPrompt)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.TextPrompt)
+                            @Html.ValidationMessageFor(model => model.TextPrompt)
+                        </div>
                     </div>
                 </div>
             </div>
     ))
-        </div>
-
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IsRequired)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.IsRequired)
                         @Html.ValidationMessageFor(model => model.IsRequired)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.ShippableProductRequired)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.ShippableProductRequired)
                         @Html.ValidationMessageFor(model => model.ShippableProductRequired)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IsTaxExempt)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.IsTaxExempt)
                         @Html.ValidationMessageFor(model => model.IsTaxExempt)
                     </div>
                 </div>
                 <div class="form-group" id="pnlTaxCategory">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.TaxCategoryId)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopDropDownListFor(model => model.TaxCategoryId, Model.AvailableTaxCategories)
                         @Html.ValidationMessageFor(model => model.TaxCategoryId)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AttributeControlTypeId)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @{
                             var attributeControlTypes = ((AttributeControlType)Model.AttributeControlTypeId)
                                 .ToSelectList(valuesToExclude:
@@ -222,55 +201,55 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.DisplayOrder)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.DisplayOrder)
                         @Html.ValidationMessageFor(model => model.DisplayOrder)
                     </div>
                 </div>
                 <div class="form-group" id="pnlValidationMinLength">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.ValidationMinLength)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.ValidationMinLength)
                         @Html.ValidationMessageFor(model => model.ValidationMinLength)
                     </div>
                 </div>
                 <div class="form-group" id="pnlValidationMaxLength">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.ValidationMaxLength)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.ValidationMaxLength)
                         @Html.ValidationMessageFor(model => model.ValidationMaxLength)
                     </div>
                 </div>
                 <div class="form-group" id="pnlValidationFileAllowedExtensions">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.ValidationFileAllowedExtensions)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.ValidationFileAllowedExtensions)
                         @Html.ValidationMessageFor(model => model.ValidationFileAllowedExtensions)
                     </div>
                 </div>
                 <div class="form-group" id="pnlValidationFileMaximumSize">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.ValidationFileMaximumSize)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.ValidationFileMaximumSize)
                         @Html.ValidationMessageFor(model => model.ValidationFileMaximumSize)
                     </div>
                 </div>
                 <div class="form-group" id="pnlDefaultValue">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.DefaultValue)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.DefaultValue)
                         @Html.ValidationMessageFor(model => model.DefaultValue)
                     </div>
@@ -279,6 +258,7 @@
         </div>
     </div>
 }
+
 @helper TabValues()
 {
     <div class="panel-group">
@@ -355,7 +335,7 @@
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPreSelected#.gif" />'
+                                    template: '# if(IsPreSelected) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "DisplayOrder",
                                     title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.DisplayOrder")",
@@ -364,7 +344,7 @@
                                     field: "Id",
                                     title: "@T("Admin.Common.Edit")",
                                     width: 100,
-                                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/CheckoutAttribute/ValueEditPopup/")#=Id#?btnId=btnRefresh&formId=checkoutattribute-form', 800, 350, true); return false;\" class='btn btn-default' />"
+                                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/CheckoutAttribute/ValueEditPopup/")#=Id#?btnId=btnRefresh&formId=checkoutattribute-form', 800, 500, true); return false;\" class='btn btn-default' />"
                                 }, {
                                     command: {name: "destroy", text: "@T("Admin.Common.Delete")"},
                                     title: "@T("Admin.Common.Delete")",
@@ -375,7 +355,7 @@
                     </script>
                 </div>
                 <div class="panel-footer">
-                    <input type="submit" id="btnAddNewValue" value="@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "CheckoutAttribute", new { checkoutAttributeId = Model.Id, btnId = "btnRefresh", formId = "checkoutattribute-form" }))', 800, 350, true); return false;" class="btn btn-default" />
+                    <input type="submit" id="btnAddNewValue" value="@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "CheckoutAttribute", new { checkoutAttributeId = Model.Id, btnId = "btnRefresh", formId = "checkoutattribute-form" }))', 800, 500, true); return false;" class="btn btn-primary" />
                     <input type="submit" id="btnRefresh" style="display: none" />
                     <script type="text/javascript">
                         $(document).ready(function () {
@@ -423,19 +403,19 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.LimitedToStores)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.LimitedToStores)
                         @Html.ValidationMessageFor(model => model.LimitedToStores)
                     </div>
                 </div>
                 <div class="form-group" id="pnl-available-stores">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AvailableStores)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
                         {
                             @Html.Action("MultistoreDisabledWarning", "Common")
@@ -459,8 +439,9 @@
         </div>
     </div>
 }
+
 @helper TabCondition()
-        {
+{
     <div class="panel-group">
         <div class="panel panel-default">
             @if (Model.Id > 0)
@@ -482,10 +463,10 @@
 
                 <div class="panel-body">
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.ConditionModel.EnableCondition)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.ConditionModel.EnableCondition)
                             @Html.ValidationMessageFor(model => model.ConditionModel.EnableCondition)
                         </div>
@@ -495,10 +476,10 @@
                         @if (Model.ConditionModel.ConditionAttributes.Count > 0)
                         {
                             <div class="form-group">
-                                <div class="col-sm-3">
+                                <div class="col-md-3">
                                     @Html.NopLabelFor(model => model.ConditionModel.SelectedAttributeId)
                                 </div>
-                                <div class="col-sm-9">
+                                <div class="col-md-9">
                                     @Html.NopDropDownListFor(model => model.ConditionModel.SelectedAttributeId,
                                 Model.ConditionModel.ConditionAttributes.Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }))
 
@@ -518,10 +499,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-sm-3">
-                                    &nbsp;
-                                </div>
-                                <div class="col-sm-9">
+                                <div class="col-md-9 col-md-offset-3">
                                     @for (int i = 0; i < Model.ConditionModel.ConditionAttributes.Count; i++)
                                     {
                                         @Html.HiddenFor(model => Model.ConditionModel.ConditionAttributes[i].Id)
@@ -537,21 +515,24 @@
                                                 case AttributeControlType.ImageSquares:
                                                     foreach (var value in Model.ConditionModel.ConditionAttributes[i].Values)
                                                     {
-                                                        <div>
-                                                            @Html.RadioButtonFor(model => Model.ConditionModel.ConditionAttributes[i].SelectedValueId, value.Value,
-                                                        value.Selected ? new { @checked = true } : null)
-                                                            @Html.LabelFor(model => Model.ConditionModel.ConditionAttributes[i].SelectedValueId, value.Text)
+                                                        <div class="radio">
+                                                            <label>
+                                                                @Html.RadioButtonFor(model => Model.ConditionModel.ConditionAttributes[i].SelectedValueId, value.Value,
+                                                                    value.Selected ? new {@checked = true} : null)
+                                                                @value.Text
+                                                            </label>
                                                         </div>
                                                     }
                                                     break;
                                                 case AttributeControlType.Checkboxes:
                                                     for (var j = 0; j < Model.ConditionModel.ConditionAttributes[i].Values.Count; j++)
                                                     {
-                                                        <div>
-                                                            @Html.HiddenFor(model => Model.ConditionModel.ConditionAttributes[i].Values[j].Value)
-                                                            @Html.CheckBoxFor(model => Model.ConditionModel.ConditionAttributes[i].Values[j].Selected)
-                                                            @Html.LabelFor(model => Model.ConditionModel.ConditionAttributes[i].Values[j].Selected,
-                                                        Model.ConditionModel.ConditionAttributes[i].Values[j].Text)
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                @Html.HiddenFor(model => Model.ConditionModel.ConditionAttributes[i].Values[j].Value)
+                                                                @Html.CheckBoxFor(model => Model.ConditionModel.ConditionAttributes[i].Values[j].Selected)
+                                                                @Model.ConditionModel.ConditionAttributes[i].Values[j].Text
+                                                            </label>
                                                         </div>
                                                     }
                                                     break;
@@ -572,10 +553,7 @@
                         else
                         {
                             <div class="form-group">
-                                <div class="col-sm-3">
-                                    &nbsp;
-                                </div>
-                                <div class="col-sm-9">
+                                <div class="col-md-9 col-md-offset-3">
                                     @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition.NoAttributeExists")
                                 </div>
                             </div>
@@ -585,7 +563,7 @@
             }
             else
             {
-                <div class="page-body">
+                <div class="panel-body">
                     @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition.SaveBeforeEdit")
                 </div>
             }

@@ -710,15 +710,22 @@ namespace Nop.Web.Controllers
 
             if (_workContext.OriginalCustomerIfImpersonated != null)
             {
+                //activity log
+                _customerActivityService.InsertActivity(_workContext.OriginalCustomerIfImpersonated, "Impersonation.Finished", 
+                    _localizationService.GetResource("ActivityLog.Impersonation.Finished.StoreOwner"), _workContext.CurrentCustomer.Email, _workContext.CurrentCustomer.Id);
+                _customerActivityService.InsertActivity("Impersonation.Finished",
+                    _localizationService.GetResource("ActivityLog.Impersonation.Finished.Customer"), _workContext.OriginalCustomerIfImpersonated.Email, _workContext.OriginalCustomerIfImpersonated.Id);
+
                 //logout impersonated customer
                 _genericAttributeService.SaveAttribute<int?>(_workContext.OriginalCustomerIfImpersonated,
                     SystemCustomerAttributeNames.ImpersonatedCustomerId, null);
+                
                 //redirect back to customer details page (admin area)
                 return this.RedirectToAction("Edit", "Customer", new { id = _workContext.CurrentCustomer.Id, area = "Admin" });
 
             }
 
-            //activity log
+           //activity log
             _customerActivityService.InsertActivity("PublicStore.Logout", _localizationService.GetResource("ActivityLog.PublicStore.Logout"));
             //standard logout 
             _authenticationService.SignOut();
@@ -1632,8 +1639,7 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             var model = new CustomerDownloadableProductsModel();
-            var items = _orderService.GetAllOrderItems(null, customer.Id, null, null,
-                null, null, null, true);
+            var items = _orderService.GetDownloadableOrderItems(customer.Id);
             foreach (var item in items)
             {
                 var itemModel = new CustomerDownloadableProductsModel.DownloadableProductsModel

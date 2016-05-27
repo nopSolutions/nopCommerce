@@ -41,9 +41,11 @@ namespace Nop.Services.Logging
         private readonly IDbContext _dbContext;
         private readonly IDataProvider _dataProvider;
         private readonly CommonSettings _commonSettings;
+        private readonly IWebHelper _webHelper;
         #endregion
         
         #region Ctor
+
         /// <summary>
         /// Ctor
         /// </summary>
@@ -54,11 +56,14 @@ namespace Nop.Services.Logging
         /// <param name="dbContext">DB context</param>>
         /// <param name="dataProvider">WeData provider</param>
         /// <param name="commonSettings">Common settings</param>
+        /// <param name="webHelper">Web helper</param>
         public CustomerActivityService(ICacheManager cacheManager,
             IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
             IWorkContext workContext,
-            IDbContext dbContext, IDataProvider dataProvider, CommonSettings commonSettings)
+            IDbContext dbContext, IDataProvider dataProvider,
+            CommonSettings commonSettings,
+            IWebHelper webHelper)
         {
             this._cacheManager = cacheManager;
             this._activityLogRepository = activityLogRepository;
@@ -67,6 +72,7 @@ namespace Nop.Services.Logging
             this._dbContext = dbContext;
             this._dataProvider = dataProvider;
             this._commonSettings = commonSettings;
+            this._webHelper = webHelper;
         }
 
         #endregion
@@ -192,20 +198,19 @@ namespace Nop.Services.Logging
         public virtual ActivityLog InsertActivity(string systemKeyword,
             string comment, params object[] commentParams)
         {
-            return InsertActivity(systemKeyword, comment, _workContext.CurrentCustomer, commentParams);
+            return InsertActivity(_workContext.CurrentCustomer, systemKeyword, comment, commentParams);
         }
-        
+
 
         /// <summary>
         /// Inserts an activity log item
         /// </summary>
+        /// <param name="customer">The customer</param>
         /// <param name="systemKeyword">The system keyword</param>
         /// <param name="comment">The activity comment</param>
-        /// <param name="customer">The customer</param>
         /// <param name="commentParams">The activity comment parameters for string.Format() function.</param>
         /// <returns>Activity log item</returns>
-        public virtual ActivityLog InsertActivity(string systemKeyword, 
-            string comment, Customer customer, params object[] commentParams)
+        public virtual ActivityLog InsertActivity(Customer customer, string systemKeyword, string comment, params object[] commentParams)
         {
             if (customer == null)
                 return null;
@@ -226,6 +231,7 @@ namespace Nop.Services.Logging
             activity.Customer = customer;
             activity.Comment = comment;
             activity.CreatedOnUtc = DateTime.UtcNow;
+            activity.IpAddress = _webHelper.GetCurrentIpAddress();
 
             _activityLogRepository.Insert(activity);
 
@@ -247,18 +253,21 @@ namespace Nop.Services.Logging
         /// <summary>
         /// Gets all activity log items
         /// </summary>
-        /// <param name="createdOnFrom">Log item creation from; null to load all customers</param>
-        /// <param name="createdOnTo">Log item creation to; null to load all customers</param>
-        /// <param name="customerId">Customer identifier; null to load all customers</param>
+        /// <param name="createdOnFrom">Log item creation from; null to load all activities</param>
+        /// <param name="createdOnTo">Log item creation to; null to load all activities</param>
+        /// <param name="customerId">Customer identifier; null to load all activities</param>
         /// <param name="activityLogTypeId">Activity log type identifier</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="ipAddress">IP address; null or empty to load all activities</param>
         /// <returns>Activity log items</returns>
         public virtual IPagedList<ActivityLog> GetAllActivities(DateTime? createdOnFrom = null,
             DateTime? createdOnTo = null, int? customerId = null, int activityLogTypeId = 0,
-            int pageIndex = 0, int pageSize = int.MaxValue)
+            int pageIndex = 0, int pageSize = int.MaxValue, string ipAddress = null)
         {
             var query = _activityLogRepository.Table;
+            if(!String.IsNullOrEmpty(ipAddress))
+                query = query.Where(al => al.IpAddress.Contains(ipAddress));
             if (createdOnFrom.HasValue)
                 query = query.Where(al => createdOnFrom.Value <= al.CreatedOnUtc);
             if (createdOnTo.HasValue)

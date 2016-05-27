@@ -373,6 +373,7 @@ namespace Nop.Services.Catalog
         /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
+        /// <param name="searchManufacturerPartNumber">A value indicating whether to search by a specified "keyword" in manufacturer part number</param>
         /// <param name="searchSku">A value indicating whether to search by a specified "keyword" in product SKU</param>
         /// <param name="searchProductTags">A value indicating whether to search by a specified "keyword" in product tags</param>
         /// <param name="languageId">Language identifier (search for text searching)</param>
@@ -402,6 +403,7 @@ namespace Nop.Services.Catalog
             int productTagId = 0,
             string keywords = null,
             bool searchDescriptions = false,
+            bool searchManufacturerPartNumber = true,
             bool searchSku = true,
             bool searchProductTags = false,
             int languageId = 0,
@@ -416,7 +418,7 @@ namespace Nop.Services.Catalog
                 storeId, vendorId, warehouseId,
                 productType, visibleIndividuallyOnly, markedAsNewOnly, featuredProducts,
                 priceMin, priceMax, productTagId, keywords, searchDescriptions, searchSku,
-                searchProductTags, languageId, filteredSpecs, 
+                searchProductTags, searchManufacturerPartNumber, languageId, filteredSpecs, 
                 orderBy, showHidden, overridePublished);
         }
 
@@ -441,6 +443,7 @@ namespace Nop.Services.Catalog
         /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
+        /// <param name="searchManufacturerPartNumber">A value indicating whether to search by a specified "keyword" in manufacturer part number</param>
         /// <param name="searchSku">A value indicating whether to search by a specified "keyword" in product SKU</param>
         /// <param name="searchProductTags">A value indicating whether to search by a specified "keyword" in product tags</param>
         /// <param name="languageId">Language identifier (search for text searching)</param>
@@ -472,6 +475,7 @@ namespace Nop.Services.Catalog
             int productTagId = 0,
             string keywords = null,
             bool searchDescriptions = false,
+            bool searchManufacturerPartNumber = true,
             bool searchSku = true,
             bool searchProductTags = false,
             int languageId = 0,
@@ -603,6 +607,11 @@ namespace Nop.Services.Catalog
                 pSearchDescriptions.Value = searchDescriptions;
                 pSearchDescriptions.DbType = DbType.Boolean;
 
+                var pSearchManufacturerPartNumber = _dataProvider.GetParameter();
+                pSearchManufacturerPartNumber.ParameterName = "SearchManufacturerPartNumber";
+                pSearchManufacturerPartNumber.Value = searchManufacturerPartNumber;
+                pSearchManufacturerPartNumber.DbType = DbType.Boolean;
+
                 var pSearchSku = _dataProvider.GetParameter();
                 pSearchSku.ParameterName = "SearchSku";
                 pSearchSku.Value = searchSku;
@@ -696,6 +705,7 @@ namespace Nop.Services.Catalog
                     pPriceMax,
                     pKeywords,
                     pSearchDescriptions,
+                    pSearchManufacturerPartNumber,
                     pSearchSku,
                     pSearchProductTags,
                     pUseFullTextSearch,
@@ -832,7 +842,12 @@ namespace Nop.Services.Catalog
                             where (p.Name.Contains(keywords)) ||
                                   (searchDescriptions && p.ShortDescription.Contains(keywords)) ||
                                   (searchDescriptions && p.FullDescription.Contains(keywords)) ||
-                                  (searchProductTags && pt.Name.Contains(keywords)) ||
+                                  //manufacturer part number
+                                  (searchManufacturerPartNumber && p.ManufacturerPartNumber == keywords) ||
+                                  //sku (exact match)
+                                  (searchSku && p.Sku == keywords) ||
+                                  //product tags (exact match)
+                                  (searchProductTags && pt.Name == keywords) ||
                                   //localized values
                                   (searchLocalizedValue && lp.LanguageId == languageId && lp.LocaleKeyGroup == "Product" && lp.LocaleKey == "Name" && lp.LocaleValue.Contains(keywords)) ||
                                   (searchDescriptions && searchLocalizedValue && lp.LanguageId == languageId && lp.LocaleKeyGroup == "Product" && lp.LocaleKey == "ShortDescription" && lp.LocaleValue.Contains(keywords)) ||
@@ -1876,6 +1891,17 @@ namespace Nop.Services.Catalog
 
             //event notification
             _eventPublisher.EntityUpdated(productPicture);
+        }
+
+        /// <summary>
+        /// Get the IDs of all product images 
+        /// </summary>
+        /// <param name="productsIds">Products IDs</param>
+        /// <returns>All picture identifiers grouped by product ID</returns>
+        public IDictionary<int, int[]> GetProductsImagesIds(int [] productsIds)
+        {
+            return _productPictureRepository.Table.Where(p => productsIds.Contains(p.ProductId))
+                .GroupBy(p => p.ProductId).ToDictionary(p => p.Key, p => p.Select(p1 => p1.PictureId).ToArray());
         }
 
         #endregion

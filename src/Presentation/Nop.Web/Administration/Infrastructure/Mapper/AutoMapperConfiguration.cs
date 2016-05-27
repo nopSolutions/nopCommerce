@@ -642,7 +642,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<TaxSettingsModel, TaxSettings>()
-                    .ForMember(dest => dest.ActiveTaxProviderSystemName, mo => mo.Ignore());
+                    .ForMember(dest => dest.ActiveTaxProviderSystemName, mo => mo.Ignore())
+                    .ForMember(dest => dest.LogErrors, mo => mo.Ignore());
                 cfg.CreateMap<NewsSettings, NewsSettingsModel>()
                     .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
                     .ForMember(dest => dest.Enabled_OverrideForStore, mo => mo.Ignore())
@@ -664,6 +665,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.AllowGuestsToCreateTopics_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowCustomersToEditPosts_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowCustomersToDeletePosts_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.AllowPostVoting_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.MaxVotesPerDay_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowCustomersToManageSubscriptions_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.TopicsPageSize_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.PostsPageSize_OverrideForStore, mo => mo.Ignore())
@@ -888,7 +891,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.MaximumImageSize_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.MultipleThumbDirectories_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.DefaultImageQuality_OverrideForStore, mo => mo.Ignore())
-                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                    .ForMember(dest => dest.ImportProductImagesUsingHash_OverrideForStore, mo => mo.Ignore());
                 cfg.CreateMap<MediaSettingsModel, MediaSettings>()
                     .ForMember(dest => dest.DefaultPictureZoomEnabled, mo => mo.Ignore())
                     .ForMember(dest => dest.ImageSquarePictureSize, mo => mo.Ignore())

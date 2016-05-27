@@ -42,109 +42,109 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="form-group">
-                <div class="col-sm-3">
+                <div class="col-md-3">
                     @Html.NopLabelFor(model => model.StoreId)
                 </div>
-                <div class="col-sm-9">
+                <div class="col-md-9">
                     @Html.NopDropDownListFor(model => model.StoreId, Model.AvailableStores)
                     @Html.ValidationMessageFor(model => model.StoreId)
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-3">
+                <div class="col-md-3">
                     @Html.NopLabelFor(model => model.WarehouseId)
                 </div>
-                <div class="col-sm-9">
+                <div class="col-md-9">
                     @Html.NopDropDownListFor(model => model.WarehouseId, Model.AvailableWarehouses)
                     @Html.ValidationMessageFor(model => model.WarehouseId)
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-3">
+                <div class="col-md-3">
                     @Html.NopLabelFor(model => model.CountryId)
                 </div>
-                <div class="col-sm-9">
+                <div class="col-md-9">
                     @Html.NopDropDownListFor(model => model.CountryId, Model.AvailableCountries)
                     @Html.ValidationMessageFor(model => model.CountryId)
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-3">
+                <div class="col-md-3">
                     @Html.NopLabelFor(model => model.StateProvinceId)
                 </div>
-                <div class="col-sm-9">
+                <div class="col-md-9">
                     @Html.NopDropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
                     @Html.ValidationMessageFor(model => model.StateProvinceId)
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-3">
+                <div class="col-md-3">
                     @Html.NopLabelFor(model => model.Zip)
                 </div>
-                <div class="col-sm-9">
+                <div class="col-md-9">
                     @Html.NopEditorFor(model => model.Zip)
                     @Html.ValidationMessageFor(model => model.Zip)
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-3">
+                <div class="col-md-3">
                     @Html.NopLabelFor(model => model.ShippingMethodId)
                 </div>
-                <div class="col-sm-9">
+                <div class="col-md-9">
                     @Html.NopDropDownListFor(model => model.ShippingMethodId, Model.AvailableShippingMethods)
                     @Html.ValidationMessageFor(model => model.ShippingMethodId)
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-3">
+                <div class="col-md-3">
                     @Html.NopLabelFor(model => model.From)
                 </div>
-                <div class="col-sm-9">
+                <div class="col-md-9">
                     @Html.NopEditorFor(model => model.From) [@Model.BaseWeightIn]
                     @Html.ValidationMessageFor(model => model.From)
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-3">
+                <div class="col-md-3">
                     @Html.NopLabelFor(model => model.To)
                 </div>
-                <div class="col-sm-9">
+                <div class="col-md-9">
                     @Html.NopEditorFor(model => model.To) [@Model.BaseWeightIn]
                     @Html.ValidationMessageFor(model => model.To)
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-3">
+                <div class="col-md-3">
                     @Html.NopLabelFor(model => model.AdditionalFixedCost)
                 </div>
-                <div class="col-sm-9">
+                <div class="col-md-9">
                     @Html.NopEditorFor(model => model.AdditionalFixedCost) [@Model.PrimaryStoreCurrencyCode]
                     @Html.ValidationMessageFor(model => model.AdditionalFixedCost)
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-3">
+                <div class="col-md-3">
                     @Html.NopLabelFor(model => model.LowerWeightLimit)
                 </div>
-                <div class="col-sm-9">
+                <div class="col-md-9">
                     @Html.NopEditorFor(model => model.LowerWeightLimit)
                     @Html.ValidationMessageFor(model => model.LowerWeightLimit)
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-3">
+                <div class="col-md-3">
                     @Html.NopLabelFor(model => model.RatePerWeightUnit)
                 </div>
-                <div class="col-sm-9">
+                <div class="col-md-9">
                     @Html.NopEditorFor(model => model.RatePerWeightUnit) [@Model.PrimaryStoreCurrencyCode]
                     @Html.ValidationMessageFor(model => model.RatePerWeightUnit)
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-3">
+                <div class="col-md-3">
                     @Html.NopLabelFor(model => model.PercentageRateOfSubtotal)
                 </div>
-                <div class="col-sm-9">
+                <div class="col-md-9">
                     @Html.NopEditorFor(model => model.PercentageRateOfSubtotal)
                     @Html.ValidationMessageFor(model => model.PercentageRateOfSubtotal)
                 </div>

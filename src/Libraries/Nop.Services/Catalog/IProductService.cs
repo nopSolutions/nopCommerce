@@ -91,6 +91,7 @@ namespace Nop.Services.Catalog
         /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
+        /// <param name="searchManufacturerPartNumber">A value indicating whether to search by a specified "keyword" in manufacturer part number</param>
         /// <param name="searchSku">A value indicating whether to search by a specified "keyword" in product SKU</param>
         /// <param name="searchProductTags">A value indicating whether to search by a specified "keyword" in product tags</param>
         /// <param name="languageId">Language identifier (search for text searching)</param>
@@ -120,6 +121,7 @@ namespace Nop.Services.Catalog
             int productTagId = 0,
             string keywords = null,
             bool searchDescriptions = false,
+            bool searchManufacturerPartNumber = true,
             bool searchSku = true,
             bool searchProductTags = false,
             int languageId = 0,
@@ -149,6 +151,7 @@ namespace Nop.Services.Catalog
         /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
+        /// <param name="searchManufacturerPartNumber">A value indicating whether to search by a specified "keyword" in manufacturer part number</param>
         /// <param name="searchSku">A value indicating whether to search by a specified "keyword" in product SKU</param>
         /// <param name="searchProductTags">A value indicating whether to search by a specified "keyword" in product tags</param>
         /// <param name="languageId">Language identifier (search for text searching)</param>
@@ -180,6 +183,7 @@ namespace Nop.Services.Catalog
             int productTagId = 0,
             string keywords = null,
             bool searchDescriptions = false,
+            bool searchManufacturerPartNumber = true,
             bool searchSku = true,
             bool searchProductTags = false, 
             int languageId = 0,
@@ -446,6 +450,13 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productPicture">Product picture</param>
         void UpdateProductPicture(ProductPicture productPicture);
+
+        /// <summary>
+        /// Get the IDs of all product images 
+        /// </summary>
+        /// <param name="productsIds">Products IDs</param>
+        /// <returns>All picture identifiers grouped by product ID</returns>
+        IDictionary<int, int[]> GetProductsImagesIds(int [] productsIds);
 
         #endregion
 

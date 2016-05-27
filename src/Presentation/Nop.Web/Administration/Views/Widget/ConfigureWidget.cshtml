@@ -1,13 +1,16 @@
 ﻿@model WidgetModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Widgets.Configure").Text + " - " + Model.FriendlyName;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Widgets");
 }
 
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ContentManagement.Widgets.Configure") - @Model.FriendlyName
-        <small>@Html.ActionLink("(" + T("Admin.ContentManagement.Widgets.BackToList") + ")", "List")</small>
+        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.ContentManagement.Widgets.BackToList").Text, "List")</small>
     </h1>
     <div class="pull-right">
         &nbsp;

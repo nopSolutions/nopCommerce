@@ -7,7 +7,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Discounts
 {
-    public class DiscountValidator : BaseNopValidator<DiscountModel>
+    public partial class DiscountValidator : BaseNopValidator<DiscountModel>
     {
         public DiscountValidator(ILocalizationService localizationService, IDbContext dbContext)
         {

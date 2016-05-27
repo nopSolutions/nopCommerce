@@ -5,7 +5,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Common
 {
-    public class AddressValidator : BaseNopValidator<AddressModel>
+    public partial class AddressValidator : BaseNopValidator<AddressModel>
     {
         public AddressValidator(ILocalizationService localizationService)
         {

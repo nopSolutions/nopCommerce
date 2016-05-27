@@ -7,7 +7,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Blogs
 {
-    public class BlogPostValidator : BaseNopValidator<BlogPostModel>
+    public partial class BlogPostValidator : BaseNopValidator<BlogPostModel>
     {
         public BlogPostValidator(ILocalizationService localizationService, IDbContext dbContext)
         {

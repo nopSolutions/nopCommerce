@@ -1,9 +1,12 @@
 ﻿@model SyndicationFeed
+
+@using System.ServiceModel.Syndication;
+@using Nop.Core.Domain.Common;
+
 @{
     var hideAdvertisements = EngineContext.Current.Resolve<CommonSettings>().HideAdvertisementsOnAdminArea;
 }
-@using System.ServiceModel.Syndication;
-@using Nop.Core.Domain.Common;
+
 <div class="box">
     <div class="box-header with-border clearfix">
         <div class="box-title">
@@ -13,9 +16,9 @@
             <button type="button" class="btn btn-box-tool" data-widget="collapse">
                 <i class="fa fa-minus"></i>
             </button>
-            <button type="button" class="btn btn-box-tool" data-widget="remove">
+            @*<button type="button" class="btn btn-box-tool" data-widget="remove">
                 <i class="fa fa-times"></i>
-            </button>
+            </button>*@
         </div>
     </div>
     <div class="box-body">
@@ -32,8 +35,7 @@
                         {
                             @item.Title.Text
                         }
-                        <br/>
-                        @item.PublishDate.ToString("d")
+                        <div>@item.PublishDate.ToString("d")</div>
                     </div>
                     <div class="panel-body">
                         @Html.Raw(item.Summary.Text)

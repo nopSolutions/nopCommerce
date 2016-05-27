@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -115,8 +116,8 @@ namespace Nop.Web.Controllers
                     return actions;
                 });
 
-            //products
-            var orderItems = _orderService.GetAllOrderItems(order.Id, null, null, null, null, null, null);
+            //returnable products
+            var orderItems = order.OrderItems.Where(oi => !oi.Product.NotReturnable);
             foreach (var orderItem in orderItems)
             {
                 var orderItemModel = new SubmitReturnRequestModel.OrderItemModel
@@ -217,7 +218,10 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             int count = 0;
-            foreach (var orderItem in order.OrderItems)
+
+            //returnable products
+            var orderItems = order.OrderItems.Where(oi => !oi.Product.NotReturnable);
+            foreach (var orderItem in orderItems)
             {
                 int quantity = 0; //parse quantity
                 foreach (string formKey in form.AllKeys)

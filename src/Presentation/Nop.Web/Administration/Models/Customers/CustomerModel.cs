@@ -290,6 +290,8 @@ namespace Nop.Admin.Models.Customers
 
             [NopResourceDisplayName("Admin.Customers.Customers.Orders.OrderStatus")]
             public string OrderStatus { get; set; }
+            [NopResourceDisplayName("Admin.Customers.Customers.Orders.OrderStatus")]
+            public int OrderStatusId { get; set; }
 
             [NopResourceDisplayName("Admin.Customers.Customers.Orders.PaymentStatus")]
             public string PaymentStatus { get; set; }
@@ -315,6 +317,8 @@ namespace Nop.Admin.Models.Customers
             public string Comment { get; set; }
             [NopResourceDisplayName("Admin.Customers.Customers.ActivityLog.CreatedOn")]
             public DateTime CreatedOn { get; set; }
+            [NopResourceDisplayName("Admin.Customers.Customers.ActivityLog.IpAddress")]
+            public string IpAddress { get; set; }
         }
 
         public partial class BackInStockSubscriptionModel : BaseNopEntityModel

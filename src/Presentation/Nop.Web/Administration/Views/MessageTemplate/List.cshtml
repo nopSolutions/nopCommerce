@@ -1,11 +1,13 @@
 ﻿@model MessageTemplateListModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.ContentManagement.MessageTemplates").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Message templates");
 }
+
 @Html.AntiForgeryToken()
-
-
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ContentManagement.MessageTemplates")
@@ -18,22 +20,26 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default">
+            <div class="panel panel-default panel-search">
                 <div class="panel-body">
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SearchStoreId)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            &nbsp;
-                        </div>
-                        <div class="col-sm-9">
-                            <input type="button" id="search-templates" class="btn btn-default" value="@T("Admin.Common.Search")"/>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.SearchStoreId)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <button type="button" id="search-templates" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -41,11 +47,10 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="templates-grid"></div>
 
                     <script>
-                        $(document).ready(function() {
+                        $(document).ready(function () {
                             $("#templates-grid").kendoGrid({
                                 dataSource: {
                                     type: "json",
@@ -62,7 +67,7 @@
                                         total: "Total",
                                         errors: "Errors"
                                     },
-                                    error: function(e) {
+                                    error: function (e) {
                                         display_kendoui_grid_error(e);
                                         // Cancel the changes
                                         this.cancelChanges();
@@ -95,26 +100,26 @@
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsActive#.gif" />'
+                                    template: '# if(IsActive) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "ListOfStores",
-                                    title: "@T("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores")"
+                                    title: "@T("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores")",
+                                    width: 300
                                 }, {
                                     field: "Id",
                                     title: "@T("Admin.Common.Edit")",
                                     width: 100,
                                     template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-                                    }
+                                }
                                 ]
                             });
                         });
                     </script>
 
                     <script type="text/javascript">
-
-                        $(document).ready(function() {
+                        $(document).ready(function () {
                             //search button
-                            $('#search-templates').click(function() {
+                            $('#search-templates').click(function () {
                                 //search
                                 var grid = $('#templates-grid').data('kendoGrid');
                                 grid.dataSource.read();

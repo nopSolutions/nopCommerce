@@ -1,75 +1,52 @@
 ﻿@model VendorModel
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 
-
 <script>
     $(document).ready(function() {
-        $("#vendor-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
+        bindBootstrapTabSelectEvent('vendor-edit');
     });
 </script>
+
 <div class="content">
     <div class="form-horizontal">
-        <div id="vendor-edit">
-            <ul>
-                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                    @T("Admin.Vendors.Info")
-                </li>
-                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                    @T("Admin.Common.SEO")
-                </li>
+        <div id="vendor-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Vendors.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"))
                 @if (Model.Id > 0)
                 {
-                    <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-                        @T("Admin.Vendors.VendorNotes")
-                    </li>
+                    @Html.RenderBootstrapTabHeader("tab-vendor-notes", @T("Admin.Vendors.VendorNotes"))
                 }
             </ul>
-            <div>
-                @TabInfo()
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-seo", @TabSeo())
+                @if (Model.Id > 0)
+                {
+                    @Html.RenderBootstrapTabContent("tab-vendor-notes", @TabVendorNotes())
+                }
             </div>
-            <div>
-                @TabSeo()
-            </div>
-            @if (Model.Id > 0)
-            {
-                <div>
-                    @TabVendorNotes()
-                </div>
-            }
         </div>
     </div>
 </div>
 
 @{
-            //custom tabs
-            var eventMessage = new AdminTabStripCreated(this.Html, "vendor-edit");
-            EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
-            foreach (var eventBlock in eventMessage.BlocksToRender)
-            {
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "vendor-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
         @eventBlock
     }
 }
 
-
-@*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
-
-
-
-
-
-
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
-        {
+{
     <script type="text/javascript">
         $(document).ready(function() {
             $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
@@ -86,64 +63,64 @@
             }
         }
     </script>
-    <div class="panel-group">
-        <div class="panel panel-default">
 
-            @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-info-localized",
-            @<div class="panel-body">
+    <div class="panel-group">
+        @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-info-localized",
+        @<div class="panel panel-default">
+            <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Locales[item].Name)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.Locales[item].Name)
                         @Html.ValidationMessageFor(model => model.Locales[item].Name)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Locales[item].Description)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
                         @Html.ValidationMessageFor(model => model.Locales[item].Description)
                     </div>
                 </div>
-                <div>
-                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
-                </div>
+                @Html.HiddenFor(model => model.Locales[item].LanguageId)
             </div>
+        </div>
     ,
-            @<div class="panel-body">
+        @<div class="panel panel-default">
+            <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Name)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.Name)
                         @Html.ValidationMessageFor(model => model.Name)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Description)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.EditorFor(x => x.Description, "RichEditor")
                         @Html.ValidationMessageFor(model => model.Description)
                     </div>
                 </div>
             </div>
-                      ))
         </div>
+    ))
 
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Email)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.Email)
                         @Html.ValidationMessageFor(model => model.Email)
                     </div>
@@ -151,10 +128,10 @@
                 @if (Model.Id > 0)
                 {
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.AssociatedCustomers)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @if (Model.AssociatedCustomers.Count > 0)
                             {
                                 for (int i = 0; i < Model.AssociatedCustomers.Count; i++)
@@ -162,7 +139,7 @@
                                     @Html.ActionLink(Model.AssociatedCustomers[i].Email, "Edit", "Customer", new { id = Model.AssociatedCustomers[i].Id }, new { })
                                     if (i != Model.AssociatedCustomers.Count - 1)
                                     {
-                                        <text>, </text>
+                                        <text>,  </text>
                                     }
                                 }
                             }
@@ -174,64 +151,64 @@
                     </div>
                 }
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.PictureId)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.PictureId)
                         @Html.ValidationMessageFor(model => model.PictureId)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AdminComment)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopTextAreaFor(model => model.AdminComment)
                         @Html.ValidationMessageFor(model => model.AdminComment)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AllowCustomersToSelectPageSize)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(x => x.AllowCustomersToSelectPageSize)
                         @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
                     </div>
                 </div>
                 <div class="form-group" id="pnlPageSize">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.PageSize)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(x => x.PageSize)
                         @Html.ValidationMessageFor(model => model.PageSize)
                     </div>
                 </div>
                 <div class="form-group" id="pnlPageSizeOptions">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.PageSizeOptions)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(x => x.PageSizeOptions)
                         @Html.ValidationMessageFor(model => model.PageSizeOptions)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Active)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.Active)
                         @Html.ValidationMessageFor(model => model.Active)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.DisplayOrder)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.DisplayOrder)
                         @Html.ValidationMessageFor(model => model.DisplayOrder)
                     </div>
@@ -240,94 +217,96 @@
         </div>
     </div>
 }
+
 @helper TabSeo()
-        {
+{
     <div class="panel-group">
-        <div class="panel panel-default">
-            @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-seo-localized",
-            @<div class="panel-body">
+        @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-seo-localized",
+        @<div class="panel panel-default">
+            <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Locales[item].MetaKeywords)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.Locales[item].MetaKeywords)
                         @Html.ValidationMessageFor(model => model.Locales[item].MetaKeywords)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Locales[item].MetaDescription)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopTextAreaFor(model => model.Locales[item].MetaDescription)
                         @Html.ValidationMessageFor(model => model.Locales[item].MetaDescription)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Locales[item].MetaTitle)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.Locales[item].MetaTitle)
                         @Html.ValidationMessageFor(model => model.Locales[item].MetaTitle)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Locales[item].SeName)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.Locales[item].SeName)
                         @Html.ValidationMessageFor(model => model.Locales[item].SeName)
                     </div>
                 </div>
-                <div class="form-group">
-                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
-                </div>
+                @Html.HiddenFor(model => model.Locales[item].LanguageId)
             </div>
-        ,
-            @<div class="panel-body">
+        </div>
+    ,
+        @<div class="panel panel-default">
+            <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.MetaKeywords)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(x => x.MetaKeywords)
                         @Html.ValidationMessageFor(model => model.MetaKeywords)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.MetaDescription)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopTextAreaFor(x => x.MetaDescription)
                         @Html.ValidationMessageFor(model => model.MetaDescription)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.MetaTitle)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(x => x.MetaTitle)
                         @Html.ValidationMessageFor(model => model.MetaTitle)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.SeName)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(x => x.SeName)
                         @Html.ValidationMessageFor(model => model.SeName)
                     </div>
                 </div>
-            </div>))
-        </div>
+            </div>
+        </div>))
     </div>
 }
+
 @helper TabVendorNotes()
 {
     <div class="panel-group">
@@ -417,24 +396,51 @@
             </div>
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AddVendorNoteMessage)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopTextAreaFor(model => model.AddVendorNoteMessage)
                         @Html.ValidationMessageFor(model => model.AddVendorNoteMessage)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
-                        &nbsp;
-                    </div>
-                    <div class="col-sm-9">
-                        <input type="button" id="addVendorNote" class="btn btn-default" value="@T("Admin.Vendors.VendorNotes.AddButton")" />
+                    <div class="col-md-9 col-md-offset-3">
+                        <button type="button" id="addVendorNote" class="btn btn-primary">@T("Admin.Vendors.VendorNotes.AddButton")</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#addVendorNote').click(function () {
+                var vendorNoteMessage = $("#@Html.FieldIdFor(model => model.AddVendorNoteMessage)").val();
+                $('#addVendorNote').attr('disabled', true);
+
+                var postData = {
+                    message: vendorNoteMessage,
+                    vendorId: @Model.Id
+                    };
+                addAntiForgeryToken(postData);
+
+                $.ajax({
+                    cache:false,
+                    type: "POST",
+                    url: "@(Url.Action("VendorNoteAdd", "Vendor"))",
+                    data: postData,
+                    success: function (data) {
+                        var grid = $("#vendornotes-grid").data('kendoGrid');
+                        grid.dataSource.read();
+                        $('#addVendorNote').attr('disabled', false);
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('Failed to add vendor note.');
+                        $('#addVendorNote').attr('disabled', false);
+                    }
+                });
+            });
+        });
+    </script>
 }

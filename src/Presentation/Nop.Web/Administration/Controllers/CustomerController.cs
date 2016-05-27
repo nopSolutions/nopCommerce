@@ -997,7 +997,15 @@ namespace Nop.Admin.Controllers
                 _customerActivityService.InsertActivity("AddNewCustomer", _localizationService.GetResource("ActivityLog.AddNewCustomer"), customer.Id);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = customer.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new {id = customer.Id});
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
@@ -1226,7 +1234,7 @@ namespace Nop.Admin.Controllers
                     if (continueEditing)
                     {
                         //selected tab
-                        SaveSelectedTabIndex();
+                        SaveSelectedTabName();
 
                         return RedirectToAction("Edit",  new {id = customer.Id});
                     }
@@ -1383,6 +1391,11 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Edit", customer.Id);
             }
 
+            //activity log
+            _customerActivityService.InsertActivity("Impersonation.Started", 
+                _localizationService.GetResource("ActivityLog.Impersonation.Started.StoreOwner"), customer.Email, customer.Id);
+            _customerActivityService.InsertActivity(customer, "Impersonation.Started",
+                _localizationService.GetResource("ActivityLog.Impersonation.Started.Customer"), _workContext.CurrentCustomer.Email, _workContext.CurrentCustomer.Id);
 
             _genericAttributeService.SaveAttribute<int?>(_workContext.CurrentCustomer,
                 SystemCustomerAttributeNames.ImpersonatedCustomerId, customer.Id);
@@ -1792,6 +1805,7 @@ namespace Nop.Admin.Controllers
                         {
                             Id = order.Id, 
                             OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                            OrderStatusId = order.OrderStatusId,
                             PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
                             ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
                             OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false),
@@ -2004,7 +2018,8 @@ namespace Nop.Admin.Controllers
                         Id = x.Id,
                         ActivityLogTypeName = x.ActivityLogType.Name,
                         Comment = x.Comment,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
+                        IpAddress = x.IpAddress
                     };
                     return m;
 

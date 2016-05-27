@@ -176,10 +176,10 @@ namespace Nop.Services.Catalog
                 query = query.Where(c => c.Name.Contains(categoryName));
             query = query.Where(c => !c.Deleted);
             query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder);
-            
-            if (!showHidden && (!_catalogSettings.IgnoreAcl || (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)))
+
+            if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) || (!showHidden && !_catalogSettings.IgnoreAcl))
             {
-                if (!_catalogSettings.IgnoreAcl)
+                if (!showHidden && !_catalogSettings.IgnoreAcl)
                 {
                     //ACL (access control list)
                     var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();

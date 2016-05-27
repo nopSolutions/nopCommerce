@@ -2889,14 +2889,20 @@ namespace Nop.Services.Orders
             if (order == null || order.Deleted)
                 return false;
 
+            //status should be compelte
             if (order.OrderStatus != OrderStatus.Complete)
                 return false;
 
-            if (_orderSettings.NumberOfDaysReturnRequestAvailable == 0)
-                return true;
+            //validate allowed number of days
+            if (_orderSettings.NumberOfDaysReturnRequestAvailable > 0)
+            {
+                var daysPassed = (DateTime.UtcNow - order.CreatedOnUtc).TotalDays;
+                if (daysPassed >= _orderSettings.NumberOfDaysReturnRequestAvailable)
+                    return false;
+            }
 
-            var daysPassed = (DateTime.UtcNow - order.CreatedOnUtc).TotalDays;
-            return (daysPassed - _orderSettings.NumberOfDaysReturnRequestAvailable) < 0;
+            //ensure that we have at least one returnable product
+            return order.OrderItems.Any(oi => !oi.Product.NotReturnable);
         }
         
 

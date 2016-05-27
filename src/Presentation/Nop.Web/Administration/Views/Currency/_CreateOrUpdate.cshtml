@@ -1,37 +1,24 @@
 ﻿@model CurrencyModel
+
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
 
-
 <script>
     $(document).ready(function () {
-        $("#currency-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
+        bindBootstrapTabSelectEvent('currency-edit');
     });
 </script>
 
 <div class="content">
     <div class="form-horizontal">
-        <div id="currency-edit">
-            <ul>
-                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                    @T("Admin.Configuration.Currencies.Info")
-                </li>
-                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                    @T("Admin.Configuration.Currencies.Stores")
-                </li>
+        <div id="currency-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Configuration.Currencies.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-stores", @T("Admin.Configuration.Currencies.Stores"))
             </ul>
-            <div>
-                @TabInfo()
-            </div>
-            <div>
-                @TabStores()
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-stores", @TabStores())
             </div>
         </div>
     </div>
@@ -47,69 +34,67 @@
     }
 }
 
-
-@*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
-        {
+{
     <div class="panel-group">
-        <div class="panel panel-default">
-            @(Html.LocalizedEditor<CurrencyModel, CurrencyLocalizedModel>("currency-info-localized",
-            @<div class="panel-body">
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.Locales[item].Name)
+        @(Html.LocalizedEditor<CurrencyModel, CurrencyLocalizedModel>("currency-info-localized",
+            @<div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Locales[item].Name)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Locales[item].Name)
+                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                        </div>
                     </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.Locales[item].Name)
-                        @Html.ValidationMessageFor(model => model.Locales[item].Name)
-                    </div>
-                </div>
-                <div>
                     @Html.HiddenFor(model => model.Locales[item].LanguageId)
                 </div>
             </div>
     ,
-            @<div class="panel-body">
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.Name)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.Name)
-                        @Html.ValidationMessageFor(model => model.Name)
+            @<div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Name)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Name)
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
                     </div>
                 </div>
             </div>
-          ))
-        </div>
-
+    ))
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CurrencyCode)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.CurrencyCode)
                         @Html.ValidationMessageFor(model => model.CurrencyCode)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Rate)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.Rate)
                         @Html.ValidationMessageFor(model => model.Rate)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.DisplayLocale)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @{
                             var cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures)
                                 .OrderBy(x => x.EnglishName)
@@ -130,28 +115,28 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomFormatting)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.CustomFormatting)
                         @Html.ValidationMessageFor(model => model.CustomFormatting)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Published)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.Published)
                         @Html.ValidationMessageFor(model => model.Published)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.DisplayOrder)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.DisplayOrder)
                         @Html.ValidationMessageFor(model => model.DisplayOrder)
                     </div>
@@ -159,11 +144,11 @@
                 @if (Model.Id > 0)
                 {
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.CreatedOn)
                         </div>
-                        <div class="col-sm-9">
-                            @Html.DisplayFor(model => model.CreatedOn)
+                        <div class="col-md-9">
+                            @Html.NopDisplayFor(model => model.CreatedOn)
                         </div>
                     </div>
                 }
@@ -173,15 +158,12 @@
 }
 
 @helper TabStores()
-        {
+{
     <script type="text/javascript">
         $(document).ready(function () {
-
             $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
-
             toggleStoreMapping();
         });
-
 
         function toggleStoreMapping() {
             if ($('#@Html.FieldIdFor(model => model.LimitedToStores)').is(':checked')) {
@@ -190,25 +172,25 @@
                 $('#pnl-available-stores').hide();
             }
         }
-
     </script>
+
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.LimitedToStores)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.LimitedToStores)
                         @Html.ValidationMessageFor(model => model.LimitedToStores)
                     </div>
                 </div>
                 <div class="form-group" id="pnl-available-stores">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AvailableStores)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
                         {
                             @Html.Action("MultistoreDisabledWarning", "Common")

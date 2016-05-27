@@ -7,7 +7,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Customers
 {
-    public class CustomerAttributeValidator : BaseNopValidator<CustomerAttributeModel>
+    public partial class CustomerAttributeValidator : BaseNopValidator<CustomerAttributeModel>
     {
         public CustomerAttributeValidator(ILocalizationService localizationService, IDbContext dbContext)
         {

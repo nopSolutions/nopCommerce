@@ -267,6 +267,9 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AllowAddingOnlyExistingAttributeCombinations")]
         public bool AllowAddingOnlyExistingAttributeCombinations { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.NotReturnable")]
+        public bool NotReturnable { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisableBuyButton")]
         public bool DisableBuyButton { get; set; }
 

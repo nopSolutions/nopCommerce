@@ -5,7 +5,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Topics
 {
-    public class TopicValidator : BaseNopValidator<TopicModel>
+    public partial class TopicValidator : BaseNopValidator<TopicModel>
     {
         public TopicValidator(ILocalizationService localizationService)
         {

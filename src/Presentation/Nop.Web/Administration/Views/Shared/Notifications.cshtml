@@ -22,6 +22,7 @@
         errorMessages.AddRange(ViewData[string.Format("nop.notifications.{0}", NotifyType.Error)] as IList<string>);
     }
 }
+
 @foreach (var message in successMessages)
 {
     <div class="alert alert-success alert-dismissable">
@@ -29,6 +30,7 @@
         @message
     </div>
 }
+
 @foreach (var message in errorMessages)
 {
     <div class="alert alert-danger alert-dismissable">

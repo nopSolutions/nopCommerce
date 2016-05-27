@@ -2,6 +2,9 @@
 
 namespace Nop.Web.Framework.UI
 {
+    /// <summary>
+    /// Page head builder
+    /// </summary>
     public partial interface IPageHeadBuilder
     {
         void AddTitleParts(string part);
@@ -23,8 +26,7 @@ namespace Nop.Web.Framework.UI
         void AddCssFileParts(ResourceLocation location, string part);
         void AppendCssFileParts(ResourceLocation location, string part);
         string GenerateCssFiles(UrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null);
-
-
+        
         void AddCanonicalUrlParts(string part);
         void AppendCanonicalUrlParts(string part);
         string GenerateCanonicalUrls();
@@ -32,5 +34,31 @@ namespace Nop.Web.Framework.UI
         void AddHeadCustomParts(string part);
         void AppendHeadCustomParts(string part);
         string GenerateHeadCustom();
+        
+        void AddPageCssClassParts(string part);
+        void AppendPageCssClassParts(string part);
+        string GeneratePageCssClasses();
+
+        /// <summary>
+        /// Specify "edit page" URL
+        /// </summary>
+        /// <param name="url">URL</param>
+        void AddEditPageUrl(string url);
+        /// <summary>
+        /// Get "edit page" URL
+        /// </summary>
+        /// <returns>URL</returns>
+        string GetEditPageUrl();
+
+        /// <summary>
+        /// Specify system name of admin menu item that should be selected (expanded)
+        /// </summary>
+        /// <param name="systemName">System name</param>
+        void SetActiveMenuItemSystemName(string systemName);
+        /// <summary>
+        /// Get system name of admin menu item that should be selected (expanded)
+        /// </summary>
+        /// <returns>System name</returns>
+        string GetActiveMenuItemSystemName();
     }
 }

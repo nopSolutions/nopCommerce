@@ -1,36 +1,24 @@
 ﻿@model SpecificationAttributeModel
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 
 <script>
     $(document).ready(function () {
-        $("#specificationattribute-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
+        bindBootstrapTabSelectEvent('specificationattribute-edit');
     });
 </script>
 
 <div class="content">
     <div class="form-horizontal">
-        <div id="specificationattribute-edit">
-            <ul>
-                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Attributes.SpecificationAttributes.Info")
-                </li>
-                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Attributes.SpecificationAttributes.Options")
-                </li>
+        <div id="specificationattribute-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Catalog.Attributes.SpecificationAttributes.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-options", @T("Admin.Catalog.Attributes.SpecificationAttributes.Options"))
             </ul>
-            <div>
-                @TabInfo()
-            </div>
-            <div>
-                @TabOptions()
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-options", @TabOptions())
             </div>
         </div>
     </div>
@@ -47,50 +35,50 @@
 }
 
 
-@*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
-        {
+{
     <div class="panel-group">
-        <div class="panel panel-default">
-            @(Html.LocalizedEditor<SpecificationAttributeModel, SpecificationAttributeLocalizedModel>("specificationattribute-localized",
-            @<div class="panel-body">
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.Locales[item].Name)
+        @(Html.LocalizedEditor<SpecificationAttributeModel, SpecificationAttributeLocalizedModel>("specificationattribute-localized",
+            @<div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Locales[item].Name)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Locales[item].Name)
+                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                        </div>
                     </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.Locales[item].Name)
-                        @Html.ValidationMessageFor(model => model.Locales[item].Name)
-                    </div>
+                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
                 </div>
-                @Html.HiddenFor(model => model.Locales[item].LanguageId)
             </div>
     ,
-            @<div class="panel-body">
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.Name)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.Name)
-                        @Html.ValidationMessageFor(model => model.Name)
+            @<div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Name)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Name)
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
                     </div>
                 </div>
             </div>
-                  ))
-        </div>
-    </div>
+                           ))
 
-    <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.DisplayOrder)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.DisplayOrder)
                         @Html.ValidationMessageFor(model => model.DisplayOrder)
                     </div>
@@ -99,6 +87,7 @@
         </div>
     </div>
 }
+
 @helper TabOptions()
 {
     <div class="panel-group">
@@ -167,12 +156,12 @@
                                     }, {
                                         field: "NumberOfAssociatedProducts",
                                         title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.NumberOfAssociatedProducts")",
-                                        width: 100
+                                        width: 250
                                     }, {
                                         field: "Id",
                                         title: "@T("Admin.Common.Edit")",
                                         width: 100,
-                                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/SpecificationAttribute/OptionEditPopup/")#=Id#?btnId=btnRefresh&formId=specificationattribute-form', 800, 350, true); return false;\" class='btn btn-default' />"
+                                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/SpecificationAttribute/OptionEditPopup/")#=Id#?btnId=btnRefresh&formId=specificationattribute-form', 800, 400, true); return false;\" class='btn btn-default' />"
                                     }, {
                                         command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                         title: "@T("Admin.Common.Delete")",
@@ -184,7 +173,7 @@
                     </script>
                 </div>
                 <div class="panel-footer">
-                    <input type="submit" id="btnAddNewOption" value="@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("OptionCreatePopup", "SpecificationAttribute", new { specificationAttributeId = Model.Id, btnId = "btnRefresh", formId = "specificationattribute-form" }))', 800, 350, true); return false;" class="btn btn-default" />
+                    <input type="submit" id="btnAddNewOption" value="@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("OptionCreatePopup", "SpecificationAttribute", new { specificationAttributeId = Model.Id, btnId = "btnRefresh", formId = "specificationattribute-form" }))', 800, 400, true); return false;" class="btn btn-primary" />
                     <input type="submit" id="btnRefresh" style="display: none" />
                     <script type="text/javascript">
                         $(document).ready(function () {

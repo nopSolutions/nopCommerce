@@ -4,7 +4,10 @@
 
     //page title
     ViewBag.Title = T("Admin.Catalog.ProductTags").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Product tags");
 }
+
 @using (Html.BeginForm(null, null, FormMethod.Post, new {id = "product-tags-form"}))
 {
     @Html.AntiForgeryToken()
@@ -94,7 +97,7 @@
                                     field: "Id",
                                     title: "@T("Admin.Common.Edit")",
                                     width: 150,
-                                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/EditProductTag/")#=Id#?btnId=btnRefresh&formId=product-tags-form', 800, 250, true); return false;\" class='btn btn-default' />"
+                                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/EditProductTag/")#=Id#?btnId=btnRefresh&formId=product-tags-form', 800, 320, true); return false;\" class='btn btn-default' />"
                                 }, {
                                     command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                     title: "@T("Admin.Common.Delete")",

@@ -12,6 +12,9 @@ using Nop.Services.Seo;
 
 namespace Nop.Web.Framework.UI
 {
+    /// <summary>
+    /// Page head builder
+    /// </summary>
     public partial class PageHeadBuilder : IPageHeadBuilder
     {
         #region Fields
@@ -26,10 +29,17 @@ namespace Nop.Web.Framework.UI
         private readonly Dictionary<ResourceLocation, List<string>> _cssParts;
         private readonly List<string> _canonicalUrlParts;
         private readonly List<string> _headCustomParts;
+        private readonly List<string> _pageCssClassParts;
+        private string _editPageUrl;
+        private string _activeAdminMenuSystemName;
         #endregion
 
         #region Ctor
 
+        /// <summary>
+        /// Constuctor
+        /// </summary>
+        /// <param name="seoSettings">SEO settings</param>
         public PageHeadBuilder(SeoSettings seoSettings)
         {
             this._seoSettings = seoSettings;
@@ -40,6 +50,7 @@ namespace Nop.Web.Framework.UI
             this._cssParts = new Dictionary<ResourceLocation, List<string>>();
             this._canonicalUrlParts = new List<string>();
             this._headCustomParts = new List<string>();
+            this._pageCssClassParts = new List<string>();
         }
 
         #endregion
@@ -182,7 +193,7 @@ namespace Nop.Web.Framework.UI
             var result = !String.IsNullOrEmpty(metaKeyword) ? metaKeyword : _seoSettings.DefaultMetaKeywords;
             return result;
         }
-
+    
 
         public virtual void AddScriptParts(ResourceLocation location, string part, bool excludeFromBundle)
         {
@@ -399,6 +410,7 @@ namespace Nop.Web.Framework.UI
             return result.ToString();
         }
 
+
         public virtual void AddHeadCustomParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -429,6 +441,62 @@ namespace Nop.Web.Framework.UI
             return result.ToString();
         }
 
+        
+        public virtual void AddPageCssClassParts(string part)
+        {
+            if (string.IsNullOrEmpty(part))
+                return;
+
+            _pageCssClassParts.Add(part);
+        }
+        public virtual void AppendPageCssClassParts(string part)
+        {
+            if (string.IsNullOrEmpty(part))
+                return;
+
+            _pageCssClassParts.Insert(0, part);
+        }
+        public virtual string GeneratePageCssClasses()
+        {
+            string result = string.Join(" ", _pageCssClassParts.AsEnumerable().Reverse().ToArray());
+            return result;
+        }
+
+
+        /// <summary>
+        /// Specify "edit page" URL
+        /// </summary>
+        /// <param name="url">URL</param>
+        public virtual void AddEditPageUrl(string url)
+        {
+            _editPageUrl = url;
+        }
+        /// <summary>
+        /// Get "edit page" URL
+        /// </summary>
+        /// <returns>URL</returns>
+        public virtual string GetEditPageUrl()
+        {
+            return _editPageUrl;
+        }
+
+
+        /// <summary>
+        /// Specify system name of admin menu item that should be selected (expanded)
+        /// </summary>
+        /// <param name="systemName">System name</param>
+        public virtual void SetActiveMenuItemSystemName(string systemName)
+        {
+            _activeAdminMenuSystemName = systemName;
+        }
+        /// <summary>
+        /// Get system name of admin menu item that should be selected (expanded)
+        /// </summary>
+        /// <returns>System name</returns>
+        public virtual string GetActiveMenuItemSystemName()
+        {
+            return _activeAdminMenuSystemName;
+        }
 
         #endregion
 

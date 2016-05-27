@@ -89,8 +89,8 @@
                     }
                 </div>
                 <div class="quote-post">
-                    <a id="@Model.Id" title="@T("Forum.PostLinkTitle")" class="forum-post-link" href="@(thisPageUrl)#@(Model.Id)">#@(Model.Id)</a>
-                    @Html.RouteLink(T("Forum.QuotePost").Text, "PostCreateQuote", new {id = Model.ForumTopicId, quote = Model.Id}, new {@class = "quote-post-button"})
+                    <a id="@Model.Id" title="@T("Forum.PostLinkTitle")" class="post-link-button" href="@(thisPageUrl)#@(Model.Id)">#@(Model.Id)</a>
+                    @Html.RouteLink(T("Forum.QuotePost").Text, "PostCreateQuote", new { id = Model.ForumTopicId, quote = Model.Id }, new { @class = "quote-post-button" })
                 </div>
             </div>
         </div>
@@ -98,6 +98,54 @@
             @Html.Raw(Model.FormattedText)
             @Html.Hidden("Id", Model.Id)
         </div>
+        @if (Model.AllowPostVoting)
+        {
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    var post = '#post-vote-' + @Model.Id;
+                    $(post + ' span.vote').click(function () {
+                        var postData = {
+                            postId: @Model.Id,
+                            IsUp: $(this).hasClass('up')
+                        };
+                        addAntiForgeryToken(postData);
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: '@Url.Action("PostVote", "Boards")',
+                            data: postData,
+                            success: function (data) {
+                                if (data.Error) {
+                                    alert(data.Error);
+                                }
+                                else {
+                                    $(post + ' div.vote-count-post').html(data.VoteCount);
+                                    $(post + ' span.up').removeClass('selected');
+                                    $(post + ' span.down').removeClass('selected');
+                                    if (data.IsUp) {
+                                        $(post + ' span.up').addClass('selected');
+                                    }
+                                    if (data.IsUp == false) {
+                                        $(post + ' span.down').addClass('selected');
+                                    }
+                                }
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                alert('Failed to vote');
+                            }
+                        });
+                    });
+                });
+            </script>
+
+            <div class="post-vote" id="@String.Format("post-vote-{0}", Model.Id)">
+                <span class="vote up @if (Model.VoteIsUp.HasValue && (bool) Model.VoteIsUp){<text>selected</text>}"
+                      title="This post/answer is useful"></span>
+                <div class="vote-count-post"> @Model.VoteCount </div>
+                <span class="vote down @if (Model.VoteIsUp.HasValue && (bool)!Model.VoteIsUp) { <text>selected</text> }"
+                      title="This post/answer is not useful"></span>
+            </div>
+        }
         @if (Model.SignaturesEnabled & !String.IsNullOrEmpty(Model.FormattedSignature))
         {
             <div class="signature">

@@ -10,6 +10,7 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
@@ -1370,6 +1371,18 @@ namespace Nop.Services.Installation
                                     },
                                     new Country
                                     {
+                                        Name = "East Timor",
+                                        AllowsBilling = true,
+                                        AllowsShipping = true,
+                                        TwoLetterIsoCode = "TL",
+                                        ThreeLetterIsoCode = "TLS",
+                                        NumericIsoCode = 626,
+                                        SubjectToVat = false,
+                                        DisplayOrder = 100,
+                                        Published = true
+                                    },
+                                    new Country
+                                    {
                                         Name = "Ecuador",
                                         AllowsBilling = true,
                                         AllowsShipping = true,
@@ -1706,6 +1719,18 @@ namespace Nop.Services.Installation
                                     },
                                     new Country
                                     {
+                                        Name = "Palestine",
+                                        AllowsBilling = true,
+                                        AllowsShipping = true,
+                                        TwoLetterIsoCode = "PS",
+                                        ThreeLetterIsoCode = "PSE",
+                                        NumericIsoCode = 275,
+                                        SubjectToVat = false,
+                                        DisplayOrder = 100,
+                                        Published = true
+                                    },
+                                    new Country
+                                    {
                                         Name = "Paraguay",
                                         AllowsBilling = true,
                                         AllowsShipping = true,
@@ -1802,7 +1827,7 @@ namespace Nop.Services.Installation
                                     },
                                     new Country
                                     {
-                                        Name = "Russia",
+                                        Name = "Russian Federation",
                                         AllowsBilling = true,
                                         AllowsShipping = true,
                                         TwoLetterIsoCode = "RU",
@@ -2372,6 +2397,18 @@ namespace Nop.Services.Installation
                                         TwoLetterIsoCode = "CG",
                                         ThreeLetterIsoCode = "COG",
                                         NumericIsoCode = 178,
+                                        SubjectToVat = false,
+                                        DisplayOrder = 100,
+                                        Published = true
+                                    },
+                                    new Country
+                                    {
+                                        Name = "Congo (Democratic Republic of the)",
+                                        AllowsBilling = true,
+                                        AllowsShipping = true,
+                                        TwoLetterIsoCode = "CD",
+                                        ThreeLetterIsoCode = "COD",
+                                        NumericIsoCode = 180,
                                         SubjectToVat = false,
                                         DisplayOrder = 100,
                                         Published = true
@@ -3518,6 +3555,18 @@ namespace Nop.Services.Installation
                                     },
                                     new Country
                                     {
+                                        Name = "South Sudan",
+                                        AllowsBilling = true,
+                                        AllowsShipping = true,
+                                        TwoLetterIsoCode = "SS",
+                                        ThreeLetterIsoCode = "SSD",
+                                        NumericIsoCode = 728,
+                                        SubjectToVat = false,
+                                        DisplayOrder = 100,
+                                        Published = true
+                                    },
+                                    new Country
+                                    {
                                         Name = "Sri Lanka",
                                         AllowsBilling = true,
                                         AllowsShipping = true,
@@ -4607,6 +4656,7 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new AdminAreaSettings
             {
                 DefaultGridPageSize = 15,
+                PopupGridPageSize = 10,
                 GridPageSizes = "10, 15, 20, 50, 100",
                 RichEditorAdditionalSettings = null,
                 RichEditorAllowJavaScript = false
@@ -4774,7 +4824,8 @@ namespace Nop.Services.Installation
                 MaximumImageSize = 1980,
                 DefaultPictureZoomEnabled = false,
                 DefaultImageQuality = 80,
-                MultipleThumbDirectories = false
+                MultipleThumbDirectories = false,
+                ImportProductImagesUsingHash = true
             });
 
             settingService.SaveSetting(new StoreInformationSettings
@@ -4984,6 +5035,8 @@ namespace Nop.Services.Installation
                 AllowCustomersToManageSubscriptions = false,
                 AllowGuestsToCreatePosts = false,
                 AllowGuestsToCreateTopics = false,
+                AllowPostVoting = true,
+                MaxVotesPerDay = 30,
                 TopicSubjectMaxLength = 450,
                 PostMaxLength = 4000,
                 StrippedTopicMaxLength = 45,
@@ -9792,6 +9845,18 @@ namespace Nop.Services.Installation
                                                   SystemKeyword = "EditWidget",
                                                   Enabled = true,
                                                   Name = "Edit a widget"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "Impersonation.Started",
+                                                  Enabled = true,
+                                                  Name = "Customer impersonation session. Started"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "Impersonation.Finished",
+                                                  Enabled = true,
+                                                  Name = "Customer impersonation session. Finished"
                                               },
                                               //public store activities
                                           new ActivityLogType

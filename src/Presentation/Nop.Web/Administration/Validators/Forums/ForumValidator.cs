@@ -7,7 +7,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Forums
 {
-    public class ForumValidator : BaseNopValidator<ForumModel>
+    public partial class ForumValidator : BaseNopValidator<ForumModel>
     {
         public ForumValidator(ILocalizationService localizationService, IDbContext dbContext)
         {

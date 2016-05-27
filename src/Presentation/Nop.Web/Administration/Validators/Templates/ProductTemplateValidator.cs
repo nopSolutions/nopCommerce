@@ -5,7 +5,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Templates
 {
-    public class ProductTemplateValidator : BaseNopValidator<ProductTemplateModel>
+    public partial class ProductTemplateValidator : BaseNopValidator<ProductTemplateModel>
     {
         public ProductTemplateValidator(ILocalizationService localizationService)
         {
