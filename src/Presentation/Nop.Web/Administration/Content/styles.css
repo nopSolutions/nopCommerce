@@ -52,7 +52,7 @@ table.adminContent {
     float: right;
     max-width: 90%;
 }
-.form-horizontal img.ico-help {
+.form-horizontal .ico-help {
     float: right;
     margin-top: 8px;
     margin-left: 5px;
@@ -671,11 +671,11 @@ ul.common-list {
 }
 
 @media (max-width: 1200px) {
-    .form-horizontal img.ico-help {
+    .form-horizontal .ico-help {
          display: none;
     }
 
-    .form-horizontal .panel-search-popup img.ico-help {
+    .form-horizontal .panel-search-popup .ico-help {
          display: block;
     }
 
@@ -748,7 +748,7 @@ ul.common-list {
         padding-top: 0;
     }
 
-    .form-horizontal .panel-search-popup img.ico-help {
+    .form-horizontal .panel-search-popup .ico-help {
          display: none;
     }
 
