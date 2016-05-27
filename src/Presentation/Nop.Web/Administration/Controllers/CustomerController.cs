@@ -2099,7 +2099,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 byte[] bytes = _exportManager.ExportCustomersToXlsx(customers);
-                return File(bytes, MimeTypes.TextXls, "customers.xlsx");
+                return File(bytes, MimeTypes.TextXlsx, "customers.xlsx");
             }
             catch (Exception exc)
             {
@@ -2127,7 +2127,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 byte[] bytes = _exportManager.ExportCustomersToXlsx(customers);
-                return File(bytes, MimeTypes.TextXls, "customers.xlsx");
+                return File(bytes, MimeTypes.TextXlsx, "customers.xlsx");
             }
             catch (Exception exc)
             {
