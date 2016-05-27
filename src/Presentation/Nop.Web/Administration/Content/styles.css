@@ -670,6 +670,10 @@ ul.common-list {
     padding-left: 20px;
 }
 
+.dropdown-menu>li>a>.fa {
+    margin-right: 0;
+}
+
 @media (max-width: 1200px) {
     .form-horizontal .ico-help {
          display: none;
