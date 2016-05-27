@@ -19,7 +19,7 @@
             @if (!Model.IsLoggedInAsVendor)
             {
                 <a href="@Url.Action("PdfInvoice", new {orderId = Model.Id})" class="btn bg-purple">
-                    <i class="fa fa-download"></i>
+                    <i class="fa fa-file-pdf-o"></i>
                     @T("Admin.Orders.PdfInvoice")
                 </a>
             }

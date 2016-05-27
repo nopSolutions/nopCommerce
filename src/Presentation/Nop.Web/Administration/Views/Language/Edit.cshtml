@@ -25,11 +25,11 @@
                 @T("Admin.Common.SaveContinue")
             </button>
             <a href="@Url.Action("ExportXml", new {id = Model.Id})" class="btn bg-green">
-                <i class="fa fa-exchange"></i>
+                <i class="fa fa-download"></i>
                 @T("Admin.Configuration.Languages.Export")
             </a>
             <button type="button" class="btn bg-olive" data-toggle="modal" data-target="#importxml-window">
-                <i class="fa fa-exchange"></i>
+                <i class="fa fa-upload"></i>
                 @T("Admin.Configuration.Languages.Import")
             </button>
             <span id="language-delete" class="btn bg-red">
