@@ -54,8 +54,10 @@ table.adminContent {
 }
 .form-horizontal .ico-help {
     float: right;
-    margin-top: 8px;
-    margin-left: 5px;
+    margin-top: 6px;
+    margin-left: 6px;
+    color:#3c8dbc;
+    font-size: 1.17em;
 }
 
 .form-text-row {

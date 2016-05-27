@@ -319,9 +319,8 @@ namespace Nop.Web.Framework
             var builder = new TagBuilder("div");
             builder.MergeAttribute("title", value);
             builder.MergeAttribute("class", "ico-help");
-            builder.MergeAttribute("style", "color:#3c8dbc;");
             var icon = new StringBuilder();
-            icon.Append("<i class='fa fa-question-circle fa-lg'></i>");
+            icon.Append("<i class='fa fa-question-circle'></i>");
             builder.InnerHtml = icon.ToString();
             // Render tag
             return MvcHtmlString.Create(builder.ToString());
