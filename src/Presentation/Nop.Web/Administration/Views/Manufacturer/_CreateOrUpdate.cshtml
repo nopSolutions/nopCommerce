@@ -405,7 +405,9 @@
                 </div>
 
                 <div class="panel-footer">
-                    <input type="submit" id="btnAddNewProduct" value="@T("Admin.Catalog.Manufacturers.Products.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Manufacturer", new { manufacturerId = Model.Id, btnId = "btnRefreshProducts", formId = "manufacturer-form" }))', 800, 800, true); return false;" class="btn btn-primary" />
+                    <button type="submit" id="btnAddNewProduct" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Manufacturer", new {manufacturerId = Model.Id, btnId = "btnRefreshProducts", formId = "manufacturer-form"}))', 800, 800, true); return false;" class="btn btn-primary">
+                        @T("Admin.Catalog.Manufacturers.Products.AddNew")
+                    </button>
                     <input type="submit" id="btnRefreshProducts" style="display: none" />
                     <script type="text/javascript">
                         $(document).ready(function () {

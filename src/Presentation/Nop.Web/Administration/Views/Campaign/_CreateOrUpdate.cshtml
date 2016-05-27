@@ -21,7 +21,9 @@
                                 <div class="input-group">
                                     @Html.NopEditorFor(model => model.TestEmail)
                                     <div class="input-group-btn">
-                                        <input type="submit" name="send-test-email" class="btn btn-info" value="@T("Admin.Promotions.Campaigns.SendTestEmail")" />
+                                        <button type="submit" name="send-test-email" class="btn btn-info" value="@T("Admin.Promotions.Campaigns.SendTestEmail")">
+                                            
+                                        </button>
                                     </div>
                                 </div>
                                 @Html.ValidationMessageFor(model => model.TestEmail)
@@ -31,7 +33,9 @@
                             <div class="col-md-3">
                             </div>
                             <div class="col-md-9">
-                                <input type="submit" name="send-mass-email" class="btn btn-primary" value="@T("Admin.Promotions.Campaigns.SendMassEmail")" />
+                                <button type="submit" name="send-mass-email" class="btn btn-primary">
+                                    @T("Admin.Promotions.Campaigns.SendMassEmail")
+                                </button>
                             </div>
                         </div>
                     </div>

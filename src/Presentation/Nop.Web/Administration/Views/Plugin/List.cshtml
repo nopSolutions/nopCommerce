@@ -156,7 +156,7 @@
                                         }, {
                                             field: "Installed",
                                             title: "@T("Admin.Configuration.Plugins.Fields.Installation")",
-                                            template: '# if(Installed) {# <input type="submit" name="uninstall-plugin-link-#=SystemName#" class="btn bg-green uninstall-plugin-link" value="@T("Admin.Configuration.Plugins.Fields.Uninstall")" /> #} else {#  <input type="submit" name="install-plugin-link-#=SystemName#" class="btn bg-red install-plugin-link" value="@T("Admin.Configuration.Plugins.Fields.Install")" /> #} #',
+                                            template: '# if(Installed) {# <button type="submit" name="uninstall-plugin-link-#=SystemName#" class="btn bg-green uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall")</button> #} else {#  <button type="submit" name="install-plugin-link-#=SystemName#" class="btn bg-red install-plugin-link" value="@T("Admin.Configuration.Plugins.Fields.Install")"></button> #} #',
                                             headerAttributes: { style: "text-align:center" },
                                             attributes: { style: "text-align:center" }
                                         }

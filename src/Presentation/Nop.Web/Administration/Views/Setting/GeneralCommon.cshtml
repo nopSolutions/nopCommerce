@@ -384,7 +384,9 @@
                         <div class="input-group input-group-short">
                             @Html.NopEditorFor(model => model.SecuritySettings.EncryptionKey)
                             <span class="input-group-btn">
-                                <input type="submit" name="changeencryptionkey" value="@T("Admin.Common.Change")" id="changeencryptionkey" class="btn btn-info" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                                <button type="submit" name="changeencryptionkey" id="changeencryptionkey" class="btn btn-info" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+                                    @T("Admin.Common.Change")
+                                </button>
                             </span>
                         </div>
                         @Html.ValidationMessageFor(model => model.SecuritySettings.EncryptionKey)
@@ -724,7 +726,9 @@
                             </label>
                         </div>
                         <div class="col-md-9">
-                            <input type="submit" name="togglefulltext" value="@(Model.FullTextSettings.Enabled ? T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disable").Text : T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enable").Text)" class="btn btn-primary" />
+                            <button type="submit" name="togglefulltext" class="btn btn-primary">
+                                @(Model.FullTextSettings.Enabled ? T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disable").Text : T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enable").Text)
+                            </button>
                         </div>
                     </div>
                     if (Model.FullTextSettings.Enabled)

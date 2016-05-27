@@ -150,7 +150,9 @@
                             <div class="input-group-btn">
                                 @if (Model.Id > 0)
                                 {
-                                    <input type="submit" name="changepassword" class="btn btn-info" value="@T("Admin.Customers.Customers.Fields.Password.Change")" />
+                                    <button type="submit" name="changepassword" class="btn btn-info">
+                                        @T("Admin.Customers.Customers.Fields.Password.Change")
+                                    </button>
                                 }
                             </div>
                         </div>
@@ -448,7 +450,9 @@
                         </div>
                         <div class="col-md-9">
                             <a href="@Url.Action("Edit", "Affiliate", new {id = Model.AffiliateId})">@Model.AffiliateName - @T("Admin.Common.View")</a>
-                            <input type="submit" name="remove-affiliate" class="btn bg-red" value="@T("Admin.Customers.Customers.Fields.Affiliate.Remove")"/>
+                            <button type="submit" name="remove-affiliate" class="btn bg-red">
+                                @T("Admin.Customers.Customers.Fields.Affiliate.Remove")
+                            </button>
                         </div>
                     </div>
                 }
@@ -461,8 +465,12 @@
                         <div class="col-md-9">
                             @Html.NopEditorFor(model => model.VatNumber)
                             (@string.Format(T("Admin.Customers.Customers.Fields.VatNumberStatus").Text, Model.VatNumberStatusNote))
-                            <input type="submit" name="markVatNumberAsValid" class="btn btn-primary" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsValid")" />
-                            <input type="submit" name="markVatNumberAsInvalid" class="btn bg-red" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsInvalid")" />
+                            <button type="submit" name="markVatNumberAsValid" class="btn btn-primary">
+                                @T("Admin.Customers.Customers.Fields.VatNumber.MarkAsValid")
+                            </button>
+                            <button type="submit" name="markVatNumberAsInvalid" class="btn bg-red">
+                                @T("Admin.Customers.Customers.Fields.VatNumber.MarkAsInvalid")
+                            </button>
                             @Html.ValidationMessageFor(model => model.VatNumber)
                         </div>
                     </div>

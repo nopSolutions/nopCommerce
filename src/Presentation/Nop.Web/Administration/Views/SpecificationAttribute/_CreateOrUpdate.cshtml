@@ -173,7 +173,9 @@
                     </script>
                 </div>
                 <div class="panel-footer">
-                    <input type="submit" id="btnAddNewOption" value="@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("OptionCreatePopup", "SpecificationAttribute", new { specificationAttributeId = Model.Id, btnId = "btnRefresh", formId = "specificationattribute-form" }))', 800, 400, true); return false;" class="btn btn-primary" />
+                    <button type="submit" id="btnAddNewOption" onclick="javascript:OpenWindow('@(Url.Action("OptionCreatePopup", "SpecificationAttribute", new {specificationAttributeId = Model.Id, btnId = "btnRefresh", formId = "specificationattribute-form"}))', 800, 400, true); return false;" class="btn btn-primary">
+                        @T("Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew")
+                    </button>
                     <input type="submit" id="btnRefresh" style="display: none" />
                     <script type="text/javascript">
                         $(document).ready(function () {

@@ -479,7 +479,9 @@
             </script>
         </div>
         <div class="panel-footer">
-            <input type="submit" id="btnAddNewCombination" value="@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("AddAttributeCombinationPopup", "Product", new {productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form"}))', 800, 700, true); return false;" class="btn btn-primary" />
+            <button type="submit" id="btnAddNewCombination" onclick="javascript:OpenWindow('@(Url.Action("AddAttributeCombinationPopup", "Product", new {productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form"}))', 800, 700, true); return false;" class="btn btn-primary">
+                @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddNew")
+            </button>
             <button type="button" id="btnGenerateAllCombinations" class="btn bg-aqua">@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateAll")</button>
         </div>
     </div>

@@ -16,7 +16,9 @@
             <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Customers.Customers.Addresses.BackToCustomer").Text, "Edit", new { id = Model.CustomerId })</small>
         </h1>
         <div class="pull-right">
-            <input type="submit" value="@T("Admin.Common.Save")" class="btn bg-blue" />
+            <button type="submit" class="btn bg-blue">
+                @T("Admin.Common.Save")
+            </button>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdateAddress", Model)

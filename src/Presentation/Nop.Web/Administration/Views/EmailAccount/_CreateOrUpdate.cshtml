@@ -63,7 +63,9 @@
                                 <div class="input-group-btn">
                                     @if (Model.Id > 0)
                                     {
-                                        <input type="submit" name="changepassword" class="btn btn-info" value="@T("Admin.Configuration.EmailAccounts.Fields.Password.Change")" />
+                                        <button type="submit" name="changepassword" class="btn btn-info">
+                                            @T("Admin.Configuration.EmailAccounts.Fields.Password.Change")
+                                        </button>
                                     }
                                 </div>
                             </div>
@@ -105,7 +107,9 @@
                                 <div class="input-group">
                                     @Html.NopEditorFor(model => model.SendTestEmailTo)
                                     <div class="input-group-btn">
-                                        <input type="submit" name="sendtestemail" class="btn btn-info" value="@T("Admin.Configuration.EmailAccounts.SendTestEmail.Button")" />
+                                        <button type="submit" name="sendtestemail" class="btn btn-info">
+                                            @T("Admin.Configuration.EmailAccounts.SendTestEmail.Button")
+                                        </button>
                                     </div>
                                 </div>
                                 @Html.ValidationMessageFor(model => model.Password)

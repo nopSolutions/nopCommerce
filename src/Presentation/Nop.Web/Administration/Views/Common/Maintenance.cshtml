@@ -168,7 +168,9 @@
                         <div id="backup-list"></div>
                     </div>
                     <div class="panel-footer">
-                        <input type="submit" id="backup-database" name="backup-database" class="btn btn-primary" value="@T("Admin.System.Maintenance.BackupDatabase.BackupNow")" />
+                        <button type="submit" id="backup-database" name="backup-database" class="btn btn-primary">
+                            @T("Admin.System.Maintenance.BackupDatabase.BackupNow")
+                        </button>
                     </div>
                 </div>
                 <div id="backup-data" style="display: none"></div>
@@ -245,12 +247,12 @@
                                 }, {
                                     field: "Name",
                                     title: "@T("Admin.System.Maintenance.BackupDatabase.Restore")",
-                                    template: '<input type="submit" class="btn bg-green" value="@T("Admin.System.Maintenance.BackupDatabase.Restore")" onclick="SubmitBackupAction(\'#=Name#\',\'restore-backup\')"/>'
+                                    template: '<button type="submit" class="btn bg-green" onclick="SubmitBackupAction(\'#=Name#\',\'restore-backup\')">@T("Admin.System.Maintenance.BackupDatabase.Restore")</button>'
                                 },
                                 {
                                     field: "Name",
                                     title: "@T("Admin.System.Maintenance.BackupDatabase.Delete")",
-                                    template: '<input type="submit" class="btn bg-red" value="@T("Admin.System.Maintenance.BackupDatabase.Delete")" onclick="SubmitBackupAction(\'#=Name#\',\'delete-backup\')" />'
+                                    template: '<button type="submit" class="btn bg-red" onclick="SubmitBackupAction(\'#=Name#\',\'delete-backup\')">@T("Admin.System.Maintenance.BackupDatabase.Delete")</button>'
                                 }
                             ]
                         });

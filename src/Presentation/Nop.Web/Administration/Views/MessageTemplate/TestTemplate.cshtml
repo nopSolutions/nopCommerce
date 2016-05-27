@@ -16,7 +16,9 @@
             <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.ContentManagement.MessageTemplates.Test.BackToTemplate").Text, "Edit", new { id = Model.Id })</small>
         </h1>
         <div class="pull-right">
-            <input type="submit" name="send-test" class="btn bg-blue" value="@T("Admin.ContentManagement.MessageTemplates.Test.Send")" />
+            <button type="submit" name="send-test" class="btn bg-blue">
+                @T("Admin.ContentManagement.MessageTemplates.Test.Send")
+            </button>
         </div>
     </div>
     @Html.HiddenFor(model => model.Id)

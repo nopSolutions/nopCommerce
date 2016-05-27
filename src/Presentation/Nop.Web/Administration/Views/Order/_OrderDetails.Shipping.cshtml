@@ -196,9 +196,15 @@
                                 </div>
                                 <div id="divShippingMethod">@Html.NopEditorFor(model => model.ShippingMethod)</div>
                                 <span class="input-group-btn">
-                                    <input type="submit" value="@T("Admin.Common.Edit")" onclick="toggleEditShippingMethod(true);return false;" id="btnEditShippingMethod" class="btn btn-primary" />
-                                    <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveShippingMethod" name="save-shipping-method" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
-                                    <input type="submit" value="@T("Admin.Common.Cancel")" onclick="toggleEditShippingMethod(false);return false;" id="btnCancelShippingMethod" class="btn bg-teal" />
+                                    <button type="submit" onclick="toggleEditShippingMethod(true);return false;" id="btnEditShippingMethod" class="btn btn-primary">
+                                        @T("Admin.Common.Edit")
+                                    </button>
+                                    <button type="submit" id="btnSaveShippingMethod" name="save-shipping-method" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+                                        @T("Admin.Common.Save")
+                                    </button>
+                                    <button type="submit" onclick="toggleEditShippingMethod(false);return false;" id="btnCancelShippingMethod" class="btn bg-teal">
+                                        @T("Admin.Common.Cancel")
+                                    </button>
                                 </span>
                             </div>
                         }
@@ -373,7 +379,9 @@
             @if (Model.CanAddNewShipments)
             {
                 <div class="panel-footer">
-                    <input type="submit" id="btnAddNewShipment" name="btnAddNewShipment" value="@T("Admin.Orders.Shipments.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Order", new {orderId = Model.Id}))'); return false;" class="btn btn-primary" />
+                    <button type="submit" id="btnAddNewShipment" name="btnAddNewShipment" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Order", new {orderId = Model.Id}))'); return false;" class="btn btn-primary">
+                        @T("Admin.Orders.Shipments.AddNew")
+                    </button>
                 </div>
             }
         </div>

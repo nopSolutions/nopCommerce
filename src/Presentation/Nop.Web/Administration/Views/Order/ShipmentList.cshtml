@@ -28,8 +28,15 @@
                     <span class="sr-only">&nbsp;</span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><input type="submit" name="exportpackagingslips-all" value="@T("Admin.Orders.Shipments.PrintPackagingSlips.All")"/></li>
-                    <li><button type="button" id="exportpackagingslips-selected">@T("Admin.Orders.Shipments.PrintPackagingSlips.Selected")</button></li>
+                    <li><button type="submit" name="exportpackagingslips-all">
+                            @T("Admin.Orders.Shipments.PrintPackagingSlips.All")
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" id="exportpackagingslips-selected">
+                            @T("Admin.Orders.Shipments.PrintPackagingSlips.Selected")
+                        </button>
+                    </li>
                 </ul>
             </div>
             <button type="button" id="ship-selected" class="btn bg-aqua">

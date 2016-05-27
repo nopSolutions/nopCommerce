@@ -43,12 +43,16 @@
                         </div>
                         <div class="form-group">
                             <div class="col-xs-2 col-xs-offset-4">
-                                <input type="submit" name="uploadlicense" value="@T("Admin.Common.Save")" id="uploadlicense" class="btn btn-primary"/>
+                                <button type="submit" name="uploadlicense" id="uploadlicense" class="btn btn-primary">
+                                    @T("Admin.Common.Save")
+                                </button>
                             </div>
                             <div class="col-xs-2">
                                 @if (Model.LicenseDownloadId > 0)
                                 {
-                                    <input type="submit" name="deletelicense" value="@T("Admin.Common.Delete")" id="deletelicense" class="btn bg-red"/>
+                                    <button type="submit" name="deletelicense" id="deletelicense" class="btn bg-red">
+                                        @T("Admin.Common.Delete")
+                                    </button>
                                 }
                                 else
                                 {
