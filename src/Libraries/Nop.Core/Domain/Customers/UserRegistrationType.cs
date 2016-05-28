@@ -1,7 +1,7 @@
 namespace Nop.Core.Domain.Customers
 {
     /// <summary>
-    /// Represents the customer registration type fortatting enumeration
+    /// Represents the customer registration type formatting enumeration
     /// </summary>
     public enum UserRegistrationType
     {
