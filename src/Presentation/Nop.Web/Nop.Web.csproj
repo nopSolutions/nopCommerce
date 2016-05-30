@@ -673,6 +673,7 @@
     <Content Include="Content\kendo\2014.1.318\Uniform\sprite.png" />
     <Content Include="Content\kendo\2014.1.318\Uniform\sprite_2x.png" />
     <Content Include="Content\magnific-popup\magnific-popup.css" />
+    <Content Include="Content\morris\morris.css" />
     <Content Include="Content\Roxy_Fileman\css\images\animated-overlay.gif" />
     <Content Include="Content\Roxy_Fileman\css\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\Roxy_Fileman\css\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -1607,6 +1608,9 @@
     <Content Include="Scripts\kendo\2014.1.318\kendo.view.min.js" />
     <Content Include="Scripts\kendo\2014.1.318\kendo.web.min.js" />
     <Content Include="Scripts\kendo\2014.1.318\kendo.window.min.js" />
+    <Content Include="Scripts\knob\jquery.knob.js" />
+    <Content Include="Scripts\morris\morris.js" />
+    <Content Include="Scripts\morris\morris.min.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\selectivizr.min.js" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
