@@ -687,7 +687,7 @@ namespace Nop.Plugin.Shipping.UPS
                             continue;
                         }
 
-                        //Weed out unwanted or unkown service rates
+                        //Weed out unwanted or unknown service rates
                         if (service.ToUpper() != "UNKNOWN")
                         {
                             var shippingOption = new ShippingOption();

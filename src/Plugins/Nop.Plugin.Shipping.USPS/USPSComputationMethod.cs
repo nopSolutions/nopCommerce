@@ -80,7 +80,7 @@ namespace Nop.Plugin.Shipping.USPS
         /// Is a request domestic
         /// </summary>
         /// <param name="getShippingOptionRequest">Request</param>
-        /// <returns>Rsult</returns>
+        /// <returns>Result</returns>
         protected bool IsDomesticRequest(GetShippingOptionRequest getShippingOptionRequest)
         {
             //Origin Country must be USA, Collect USA from list of countries
@@ -520,7 +520,7 @@ namespace Nop.Plugin.Shipping.USPS
                                 tr.MoveToAttribute(i);
                                 if (tr.Name.Equals(classStr))
                                 {
-                                    // Add delimiters [] so that single digit IDs aren't found in mutli-digit IDs                                    
+                                    // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs                                    
                                     serviceId = String.Format("[{0}]", tr.Value);
                                     break;
                                 }

@@ -3,11 +3,49 @@
 Admin.Navigation = (function () {
     var buildMap = function () {
         var map = {};
-        $('.sidebar-menu a.menu-item-link').each(function () {
-            var linkTitle = $(this).children('.menu-item-title').text();
-            var href = $(this).attr('href');
-            map[href] = { root: linkTitle, node: null, title: linkTitle, url: href };
+        
+        var linkElements = $("a.menu-item-link");
+
+        linkElements.each(function () {
+            var parents = $(this).parentsUntil(".sidebar-menu");
+            var href;
+            var title;
+            var parent;
+            var grandParent;
+            switch (parents.length) {
+                // items in level one
+                case 1:
+                    {
+                        href = $(parents).find("a").attr("href");
+                        title = $(parents).find("a").find("span").html();
+                        map[href] = { title: title, link: href, parent: null, grandParent: null };
+
+                        break;
+                    }
+                    // items in level two, these items have parent but have not grand parent
+                case 3:
+                    {
+                        href = $(parents).eq(0).find("a").attr("href");
+                        title = $(parents).eq(0).find("a").find("span").html();
+                        parent = $(parents).eq(2).find("a").find("span").html();
+                        map[href] = { title: title, link: href, parent: parent, grandParent: null };
+
+                        break;
+                    }
+                    // items in level three, these items have both parent and grand parent
+                case 5:
+                    {
+                        href = $(parents).eq(0).find("a").attr("href");
+                        title = $(parents).eq(0).find("a").find("span").html();
+                        parent = $(parents).eq(2).find("a").find("span").html();
+                        grandParent = $(parents).eq(4).find("a").find("span").html();
+                        map[href] = { title: title, link: href, parent: parent, grandParent: grandParent };
+                        break;
+                    }
+                default: break;
+            }
         });
+
         return map;
     };
 
@@ -25,9 +63,9 @@ Admin.Navigation = (function () {
             }
         },
         open: function (url) {
-            if (events['open']) {
-                var event = $.Event('open', { url: url });
-                events['open'].fire(event);
+            if (events["open"]) {
+                var event = $.Event("open", { url: url });
+                events["open"].fire(event);
                 if (event.isDefaultPrevented())
                     return;
             }
