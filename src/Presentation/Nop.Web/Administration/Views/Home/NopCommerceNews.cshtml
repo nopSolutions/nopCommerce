@@ -7,7 +7,7 @@
     var hideAdvertisements = EngineContext.Current.Resolve<CommonSettings>().HideAdvertisementsOnAdminArea;
 }
 
-<div class="box">
+<div class="box box-info">
     <div class="box-header with-border clearfix">
         <div class="box-title">
             @T("Admin.NopCommerceNews")
@@ -17,31 +17,41 @@
                 <i class="fa fa-minus"></i>
             </button>
             @*<button type="button" class="btn btn-box-tool" data-widget="remove">
-                <i class="fa fa-times"></i>
-            </button>*@
+                    <i class="fa fa-times"></i>
+                </button>*@
         </div>
     </div>
     <div class="box-body">
-        <div class="panel-group">
-            @foreach (var item in Model.Items)
+        <div class="row">
+            @for (var i = 0; i < 3; i++)
             {
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        @if (item.Links.Count > 0)
-                        {
-                            <a href='@(item.Links[0].Uri.OriginalString)'>@item.Title.Text</a>
-                        }
-                        else
-                        {
-                            @item.Title.Text
-                        }
-                        <div>@item.PublishDate.ToString("d")</div>
-                    </div>
-                    <div class="panel-body">
-                        @Html.Raw(item.Summary.Text)
-                    </div>
-                </div>
+                if (Model.Items.Count() > i)
+                {
+                    var item = Model.Items.ElementAt(i);
+                    if (item != null)
+                    {
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    @if (item.Links.Count > 0)
+                                    {
+                                        <a href='@(item.Links[0].Uri.OriginalString)'>@item.Title.Text</a>
+                                    }
+                                    else
+                                    {
+                                        @item.Title.Text
+                                    }
+                                    <div>@item.PublishDate.ToString("d")</div>
+                                </div>
+                                <div class="panel-body">
+                                    @Html.Raw(item.Summary.Text)
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
             }
+
         </div>
     </div>
     <div class="box-footer">

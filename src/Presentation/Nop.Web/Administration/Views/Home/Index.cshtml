@@ -23,7 +23,7 @@
 
 <div class="content">
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-12">
             @Html.Widget("admin_dashboard_top")
 
             <div class="row">
@@ -37,7 +37,7 @@
                             <i class="ion ion-bag"></i>
                         </div>
                         <a href="@Url.Content("~/Admin/Order/List/")" class="small-box-footer">
-                            More info 
+                            More info
                             <i class="fa fa-arrow-circle-right"></i>
                         </a>
                     </div>
@@ -52,7 +52,7 @@
                             <i class="ion ion-person-add"></i>
                         </div>
                         <a href="@Url.Content("~/Admin/Customer/List/")" class="small-box-footer">
-                            More info 
+                            More info
                             <i class="fa fa-arrow-circle-right"></i>
                         </a>
                     </div>
@@ -67,7 +67,7 @@
                             <i class="ion ion-stats-bars"></i>
                         </div>
                         <a href="@Url.Content("~/Admin/ReturnRequest/List/")" class="small-box-footer">
-                            More info 
+                            More info
                             <i class="fa fa-arrow-circle-right"></i>
                         </a>
                     </div>
@@ -88,8 +88,6 @@
                     </div>
                 </div>
             </div>
-
-
 
             @if (!Model.IsLoggedInAsVendor && canManageOrders)
             {
@@ -207,12 +205,15 @@
                     </div>
                 </div>
             }
-        </div>
-        <div class="col-md-2">
-            @if (!Model.IsLoggedInAsVendor)
-            {
-                @Html.Action("NopCommerceNews", "Home")
-            }
+
+            <div class="row">
+                <div class="col-md-12">
+                    @if (!Model.IsLoggedInAsVendor)
+                    {
+                        @Html.Action("NopCommerceNews", "Home")
+                    }
+                </div>
+            </div>
         </div>
         @Html.Widget("admin_dashboard_bottom")
     </div>
