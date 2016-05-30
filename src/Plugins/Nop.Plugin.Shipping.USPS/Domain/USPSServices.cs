@@ -83,7 +83,7 @@ namespace Nop.Plugin.Shipping.USPS.Domain
         /// Gets the Service ID for an International service
         /// </summary>
         /// <param name="service">service name</param>
-        /// <returns>service id or emtpy string</returns>
+        /// <returns>service id or empty string</returns>
         public static string GetServiceIdInternational(string service)
         {
             var serviceId = "";
