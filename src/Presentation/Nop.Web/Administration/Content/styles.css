@@ -541,9 +541,9 @@ input[type=file].form-control {
     background-color: #dd4b39;
     color: #fff;
 }
-.content-header .dropdown-menu input, 
-.content-header .dropdown-menu button,
-.content-header .dropdown-menu a {
+.content-header .btn-group .dropdown-menu input, 
+.content-header .btn-group .dropdown-menu button,
+.content-header .btn-group .dropdown-menu a {
     display: block;
     background: none;
     border: none;
