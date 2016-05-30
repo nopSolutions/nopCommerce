@@ -676,6 +676,14 @@ ul.common-list {
     margin-right: 0;
 }
 
+.info-box {
+    min-height: 106px;
+}
+
+.info-box-icon {
+    min-height: 106px;
+}
+
 @media (max-width: 1200px) {
     .form-horizontal .ico-help {
          display: none;

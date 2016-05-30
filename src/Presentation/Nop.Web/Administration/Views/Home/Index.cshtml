@@ -106,7 +106,7 @@
                                     <canvas id="orders-line-chart" height="300"></canvas>
 
                                     <script>
-                                        $(document).ready(function() {
+                                        $(document).ready(function () {
                                             var ordersConfig = {
                                                 type: 'line',
                                                 data: {
@@ -175,7 +175,7 @@
                                     <canvas id="customers-line-chart" height="300"></canvas>
 
                                     <script>
-                                        $(document).ready(function() {
+                                        $(document).ready(function () {
                                             var customersConfig = {
                                                 type: 'line',
                                                 data: {
@@ -232,89 +232,6 @@
                         </div>
                     </div>
                 </div>
-
-
-            }
-
-            @if (!Model.IsLoggedInAsVendor && canManageOrders)
-            {
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="box box-info">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">@T("Admin.SalesReport.Average")</h3>
-                                <div class="box-tools pull-right">
-                                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                </div>
-                            </div>
-                            <div class="box-body">
-                                @Html.Action("OrderAverageReport", "Order")
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-            @if (!Model.IsLoggedInAsVendor)
-            {
-                if (canManageOrders || canManageCustomers || canManageProducts)
-                {
-                    <div class="row">
-                        @if (canManageOrders)
-                        {
-                            <div class="col-md-6">
-                                <div class="box box-info">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title">@T("Admin.SalesReport.Incomplete")</h3>
-                                        <div class="box-tools pull-right">
-                                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                        </div>
-                                    </div>
-                                    <div class="box-body">
-                                        @Html.Action("OrderIncompleteReport", "Order")
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-                        @if (canManageCustomers)
-                        {
-                            <div class="col-md-3">
-                                <div class="box box-info">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title">
-                                            @T("Admin.Customers.Reports.RegisteredCustomers")
-                                        </h3>
-                                        <div class="box-tools pull-right">
-                                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                        </div>
-                                    </div>
-                                    <div class="box-body">
-                                        @Html.Action("ReportRegisteredCustomers", "Customer")
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-                        @if (canManageProducts)
-                        {
-                            <div class="col-md-3">
-                                <div class="box box-info">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title">
-                                            @T("Admin.SearchTermReport")
-                                        </h3>
-                                        <div class="box-tools pull-right">
-                                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                        </div>
-                                    </div>
-                                    <div class="box-body">
-                                        @Html.Action("PopularSearchTermsReport", "Common")
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                }
             }
 
             @if (canManageOrders)
@@ -425,6 +342,7 @@
                         </div>
                     </div>
 
+
                     <div class="col-md-4">
                         <div class="box box-info">
                             <div class="box-header with-border">
@@ -496,95 +414,126 @@
                             </script>
                         </div>
                     </div>
-
-                    <div class="col-md-4">
-                        <div class="info-box bg-green">
-                            <span class="info-box-icon"><i class="ion ion-ios-checkmark-outline"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Complete Orders</span>
-                                <span class="info-box-number">Count: 12, Total: 92,050</span>
-                                <div class="progress">
-                                    <div class="progress-bar" style="width: 20%"></div>
-                                </div>
-                                <span class="progress-description">
-                                    20% Increase in 30 Days
-                                </span>
-                            </div>
-                        </div>
-                        <div class="info-box bg-aqua">
-                            <span class="info-box-icon"><i class="ion ion-ios-loop"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Processing Orders</span>
-                                <span class="info-box-number">Count: 12, Total: 92,050</span>
-                                <div class="progress">
-                                    <div class="progress-bar" style="width: 50%"></div>
-                                </div>
-                                <span class="progress-description">
-                                    50% Increase in 30 Days
-                                </span>
-                            </div>
-                        </div>
-                        <div class="info-box bg-orange">
-                            <span class="info-box-icon"><i class="ion ion-ios-clock-outline"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Pending Orders</span>
-                                <span class="info-box-number">Count: 12, Total: 92,050</span>
-                                <div class="progress">
-                                    <div class="progress-bar" style="width: 70%"></div>
-                                </div>
-                                <span class="progress-description">
-                                    70% Increase in 30 Days
-                                </span>
-                            </div>
-                        </div>
-                        <div class="info-box bg-red">
-                            <span class="info-box-icon"><i class="ion ion-ios-close-outline"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Cancelled Orders</span>
-                                <span class="info-box-number">Count: 12, Total: 92,050</span>
-                                <div class="progress">
-                                    <div class="progress-bar" style="width: 40%"></div>
-                                </div>
-                                <span class="progress-description">
-                                    40% Increase in 30 Days
-                                </span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-            }
 
-            @if (canManageOrders)
-            {
+
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="box box-info">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">
-                                    @T("Admin.SalesReport.BestSellers.ByQuantity")
-                                </h3>
-                                <div class="box-tools pull-right">
-                                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    @if (!Model.IsLoggedInAsVendor)
+                    {
+                        <div class="col-md-4">
+                            <div class="box box-info">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Order totals</h3>
+                                    <div class="box-tools pull-right">
+                                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="box-body">
-                                @Html.Action("BestsellersBriefReportByQuantity", "Order")
+                                <div class="box-body">
+                                    <div class="nav-tabs-custom">
+                                        <ul class="nav nav-tabs">
+                                            <li class="active"><a href="tab1">Today</a></li>
+                                            <li><a href="#">This Week</a></li>
+                                            <li><a href="#">This Month</a></li>
+                                            <li><a href="#">This Year</a></li>
+                                            <li><a href="#">All time</a></li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="tab1">
+                                                <div class="info-box bg-green">
+                                                    <span class="info-box-icon"><i class="ion ion-ios-checkmark-outline"></i></span>
+                                                    <div class="info-box-content">
+                                                        <span class="info-box-text">Complete Orders</span>
+                                                        <span class="info-box-number">Count: 12, Total: 92,050</span>
+                                                        <div class="progress">
+                                                            <div class="progress-bar" style="width: 20%"></div>
+                                                        </div>
+                                                        <span class="progress-description">
+                                                            20% Increase in 30 Days
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="info-box bg-aqua">
+                                                    <span class="info-box-icon"><i class="ion ion-ios-loop"></i></span>
+                                                    <div class="info-box-content">
+                                                        <span class="info-box-text">Processing Orders</span>
+                                                        <span class="info-box-number">Count: 12, Total: 92,050</span>
+                                                        <div class="progress">
+                                                            <div class="progress-bar" style="width: 50%"></div>
+                                                        </div>
+                                                        <span class="progress-description">
+                                                            50% Increase in 30 Days
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="info-box bg-orange">
+                                                    <span class="info-box-icon"><i class="ion ion-ios-clock-outline"></i></span>
+                                                    <div class="info-box-content">
+                                                        <span class="info-box-text">Pending Orders</span>
+                                                        <span class="info-box-number">Count: 12, Total: 92,050</span>
+                                                        <div class="progress">
+                                                            <div class="progress-bar" style="width: 70%"></div>
+                                                        </div>
+                                                        <span class="progress-description">
+                                                            70% Increase in 30 Days
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="info-box bg-red">
+                                                    <span class="info-box-icon"><i class="ion ion-ios-close-outline"></i></span>
+                                                    <div class="info-box-content">
+                                                        <span class="info-box-text">Cancelled Orders</span>
+                                                        <span class="info-box-number">Count: 12, Total: 92,050</span>
+                                                        <div class="progress">
+                                                            <div class="progress-bar" style="width: 40%"></div>
+                                                        </div>
+                                                        <span class="progress-description">
+                                                            40% Increase in 30 Days
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="box box-info">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">
-                                    @T("Admin.SalesReport.BestSellers.ByAmount")
-                                </h3>
-                                <div class="box-tools pull-right">
-                                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    }
+
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box box-info">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">
+                                            @T("Admin.SalesReport.BestSellers.ByQuantity")
+                                        </h3>
+                                        <div class="box-tools pull-right">
+                                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="box-body">
+                                        @Html.Action("BestsellersBriefReportByQuantity", "Order")
+                                    </div>
                                 </div>
                             </div>
-                            <div class="box-body">
-                                @Html.Action("BestsellersBriefReportByAmount", "Order")
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box box-info">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">
+                                            @T("Admin.SalesReport.BestSellers.ByAmount")
+                                        </h3>
+                                        <div class="box-tools pull-right">
+                                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="box-body">
+                                        @Html.Action("BestsellersBriefReportByAmount", "Order")
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
