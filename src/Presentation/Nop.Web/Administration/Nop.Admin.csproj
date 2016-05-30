@@ -479,9 +479,13 @@
     <Content Include="Content\bootstrap\bootstrap-3.3.5.min.css" />
     <Content Include="Content\fontAwesome\font-awesome-4.6.3.css" />
     <Content Include="Content\fontAwesome\font-awesome-4.6.3.min.css" />
+    <Content Include="Content\fonts\ionicons\ionicons.svg" />
     <Content Include="Content\images\logo-mini.png" />
     <Content Include="Content\images\logo.png" />
     <Content Include="Content\images\search-icon.png" />
+    <Content Include="Content\ionicons\css\ionicons-2.0.1.css" />
+    <Content Include="Content\ionicons\css\ionicons-2.0.1.min.css" />
+    <Content Include="Content\ionicons\fonts\ionicons.svg" />
     <Content Include="db_backups\placeholder.txt" />
     <Content Include="Content\images\ajax_loader_small.gif" />
     <Content Include="Content\images\ajax-loading.gif" />
@@ -1003,6 +1007,12 @@
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\bootstrap\bootstrap-3.3.5.css.map" />
+    <Content Include="Content\fonts\ionicons\ionicons.eot" />
+    <Content Include="Content\fonts\ionicons\ionicons.ttf" />
+    <Content Include="Content\fonts\ionicons\ionicons.woff" />
+    <Content Include="Content\ionicons\fonts\ionicons.eot" />
+    <Content Include="Content\ionicons\fonts\ionicons.ttf" />
+    <Content Include="Content\ionicons\fonts\ionicons.woff" />
     <None Include="Views\Product\_ProductAttributes.cshtml" />
     <Content Include="Views\Setting\_ReturnRequestReasons.cshtml" />
     <Content Include="Views\Setting\ReturnRequestReasonEdit.cshtml" />
