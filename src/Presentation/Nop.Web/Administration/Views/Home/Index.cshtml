@@ -173,7 +173,7 @@
             @if (canManageOrders)
             {
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <div class="box box-info">
                             <div class="box-header with-border">
                                 <h3 class="box-title">Latest Orders</h3>
@@ -187,52 +187,49 @@
                             <div class="box-footer clearfix">
                                 <a href="@Url.Content("~/Admin/Order/List/")" class="btn btn-sm btn-info btn-flat">View All Orders</a>
                             </div>
-                        </div>
-                    </div>
-                </div>
 
-                <script>
-                    $(document).ready(function () {
-                        $("#orders-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("OrderList", "Order"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: additionalData
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors"
-                                },
-                                error: function (e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: 5,
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true
-                            },
-                            scrollable: false,
-                            columns: [
-                                {
-                                    field: "Id",
-                                    title: "@T("Admin.Orders.Fields.ID")",
-                                    width: 80
-                                },
-                                @if (!Model.IsLoggedInAsVendor)
-                                                {
-                                                    //a vendor does not have access to this functionality
-                                                    <text>{
+                            <script>
+                                $(document).ready(function() {
+                                    $("#orders-grid").kendoGrid({
+                                        dataSource: {
+                                            type: "json",
+                                            transport: {
+                                                read: {
+                                                    url: "@Html.Raw(Url.Action("OrderList", "Order"))",
+                                                    type: "POST",
+                                                    dataType: "json",
+                                                    data: additionalData
+                                                }
+                                            },
+                                            schema: {
+                                                data: "Data",
+                                                total: "Total",
+                                                errors: "Errors"
+                                            },
+                                            error: function(e) {
+                                                display_kendoui_grid_error(e);
+                                                // Cancel the changes
+                                                this.cancelChanges();
+                                            },
+                                            pageSize: 7,
+                                            serverPaging: true,
+                                            serverFiltering: true,
+                                            serverSorting: true
+                                        },
+                                        pageable: {
+                                            refresh: true
+                                        },
+                                        scrollable: false,
+                                        columns: [
+                                            {
+                                                field: "Id",
+                                                title: "@T("Admin.Orders.Fields.ID")",
+                                                width: 80
+                                            },
+                                            @if (!Model.IsLoggedInAsVendor)
+                                            {
+                                                //a vendor does not have access to this functionality
+                                                <text>{
                                     field: "OrderStatus",
                                     title: "@T("Admin.Orders.Fields.OrderStatus")",
                                     width: 100,
@@ -243,41 +240,99 @@
                                         '# if(OrderStatusId == 40) {# order-status-cancelled #} #' +
                                         '">#=OrderStatus#</span>'
                                 },</text>
-                                                }
-                                {
-                                    field: "CustomerEmail",
-                                    title: "@T("Admin.Orders.Fields.Customer")",
-                                    width: 250,
-                                    template: '#=CustomerFullName# (#=CustomerEmail#)'
-                                },
-                                {
-                                    field: "StoreName",
-                                    title: "@T("Admin.Orders.Fields.Store")",
-                                    width: 100
-                                }, {
-                                    field: "CreatedOn",
-                                    title: "@T("Admin.Orders.Fields.CreatedOn")",
-                                    width: 150,
-                                    type: "date",
-                                    format: "{0:G}"
-                                },
-                                {
-                                    field: "Id",
-                                    title: "@T("Admin.Common.View")",
-                                    width: 50,
-                                    template: '<a href="Edit/#=Id#">@T("Admin.Common.View")</a>'
+                                            }
+                                            {
+                                                field: "CustomerEmail",
+                                                title: "@T("Admin.Orders.Fields.Customer")",
+                                                width: 250,
+                                                template: '#=CustomerFullName# (#=CustomerEmail#)'
+                                            },
+                                            {
+                                                field: "StoreName",
+                                                title: "@T("Admin.Orders.Fields.Store")",
+                                                width: 100
+                                            }, {
+                                                field: "CreatedOn",
+                                                title: "@T("Admin.Orders.Fields.CreatedOn")",
+                                                width: 150,
+                                                type: "date",
+                                                format: "{0:G}"
+                                            },
+                                            {
+                                                field: "Id",
+                                                title: "@T("Admin.Common.View")",
+                                                width: 50,
+                                                template: '<a href="Edit/#=Id#">@T("Admin.Common.View")</a>'
+                                            }
+                                        ]
+                                    });
+                                });
+
+
+                                function additionalData() {
+                                    var data = {};
+                                    addAntiForgeryToken(data);
+                                    return data;
                                 }
-                            ]
-                        });
-                    });
+                            </script>
+                        </div>
+                    </div>
 
-
-                    function additionalData() {
-                        var data = {};
-                        addAntiForgeryToken(data);
-                        return data;
-                    }
-                </script>
+                    <div class="col-md-4">
+                        <div class="info-box bg-green">
+                            <span class="info-box-icon"><i class="ion ion-ios-checkmark-outline"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Complete Orders</span>
+                                <span class="info-box-number">Count: 12, Total: 92,050</span>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 20%"></div>
+                                </div>
+                                <span class="progress-description">
+                                    20% Increase in 30 Days
+                                </span>
+                            </div>
+                        </div>
+                        <div class="info-box bg-aqua">
+                            <span class="info-box-icon"><i class="ion ion-ios-loop"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Processing Orders</span>
+                                <span class="info-box-number">Count: 12, Total: 92,050</span>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 50%"></div>
+                                </div>
+                                <span class="progress-description">
+                                    50% Increase in 30 Days
+                                </span>
+                            </div>
+                        </div>
+                        <div class="info-box bg-orange">
+                            <span class="info-box-icon"><i class="ion ion-ios-clock-outline"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Pending Orders</span>
+                                <span class="info-box-number">Count: 12, Total: 92,050</span>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 70%"></div>
+                                </div>
+                                <span class="progress-description">
+                                    70% Increase in 30 Days
+                                </span>
+                            </div>
+                        </div>
+                        <div class="info-box bg-red">
+                            <span class="info-box-icon"><i class="ion ion-ios-close-outline"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Cancelled Orders</span>
+                                <span class="info-box-number">Count: 12, Total: 92,050</span>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 40%"></div>
+                                </div>
+                                <span class="progress-description">
+                                    40% Increase in 30 Days
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             }
 
             @if (canManageOrders)
