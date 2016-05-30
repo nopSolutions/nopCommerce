@@ -36,6 +36,8 @@
         $("#@Html.FieldIdFor(model => model.BackorderModeId)").change(toggleManageStock);
         $("#@Html.FieldIdFor(model => model.DisplayStockAvailability)").click(toggleManageStock);
         $("#@Html.FieldIdFor(model => model.MarkAsNew)").click(toggleMarkAsNew);
+        $("#@Html.FieldIdFor(model => model.IsPaidService)").click(toggleIsPaidService);
+
 
         @if (!Model.IsLoggedInAsVendor)
         {
@@ -54,8 +56,17 @@
         toggleTax();
         toggleManageStock();
         toggleMarkAsNew();
+        toggleIsPaidService();
     });
-
+    function toggleIsPaidService() {
+        if ($('#@Html.FieldIdFor(model => model.IsPaidService)').is(':checked')) {
+            $('#pnlPaidServiceExpirationDays').show();
+            $('#pnlPaidFields').show();
+        } else {
+            $('#pnlPaidServiceExpirationDays').hide();
+            $('#pnlPaidFields').hide();
+        }
+    }
     function toggleShowOnHomePage() {
         if ($('#@Html.FieldIdFor(model => model.ShowOnHomePage)').is(':checked')) {
             $('#pnlDisplayOrder').show();
@@ -1038,7 +1049,37 @@
             </div>
         </div>
     </div>
-
+    <div class="panel panel-default" id="group-PaidService">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.IsPaidService)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.IsPaidService)
+                    @Html.ValidationMessageFor(model => model.IsPaidService)
+                </div>
+            </div>
+            <div class="form-group" id="pnlPaidServiceExpirationDays">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.PaidServiceExpirationDays)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.PaidServiceExpirationDays)
+                    @Html.ValidationMessageFor(model => model.PaidServiceExpirationDays)
+                </div>
+            </div>
+            <div class="form-group" id="pnlPaidFields">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.PaidFields)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.PaidFields)
+                    @Html.ValidationMessageFor(model => model.PaidFields)
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="panel panel-default" id="group-shipping">
         <div class="panel-body">
             <div class="form-group">

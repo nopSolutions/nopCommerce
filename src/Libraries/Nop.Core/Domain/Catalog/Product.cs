@@ -486,8 +486,18 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public DateTime UpdatedOnUtc { get; set; }
 
-
-
+        /// <summary>
+        /// 是否付费服务
+        /// </summary>
+        public bool IsPaidService { get; set; }
+        /// <summary>
+        /// 服务有效期天数
+        /// </summary>
+        public int? PaidServiceExpirationDays { get; set; }
+        /// <summary>
+        /// 服务需要的字段，以逗号分隔
+        /// </summary>
+        public string PaidFields { get; set; }
 
 
 
