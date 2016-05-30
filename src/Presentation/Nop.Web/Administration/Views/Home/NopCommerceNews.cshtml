@@ -31,17 +31,17 @@
                     if (item != null)
                     {
                         <div class="col-md-4">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
+                            <div class="panel panel-info">
+                                <div class="panel-heading clearfix">
                                     @if (item.Links.Count > 0)
                                     {
-                                        <a href='@(item.Links[0].Uri.OriginalString)'>@item.Title.Text</a>
+                                        <a class="pull-left" href='@(item.Links[0].Uri.OriginalString)'>@item.Title.Text</a>
                                     }
                                     else
                                     {
-                                        @item.Title.Text
+                                        <div class="pull-left">@item.Title.Text</div>
                                     }
-                                    <div>@item.PublishDate.ToString("d")</div>
+                                    <div class="pull-right">@item.PublishDate.ToString("d")</div>
                                 </div>
                                 <div class="panel-body">
                                     @Html.Raw(item.Summary.Text)
@@ -55,7 +55,9 @@
         </div>
     </div>
     <div class="box-footer">
-        <a id="nopcommerceNewsHideAdv" href="#">@(hideAdvertisements ? T("Admin.NopCommerceNews.ShowAdv") : T("Admin.NopCommerceNews.HideAdv"))</a>
+        <button id="nopcommerceNewsHideAdv" class="btn bg-aqua">
+            @(hideAdvertisements ? T("Admin.NopCommerceNews.ShowAdv") : T("Admin.NopCommerceNews.HideAdv"))
+        </button>
         <script type="text/javascript">
             $(document).ready(function () {
                 $('#nopcommerceNewsHideAdv').click(function () {

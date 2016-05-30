@@ -111,12 +111,14 @@
                 </div>
 
                 <script>
-                    $(document).ready(function() {
+                    $(document).ready(function () {
                         var config = {
                             type: 'line',
                             data: {
-                                labels: ["May 1", "May 2", "May 3", "May 4", "May 5", "May 6", "May 7",
-                                    "May 8", "May 9", "May 10", "May 11", "May 12", "May 13", "May 14", "May 15", "May 16", "May 17"],
+                                labels: [
+                                    "May 1", "May 2", "May 3", "May 4", "May 5", "May 6", "May 7",
+                                    "May 8", "May 9", "May 10", "May 11", "May 12", "May 13", "May 14", "May 15", "May 16", "May 17"
+                                ],
                                 datasets: [
                                     {
                                         label: "Orders",
@@ -265,7 +267,7 @@
                             </div>
 
                             <script>
-                                $(document).ready(function() {
+                                $(document).ready(function () {
                                     $("#orders-grid").kendoGrid({
                                         dataSource: {
                                             type: "json",
@@ -282,7 +284,7 @@
                                                 total: "Total",
                                                 errors: "Errors"
                                             },
-                                            error: function(e) {
+                                            error: function (e) {
                                                 display_kendoui_grid_error(e);
                                                 // Cancel the changes
                                                 this.cancelChanges();
@@ -303,20 +305,20 @@
                                                 width: 80
                                             },
                                             @if (!Model.IsLoggedInAsVendor)
-                                            {
-                                                //a vendor does not have access to this functionality
-                                                <text>{
-                                    field: "OrderStatus",
-                                    title: "@T("Admin.Orders.Fields.OrderStatus")",
-                                    width: 100,
-                                    template: '<span class="order-status ' +
-                                        '# if(OrderStatusId == 10) {# order-status-pending #} #' +
-                                        '# if(OrderStatusId == 20) {# order-status-processing #} #' +
-                                        '# if(OrderStatusId == 30) {# order-status-complete #} #' +
-                                        '# if(OrderStatusId == 40) {# order-status-cancelled #} #' +
-                                        '">#=OrderStatus#</span>'
-                                },</text>
-                                            }
+                                {
+                                    //a vendor does not have access to this functionality
+                                    <text>{
+                                                field: "OrderStatus",
+                                                title: "@T("Admin.Orders.Fields.OrderStatus")",
+                                                width: 100,
+                                                template: '<span class="order-status ' +
+                                                    '# if(OrderStatusId == 10) {# order-status-pending #} #' +
+                                                    '# if(OrderStatusId == 20) {# order-status-processing #} #' +
+                                                    '# if(OrderStatusId == 30) {# order-status-complete #} #' +
+                                                    '# if(OrderStatusId == 40) {# order-status-cancelled #} #' +
+                                                    '">#=OrderStatus#</span>'
+                                            },</text>
+                                }
                                             {
                                                 field: "CustomerEmail",
                                                 title: "@T("Admin.Orders.Fields.Customer")",
@@ -457,6 +459,6 @@
             </div>
         </div>
 
-            @Html.Widget("admin_dashboard_bottom")
-        </div>
+        @Html.Widget("admin_dashboard_bottom")
     </div>
+</div>
