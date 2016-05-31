@@ -1153,6 +1153,17 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        //available even when navigation is not allowed
+        [PublicStoreAllowNavigation(true)]
+        [HttpPost]
+        public ActionResult RegisterResult(string returnUrl)
+        {
+            if (String.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
+                return RedirectToRoute("HomePage");
+
+            return Redirect(returnUrl);
+        }
+
         [HttpPost]
         [PublicAntiForgery]
         [ValidateInput(false)]
