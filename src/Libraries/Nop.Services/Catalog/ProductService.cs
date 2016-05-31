@@ -1238,6 +1238,9 @@ namespace Nop.Services.Catalog
         /// <returns>Count of vendor products</returns>
         public int GetProductNumberByVendorId(int vendorId)
         {
+            if (vendorId == 0)
+                return 0;
+
             return _productRepository.Table.Count(p => p.VendorId == vendorId && !p.Deleted);
         }
 

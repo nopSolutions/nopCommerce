@@ -942,9 +942,10 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
+            //validate maximum number of products per vendor
             if (_workContext.CurrentVendor != null)
             {
-                if (_productService.GetProductNumberByVendorId(_workContext.CurrentVendor.Id) + 1 > _vendorSettings.MaximumProductNumber)
+                if (_productService.GetProductNumberByVendorId(_workContext.CurrentVendor.Id) >= _vendorSettings.MaximumProductNumber)
                 {
                     ErrorNotification(String.Format(_localizationService.GetResource("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
                     return RedirectToAction("List");
@@ -973,9 +974,10 @@ namespace Nop.Admin.Controllers
                     model.VendorId = _workContext.CurrentVendor.Id;
                 }
 
-                if (model.VendorId != 0)
+                //validate maximum number of products per vendor
+                if (_workContext.CurrentVendor != null)
                 {
-                    if (_productService.GetProductNumberByVendorId(model.VendorId) + 1 > _vendorSettings.MaximumProductNumber)
+                    if (_productService.GetProductNumberByVendorId(_workContext.CurrentVendor.Id) >= _vendorSettings.MaximumProductNumber)
                     {
                         ErrorNotification(String.Format(_localizationService.GetResource("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
 
@@ -1100,9 +1102,10 @@ namespace Nop.Admin.Controllers
                     model.VendorId = _workContext.CurrentVendor.Id;
                 }
 
-                if (model.VendorId != 0)
+                //validate maximum number of products per vendor
+                if (_workContext.CurrentVendor != null)
                 {
-                    if (_productService.GetProductNumberByVendorId(model.VendorId) + 1 > _vendorSettings.MaximumProductNumber)
+                    if (_productService.GetProductNumberByVendorId(_workContext.CurrentVendor.Id) >= _vendorSettings.MaximumProductNumber)
                     {
                         ErrorNotification(String.Format(_localizationService.GetResource("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
 
