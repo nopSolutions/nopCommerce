@@ -304,12 +304,12 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Get (visible) product number in certain category
+        /// Get number of product (published and visible) in certain category
         /// </summary>
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
-        /// <returns>Product number</returns>
-        public virtual int GetCategoryProductNumber(IList<int> categoryIds = null, int storeId = 0)
+        /// <returns>Number of products</returns>
+        public virtual int GetNumberOfProductsInCategory(IList<int> categoryIds = null, int storeId = 0)
         {
             //validate "categoryIds" parameter
             if (categoryIds != null && categoryIds.Contains(0))
@@ -1232,11 +1232,11 @@ namespace Nop.Services.Catalog
 
 
         /// <summary>
-        /// Gets product number by vendor identifier
+        /// Gets number of products by vendor identifier
         /// </summary>
         /// <param name="vendorId">Vendor identifier</param>
-        /// <returns>Count of vendor products</returns>
-        public int GetProductNumberByVendorId(int vendorId)
+        /// <returns>Number of products</returns>
+        public int GetNumberOfProductsByVendorId(int vendorId)
         {
             if (vendorId == 0)
                 return 0;

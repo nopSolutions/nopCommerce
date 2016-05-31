@@ -608,6 +608,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Manage">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.MiniShoppingCartProductNumber">
+    <Value>Number of products in mini-shopping cart</Value>
+  </LocaleResource>
 </Language>
 '
 

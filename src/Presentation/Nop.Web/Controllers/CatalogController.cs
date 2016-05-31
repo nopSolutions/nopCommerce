@@ -361,7 +361,7 @@ namespace Nop.Web.Controllers
                     IncludeInTopMenu = category.IncludeInTopMenu
                 };
 
-                //product number for each category
+                //nubmer of products in each category
                 if (_catalogSettings.ShowCategoryProductNumber)
                 {
                     string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NUMBER_OF_PRODUCTS_MODEL_KEY,
@@ -375,7 +375,7 @@ namespace Nop.Web.Controllers
                         //include subcategories
                         if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
                             categoryIds.AddRange(GetChildCategoryIds(category.Id));
-                        return _productService.GetCategoryProductNumber(categoryIds, _storeContext.CurrentStore.Id);
+                        return _productService.GetNumberOfProductsInCategory(categoryIds, _storeContext.CurrentStore.Id);
                     });
                 }
 

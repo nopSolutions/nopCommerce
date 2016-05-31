@@ -945,7 +945,7 @@ namespace Nop.Admin.Controllers
             //validate maximum number of products per vendor
             if (_workContext.CurrentVendor != null)
             {
-                if (_productService.GetProductNumberByVendorId(_workContext.CurrentVendor.Id) >= _vendorSettings.MaximumProductNumber)
+                if (_productService.GetNumberOfProductsByVendorId(_workContext.CurrentVendor.Id) >= _vendorSettings.MaximumProductNumber)
                 {
                     ErrorNotification(String.Format(_localizationService.GetResource("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
                     return RedirectToAction("List");
@@ -977,7 +977,7 @@ namespace Nop.Admin.Controllers
                 //validate maximum number of products per vendor
                 if (_workContext.CurrentVendor != null)
                 {
-                    if (_productService.GetProductNumberByVendorId(_workContext.CurrentVendor.Id) >= _vendorSettings.MaximumProductNumber)
+                    if (_productService.GetNumberOfProductsByVendorId(_workContext.CurrentVendor.Id) >= _vendorSettings.MaximumProductNumber)
                     {
                         ErrorNotification(String.Format(_localizationService.GetResource("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
 
@@ -1105,7 +1105,7 @@ namespace Nop.Admin.Controllers
                 //validate maximum number of products per vendor
                 if (_workContext.CurrentVendor != null)
                 {
-                    if (_productService.GetProductNumberByVendorId(_workContext.CurrentVendor.Id) >= _vendorSettings.MaximumProductNumber)
+                    if (_productService.GetNumberOfProductsByVendorId(_workContext.CurrentVendor.Id) >= _vendorSettings.MaximumProductNumber)
                     {
                         ErrorNotification(String.Format(_localizationService.GetResource("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
 
