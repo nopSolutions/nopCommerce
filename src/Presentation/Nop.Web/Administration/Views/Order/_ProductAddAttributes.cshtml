@@ -1,15 +1,21 @@
 ﻿@model IList<OrderModel.AddOrderProductModel.ProductAttributeModel>
 
+@using System.Text
 @using Nop.Web.Framework;
 @using Nop.Core.Domain.Catalog;
 @if (Model.Count > 0)
 {
-    //Actually just a copy (almost) of \Presentation\Nop.Web\Views\Product\_ProductAttributes.cshtml
+    //dynamic update support
+    var attributeChangeScriptsBuilder = new StringBuilder();
+    var productId = Convert.ToInt32(ViewData["productId"]);
+    var attributesHaveConditions = Model.Any(a => a.HasCondition);
+    var attributeChangeHandlerFuncName = string.Format("attribute_change_handler_{0}", productId);
+
     <div class="panel panel-default">
         <div class="panel-body">
             @foreach (var attribute in Model)
             {
-                <div class="form-group">
+                <div id="product_attribute_row_@(attribute.Id)" class="form-group">
                     @{
                         string controlId = string.Format("product_attribute_{0}", attribute.Id);
                         string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
@@ -25,69 +31,69 @@
                         @switch (attribute.AttributeControlType)
                         {
                             case AttributeControlType.DropdownList:
-                            {
-                                <select name="@(controlId)" id="@(controlId)" class="form-control">
-                                    @if (!attribute.IsRequired)
-                                    {
-                                        <option value="0">---</option>
-                                    }
-                                    @foreach (var attributeValue in attribute.Values)
-                                    {
-                                        <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">
-                                            @attributeValue.Name
-                                        </option>
-                                    }
-                                </select>
-                            }
+                                {
+                                    <select name="@(controlId)" id="@(controlId)" class="form-control">
+                                        @if (!attribute.IsRequired)
+                                        {
+                                            <option value="0">---</option>
+                                        }
+                                        @foreach (var attributeValue in attribute.Values)
+                                        {
+                                            <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">
+                                                @attributeValue.Name
+                                            </option>
+                                        }
+                                    </select>
+                                }
                                 break;
                             case AttributeControlType.RadioList:
                             case AttributeControlType.ColorSquares:
                             case AttributeControlType.ImageSquares:
-                            {
-                                foreach (var attributeValue in attribute.Values)
                                 {
-                                    <div class="radio">
-                                        <label for="@(controlId)">
-                                            <input id="@(controlId)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected"/>
-                                            @attributeValue.Name
-                                        </label>
-                                    </div>
+                                    foreach (var attributeValue in attribute.Values)
+                                    {
+                                        <div class="radio">
+                                            <label for="@(controlId)_@(attributeValue.Id)">
+                                                <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                                @attributeValue.Name
+                                            </label>
+                                        </div>
+                                    }
                                 }
-                            }
                                 break;
                             case AttributeControlType.Checkboxes:
                             case AttributeControlType.ReadonlyCheckboxes:
-                            {
-                                foreach (var attributeValue in attribute.Values)
                                 {
-                                    <div class="checkbox">
-                                        <label for="@(controlId)">
-                                            <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null)/>
-                                            @attributeValue.Name
-                                        </label>
-                                    </div>
+                                    foreach (var attributeValue in attribute.Values)
+                                    {
+                                        <div class="checkbox">
+                                            <label for="@(controlId)_@(attributeValue.Id)">
+                                                <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                                                @attributeValue.Name
+                                            </label>
+                                        </div>
+                                    }
                                 }
-                            }
                                 break;
                             case AttributeControlType.TextBox:
-                            {
-                                <input name="@(controlId)" type="text" id="@(controlId)" class="form-control"/>
-                            }
+                                {
+                                    <input name="@(controlId)" type="text" id="@(controlId)" class="form-control" />
+                                }
                                 break;
                             case AttributeControlType.MultilineTextbox:
-                            {
-                                <textarea cols="20" id="@(controlId)" name="@(controlId)" rows="2" class="form-control"></textarea>
-                            }
+                                {
+                                    <textarea cols="20" id="@(controlId)" name="@(controlId)" rows="2" class="form-control"></textarea>
+                                }
                                 break;
                             case AttributeControlType.Datepicker:
-                            {
-                                @Html.DatePickerDropDowns(controlId + "_day", controlId + "_month", controlId + "_year", DateTime.Now.Year, DateTime.Now.Year + 1)
-                            }
+                                {
+                                    @Html.DatePickerDropDowns(controlId + "_day", controlId + "_month", controlId + "_year", DateTime.Now.Year, DateTime.Now.Year + 1)
+                                }
                                 break;
                             case AttributeControlType.FileUpload:
-                            {
-                                <input type="file" id="@(controlId)" name="@(controlId)" class="form-control"/>
-                            }
+                                {
+                                    <input type="file" id="@(controlId)" name="@(controlId)" class="form-control" />
+                                }
                                 break;
                         }
                     </div>
@@ -95,4 +101,66 @@
             }
         </div>
     </div>
+    //generate change event script
+    foreach (var attribute in Model)
+    {
+        string controlId = string.Format("product_attribute_{0}", attribute.Id);
+        switch (attribute.AttributeControlType)
+        {
+            case AttributeControlType.DropdownList:
+            {
+                attributeChangeScriptsBuilder.AppendFormat("$('#{0}').change(function(){{{1}();}});\n", controlId, attributeChangeHandlerFuncName);
+            }
+                break;
+            case AttributeControlType.RadioList:
+            case AttributeControlType.ColorSquares:
+            case AttributeControlType.ImageSquares:
+            {
+                foreach (var attributeValue in attribute.Values)
+                {
+                    attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
+                }
+            }
+                break;
+            case AttributeControlType.Checkboxes:
+            case AttributeControlType.ReadonlyCheckboxes:
+            {
+                foreach (var attributeValue in attribute.Values)
+                {
+                    attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
+                }
+            }
+                break;
+            default:
+                break;
+        }
+    }
+    //render scripts
+    <script type="text/javascript">
+        function @(attributeChangeHandlerFuncName)() {
+            $.ajax({
+                cache: false,
+                url: '@Html.Raw(Url.Action("productdetails_attributechange", "Order", new {productId = productId, validateAttributeConditions = attributesHaveConditions}))',
+                data: $('#product-details-form').serialize(),
+                type: 'post',
+                success: function(data) {
+                    if (data.enabledattributemappingids) {
+                        for (var i = 0; i < data.enabledattributemappingids.length; i++) {
+                            $('#product_attribute_row_' + data.enabledattributemappingids[i]).show();
+                        }
+                    }
+                    if (data.disabledattributemappingids) {
+                        for (var i = 0; i < data.disabledattributemappingids.length; i++) {
+                            $('#product_attribute_row_' + data.disabledattributemappingids[i]).hide();
+                        }
+                    }
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            @(attributeChangeHandlerFuncName)();
+            @Html.Raw(attributeChangeScriptsBuilder.ToString())
+        });
+    </script>
 }

@@ -11,7 +11,7 @@
 @using (Html.BeginForm("AddProductToOrderDetails", "Order",
                                                     new RouteValueDictionary(new { orderId = Model.OrderId, productId = Model.ProductId }),
                                                     FormMethod.Post,
-                                                    new Dictionary<string, Object> { { "enctype", "multipart/form-data" } }))
+                                                    new Dictionary<string, Object> { { "enctype", "multipart/form-data" }, {"id", "product-details-form" } }))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(false)
@@ -86,7 +86,7 @@
                         </div>
                     </div>
 
-                    @Html.Partial("_ProductAddAttributes", Model.ProductAttributes)
+                    @Html.Partial("_ProductAddAttributes", Model.ProductAttributes, new ViewDataDictionary() {new KeyValuePair<string, object>("productId", Model.ProductId)})
 
                     var dataDictGiftCard = new ViewDataDictionary();
                     dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = "giftcard";
