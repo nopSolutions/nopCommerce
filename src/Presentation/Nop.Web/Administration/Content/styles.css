@@ -684,6 +684,11 @@ ul.common-list {
     min-height: 106px;
 }
 
+.nav-tabs-customer-statistics .chart, .nav-tabs-order-statistics .chart {
+    height: 300px;
+}
+
+
 @media (max-width: 1200px) {
     .form-horizontal .ico-help {
          display: none;
