@@ -1,0 +1,62 @@
+﻿@model DashboardModel
+
+<div class="col-lg-3 col-xs-6">
+    <div class="small-box bg-aqua">
+        <div class="inner">
+            <h3>150</h3>
+            <p>Total Orders</p>
+        </div>
+        <div class="icon">
+            <i class="ion ion-bag"></i>
+        </div>
+        <a href="@Url.Content("~/Admin/Order/List/")" class="small-box-footer">
+            More info
+            <i class="fa fa-arrow-circle-right"></i>
+        </a>
+    </div>
+</div>
+<div class="col-lg-3 col-xs-6">
+    <div class="small-box bg-green">
+        <div class="inner">
+            <h3>53</h3>
+            <p>Total Customers</p>
+        </div>
+        <div class="icon">
+            <i class="ion ion-person-add"></i>
+        </div>
+        <a href="@Url.Content("~/Admin/Customer/List/")" class="small-box-footer">
+            More info
+            <i class="fa fa-arrow-circle-right"></i>
+        </a>
+    </div>
+</div>
+<div class="col-lg-3 col-xs-6">
+    <div class="small-box bg-yellow">
+        <div class="inner">
+            <h3>44</h3>
+            <p>Return requests</p>
+        </div>
+        <div class="icon">
+            <i class="ion ion-refresh"></i>
+        </div>
+        <a href="@Url.Content("~/Admin/ReturnRequest/List/")" class="small-box-footer">
+            More info
+            <i class="fa fa-arrow-circle-right"></i>
+        </a>
+    </div>
+</div>
+<div class="col-lg-3 col-xs-6">
+    <div class="small-box bg-red">
+        <div class="inner">
+            <h3>65</h3>
+            <p>Low stock products</p>
+        </div>
+        <div class="icon">
+            <i class="ion ion-pie-graph"></i>
+        </div>
+        <a href="@Url.Content("~/Admin/Product/LowStockReport/")" class="small-box-footer">
+            More info
+            <i class="fa fa-arrow-circle-right"></i>
+        </a>
+    </div>
+</div>

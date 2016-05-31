@@ -1943,6 +1943,7 @@ namespace Nop.Admin.Controllers
 
             return PartialView();
         }
+
         [HttpPost]
         public ActionResult ReportRegisteredCustomersList(DataSourceRequest command)
         {
@@ -1958,7 +1959,16 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-        
+
+        [ChildActionOnly]
+        public ActionResult CustomerStatistics()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return Content("");
+
+            return PartialView();
+        }
+
         #endregion
 
         #region Current shopping cart/ wishlist

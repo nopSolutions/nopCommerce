@@ -1,0 +1,72 @@
+﻿<div class="box box-info">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <i class="fa fa-hourglass-start"></i>
+            Incomplete orders
+        </h3>
+        <div class="box-tools pull-right">
+            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="chart-responsive">
+                    <canvas id="pieChart" height="155"></canvas>
+
+                    <script>
+                        var randomScalingFactor = function () {
+                            return Math.round(Math.random() * 100);
+                        };
+                        var randomColorFactor = function () {
+                            return Math.round(Math.random() * 255);
+                        };
+                        var randomColor = function (opacity) {
+                            return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',' + (opacity || '.3') + ')';
+                        };
+                        $(document).ready(function () {
+                            var pieConfig = {
+                                type: 'pie',
+                                legend: {
+                                    enabled: false
+                                },
+                                data: {
+                                    datasets: [{
+                                        data: [
+                                            randomScalingFactor(),
+                                            randomScalingFactor(),
+                                            randomScalingFactor()
+                                        ],
+                                        backgroundColor: [
+                                            "#F7464A",
+                                            "#46BFBD",
+                                            "#FDB45C"
+                                        ]
+                                    }],
+                                    labels: [
+                                        "Total unpaid orders (pending payment status)",
+                                        "Total not yet shipped orders",
+                                        "Total incomplete orders (pending order status)"
+                                    ]
+                                },
+                                options: {
+                                    responsive: true
+                                }
+                            };
+
+                            var incompeteOrderCtx = document.getElementById("pieChart").getContext("2d");
+                            window.myPie = new Chart(incompeteOrderCtx, pieConfig);
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box-footer">
+        <ul class="chart-legend clearfix">
+            <li><i class="fa fa-circle-o text-red"></i> Total unpaid orders (pending payment status)</li>
+            <li><i class="fa fa-circle-o text-green"></i> Total not yet shipped orders</li>
+            <li><i class="fa fa-circle-o text-yellow"></i> Total incomplete orders (pending order status)</li>
+        </ul>
+    </div>
+</div>

@@ -3941,6 +3941,7 @@ namespace Nop.Admin.Controllers
 
             return PartialView();
         }
+
         [HttpPost]
         public ActionResult OrderIncompleteReportList(DataSourceRequest command)
         {
@@ -3996,9 +3997,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-
-
-
+        
         public ActionResult CountryReport()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
@@ -4016,6 +4015,7 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public ActionResult CountryReportList(DataSourceRequest command, CountryReportModel model)
         {
@@ -4055,6 +4055,32 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
+        [ChildActionOnly]
+        public ActionResult OrderStatistics()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            return PartialView();
+        }
+
+        [ChildActionOnly]
+        public ActionResult LatestOrders()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            return PartialView();
+        }
+
+        [ChildActionOnly]
+        public ActionResult IncompleteOrders()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            return PartialView();
+        }
 
         #endregion
 

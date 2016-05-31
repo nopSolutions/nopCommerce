@@ -9,6 +9,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -18,6 +19,7 @@ namespace Nop.Admin.Controllers
         private readonly IStoreContext _storeContext;
         private readonly CommonSettings _commonSettings;
         private readonly ISettingService _settingService;
+        private readonly IPermissionService _permissionService;
         private readonly IWorkContext _workContext;
         private readonly ICacheManager _cacheManager;
 
@@ -28,6 +30,7 @@ namespace Nop.Admin.Controllers
         public HomeController(IStoreContext storeContext, 
             CommonSettings commonSettings, 
             ISettingService settingService,
+            IPermissionService permissionService,
             IWorkContext workContext,
             ICacheManager cacheManager)
         {
@@ -35,7 +38,8 @@ namespace Nop.Admin.Controllers
             this._commonSettings = commonSettings;
             this._settingService = settingService;
             this._workContext = workContext;
-            this._cacheManager= cacheManager;
+            this._cacheManager = cacheManager;
+            this._permissionService = permissionService;
         }
 
         #endregion
@@ -87,6 +91,16 @@ namespace Nop.Admin.Controllers
             _commonSettings.HideAdvertisementsOnAdminArea = !_commonSettings.HideAdvertisementsOnAdminArea;
             _settingService.SaveSetting(_commonSettings);
             return Content("Setting changed");
+        }
+
+        [ChildActionOnly]
+        public ActionResult DayStatistics()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) ||
+                !_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            return PartialView();
         }
 
         #endregion

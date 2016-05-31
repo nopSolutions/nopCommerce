@@ -1013,6 +1013,11 @@
     <Content Include="Content\ionicons\fonts\ionicons.eot" />
     <Content Include="Content\ionicons\fonts\ionicons.ttf" />
     <Content Include="Content\ionicons\fonts\ionicons.woff" />
+    <Content Include="Views\Home\DayStatistics.cshtml" />
+    <Content Include="Views\Order\OrderStatistics.cshtml" />
+    <Content Include="Views\Customer\CustomerStatistics.cshtml" />
+    <Content Include="Views\Order\LatestOrders.cshtml" />
+    <Content Include="Views\Order\IncompleteOrders.cshtml" />
     <None Include="Views\Product\_ProductAttributes.cshtml" />
     <Content Include="Views\Setting\_ReturnRequestReasons.cshtml" />
     <Content Include="Views\Setting\ReturnRequestReasonEdit.cshtml" />

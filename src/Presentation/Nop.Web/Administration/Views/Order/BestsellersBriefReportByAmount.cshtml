@@ -2,77 +2,90 @@
     var gridPageSize = 5;
 }
 
-<div id="bestsellers-byamount-grid" class="bestsellers-list"></div>
+<div class="box box-info">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <i class="fa fa-star-o"></i>
+            @T("Admin.SalesReport.BestSellers.ByAmount")
+        </h3>
+        <div class="box-tools pull-right">
+            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div>
+    </div>
+    <div class="box-body">
+        <div id="bestsellers-byamount-grid" class="bestsellers-list"></div>
 
-<script>
-    //row index
-    var rowNumber_BriefByAmount = 0;
-    function onBriefByAmountDataBound(data) {
-        return rowNumber_BriefByAmount = 0;
-    }
-    function onBriefByAmountIncrease(max) {
-        if (rowNumber_BriefByAmount === max)
-            rowNumber_BriefByAmount = 0;
-        ++rowNumber_BriefByAmount;
-    }
+        <script>
+            //row index
+            var rowNumber_BriefByAmount = 0;
+            function onBriefByAmountDataBound(data) {
+                return rowNumber_BriefByAmount = 0;
+            }
+            function onBriefByAmountIncrease(max) {
+                if (rowNumber_BriefByAmount === max)
+                    rowNumber_BriefByAmount = 0;
+                ++rowNumber_BriefByAmount;
+            }
 
-    $(document).ready(function () {
-        $("#bestsellers-byamount-grid").kendoGrid({
-            dataSource: {
-                type: "json",
-                transport: {
-                    read: {
-                        url: "@Html.Raw(Url.Action("BestsellersBriefReportByAmountList", "Order"))",
-                        type: "POST",
-                        dataType: "json",
-                        data: addAntiForgeryToken
-                    }
-                },
-                schema: {
-                    data: "Data",
-                    total: "Total",
-                    errors: "Errors"
-                },
-                error: function(e) {
-                    display_kendoui_grid_error(e);
-                    // Cancel the changes
-                    this.cancelChanges();
-                },
-                pageSize: @(gridPageSize),
-                serverPaging: true,
-                serverFiltering: true,
-                serverSorting: true
-            },
-            pageable: {
-                refresh: true
-            },
-            editable: {
-                confirmation: false,
-                mode: "inline"
-            },
-            dataBound: onBriefByAmountDataBound,
-            scrollable: false,
-            columns: [{
-                field: "ProductName",
-                title: "@T("Admin.SalesReport.Bestsellers.Fields.Name")"
-            }, {
-                field: "TotalQuantity",
-                title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalQuantity")"
-            }, {
-                field: "TotalAmount",
-                title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalAmount")",
-                template: '# onBriefByAmountIncrease(4) # <span class="report-item ' +
-                    '# if(rowNumber_BriefByAmount == 1) {# yellow #} #' +
-                    '# if(rowNumber_BriefByAmount == 2) {# blue #} #' +
-                    '# if(rowNumber_BriefByAmount == 3) {# red #} #' +
-                    '# if(rowNumber_BriefByAmount == 4) {# green #} #' +
-                    '">#=TotalAmount#</span>'
-            }, {
-                field: "ProductId",
-                title: "@T("Admin.Common.View")",
-                width: 100,
-                template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
-            }]
-        });
-    });
-</script>
+            $(document).ready(function () {
+                $("#bestsellers-byamount-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("BestsellersBriefReportByAmountList", "Order"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors"
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        pageSize: @(gridPageSize),
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    dataBound: onBriefByAmountDataBound,
+                    scrollable: false,
+                    columns: [{
+                        field: "ProductName",
+                        title: "@T("Admin.SalesReport.Bestsellers.Fields.Name")"
+                    }, {
+                        field: "TotalQuantity",
+                        title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalQuantity")"
+                    }, {
+                        field: "TotalAmount",
+                        title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalAmount")",
+                        template: '# onBriefByAmountIncrease(4) # <span class="report-item ' +
+                            '# if(rowNumber_BriefByAmount == 1) {# yellow #} #' +
+                            '# if(rowNumber_BriefByAmount == 2) {# blue #} #' +
+                            '# if(rowNumber_BriefByAmount == 3) {# red #} #' +
+                            '# if(rowNumber_BriefByAmount == 4) {# green #} #' +
+                            '">#=TotalAmount#</span>'
+                    }, {
+                        field: "ProductId",
+                        title: "@T("Admin.Common.View")",
+                        width: 100,
+                        template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
+                    }]
+                });
+            });
+        </script>
+    </div>
+</div>
