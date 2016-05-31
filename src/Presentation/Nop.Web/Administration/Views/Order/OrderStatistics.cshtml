@@ -1,0 +1,67 @@
+﻿<div class="box box-info">
+    <div class="box-header with-border">
+        <h3 class="box-title">Orders</h3>
+        <div class="box-tools pull-right">
+            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="chart">
+            <canvas id="orders-statistics" height="300"></canvas>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                var ordersConfig = {
+                    type: 'line',
+                    data: {
+                        labels: [
+                            "May 1", "May 2", "May 3", "May 4", "May 5", "May 6", "May 7",
+                            "May 8", "May 9", "May 10", "May 11", "May 12", "May 13", "May 14", "May 15", "May 16", "May 17"
+                        ],
+                        datasets: [
+                            {
+                                label: "Orders",
+                                fillColor: "rgba(60,141,188,0.9)",
+                                strokeColor: "rgba(60,141,188,0.8)",
+                                pointColor: "#3b8bba",
+                                pointStrokeColor: "rgba(60,141,188,1)",
+                                pointHighlightFill: "#fff",
+                                pointHighlightStroke: "rgba(60,141,188,1)",
+                                borderColor: 'rgba(60, 141, 188, 0.7)',
+                                backgroundColor: 'rgba(44, 152, 214, 0.5)',
+                                pointBorderColor: 'rgba(37, 103, 142, 0.9)',
+                                pointBackgroundColor: 'rgba(60, 141, 188, 0.4)',
+                                pointBorderWidth: 1,
+                                data: [65, 59, 80, 81, 56, 55, 40, 140, 70, 80, 40, 40, 40, 70, 40, 22, 55]
+                            }
+                        ]
+                    },
+                    options: {
+                        legend: {
+                            display: false
+                        },
+                        showScale: true,
+                        scaleShowGridLines: false,
+                        scaleGridLineColor: "rgba(0,0,0,.05)",
+                        scaleGridLineWidth: 1,
+                        scaleShowHorizontalLines: true,
+                        scaleShowVerticalLines: true,
+                        bezierCurve: true,
+                        pointDot: false,
+                        pointDotRadius: 4,
+                        pointDotStrokeWidth: 1,
+                        pointHitDetectionRadius: 20,
+                        datasetStroke: true,
+                        datasetFill: true,
+                        maintainAspectRatio: false,
+                        responsive: true
+                    }
+                }
+
+                var ordersCtx = document.getElementById("orders-statistics").getContext("2d");
+                window.ordersLine = new Chart(ordersCtx, ordersConfig);
+            });
+        </script>
+    </div>
+</div>

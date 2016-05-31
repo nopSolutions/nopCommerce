@@ -27,526 +27,82 @@
         <div class="col-md-12">
             @Html.Widget("admin_dashboard_top")
 
-            <div class="row">
-                <div class="col-lg-3 col-xs-6">
-                    <div class="small-box bg-aqua">
-                        <div class="inner">
-                            <h3>150</h3>
-                            <p>Total Orders</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-bag"></i>
-                        </div>
-                        <a href="@Url.Content("~/Admin/Order/List/")" class="small-box-footer">
-                            More info
-                            <i class="fa fa-arrow-circle-right"></i>
-                        </a>
-                    </div>
+            @if (!Model.IsLoggedInAsVendor && canManageOrders)
+            {
+                <div class="row">
+                    @Html.Action("DayStatistics", "Home")
                 </div>
-                <div class="col-lg-3 col-xs-6">
-                    <div class="small-box bg-green">
-                        <div class="inner">
-                            <h3>53</h3>
-                            <p>Total Customers</p>
+            }
+
+            @if (!Model.IsLoggedInAsVendor && (canManageOrders || canManageCustomers))
+            {
+                <div class="row">
+                    @if (!Model.IsLoggedInAsVendor && canManageOrders)
+                    {
+                        <div class="col-md-6">
+                            @Html.Action("OrderStatistics", "Order")
                         </div>
-                        <div class="icon">
-                            <i class="ion ion-person-add"></i>
+                    }
+                    @if (!Model.IsLoggedInAsVendor && canManageCustomers)
+                    {
+                        <div class="col-md-6">
+                            @Html.Action("CustomerStatistics", "Customer")
                         </div>
-                        <a href="@Url.Content("~/Admin/Customer/List/")" class="small-box-footer">
-                            More info
-                            <i class="fa fa-arrow-circle-right"></i>
-                        </a>
-                    </div>
+                    }
                 </div>
-                <div class="col-lg-3 col-xs-6">
-                    <div class="small-box bg-yellow">
-                        <div class="inner">
-                            <h3>44</h3>
-                            <p>Return requests</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-stats-bars"></i>
-                        </div>
-                        <a href="@Url.Content("~/Admin/ReturnRequest/List/")" class="small-box-footer">
-                            More info
-                            <i class="fa fa-arrow-circle-right"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-xs-6">
-                    <div class="small-box bg-red">
-                        <div class="inner">
-                            <h3>65</h3>
-                            <p>Low stock products</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-pie-graph"></i>
-                        </div>
-                        <a href="@Url.Content("~/Admin/Product/LowStockReport/")" class="small-box-footer">
-                            More info
-                            <i class="fa fa-arrow-circle-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+            }
 
             @if (!Model.IsLoggedInAsVendor && canManageOrders)
             {
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="box box-info">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">Orders</h3>
-                                <div class="box-tools pull-right">
-                                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                </div>
-                            </div>
-                            <div class="box-body">
-                                <div class="chart">
-                                    <canvas id="orders-line-chart" height="300"></canvas>
-
-                                    <script>
-                                        $(document).ready(function () {
-                                            var ordersConfig = {
-                                                type: 'line',
-                                                data: {
-                                                    labels: [
-                                                        "May 1", "May 2", "May 3", "May 4", "May 5", "May 6", "May 7",
-                                                        "May 8", "May 9", "May 10", "May 11", "May 12", "May 13", "May 14", "May 15", "May 16", "May 17"
-                                                    ],
-                                                    datasets: [
-                                                        {
-                                                            label: "Orders",
-                                                            fillColor: "rgba(60,141,188,0.9)",
-                                                            strokeColor: "rgba(60,141,188,0.8)",
-                                                            pointColor: "#3b8bba",
-                                                            pointStrokeColor: "rgba(60,141,188,1)",
-                                                            pointHighlightFill: "#fff",
-                                                            pointHighlightStroke: "rgba(60,141,188,1)",
-                                                            borderColor: 'rgba(60, 141, 188, 0.7)',
-                                                            backgroundColor: 'rgba(44, 152, 214, 0.5)',
-                                                            pointBorderColor: 'rgba(37, 103, 142, 0.9)',
-                                                            pointBackgroundColor: 'rgba(60, 141, 188, 0.4)',
-                                                            pointBorderWidth: 1,
-                                                            data: [65, 59, 80, 81, 56, 55, 40, 140, 70, 80, 40, 40, 40, 70, 40, 22, 55]
-                                                        }
-                                                    ]
-                                                },
-                                                options: {
-                                                    legend: {
-                                                        display: false
-                                                    },
-                                                    showScale: true,
-                                                    scaleShowGridLines: false,
-                                                    scaleGridLineColor: "rgba(0,0,0,.05)",
-                                                    scaleGridLineWidth: 1,
-                                                    scaleShowHorizontalLines: true,
-                                                    scaleShowVerticalLines: true,
-                                                    bezierCurve: true,
-                                                    pointDot: false,
-                                                    pointDotRadius: 4,
-                                                    pointDotStrokeWidth: 1,
-                                                    pointHitDetectionRadius: 20,
-                                                    datasetStroke: true,
-                                                    datasetFill: true,
-                                                    maintainAspectRatio: false,
-                                                    responsive: true
-                                                }
-                                            }
-
-                                            var ordersCtx = document.getElementById("orders-line-chart").getContext("2d");
-                                            window.ordersLine = new Chart(ordersCtx, ordersConfig);
-                                        });
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="col-md-8">
+                        @Html.Action("LatestOrders", "Order")
                     </div>
-                    <div class="col-md-6">
-                        <div class="box box-info">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">New Customers</h3>
-                                <div class="box-tools pull-right">
-                                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                </div>
-                            </div>
-                            <div class="box-body">
-                                <div class="chart">
-                                    <canvas id="customers-line-chart" height="300"></canvas>
-
-                                    <script>
-                                        $(document).ready(function () {
-                                            var customersConfig = {
-                                                type: 'line',
-                                                data: {
-                                                    labels: [
-                                                        "May 1", "May 2", "May 3", "May 4", "May 5", "May 6", "May 7",
-                                                        "May 8", "May 9", "May 10", "May 11", "May 12", "May 13", "May 14", "May 15", "May 16", "May 17"
-                                                    ],
-                                                    datasets: [
-                                                        {
-                                                            label: "New Cutomers",
-                                                            fillColor: "rgba(60,141,188,0.9)",
-                                                            strokeColor: "rgba(60,141,188,0.8)",
-                                                            pointColor: "#3b8bba",
-                                                            pointStrokeColor: "rgba(60,141,188,1)",
-                                                            pointHighlightFill: "#fff",
-                                                            pointHighlightStroke: "rgba(60,141,188,1)",
-                                                            borderColor: 'rgba(89, 38, 128, 0.5)',
-                                                            backgroundColor: 'rgba(116, 60, 188, 0.5)',
-                                                            pointBorderColor: 'rgba(65, 4, 111, 0.7)',
-                                                            pointBackgroundColor: 'rgba(148, 64, 213, 0.4)',
-                                                            pointBorderWidth: 1,
-                                                            data: [165, 529, 820, 891, 586, 575, 405, 1407, 770, 800, 40, 400, 40, 70, 40, 22, 55]
-                                                        }
-                                                    ]
-                                                },
-                                                options: {
-                                                    legend: {
-                                                        display: false
-                                                    },
-                                                    showScale: true,
-                                                    scaleShowGridLines: false,
-                                                    scaleGridLineColor: "rgba(0,0,0,.05)",
-                                                    scaleGridLineWidth: 1,
-                                                    scaleShowHorizontalLines: true,
-                                                    scaleShowVerticalLines: true,
-                                                    bezierCurve: true,
-                                                    pointDot: false,
-                                                    pointDotRadius: 4,
-                                                    pointDotStrokeWidth: 1,
-                                                    pointHitDetectionRadius: 20,
-                                                    datasetStroke: true,
-                                                    datasetFill: true,
-                                                    maintainAspectRatio: false,
-                                                    responsive: true
-                                                }
-                                            }
-
-                                            var customersCtx = document.getElementById("customers-line-chart").getContext("2d");
-                                            window.customersLine = new Chart(customersCtx, customersConfig);
-                                        });
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="col-md-4">
+                        @Html.Action("IncompleteOrders", "Order")
                     </div>
+                </div>
+
+            }
+
+            @if (!Model.IsLoggedInAsVendor && (canManageOrders || canManageProducts))
+            {
+                <div class="row">
+                    @if (canManageOrders)
+                    {
+                        <div class="col-md-8">
+                            @Html.Action("OrderAverageReport", "Order")
+                        </div>
+                    }
+                    @if (canManageProducts)
+                    {
+                        <div class="col-md-4">
+                            @Html.Action("PopularSearchTermsReport", "Common")
+                        </div>
+                    }
                 </div>
             }
 
             @if (canManageOrders)
             {
                 <div class="row">
-                    <div class="col-md-8">
-                        <div class="box box-info">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">Latest Orders</h3>
-                                <div class="box-tools pull-right">
-                                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                </div>
-                            </div>
-                            <div class="box-body">
-                                <div id="orders-grid" class="order-list"></div>
-                            </div>
-                            <div class="box-footer clearfix">
-                                <a href="@Url.Content("~/Admin/Order/List/")" class="btn btn-sm btn-info btn-flat">View All Orders</a>
-                            </div>
-
-                            <script>
-                                $(document).ready(function () {
-                                    $("#orders-grid").kendoGrid({
-                                        dataSource: {
-                                            type: "json",
-                                            transport: {
-                                                read: {
-                                                    url: "@Html.Raw(Url.Action("OrderList", "Order"))",
-                                                    type: "POST",
-                                                    dataType: "json",
-                                                    data: additionalData
-                                                }
-                                            },
-                                            schema: {
-                                                data: "Data",
-                                                total: "Total",
-                                                errors: "Errors"
-                                            },
-                                            error: function (e) {
-                                                display_kendoui_grid_error(e);
-                                                // Cancel the changes
-                                                this.cancelChanges();
-                                            },
-                                            pageSize: 7,
-                                            serverPaging: true,
-                                            serverFiltering: true,
-                                            serverSorting: true
-                                        },
-                                        pageable: {
-                                            refresh: true
-                                        },
-                                        scrollable: false,
-                                        columns: [
-                                            {
-                                                field: "Id",
-                                                title: "@T("Admin.Orders.Fields.ID")",
-                                                width: 80
-                                            },
-                                            @if (!Model.IsLoggedInAsVendor)
-                                {
-                                    //a vendor does not have access to this functionality
-                                    <text>{
-                                                field: "OrderStatus",
-                                                title: "@T("Admin.Orders.Fields.OrderStatus")",
-                                                width: 100,
-                                                template: '<span class="order-status ' +
-                                                    '# if(OrderStatusId == 10) {# order-status-pending #} #' +
-                                                    '# if(OrderStatusId == 20) {# order-status-processing #} #' +
-                                                    '# if(OrderStatusId == 30) {# order-status-complete #} #' +
-                                                    '# if(OrderStatusId == 40) {# order-status-cancelled #} #' +
-                                                    '">#=OrderStatus#</span>'
-                                            },</text>
-                                }
-                                            {
-                                                field: "CustomerEmail",
-                                                title: "@T("Admin.Orders.Fields.Customer")",
-                                                width: 250,
-                                                template: '#=CustomerFullName# (#=CustomerEmail#)'
-                                            },
-                                            {
-                                                field: "StoreName",
-                                                title: "@T("Admin.Orders.Fields.Store")",
-                                                width: 100
-                                            }, {
-                                                field: "CreatedOn",
-                                                title: "@T("Admin.Orders.Fields.CreatedOn")",
-                                                width: 150,
-                                                type: "date",
-                                                format: "{0:G}"
-                                            },
-                                            {
-                                                field: "Id",
-                                                title: "@T("Admin.Common.View")",
-                                                width: 50,
-                                                template: '<a href="Edit/#=Id#">@T("Admin.Common.View")</a>'
-                                            }
-                                        ]
-                                    });
-                                });
-
-
-                                function additionalData() {
-                                    var data = {};
-                                    addAntiForgeryToken(data);
-                                    return data;
-                                }
-                            </script>
-                        </div>
+                    <div class="col-md-6">
+                        @Html.Action("BestsellersBriefReportByQuantity", "Order")
                     </div>
-
-
-                    <div class="col-md-4">
-                        <div class="box box-info">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">Incomplete orders</h3>
-                                <div class="box-tools pull-right">
-                                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                </div>
-                            </div>
-                            <div class="box-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="chart-responsive">
-                                            <canvas id="pieChart" height="155"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="box-footer">
-                                <ul class="chart-legend clearfix">
-                                    <li><i class="fa fa-circle-o text-red"></i> Total unpaid orders (pending payment status)</li>
-                                    <li><i class="fa fa-circle-o text-green"></i> Total not yet shipped orders</li>
-                                    <li><i class="fa fa-circle-o text-yellow"></i> Total incomplete orders (pending order status)</li>
-                                </ul>
-                            </div>
-
-                            <script>
-                                var randomScalingFactor = function () {
-                                    return Math.round(Math.random() * 100);
-                                };
-                                var randomColorFactor = function () {
-                                    return Math.round(Math.random() * 255);
-                                };
-                                var randomColor = function (opacity) {
-                                    return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',' + (opacity || '.3') + ')';
-                                };
-                                $(document).ready(function () {
-                                    var pieConfig = {
-                                        type: 'pie',
-                                        legend: {
-                                            enabled: false
-                                        },
-                                        data: {
-                                            datasets: [{
-                                                data: [
-                                                    randomScalingFactor(),
-                                                    randomScalingFactor(),
-                                                    randomScalingFactor()
-                                                ],
-                                                backgroundColor: [
-                                                    "#F7464A",
-                                                    "#46BFBD",
-                                                    "#FDB45C"
-                                                ]
-                                            }],
-                                            labels: [
-                                                "Total unpaid orders (pending payment status)",
-                                                "Total not yet shipped orders",
-                                                "Total incomplete orders (pending order status)"
-                                            ]
-                                        },
-                                        options: {
-                                            responsive: true
-                                        }
-                                    };
-
-                                    var incompeteOrderCtx = document.getElementById("pieChart").getContext("2d");
-                                    window.myPie = new Chart(incompeteOrderCtx, pieConfig);
-                                });
-                            </script>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="row">
-                    @if (!Model.IsLoggedInAsVendor)
-                    {
-                        <div class="col-md-4">
-                            <div class="box box-info">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Order totals</h3>
-                                    <div class="box-tools pull-right">
-                                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                    </div>
-                                </div>
-                                <div class="box-body">
-                                    <div class="nav-tabs-custom">
-                                        <ul class="nav nav-tabs">
-                                            <li class="active"><a href="tab1">Today</a></li>
-                                            <li><a href="#">This Week</a></li>
-                                            <li><a href="#">This Month</a></li>
-                                            <li><a href="#">This Year</a></li>
-                                            <li><a href="#">All time</a></li>
-                                        </ul>
-                                        <div class="tab-content">
-                                            <div class="tab-pane active" id="tab1">
-                                                <div class="info-box bg-green">
-                                                    <span class="info-box-icon"><i class="ion ion-ios-checkmark-outline"></i></span>
-                                                    <div class="info-box-content">
-                                                        <span class="info-box-text">Complete Orders</span>
-                                                        <span class="info-box-number">Count: 12, Total: 92,050</span>
-                                                        <div class="progress">
-                                                            <div class="progress-bar" style="width: 20%"></div>
-                                                        </div>
-                                                        <span class="progress-description">
-                                                            20% Increase in 30 Days
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="info-box bg-aqua">
-                                                    <span class="info-box-icon"><i class="ion ion-ios-loop"></i></span>
-                                                    <div class="info-box-content">
-                                                        <span class="info-box-text">Processing Orders</span>
-                                                        <span class="info-box-number">Count: 12, Total: 92,050</span>
-                                                        <div class="progress">
-                                                            <div class="progress-bar" style="width: 50%"></div>
-                                                        </div>
-                                                        <span class="progress-description">
-                                                            50% Increase in 30 Days
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="info-box bg-orange">
-                                                    <span class="info-box-icon"><i class="ion ion-ios-clock-outline"></i></span>
-                                                    <div class="info-box-content">
-                                                        <span class="info-box-text">Pending Orders</span>
-                                                        <span class="info-box-number">Count: 12, Total: 92,050</span>
-                                                        <div class="progress">
-                                                            <div class="progress-bar" style="width: 70%"></div>
-                                                        </div>
-                                                        <span class="progress-description">
-                                                            70% Increase in 30 Days
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="info-box bg-red">
-                                                    <span class="info-box-icon"><i class="ion ion-ios-close-outline"></i></span>
-                                                    <div class="info-box-content">
-                                                        <span class="info-box-text">Cancelled Orders</span>
-                                                        <span class="info-box-number">Count: 12, Total: 92,050</span>
-                                                        <div class="progress">
-                                                            <div class="progress-bar" style="width: 40%"></div>
-                                                        </div>
-                                                        <span class="progress-description">
-                                                            40% Increase in 30 Days
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    }
-
-                    <div class="col-md-8">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="box box-info">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title">
-                                            @T("Admin.SalesReport.BestSellers.ByQuantity")
-                                        </h3>
-                                        <div class="box-tools pull-right">
-                                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                        </div>
-                                    </div>
-                                    <div class="box-body">
-                                        @Html.Action("BestsellersBriefReportByQuantity", "Order")
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="box box-info">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title">
-                                            @T("Admin.SalesReport.BestSellers.ByAmount")
-                                        </h3>
-                                        <div class="box-tools pull-right">
-                                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                        </div>
-                                    </div>
-                                    <div class="box-body">
-                                        @Html.Action("BestsellersBriefReportByAmount", "Order")
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
+                    <div class="col-md-6">
+                        @Html.Action("BestsellersBriefReportByAmount", "Order")
                     </div>
                 </div>
             }
 
-            <div class="row">
-                <div class="col-md-12">
-                    @if (!Model.IsLoggedInAsVendor)
-                    {
+            @if (!Model.IsLoggedInAsVendor)
+            {
+                <div class="row">
+                    <div class="col-md-12">
                         @Html.Action("NopCommerceNews", "Home")
-                    }
+                    </div>
                 </div>
-            </div>
+            }
         </div>
 
         @Html.Widget("admin_dashboard_bottom")

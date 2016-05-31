@@ -2,52 +2,63 @@
     var gridPageSize = 4;
 }
 
-<div id="search-term-report-grid"></div>
+<div class="box box-info">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            @T("Admin.SearchTermReport")
+        </h3>
+        <div class="box-tools pull-right">
+            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div>
+    </div>
+    <div class="box-body">
+        <div id="search-term-report-grid"></div>
 
-<script>
-    $(document).ready(function () {
-        $("#search-term-report-grid").kendoGrid({
-            dataSource: {
-                type: "json",
-                transport: {
-                    read: {
-                        url: "@Html.Raw(Url.Action("PopularSearchTermsReport", "Common"))",
-                        type: "POST",
-                        dataType: "json",
-                        data: addAntiForgeryToken
-                    }
-                },
-                schema: {
-                    data: "Data",
-                    total: "Total",
-                    errors: "Errors"
-                },
-                error: function(e) {
-                    display_kendoui_grid_error(e);
-                    // Cancel the changes
-                    this.cancelChanges();
-                },
-                pageSize: @(gridPageSize),
-                serverPaging: true,
-                serverFiltering: true,
-                serverSorting: true
-            },
-            pageable: {
-                refresh: true
-            },
-            editable: {
-                confirmation: false,
-                mode: "inline"
-            },
-            scrollable: false,
-            columns: [{
-                field: "Keyword",
-                title: "@T("Admin.SearchTermReport.Keyword")"
-            }, {
-                field: "Count",
-                title: "@T("Admin.SearchTermReport.Count")"
-            }]
-        });
-    });
-</script>
-
+        <script>
+            $(document).ready(function () {
+                $("#search-term-report-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("PopularSearchTermsReport", "Common"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors"
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        pageSize: @(gridPageSize),
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "Keyword",
+                        title: "@T("Admin.SearchTermReport.Keyword")"
+                    }, {
+                        field: "Count",
+                        title: "@T("Admin.SearchTermReport.Count")"
+                    }]
+                });
+            });
+        </script>
+    </div>
+</div>
