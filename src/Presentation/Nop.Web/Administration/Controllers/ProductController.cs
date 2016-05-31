@@ -943,13 +943,12 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //validate maximum number of products per vendor
-            if (_workContext.CurrentVendor != null)
-            {
-                if (_productService.GetNumberOfProductsByVendorId(_workContext.CurrentVendor.Id) >= _vendorSettings.MaximumProductNumber)
-                {
-                    ErrorNotification(String.Format(_localizationService.GetResource("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
-                    return RedirectToAction("List");
-                }
+            if (_vendorSettings.MaximumProductNumber > 0 &&
+                _workContext.CurrentVendor != null &&
+                _productService.GetNumberOfProductsByVendorId(_workContext.CurrentVendor.Id) >= _vendorSettings.MaximumProductNumber)
+            {   
+                ErrorNotification(string.Format(_localizationService.GetResource("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
+                return RedirectToAction("List");
             }
 
             var model = new ProductModel();
@@ -966,27 +965,21 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
+            //validate maximum number of products per vendor
+            if (_vendorSettings.MaximumProductNumber > 0 &&
+                _workContext.CurrentVendor != null &&
+                _productService.GetNumberOfProductsByVendorId(_workContext.CurrentVendor.Id) >= _vendorSettings.MaximumProductNumber)
+            {
+                ErrorNotification(string.Format(_localizationService.GetResource("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
+                return RedirectToAction("List");
+            }
+
             if (ModelState.IsValid)
             {
                 //a vendor should have access only to his products
                 if (_workContext.CurrentVendor != null)
                 {
                     model.VendorId = _workContext.CurrentVendor.Id;
-                }
-
-                //validate maximum number of products per vendor
-                if (_workContext.CurrentVendor != null)
-                {
-                    if (_productService.GetNumberOfProductsByVendorId(_workContext.CurrentVendor.Id) >= _vendorSettings.MaximumProductNumber)
-                    {
-                        ErrorNotification(String.Format(_localizationService.GetResource("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
-
-                        //If we got this far, something failed, redisplay form
-                        PrepareProductModel(model, null, false, true);
-                        PrepareAclModel(model, null, true);
-                        PrepareStoresMappingModel(model, null, true);
-                        return View(model);
-                    }
                 }
 
                 //vendors cannot edit "Show on home page" property
@@ -1102,20 +1095,7 @@ namespace Nop.Admin.Controllers
                     model.VendorId = _workContext.CurrentVendor.Id;
                 }
 
-                //validate maximum number of products per vendor
-                if (_workContext.CurrentVendor != null)
-                {
-                    if (_productService.GetNumberOfProductsByVendorId(_workContext.CurrentVendor.Id) >= _vendorSettings.MaximumProductNumber)
-                    {
-                        ErrorNotification(String.Format(_localizationService.GetResource("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
-
-                        //If we got this far, something failed, redisplay form
-                        PrepareProductModel(model, product, false, true);
-                        PrepareAclModel(model, product, true);
-                        PrepareStoresMappingModel(model, product, true);
-                        return View(model);
-                    }
-                }
+                //we do not validate maximum number of products per vendor when editing existing products (only during creation of new products)
 
                 //vendors cannot edit "Show on home page" property
                 if (_workContext.CurrentVendor != null && model.ShowOnHomePage != product.ShowOnHomePage)
