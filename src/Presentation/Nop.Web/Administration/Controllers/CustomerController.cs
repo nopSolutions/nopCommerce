@@ -1963,10 +1963,48 @@ namespace Nop.Admin.Controllers
         [ChildActionOnly]
         public ActionResult CustomerStatistics()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
-            return PartialView();
+            var model = new CustomerStatisticsModel();
+            DateTime nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
+            TimeZoneInfo timeZone = _dateTimeHelper.CurrentTimeZone;
+
+            //month statistics
+            var startMonthDt = nowDt.AddDays(-30);
+            if (!timeZone.IsInvalidTime(startMonthDt))
+            {
+                DateTime? startMonthDateUtc = _dateTimeHelper.ConvertToUtcTime(startMonthDt, timeZone);
+                for (int i = 0; i < 30; i++)
+                {
+                    var d = startMonthDateUtc.Value.AddDays(i);
+                    model.Month.Add(new CustomerStatisticsItemModel()
+                    {
+                        Name = d.Date.ToString("M"),
+                        Value = _customerService.GetAllCustomers(createdFromUtc: d, createdToUtc: d.AddDays(1)).Count.ToString()
+                    });
+                }
+            }
+
+            //year statistics
+            var yearAgoRoundedDt = nowDt.AddDays(-365).AddMonths(1);
+            var startYearDt = new DateTime(yearAgoRoundedDt.Year, yearAgoRoundedDt.Month, 1);
+            if (!timeZone.IsInvalidTime(startYearDt))
+            {
+                DateTime? startYearDateUtc = _dateTimeHelper.ConvertToUtcTime(startYearDt, timeZone);
+                for (int i = 0; i < 12; i++)
+                {
+                    var d = startYearDateUtc.Value.AddMonths(i);
+                    model.Year.Add(new CustomerStatisticsItemModel()
+                    {
+                        Name = d.Date.ToString("Y"),
+                        Value = _customerService.GetAllCustomers(createdFromUtc: d, createdToUtc: d.AddMonths(1), 
+                        customerRoleIds: new [] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id }).Count.ToString()
+                    });
+                }
+            }
+
+            return PartialView(model);
         }
 
         #endregion
