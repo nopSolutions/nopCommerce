@@ -45,7 +45,6 @@
 
 <script>
     $(document).ready(function () {
-
         var osCommonOptions = {
             legend: {
                 display: false
@@ -78,7 +77,7 @@
                 ],
                 datasets: [
                     {
-                        label: "Orders",
+                        label: "@T("Admin.SalesReport.OrderStatistics")",
                         fillColor: "rgba(60,141,188,0.9)",
                         strokeColor: "rgba(60,141,188,0.8)",
                         pointColor: "#3b8bba",
@@ -126,7 +125,7 @@
                         pointBackgroundColor: 'rgba(60, 141, 188, 0.4)',
                         pointBorderWidth: 1,
                         data: [
-                            @foreach (var item in Model.Month)
+                            @foreach (var item in Model.Year)
                             {
                                 <text>'@item.Value',</text>
                             }
