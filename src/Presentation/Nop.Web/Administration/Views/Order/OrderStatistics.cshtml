@@ -1,33 +1,35 @@
-﻿<div class="nav-tabs-custom nav-tabs-order-statistics">
+﻿@model OrderStatisticsModel
+
+<div class="nav-tabs-custom nav-tabs-order-statistics">
     <ul class="nav nav-tabs pull-right">
-        <li>
-            <a data-toggle="tab" href="#order-statistics-week">
-                Week
-            </a>
-        </li>
+        @*<li>
+                <a data-toggle="tab" href="#order-statistics-week">
+                    Week
+                </a>
+            </li>*@
         <li class="active">
             <a data-toggle="tab" href="#order-statistics-moth">
-                Month
+                @T("Admin.SalesReport.OrderStatistics.Month")
             </a>
         </li>
         <li>
             <a data-toggle="tab" href="#order-statistics-year">
-                Year
+                @T("Admin.SalesReport.OrderStatistics.Year")
             </a>
         </li>
         <li class="pull-left header">
             <i class="fa fa-shopping-cart"></i>
-            Orders
+            @T("Admin.SalesReport.OrderStatistics")
         </li>
     </ul>
     <div class="tab-content">
         <div class="tab-content">
-            <div class="tab-pane active" id="order-statistics-week">
-                <div class="chart">
-                    <canvas id="order-statistics-chart-week" height="300"></canvas>
-                </div>
-            </div>
-            <div class="tab-pane" id="order-statistics-moth">
+            @*<div class="tab-pane active" id="order-statistics-week">
+                    <div class="chart">
+                        <canvas id="order-statistics-chart-week" height="300"></canvas>
+                    </div>
+                </div>*@
+            <div class="tab-pane active" id="order-statistics-moth">
                 <div class="chart">
                     <canvas id="order-statistics-chart-moth" height="300"></canvas>
                 </div>
@@ -43,12 +45,36 @@
 
 <script>
     $(document).ready(function () {
-        var orderConfig = {
+
+        var osCommonOptions = {
+            legend: {
+                display: false
+            },
+            showScale: true,
+            scaleShowGridLines: false,
+            scaleGridLineColor: "rgba(0,0,0,.05)",
+            scaleGridLineWidth: 1,
+            scaleShowHorizontalLines: true,
+            scaleShowVerticalLines: true,
+            bezierCurve: true,
+            pointDot: false,
+            pointDotRadius: 4,
+            pointDotStrokeWidth: 1,
+            pointHitDetectionRadius: 20,
+            datasetStroke: true,
+            datasetFill: true,
+            maintainAspectRatio: false,
+            responsive: true
+        }
+
+        var osMonthConfig = {
             type: 'line',
             data: {
                 labels: [
-                    "May 1", "May 2", "May 3", "May 4", "May 5", "May 6", "May 7",
-                    "May 8", "May 9", "May 10", "May 11", "May 12", "May 13", "May 14", "May 15", "May 16", "May 17"
+                    @foreach (var item in Model.Month)
+                    {
+                        <text>'@item.Name',</text>
+                    }
                 ],
                 datasets: [
                     {
@@ -64,34 +90,55 @@
                         pointBorderColor: 'rgba(37, 103, 142, 0.9)',
                         pointBackgroundColor: 'rgba(60, 141, 188, 0.4)',
                         pointBorderWidth: 1,
-                        data: [65, 59, 80, 81, 56, 55, 40, 140, 70, 80, 40, 40, 40, 70, 40, 22, 55]
+                        data: [
+                            @foreach (var item in Model.Month)
+                                {
+                                    <text>'@item.Value',</text>
+                                }
+                        ]
                     }
                 ]
             },
-            options: {
-                legend: {
-                    display: false
-                },
-                showScale: true,
-                scaleShowGridLines: false,
-                scaleGridLineColor: "rgba(0,0,0,.05)",
-                scaleGridLineWidth: 1,
-                scaleShowHorizontalLines: true,
-                scaleShowVerticalLines: true,
-                bezierCurve: true,
-                pointDot: false,
-                pointDotRadius: 4,
-                pointDotStrokeWidth: 1,
-                pointHitDetectionRadius: 20,
-                datasetStroke: true,
-                datasetFill: true,
-                maintainAspectRatio: false,
-                responsive: true
-            }
+            options: osCommonOptions
         }
 
-        window.orderStatisticsWeek = new Chart(document.getElementById("order-statistics-chart-week").getContext("2d"), orderConfig);
-        window.orderStatisticsMoth = new Chart(document.getElementById("order-statistics-chart-moth").getContext("2d"), orderConfig);
-        window.orderStatisticsYear = new Chart(document.getElementById("order-statistics-chart-year").getContext("2d"), orderConfig);
+        var osYearConfig = {
+            type: 'line',
+            data: {
+                labels: [
+                    @foreach (var item in Model.Year)
+                    {
+                        <text>'@item.Name',</text>
+                    }
+                ],
+                datasets: [
+                    {
+                        label: "Orders",
+                        fillColor: "rgba(60,141,188,0.9)",
+                        strokeColor: "rgba(60,141,188,0.8)",
+                        pointColor: "#3b8bba",
+                        pointStrokeColor: "rgba(60,141,188,1)",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(60,141,188,1)",
+                        borderColor: 'rgba(60, 141, 188, 0.7)',
+                        backgroundColor: 'rgba(44, 152, 214, 0.5)',
+                        pointBorderColor: 'rgba(37, 103, 142, 0.9)',
+                        pointBackgroundColor: 'rgba(60, 141, 188, 0.4)',
+                        pointBorderWidth: 1,
+                        data: [
+                            @foreach (var item in Model.Month)
+                            {
+                                <text>'@item.Value',</text>
+                            }
+                        ]
+                    }
+                ]
+            },
+            options: osCommonOptions
+        }
+
+        //window.orderStatisticsWeek = new Chart(document.getElementById("order-statistics-chart-week").getContext("2d"), orderConfig);
+        window.orderStatisticsMoth = new Chart(document.getElementById("order-statistics-chart-moth").getContext("2d"), osMonthConfig);
+        window.orderStatisticsYear = new Chart(document.getElementById("order-statistics-chart-year").getContext("2d"), osYearConfig);
     });
 </script>

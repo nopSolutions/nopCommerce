@@ -243,6 +243,7 @@
     <Compile Include="Models\Messages\TestMessageTemplateModel.cs" />
     <Compile Include="Models\Orders\CountryReportLineModel.cs" />
     <Compile Include="Models\Orders\CountryReportModel.cs" />
+    <Compile Include="Models\Orders\OrderStatisticsModel.cs" />
     <Compile Include="Models\Orders\IncompleteOrdersChartModel.cs" />
     <Compile Include="Models\Payments\PaymentMethodRestrictionModel.cs" />
     <Compile Include="Models\Plugins\OfficialFeedListModel.cs" />

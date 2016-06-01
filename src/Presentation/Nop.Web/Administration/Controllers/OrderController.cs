@@ -4061,7 +4061,44 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
-            return PartialView();
+            var model = new OrderStatisticsModel();
+            DateTime nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
+            TimeZoneInfo timeZone = _dateTimeHelper.CurrentTimeZone;
+
+            //month statistics
+            var startMonthDt = nowDt.AddDays(-30);
+            if (!timeZone.IsInvalidTime(startMonthDt))
+            {
+                DateTime? startMonthDateUtc = _dateTimeHelper.ConvertToUtcTime(startMonthDt, timeZone);
+                for (int i = 0; i < 30; i++)
+                {
+                    var d = startMonthDateUtc.Value.AddDays(i);
+                    model.Month.Add(new OrderStatisticsItemModel()
+                    {
+                        Name = d.Date.ToString("M"),
+                        Value = _orderService.SearchOrders(createdFromUtc: d, createdToUtc: d.AddDays(1)).Count.ToString()
+                    });
+                }
+            }
+
+            //year statistics
+            var yearAgoRoundedDt = nowDt.AddDays(-365).AddMonths(1);
+            var startYearDt = new DateTime(yearAgoRoundedDt.Year, yearAgoRoundedDt.Month, 1);
+            if (!timeZone.IsInvalidTime(startYearDt))
+            {
+                DateTime? startYearDateUtc = _dateTimeHelper.ConvertToUtcTime(startYearDt, timeZone);
+                for (int i = 0; i < 12; i++)
+                {
+                    var d = startYearDateUtc.Value.AddMonths(i);
+                    model.Year.Add(new OrderStatisticsItemModel()
+                    {
+                        Name = d.Date.ToString("Y"),
+                        Value = _orderService.SearchOrders(createdFromUtc: d, createdToUtc: d.AddMonths(1)).Count.ToString()
+                    });
+                }
+            }
+
+            return PartialView(model);
         }
 
         [ChildActionOnly]
