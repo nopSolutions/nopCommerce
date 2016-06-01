@@ -8754,6 +8754,21 @@
   <LocaleResource Name="Admin.Dashboard">
     <Value>Dashboard</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.NumberOfOrders">
+    <Value>Orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.NumberOfCustomers">
+    <Value>Registered customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.NumberOfPendingReturnRequests">
+    <Value>Pending return requests</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.NumberOfLowStockProducts">
+    <Value>Low stock products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.MoreInfo">
+    <Value>More info</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Download.DownloadUploadedFile">
     <Value>Download uploaded file</Value>
   </LocaleResource>

@@ -1,16 +1,16 @@
-﻿@model DashboardModel
+﻿@model DayStatisticsModel
 
 <div class="col-lg-3 col-xs-6">
     <div class="small-box bg-aqua">
         <div class="inner">
-            <h3>150</h3>
-            <p>Total Orders</p>
+            <h3>@Model.NumberOfOrders</h3>
+            <p>@T("Admin.Dashboard.NumberOfOrders")</p>
         </div>
         <div class="icon">
             <i class="ion ion-bag"></i>
         </div>
-        <a href="@Url.Content("~/Admin/Order/List/")" class="small-box-footer">
-            More info
+        <a href="@Url.Action("List", "Order")" class="small-box-footer">
+            @T("Admin.Dashboard.MoreInfo")
             <i class="fa fa-arrow-circle-right"></i>
         </a>
     </div>
@@ -18,14 +18,14 @@
 <div class="col-lg-3 col-xs-6">
     <div class="small-box bg-green">
         <div class="inner">
-            <h3>53</h3>
-            <p>Total Customers</p>
+            <h3>@Model.NumberOfCustomers</h3>
+            <p>@T("Admin.Dashboard.NumberOfCustomers")</p>
         </div>
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="@Url.Content("~/Admin/Customer/List/")" class="small-box-footer">
-            More info
+        <a href="@Url.Action("List", "Customer")" class="small-box-footer">
+            @T("Admin.Dashboard.MoreInfo")
             <i class="fa fa-arrow-circle-right"></i>
         </a>
     </div>
@@ -33,14 +33,14 @@
 <div class="col-lg-3 col-xs-6">
     <div class="small-box bg-yellow">
         <div class="inner">
-            <h3>44</h3>
-            <p>Return requests</p>
+            <h3>@Model.NumberOfPendingReturnRequests</h3>
+            <p>@T("Admin.Dashboard.NumberOfPendingReturnRequests")</p>
         </div>
         <div class="icon">
             <i class="ion ion-refresh"></i>
         </div>
-        <a href="@Url.Content("~/Admin/ReturnRequest/List/")" class="small-box-footer">
-            More info
+        <a href="@Url.Action("List", "ReturnRequest")" class="small-box-footer">
+            @T("Admin.Dashboard.MoreInfo")
             <i class="fa fa-arrow-circle-right"></i>
         </a>
     </div>
@@ -48,14 +48,14 @@
 <div class="col-lg-3 col-xs-6">
     <div class="small-box bg-red">
         <div class="inner">
-            <h3>65</h3>
-            <p>Low stock products</p>
+            <h3>@Model.NumberOfLowStockProducts</h3>
+            <p>@T("Admin.Dashboard.NumberOfLowStockProducts")</p>
         </div>
         <div class="icon">
             <i class="ion ion-pie-graph"></i>
         </div>
-        <a href="@Url.Content("~/Admin/Product/LowStockReport/")" class="small-box-footer">
-            More info
+        <a href="@Url.Action("LowStockReport", "Product")" class="small-box-footer">
+            @T("Admin.Dashboard.MoreInfo")
             <i class="fa fa-arrow-circle-right"></i>
         </a>
     </div>

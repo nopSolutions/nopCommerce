@@ -13,6 +13,7 @@
     var canManageOrders = permissionService.Authorize(StandardPermissionProvider.ManageOrders);
     var canManageCustomers = permissionService.Authorize(StandardPermissionProvider.ManageCustomers);
     var canManageProducts = permissionService.Authorize(StandardPermissionProvider.ManageProducts);
+    var canManageRecurringPayments = permissionService.Authorize(StandardPermissionProvider.ManageProducts);
 }
 
 @Html.AntiForgeryToken()
@@ -27,7 +28,7 @@
         <div class="col-md-12">
             @Html.Widget("admin_dashboard_top")
 
-            @if (!Model.IsLoggedInAsVendor && canManageOrders)
+            @if (!Model.IsLoggedInAsVendor && canManageOrders && canManageCustomers && canManageProducts && canManageRecurringPayments)
             {
                 <div class="row">
                     @Html.Action("DayStatistics", "Home")

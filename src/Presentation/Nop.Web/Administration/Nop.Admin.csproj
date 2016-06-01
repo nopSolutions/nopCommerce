@@ -237,6 +237,7 @@
     <Compile Include="Models\Customers\CustomerAttributeModel.cs" />
     <Compile Include="Models\Customers\CustomerAttributeValueModel.cs" />
     <Compile Include="Models\Discounts\DiscountListModel.cs" />
+    <Compile Include="Models\Home\DayStatisticsModel.cs" />
     <Compile Include="Models\Home\DashboardModel.cs" />
     <Compile Include="Models\Localization\LanguageResourcesListModel.cs" />
     <Compile Include="Models\Messages\TestMessageTemplateModel.cs" />

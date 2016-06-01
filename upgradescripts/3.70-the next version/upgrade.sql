@@ -611,6 +611,21 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.MiniShoppingCartProductNumber">
     <Value>Number of products in mini-shopping cart</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.NumberOfOrders">
+    <Value>Orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.NumberOfCustomers">
+    <Value>Registered customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.NumberOfPendingReturnRequests">
+    <Value>Pending return requests</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.NumberOfLowStockProducts">
+    <Value>Low stock products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.MoreInfo">
+    <Value>More info</Value>
+  </LocaleResource>
 </Language>
 '
 
