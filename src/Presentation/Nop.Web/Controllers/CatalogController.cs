@@ -491,12 +491,13 @@ namespace Nop.Web.Controllers
             }
 
 
-
-
+            
+            var pictureSize = _mediaSettings.CategoryThumbPictureSize;
 
             //subcategories
             string subCategoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_SUBCATEGORIES_KEY,
                 categoryId,
+                pictureSize,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id,
@@ -514,7 +515,6 @@ namespace Nop.Web.Controllers
                     };
 
                     //prepare picture model
-                    int pictureSize = _mediaSettings.CategoryThumbPictureSize;
                     var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                     subCatModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
                     {
@@ -704,8 +704,11 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult HomepageCategories()
         {
+            var pictureSize = _mediaSettings.CategoryThumbPictureSize;
+
             string categoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HOMEPAGE_KEY,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
+                pictureSize,
                 _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id, 
                 _webHelper.IsCurrentConnectionSecured());
@@ -717,7 +720,6 @@ namespace Nop.Web.Controllers
                     var catModel = x.ToModel();
 
                     //prepare picture model
-                    int pictureSize = _mediaSettings.CategoryThumbPictureSize;
                     var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                     catModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
                     {
