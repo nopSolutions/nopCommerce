@@ -626,6 +626,9 @@ set @resources='
   <LocaleResource Name="Admin.Dashboard.MoreInfo">
     <Value>More info</Value>
   </LocaleResource>
+   <LocaleResource Name="Admin.Dashboard.IncompleteOrders">
+    <Value>Incomplete orders</Value>
+  </LocaleResource>
 </Language>
 '
 
