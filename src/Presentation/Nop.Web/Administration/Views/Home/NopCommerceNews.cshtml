@@ -1,12 +1,9 @@
 ﻿@model SyndicationFeed
-
 @using System.ServiceModel.Syndication;
 @using Nop.Core.Domain.Common;
-
 @{
     var hideAdvertisements = EngineContext.Current.Resolve<CommonSettings>().HideAdvertisementsOnAdminArea;
 }
-
 <div class="box box-info">
     <div class="box-header with-border clearfix">
         <div class="box-title">
@@ -55,7 +52,7 @@
 
         </div>
     </div>
-    <div class="box-footer">
+    @*<div class="box-footer">
         <button id="nopcommerceNewsHideAdv" class="btn bg-aqua">
             @(hideAdvertisements ? T("Admin.NopCommerceNews.ShowAdv") : T("Admin.NopCommerceNews.HideAdv"))
         </button>
@@ -81,5 +78,5 @@
                 });
             });
         </script>
-    </div>
+    </div>*@
 </div>
