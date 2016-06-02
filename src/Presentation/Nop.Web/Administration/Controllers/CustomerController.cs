@@ -1963,45 +1963,64 @@ namespace Nop.Admin.Controllers
         [ChildActionOnly]
         public ActionResult CustomerStatistics()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return Content("");
 
             var model = new CustomerStatisticsModel();
-            DateTime nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
-            TimeZoneInfo timeZone = _dateTimeHelper.CurrentTimeZone;
+
+            var nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
+            var timeZone = _dateTimeHelper.CurrentTimeZone;
+            var searchCustomerRoleIds = new [] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id };
 
             //month statistics
-            var startMonthDt = nowDt.AddDays(-30);
-            if (!timeZone.IsInvalidTime(startMonthDt))
+            var searchMonthDateUser = new DateTime(nowDt.Year, nowDt.AddMonths(-1).Month, nowDt.AddMonths(-1).Day);
+            if (!timeZone.IsInvalidTime(searchMonthDateUser))
             {
-                DateTime? startMonthDateUtc = _dateTimeHelper.ConvertToUtcTime(startMonthDt, timeZone);
-                for (int i = 0; i < 30; i++)
+                DateTime searchYearDateUtc = _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone);
+
+                do
                 {
-                    var d = startMonthDateUtc.Value.AddDays(i);
-                    model.Month.Add(new CustomerStatisticsItemModel()
+                    model.ByMonthItems.Add(new CustomerStatisticsItemModel
                     {
-                        Name = d.Date.ToString("M"),
-                        Value = _customerService.GetAllCustomers(createdFromUtc: d, createdToUtc: d.AddDays(1)).Count.ToString()
+                        Date = searchMonthDateUser.Date,
+                        Value = _customerService.GetAllCustomers(
+                            createdFromUtc: searchYearDateUtc,
+                            createdToUtc: searchYearDateUtc.AddDays(1),
+                            customerRoleIds: searchCustomerRoleIds,
+                            pageIndex: 0,
+                            pageSize: 1).TotalCount.ToString()
                     });
-                }
+
+                    searchYearDateUtc = searchYearDateUtc.AddDays(1);
+                    searchMonthDateUser = searchMonthDateUser.AddDays(1);
+
+                } while (!(searchMonthDateUser.Date.Month == nowDt.Date.Month && searchMonthDateUser.Date.Day > nowDt.Date.Day));
             }
 
             //year statistics
-            var yearAgoRoundedDt = nowDt.AddDays(-365).AddMonths(1);
-            var startYearDt = new DateTime(yearAgoRoundedDt.Year, yearAgoRoundedDt.Month, 1);
-            if (!timeZone.IsInvalidTime(startYearDt))
+            var yearAgoRoundedDt = nowDt.AddYears(-1).AddMonths(1);
+            var searchYearDateUser = new DateTime(yearAgoRoundedDt.Year, yearAgoRoundedDt.Month, 1);
+            if (!timeZone.IsInvalidTime(searchYearDateUser))
             {
-                DateTime? startYearDateUtc = _dateTimeHelper.ConvertToUtcTime(startYearDt, timeZone);
-                for (int i = 0; i < 12; i++)
+                DateTime searchYearDateUtc = _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone);
+
+                do
                 {
-                    var d = startYearDateUtc.Value.AddMonths(i);
-                    model.Year.Add(new CustomerStatisticsItemModel()
+                    model.ByYearItems.Add(new CustomerStatisticsItemModel
                     {
-                        Name = d.Date.ToString("Y"),
-                        Value = _customerService.GetAllCustomers(createdFromUtc: d, createdToUtc: d.AddMonths(1), 
-                        customerRoleIds: new [] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id }).Count.ToString()
+                        Date = searchYearDateUser.Date,
+                        Value = _customerService.GetAllCustomers(
+                            createdFromUtc: searchYearDateUtc,
+                            createdToUtc: searchYearDateUtc.AddMonths(1),
+                            customerRoleIds: searchCustomerRoleIds,
+                            pageIndex: 0,
+                            pageSize: 1).TotalCount.ToString()
                     });
-                }
+
+                    searchYearDateUtc = searchYearDateUtc.AddMonths(1);
+                    searchYearDateUser = searchYearDateUser.AddMonths(1);
+
+                } while (!(searchYearDateUser.Date.Year == nowDt.Date.Year && searchYearDateUser.Date.Month > nowDt.Date.Month));
             }
 
             return PartialView(model);
