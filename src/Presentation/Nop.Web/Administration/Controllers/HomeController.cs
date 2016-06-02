@@ -118,7 +118,7 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) ||
                 !_permissionService.Authorize(StandardPermissionProvider.ManageOrders) ||
-                !_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments) ||
+                !_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests) ||
                 !_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return Content("");
 
