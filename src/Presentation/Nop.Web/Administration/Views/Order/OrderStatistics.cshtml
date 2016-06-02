@@ -45,34 +45,13 @@
 
 <script>
     $(document).ready(function () {
-        var osCommonOptions = {
-            legend: {
-                display: false
-            },
-            showScale: true,
-            scaleShowGridLines: false,
-            scaleGridLineColor: "rgba(0,0,0,.05)",
-            scaleGridLineWidth: 1,
-            scaleShowHorizontalLines: true,
-            scaleShowVerticalLines: true,
-            bezierCurve: true,
-            pointDot: false,
-            pointDotRadius: 4,
-            pointDotStrokeWidth: 1,
-            pointHitDetectionRadius: 20,
-            datasetStroke: true,
-            datasetFill: true,
-            maintainAspectRatio: false,
-            responsive: true
-        }
-
         var osMonthConfig = {
             type: 'line',
             data: {
                 labels: [
-                    @foreach (var item in Model.Month)
+                    @foreach (var item in Model.ByMonthItems)
                     {
-                        <text>'@item.Name',</text>
+                        <text>'@item.Date.ToString("M")',</text>
                     }
                 ],
                 datasets: [
@@ -90,7 +69,7 @@
                         pointBackgroundColor: 'rgba(60, 141, 188, 0.4)',
                         pointBorderWidth: 1,
                         data: [
-                            @foreach (var item in Model.Month)
+                            @foreach (var item in Model.ByMonthItems)
                                 {
                                     <text>'@item.Value',</text>
                                 }
@@ -98,21 +77,58 @@
                     }
                 ]
             },
-            options: osCommonOptions
+            options: {
+                legend: {
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        ticks: {
+                            userCallback: function (dataLabel, index) {
+                                return index % 5 === 0 ? dataLabel : '';
+                            }
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            userCallback: function (dataLabel, index) {
+                                return (dataLabel ^ 0) === dataLabel ? dataLabel : '';
+                            }
+                        }
+                    }]
+                },
+                showScale: true,
+                scaleShowGridLines: false,
+                scaleGridLineColor: "rgba(0,0,0,.05)",
+                scaleGridLineWidth: 1,
+                scaleShowHorizontalLines: true,
+                scaleShowVerticalLines: true,
+                bezierCurve: true,
+                pointDot: false,
+                pointDotRadius: 4,
+                pointDotStrokeWidth: 1,
+                pointHitDetectionRadius: 20,
+                datasetStroke: true,
+                datasetFill: true,
+                maintainAspectRatio: false,
+                responsive: true
+            }
         }
 
         var osYearConfig = {
             type: 'line',
             data: {
                 labels: [
-                    @foreach (var item in Model.Year)
+                    @foreach (var item in Model.ByYearItems)
                     {
-                        <text>'@item.Name',</text>
+                        <text>'@item.Date.ToString("Y")',</text>
                     }
                 ],
                 datasets: [
                     {
-                        label: "Orders",
+                        label: "@T("Admin.SalesReport.OrderStatistics")",
                         fillColor: "rgba(60,141,188,0.9)",
                         strokeColor: "rgba(60,141,188,0.8)",
                         pointColor: "#3b8bba",
@@ -125,7 +141,7 @@
                         pointBackgroundColor: 'rgba(60, 141, 188, 0.4)',
                         pointBorderWidth: 1,
                         data: [
-                            @foreach (var item in Model.Year)
+                            @foreach (var item in Model.ByYearItems)
                             {
                                 <text>'@item.Value',</text>
                             }
@@ -133,7 +149,36 @@
                     }
                 ]
             },
-            options: osCommonOptions
+            options: {
+                legend: {
+                    display: false
+                },
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            userCallback: function (dataLabel, index) {
+                                return (dataLabel ^ 0) === dataLabel ? dataLabel : '';
+                            }
+                        }
+                    }]
+                },
+                showScale: true,
+                scaleShowGridLines: false,
+                scaleGridLineColor: "rgba(0,0,0,.05)",
+                scaleGridLineWidth: 1,
+                scaleShowHorizontalLines: true,
+                scaleShowVerticalLines: true,
+                bezierCurve: true,
+                pointDot: false,
+                pointDotRadius: 4,
+                pointDotStrokeWidth: 1,
+                pointHitDetectionRadius: 20,
+                datasetStroke: true,
+                datasetFill: true,
+                maintainAspectRatio: false,
+                responsive: true
+            }
         }
 
         //window.orderStatisticsWeek = new Chart(document.getElementById("order-statistics-chart-week").getContext("2d"), orderConfig);

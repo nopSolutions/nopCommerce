@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Orders
@@ -7,18 +8,18 @@ namespace Nop.Admin.Models.Orders
     {
         public OrderStatisticsModel()
         {
-            Month = new List<OrderStatisticsItemModel>();
-            Year = new List<OrderStatisticsItemModel>();
+            ByMonthItems = new List<OrderStatisticsItemModel>();
+            ByYearItems = new List<OrderStatisticsItemModel>();
         }
 
-        public List<OrderStatisticsItemModel> Month { get; set; }
+        public List<OrderStatisticsItemModel> ByMonthItems { get; set; }
 
-        public List<OrderStatisticsItemModel> Year { get; set; }
+        public List<OrderStatisticsItemModel> ByYearItems { get; set; }
     }
 
     public partial class OrderStatisticsItemModel : BaseNopModel
     {
-        public string Name { get; set; }
+        public DateTime Date { get; set; }
 
         public string Value { get; set; }
     }
