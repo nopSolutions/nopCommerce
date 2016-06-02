@@ -136,9 +136,6 @@ namespace Nop.Admin.Controllers
                 pageSize: 1).TotalCount;
 
             model.NumberOfPendingReturnRequests = _returnRequestService.SearchReturnRequests(
-                storeId: 0, 
-                customerId: 0, 
-                orderItemId: 0,
                 rs: ReturnRequestStatus.Pending, 
                 pageIndex: 0, 
                 pageSize:1).TotalCount;
