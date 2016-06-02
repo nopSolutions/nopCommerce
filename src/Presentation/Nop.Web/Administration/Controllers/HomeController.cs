@@ -146,7 +146,7 @@ namespace Nop.Admin.Controllers
             IList<Product> products;
             IList<ProductAttributeCombination> combinations;
             _productService.GetLowStockProducts(vendorId, out products, out combinations);
-            model.NumberOfLowStockProducts = products.Count;
+            model.NumberOfLowStockProducts = products.Count + combinations.Count;
 
             return PartialView(model);
         }
