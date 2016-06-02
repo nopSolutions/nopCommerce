@@ -140,10 +140,8 @@ namespace Nop.Admin.Controllers
                 pageIndex: 0, 
                 pageSize:1).TotalCount;
 
-            IList<Product> products;
-            IList<ProductAttributeCombination> combinations;
-            _productService.GetLowStockProducts(vendorId, out products, out combinations);
-            model.NumberOfLowStockProducts = products.Count + combinations.Count;
+            model.NumberOfLowStockProducts = _productService.GetLowStockProducts(vendorId, 0, 1).TotalCount +
+                                             _productService.GetLowStockProductCombinations(vendorId, 0, 1).TotalCount;
 
             return PartialView(model);
         }

@@ -2978,9 +2978,8 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
-            IList<Product> products;
-            IList<ProductAttributeCombination> combinations;
-            _productService.GetLowStockProducts(vendorId, out products, out combinations);
+            IList<Product> products = _productService.GetLowStockProducts(vendorId);
+            IList<ProductAttributeCombination> combinations = _productService.GetLowStockProductCombinations(vendorId);
 
             var models = new List<LowStockProductModel>();
             //products
