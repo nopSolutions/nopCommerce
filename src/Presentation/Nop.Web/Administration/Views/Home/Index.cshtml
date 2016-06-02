@@ -31,7 +31,7 @@
             @if (!Model.IsLoggedInAsVendor && canManageOrders && canManageCustomers && canManageProducts && canManageRecurringPayments)
             {
                 <div class="row">
-                    @Html.Action("DayStatistics", "Home")
+                    @Html.Action("CommonStatistics", "Home")
                 </div>
             }
 

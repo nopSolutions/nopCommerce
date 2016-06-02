@@ -2,10 +2,8 @@
 
 namespace Nop.Admin.Models.Home
 {
-    public partial class DayStatisticsModel : BaseNopModel
+    public partial class CommonStatisticsModel : BaseNopModel
     {
-        public bool IsLoggedInAsVendor { get; set; }
-
         public int NumberOfOrders { get; set; }
 
         public int NumberOfCustomers { get; set; }

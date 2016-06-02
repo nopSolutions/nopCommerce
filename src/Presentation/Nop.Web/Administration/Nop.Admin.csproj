@@ -238,7 +238,7 @@
     <Compile Include="Models\Customers\CustomerAttributeValueModel.cs" />
     <Compile Include="Models\Customers\CustomerStatisticsModel.cs" />
     <Compile Include="Models\Discounts\DiscountListModel.cs" />
-    <Compile Include="Models\Home\DayStatisticsModel.cs" />
+    <Compile Include="Models\Home\CommonStatisticsModel.cs" />
     <Compile Include="Models\Home\DashboardModel.cs" />
     <Compile Include="Models\Localization\LanguageResourcesListModel.cs" />
     <Compile Include="Models\Messages\TestMessageTemplateModel.cs" />
@@ -1017,7 +1017,7 @@
     <Content Include="Content\ionicons\fonts\ionicons.eot" />
     <Content Include="Content\ionicons\fonts\ionicons.ttf" />
     <Content Include="Content\ionicons\fonts\ionicons.woff" />
-    <Content Include="Views\Home\DayStatistics.cshtml" />
+    <Content Include="Views\Home\CommonStatistics.cshtml" />
     <Content Include="Views\Order\OrderStatistics.cshtml" />
     <Content Include="Views\Customer\CustomerStatistics.cshtml" />
     <Content Include="Views\Order\LatestOrders.cshtml" />

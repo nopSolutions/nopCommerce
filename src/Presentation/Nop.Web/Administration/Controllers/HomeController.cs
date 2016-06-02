@@ -114,7 +114,7 @@ namespace Nop.Admin.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult DayStatistics()
+        public ActionResult CommonStatistics()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) ||
                 !_permissionService.Authorize(StandardPermissionProvider.ManageOrders) ||
@@ -122,17 +122,26 @@ namespace Nop.Admin.Controllers
                 !_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return Content("");
 
-            var model = new DayStatisticsModel();
+            var model = new CommonStatisticsModel();
+            var vendorId = _workContext.CurrentVendor != null ? _workContext.CurrentVendor.Id : 0;
 
-            int vendorId = 0;
-            if (_workContext.CurrentVendor != null)
-                vendorId = _workContext.CurrentVendor.Id;
+            model.NumberOfOrders = _orderService.SearchOrders(
+                vendorId: vendorId, 
+                pageIndex: 0, 
+                pageSize: 1).TotalCount;
 
-            model.NumberOfOrders = _orderService.SearchOrders(vendorId: vendorId, pageIndex: 0, pageSize: 1).TotalCount;
             model.NumberOfCustomers = _customerService.GetAllCustomers(
                 customerRoleIds: new [] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id }, 
-                pageIndex: 0, pageSize: 1).TotalCount;
-            model.NumberOfPendingReturnRequests = _returnRequestService.SearchReturnRequests(0, 0, 0, ReturnRequestStatus.Pending, 0, 1).TotalCount;
+                pageIndex: 0, 
+                pageSize: 1).TotalCount;
+
+            model.NumberOfPendingReturnRequests = _returnRequestService.SearchReturnRequests(
+                storeId: 0, 
+                customerId: 0, 
+                orderItemId: 0,
+                rs: ReturnRequestStatus.Pending, 
+                pageIndex: 0, 
+                pageSize:1).TotalCount;
 
             IList<Product> products;
             IList<ProductAttributeCombination> combinations;

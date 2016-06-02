@@ -8,9 +8,12 @@ namespace Nop.Admin.Models.Customers
     {
         public CustomerStatisticsModel()
         {
+            ByDayItems = new List<CustomerStatisticsItemModel>();
             ByMonthItems = new List<CustomerStatisticsItemModel>();
             ByYearItems = new List<CustomerStatisticsItemModel>();
         }
+
+        public List<CustomerStatisticsItemModel> ByDayItems { get; set; }
 
         public List<CustomerStatisticsItemModel> ByMonthItems { get; set; }
 
