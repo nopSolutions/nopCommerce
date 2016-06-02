@@ -21,7 +21,7 @@
                                 url: "@Html.Raw(Url.Action("OrderList", "Order"))",
                                 type: "POST",
                                 dataType: "json",
-                                data: additionalData
+                                data: additionalDataLatestOrders
                             }
                         },
                         schema: {
@@ -49,17 +49,17 @@
                             title: "@T("Admin.Orders.Fields.ID")",
                             width: 80
                         },
-                                    {
-                                        field: "OrderStatus",
-                                        title: "@T("Admin.Orders.Fields.OrderStatus")",
-                                        width: 100,
-                                        template: '<span class="order-status ' +
-                                            '# if(OrderStatusId == 10) {# order-status-pending #} #' +
-                                            '# if(OrderStatusId == 20) {# order-status-processing #} #' +
-                                            '# if(OrderStatusId == 30) {# order-status-complete #} #' +
-                                            '# if(OrderStatusId == 40) {# order-status-cancelled #} #' +
-                                            '">#=OrderStatus#</span>'
-                                    },
+                        {
+                            field: "OrderStatus",
+                            title: "@T("Admin.Orders.Fields.OrderStatus")",
+                            width: 100,
+                            template: '<span class="order-status ' +
+                                '# if(OrderStatusId == 10) {# order-status-pending #} #' +
+                                '# if(OrderStatusId == 20) {# order-status-processing #} #' +
+                                '# if(OrderStatusId == 30) {# order-status-complete #} #' +
+                                '# if(OrderStatusId == 40) {# order-status-cancelled #} #' +
+                                '">#=OrderStatus#</span>'
+                        },
                         {
                             field: "CustomerEmail",
                             title: "@T("Admin.Orders.Fields.Customer")",
@@ -87,7 +87,7 @@
                 });
             });
 
-            function additionalData() {
+            function additionalDataLatestOrders() {
                 var data = {};
                 addAntiForgeryToken(data);
                 return data;
