@@ -2,12 +2,12 @@
 
 <div class="nav-tabs-custom nav-tabs-customer-statistics">
     <ul class="nav nav-tabs pull-right">
-        @*<li class="active">
-                <a data-toggle="tab" href="#customer-statistics-week">
-                    Week
-                </a>
-            </li>*@
         <li class="active">
+            <a data-toggle="tab" href="#customer-statistics-week">
+                @T("Admin.Customers.Reports.CustomerStatistics.Week")
+            </a>
+        </li>
+        <li>
             <a data-toggle="tab" href="#customer-statistics-moth">
                 @T("Admin.Customers.Reports.CustomerStatistics.Month")
             </a>
@@ -23,12 +23,12 @@
         </li>
     </ul>
     <div class="tab-content">
-        @*<div class="tab-pane active" id="customer-statistics-week">
-                <div class="chart">
-                    <canvas id="customer-statistics-chart-week" height="300"></canvas>
-                </div>
-            </div>*@
-        <div class="tab-pane active" id="customer-statistics-moth">
+        <div class="tab-pane active" id="customer-statistics-week">
+            <div class="chart">
+                <canvas id="customer-statistics-chart-week" height="300"></canvas>
+            </div>
+        </div>
+        <div class="tab-pane" id="customer-statistics-moth">
             <div class="chart">
                 <canvas id="customer-statistics-chart-moth" height="300"></canvas>
             </div>
@@ -42,7 +42,73 @@
 </div>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
+        var csWeekConfig = {
+            type: 'line',
+            data: {
+                labels: [
+                    @foreach (var item in Model.ByWeekItems)
+                    {
+                        <text>'@item.Date.ToString("d dddd")',</text>
+                    }
+                ],
+                datasets: [
+                    {
+                        label: "@T("Admin.Customers.Reports.CustomerStatistics")",
+                        fillColor: "rgba(60,141,188,0.9)",
+                        strokeColor: "rgba(60,141,188,0.8)",
+                        pointColor: "#3b8bba",
+                        pointStrokeColor: "rgba(60,141,188,1)",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(60,141,188,1)",
+                        borderColor: 'rgba(89, 38, 128, 0.5)',
+                        backgroundColor: 'rgba(116, 60, 188, 0.5)',
+                        pointBorderColor: 'rgba(65, 4, 111, 0.7)',
+                        pointBackgroundColor: 'rgba(148, 64, 213, 0.4)',
+                        pointBorderWidth: 1,
+                        data: [
+                            @foreach (var item in Model.ByWeekItems)
+                            {
+                                <text>'@item.Value',</text>
+                            }
+                        ]
+                    }
+                ]
+            },
+            options: {
+                legend: {
+                    display: false
+                },
+                scales: {
+                    yAxes: [
+                        {
+                            display: true,
+                            ticks: {
+                                userCallback: function(dataLabel, index) {
+                                    return (dataLabel ^ 0) === dataLabel ? dataLabel : '';
+                                }
+                            }
+                        }
+                    ]
+                },
+                showScale: true,
+                scaleShowGridLines: false,
+                scaleGridLineColor: "rgba(0,0,0,.05)",
+                scaleGridLineWidth: 1,
+                scaleShowHorizontalLines: true,
+                scaleShowVerticalLines: true,
+                bezierCurve: true,
+                pointDot: false,
+                pointDotRadius: 4,
+                pointDotStrokeWidth: 1,
+                pointHitDetectionRadius: 20,
+                datasetStroke: true,
+                datasetFill: true,
+                maintainAspectRatio: false,
+                responsive: true
+            }
+        }
+
         var csMonthConfig = {
             type: 'line',
             data: {
@@ -179,7 +245,7 @@
             }
         }
 
-        //window.customerStatisticsWeek = new Chart(document.getElementById("customer-statistics-chart-week").getContext("2d"), customersConfig);
+        window.customerStatisticsWeek = new Chart(document.getElementById("customer-statistics-chart-week").getContext("2d"), csWeekConfig);
         window.customerStatisticsMoth = new Chart(document.getElementById("customer-statistics-chart-moth").getContext("2d"), csMonthConfig);
         window.customerStatisticsYear = new Chart(document.getElementById("customer-statistics-chart-year").getContext("2d"), csYearConfig);
     });

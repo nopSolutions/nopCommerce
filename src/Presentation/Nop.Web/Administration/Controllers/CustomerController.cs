@@ -1972,6 +1972,31 @@ namespace Nop.Admin.Controllers
             var timeZone = _dateTimeHelper.CurrentTimeZone;
             var searchCustomerRoleIds = new [] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id };
 
+            //week statistics
+            var searchWeekDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-7).Month, nowDt.AddDays(-7).Day);
+            if (!timeZone.IsInvalidTime(searchWeekDateUser))
+            {
+                DateTime searchWeekDateUtc = _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone);
+
+                do
+                {
+                    model.ByWeekItems.Add(new CustomerStatisticsItemModel
+                    {
+                        Date = searchWeekDateUser.Date,
+                        Value = _customerService.GetAllCustomers(
+                            createdFromUtc: searchWeekDateUtc,
+                            createdToUtc: searchWeekDateUtc.AddDays(1),
+                            customerRoleIds: searchCustomerRoleIds,
+                            pageIndex: 0,
+                            pageSize: 1).TotalCount.ToString()
+                    });
+
+                    searchWeekDateUtc = searchWeekDateUtc.AddDays(1);
+                    searchWeekDateUser = searchWeekDateUser.AddDays(1);
+
+                } while (!(searchWeekDateUser.Date.Month == nowDt.Date.Month && searchWeekDateUser.Date.Day > nowDt.Date.Day));
+            }
+
             //month statistics
             var searchMonthDateUser = new DateTime(nowDt.Year, nowDt.AddMonths(-1).Month, nowDt.AddMonths(-1).Day);
             if (!timeZone.IsInvalidTime(searchMonthDateUser))
