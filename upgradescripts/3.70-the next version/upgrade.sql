@@ -653,6 +653,9 @@ set @resources='
   <LocaleResource Name="Admin.Dashboard.LatestOrders">
     <Value>Latest Orders</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.LatestOrders.ViewAll">
+    <Value>View All Orders</Value>
+  </LocaleResource>
 </Language>
 '
 
