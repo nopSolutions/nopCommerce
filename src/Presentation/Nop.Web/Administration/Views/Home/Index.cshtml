@@ -28,6 +28,15 @@
         <div class="col-md-12">
             @Html.Widget("admin_dashboard_top")
 
+            @if (!Model.IsLoggedInAsVendor)
+            {
+                <div class="row">
+                    <div class="col-md-12">
+                        @Html.Action("NopCommerceNews", "Home")
+                    </div>
+                </div>
+            }
+
             @if (!Model.IsLoggedInAsVendor && canManageOrders && canManageCustomers && canManageProducts && canManageReturnRequests)
             {
                 <div class="row">
@@ -96,14 +105,6 @@
                 </div>
             }
 
-            @if (!Model.IsLoggedInAsVendor)
-            {
-                <div class="row">
-                    <div class="col-md-12">
-                        @Html.Action("NopCommerceNews", "Home")
-                    </div>
-                </div>
-            }
         </div>
 
         @Html.Widget("admin_dashboard_bottom")
