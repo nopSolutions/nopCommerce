@@ -8784,6 +8784,9 @@
   <LocaleResource Name="Admin.Dashboard.IncompleteOrders">
     <Value>Incomplete orders</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.LatestOrders">
+    <Value>Latest Orders</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Download.DownloadUploadedFile">
     <Value>Download uploaded file</Value>
   </LocaleResource>
