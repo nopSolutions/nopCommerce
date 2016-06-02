@@ -59,13 +59,13 @@
                                         if (this.active[0]) {
                                             switch (this.active[0]._model.label) {
                                                 case '@Model.UnpaidOrders.ItemName':
-                                                    setLocation('@Model.UnpaidOrders.ViewLink');
+                                                    setLocation('@Html.Raw(Model.UnpaidOrders.ViewLink)');
                                                     break;
                                                 case '@Model.NotYetShippedOrders.ItemName':
-                                                    setLocation('@Model.NotYetShippedOrders.ViewLink');
+                                                    setLocation('@Html.Raw(@Model.NotYetShippedOrders.ViewLink)');
                                                     break;
                                                 case '@Model.IncompleteOrders.ItemName':
-                                                    setLocation('@Model.IncompleteOrders.ViewLink');
+                                                    setLocation('@Html.Raw(@Model.IncompleteOrders.ViewLink)');
                                                     break;
                                             }
                                         }
