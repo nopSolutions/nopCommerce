@@ -4088,7 +4088,7 @@ namespace Nop.Admin.Controllers
                     searchMonthDateUtc = searchMonthDateUtc.AddDays(1);
                     searchMonthDateUser = searchMonthDateUser.AddDays(1);
 
-                } while (!(searchMonthDateUser.Date.Month == nowDt.Date.Month && searchMonthDateUser.Date.Day > nowDt.Date.Day));
+                } while (!(searchMonthDateUser.Month == nowDt.Month && searchMonthDateUser.Day > nowDt.Day));
             }
 
             //year statistics
@@ -4114,7 +4114,7 @@ namespace Nop.Admin.Controllers
                     searchYearDateUtc = searchYearDateUtc.AddMonths(1);
                     searchYearDateUser = searchYearDateUser.AddMonths(1);
 
-                } while (!(searchYearDateUser.Date.Year == nowDt.Date.Year && searchYearDateUser.Date.Month > nowDt.Date.Month));
+                } while (!(searchYearDateUser.Year == nowDt.Year && searchYearDateUser.Month > nowDt.Month));
             }
 
             return PartialView(model);
