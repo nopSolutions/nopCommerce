@@ -1976,7 +1976,7 @@ namespace Nop.Admin.Controllers
             var searchMonthDateUser = new DateTime(nowDt.Year, nowDt.AddMonths(-1).Month, nowDt.AddMonths(-1).Day);
             if (!timeZone.IsInvalidTime(searchMonthDateUser))
             {
-                DateTime searchYearDateUtc = _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone);
+                DateTime searchMonthDateUtc = _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone);
 
                 do
                 {
@@ -1984,14 +1984,14 @@ namespace Nop.Admin.Controllers
                     {
                         Date = searchMonthDateUser.Date,
                         Value = _customerService.GetAllCustomers(
-                            createdFromUtc: searchYearDateUtc,
-                            createdToUtc: searchYearDateUtc.AddDays(1),
+                            createdFromUtc: searchMonthDateUtc,
+                            createdToUtc: searchMonthDateUtc.AddDays(1),
                             customerRoleIds: searchCustomerRoleIds,
                             pageIndex: 0,
                             pageSize: 1).TotalCount.ToString()
                     });
 
-                    searchYearDateUtc = searchYearDateUtc.AddDays(1);
+                    searchMonthDateUtc = searchMonthDateUtc.AddDays(1);
                     searchMonthDateUser = searchMonthDateUser.AddDays(1);
 
                 } while (!(searchMonthDateUser.Date.Month == nowDt.Date.Month && searchMonthDateUser.Date.Day > nowDt.Date.Day));
