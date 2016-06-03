@@ -271,7 +271,7 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <div id="orders-grid" class="order-list"></div>
+                        <div id="orders-grid"></div>
 
                         <script>
                             $(document).ready(function() {
@@ -341,11 +341,11 @@
                                                 field: "OrderStatus",
                                                 title: "@T("Admin.Orders.Fields.OrderStatus")",
                                                 width: 100,
-                                                template: '<span class="order-status ' +
-                                                    '# if(OrderStatusId == 10) {# order-status-pending #} #' +
-                                                    '# if(OrderStatusId == 20) {# order-status-processing #} #' +
-                                                    '# if(OrderStatusId == 30) {# order-status-complete #} #' +
-                                                    '# if(OrderStatusId == 40) {# order-status-cancelled #} #' +
+                                                template: '<span class="grid-report-item ' +
+                                                    '# if(OrderStatusId == 10) {# yellow #} #' +
+                                                    '# if(OrderStatusId == 20) {# blue #} #' +
+                                                    '# if(OrderStatusId == 30) {# green #} #' +
+                                                    '# if(OrderStatusId == 40) {# red #} #' +
                                                     '">#=OrderStatus#</span>'
                                             },</text>
                                         }

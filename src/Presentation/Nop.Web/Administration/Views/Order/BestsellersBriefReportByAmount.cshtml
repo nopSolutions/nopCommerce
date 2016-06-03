@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="box-body">
-        <div id="bestsellers-byamount-grid" class="bestsellers-list"></div>
+        <div id="bestsellers-byamount-grid"></div>
 
         <script>
             //row index
@@ -72,7 +72,7 @@
                     }, {
                         field: "TotalAmount",
                         title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalAmount")",
-                        template: '# onBriefByAmountIncrease(4) # <span class="report-item ' +
+                        template: '# onBriefByAmountIncrease(4) # <span class="grid-report-item ' +
                             '# if(rowNumber_BriefByAmount == 1) {# yellow #} #' +
                             '# if(rowNumber_BriefByAmount == 2) {# blue #} #' +
                             '# if(rowNumber_BriefByAmount == 3) {# red #} #' +

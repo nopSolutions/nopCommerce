@@ -519,25 +519,25 @@ input[type=file].form-control {
     color: #fff;
 }
 
-/*reports statuses*/
-.bestsellers-list span.report-item {
+/*grid color statuses*/
+span.grid-report-item {
     padding: .2em .6em .3em;
     border-radius: .25em;
     color: #2e2e2e;
 }
-.bestsellers-list span.yellow {
+span.grid-report-item.yellow {
     background-color: #f39c12;
     color: #fff;
 }
-.bestsellers-list span.blue {
+span.grid-report-item.blue {
     background-color: #00c0ef;
     color: #fff;
 }
-.bestsellers-list span.green {
+span.grid-report-item.green {
     background-color: #00a65a;
     color: #fff;
 }
-.bestsellers-list span.red {
+span.grid-report-item.red {
     background-color: #dd4b39;
     color: #fff;
 }
