@@ -43,9 +43,9 @@
                 data: {
                     labels: [
                         @foreach (var item in Model.ByMonthItems)
-                    {
-                        <text>'@item.Date.ToString("M")',</text>
-                    }
+                        {
+                            <text>'@item.Date.ToString("M")',</text>
+                        }
                     ],
                     datasets: [
                         {
@@ -88,7 +88,8 @@
                             ticks: {
                                 userCallback: function (dataLabel, index) {
                                     return (dataLabel ^ 0) === dataLabel ? dataLabel : '';
-                                }
+                                },
+                                min: 0
                             }
                         }]
                     },
@@ -165,7 +166,8 @@
                             ticks: {
                                 userCallback: function (dataLabel, index) {
                                     return (dataLabel ^ 0) === dataLabel ? dataLabel : '';
-                                }
+                                },
+                                min: 0
                             }
                         }]
                     },

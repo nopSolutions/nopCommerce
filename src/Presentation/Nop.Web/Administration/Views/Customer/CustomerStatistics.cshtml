@@ -32,7 +32,7 @@
                         @foreach (var item in Model.ByWeekItems)
                         {
                             <text>'@item.Date.ToString("d dddd")',</text>
-                    }
+                        }
                     ],
                     datasets: [
                         {
@@ -52,7 +52,7 @@
                                 @foreach (var item in Model.ByWeekItems)
                                 {
                                     <text>'@item.Value',</text>
-                            }
+                                }
                             ]
                         }
                     ]
@@ -68,7 +68,8 @@
                                 ticks: {
                                     userCallback: function (dataLabel, index) {
                                         return (dataLabel ^ 0) === dataLabel ? dataLabel : '';
-                                    }
+                                    },
+                                    min: 0
                                 }
                             }
                         ]
@@ -111,7 +112,7 @@
                         @foreach (var item in Model.ByMonthItems)
                         {
                             <text>'@item.Date.ToString("M")',</text>
-                    }
+                        }
                     ],
                     datasets: [
                         {
@@ -131,7 +132,7 @@
                                 @foreach (var item in Model.ByMonthItems)
                                 {
                                     <text>'@item.Value',</text>
-                            }
+                                }
                             ]
                         }
                     ]
@@ -154,7 +155,8 @@
                             ticks: {
                                 userCallback: function (dataLabel, index) {
                                     return (dataLabel ^ 0) === dataLabel ? dataLabel : '';
-                                }
+                                },
+                                min: 0
                             }
                         }]
                     },
@@ -194,9 +196,9 @@
                 data: {
                     labels: [
                         @foreach (var item in Model.ByYearItems)
-                    {
-                        <text>'@item.Date.ToString("Y")',</text>
-                    }
+                        {
+                            <text>'@item.Date.ToString("Y")',</text>
+                        }
                     ],
                     datasets: [
                         {
@@ -214,9 +216,9 @@
                             pointBorderWidth: 1,
                             data: [
                                 @foreach (var item in Model.ByYearItems)
-                            {
-                                <text>'@item.Value',</text>
-                            }
+                                {
+                                    <text>'@item.Value',</text>
+                                }
                             ]
                         }
                     ]
@@ -231,7 +233,8 @@
                             ticks: {
                                 userCallback: function (dataLabel, index) {
                                     return (dataLabel ^ 0) === dataLabel ? dataLabel : '';
-                                }
+                                },
+                                min: 0
                             }
                         }]
                     },
