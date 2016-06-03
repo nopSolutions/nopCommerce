@@ -1,17 +1,19 @@
 ﻿@model NopCommerceNewsModel
+
 <div class="box box-info">
     <div class="box-header with-border clearfix">
         <div class="box-title">
             <i class="fa fa-newspaper-o"></i>
             @T("Admin.NopCommerceNews")
+            @if (Model.HasNewItems)
+            {
+                <div class="new-item-notification"><span>+1</span></div>
+            }
         </div>
         <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse">
                 <i class="fa fa-minus"></i>
             </button>
-            @*<button type="button" class="btn btn-box-tool" data-widget="remove">
-                    <i class="fa fa-times"></i>
-                </button>*@
         </div>
     </div>
     <div class="box-body">
