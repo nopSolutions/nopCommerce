@@ -688,7 +688,6 @@ ul.common-list {
     height: 300px;
 }
 
-
 @media (max-width: 1200px) {
     .form-horizontal .ico-help {
          display: none;
