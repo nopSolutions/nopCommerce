@@ -635,6 +635,9 @@ set @resources='
   <LocaleResource Name="Admin.SalesReport.OrderStatistics.Month">
     <Value>Month</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.OrderStatistics.Week">
+    <Value>Week</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.SalesReport.OrderStatistics.Year">
     <Value>Year</Value>
   </LocaleResource>
