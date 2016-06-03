@@ -1,4 +1,4 @@
-﻿<div class="box box-info">
+﻿<div class="box box-info box-latest-orders">
     <div class="box-header with-border">
         <h3 class="box-title">
             <i class="fa fa-cart-plus"></i>
@@ -34,7 +34,7 @@
                             // Cancel the changes
                             this.cancelChanges();
                         },
-                        pageSize: 7,
+                        pageSize: 10,
                         serverPaging: true,
                         serverFiltering: true,
                         serverSorting: true
@@ -95,6 +95,6 @@
         </script>
     </div>
     <div class="box-footer clearfix">
-        <a href="@Url.Action("List", "Order")" class="btn btn-sm btn-info btn-flat">@T("Admin.Dashboard.LatestOrders.ViewAll")</a>
+        <a href="@Url.Action("List", "Order")" class="btn btn-info btn-flat">@T("Admin.Dashboard.LatestOrders.ViewAll")</a>
     </div>
 </div>

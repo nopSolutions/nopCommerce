@@ -688,6 +688,9 @@ ul.common-list {
     height: 300px;
 }
 
+.box-latest-orders .box-body {
+    min-height: 418px;
+}
 
 @media (max-width: 1200px) {
     .form-horizontal .ico-help {
