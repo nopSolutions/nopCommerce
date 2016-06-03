@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.ServiceModel.Syndication;
 using System.Web.Mvc;
@@ -94,8 +95,42 @@ namespace Nop.Admin.Controllers
                         return SyndicationFeed.Load(reader);
                     }
                 });
- 
-                return PartialView(rssData);
+                
+                var model = new NopCommerceNewsModel()
+                {
+                    HideAdvertisements = _commonSettings.HideAdvertisementsOnAdminArea
+                };
+                for (int i = 0; i < rssData.Items.Count(); i++)
+                {
+                    var item = rssData.Items.ElementAt(i);
+                    var newsItem = new NopCommerceNewsModel.NewsDetailsModel()
+                    {
+                        Title = item.Title.Text,
+                        Summary = item.Summary.Text,
+                        Url = item.Links.Any() ? item.Links.First().Uri.OriginalString : null,
+                        PublishDate = item.PublishDate
+                    };
+                    model.Items.Add(newsItem);
+
+                    //has new items?
+                    if (i == 0)
+                    {
+                        var firstRequest = String.IsNullOrEmpty(_commonSettings.LastNewsTitleAdminArea);
+                        if (_commonSettings.LastNewsTitleAdminArea != newsItem.Title)
+                        {
+                            _commonSettings.LastNewsTitleAdminArea = newsItem.Title;
+                            _settingService.SaveSetting(_commonSettings);
+
+                            if (!firstRequest)
+                            {
+                                //new item
+                                model.HasNewItems = true;
+                            }
+                        }
+                    }
+                }
+                
+                return PartialView(model);
             }
             catch (Exception)
             {

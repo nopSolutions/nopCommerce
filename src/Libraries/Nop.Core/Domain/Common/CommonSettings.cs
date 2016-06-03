@@ -14,9 +14,7 @@ namespace Nop.Core.Domain.Common
         public bool UseSystemEmailForContactUsForm { get; set; }
 
         public bool UseStoredProceduresIfSupported { get; set; }
-
-        public bool HideAdvertisementsOnAdminArea { get; set; }
-
+        
         public bool SitemapEnabled { get; set; }
         public bool SitemapIncludeCategories { get; set; }
         public bool SitemapIncludeManufacturers { get; set; }
@@ -58,7 +56,7 @@ namespace Nop.Core.Domain.Common
         public string XuaCompatibleValue { get; set; }
 
         /// <summary>
-        /// Gets or sets a ignore words (phrases) to be ignored when logging errors/messages
+        /// Gets or sets ignore words (phrases) to be ignored when logging errors/messages
         /// </summary>
         public List<string> IgnoreLogWordlist { get; set; }
 
@@ -66,5 +64,14 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets interval (in minutes) with which the Delete Guest Task runs
         /// </summary>
         public int DeleteGuestTaskOlderThanMinutes { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether advertisements (news) should be hidden
+        /// </summary>
+        public bool HideAdvertisementsOnAdminArea { get; set; }
+        /// <summary>
+        /// Gets or sets title of last news (admin area)
+        /// </summary>
+        public string LastNewsTitleAdminArea { get; set; }
     }
 }

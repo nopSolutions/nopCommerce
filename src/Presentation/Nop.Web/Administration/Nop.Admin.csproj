@@ -238,6 +238,7 @@
     <Compile Include="Models\Customers\CustomerAttributeValueModel.cs" />
     <Compile Include="Models\Customers\CustomerStatisticsModel.cs" />
     <Compile Include="Models\Discounts\DiscountListModel.cs" />
+    <Compile Include="Models\Home\NopCommerceNewsModel.cs" />
     <Compile Include="Models\Home\CommonStatisticsModel.cs" />
     <Compile Include="Models\Home\DashboardModel.cs" />
     <Compile Include="Models\Localization\LanguageResourcesListModel.cs" />
