@@ -1,8 +1,13 @@
-﻿<div class="box box-info">
+﻿@{
+    var gridPageSize = 5;
+}
+
+<div class="box box-info">
     <div class="box-header with-border">
         <h3 class="box-title">
             <i class="fa fa-cart-plus"></i>
             @T("Admin.Dashboard.LatestOrders")
+            <a href="@Url.Action("List", "Order")" class="btn btn-xs btn-info btn-flat" style="margin-left: 10px;">@T("Admin.Dashboard.LatestOrders.ViewAll")</a>
         </h3>
         <div class="box-tools pull-right">
             <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -34,7 +39,7 @@
                             // Cancel the changes
                             this.cancelChanges();
                         },
-                        pageSize: 10,
+                        pageSize: @(gridPageSize),
                         serverPaging: true,
                         serverFiltering: true,
                         serverSorting: true
@@ -93,8 +98,5 @@
                 return data;
             }
         </script>
-    </div>
-    <div class="box-footer clearfix" style="margin-top: 5px;">
-        <a href="@Url.Action("List", "Order")" class="btn btn-info btn-flat">@T("Admin.Dashboard.LatestOrders.ViewAll")</a>
     </div>
 </div>

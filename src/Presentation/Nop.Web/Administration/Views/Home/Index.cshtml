@@ -62,20 +62,28 @@
                 </div>
             }
 
+            @if (!Model.IsLoggedInAsVendor && canManageOrders)
+            {
+                <div class="row">
+                    <div class="col-md-8">
+                        @Html.Action("OrderAverageReport", "Order")
+                    </div>
+                    <div class="col-md-4">
+                        @Html.Action("OrderIncompleteReport", "Order")
+                    </div>
+                </div>
+            }
+
             @if (!Model.IsLoggedInAsVendor && (canManageOrders || canManageProducts))
             {
                 <div class="row">
                     @if (canManageOrders)
                     {
-                        <div class="col-md-7">
+                        <div class="col-md-8">
                             @Html.Action("LatestOrders", "Order")
                         </div>
                     }
-                    <div class="col-md-5">
-                        @if (canManageOrders)
-                        {
-                            @Html.Action("OrderIncompleteReport", "Order")
-                        }
+                    <div class="col-md-4">
                         @if (canManageProducts)
                         {
                             @Html.Action("PopularSearchTermsReport", "Common")
@@ -83,15 +91,6 @@
                     </div>
                 </div>
 
-            }
-
-            @if (!Model.IsLoggedInAsVendor && canManageOrders)
-            {
-                <div class="row">
-                    <div class="col-md-12">
-                        @Html.Action("OrderAverageReport", "Order")
-                    </div>
-                </div>
             }
 
             @if (canManageOrders)
