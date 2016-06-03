@@ -2,187 +2,192 @@
 
 <div class="nav-tabs-custom nav-tabs-order-statistics">
     <ul class="nav nav-tabs pull-right">
-        @*<li>
-                <a data-toggle="tab" href="#order-statistics-week">
-                    Week
-                </a>
-            </li>*@
-        <li class="active">
-            <a data-toggle="tab" href="#order-statistics-moth">
-                @T("Admin.SalesReport.OrderStatistics.Month")
-            </a>
-        </li>
-        <li>
-            <a data-toggle="tab" href="#order-statistics-year">
-                @T("Admin.SalesReport.OrderStatistics.Year")
-            </a>
-        </li>
+        @*@Html.RenderBootstrapTabHeader("tab-order-statistics-week", @T("Admin.SalesReport.OrderStatistics.Week"), true)*@
+        @Html.RenderBootstrapTabHeader("tab-order-statistics-month", @T("Admin.SalesReport.OrderStatistics.Month"), true)
+        @Html.RenderBootstrapTabHeader("tab-order-statistics-year", @T("Admin.SalesReport.OrderStatistics.Year"))
         <li class="pull-left header">
             <i class="fa fa-shopping-cart"></i>
             @T("Admin.SalesReport.OrderStatistics")
         </li>
     </ul>
     <div class="tab-content">
-        <div class="tab-content">
-            @*<div class="tab-pane active" id="order-statistics-week">
-                    <div class="chart">
-                        <canvas id="order-statistics-chart-week" height="300"></canvas>
-                    </div>
-                </div>*@
-            <div class="tab-pane active" id="order-statistics-moth">
-                <div class="chart">
-                    <canvas id="order-statistics-chart-moth" height="300"></canvas>
-                </div>
-            </div>
-            <div class="tab-pane" id="order-statistics-year">
-                <div class="chart">
-                    <canvas id="order-statistics-chart-year" height="300"></canvas>
-                </div>
-            </div>
-        </div>
+        @*@Html.RenderBootstrapTabContent("tab-order-statistics-week", TabStatisticsWeek(), true)*@
+        @Html.RenderBootstrapTabContent("tab-order-statistics-month", @TabStatisticsMonth(), true)
+        @Html.RenderBootstrapTabContent("tab-order-statistics-year", @TabStatisticsYear())
     </div>
 </div>
 
-<script>
-    $(document).ready(function () {
-        var osMonthConfig = {
-            type: 'line',
-            data: {
-                labels: [
-                    @foreach (var item in Model.ByMonthItems)
+@helper TabStatisticsWeek()
+{
+    <div class="chart">
+        <canvas id="order-statistics-chart-week" height="300"></canvas>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            //window.orderStatisticsWeek = new Chart(document.getElementById("order-statistics-chart-week").getContext("2d"), orderConfig);
+        });
+    </script>
+}
+
+@helper TabStatisticsMonth()
+{
+    <div class="chart">
+        <canvas id="order-statistics-chart-moth" height="300"></canvas>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var osMonthConfig = {
+                type: 'line',
+                data: {
+                    labels: [
+                        @foreach (var item in Model.ByMonthItems)
                     {
                         <text>'@item.Date.ToString("M")',</text>
                     }
-                ],
-                datasets: [
-                    {
-                        label: "@T("Admin.SalesReport.OrderStatistics")",
-                        fillColor: "rgba(60,141,188,0.9)",
-                        strokeColor: "rgba(60,141,188,0.8)",
-                        pointColor: "#3b8bba",
-                        pointStrokeColor: "rgba(60,141,188,1)",
-                        pointHighlightFill: "#fff",
-                        pointHighlightStroke: "rgba(60,141,188,1)",
-                        borderColor: 'rgba(60, 141, 188, 0.7)',
-                        backgroundColor: 'rgba(44, 152, 214, 0.5)',
-                        pointBorderColor: 'rgba(37, 103, 142, 0.9)',
-                        pointBackgroundColor: 'rgba(60, 141, 188, 0.4)',
-                        pointBorderWidth: 1,
-                        data: [
-                            @foreach (var item in Model.ByMonthItems)
+                    ],
+                    datasets: [
+                        {
+                            label: "@T("Admin.SalesReport.OrderStatistics")",
+                            fillColor: "rgba(60,141,188,0.9)",
+                            strokeColor: "rgba(60,141,188,0.8)",
+                            pointColor: "#3b8bba",
+                            pointStrokeColor: "rgba(60,141,188,1)",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(60,141,188,1)",
+                            borderColor: 'rgba(60, 141, 188, 0.7)',
+                            backgroundColor: 'rgba(44, 152, 214, 0.5)',
+                            pointBorderColor: 'rgba(37, 103, 142, 0.9)',
+                            pointBackgroundColor: 'rgba(60, 141, 188, 0.4)',
+                            pointBorderWidth: 1,
+                            data: [
+                                @foreach (var item in Model.ByMonthItems)
                                 {
                                     <text>'@item.Value',</text>
                                 }
-                        ]
-                    }
-                ]
-            },
-            options: {
-                legend: {
-                    display: false
-                },
-                scales: {
-                    xAxes: [{
-                        display: true,
-                        ticks: {
-                            userCallback: function (dataLabel, index) {
-                                return index % 5 === 0 ? dataLabel : '';
-                            }
+                            ]
                         }
-                    }],
-                    yAxes: [{
-                        display: true,
-                        ticks: {
-                            userCallback: function (dataLabel, index) {
-                                return (dataLabel ^ 0) === dataLabel ? dataLabel : '';
-                            }
-                        }
-                    }]
+                    ]
                 },
-                showScale: true,
-                scaleShowGridLines: false,
-                scaleGridLineColor: "rgba(0,0,0,.05)",
-                scaleGridLineWidth: 1,
-                scaleShowHorizontalLines: true,
-                scaleShowVerticalLines: true,
-                bezierCurve: true,
-                pointDot: false,
-                pointDotRadius: 4,
-                pointDotStrokeWidth: 1,
-                pointHitDetectionRadius: 20,
-                datasetStroke: true,
-                datasetFill: true,
-                maintainAspectRatio: false,
-                responsive: true
+                options: {
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            ticks: {
+                                userCallback: function (dataLabel, index) {
+                                    return index % 5 === 0 ? dataLabel : '';
+                                }
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            ticks: {
+                                userCallback: function (dataLabel, index) {
+                                    return (dataLabel ^ 0) === dataLabel ? dataLabel : '';
+                                }
+                            }
+                        }]
+                    },
+                    showScale: true,
+                    scaleShowGridLines: false,
+                    scaleGridLineColor: "rgba(0,0,0,.05)",
+                    scaleGridLineWidth: 1,
+                    scaleShowHorizontalLines: true,
+                    scaleShowVerticalLines: true,
+                    bezierCurve: true,
+                    pointDot: false,
+                    pointDotRadius: 4,
+                    pointDotStrokeWidth: 1,
+                    pointHitDetectionRadius: 20,
+                    datasetStroke: true,
+                    datasetFill: true,
+                    maintainAspectRatio: false,
+                    responsive: true
+                }
             }
-        }
 
-        var osYearConfig = {
-            type: 'line',
-            data: {
-                labels: [
-                    @foreach (var item in Model.ByYearItems)
-                    {
-                        <text>'@item.Date.ToString("Y")',</text>
-                    }
-                ],
-                datasets: [
-                    {
-                        label: "@T("Admin.SalesReport.OrderStatistics")",
-                        fillColor: "rgba(60,141,188,0.9)",
-                        strokeColor: "rgba(60,141,188,0.8)",
-                        pointColor: "#3b8bba",
-                        pointStrokeColor: "rgba(60,141,188,1)",
-                        pointHighlightFill: "#fff",
-                        pointHighlightStroke: "rgba(60,141,188,1)",
-                        borderColor: 'rgba(60, 141, 188, 0.7)',
-                        backgroundColor: 'rgba(44, 152, 214, 0.5)',
-                        pointBorderColor: 'rgba(37, 103, 142, 0.9)',
-                        pointBackgroundColor: 'rgba(60, 141, 188, 0.4)',
-                        pointBorderWidth: 1,
-                        data: [
-                            @foreach (var item in Model.ByYearItems)
-                            {
-                                <text>'@item.Value',</text>
-                            }
-                        ]
-                    }
-                ]
-            },
-            options: {
-                legend: {
-                    display: false
-                },
-                scales: {
-                    yAxes: [{
-                        display: true,
-                        ticks: {
-                            userCallback: function (dataLabel, index) {
-                                return (dataLabel ^ 0) === dataLabel ? dataLabel : '';
-                            }
+            window.orderStatisticsMoth = new Chart(document.getElementById("order-statistics-chart-moth").getContext("2d"), osMonthConfig);
+        });
+    </script>
+}
+
+@helper TabStatisticsYear()
+{
+    <div class="chart">
+        <canvas id="order-statistics-chart-year" height="300"></canvas>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var osYearConfig = {
+                type: 'line',
+                data: {
+                    labels: [
+                        @foreach (var item in Model.ByYearItems)
+                        {
+                            <text>'@item.Date.ToString("Y")',</text>
                         }
-                    }]
+                    ],
+                    datasets: [
+                        {
+                            label: "@T("Admin.SalesReport.OrderStatistics")",
+                            fillColor: "rgba(60,141,188,0.9)",
+                            strokeColor: "rgba(60,141,188,0.8)",
+                            pointColor: "#3b8bba",
+                            pointStrokeColor: "rgba(60,141,188,1)",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(60,141,188,1)",
+                            borderColor: 'rgba(60, 141, 188, 0.7)',
+                            backgroundColor: 'rgba(44, 152, 214, 0.5)',
+                            pointBorderColor: 'rgba(37, 103, 142, 0.9)',
+                            pointBackgroundColor: 'rgba(60, 141, 188, 0.4)',
+                            pointBorderWidth: 1,
+                            data: [
+                                @foreach (var item in Model.ByYearItems)
+                                {
+                                    <text>'@item.Value',</text>
+                                }
+                            ]
+                        }
+                    ]
                 },
-                showScale: true,
-                scaleShowGridLines: false,
-                scaleGridLineColor: "rgba(0,0,0,.05)",
-                scaleGridLineWidth: 1,
-                scaleShowHorizontalLines: true,
-                scaleShowVerticalLines: true,
-                bezierCurve: true,
-                pointDot: false,
-                pointDotRadius: 4,
-                pointDotStrokeWidth: 1,
-                pointHitDetectionRadius: 20,
-                datasetStroke: true,
-                datasetFill: true,
-                maintainAspectRatio: false,
-                responsive: true
+                options: {
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            display: true,
+                            ticks: {
+                                userCallback: function (dataLabel, index) {
+                                    return (dataLabel ^ 0) === dataLabel ? dataLabel : '';
+                                }
+                            }
+                        }]
+                    },
+                    showScale: true,
+                    scaleShowGridLines: false,
+                    scaleGridLineColor: "rgba(0,0,0,.05)",
+                    scaleGridLineWidth: 1,
+                    scaleShowHorizontalLines: true,
+                    scaleShowVerticalLines: true,
+                    bezierCurve: true,
+                    pointDot: false,
+                    pointDotRadius: 4,
+                    pointDotStrokeWidth: 1,
+                    pointHitDetectionRadius: 20,
+                    datasetStroke: true,
+                    datasetFill: true,
+                    maintainAspectRatio: false,
+                    responsive: true
+                }
             }
-        }
 
-        //window.orderStatisticsWeek = new Chart(document.getElementById("order-statistics-chart-week").getContext("2d"), orderConfig);
-        window.orderStatisticsMoth = new Chart(document.getElementById("order-statistics-chart-moth").getContext("2d"), osMonthConfig);
-        window.orderStatisticsYear = new Chart(document.getElementById("order-statistics-chart-year").getContext("2d"), osYearConfig);
-    });
-</script>
+            window.orderStatisticsYear = new Chart(document.getElementById("order-statistics-chart-year").getContext("2d"), osYearConfig);
+        });
+    </script>
+}
