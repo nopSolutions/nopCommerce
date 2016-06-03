@@ -4129,62 +4129,6 @@ namespace Nop.Admin.Controllers
             return PartialView();
         }
 
-        [ChildActionOnly]
-        public ActionResult IncompleteOrders()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
-
-            var model = new IncompleteOrdersChartModel();
-
-            //not paid
-            var orderStatuses = Enum.GetValues(typeof(OrderStatus)).Cast<int>().Where(os => os != (int)OrderStatus.Cancelled).ToList();
-            var paymentStatuses = new List<int>() { (int)PaymentStatus.Pending };
-            var psPending = _orderReportService.GetOrderAverageReportLine(psIds: paymentStatuses, osIds: orderStatuses);
-            model.UnpaidOrders = new IncompleteOrderItemModel()
-            {
-                ItemName = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalUnpaidOrders"),
-                Count = psPending.CountOrders,
-                Total = _priceFormatter.FormatPrice(psPending.SumOrders, true, false),
-                ViewLink = Url.Action("List", "Order", new
-                {
-                    orderStatusIds = string.Join(",", orderStatuses),
-                    paymentStatusIds = string.Join(",", paymentStatuses)
-                })
-            };
-
-            //not shipped
-            var shippingStatuses = new List<int>() { (int)ShippingStatus.NotYetShipped };
-            var ssPending = _orderReportService.GetOrderAverageReportLine(osIds: orderStatuses, ssIds: shippingStatuses);
-            model.NotYetShippedOrders = new IncompleteOrderItemModel()
-            {
-                ItemName = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalNotShippedOrders"),
-                Count = ssPending.CountOrders,
-                Total = _priceFormatter.FormatPrice(ssPending.SumOrders, true, false),
-                ViewLink = Url.Action("List", "Order", new
-                {
-                    orderStatusIds = string.Join(",", orderStatuses),
-                    shippingStatusIds = string.Join(",", shippingStatuses)
-                })
-            };
-
-            //pending
-            orderStatuses = new List<int>() { (int)OrderStatus.Pending };
-            var osPending = _orderReportService.GetOrderAverageReportLine(osIds: orderStatuses);
-            model.IncompleteOrders = new IncompleteOrderItemModel()
-            {
-                ItemName = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalIncompleteOrders"),
-                Count = osPending.CountOrders,
-                Total = _priceFormatter.FormatPrice(osPending.SumOrders, true, false),
-                ViewLink = Url.Action("List", "Order", new
-                {
-                    orderStatusIds = string.Join(",", orderStatuses)
-                })
-            };
-
-            return PartialView(model);
-        }
-
         #endregion
 
         #region Activity log

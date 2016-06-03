@@ -245,7 +245,6 @@
     <Compile Include="Models\Orders\CountryReportLineModel.cs" />
     <Compile Include="Models\Orders\CountryReportModel.cs" />
     <Compile Include="Models\Orders\OrderStatisticsModel.cs" />
-    <Compile Include="Models\Orders\IncompleteOrdersChartModel.cs" />
     <Compile Include="Models\Payments\PaymentMethodRestrictionModel.cs" />
     <Compile Include="Models\Plugins\OfficialFeedListModel.cs" />
     <Compile Include="Models\Plugins\PluginListModel.cs" />
@@ -1021,7 +1020,6 @@
     <Content Include="Views\Order\OrderStatistics.cshtml" />
     <Content Include="Views\Customer\CustomerStatistics.cshtml" />
     <Content Include="Views\Order\LatestOrders.cshtml" />
-    <Content Include="Views\Order\IncompleteOrders.cshtml" />
     <None Include="Views\Product\_ProductAttributes.cshtml" />
     <Content Include="Views\Setting\_ReturnRequestReasons.cshtml" />
     <Content Include="Views\Setting\ReturnRequestReasonEdit.cshtml" />
