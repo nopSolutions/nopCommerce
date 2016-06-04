@@ -193,6 +193,20 @@ namespace Nop.Web.Infrastructure
                             "productreviews/{productId}",
                             new { controller = "Product", action = "ProductReviews" },
                             new[] { "Nop.Web.Controllers" });
+
+            //My product reviews
+            routes.MapLocalizedRoute("MyProductReviews",
+                            "myproductreviews/",
+                            new { controller = "MyProductReviews", action = "Index" },
+                            new[] { "Nop.Web.Controllers" });
+
+            // My product reviews paged
+            routes.MapLocalizedRoute("MyProductReviewsPaged",
+                            "myproductreviews/page/{page}",
+                            new { controller = "MyProductReviews", action = "Index" },
+                            new { page = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+
             //back in stock notifications
             routes.MapLocalizedRoute("BackInStockSubscribePopup",
                             "backinstocksubscribe/{productId}",

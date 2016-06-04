@@ -14,6 +14,7 @@ namespace Nop.Web.Models.Customer
         public bool HideChangePassword { get; set; }
         public bool HideAvatar { get; set; }
         public bool HideForumSubscriptions { get; set; }
+        public bool HideMyProductReviews { get; set; }
 
         public CustomerNavigationEnum SelectedTab { get; set; }
     }
@@ -29,6 +30,7 @@ namespace Nop.Web.Models.Customer
         RewardPoints = 60,
         ChangePassword = 70,
         Avatar = 80,
-        ForumSubscriptions = 90
+        ForumSubscriptions = 90,
+        MyProductReviews = 100
     }
 }
