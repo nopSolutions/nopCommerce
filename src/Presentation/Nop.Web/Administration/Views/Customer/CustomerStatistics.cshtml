@@ -1,5 +1,7 @@
 ﻿@model CustomerStatisticsModel
-
+@{
+    Html.AppendScriptParts("~/Scripts/chartjs/Chart.min.js");
+}
 <div class="nav-tabs-custom nav-tabs-customer-statistics">
     <ul class="nav nav-tabs pull-right">
         @Html.RenderBootstrapTabHeader("tab-customer-statistics-week", @T("Admin.Customers.Reports.CustomerStatistics.Week"), true)
