@@ -155,11 +155,14 @@ namespace Nop.Admin.Controllers
                 !_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return Content("");
 
+            //a vendor doesn't have access to this report
+            if (_workContext.CurrentVendor != null)
+                return Content("");
+
+
             var model = new CommonStatisticsModel();
-            var vendorId = _workContext.CurrentVendor != null ? _workContext.CurrentVendor.Id : 0;
 
             model.NumberOfOrders = _orderService.SearchOrders(
-                vendorId: vendorId, 
                 pageIndex: 0, 
                 pageSize: 1).TotalCount;
 
@@ -173,8 +176,8 @@ namespace Nop.Admin.Controllers
                 pageIndex: 0, 
                 pageSize:1).TotalCount;
 
-            model.NumberOfLowStockProducts = _productService.GetLowStockProducts(vendorId, 0, 1).TotalCount +
-                                             _productService.GetLowStockProductCombinations(vendorId, 0, 1).TotalCount;
+            model.NumberOfLowStockProducts = _productService.GetLowStockProducts(0, 0, 1).TotalCount +
+                                             _productService.GetLowStockProductCombinations(0, 0, 1).TotalCount;
 
             return PartialView(model);
         }

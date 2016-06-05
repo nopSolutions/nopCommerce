@@ -3904,10 +3904,9 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
-            //a vendor does have access to this report
+            //a vendor doesn't have access to this report
             if (_workContext.CurrentVendor != null)
                 return Content("");
-
 
             var report = new List<OrderAverageReportLineSummary>();
             report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Pending));
@@ -3947,8 +3946,8 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
-            
-            //a vendor does have access to this report
+
+            //a vendor doesn't have access to this report
             if (_workContext.CurrentVendor != null)
                 return Content("");
 
@@ -4061,10 +4060,13 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
+            //a vendor doesn't have access to this report
+            if (_workContext.CurrentVendor != null)
+                return Content("");
+
             var model = new OrderStatisticsModel();
             var nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
             var timeZone = _dateTimeHelper.CurrentTimeZone;
-            var vendorId = _workContext.CurrentVendor != null ? _workContext.CurrentVendor.Id : 0;
 
             //week statistics
             var searchWeekDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-7).Month, nowDt.AddDays(-7).Day);
@@ -4080,7 +4082,6 @@ namespace Nop.Admin.Controllers
                         Value = _orderService.SearchOrders(
                             createdFromUtc: searchWeekDateUtc,
                             createdToUtc: searchWeekDateUtc.AddDays(1),
-                            vendorId: vendorId,
                             pageIndex: 0,
                             pageSize: 1).TotalCount.ToString()
                     });
@@ -4105,7 +4106,6 @@ namespace Nop.Admin.Controllers
                         Value = _orderService.SearchOrders(
                             createdFromUtc: searchMonthDateUtc,
                             createdToUtc: searchMonthDateUtc.AddDays(1),
-                            vendorId: vendorId,
                             pageIndex: 0,
                             pageSize: 1).TotalCount.ToString()
                     });
@@ -4131,7 +4131,6 @@ namespace Nop.Admin.Controllers
                         Value = _orderService.SearchOrders(
                             createdFromUtc: searchYearDateUtc,
                             createdToUtc: searchYearDateUtc.AddMonths(1),
-                            vendorId: vendorId,
                             pageIndex: 0,
                             pageSize: 1).TotalCount.ToString()
                     });
