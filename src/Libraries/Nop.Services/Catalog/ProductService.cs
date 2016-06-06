@@ -304,12 +304,12 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Get (visible) product number in certain category
+        /// Get number of product (published and visible) in certain category
         /// </summary>
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
-        /// <returns>Product number</returns>
-        public virtual int GetCategoryProductNumber(IList<int> categoryIds = null, int storeId = 0)
+        /// <returns>Number of products</returns>
+        public virtual int GetNumberOfProductsInCategory(IList<int> categoryIds = null, int storeId = 0)
         {
             //validate "categoryIds" parameter
             if (categoryIds != null && categoryIds.Contains(0))
@@ -1137,14 +1137,14 @@ namespace Nop.Services.Catalog
         /// Get low stock products
         /// </summary>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
-        /// <param name="products">Low stock products</param>
-        /// <param name="combinations">Low stock attribute combinations</param>
-        public virtual void GetLowStockProducts(int vendorId,
-            out IList<Product> products, 
-            out IList<ProductAttributeCombination> combinations)
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Products</returns>
+        public virtual IPagedList<Product> GetLowStockProducts(int vendorId = 0,
+            int pageIndex = 0, int pageSize = int.MaxValue)
         {
             //Track inventory for product
-            var query1 = from p in _productRepository.Table
+            var query = from p in _productRepository.Table
                          orderby p.MinStockQuantity
                          where !p.Deleted &&
                          p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock &&
@@ -1156,19 +1156,32 @@ namespace Nop.Services.Catalog
                             p.StockQuantity) &&
                          (vendorId == 0 || p.VendorId == vendorId)
                          select p;
-            products = query1.ToList();
 
+            return new PagedList<Product>(query, pageIndex, pageSize);
+        }
+
+        /// <summary>
+        /// Get low stock product combinations
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Product combinations</returns>
+        public virtual IPagedList<ProductAttributeCombination> GetLowStockProductCombinations(int vendorId = 0,
+            int pageIndex = 0, int pageSize = int.MaxValue)
+        {
             //Track inventory for product by product attributes
-            var query2 = from p in _productRepository.Table
+            var query = from p in _productRepository.Table
                          from c in p.ProductAttributeCombinations
                          where !p.Deleted &&
                          p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
                          c.StockQuantity <= 0 &&
                          (vendorId == 0 || p.VendorId == vendorId)
                          select c;
-            combinations = query2.ToList();
+
+            return new PagedList<ProductAttributeCombination>(query, pageIndex, pageSize);
         }
-        
+
         /// <summary>
         /// Gets a product by SKU
         /// </summary>
@@ -1232,12 +1245,15 @@ namespace Nop.Services.Catalog
 
 
         /// <summary>
-        /// Gets product number by vendor identifier
+        /// Gets number of products by vendor identifier
         /// </summary>
         /// <param name="vendorId">Vendor identifier</param>
-        /// <returns>Count of vendor products</returns>
-        public int GetProductNumberByVendorId(int vendorId)
+        /// <returns>Number of products</returns>
+        public int GetNumberOfProductsByVendorId(int vendorId)
         {
+            if (vendorId == 0)
+                return 0;
+
             return _productRepository.Table.Count(p => p.VendorId == vendorId && !p.Deleted);
         }
 

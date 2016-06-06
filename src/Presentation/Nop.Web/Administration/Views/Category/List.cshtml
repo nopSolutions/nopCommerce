@@ -6,7 +6,6 @@
 
     //page title
     ViewBag.Title = T("Admin.Catalog.Categories.Manage").Text;
-
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Categories");
 }
@@ -23,7 +22,7 @@
         </a>
         <div class="btn-group">
             <button type="button" class="btn btn-success">
-                <i class="fa fa-exchange"></i>
+                <i class="fa fa-download"></i>
                 @T("Admin.Common.Export")
             </button>
             <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -31,12 +30,22 @@
                 <span class="sr-only">&nbsp;</span>
             </button>
             <ul class="dropdown-menu" role="menu">
-                <li><a href="@Url.Action("ExportXml")">@T("Admin.Common.ExportToXml")</a></li>
-                <li><a href="@Url.Action("ExportXlsx")">@T("Admin.Common.ExportToExcel")</a></li>
+                <li>
+                    <a href="@Url.Action("ExportXml")">
+                        <i class="fa fa-file-code-o"></i>
+                        @T("Admin.Common.ExportToXml")
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("ExportXlsx")">
+                        <i class="fa fa-file-excel-o"></i>
+                        @T("Admin.Common.ExportToExcel")
+                    </a>
+                </li>
             </ul>
         </div>
         <button type="button" name="importexcel" class="btn bg-olive" data-toggle="modal" data-target="#importexcel-window">
-            <i class="fa fa-exchange"></i>
+            <i class="fa fa-upload"></i>
             @T("Admin.Common.Import")
         </button>
     </div>
@@ -57,7 +66,7 @@
                                     @Html.NopEditorFor(model => model.SearchCategoryName)
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                 <div class="col-md-4">
                                     @Html.NopLabelFor(model => model.SearchStoreId)
                                 </div>
@@ -209,7 +218,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" class="btn btn-primary" value="@T("Admin.Common.ImportFromExcel")" />
+                        <button type="submit" class="btn btn-primary">
+                            @T("Admin.Common.ImportFromExcel")
+                        </button>
                     </div>
                 </div>
             }

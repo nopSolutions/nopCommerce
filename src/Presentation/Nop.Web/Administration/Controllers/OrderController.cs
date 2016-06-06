@@ -1175,7 +1175,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 byte[] bytes = _exportManager.ExportOrdersToXlsx(orders);
-                return File(bytes, MimeTypes.TextXls, "orders.xlsx");
+                return File(bytes, MimeTypes.TextXlsx, "orders.xlsx");
             }
             catch (Exception exc)
             {
@@ -1207,7 +1207,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 byte[] bytes = _exportManager.ExportOrdersToXlsx(orders);
-                return File(bytes, MimeTypes.TextXls, "orders.xlsx");
+                return File(bytes, MimeTypes.TextXlsx, "orders.xlsx");
             }
             catch (Exception exc)
             {
@@ -3904,10 +3904,9 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
-            //a vendor does have access to this report
+            //a vendor doesn't have access to this report
             if (_workContext.CurrentVendor != null)
                 return Content("");
-
 
             var report = new List<OrderAverageReportLineSummary>();
             report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Pending));
@@ -3941,13 +3940,14 @@ namespace Nop.Admin.Controllers
 
             return PartialView();
         }
+
         [HttpPost]
         public ActionResult OrderIncompleteReportList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
-            
-            //a vendor does have access to this report
+
+            //a vendor doesn't have access to this report
             if (_workContext.CurrentVendor != null)
                 return Content("");
 
@@ -3996,9 +3996,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-
-
-
+        
         public ActionResult CountryReport()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
@@ -4016,6 +4014,7 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public ActionResult CountryReportList(DataSourceRequest command, CountryReportModel model)
         {
@@ -4055,6 +4054,104 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
+        [ChildActionOnly]
+        public ActionResult OrderStatistics()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            //a vendor doesn't have access to this report
+            if (_workContext.CurrentVendor != null)
+                return Content("");
+
+            var model = new OrderStatisticsModel();
+            var nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
+            var timeZone = _dateTimeHelper.CurrentTimeZone;
+
+            //week statistics
+            var searchWeekDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-7).Month, nowDt.AddDays(-7).Day);
+            if (!timeZone.IsInvalidTime(searchWeekDateUser))
+            {
+                DateTime searchWeekDateUtc = _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone);
+
+                do
+                {
+                    model.ByWeekItems.Add(new OrderStatisticsItemModel
+                    {
+                        Date = searchWeekDateUser.Date,
+                        Value = _orderService.SearchOrders(
+                            createdFromUtc: searchWeekDateUtc,
+                            createdToUtc: searchWeekDateUtc.AddDays(1),
+                            pageIndex: 0,
+                            pageSize: 1).TotalCount.ToString()
+                    });
+
+                    searchWeekDateUtc = searchWeekDateUtc.AddDays(1);
+                    searchWeekDateUser = searchWeekDateUser.AddDays(1);
+
+                } while (!(searchWeekDateUser.Month == nowDt.Month && searchWeekDateUser.Day > nowDt.Day));
+            }
+
+            //month statistics
+            var searchMonthDateUser = new DateTime(nowDt.Year, nowDt.AddMonths(-1).Month, nowDt.AddMonths(-1).Day);
+            if (!timeZone.IsInvalidTime(searchMonthDateUser))
+            {
+                DateTime searchMonthDateUtc = _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone);
+
+                do
+                {
+                    model.ByMonthItems.Add(new OrderStatisticsItemModel
+                    {
+                        Date = searchMonthDateUser.Date,
+                        Value = _orderService.SearchOrders(
+                            createdFromUtc: searchMonthDateUtc,
+                            createdToUtc: searchMonthDateUtc.AddDays(1),
+                            pageIndex: 0,
+                            pageSize: 1).TotalCount.ToString()
+                    });
+
+                    searchMonthDateUtc = searchMonthDateUtc.AddDays(1);
+                    searchMonthDateUser = searchMonthDateUser.AddDays(1);
+
+                } while (!(searchMonthDateUser.Month == nowDt.Month && searchMonthDateUser.Day > nowDt.Day));
+            }
+
+            //year statistics
+            var yearAgoRoundedDt = nowDt.AddYears(-1).AddMonths(1);
+            var searchYearDateUser = new DateTime(yearAgoRoundedDt.Year, yearAgoRoundedDt.Month, 1);
+            if (!timeZone.IsInvalidTime(searchYearDateUser))
+            {
+                DateTime searchYearDateUtc = _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone);
+
+                do
+                {
+                    model.ByYearItems.Add(new OrderStatisticsItemModel
+                    {
+                        Date = searchYearDateUser.Date,
+                        Value = _orderService.SearchOrders(
+                            createdFromUtc: searchYearDateUtc,
+                            createdToUtc: searchYearDateUtc.AddMonths(1),
+                            pageIndex: 0,
+                            pageSize: 1).TotalCount.ToString()
+                    });
+
+                    searchYearDateUtc = searchYearDateUtc.AddMonths(1);
+                    searchYearDateUser = searchYearDateUser.AddMonths(1);
+
+                } while (!(searchYearDateUser.Year == nowDt.Year && searchYearDateUser.Month > nowDt.Month));
+            }
+
+            return PartialView(model);
+        }
+
+        [ChildActionOnly]
+        public ActionResult LatestOrders()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            return PartialView();
+        }
 
         #endregion
 

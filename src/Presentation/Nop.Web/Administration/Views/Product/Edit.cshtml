@@ -4,7 +4,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.EditProductDetails").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Manage products");
+    Html.SetActiveMenuItemSystemName("Products");
 }
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "product-form" }))
@@ -20,11 +20,11 @@
                 <i class="fa fa-eye"></i>
                 @T("Admin.Common.Preview")
             </button>
-            <button type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")">
+            <button type="submit" name="save" class="btn bg-blue">
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
-            <button type="submit" name="save-continue" class="btn bg-blue" value="@T("Admin.Common.SaveContinue")">
+            <button type="submit" name="save-continue" class="btn bg-blue">
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
@@ -82,7 +82,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" class="btn btn-primary" value="@T("Admin.Catalog.Products.Copy")" />
+                        <button type="submit" class="btn btn-primary">
+                            @T("Admin.Catalog.Products.Copy")
+                        </button>
                     </div>
                 </div>
             }

@@ -212,7 +212,9 @@
                                     @Html.NopDisplay(Model.IsRecipientNotified.ToString())
                                 </div>
                                 <div class="input-group-btn">
-                                    <input type="submit" name="notifyRecipient" class="btn btn-info" value="@T("Admin.GiftCards.Fields.IsRecipientNotified.Notify")" />
+                                    <button type="submit" name="notifyRecipient" class="btn btn-info">
+                                        @T("Admin.GiftCards.Fields.IsRecipientNotified.Notify")
+                                    </button>
                                 </div>
                             </div>
                         </div>

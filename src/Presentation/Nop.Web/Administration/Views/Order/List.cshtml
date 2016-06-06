@@ -23,7 +23,7 @@
                 //a vendor cannot export/import orders
                 <div class="btn-group">
                     <button type="button" class="btn btn-success">
-                        <i class="fa fa-exchange"></i>
+                        <i class="fa fa-download"></i>
                         @T("Admin.Common.Export")
                     </button>
                     <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -31,17 +31,37 @@
                         <span class="sr-only">&nbsp;</span>
                     </button>
                     <ul class="dropdown-menu" role="menu">
-                        <li><input type="submit" name="exportxml-all" value="@T("Admin.Common.ExportToXml.All")" /></li>
-                        <li><button type="button" id="exportxml-selected">@T("Admin.Common.ExportToXml.Selected")</button></li>
+                        <li>
+                            <button type="submit" name="exportxml-all">
+                                <i class="fa fa-file-code-o"></i>
+                                @T("Admin.Common.ExportToXml.All")
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" id="exportxml-selected">
+                                <i class="fa fa-file-code-o"></i>
+                                @T("Admin.Common.ExportToXml.Selected")
+                            </button>
+                        </li>
                         <li class="divider"></li>
-                        <li><input type="submit" name="exportexcel-all" value="@T("Admin.Common.ExportToExcel.All")" /></li>
-                        <li><button type="button" id="exportexcel-selected">@T("Admin.Common.ExportToExcel.Selected")</button></li>
+                        <li>
+                            <button type="submit" name="exportexcel-all">
+                                <i class="fa fa-file-excel-o"></i>
+                                @T("Admin.Common.ExportToExcel.All")
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" id="exportexcel-selected">
+                                <i class="fa fa-file-excel-o"></i>
+                                @T("Admin.Common.ExportToExcel.Selected")
+                            </button>
+                        </li>
                     </ul>
                 </div>
             }
             <div class="btn-group">
                 <button type="button" class="btn bg-purple">
-                    <i class="fa fa-download"></i>
+                    <i class="fa fa-file-pdf-o"></i>
                     @T("Admin.Orders.PdfInvoices")
                 </button>
                 <button type="button" class="btn bg-purple dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -49,8 +69,16 @@
                     <span class="sr-only">&nbsp;</span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><input type="submit" name="pdf-invoice-all" value="@T("Admin.Orders.PdfInvoices.All")" /></li>
-                    <li><button type="button" id="pdf-invoice-selected">@T("Admin.Orders.PdfInvoices.Selected")</button></li>
+                    <li>
+                        <button type="submit" name="pdf-invoice-all">
+                            @T("Admin.Orders.PdfInvoices.All")
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" id="pdf-invoice-selected">
+                            @T("Admin.Orders.PdfInvoices.Selected")
+                        </button>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -79,7 +107,7 @@
                                         @Html.NopEditorFor(model => model.EndDate)
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.StoreId)
                                     </div>
@@ -87,7 +115,7 @@
                                         @Html.NopDropDownList("StoreId", Model.AvailableStores)
                                     </div>
                                 </div>
-                                <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                <div class="form-group" @(Model.AvailableVendors.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                     <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.VendorId)
                                     </div>
@@ -95,7 +123,7 @@
                                         @Html.NopDropDownList("VendorId", Model.AvailableVendors)
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" @(Model.AvailableWarehouses.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.WarehouseId)
                                     </div>
@@ -197,7 +225,7 @@
                                         @Html.NopEditorFor(model => model.BillingLastName)
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" @(Model.AvailableCountries.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.BillingCountryId)
                                     </div>
@@ -205,7 +233,7 @@
                                         @Html.NopDropDownList("BillingCountryId", Model.AvailableCountries)
                                     </div>
                                 </div>
-                                <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                <div class="form-group" @(Model.AvailablePaymentMethods.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                     <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.PaymentMethodSystemName)
                                     </div>
@@ -221,7 +249,9 @@
                                         <div class="input-group input-group-short">
                                             @Html.NopEditorFor(model => model.GoDirectlyToNumber)
                                             <span class="input-group-btn">
-                                                <input type="submit" id="go-to-order-by-number" name="go-to-order-by-number" class="btn btn-info btn-flat" value="@T("Admin.Common.Go")" />
+                                                <button type="submit" id="go-to-order-by-number" name="go-to-order-by-number" class="btn btn-info btn-flat">
+                                                    @T("Admin.Common.Go")
+                                                </button>
                                             </span>
                                         </div>
                                     </div>
@@ -230,7 +260,10 @@
                         </div>
                         <div class="row">
                             <div class="col-md-7 col-md-offset-5">
-                                <button type="button" id="search-orders" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
+                                <button type="button" id="search-orders" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -238,7 +271,7 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <div id="orders-grid" class="order-list"></div>
+                        <div id="orders-grid"></div>
 
                         <script>
                             $(document).ready(function() {
@@ -308,11 +341,11 @@
                                                 field: "OrderStatus",
                                                 title: "@T("Admin.Orders.Fields.OrderStatus")",
                                                 width: 100,
-                                                template: '<span class="order-status ' +
-                                                    '# if(OrderStatusId == 10) {# order-status-pending #} #' +
-                                                    '# if(OrderStatusId == 20) {# order-status-processing #} #' +
-                                                    '# if(OrderStatusId == 30) {# order-status-complete #} #' +
-                                                    '# if(OrderStatusId == 40) {# order-status-cancelled #} #' +
+                                                template: '<span class="grid-report-item ' +
+                                                    '# if(OrderStatusId == 10) {# yellow #} #' +
+                                                    '# if(OrderStatusId == 20) {# blue #} #' +
+                                                    '# if(OrderStatusId == 30) {# green #} #' +
+                                                    '# if(OrderStatusId == 40) {# red #} #' +
                                                     '">#=OrderStatus#</span>'
                                             },</text>
                                         }
@@ -392,12 +425,19 @@
                                 $("".concat("#@Html.FieldIdFor(model => model.BillingEmail),",
                                     "#@Html.FieldIdFor(model => model.BillingLastName),",
                                     "#@Html.FieldIdFor(model => model.OrderNotes),",
-                                    "#@Html.FieldIdFor(model => model.GoDirectlyToNumber)")).keydown(function (event) {
+                                    "#@Html.FieldIdFor(model => model.OrderGuid)")).keydown(function (event) {
                                         if (event.keyCode === 13) {
-                                            $("#go-to-order-by-number").click();
+                                            $("#search-orders").click();
                                             return false;
                                         }
                                     });
+
+                                $("#@Html.FieldIdFor(model => model.GoDirectlyToNumber)").keydown(function(event) {
+                                    if (event.keyCode === 13) {
+                                        $("#go-to-order-by-number").click();
+                                        return false;
+                                    }
+                                });
 
                                 $('#mastercheckbox').click(function () {
                                     $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();

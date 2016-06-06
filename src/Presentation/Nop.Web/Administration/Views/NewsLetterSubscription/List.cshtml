@@ -18,9 +18,14 @@
             @T("Admin.Promotions.NewsLetterSubscriptions")
         </h1>
         <div class="pull-right">
-            <input type="submit" name="exportcsv" class="btn bg-green" value="@T("Admin.Common.ExportToCsv")" />
-            <button type="button" name="importcsv" class="btn bg-olive" data-toggle="modal" data-target="#importcsv-window">@T("Admin.Common.ImportFromCsv")</button>
-        </div>
+            <button type="submit" name="exportcsv" class="btn bg-green">
+                <i class="fa fa-download"></i>
+                @T("Admin.Common.ExportToCsv")
+            </button>
+            <button type="button" name="importcsv" class="btn bg-olive" data-toggle="modal" data-target="#importcsv-window">
+                <i class="fa fa-upload"></i>
+                @T("Admin.Common.ImportFromCsv")
+            </button>        </div>
     </div>
 
     <div class="content">
@@ -80,7 +85,10 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-8 col-md-offset-4">
-                                        <button type="button" id="search-subscriptions" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
+                                        <button type="button" id="search-subscriptions" class="btn btn-primary btn-search">
+                                            <i class="fa fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -260,7 +268,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" class="btn btn-primary" value="@T("Admin.Common.ImportFromCsv")" />
+                        <button type="submit" class="btn btn-primary">
+                            @T("Admin.Common.ImportFromCsv")
+                        </button>
                     </div>
                 </div>
             }

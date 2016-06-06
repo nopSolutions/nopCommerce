@@ -22,7 +22,7 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.System.QueuedEmails.DeleteSelected")
             </button>
-            <button type="submit" name="delete-all" class="btn bg-red" value="@T("Admin.System.QueuedEmails.DeleteAll")" onclick="return confirm('@T("Admin.Common.AreYouSure")'); ">
+            <button type="submit" name="delete-all" class="btn bg-red" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.System.QueuedEmails.DeleteAll")
             </button>
@@ -92,14 +92,19 @@
                                         <div class="input-group input-group-short">
                                             @Html.NopEditorFor(model => model.GoDirectlyToNumber)
                                             <span class="input-group-btn">
-                                                <input type="submit" id="go-to-email-by-number" class="btn btn-info btn-flat" value="@T("Admin.Common.Go")" />
+                                                <button type="submit" id="go-to-email-by-number" name="go-to-email-by-number" class="btn btn-info btn-flat">
+                                                    @T("Admin.Common.Go")
+                                                </button>
                                             </span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-8 col-md-offset-4">
-                                        <button type="button" id="search-queuedemails" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
+                                        <button type="button" id="search-queuedemails" class="btn btn-primary btn-search">
+                                            <i class="fa fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -225,6 +230,14 @@
                                             return false;
                                         }
                                     });
+                            
+
+                                $("#@Html.FieldIdFor(model => model.GoDirectlyToNumber)").keydown(function (event) {
+                                    if (event.keyCode === 13) {
+                                        $("#go-to-email-by-number").click();
+                                        return false;
+                                    }
+                                });
 
                                 //"delete selected" button
                                 $('#delete-selected').click(function(e) {

@@ -566,6 +566,99 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.AddButton">
     <Value>Add (reduce) reward points</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon">
+    <Value>General settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageExternalAuthenticationMethods">
+    <Value>Admin area. Manage External Authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods">
+    <Value>External authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods.BackToList">
+    <Value>back to extenal authentication method list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed">
+    <Value>All plugins and themes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Methods.Description">
+    <Value>Shipping methods used by offline shipping rate compuration methods (e.g. "Fixed Rate Shipping" or "Shipping by weight").</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts">
+    <Value>Email accounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails">
+    <Value>Message queue</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions">
+    <Value>Newsletter subscribers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes">
+    <Value>Product attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes">
+    <Value>Checkout attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes">
+    <Value>Specification attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement">
+    <Value>Content management</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Manage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.MiniShoppingCartProductNumber">
+    <Value>Number of products in mini-shopping cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.NumberOfOrders">
+    <Value>Orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.NumberOfCustomers">
+    <Value>Registered customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.NumberOfPendingReturnRequests">
+    <Value>Pending return requests</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.NumberOfLowStockProducts">
+    <Value>Low stock products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.MoreInfo">
+    <Value>More info</Value>
+  </LocaleResource>
+   <LocaleResource Name="Admin.Dashboard.IncompleteOrders">
+    <Value>Incomplete orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.OrderStatistics">
+    <Value>Orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.OrderStatistics.Month">
+    <Value>Month</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.OrderStatistics.Week">
+    <Value>Week</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.OrderStatistics.Year">
+    <Value>Year</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.CustomerStatistics">
+    <Value>New customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.CustomerStatistics.Month">
+    <Value>Month</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.CustomerStatistics.Week">
+    <Value>Week</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.CustomerStatistics.Year">
+    <Value>Year</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.LatestOrders">
+    <Value>Latest Orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.LatestOrders.ViewAll">
+    <Value>View All Orders</Value>
+  </LocaleResource>
 </Language>
 '
 

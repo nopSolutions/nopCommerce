@@ -336,7 +336,7 @@ namespace Nop.Services.Messages
         int SendQuantityBelowStoreOwnerNotification(ProductAttributeCombination combination, int languageId);
 
         /// <summary>
-        /// Sends a "new VAT sumitted" notification to a store owner
+        /// Sends a "new VAT submitted" notification to a store owner
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="vatName">Received VAT name</param>

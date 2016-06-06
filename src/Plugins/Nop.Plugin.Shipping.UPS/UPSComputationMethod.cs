@@ -447,7 +447,7 @@ namespace Nop.Plugin.Shipping.UPS
 
         private string DoRequest(string url, string requestString)
         {
-            byte[] bytes = new ASCIIEncoding().GetBytes(requestString);
+            byte[] bytes = Encoding.ASCII.GetBytes(requestString);
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = WebRequestMethods.Http.Post;
             request.ContentType = MimeTypes.ApplicationXWwwFormUrlencoded;
@@ -687,7 +687,7 @@ namespace Nop.Plugin.Shipping.UPS
                             continue;
                         }
 
-                        //Weed out unwanted or unkown service rates
+                        //Weed out unwanted or unknown service rates
                         if (service.ToUpper() != "UNKNOWN")
                         {
                             var shippingOption = new ShippingOption();

@@ -316,17 +316,12 @@ namespace Nop.Web.Framework
         public static MvcHtmlString Hint(this HtmlHelper helper, string value)
         {
             // Create tag builder
-            var builder = new TagBuilder("img");
-
-            // Add attributes
-            var urlHelper = new UrlHelper(helper.ViewContext.RequestContext);
-            var url = MvcHtmlString.Create(urlHelper.Content("~/Administration/Content/images/ico-help.gif")).ToHtmlString();
-
-            builder.MergeAttribute("src", url);
-            builder.MergeAttribute("alt", value);
+            var builder = new TagBuilder("div");
             builder.MergeAttribute("title", value);
             builder.MergeAttribute("class", "ico-help");
-
+            var icon = new StringBuilder();
+            icon.Append("<i class='fa fa-question-circle'></i>");
+            builder.InnerHtml = icon.ToString();
             // Render tag
             return MvcHtmlString.Create(builder.ToString());
         }

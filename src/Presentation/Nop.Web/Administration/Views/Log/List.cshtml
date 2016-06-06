@@ -6,7 +6,6 @@
 
     //page title
     ViewBag.Title = T("Admin.System.Log").Text;
-
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Log");
 }
@@ -23,7 +22,7 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.System.Log.DeleteSelected")
             </button>
-            <button type="submit" name="clearall" class="btn bg-red" onclick="return confirm('@T("Admin.Common.AreYouSure")');" value="@T("Admin.System.Log.ClearLog")">
+            <button type="submit" name="clearall" class="btn bg-red" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.System.Log.ClearLog")
             </button>
@@ -71,7 +70,10 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-8 col-md-offset-4">
-                                        <button type="button" id="search-log" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
+                                        <button type="button" id="search-log" class="btn btn-primary btn-search">
+                                            <i class="fa fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
                                     </div>
                                 </div>
                             </div>

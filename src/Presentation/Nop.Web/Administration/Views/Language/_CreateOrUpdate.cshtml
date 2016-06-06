@@ -234,7 +234,10 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-8 col-md-offset-4">
-                                    <button type="button" id="search-resources" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
+                                    <button type="button" id="search-resources" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
                                 </div>
                             </div>
                         }
@@ -391,14 +394,14 @@
 
                         $("".concat("#@Html.FieldIdFor(model => model.Search.SearchResourceName),",
                             "#@Html.FieldIdFor(model => model.Search.SearchResourceValue)")).keydown(function(event) {
-                                if (event.keyCode === 13) {
-                                    $("#search-resources").click();
-                                    return false;
-                                }
-                            });
+                            if (event.keyCode === 13) {
+                                $("#search-resources").click();
+                                return false;
+                            }
+                        });
                     </script>
                 </div>
             </div>
-                        }
+        }
     </div>
 }

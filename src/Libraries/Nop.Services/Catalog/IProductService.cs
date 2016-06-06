@@ -65,12 +65,12 @@ namespace Nop.Services.Catalog
         void UpdateProducts(IList<Product> products);
 
         /// <summary>
-        /// Get (visible) product number in certain category
+        /// Get number of product (published and visible) in certain category
         /// </summary>
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
-        /// <returns>Product number</returns>
-        int GetCategoryProductNumber(IList<int> categoryIds = null, int storeId = 0);
+        /// <returns>Number of products</returns>
+        int GetNumberOfProductsInCategory(IList<int> categoryIds = null, int storeId = 0);
 
         /// <summary>
         /// Search products
@@ -223,11 +223,21 @@ namespace Nop.Services.Catalog
         /// Get low stock products
         /// </summary>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
-        /// <param name="products">Low stock products</param>
-        /// <param name="combinations">Low stock attribute combinations</param>
-        void GetLowStockProducts(int vendorId,
-            out IList<Product> products,
-            out IList<ProductAttributeCombination> combinations);
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Products</returns>
+        IPagedList<Product> GetLowStockProducts(int vendorId = 0,
+            int pageIndex = 0, int pageSize = int.MaxValue);
+
+        /// <summary>
+        /// Get low stock product combinations
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Product combinations</returns>
+        IPagedList<ProductAttributeCombination> GetLowStockProductCombinations(int vendorId = 0,
+            int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets a product by SKU
@@ -256,11 +266,11 @@ namespace Nop.Services.Catalog
         void UpdateHasDiscountsApplied(Product product);
 
         /// <summary>
-        /// Gets product number by vendor identifier
+        /// Gets number of products by vendor identifier
         /// </summary>
         /// <param name="vendorId">Vendor identifier</param>
-        /// <returns>Count of vendor products</returns>
-        int GetProductNumberByVendorId(int vendorId);
+        /// <returns>Number of products</returns>
+        int GetNumberOfProductsByVendorId(int vendorId);
 
         #endregion
 

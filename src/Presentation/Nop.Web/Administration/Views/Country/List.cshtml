@@ -1,7 +1,6 @@
 ﻿@{
     //page title
     ViewBag.Title = T("Admin.Configuration.Countries").Text;
-
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Countries");
 }
@@ -16,14 +15,20 @@
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
-        <input type="button" id="publish-selected" class="btn bg-teal" value="@T("Admin.Configuration.Countries.PublishSelected")" />
-        <input type="button" id="unpublish-selected" class="btn bg-navy" value="@T("Admin.Configuration.Countries.UnpublishSelected")" />
+        <button type="button" id="publish-selected" class="btn bg-teal">
+            <i class="fa fa-check-square-o"></i>
+            @T("Admin.Configuration.Countries.PublishSelected")
+        </button>
+        <button type="button" id="unpublish-selected" class="btn bg-navy">
+            <i class="fa fa-minus-square-o"></i>
+            @T("Admin.Configuration.Countries.UnpublishSelected")
+        </button>
         <a href="@Url.Action("ExportCsv")" class="btn bg-green">
-            <i class="fa fa-exchange"></i>
+            <i class="fa fa-download"></i>
             @T("Admin.Configuration.Countries.ExportToCsv")
         </a>
-        <button type="submit" name="importcsv" class="btn bg-olive" value="@T("Admin.Configuration.Countries.ImportFromCsv")" data-toggle="modal" data-target="#importcsv-window">
-            <i class="fa fa-exchange"></i>
+        <button type="submit" name="importcsv" class="btn bg-olive" data-toggle="modal" data-target="#importcsv-window">
+            <i class="fa fa-upload"></i>
             @T("Admin.Configuration.Countries.ImportFromCsv")
         </button>
     </div>
@@ -275,7 +280,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" class="btn btn-primary" value="@T("Admin.Common.ImportFromCsv")" />
+                        <button type="submit" class="btn btn-primary">
+                            @T("Admin.Common.ImportFromCsv")
+                        </button>
                     </div>
                 </div>
             }
