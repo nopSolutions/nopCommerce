@@ -557,8 +557,6 @@ span.grid-report-item.red {
 
 .dropdown-menu a:hover {
     text-decoration: none;
-    background: transparent!important;
-    color: #777!important;
 }
 
 .content-header .pull-right .dropdown-menu {
@@ -710,6 +708,12 @@ width: 25px;
 
 .new-item-notification span {
     font-size: 15px;
+}
+
+.maintenance-menu .dropdown-menu{
+    width: 280px !important;
+    border: none !important;
+    left: 0 !important;
 }
 
 @media (max-width: 1200px) {
