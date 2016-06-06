@@ -557,8 +557,6 @@ span.grid-report-item.red {
 
 .dropdown-menu a:hover {
     text-decoration: none;
-    background: transparent!important;
-    color: #777!important;
 }
 
 .content-header .pull-right .dropdown-menu {
@@ -712,6 +710,24 @@ width: 25px;
     font-size: 15px;
 }
 
+.maintenance-menu {
+    position: relative;    
+}
+
+.maintenance-menu .dropdown-menu{
+    width: 280px !important;
+    border: none !important;
+}
+
+.maintenance-menu .dropdown-menu a {
+    background-color: transparent !important;
+    color: #fff;
+}
+
+.margin-r-10 {
+    margin-right: 10px;
+}
+
 @media (max-width: 1200px) {
     .form-horizontal .ico-help {
          display: none;
@@ -796,5 +812,11 @@ width: 25px;
 
     .navbar-nav>.user-menu .user-image {
         margin-top: -2px;
+    }
+}
+
+@media (max-width: 480px) {
+    .maintenance-menu .dropdown-menu {
+        left: 0;
     }
 }
