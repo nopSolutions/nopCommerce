@@ -230,19 +230,24 @@
                     @RenderBody()
                 </div>
             </div>
-            <div class="main-footer">
-                <div class="pull-right hidden-xs">
-                    <b>nopCommerce version @NopVersion.CurrentVersion</b>
+            <div class="main-footer clearfix">
+                <div class="text-center">
+                    @(EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(DateTime.Now).ToString("f"))
                 </div>
                 @*<strong>
-                        @T("Content.CopyrightNotice", DateTime.Now.Year, EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Name)
-                    </strong>*@
+                    @T("Content.CopyrightNotice", DateTime.Now.Year, EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Name)
+                </strong>*@
                 @if (!EngineContext.Current.Resolve<StoreInformationSettings>().HidePoweredByNopCommerce)
                 {
                     @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
                         Please find more info at http://www.nopcommerce.com/copyrightremoval.aspx*@
-                    <text>Powered by <a href="http://www.nopcommerce.com/?utm_source=admin-panel&utm_medium=footer&utm_campaign=admin-panel" target="_blank">nopCommerce</a></text>
+                    <div class="pull-left">
+                        Powered by <a href="http://www.nopcommerce.com/?utm_source=admin-panel&utm_medium=footer&utm_campaign=admin-panel" target="_blank">nopCommerce</a>
+                    </div>
                 }
+                <div class="pull-right hidden-xs">
+                    <b>nopCommerce version @NopVersion.CurrentVersion</b>
+                </div>
             </div>
         </div>
         @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
