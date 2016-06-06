@@ -331,7 +331,14 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                                                 else
                                                 {
                                                     //next payments
-                                                    _orderProcessingService.ProcessNextRecurringPayment(rp);
+                                                    var processPaymentResult = new ProcessPaymentResult();
+                                                    processPaymentResult.NewPaymentStatus = newPaymentStatus;
+                                                    if (newPaymentStatus == PaymentStatus.Authorized)
+                                                        processPaymentResult.AuthorizationTransactionId = txn_id;
+                                                    else
+                                                        processPaymentResult.CaptureTransactionId = txn_id;
+
+                                                    _orderProcessingService.ProcessNextRecurringPayment(rp, processPaymentResult);
                                                 }
                                             }
                                             break;
