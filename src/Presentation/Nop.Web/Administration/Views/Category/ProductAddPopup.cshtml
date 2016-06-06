@@ -53,12 +53,12 @@
                                         @Html.NopDropDownList("SearchCategoryId", Model.AvailableCategories)
                                     </div>
                                 </div>
-                                <div class="form-group" @(Model.AvailableManufacturers.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                <div class="form-group" @(Model.AvailableVendors.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-sm-5">
-                                        @Html.NopLabelFor(model => model.SearchManufacturerId)
+                                        @Html.NopLabelFor(model => model.SearchVendorId)
                                     </div>
                                     <div class="col-sm-7">
-                                        @Html.NopDropDownList("SearchManufacturerId", Model.AvailableManufacturers)
+                                        @Html.NopDropDownList("SearchVendorId", Model.AvailableVendors)
                                     </div>
                                 </div>
                             </div>
@@ -71,20 +71,20 @@
                                         @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
                                     </div>
                                 </div>
-                                <div class="form-group" @(Model.AvailableVendors.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
-                                    <div class="col-sm-5">
-                                        @Html.NopLabelFor(model => model.SearchVendorId)
-                                    </div>
-                                    <div class="col-sm-7">
-                                        @Html.NopDropDownList("SearchVendorId", Model.AvailableVendors)
-                                    </div>
-                                </div>
                                 <div class="form-group">
                                     <div class="col-sm-5">
                                         @Html.NopLabelFor(model => model.SearchProductTypeId)
                                     </div>
                                     <div class="col-sm-7">
                                         @Html.NopDropDownList("SearchProductTypeId", Model.AvailableProductTypes)
+                                    </div>
+                                </div>
+                                <div class="form-group" @(Model.AvailableManufacturers.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-sm-5">
+                                        @Html.NopLabelFor(model => model.SearchManufacturerId)
+                                    </div>
+                                    <div class="col-sm-7">
+                                        @Html.NopDropDownList("SearchManufacturerId", Model.AvailableManufacturers)
                                     </div>
                                 </div>
                             </div>
