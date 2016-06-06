@@ -55,9 +55,26 @@ namespace Nop.Admin.Controllers
             this._storeMappingService = storeMappingService;
 		}
 
-		#endregion 
+        #endregion
 
         #region Utilities
+
+        [NonAction]
+        protected virtual void PrepareLanguagesModel(NewsItemModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            var languages = _languageService.GetAllLanguages(true);
+            foreach (var language in languages)
+            {
+                model.AvailableLanguages.Add(new SelectListItem
+                {
+                    Text = language.Name,
+                    Value = language.Id.ToString()
+                });
+            }
+        }
 
         [NonAction]
         protected virtual void PrepareStoresMappingModel(NewsItemModel model, NewsItem newsItem, bool excludeProperties)
@@ -163,8 +180,9 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = new NewsItemModel();
+            //languages
+            PrepareLanguagesModel(model);
             //Stores
             PrepareStoresMappingModel(model, null, false);
             //default values
@@ -208,8 +226,7 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
-            //Stores
+            PrepareLanguagesModel(model);
             PrepareStoresMappingModel(model, null, true);
             return View(model);
         }
@@ -224,10 +241,11 @@ namespace Nop.Admin.Controllers
                 //No news item found with the specified id
                 return RedirectToAction("List");
 
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = newsItem.ToModel();
             model.StartDate = newsItem.StartDateUtc;
             model.EndDate = newsItem.EndDateUtc;
+            //languages
+            PrepareLanguagesModel(model);
             //Store
             PrepareStoresMappingModel(model, newsItem, false);
             return View(model);
@@ -271,8 +289,7 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
-            //Store
+            PrepareLanguagesModel(model);
             PrepareStoresMappingModel(model, newsItem, true);
             return View(model);
         }

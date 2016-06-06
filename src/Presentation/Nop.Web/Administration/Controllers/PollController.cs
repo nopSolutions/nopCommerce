@@ -39,8 +39,29 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
 		}
 
-		#endregion 
-        
+        #endregion
+
+        #region Utilities
+
+        [NonAction]
+        protected virtual void PrepareLanguagesModel(PollModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            var languages = _languageService.GetAllLanguages(true);
+            foreach (var language in languages)
+            {
+                model.AvailableLanguages.Add(new SelectListItem
+                {
+                    Text = language.Name,
+                    Value = language.Id.ToString()
+                });
+            }
+        }
+
+        #endregion
+
         #region Polls
 
         public ActionResult Index()
@@ -86,8 +107,9 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = new PollModel();
+            //languages
+            PrepareLanguagesModel(model);
             //default values
             model.Published = true;
             model.ShowOnHomePage = true;
@@ -121,7 +143,7 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
+            PrepareLanguagesModel(model);
             return View(model);
         }
 
@@ -134,11 +156,12 @@ namespace Nop.Admin.Controllers
             if (poll == null)
                 //No poll found with the specified id
                 return RedirectToAction("List");
-
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
+            
             var model = poll.ToModel();
             model.StartDate = poll.StartDateUtc;
             model.EndDate = poll.EndDateUtc;
+            //languages
+            PrepareLanguagesModel(model);
             return View(model);
         }
 
@@ -173,7 +196,7 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
+            PrepareLanguagesModel(model);
             return View(model);
         }
 

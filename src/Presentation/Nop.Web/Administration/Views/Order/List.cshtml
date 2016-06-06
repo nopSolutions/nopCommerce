@@ -107,7 +107,7 @@
                                         @Html.NopEditorFor(model => model.EndDate)
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.StoreId)
                                     </div>
@@ -115,7 +115,7 @@
                                         @Html.NopDropDownList("StoreId", Model.AvailableStores)
                                     </div>
                                 </div>
-                                <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                <div class="form-group" @(Model.AvailableVendors.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                     <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.VendorId)
                                     </div>
@@ -123,7 +123,7 @@
                                         @Html.NopDropDownList("VendorId", Model.AvailableVendors)
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" @(Model.AvailableWarehouses.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.WarehouseId)
                                     </div>
@@ -225,7 +225,7 @@
                                         @Html.NopEditorFor(model => model.BillingLastName)
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" @(Model.AvailableCountries.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.BillingCountryId)
                                     </div>
@@ -233,7 +233,7 @@
                                         @Html.NopDropDownList("BillingCountryId", Model.AvailableCountries)
                                     </div>
                                 </div>
-                                <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                <div class="form-group" @(Model.AvailablePaymentMethods.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                     <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.PaymentMethodSystemName)
                                     </div>

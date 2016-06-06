@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
@@ -11,8 +12,13 @@ namespace Nop.Admin.Models.Polls
     [Validator(typeof(PollValidator))]
     public partial class PollModel : BaseNopEntityModel
     {
+        public PollModel()
+        {
+            this.AvailableLanguages = new List<SelectListItem>();
+        }
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.Language")]
         public int LanguageId { get; set; }
+        public IList<SelectListItem> AvailableLanguages { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.Language")]
         [AllowHtml]
