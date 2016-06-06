@@ -30,7 +30,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group" @(Model.AvailableStores.Count(x => !x.Value.ToString().Equals("0")) < 2 ? Html.Raw("style=\"display:none\"") : null)>
+                            <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                 <div class="col-md-4">
                                     @Html.NopLabelFor(model => model.SearchStoreId)
                                 </div>

@@ -63,7 +63,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="form-group" @(Model.AvailableStores.Count(x => !x.Value.ToString().Equals("0")) < 2 ? Html.Raw("style=\"display:none\"") : null)>
+                                <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-sm-5">
                                         @Html.NopLabelFor(model => model.SearchStoreId)
                                     </div>
@@ -71,7 +71,7 @@
                                         @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
                                     </div>
                                 </div>
-                                <div class="form-group" @(Model.AvailableVendors.Count(x => !x.Value.ToString().Equals("0")) < 2 ? Html.Raw("style=\"display:none\"") : null)>
+                                <div class="form-group" @(Model.AvailableVendors.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-sm-5">
                                         @Html.NopLabelFor(model => model.SearchVendorId)
                                     </div>
