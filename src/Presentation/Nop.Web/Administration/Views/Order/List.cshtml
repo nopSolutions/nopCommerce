@@ -107,22 +107,6 @@
                                         @Html.NopEditorFor(model => model.EndDate)
                                     </div>
                                 </div>
-                                <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
-                                    <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.StoreId)
-                                    </div>
-                                    <div class="col-md-8">
-                                        @Html.NopDropDownList("StoreId", Model.AvailableStores)
-                                    </div>
-                                </div>
-                                <div class="form-group" @(Model.AvailableVendors.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                    <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.VendorId)
-                                    </div>
-                                    <div class="col-md-8">
-                                        @Html.NopDropDownList("VendorId", Model.AvailableVendors)
-                                    </div>
-                                </div>
                                 <div class="form-group" @(Model.AvailableWarehouses.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.WarehouseId)
@@ -175,16 +159,6 @@
                                         @Html.NopEditorFor(model => model.OrderNotes)
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.OrderGuid)
-                                    </div>
-                                    <div class="col-md-8">
-                                        @Html.NopEditorFor(model => model.OrderGuid)
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-7">
                                 <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                     <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.OrderStatusIds)
@@ -207,6 +181,32 @@
                                     </div>
                                     <div class="col-md-8">
                                         @Html.EditorFor(model => model.ShippingStatusIds, new { SelectList = Model.AvailableShippingStatuses })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.StoreId)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopDropDownList("StoreId", Model.AvailableStores)
+                                    </div>
+                                </div>
+                                <div class="form-group" @(Model.AvailableVendors.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.VendorId)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopDropDownList("VendorId", Model.AvailableVendors)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.OrderGuid)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopEditorFor(model => model.OrderGuid)
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -338,16 +338,16 @@
                                         {
                                             //a vendor does not have access to this functionality
                                             <text>{
-                                                field: "OrderStatus",
-                                                title: "@T("Admin.Orders.Fields.OrderStatus")",
-                                                width: 100,
-                                                template: '<span class="grid-report-item ' +
-                                                    '# if(OrderStatusId == 10) {# yellow #} #' +
-                                                    '# if(OrderStatusId == 20) {# blue #} #' +
-                                                    '# if(OrderStatusId == 30) {# green #} #' +
-                                                    '# if(OrderStatusId == 40) {# red #} #' +
-                                                    '">#=OrderStatus#</span>'
-                                            },</text>
+                                            field: "OrderStatus",
+                                            title: "@T("Admin.Orders.Fields.OrderStatus")",
+                                            width: 100,
+                                            template: '<span class="grid-report-item ' +
+                                                '# if(OrderStatusId == 10) {# yellow #} #' +
+                                                '# if(OrderStatusId == 20) {# blue #} #' +
+                                                '# if(OrderStatusId == 30) {# green #} #' +
+                                                '# if(OrderStatusId == 40) {# red #} #' +
+                                                '">#=OrderStatus#</span>'
+                                        },</text>
                                         }
                                         {
                                             field: "PaymentStatus",
@@ -358,10 +358,10 @@
                                         {
                                             //a vendor does not have access to this functionality
                                             <text>{
-                                                field: "ShippingStatus",
-                                                title: "@T("Admin.Orders.Fields.ShippingStatus")",
-                                                width: 150
-                                            },</text>
+                                            field: "ShippingStatus",
+                                            title: "@T("Admin.Orders.Fields.ShippingStatus")",
+                                            width: 150
+                                        },</text>
                                         }
                                         {
                                             field: "CustomerEmail",
@@ -384,15 +384,15 @@
                                         {
                                             //a vendor does not have access to this functionality
                                             <text>{
-                                                field: "OrderTotal",
-                                                title: "@T("Admin.Orders.Fields.OrderTotal")",
-                                                width: 100,
-                                                footerTemplate: '<div><strong>@T("Admin.Orders.Report.Summary")</strong></div>' +
-                                                                        '<div>@T("Admin.Orders.Report.Profit") <span id=\"aggregator-profit-block\"></span></div>' +
-                                                                        '<div>@T("Admin.Orders.Report.Shipping") <span id=\"aggregator-shipping-block\"></span></div>' +
-                                                                        '<div>@T("Admin.Orders.Report.Tax") <span id=\"aggregator-tax-block\"></span></div>' +
-                                                                        '<div>@T("Admin.Orders.Report.Total") <span id=\"aggregator-total-block\"></span></div>'
-                                            },</text>
+                                            field: "OrderTotal",
+                                            title: "@T("Admin.Orders.Fields.OrderTotal")",
+                                            width: 100,
+                                            footerTemplate: '<div><strong>@T("Admin.Orders.Report.Summary")</strong></div>' +
+                                                                    '<div>@T("Admin.Orders.Report.Profit") <span id=\"aggregator-profit-block\"></span></div>' +
+                                                                    '<div>@T("Admin.Orders.Report.Shipping") <span id=\"aggregator-shipping-block\"></span></div>' +
+                                                                    '<div>@T("Admin.Orders.Report.Tax") <span id=\"aggregator-tax-block\"></span></div>' +
+                                                                    '<div>@T("Admin.Orders.Report.Total") <span id=\"aggregator-total-block\"></span></div>'
+                                        },</text>
                                         }
                                         {
                                             field: "Id",
