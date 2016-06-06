@@ -93,9 +93,8 @@ namespace Nop.Admin.Controllers
 
             //we just redirect a user to the address settings page
             
-            //select third tab
-            const int addressFormFieldIndex = 2;
-            SaveSelectedTabIndex(addressFormFieldIndex);
+            //select "address form fields" tab
+            SaveSelectedTabName("tab-addressformfields");
             return RedirectToAction("CustomerUser", "Setting");
         }
 
@@ -145,7 +144,15 @@ namespace Nop.Admin.Controllers
                 UpdateAttributeLocales(addressAttribute, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Address.AddressAttributes.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = addressAttribute.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = addressAttribute.Id });
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
@@ -194,7 +201,7 @@ namespace Nop.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    SaveSelectedTabName();
 
                     return RedirectToAction("Edit", new {id = addressAttribute.Id});
                 }

@@ -304,12 +304,12 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Get (visible) product number in certain category
+        /// Get number of product (published and visible) in certain category
         /// </summary>
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
-        /// <returns>Product number</returns>
-        public virtual int GetCategoryProductNumber(IList<int> categoryIds = null, int storeId = 0)
+        /// <returns>Number of products</returns>
+        public virtual int GetNumberOfProductsInCategory(IList<int> categoryIds = null, int storeId = 0)
         {
             //validate "categoryIds" parameter
             if (categoryIds != null && categoryIds.Contains(0))
@@ -373,6 +373,7 @@ namespace Nop.Services.Catalog
         /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
+        /// <param name="searchManufacturerPartNumber">A value indicating whether to search by a specified "keyword" in manufacturer part number</param>
         /// <param name="searchSku">A value indicating whether to search by a specified "keyword" in product SKU</param>
         /// <param name="searchProductTags">A value indicating whether to search by a specified "keyword" in product tags</param>
         /// <param name="languageId">Language identifier (search for text searching)</param>
@@ -402,6 +403,7 @@ namespace Nop.Services.Catalog
             int productTagId = 0,
             string keywords = null,
             bool searchDescriptions = false,
+            bool searchManufacturerPartNumber = true,
             bool searchSku = true,
             bool searchProductTags = false,
             int languageId = 0,
@@ -416,7 +418,7 @@ namespace Nop.Services.Catalog
                 storeId, vendorId, warehouseId,
                 productType, visibleIndividuallyOnly, markedAsNewOnly, featuredProducts,
                 priceMin, priceMax, productTagId, keywords, searchDescriptions, searchSku,
-                searchProductTags, languageId, filteredSpecs, 
+                searchProductTags, searchManufacturerPartNumber, languageId, filteredSpecs, 
                 orderBy, showHidden, overridePublished);
         }
 
@@ -441,6 +443,7 @@ namespace Nop.Services.Catalog
         /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
+        /// <param name="searchManufacturerPartNumber">A value indicating whether to search by a specified "keyword" in manufacturer part number</param>
         /// <param name="searchSku">A value indicating whether to search by a specified "keyword" in product SKU</param>
         /// <param name="searchProductTags">A value indicating whether to search by a specified "keyword" in product tags</param>
         /// <param name="languageId">Language identifier (search for text searching)</param>
@@ -472,6 +475,7 @@ namespace Nop.Services.Catalog
             int productTagId = 0,
             string keywords = null,
             bool searchDescriptions = false,
+            bool searchManufacturerPartNumber = true,
             bool searchSku = true,
             bool searchProductTags = false,
             int languageId = 0,
@@ -603,6 +607,11 @@ namespace Nop.Services.Catalog
                 pSearchDescriptions.Value = searchDescriptions;
                 pSearchDescriptions.DbType = DbType.Boolean;
 
+                var pSearchManufacturerPartNumber = _dataProvider.GetParameter();
+                pSearchManufacturerPartNumber.ParameterName = "SearchManufacturerPartNumber";
+                pSearchManufacturerPartNumber.Value = searchManufacturerPartNumber;
+                pSearchManufacturerPartNumber.DbType = DbType.Boolean;
+
                 var pSearchSku = _dataProvider.GetParameter();
                 pSearchSku.ParameterName = "SearchSku";
                 pSearchSku.Value = searchSku;
@@ -696,6 +705,7 @@ namespace Nop.Services.Catalog
                     pPriceMax,
                     pKeywords,
                     pSearchDescriptions,
+                    pSearchManufacturerPartNumber,
                     pSearchSku,
                     pSearchProductTags,
                     pUseFullTextSearch,
@@ -832,7 +842,12 @@ namespace Nop.Services.Catalog
                             where (p.Name.Contains(keywords)) ||
                                   (searchDescriptions && p.ShortDescription.Contains(keywords)) ||
                                   (searchDescriptions && p.FullDescription.Contains(keywords)) ||
-                                  (searchProductTags && pt.Name.Contains(keywords)) ||
+                                  //manufacturer part number
+                                  (searchManufacturerPartNumber && p.ManufacturerPartNumber == keywords) ||
+                                  //sku (exact match)
+                                  (searchSku && p.Sku == keywords) ||
+                                  //product tags (exact match)
+                                  (searchProductTags && pt.Name == keywords) ||
                                   //localized values
                                   (searchLocalizedValue && lp.LanguageId == languageId && lp.LocaleKeyGroup == "Product" && lp.LocaleKey == "Name" && lp.LocaleValue.Contains(keywords)) ||
                                   (searchDescriptions && searchLocalizedValue && lp.LanguageId == languageId && lp.LocaleKeyGroup == "Product" && lp.LocaleKey == "ShortDescription" && lp.LocaleValue.Contains(keywords)) ||
@@ -1122,14 +1137,14 @@ namespace Nop.Services.Catalog
         /// Get low stock products
         /// </summary>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
-        /// <param name="products">Low stock products</param>
-        /// <param name="combinations">Low stock attribute combinations</param>
-        public virtual void GetLowStockProducts(int vendorId,
-            out IList<Product> products, 
-            out IList<ProductAttributeCombination> combinations)
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Products</returns>
+        public virtual IPagedList<Product> GetLowStockProducts(int vendorId = 0,
+            int pageIndex = 0, int pageSize = int.MaxValue)
         {
             //Track inventory for product
-            var query1 = from p in _productRepository.Table
+            var query = from p in _productRepository.Table
                          orderby p.MinStockQuantity
                          where !p.Deleted &&
                          p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock &&
@@ -1141,19 +1156,32 @@ namespace Nop.Services.Catalog
                             p.StockQuantity) &&
                          (vendorId == 0 || p.VendorId == vendorId)
                          select p;
-            products = query1.ToList();
 
+            return new PagedList<Product>(query, pageIndex, pageSize);
+        }
+
+        /// <summary>
+        /// Get low stock product combinations
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Product combinations</returns>
+        public virtual IPagedList<ProductAttributeCombination> GetLowStockProductCombinations(int vendorId = 0,
+            int pageIndex = 0, int pageSize = int.MaxValue)
+        {
             //Track inventory for product by product attributes
-            var query2 = from p in _productRepository.Table
+            var query = from p in _productRepository.Table
                          from c in p.ProductAttributeCombinations
                          where !p.Deleted &&
                          p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
                          c.StockQuantity <= 0 &&
                          (vendorId == 0 || p.VendorId == vendorId)
                          select c;
-            combinations = query2.ToList();
+
+            return new PagedList<ProductAttributeCombination>(query, pageIndex, pageSize);
         }
-        
+
         /// <summary>
         /// Gets a product by SKU
         /// </summary>
@@ -1213,6 +1241,20 @@ namespace Nop.Services.Catalog
 
             product.HasDiscountsApplied = product.AppliedDiscounts.Count > 0;
             UpdateProduct(product);
+        }
+
+
+        /// <summary>
+        /// Gets number of products by vendor identifier
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier</param>
+        /// <returns>Number of products</returns>
+        public int GetNumberOfProductsByVendorId(int vendorId)
+        {
+            if (vendorId == 0)
+                return 0;
+
+            return _productRepository.Table.Count(p => p.VendorId == vendorId && !p.Deleted);
         }
 
         #endregion
@@ -1865,6 +1907,17 @@ namespace Nop.Services.Catalog
 
             //event notification
             _eventPublisher.EntityUpdated(productPicture);
+        }
+
+        /// <summary>
+        /// Get the IDs of all product images 
+        /// </summary>
+        /// <param name="productsIds">Products IDs</param>
+        /// <returns>All picture identifiers grouped by product ID</returns>
+        public IDictionary<int, int[]> GetProductsImagesIds(int [] productsIds)
+        {
+            return _productPictureRepository.Table.Where(p => productsIds.Contains(p.ProductId))
+                .GroupBy(p => p.ProductId).ToDictionary(p => p.Key, p => p.Select(p1 => p1.PictureId).ToArray());
         }
 
         #endregion

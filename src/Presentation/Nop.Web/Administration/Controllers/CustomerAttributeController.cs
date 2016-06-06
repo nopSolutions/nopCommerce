@@ -92,10 +92,9 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //we just redirect a user to the customer settings page
-            
-            //select second tab
-            const int customerFormFieldIndex = 1;
-            SaveSelectedTabIndex(customerFormFieldIndex);
+
+            //select "customer form fields" tab
+            SaveSelectedTabName("tab-customerformfields");
             return RedirectToAction("CustomerUser", "Setting");
         }
 
@@ -145,7 +144,15 @@ namespace Nop.Admin.Controllers
                 UpdateAttributeLocales(customerAttribute, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAttributes.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = customerAttribute.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = customerAttribute.Id });
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
@@ -194,7 +201,7 @@ namespace Nop.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    SaveSelectedTabName();
 
                     return RedirectToAction("Edit", new {id = customerAttribute.Id});
                 }

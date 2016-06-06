@@ -5,7 +5,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Messages
 {
-    public class TestMessageTemplateValidator : BaseNopValidator<TestMessageTemplateModel>
+    public partial class TestMessageTemplateValidator : BaseNopValidator<TestMessageTemplateModel>
     {
         public TestMessageTemplateValidator(ILocalizationService localizationService)
         {

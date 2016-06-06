@@ -7,7 +7,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Orders
 {
-    public class CheckoutAttributeValueValidator : BaseNopValidator<CheckoutAttributeValueModel>
+    public partial class CheckoutAttributeValueValidator : BaseNopValidator<CheckoutAttributeValueModel>
     {
         public CheckoutAttributeValueValidator(ILocalizationService localizationService, IDbContext dbContext)
         {

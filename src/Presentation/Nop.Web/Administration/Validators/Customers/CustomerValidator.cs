@@ -9,7 +9,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Customers
 {
-    public class CustomerValidator : BaseNopValidator<CustomerModel>
+    public partial class CustomerValidator : BaseNopValidator<CustomerModel>
     {
         public CustomerValidator(ILocalizationService localizationService,
             IStateProvinceService stateProvinceService,

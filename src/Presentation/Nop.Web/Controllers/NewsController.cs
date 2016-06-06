@@ -17,6 +17,7 @@ using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.News;
+using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Web.Framework;
@@ -44,6 +45,7 @@ namespace Nop.Web.Controllers
         private readonly ICacheManager _cacheManager;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IPermissionService _permissionService;
 
         private readonly MediaSettings _mediaSettings;
         private readonly NewsSettings _newsSettings;
@@ -56,14 +58,21 @@ namespace Nop.Web.Controllers
         #region Constructors
 
         public NewsController(INewsService newsService,
-            IWorkContext workContext, IStoreContext storeContext,
-            IPictureService pictureService, ILocalizationService localizationService,
+            IWorkContext workContext, 
+            IStoreContext storeContext,
+            IPictureService pictureService, 
+            ILocalizationService localizationService,
             IDateTimeHelper dateTimeHelper,
-            IWorkflowMessageService workflowMessageService, IWebHelper webHelper,
-            ICacheManager cacheManager, ICustomerActivityService customerActivityService,
+            IWorkflowMessageService workflowMessageService,
+            IWebHelper webHelper,
+            ICacheManager cacheManager, 
+            ICustomerActivityService customerActivityService,
             IStoreMappingService storeMappingService,
-            MediaSettings mediaSettings, NewsSettings newsSettings,
-            LocalizationSettings localizationSettings, CustomerSettings customerSettings,
+            IPermissionService permissionService,
+            MediaSettings mediaSettings, 
+            NewsSettings newsSettings,
+            LocalizationSettings localizationSettings, 
+            CustomerSettings customerSettings,
             CaptchaSettings captchaSettings)
         {
             this._newsService = newsService;
@@ -77,6 +86,7 @@ namespace Nop.Web.Controllers
             this._cacheManager = cacheManager;
             this._customerActivityService = customerActivityService;
             this._storeMappingService = storeMappingService;
+            this._permissionService = permissionService;
 
             this._mediaSettings = mediaSettings;
             this._newsSettings = newsSettings;
@@ -240,6 +250,10 @@ namespace Nop.Web.Controllers
 
             var model = new NewsItemModel();
             PrepareNewsItemModel(model, newsItem, true);
+
+            //display "edit" (manage) link
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageNews))
+                DisplayEditLink(Url.Action("Edit", "News", new { id = newsItem.Id, area = "Admin" }));
 
             return View(model);
         }

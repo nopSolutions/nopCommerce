@@ -909,6 +909,9 @@ namespace Nop.Services.Messages
         /// <returns>List of allowed (supported) message tokens for campaigns</returns>
         public virtual string[] GetListOfCampaignAllowedTokens()
         {
+            var additionTokens = new CampaignAdditionTokensAddedEvent();
+            _eventPublisher.Publish(additionTokens);
+
             var allowedTokens = new List<string>
             {
                 "%Store.Name%",
@@ -926,11 +929,15 @@ namespace Nop.Services.Messages
                 "%YouTube.URL%",
                 "%GooglePlus.URL%"
             };
-            return allowedTokens.ToArray();
+            allowedTokens.AddRange(additionTokens.AdditionTokens);
+            return allowedTokens.Distinct().ToArray();
         }
 
         public virtual string[] GetListOfAllowedTokens()
         {
+            var additionTokens = new AdditionTokensAddedEvent();
+            _eventPublisher.Publish(additionTokens);
+
             var allowedTokens = new List<string>
             {
                 "%Store.Name%",
@@ -1043,9 +1050,11 @@ namespace Nop.Services.Messages
                 "%YouTube.URL%",
                 "%GooglePlus.URL%"
             };
-            return allowedTokens.ToArray();
+            allowedTokens.AddRange(additionTokens.AdditionTokens);
+
+            return allowedTokens.Distinct().ToArray();
         }
-        
+
         #endregion
     }
 }

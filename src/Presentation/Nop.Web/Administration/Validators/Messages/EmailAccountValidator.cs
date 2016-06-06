@@ -7,7 +7,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Messages
 {
-    public class EmailAccountValidator : BaseNopValidator<EmailAccountModel>
+    public partial class EmailAccountValidator : BaseNopValidator<EmailAccountModel>
     {
         public EmailAccountValidator(ILocalizationService localizationService, IDbContext dbContext)
         {

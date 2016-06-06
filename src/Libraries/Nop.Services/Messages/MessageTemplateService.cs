@@ -168,7 +168,6 @@ namespace Nop.Services.Messages
                 var query = _messageTemplateRepository.Table;
                 query = query.Where(t => t.Name == messageTemplateName);
                 query = query.OrderBy(t => t.Id);
-                query = query.OrderBy(t => t.Id);
                 var templates = query.ToList();
 
                 //store mapping

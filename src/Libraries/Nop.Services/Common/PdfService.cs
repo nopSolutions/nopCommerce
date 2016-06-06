@@ -114,12 +114,28 @@ namespace Nop.Services.Common
 
         #region Utilities
 
+        /// <summary>
+        /// Get font
+        /// </summary>
+        /// <returns>Font</returns>
         protected virtual Font GetFont()
         {
             //nopCommerce supports unicode characters
             //nopCommerce uses Free Serif font by default (~/App_Data/Pdf/FreeSerif.ttf file)
             //It was downloaded from http://savannah.gnu.org/projects/freefont
-            string fontPath = Path.Combine(CommonHelper.MapPath("~/App_Data/Pdf/"), _pdfSettings.FontFileName);
+            return GetFont(_pdfSettings.FontFileName);
+        }
+        /// <summary>
+        /// Get font
+        /// </summary>
+        /// <param name="fontFileName">Font file name</param>
+        /// <returns>Font</returns>
+        protected virtual Font GetFont(string fontFileName)
+        {
+            if (fontFileName == null)
+                throw new ArgumentNullException("fontFileName");
+
+            string fontPath = Path.Combine(CommonHelper.MapPath("~/App_Data/Pdf/"), fontFileName);
             var baseFont = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
             var font = new Font(baseFont, 10, Font.NORMAL);
             return font;
@@ -415,7 +431,7 @@ namespace Nop.Services.Common
                 doc.Add(new Paragraph(" "));
 
 
-                var orderItems = _orderService.GetAllOrderItems(order.Id, null, null, null, null, null, null);
+                var orderItems = order.OrderItems;
 
                 var productsTable = new PdfPTable(_catalogSettings.ShowProductSku ? 5 : 4);
                 productsTable.RunDirection = GetDirection(lang);

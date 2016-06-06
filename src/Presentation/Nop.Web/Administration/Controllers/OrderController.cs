@@ -826,33 +826,33 @@ namespace Nop.Admin.Controllers
             var model = new OrderListModel();
             model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
             model.AvailableOrderStatuses.Insert(0, new SelectListItem
-                { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0", Selected = true });
-            if (orderStatusIds != null && orderStatusIds.Count() > 0)
+            { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0", Selected = true });
+            if (orderStatusIds != null && orderStatusIds.Any())
             {
                 foreach (var item in model.AvailableOrderStatuses.Where(os => orderStatusIds.Contains(os.Value)))
                     item.Selected = true;
-                model.AvailableOrderStatuses.FirstOrDefault().Selected = false;
+                model.AvailableOrderStatuses.First().Selected = false;
             }
             //payment statuses
             model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
             model.AvailablePaymentStatuses.Insert(0, new SelectListItem
             { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0", Selected = true });
-            if (paymentStatusIds != null && paymentStatusIds.Count > 0)
+            if (paymentStatusIds != null && paymentStatusIds.Any())
             {
                 foreach (var item in model.AvailablePaymentStatuses.Where(ps => paymentStatusIds.Contains(ps.Value)))
                     item.Selected = true;
-                model.AvailablePaymentStatuses.FirstOrDefault().Selected = false;
+                model.AvailablePaymentStatuses.First().Selected = false;
             }
 
             //shipping statuses
             model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
             model.AvailableShippingStatuses.Insert(0, new SelectListItem
             { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0", Selected = true });
-            if (shippingStatusIds != null && shippingStatusIds.Count > 0)
+            if (shippingStatusIds != null && shippingStatusIds.Any())
             {
                 foreach (var item in model.AvailableShippingStatuses.Where(ss => shippingStatusIds.Contains(ss.Value)))
                     item.Selected = true;
-                model.AvailableShippingStatuses.FirstOrDefault().Selected = false;
+                model.AvailableShippingStatuses.First().Selected = false;
             }
 
             //stores
@@ -886,9 +886,9 @@ namespace Nop.Admin.Controllers
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             return View(model);
-		}
+        }
 
-		[HttpPost]
+        [HttpPost]
 		public ActionResult OrderList(DataSourceRequest command, OrderListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
@@ -944,8 +944,11 @@ namespace Nop.Admin.Controllers
                         StoreName = store != null ? store.Name : "Unknown",
                         OrderTotal = _priceFormatter.FormatPrice(x.OrderTotal, true, false),
                         OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                        OrderStatusId = x.OrderStatusId,
                         PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
+                        PaymentStatusId = x.PaymentStatusId,
                         ShippingStatus = x.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
+                        ShippingStatusId = x.ShippingStatusId,
                         CustomerEmail = x.BillingAddress.Email,
                         CustomerFullName = string.Format("{0} {1}", x.BillingAddress.FirstName, x.BillingAddress.LastName),
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
@@ -1172,7 +1175,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 byte[] bytes = _exportManager.ExportOrdersToXlsx(orders);
-                return File(bytes, MimeTypes.TextXls, "orders.xlsx");
+                return File(bytes, MimeTypes.TextXlsx, "orders.xlsx");
             }
             catch (Exception exc)
             {
@@ -1204,7 +1207,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 byte[] bytes = _exportManager.ExportOrdersToXlsx(orders);
-                return File(bytes, MimeTypes.TextXls, "orders.xlsx");
+                return File(bytes, MimeTypes.TextXlsx, "orders.xlsx");
             }
             catch (Exception exc)
             {
@@ -1874,7 +1877,7 @@ namespace Nop.Admin.Controllers
             PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            SaveSelectedTabName(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1964,7 +1967,7 @@ namespace Nop.Admin.Controllers
             PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            SaveSelectedTabName(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -2007,7 +2010,7 @@ namespace Nop.Admin.Controllers
                 ErrorNotification("This order item has an associated gift card record. Please delete it first.", false);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                SaveSelectedTabName(persistForTheNextRequest: false);
 
                 return View(model);
 
@@ -2034,7 +2037,7 @@ namespace Nop.Admin.Controllers
                 PrepareOrderDetailsModel(model, order);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                SaveSelectedTabName(persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -2075,7 +2078,7 @@ namespace Nop.Admin.Controllers
             PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            SaveSelectedTabName(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -2115,7 +2118,7 @@ namespace Nop.Admin.Controllers
             PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            SaveSelectedTabName(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -3938,6 +3941,7 @@ namespace Nop.Admin.Controllers
 
             return PartialView();
         }
+
         [HttpPost]
         public ActionResult OrderIncompleteReportList(DataSourceRequest command)
         {
@@ -3993,9 +3997,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-
-
-
+        
         public ActionResult CountryReport()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
@@ -4013,6 +4015,7 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public ActionResult CountryReportList(DataSourceRequest command, CountryReportModel model)
         {
@@ -4052,6 +4055,104 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
+        [ChildActionOnly]
+        public ActionResult OrderStatistics()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            var model = new OrderStatisticsModel();
+            var nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
+            var timeZone = _dateTimeHelper.CurrentTimeZone;
+            var vendorId = _workContext.CurrentVendor != null ? _workContext.CurrentVendor.Id : 0;
+
+            //week statistics
+            var searchWeekDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-7).Month, nowDt.AddDays(-7).Day);
+            if (!timeZone.IsInvalidTime(searchWeekDateUser))
+            {
+                DateTime searchWeekDateUtc = _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone);
+
+                do
+                {
+                    model.ByWeekItems.Add(new OrderStatisticsItemModel
+                    {
+                        Date = searchWeekDateUser.Date,
+                        Value = _orderService.SearchOrders(
+                            createdFromUtc: searchWeekDateUtc,
+                            createdToUtc: searchWeekDateUtc.AddDays(1),
+                            vendorId: vendorId,
+                            pageIndex: 0,
+                            pageSize: 1).TotalCount.ToString()
+                    });
+
+                    searchWeekDateUtc = searchWeekDateUtc.AddDays(1);
+                    searchWeekDateUser = searchWeekDateUser.AddDays(1);
+
+                } while (!(searchWeekDateUser.Month == nowDt.Month && searchWeekDateUser.Day > nowDt.Day));
+            }
+
+            //month statistics
+            var searchMonthDateUser = new DateTime(nowDt.Year, nowDt.AddMonths(-1).Month, nowDt.AddMonths(-1).Day);
+            if (!timeZone.IsInvalidTime(searchMonthDateUser))
+            {
+                DateTime searchMonthDateUtc = _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone);
+
+                do
+                {
+                    model.ByMonthItems.Add(new OrderStatisticsItemModel
+                    {
+                        Date = searchMonthDateUser.Date,
+                        Value = _orderService.SearchOrders(
+                            createdFromUtc: searchMonthDateUtc,
+                            createdToUtc: searchMonthDateUtc.AddDays(1),
+                            vendorId: vendorId,
+                            pageIndex: 0,
+                            pageSize: 1).TotalCount.ToString()
+                    });
+
+                    searchMonthDateUtc = searchMonthDateUtc.AddDays(1);
+                    searchMonthDateUser = searchMonthDateUser.AddDays(1);
+
+                } while (!(searchMonthDateUser.Month == nowDt.Month && searchMonthDateUser.Day > nowDt.Day));
+            }
+
+            //year statistics
+            var yearAgoRoundedDt = nowDt.AddYears(-1).AddMonths(1);
+            var searchYearDateUser = new DateTime(yearAgoRoundedDt.Year, yearAgoRoundedDt.Month, 1);
+            if (!timeZone.IsInvalidTime(searchYearDateUser))
+            {
+                DateTime searchYearDateUtc = _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone);
+
+                do
+                {
+                    model.ByYearItems.Add(new OrderStatisticsItemModel
+                    {
+                        Date = searchYearDateUser.Date,
+                        Value = _orderService.SearchOrders(
+                            createdFromUtc: searchYearDateUtc,
+                            createdToUtc: searchYearDateUtc.AddMonths(1),
+                            vendorId: vendorId,
+                            pageIndex: 0,
+                            pageSize: 1).TotalCount.ToString()
+                    });
+
+                    searchYearDateUtc = searchYearDateUtc.AddMonths(1);
+                    searchYearDateUser = searchYearDateUser.AddMonths(1);
+
+                } while (!(searchYearDateUser.Year == nowDt.Year && searchYearDateUser.Month > nowDt.Month));
+            }
+
+            return PartialView(model);
+        }
+
+        [ChildActionOnly]
+        public ActionResult LatestOrders()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            return PartialView();
+        }
 
         #endregion
 

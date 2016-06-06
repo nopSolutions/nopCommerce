@@ -195,7 +195,16 @@ namespace Nop.Admin.Controllers
                 SaveStoreMappings(newsItem, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = newsItem.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = newsItem.Id });
+                }
+                return RedirectToAction("List");
+
             }
 
             //If we got this far, something failed, redisplay form
@@ -254,7 +263,7 @@ namespace Nop.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    SaveSelectedTabName();
 
                     return RedirectToAction("Edit", new {id = newsItem.Id});
                 }
@@ -304,18 +313,11 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            IList<NewsComment> comments;
-            if (filterByNewsItemId.HasValue)
-            {
+            IList<NewsComment> comments = filterByNewsItemId.HasValue ?
                 //filter comments by news item
-                var newsItem = _newsService.GetNewsById(filterByNewsItemId.Value);
-                comments = newsItem.NewsComments.OrderBy(bc => bc.CreatedOnUtc).ToList();
-            }
-            else
-            {
+                _newsService.GetNewsById(filterByNewsItemId.Value).NewsComments.OrderBy(bc => bc.CreatedOnUtc).ToList() :
                 //load all news comments
-                comments = _newsService.GetAllComments(0);
-            }
+                _newsService.GetAllComments(0);
 
             var gridModel = new DataSourceResult
             {

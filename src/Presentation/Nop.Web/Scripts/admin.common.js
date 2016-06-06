@@ -55,10 +55,11 @@ function checkOverriddenStoreValue(obj, selector) {
     };
 }
 
-function tabstrip_on_tab_select(e) {
-    //we use this function to store selected tab index into HML input
-    //this way we can persist selected tab between HTTP requests
-    $("#selected-tab-index").val($(e.item).index());
+function bindBootstrapTabSelectEvent(tabsId) {
+    $('#' + tabsId + ' > ul li a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var tabName = $(e.target).attr("data-tab-name");
+        $("#selected-tab-name").val(tabName);
+    });
 }
 
 function display_kendoui_grid_error(e) {

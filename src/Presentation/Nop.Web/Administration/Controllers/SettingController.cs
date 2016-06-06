@@ -294,6 +294,7 @@ namespace Nop.Admin.Controllers
                 model.AllowCustomersToContactVendors_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.AllowCustomersToContactVendors, storeScope);
                 model.AllowCustomersToApplyForVendorAccount_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.AllowCustomersToApplyForVendorAccount, storeScope);
                 model.AllowSearchByVendor_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.AllowSearchByVendor, storeScope);
+                model.MaximumProductNumber_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.MaximumProductNumber, storeScope);
             }
 
             return View(model);
@@ -338,6 +339,11 @@ namespace Nop.Admin.Controllers
             else if (storeScope > 0)
                 _settingService.DeleteSetting(vendorSettings, x => x.AllowSearchByVendor, storeScope);
 
+            if (model.MaximumProductNumber_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(vendorSettings, x => x.MaximumProductNumber, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(vendorSettings, x => x.MaximumProductNumber, storeScope);
+
             //now clear settings cache
             _settingService.ClearCache();
 
@@ -370,6 +376,8 @@ namespace Nop.Admin.Controllers
                 model.AllowGuestsToCreateTopics_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.AllowGuestsToCreateTopics, storeScope);
                 model.AllowCustomersToEditPosts_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.AllowCustomersToEditPosts, storeScope);
                 model.AllowCustomersToDeletePosts_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.AllowCustomersToDeletePosts, storeScope);
+                model.AllowPostVoting_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.AllowPostVoting, storeScope);
+                model.MaxVotesPerDay_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.MaxVotesPerDay, storeScope);
                 model.AllowCustomersToManageSubscriptions_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.AllowCustomersToManageSubscriptions, storeScope);
                 model.TopicsPageSize_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.TopicsPageSize, storeScope);
                 model.PostsPageSize_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.PostsPageSize, storeScope);
@@ -438,7 +446,17 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(forumSettings, x => x.AllowCustomersToDeletePosts, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(forumSettings, x => x.AllowCustomersToDeletePosts, storeScope);
-            
+
+            if (model.AllowPostVoting_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.AllowPostVoting, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.AllowPostVoting, storeScope);
+
+            if (model.MaxVotesPerDay_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.MaxVotesPerDay, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.MaxVotesPerDay, storeScope);
+
             if (model.AllowCustomersToManageSubscriptions_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(forumSettings, x => x.AllowCustomersToManageSubscriptions, storeScope, false);
             else if (storeScope > 0)
@@ -508,7 +526,7 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(forumSettings, x => x.ActiveDiscussionsPageSize, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(forumSettings, x => x.ActiveDiscussionsPageSize, storeScope);
-            
+
             //now clear settings cache
             _settingService.ClearCache();
 
@@ -1379,7 +1397,7 @@ namespace Nop.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             //selected tab
-            SaveSelectedTabIndex();
+            SaveSelectedTabName();
 
             return RedirectToAction("Catalog");
         }
@@ -1737,7 +1755,7 @@ namespace Nop.Admin.Controllers
             }
 
             //selected tab
-            SaveSelectedTabIndex();
+            SaveSelectedTabName();
 
             return RedirectToAction("Order");
         }
@@ -1751,9 +1769,8 @@ namespace Nop.Admin.Controllers
 
             //we just redirect a user to the order settings page
 
-            //select second tab
-            const int customerFormFieldIndex = 1;
-            SaveSelectedTabIndex(customerFormFieldIndex);
+            //select "return request" tab
+            SaveSelectedTabName("tab-returnrequest");
             return RedirectToAction("Order", "Setting");
         }
         [HttpPost]
@@ -1842,7 +1859,7 @@ namespace Nop.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    SaveSelectedTabName();
 
                     return RedirectToAction("ReturnRequestReasonEdit", new { id = rrr.Id });
                 }
@@ -1877,9 +1894,8 @@ namespace Nop.Admin.Controllers
 
             //we just redirect a user to the order settings page
 
-            //select second tab
-            const int customerFormFieldIndex = 1;
-            SaveSelectedTabIndex(customerFormFieldIndex);
+            //select "return request" tab
+            SaveSelectedTabName("tab-returnrequest");
             return RedirectToAction("Order", "Setting");
         }
         [HttpPost]
@@ -1968,7 +1984,7 @@ namespace Nop.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    SaveSelectedTabName();
 
                     return RedirectToAction("ReturnRequestActionEdit", new { id = rra.Id });
                 }
@@ -2168,6 +2184,7 @@ namespace Nop.Admin.Controllers
                 model.MaximumImageSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.MaximumImageSize, storeScope);
                 model.MultipleThumbDirectories_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.MultipleThumbDirectories, storeScope);
                 model.DefaultImageQuality_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.DefaultImageQuality, storeScope);
+                model.ImportProductImagesUsingHash_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.ImportProductImagesUsingHash, storeScope);
             }
             model.PicturesStoredIntoDatabase = _pictureService.StoreInDb;
             return View(model);
@@ -2196,7 +2213,7 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(mediaSettings, x => x.ProductThumbPictureSize, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(mediaSettings, x => x.ProductThumbPictureSize, storeScope);
-            
+
             if (model.ProductDetailsPictureSize_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(mediaSettings, x => x.ProductDetailsPictureSize, storeScope, false);
             else if (storeScope > 0)
@@ -2251,6 +2268,11 @@ namespace Nop.Admin.Controllers
               _settingService.SaveSetting(mediaSettings, x => x.DefaultImageQuality, storeScope, false);
             else if (storeScope > 0)
               _settingService.DeleteSetting(mediaSettings, x => x.DefaultImageQuality, storeScope);
+
+            if (model.ImportProductImagesUsingHash_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(mediaSettings, x => x.ImportProductImagesUsingHash, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(mediaSettings, x => x.ImportProductImagesUsingHash, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();
@@ -2343,7 +2365,7 @@ namespace Nop.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             //selected tab
-            SaveSelectedTabIndex();
+            SaveSelectedTabName();
 
             return RedirectToAction("CustomerUser");
         }
@@ -2787,7 +2809,7 @@ namespace Nop.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             //selected tab
-            SaveSelectedTabIndex();
+            SaveSelectedTabName();
 
             return RedirectToAction("GeneralCommon");
         }
@@ -2871,7 +2893,7 @@ namespace Nop.Admin.Controllers
             }
 
             //selected tab
-            SaveSelectedTabIndex();
+            SaveSelectedTabName();
 
             return RedirectToAction("GeneralCommon");
         }
@@ -2914,7 +2936,7 @@ namespace Nop.Admin.Controllers
             }
 
             //selected tab
-            SaveSelectedTabIndex();
+            SaveSelectedTabName();
 
             return RedirectToAction("GeneralCommon");
         }

@@ -473,13 +473,14 @@ namespace Nop.Admin.Controllers
                 int w = 0, h = 0;
                 if (GetFileType(f.Extension) == "image"){
                     try{
-                        FileStream fs = new FileStream(f.FullName, FileMode.Open);
-                        Image img = Image.FromStream(fs);
-                        w = img.Width;
-                        h = img.Height;
-                        fs.Close();
-                        fs.Dispose();
-                        img.Dispose();
+                        using (FileStream fs = new FileStream(f.FullName, FileMode.Open))
+                        {
+                            using (Image img = Image.FromStream(fs))
+                            {
+                                w = img.Width;
+                                h = img.Height;
+                            }
+                        }                        
                     }
                     catch(Exception ex){throw ex;}
                 }

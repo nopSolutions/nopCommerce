@@ -370,7 +370,15 @@ namespace Nop.Admin.Controllers
                 _customerActivityService.InsertActivity("AddNewManufacturer", _localizationService.GetResource("ActivityLog.AddNewManufacturer"), manufacturer.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = manufacturer.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = manufacturer.Id });
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
@@ -481,7 +489,7 @@ namespace Nop.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    SaveSelectedTabName();
 
                     return RedirectToAction("Edit",  new {id = manufacturer.Id});
                 }
@@ -553,7 +561,7 @@ namespace Nop.Admin.Controllers
             {
                 var bytes = _exportManager.ExportManufacturersToXlsx(_manufacturerService.GetAllManufacturers(showHidden: true).Where(p=>!p.Deleted));
                  
-                return File(bytes, MimeTypes.TextXls, "manufacturers.xlsx");
+                return File(bytes, MimeTypes.TextXlsx, "manufacturers.xlsx");
             }
             catch (Exception exc)
             {
@@ -584,7 +592,7 @@ namespace Nop.Admin.Controllers
                     ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
                     return RedirectToAction("List");
                 }
-                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturer.Imported"));
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Imported"));
                 return RedirectToAction("List");
             }
             catch (Exception exc)

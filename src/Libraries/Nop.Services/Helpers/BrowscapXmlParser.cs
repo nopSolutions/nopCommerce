@@ -28,21 +28,23 @@ namespace Nop.Services.Helpers
 
         private void Initialize(string filePath)
         {
-            var sr = new StreamReader(filePath);
-            var text = sr.ReadToEnd().Replace("&", "&amp;");
+            using (var sr = new StreamReader(filePath))
+            {
+                var text = sr.ReadToEnd().Replace("&", "&amp;");
 
-            var browsercapItems = XDocument.Parse(text).Root.Return(x => x.Element("browsercapitems"), null);
+                var browsercapItems = XDocument.Parse(text).Root.Return(x => x.Element("browsercapitems"), null);
 
-            if (browsercapItems == null)
-                throw new Exception("Incorrect file format");
+                if (browsercapItems == null)
+                    throw new Exception("Incorrect file format");
 
-            _crawlerUserAgentsRegexp.AddRange(browsercapItems.Elements("browscapitem")
-                //only crawlers
-                .Where(IsBrowscapItemIsCrawler)
-                //get only user agent names
-                .Select(e => e.Attribute("name").Return(a => a.Value.Replace("&amp;", "&"), ""))
-                .Where(s => !string.IsNullOrEmpty(s))
-                .Select(ToRegexp));
+                _crawlerUserAgentsRegexp.AddRange(browsercapItems.Elements("browscapitem")
+                    //only crawlers
+                    .Where(IsBrowscapItemIsCrawler)
+                    //get only user agent names
+                    .Select(e => e.Attribute("name").Return(a => a.Value.Replace("&amp;", "&"), ""))
+                    .Where(s => !string.IsNullOrEmpty(s))
+                    .Select(ToRegexp));
+            }
         }
 
         private static bool IsBrowscapItemIsCrawler(XElement browscapItem)

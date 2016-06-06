@@ -2753,6 +2753,16 @@ label, label + * {
 	font-size: 16px;
 	color: #4cb17c;
 }
+.customer-info-page .vat-status {
+    margin: 0 5px;
+    font-size: 14px;
+}
+.registration-page .vat-note,
+.customer-info-page .vat-note {
+    display: block;
+    font-size: 14px;
+    margin-top: 5px;
+}
 
 .login-page .customer-blocks {
 	margin: 0 0 30px;
@@ -3125,7 +3135,7 @@ label, label + * {
 }
 .checkout-attributes input[type="text"],
 .checkout-attributes select {
-	min-width: 200px;
+	min-width: 170px;
 }
 .checkout-attributes ul {
 	font-size: 0;
@@ -4488,6 +4498,13 @@ label, label + * {
 	padding: 0 10px 20px;
 	line-height: 22px;
 	color: #444;
+    margin-bottom: 0;
+}
+
+.topic-post .post-vote{
+    text-align: center;
+    display: table;
+    margin: 0 auto 20px;
 }
 
 .topic-post .user-posted-image,
@@ -4510,6 +4527,28 @@ label, label + * {
     font-style: italic;
 }
 
+.topic-post .post-vote span.vote {
+	cursor: pointer;
+    display: block;
+    width: 40px;
+    height: 24px;
+}
+.topic-post .post-vote span.up{
+    background: url('../images/vote-up.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.vote.up.selected{
+    background: url('../images/vote-up-selected.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.down{
+    background: url('../images/vote-down.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.vote.down.selected{
+    background: url('../images/vote-down-selected.png') no-repeat 50% 50%;
+}
+.topic-post .vote-count-post {
+    display: block;
+    font-size: 160%;
+}
 /* forum edit & send message */
 
 .forum-edit-page .page-title,
@@ -5180,6 +5219,12 @@ pre {
 	margin: 1px;
 }
 
+.topic-post .post-body {
+    float: right;
+    max-width: 90.5%;
+    text-align: right;
+}
+
 }
 
 
@@ -5731,8 +5776,13 @@ pre {
 	border-right: 1px solid #ddd;
 	text-align: center;
 }
+
 .topic-post .post-body {
-	padding: 20px;
+    padding: 20px;
+}
+
+.topic-post .post-vote {
+    padding: 20px 0;
 }
 
 .ui-tabs-nav {

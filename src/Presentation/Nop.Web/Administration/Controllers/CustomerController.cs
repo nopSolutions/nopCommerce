@@ -997,7 +997,15 @@ namespace Nop.Admin.Controllers
                 _customerActivityService.InsertActivity("AddNewCustomer", _localizationService.GetResource("ActivityLog.AddNewCustomer"), customer.Id);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = customer.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new {id = customer.Id});
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
@@ -1226,7 +1234,7 @@ namespace Nop.Admin.Controllers
                     if (continueEditing)
                     {
                         //selected tab
-                        SaveSelectedTabIndex();
+                        SaveSelectedTabName();
 
                         return RedirectToAction("Edit",  new {id = customer.Id});
                     }
@@ -1383,6 +1391,11 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Edit", customer.Id);
             }
 
+            //activity log
+            _customerActivityService.InsertActivity("Impersonation.Started", 
+                _localizationService.GetResource("ActivityLog.Impersonation.Started.StoreOwner"), customer.Email, customer.Id);
+            _customerActivityService.InsertActivity(customer, "Impersonation.Started",
+                _localizationService.GetResource("ActivityLog.Impersonation.Started.Customer"), _workContext.CurrentCustomer.Email, _workContext.CurrentCustomer.Id);
 
             _genericAttributeService.SaveAttribute<int?>(_workContext.CurrentCustomer,
                 SystemCustomerAttributeNames.ImpersonatedCustomerId, customer.Id);
@@ -1792,6 +1805,7 @@ namespace Nop.Admin.Controllers
                         {
                             Id = order.Id, 
                             OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                            OrderStatusId = order.OrderStatusId,
                             PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
                             ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
                             OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false),
@@ -1929,6 +1943,7 @@ namespace Nop.Admin.Controllers
 
             return PartialView();
         }
+
         [HttpPost]
         public ActionResult ReportRegisteredCustomersList(DataSourceRequest command)
         {
@@ -1944,7 +1959,98 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-        
+
+        [ChildActionOnly]
+        public ActionResult CustomerStatistics()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return Content("");
+
+            var model = new CustomerStatisticsModel();
+
+            var nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
+            var timeZone = _dateTimeHelper.CurrentTimeZone;
+            var searchCustomerRoleIds = new [] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id };
+
+            //week statistics
+            var searchWeekDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-7).Month, nowDt.AddDays(-7).Day);
+            if (!timeZone.IsInvalidTime(searchWeekDateUser))
+            {
+                DateTime searchWeekDateUtc = _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone);
+
+                do
+                {
+                    model.ByWeekItems.Add(new CustomerStatisticsItemModel
+                    {
+                        Date = searchWeekDateUser.Date,
+                        Value = _customerService.GetAllCustomers(
+                            createdFromUtc: searchWeekDateUtc,
+                            createdToUtc: searchWeekDateUtc.AddDays(1),
+                            customerRoleIds: searchCustomerRoleIds,
+                            pageIndex: 0,
+                            pageSize: 1).TotalCount.ToString()
+                    });
+
+                    searchWeekDateUtc = searchWeekDateUtc.AddDays(1);
+                    searchWeekDateUser = searchWeekDateUser.AddDays(1);
+
+                } while (!(searchWeekDateUser.Month == nowDt.Month && searchWeekDateUser.Day > nowDt.Day));
+            }
+
+            //month statistics
+            var searchMonthDateUser = new DateTime(nowDt.Year, nowDt.AddMonths(-1).Month, nowDt.AddMonths(-1).Day);
+            if (!timeZone.IsInvalidTime(searchMonthDateUser))
+            {
+                DateTime searchMonthDateUtc = _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone);
+
+                do
+                {
+                    model.ByMonthItems.Add(new CustomerStatisticsItemModel
+                    {
+                        Date = searchMonthDateUser.Date,
+                        Value = _customerService.GetAllCustomers(
+                            createdFromUtc: searchMonthDateUtc,
+                            createdToUtc: searchMonthDateUtc.AddDays(1),
+                            customerRoleIds: searchCustomerRoleIds,
+                            pageIndex: 0,
+                            pageSize: 1).TotalCount.ToString()
+                    });
+
+                    searchMonthDateUtc = searchMonthDateUtc.AddDays(1);
+                    searchMonthDateUser = searchMonthDateUser.AddDays(1);
+
+                } while (!(searchMonthDateUser.Month == nowDt.Month && searchMonthDateUser.Day > nowDt.Day));
+            }
+
+            //year statistics
+            var yearAgoRoundedDt = nowDt.AddYears(-1).AddMonths(1);
+            var searchYearDateUser = new DateTime(yearAgoRoundedDt.Year, yearAgoRoundedDt.Month, 1);
+            if (!timeZone.IsInvalidTime(searchYearDateUser))
+            {
+                DateTime searchYearDateUtc = _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone);
+
+                do
+                {
+                    model.ByYearItems.Add(new CustomerStatisticsItemModel
+                    {
+                        Date = searchYearDateUser.Date,
+                        Value = _customerService.GetAllCustomers(
+                            createdFromUtc: searchYearDateUtc,
+                            createdToUtc: searchYearDateUtc.AddMonths(1),
+                            customerRoleIds: searchCustomerRoleIds,
+                            pageIndex: 0,
+                            pageSize: 1).TotalCount.ToString()
+                    });
+
+                    searchYearDateUtc = searchYearDateUtc.AddMonths(1);
+                    searchYearDateUser = searchYearDateUser.AddMonths(1);
+
+                } while (!(searchYearDateUser.Year == nowDt.Year && searchYearDateUser.Month > nowDt.Month));
+            }
+
+            return PartialView(model);
+        }
+
         #endregion
 
         #region Current shopping cart/ wishlist
@@ -2004,7 +2110,8 @@ namespace Nop.Admin.Controllers
                         Id = x.Id,
                         ActivityLogTypeName = x.ActivityLogType.Name,
                         Comment = x.Comment,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
+                        IpAddress = x.IpAddress
                     };
                     return m;
 
@@ -2084,7 +2191,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 byte[] bytes = _exportManager.ExportCustomersToXlsx(customers);
-                return File(bytes, MimeTypes.TextXls, "customers.xlsx");
+                return File(bytes, MimeTypes.TextXlsx, "customers.xlsx");
             }
             catch (Exception exc)
             {
@@ -2112,7 +2219,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 byte[] bytes = _exportManager.ExportCustomersToXlsx(customers);
-                return File(bytes, MimeTypes.TextXls, "customers.xlsx");
+                return File(bytes, MimeTypes.TextXlsx, "customers.xlsx");
             }
             catch (Exception exc)
             {

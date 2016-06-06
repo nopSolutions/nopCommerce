@@ -25,13 +25,15 @@ namespace Nop.Core.Plugins
             request.Timeout = 5000;
             using (var response = request.GetResponse())
             {
-                var dataStream = response.GetResponseStream();
-                var reader = new StreamReader(dataStream);
-                string responseFromServer = reader.ReadToEnd();
+                using (var dataStream = response.GetResponseStream())
+                using (var reader = new StreamReader(dataStream))
+                {
+                    string responseFromServer = reader.ReadToEnd();
 
-                var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(responseFromServer);
-                return xmlDoc;
+                    var xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(responseFromServer);
+                    return xmlDoc;
+                }
             }
         }
 

@@ -7,7 +7,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Customers
 {
-    public class CustomerRoleValidator : BaseNopValidator<CustomerRoleModel>
+    public partial class CustomerRoleValidator : BaseNopValidator<CustomerRoleModel>
     {
         public CustomerRoleValidator(ILocalizationService localizationService, IDbContext dbContext)
         {

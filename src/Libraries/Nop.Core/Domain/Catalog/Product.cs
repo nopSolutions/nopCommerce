@@ -322,6 +322,10 @@ namespace Nop.Core.Domain.Catalog
         /// This option is used only when we have "manage inventory" set to "track inventory by product attributes"
         /// </summary>
         public bool AllowAddingOnlyExistingAttributeCombinations { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether this product is returnable (a customer is allowed to submit return request with this product)
+        /// </summary>
+        public bool NotReturnable { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to disable buy (Add to cart) button

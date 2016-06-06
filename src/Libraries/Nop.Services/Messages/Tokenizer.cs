@@ -54,6 +54,7 @@ namespace Nop.Services.Messages
 
             int count, position0, position1;
             count = position0 = position1 = 0;
+            replacement = replacement ?? string.Empty;
             int inc = (original.Length/pattern.Length)*(replacement.Length - pattern.Length);
             var chars = new char[original.Length + Math.Max(0, inc)];
             while ((position1 = original.IndexOf(pattern, position0, _stringComparison)) != -1)

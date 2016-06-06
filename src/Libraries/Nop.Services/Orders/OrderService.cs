@@ -326,46 +326,20 @@ namespace Nop.Services.Orders
         }
         
         /// <summary>
-        /// Gets all order items
+        /// Gets all downloadable order items
         /// </summary>
-        /// <param name="orderId">Order identifier; null to load all records</param>
         /// <param name="customerId">Customer identifier; null to load all records</param>
-        /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
-        /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
-        /// <param name="os">Order status; null to load all records</param>
-        /// <param name="ps">Order payment status; null to load all records</param>
-        /// <param name="ss">Order shipment status; null to load all records</param>
-        /// <param name="loadDownloableProductsOnly">Value indicating whether to load downloadable products only</param>
-        /// <returns>Orders</returns>
-        public virtual IList<OrderItem> GetAllOrderItems(int? orderId,
-            int? customerId, DateTime? createdFromUtc, DateTime? createdToUtc, 
-            OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
-            bool loadDownloableProductsOnly)
+        /// <returns>Order items</returns>
+        public virtual IList<OrderItem> GetDownloadableOrderItems(int customerId)
         {
-            int? orderStatusId = null;
-            if (os.HasValue)
-                orderStatusId = (int)os.Value;
-
-            int? paymentStatusId = null;
-            if (ps.HasValue)
-                paymentStatusId = (int)ps.Value;
-
-            int? shippingStatusId = null;
-            if (ss.HasValue)
-                shippingStatusId = (int)ss.Value;
-
+            if (customerId == 0)
+                throw new ArgumentOutOfRangeException("customerId");
 
             var query = from orderItem in _orderItemRepository.Table
                         join o in _orderRepository.Table on orderItem.OrderId equals o.Id
                         join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                        where (!orderId.HasValue || orderId.Value == 0 || orderId == o.Id) &&
-                        (!customerId.HasValue || customerId.Value == 0 || customerId == o.CustomerId) &&
-                        (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
-                        (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
-                        (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
-                        (!paymentStatusId.HasValue || paymentStatusId.Value == o.PaymentStatusId) &&
-                        (!shippingStatusId.HasValue || shippingStatusId.Value == o.ShippingStatusId) &&
-                        (!loadDownloableProductsOnly || p.IsDownload) &&
+                        where customerId == o.CustomerId &&
+                        p.IsDownload &&
                         !o.Deleted
                         orderby o.CreatedOnUtc descending, orderItem.Id
                         select orderItem;

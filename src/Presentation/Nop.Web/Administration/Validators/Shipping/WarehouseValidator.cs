@@ -7,7 +7,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Shipping
 {
-    public class WarehouseValidator : BaseNopValidator<WarehouseModel>
+    public partial class WarehouseValidator : BaseNopValidator<WarehouseModel>
     {
         public WarehouseValidator(ILocalizationService localizationService, IDbContext dbContext)
         {

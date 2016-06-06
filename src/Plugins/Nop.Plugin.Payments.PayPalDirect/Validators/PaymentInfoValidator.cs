@@ -5,7 +5,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Plugin.Payments.PayPalDirect.Validators
 {
-    public class PaymentInfoValidator : BaseNopValidator<PaymentInfoModel>
+    public partial class PaymentInfoValidator : BaseNopValidator<PaymentInfoModel>
     {
         public PaymentInfoValidator(ILocalizationService localizationService)
         {
