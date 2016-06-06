@@ -54,7 +54,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="form-group">
+                                <div class="form-group" @(Model.AvailableStores.Count(x => !x.Value.ToString().Equals("0")) < 2 ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-sm-5">
                                         @Html.NopLabelFor(model => model.SearchStoreId)
                                     </div>
