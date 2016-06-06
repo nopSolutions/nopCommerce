@@ -184,13 +184,11 @@
                                 <li class="dropdown maintenance-menu">
                                     <a href="#" data-toggle="dropdown"><i class="fa fa-gears"></i></a>
                                     <div class="dropdown-menu bg-light-blue">
-                                        <div class="col-xs-6">
-                                            <a class="btn btn-default btn-flat pull-left" href="@webHelper.ModifyQueryString(Url.Action("ClearCache", "Common", new RouteValueDictionary {{"area", "Admin"}}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">
+                                        <div class="col-xs-12">
+                                            <a class="btn btn-default btn-flat margin-r-10" href="@webHelper.ModifyQueryString(Url.Action("ClearCache", "Common", new RouteValueDictionary {{"area", "Admin"}}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">
                                                 <span>@T("Admin.Header.ClearCache")</span>
                                             </a>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <a class="btn btn-default btn-flat pull-right" id="restart-application" href="@webHelper.ModifyQueryString(Url.Action("RestartApplication", "Common", new RouteValueDictionary {{"area", "Admin"}}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">
+                                            <a class="btn btn-default btn-flat" id="restart-application" href="@webHelper.ModifyQueryString(Url.Action("RestartApplication", "Common", new RouteValueDictionary {{"area", "Admin"}}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">
                                                 <span>@T("Admin.Header.RestartApplication")</span>
                                             </a>
                                         </div>
