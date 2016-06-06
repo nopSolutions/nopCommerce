@@ -26,7 +26,6 @@
     <div class="row">
         <div class="col-md-12">
             @Html.Widget("admin_dashboard_top")
-
             @if (!Model.IsLoggedInAsVendor)
             {
                 <div class="row">
@@ -35,14 +34,14 @@
                     </div>
                 </div>
             }
-
+            @Html.Widget("admin_dashboard_news_after")
             @if (!Model.IsLoggedInAsVendor && canManageOrders && canManageCustomers && canManageProducts && canManageReturnRequests)
             {
                 <div class="row">
                     @Html.Action("CommonStatistics", "Home")
                 </div>
             }
-
+            @Html.Widget("admin_dashboard_commonstatistics_after")
             @if (!Model.IsLoggedInAsVendor && (canManageOrders || canManageCustomers))
             {
                 <div class="row margin-bottom">
@@ -60,7 +59,7 @@
                     }
                 </div>
             }
-
+            @Html.Widget("admin_dashboard_customerordercharts_after")
             @if (!Model.IsLoggedInAsVendor && canManageOrders)
             {
                 <div class="row">
@@ -72,7 +71,7 @@
                     </div>
                 </div>
             }
-
+            @Html.Widget("admin_dashboard_orderreports_after")
             @if (!Model.IsLoggedInAsVendor && (canManageOrders || canManageProducts))
             {
                 <div class="row">
@@ -89,9 +88,8 @@
                         }
                     </div>
                 </div>
-
             }
-
+            @Html.Widget("admin_dashboard_latestorders_searchterms_after")
             @if (canManageOrders)
             {
                 <div class="row">
@@ -103,9 +101,7 @@
                     </div>
                 </div>
             }
-
+            @Html.Widget("admin_dashboard_bottom")
         </div>
-
-        @Html.Widget("admin_dashboard_bottom")
     </div>
 </div>
