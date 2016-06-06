@@ -1,7 +1,11 @@
-﻿@model NopCommerceNewsModel
+﻿@using Nop.Core
+@using Nop.Services.Common
+@model NopCommerceNewsModel
 
 @{
     const string panelId = "nopcommerce-news-box";
+    const string hidePanelAttributeName = "HideNopCommerceNewsPanel";
+    var hidePanel = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
 }
 
 <div class="box box-info" id="@panelId">
@@ -43,18 +47,18 @@
                     </div>
                 </div>
             }
-
         </div>
 
         <script>
             $(document).ready(function () {
-                if ('@Model.HidePanel'.toLowerCase() === 'true') {
-                    $('#@panelId button[data-widget="collapse"]').click();
+                @if (hidePanel)
+                {
+                    <text>$('#@panelId button[data-widget="collapse"]').click();</text>
                 }
 
                 $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
                     var collapsed = !$('#@panelId').hasClass('collapsed-box');
-                    SaveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@Model.HidePanelSettingName', collapsed);
+                    saveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
                 });
             });
         </script>

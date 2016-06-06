@@ -12,7 +12,6 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
-using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Orders;
@@ -129,13 +128,6 @@ namespace Nop.Admin.Controllers
                         }
                     }
                 }
-
-                const string showPanelSettingName = "HideNopCommerceNewsPanel";
-                var customer = _workContext.CurrentCustomer;
-
-                model.HidePanelSettingName = showPanelSettingName;
-                model.HidePanel = customer.GetAttribute<bool>(showPanelSettingName);
-
                 return PartialView(model);
             }
             catch (Exception)

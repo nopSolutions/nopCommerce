@@ -1,7 +1,9 @@
-﻿@model OrderAverageReportModel
-
+﻿@using Nop.Core
+@using Nop.Services.Common
 @{
     const string panelId = "order-average-report-box";
+    const string hidePanelAttributeName = "HideOrderAverageReportPanel";
+    var hidePanel = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
 }
 
 <div class="box box-info" id="@panelId">
@@ -19,13 +21,14 @@
 
         <script>
             $(document).ready(function () {
-                if ('@Model.HidePanel'.toLowerCase() === 'true') {
-                    $('#@panelId button[data-widget="collapse"]').click();
+                @if (hidePanel)
+                {
+                    <text>$('#@panelId button[data-widget="collapse"]').click();</text>
                 }
 
                 $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
                     var collapsed = !$('#@panelId').hasClass('collapsed-box');
-                    SaveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@Model.HidePanelSettingName', collapsed);
+                    saveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
                 });
 
                 $("#average-order-report-grid").kendoGrid({

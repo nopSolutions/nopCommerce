@@ -1,7 +1,9 @@
-﻿@model BestsellersBriefReportByAmountModel
-
+﻿@using Nop.Core
+@using Nop.Services.Common
 @{
-    const string panelId = "bstsellers-report-amount-box";
+    const string panelId = "bestsellers-report-amount-box";
+    const string hidePanelAttributeName = "HideBestsellersBriefReportByAmountPanel";
+    var hidePanel = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
     var gridPageSize = 5;
 }
 
@@ -31,13 +33,14 @@
             }
 
             $(document).ready(function () {
-                if ('@Model.HidePanel'.toLowerCase() === 'true') {
-                    $('#@panelId button[data-widget="collapse"]').click();
+                @if (hidePanel)
+                {
+                    <text>$('#@panelId button[data-widget="collapse"]').click();</text>
                 }
 
                 $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
                     var collapsed = !$('#@panelId').hasClass('collapsed-box');
-                    SaveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@Model.HidePanelSettingName', collapsed);
+                    saveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
                 });
 
                 $("#bestsellers-byamount-grid").kendoGrid({

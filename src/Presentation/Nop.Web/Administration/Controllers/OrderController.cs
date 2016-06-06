@@ -3709,15 +3709,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
-            var model = new BestsellersBriefReportByQuantityModel();
-
-            const string showPanelSettingName = "HideBestsellersBriefReportByQuantityPanel";
-            var customer = _workContext.CurrentCustomer;
-
-            model.HidePanelSettingName = showPanelSettingName;
-            model.HidePanel = customer.GetAttribute<bool>(showPanelSettingName);
-
-            return PartialView(model);
+            return PartialView();
         }
         [HttpPost]
         public ActionResult BestsellersBriefReportByQuantityList(DataSourceRequest command)
@@ -3734,16 +3726,8 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
-
-            var model = new BestsellersBriefReportByAmountModel();
-
-            const string showPanelSettingName = "HideBestsellersBriefReportByAmountPanel";
-            var customer = _workContext.CurrentCustomer;
-
-            model.HidePanelSettingName = showPanelSettingName;
-            model.HidePanel = customer.GetAttribute<bool>(showPanelSettingName);
-
-            return PartialView(model);
+            
+            return PartialView();
         }
         [HttpPost]
         public ActionResult BestsellersBriefReportByAmountList(DataSourceRequest command)
@@ -3912,15 +3896,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
-            var model = new OrderAverageReportModel();
-
-            const string showPanelSettingName = "HideOrderAverageReportPanel";
-            var customer = _workContext.CurrentCustomer;
-
-            model.HidePanelSettingName = showPanelSettingName;
-            model.HidePanel = customer.GetAttribute<bool>(showPanelSettingName);
-
-            return PartialView(model);
+            return PartialView();
         }
         [HttpPost]
         public ActionResult OrderAverageReportList(DataSourceRequest command)
@@ -3962,15 +3938,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
-            var model = new OrderIncompleteReportModel();
-
-            const string showPanelSettingName = "HideOrderIncompleteReportPanel";
-            var customer = _workContext.CurrentCustomer;
-
-            model.HidePanelSettingName = showPanelSettingName;
-            model.HidePanel = customer.GetAttribute<bool>(showPanelSettingName);
-
-            return PartialView(model);
+            return PartialView();
         }
 
         [HttpPost]
@@ -4183,15 +4151,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
-            var model = new LatestOrdersModel();
-
-            const string showPanelSettingName = "HideLatestOrdersPanel";
-            var customer = _workContext.CurrentCustomer;
-
-            model.HidePanelSettingName = showPanelSettingName;
-            model.HidePanel = customer.GetAttribute<bool>(showPanelSettingName);
-
-            return PartialView(model);
+            return PartialView();
         }
 
         #endregion
