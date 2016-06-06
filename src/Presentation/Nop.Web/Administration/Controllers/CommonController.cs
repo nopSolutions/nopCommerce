@@ -746,7 +746,15 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return Content("");
 
-            return PartialView();
+            var model = new PopularSearchTermsReportModel();
+
+            const string showPanelSettingName = "HidePopularSearchTermsReport";
+            var customer = _workContext.CurrentCustomer;
+
+            model.HidePanelSettingName = showPanelSettingName;
+            model.HidePanel = customer.GetAttribute<bool>(showPanelSettingName);
+
+            return PartialView(model);
         }
         [HttpPost]
         public ActionResult PopularSearchTermsReport(DataSourceRequest command)

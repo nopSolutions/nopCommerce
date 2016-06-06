@@ -14,6 +14,8 @@ namespace Nop.Admin.Models.Home
         public List<NewsDetailsModel> Items { get; set; }
         public bool HasNewItems { get; set; }
         public bool HideAdvertisements { get; set; }
+        public bool HidePanel { get; set; }
+        public string HidePanelSettingName { get; set; }
 
         public class NewsDetailsModel : BaseNopModel
         {

@@ -1,8 +1,11 @@
-﻿@{
+﻿@model BestsellersBriefReportByAmountModel
+
+@{
+    const string panelId = "bstsellers-report-amount-box";
     var gridPageSize = 5;
 }
 
-<div class="box box-info">
+<div class="box box-info" id="@panelId">
     <div class="box-header with-border">
         <h3 class="box-title">
             <i class="fa fa-star-o"></i>
@@ -28,6 +31,15 @@
             }
 
             $(document).ready(function () {
+                if ('@Model.HidePanel'.toLowerCase() === 'true') {
+                    $('#@panelId button[data-widget="collapse"]').click();
+                }
+
+                $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
+                    var collapsed = !$('#@panelId').hasClass('collapsed-box');
+                    SaveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@Model.HidePanelSettingName', collapsed);
+                });
+
                 $("#bestsellers-byamount-grid").kendoGrid({
                     dataSource: {
                         type: "json",

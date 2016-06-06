@@ -156,6 +156,7 @@
     <Compile Include="Controllers\BaseAdminController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\AddressAttributeController.cs" />
+    <Compile Include="Controllers\PreferencesController.cs" />
     <Compile Include="Controllers\CustomerAttributeController.cs" />
     <Compile Include="Controllers\CheckoutAttributeController.cs" />
     <Compile Include="Controllers\AffiliateController.cs" />
@@ -228,6 +229,7 @@
     <Compile Include="Models\Common\AddressAttributeModel.cs" />
     <Compile Include="Models\Common\AddressAttributeValueModel.cs" />
     <Compile Include="Models\Common\LanguageSelectorModel.cs" />
+    <Compile Include="Models\Common\PopularSearchTermsReportModel.cs" />
     <Compile Include="Models\Common\SearchTermReportLineModel.cs" />
     <Compile Include="Models\Common\UrlRecordListModel.cs" />
     <Compile Include="Models\Common\UrlRecordModel.cs" />
@@ -243,8 +245,13 @@
     <Compile Include="Models\Home\DashboardModel.cs" />
     <Compile Include="Models\Localization\LanguageResourcesListModel.cs" />
     <Compile Include="Models\Messages\TestMessageTemplateModel.cs" />
+    <Compile Include="Models\Orders\BestsellersBriefReportByAmountModel.cs" />
     <Compile Include="Models\Orders\CountryReportLineModel.cs" />
     <Compile Include="Models\Orders\CountryReportModel.cs" />
+    <Compile Include="Models\Orders\LatestOrdersModel.cs" />
+    <Compile Include="Models\Orders\BestsellersBriefReportByQuantityModel.cs" />
+    <Compile Include="Models\Orders\OrderIncompleteReportModel.cs" />
+    <Compile Include="Models\Orders\OrderAverageReportModel.cs" />
     <Compile Include="Models\Orders\OrderStatisticsModel.cs" />
     <Compile Include="Models\Payments\PaymentMethodRestrictionModel.cs" />
     <Compile Include="Models\Plugins\OfficialFeedListModel.cs" />

@@ -1,8 +1,11 @@
-﻿@{
+﻿@model LatestOrdersModel
+
+@{
+    const string panelId = "latest-orders-box";
     var gridPageSize = 5;
 }
 
-<div class="box box-info">
+<div class="box box-info" id="@panelId">
     <div class="box-header with-border">
         <h3 class="box-title">
             <i class="fa fa-cart-plus"></i>
@@ -15,9 +18,18 @@
     </div>
     <div class="box-body">
         <div id="orders-grid"></div>
-        
+
         <script>
             $(document).ready(function () {
+                if ('@Model.HidePanel'.toLowerCase() === 'true') {
+                    $('#@panelId button[data-widget="collapse"]').click();
+                }
+
+                $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
+                    var collapsed = !$('#@panelId').hasClass('collapsed-box');
+                    SaveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@Model.HidePanelSettingName', collapsed);
+                });
+
                 $("#orders-grid").kendoGrid({
                     dataSource: {
                         type: "json",

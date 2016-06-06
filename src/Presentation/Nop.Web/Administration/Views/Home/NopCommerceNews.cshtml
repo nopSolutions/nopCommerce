@@ -1,6 +1,10 @@
 ﻿@model NopCommerceNewsModel
 
-<div class="box box-info">
+@{
+    const string panelId = "nopcommerce-news-box";
+}
+
+<div class="box box-info" id="@panelId">
     <div class="box-header with-border clearfix">
         <div class="box-title">
             <i class="fa fa-newspaper-o"></i>
@@ -41,32 +45,45 @@
             }
 
         </div>
-    </div>
-    @*<div class="box-footer">
-        <button id="nopcommerceNewsHideAdv" class="btn bg-aqua">
-            @(Model.HideAdvertisements ? T("Admin.NopCommerceNews.ShowAdv") : T("Admin.NopCommerceNews.HideAdv"))
-        </button>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('#nopcommerceNewsHideAdv').click(function () {
-                    var postData = {
-                    };
-                    addAntiForgeryToken(postData);
 
-                    $.ajax({
-                        cache: false,
-                        type: "POST",
-                        url: "@(Url.Action("NopCommerceNewsHideAdv", "Home"))",
-                        data: postData,
-                        success: function (data) {
-                            location.reload();
-                        },
-                        error: function (xhr, ajaxOptions, thrownError) {
-                            alert('Failed to change setting.');
-                        }
-                    });
+        <script>
+            $(document).ready(function () {
+                if ('@Model.HidePanel'.toLowerCase() === 'true') {
+                    $('#@panelId button[data-widget="collapse"]').click();
+                }
+
+                $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
+                    var collapsed = !$('#@panelId').hasClass('collapsed-box');
+                    SaveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@Model.HidePanelSettingName', collapsed);
                 });
             });
         </script>
-    </div>*@
+    </div>
+    @*<div class="box-footer">
+            <button id="nopcommerceNewsHideAdv" class="btn bg-aqua">
+                @(Model.HideAdvertisements ? T("Admin.NopCommerceNews.ShowAdv") : T("Admin.NopCommerceNews.HideAdv"))
+            </button>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#nopcommerceNewsHideAdv').click(function () {
+                        var postData = {
+                        };
+                        addAntiForgeryToken(postData);
+
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: "@(Url.Action("NopCommerceNewsHideAdv", "Home"))",
+                            data: postData,
+                            success: function (data) {
+                                location.reload();
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                alert('Failed to change setting.');
+                            }
+                        });
+                    });
+                });
+            </script>
+        </div>*@
 </div>

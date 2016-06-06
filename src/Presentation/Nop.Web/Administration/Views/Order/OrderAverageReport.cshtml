@@ -1,4 +1,10 @@
-﻿<div class="box box-info">
+﻿@model OrderAverageReportModel
+
+@{
+    const string panelId = "order-average-report-box";
+}
+
+<div class="box box-info" id="@panelId">
     <div class="box-header with-border">
         <h3 class="box-title">
             <i class="fa fa-money"></i>
@@ -13,6 +19,15 @@
 
         <script>
             $(document).ready(function () {
+                if ('@Model.HidePanel'.toLowerCase() === 'true') {
+                    $('#@panelId button[data-widget="collapse"]').click();
+                }
+
+                $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
+                    var collapsed = !$('#@panelId').hasClass('collapsed-box');
+                    SaveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@Model.HidePanelSettingName', collapsed);
+                });
+
                 $("#average-order-report-grid").kendoGrid({
                     dataSource: {
                         type: "json",

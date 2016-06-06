@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.ServiceModel.Syndication;
@@ -13,6 +12,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Orders;
@@ -129,7 +129,13 @@ namespace Nop.Admin.Controllers
                         }
                     }
                 }
-                
+
+                const string showPanelSettingName = "HideNopCommerceNewsPanel";
+                var customer = _workContext.CurrentCustomer;
+
+                model.HidePanelSettingName = showPanelSettingName;
+                model.HidePanel = customer.GetAttribute<bool>(showPanelSettingName);
+
                 return PartialView(model);
             }
             catch (Exception)
@@ -158,7 +164,6 @@ namespace Nop.Admin.Controllers
             //a vendor doesn't have access to this report
             if (_workContext.CurrentVendor != null)
                 return Content("");
-
 
             var model = new CommonStatisticsModel();
 

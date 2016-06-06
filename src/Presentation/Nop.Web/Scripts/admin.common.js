@@ -102,6 +102,22 @@ function addAntiForgeryToken(data) {
     return data;
 };
 
+function SaveDashboardPreferences(url, name, value) {
+    var postData = {
+        name: name,
+        value: value
+    };
+
+    $.ajax({
+        cache: false,
+        url: url,
+        data: postData,
+        dataType: 'json',
+        error: function(xhr, ajaxOptions, thrownError) {
+            alert('Failed to save preferences.');
+        }
+    });
+};
 
 // Ajax activity indicator bound to ajax start/stop document events
 $(document).ajaxStart(function () {
