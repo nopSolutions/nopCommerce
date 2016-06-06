@@ -119,7 +119,7 @@
                                         @Html.NopDropDownList("SearchVendorId", Model.AvailableVendors)
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" @(Model.AvailableWarehouses.Count(x => !x.Value.ToString().Equals("0")) < 2 ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.SearchWarehouseId)
                                     </div>
