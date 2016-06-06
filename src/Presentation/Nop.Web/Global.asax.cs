@@ -18,6 +18,7 @@ using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Routes;
 using Nop.Web.Framework.Themes;
 using StackExchange.Profiling;
+using StackExchange.Profiling.EntityFramework6;
 using StackExchange.Profiling.Mvc;
 
 namespace Nop.Web
@@ -45,6 +46,9 @@ namespace Nop.Web
         {
             //disable "X-AspNetMvc-Version" header name
             MvcHandler.DisableMvcResponseHeader = true;
+
+            //MiniProfiler for EF must be initialized before first Database call. Doesn't matter if we later start Profiler or not.
+            MiniProfilerEF6.Initialize();
 
             //initialize engine context
             EngineContext.Initialize(false);
