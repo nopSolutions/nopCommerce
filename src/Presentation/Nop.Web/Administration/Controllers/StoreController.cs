@@ -52,8 +52,7 @@ namespace Nop.Admin.Controllers
         {
             if (model == null)
                 throw new ArgumentNullException("model");
-
-            //templates
+            
             model.AvailableLanguages.Add(new SelectListItem
             {
                 Text = "---",

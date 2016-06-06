@@ -16,10 +16,12 @@ namespace Nop.Admin.Models.News
         public NewsItemModel()
         {
             this.AvailableStores = new List<StoreModel>();
+            this.AvailableLanguages = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Language")]
         public int LanguageId { get; set; }
+        public IList<SelectListItem> AvailableLanguages { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Language")]
         [AllowHtml]
