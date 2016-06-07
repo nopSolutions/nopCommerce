@@ -28,7 +28,7 @@ namespace Nop.Services.Helpers
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        protected virtual BrowscapXmlHelper GetBrowscapXmlHelperr()
+        protected virtual BrowscapXmlHelper GetBrowscapXmlHelper()
         {
             if (Singleton<BrowscapXmlHelper>.Instance != null)
                 return Singleton<BrowscapXmlHelper>.Instance;
@@ -57,14 +57,14 @@ namespace Nop.Services.Helpers
             //more info: http://www.nopcommerce.com/boards/t/17711/unhandled-exception-request-is-not-available-in-this-context.aspx
             try
             {
-                var bowscapXmlHelperr = GetBrowscapXmlHelperr();
+                var bowscapXmlHelper = GetBrowscapXmlHelper();
 
                 //we cannot load parser
-                if (bowscapXmlHelperr == null)
+                if (bowscapXmlHelper == null)
                     return false;
 
                 var userAgent = _httpContext.Request.UserAgent;
-                return bowscapXmlHelperr.IsCrawler(userAgent);
+                return bowscapXmlHelper.IsCrawler(userAgent);
             }
             catch (Exception exc)
             {
