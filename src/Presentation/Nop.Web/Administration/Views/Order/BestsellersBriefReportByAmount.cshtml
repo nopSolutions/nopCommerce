@@ -7,7 +7,7 @@
     var gridPageSize = 5;
 }
 
-<div class="box box-info" id="@panelId">
+<div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">
     <div class="box-header with-border">
         <h3 class="box-title">
             <i class="fa fa-star-o"></i>
@@ -33,11 +33,6 @@
             }
 
             $(document).ready(function () {
-                @if (hidePanel)
-                {
-                    <text>$('#@panelId button[data-widget="collapse"]').click();</text>
-                }
-
                 $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
                     var collapsed = !$('#@panelId').hasClass('collapsed-box');
                     saveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
