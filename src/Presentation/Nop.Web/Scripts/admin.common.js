@@ -107,10 +107,11 @@ function saveDashboardPreferences(url, name, value) {
         name: name,
         value: value
     };
-
+    addAntiForgeryToken(postData);
     $.ajax({
         cache: false,
         url: url,
+        type: 'post',
         data: postData,
         dataType: 'json',
         error: function(xhr, ajaxOptions, thrownError) {
