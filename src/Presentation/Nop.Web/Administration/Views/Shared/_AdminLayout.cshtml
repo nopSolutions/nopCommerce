@@ -80,7 +80,11 @@
     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 
     //info: we specify "Admin" area for actions and widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
+
+    const string hideSidebarAttributeName = "HideSidebar";
+    var hideSidebar = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.GetAttribute<bool>(hideSidebarAttributeName);
 }
+
 <!DOCTYPE html>
 <html @(supportRtl ? Html.Raw("dir=\"rtl\"") : null)>
 <head>
@@ -91,7 +95,7 @@
     @Html.NopCssFiles(this.Url, ResourceLocation.Head)
     @Html.NopScripts(this.Url, ResourceLocation.Head)
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini @if(hideSidebar){<text>sidebar-collapse</text>}">
     <div class="throbber">
         <div class="curtain">
         </div>
@@ -109,7 +113,7 @@
     </div>
     <div class="wrapper">
         @if (IsSectionDefined("header"))
-            {
+        {
             @RenderSection("header")
         }
         else
@@ -203,7 +207,7 @@
             @Html.Widget("admin_header_after", area: "Admin")
         }
         @if (IsSectionDefined("headermenu"))
-            {
+        {
             @RenderSection("headermenu")
         }
         else
@@ -254,5 +258,13 @@
     </div>
     @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
     @Html.NopScripts(this.Url, ResourceLocation.Foot)
+
+
+    <script>
+        $('a.sidebar-toggle').on('click', function () {
+            var collapsed = !$('body').hasClass('sidebar-collapse');
+            saveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
+        });
+    </script>
 </body>
 </html>
