@@ -415,6 +415,11 @@ namespace Nop.Admin.Models.Orders
 
                 public bool HasCondition { get; set; }
 
+                /// <summary>
+                /// Allowed file extensions for customer uploaded files
+                /// </summary>
+                public IList<string> AllowedFileExtensions { get; set; }
+
                 public AttributeControlType AttributeControlType { get; set; }
 
                 public IList<ProductAttributeValueModel> Values { get; set; }

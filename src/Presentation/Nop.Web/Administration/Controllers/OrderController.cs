@@ -11,7 +11,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -266,23 +265,23 @@ namespace Nop.Admin.Controllers
             return hasVendorProducts;
         }
 
-        /// <summary>
-        /// Parse product attributes on the add product to order details page
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="form">Form</param>
-        /// <returns>Parsed attributes</returns>
-        [NonAction]
+	    /// <summary>
+	    /// Parse product attributes on the add product to order details page
+	    /// </summary>
+	    /// <param name="product">Product</param>
+	    /// <param name="form">Form</param>
+	    /// <returns>Parsed attributes</returns>
+	    [NonAction]
         protected virtual string ParseProductAttributes(Product product, FormCollection form)
         {
-            string attributesXml = "";
+            var attributesXml = string.Empty;
 
             #region Product attributes
 
             var productAttributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
             foreach (var attribute in productAttributes)
             {
-                string controlId = string.Format("product_attribute_{0}", attribute.Id);
+                var controlId = string.Format("product_attribute_{0}", attribute.Id);
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -435,27 +434,22 @@ namespace Nop.Admin.Controllers
         }
 
         /// <summary>
-        /// Parse product rental dates on the add product to order details page
+        /// Parse rental dates on the add product to order details page
         /// </summary>
-        /// <param name="product">Product</param>
         /// <param name="form">Form</param>
         /// <param name="startDate">Start date</param>
         /// <param name="endDate">End date</param>
         [NonAction]
-        protected virtual void ParseRentalDates(Product product, FormCollection form,
+        protected virtual void ParseRentalDates(FormCollection form,
             out DateTime? startDate, out DateTime? endDate)
         {
             startDate = null;
             endDate = null;
 
-            string startControlId = string.Format("rental_start_date_{0}", product.Id);
-            string endControlId = string.Format("rental_end_date_{0}", product.Id);
-            var ctrlStartDate = form[startControlId];
-            var ctrlEndDate = form[endControlId];
+            var ctrlStartDate = form["rental_start_date"];
+            var ctrlEndDate = form["rental_end_date"];
             try
             {
-                //TODO: Уточнить, нужна ли вьюха с информацией об аренде.
-                //currenly we support only this format (as in the \Views\Product\_RentalInfo.cshtml file)
                 const string datePickerFormat = "MM/dd/yyyy";
                 startDate = DateTime.ParseExact(ctrlStartDate, datePickerFormat, CultureInfo.InvariantCulture);
                 endDate = DateTime.ParseExact(ctrlEndDate, datePickerFormat, CultureInfo.InvariantCulture);
@@ -868,6 +862,12 @@ namespace Nop.Admin.Controllers
                     AttributeControlType = attribute.AttributeControlType,
                     HasCondition = !String.IsNullOrEmpty(attribute.ConditionAttributeXml)
                 };
+                if (!String.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
+                {
+                    attributeModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
+                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                        .ToList();
+                }
 
                 if (attribute.ShouldHaveValues())
                 {
@@ -1953,7 +1953,6 @@ namespace Nop.Admin.Controllers
             return File(bytes, MimeTypes.ApplicationPdf, "orders.pdf");
         }
 
-        //handle product attribute selection event. this way we return new price, overridden gtin/sku/mpn
         //currently we use this method on the add product to order details pages
         [HttpPost]
         [ValidateInput(false)]
@@ -1964,15 +1963,7 @@ namespace Nop.Admin.Controllers
             if (product == null)
                 return new NullJsonResult();
 
-            string attributeXml = ParseProductAttributes(product, form);
-
-            //rental attributes
-            DateTime? rentalStartDate = null;
-            DateTime? rentalEndDate = null;
-            if (product.IsRental)
-            {
-                ParseRentalDates(product, form, out rentalStartDate, out rentalEndDate);
-            }
+            var attributeXml = ParseProductAttributes(product, form);
 
             //conditional attributes
             var enabledAttributeMappingIds = new List<int>();
@@ -2573,146 +2564,11 @@ namespace Nop.Admin.Controllers
             decimal priceExclTax;
             decimal.TryParse(form["SubTotalExclTax"], out priceExclTax);
 
-            //attributes
             //warnings
             var warnings = new List<string>();
-            string attributesXml = "";
 
-            #region Product attributes
-
-            var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
-            foreach (var attribute in attributes)
-            {
-                string controlId = string.Format("product_attribute_{0}", attribute.Id);
-                switch (attribute.AttributeControlType)
-                {
-                    case AttributeControlType.DropdownList:
-                    case AttributeControlType.RadioList:
-                    case AttributeControlType.ColorSquares:
-                    case AttributeControlType.ImageSquares:
-                        {
-                            var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
-                            {
-                                int selectedAttributeId = int.Parse(ctrlAttributes);
-                                if (selectedAttributeId > 0)
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, selectedAttributeId.ToString());
-                            }
-                        }
-                        break;
-                    case AttributeControlType.Checkboxes:
-                        {
-                            var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
-                            {
-                                foreach (var item in ctrlAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                                {
-                                    int selectedAttributeId = int.Parse(item);
-                                    if (selectedAttributeId > 0)
-                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
-                                }
-                            }
-                        }
-                        break;
-                    case AttributeControlType.ReadonlyCheckboxes:
-                        {
-                            //load read-only (already server-side selected) values
-                            var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
-                            foreach (var selectedAttributeId in attributeValues
-                                .Where(v => v.IsPreSelected)
-                                .Select(v => v.Id)
-                                .ToList())
-                            {
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, selectedAttributeId.ToString());
-                            }
-                        }
-                        break;
-                    case AttributeControlType.TextBox:
-                    case AttributeControlType.MultilineTextbox:
-                        {
-                            var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
-                            {
-                                string enteredText = ctrlAttributes.Trim();
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, enteredText);
-                            }
-                        }
-                        break;
-                    case AttributeControlType.Datepicker:
-                        {
-                            var day = form[controlId + "_day"];
-                            var month = form[controlId + "_month"];
-                            var year = form[controlId + "_year"];
-                            DateTime? selectedDate = null;
-                            try
-                            {
-                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(day));
-                            }
-                            catch { }
-                            if (selectedDate.HasValue)
-                            {
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, selectedDate.Value.ToString("D"));
-                            }
-                        }
-                        break;
-                    case AttributeControlType.FileUpload:
-                        {
-                            var httpPostedFile = this.Request.Files[controlId];
-                            if ((httpPostedFile != null) && (!String.IsNullOrEmpty(httpPostedFile.FileName)))
-                            {
-                                var fileSizeOk = true;
-                                if (attribute.ValidationFileMaximumSize.HasValue)
-                                {
-                                    //compare in bytes
-                                    var maxFileSizeBytes = attribute.ValidationFileMaximumSize.Value * 1024;
-                                    if (httpPostedFile.ContentLength > maxFileSizeBytes)
-                                    {
-                                        warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), attribute.ValidationFileMaximumSize.Value));
-                                        fileSizeOk = false;
-                                    }
-                                }
-                                if (fileSizeOk)
-                                {
-                                    //save an uploaded file
-                                    var download = new Download
-                                    {
-                                        DownloadGuid = Guid.NewGuid(),
-                                        UseDownloadUrl = false,
-                                        DownloadUrl = "",
-                                        DownloadBinary = httpPostedFile.GetDownloadBits(),
-                                        ContentType = httpPostedFile.ContentType,
-                                        Filename = Path.GetFileNameWithoutExtension(httpPostedFile.FileName),
-                                        Extension = Path.GetExtension(httpPostedFile.FileName),
-                                        IsNew = true
-                                    };
-                                    _downloadService.InsertDownload(download);
-                                    //save attribute
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, download.DownloadGuid.ToString());
-                                }
-                            }
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-            //validate conditional attributes (if specified)
-            foreach (var attribute in attributes)
-            {
-                var conditionMet = _productAttributeParser.IsConditionMet(attribute, attributesXml);
-                if (conditionMet.HasValue && !conditionMet.Value)
-                {
-                    attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
-                }
-            }
-
-            #endregion
+            //attributes
+            var attributesXml = ParseProductAttributes(product, form);
 
             #region Gift cards
 
@@ -2764,18 +2620,7 @@ namespace Nop.Admin.Controllers
             DateTime? rentalEndDate = null;
             if (product.IsRental)
             {
-                var ctrlStartDate = form["rental_start_date"];
-                var ctrlEndDate = form["rental_end_date"];
-                try
-                {
-                    //currenly we support only this format (as in the \Views\Order\_ProductAddRentalInfo.cshtml file)
-                    const string datePickerFormat = "MM/dd/yyyy";
-                    rentalStartDate = DateTime.ParseExact(ctrlStartDate, datePickerFormat, CultureInfo.InvariantCulture);
-                    rentalEndDate = DateTime.ParseExact(ctrlEndDate, datePickerFormat, CultureInfo.InvariantCulture);
-                }
-                catch
-                {
-                }
+                ParseRentalDates(form, out rentalStartDate, out rentalEndDate);
             }
 
             #endregion
@@ -2789,7 +2634,7 @@ namespace Nop.Admin.Controllers
                 //no errors
 
                 //attributes
-                string attributeDescription = _productAttributeFormatter.FormatAttributes(product, attributesXml, order.Customer);
+                var attributeDescription = _productAttributeFormatter.FormatAttributes(product, attributesXml, order.Customer);
 
                 //save item
                 var orderItem = new OrderItem

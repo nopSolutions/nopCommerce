@@ -515,6 +515,10 @@ input[type=file].form-control {
     overflow-x: auto;
 }
 
+.margin-t-5 {
+    margin-top: 5px;
+}
+
 @media (max-width: 1200px) {
     .form-horizontal img.ico-help {
          display: none;
