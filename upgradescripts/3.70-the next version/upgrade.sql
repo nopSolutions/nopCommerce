@@ -608,6 +608,57 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Manage">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.MiniShoppingCartProductNumber">
+    <Value>Number of products in mini-shopping cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.NumberOfOrders">
+    <Value>Orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.NumberOfCustomers">
+    <Value>Registered customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.NumberOfPendingReturnRequests">
+    <Value>Pending return requests</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.NumberOfLowStockProducts">
+    <Value>Low stock products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.MoreInfo">
+    <Value>More info</Value>
+  </LocaleResource>
+   <LocaleResource Name="Admin.Dashboard.IncompleteOrders">
+    <Value>Incomplete orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.OrderStatistics">
+    <Value>Orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.OrderStatistics.Month">
+    <Value>Month</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.OrderStatistics.Week">
+    <Value>Week</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.OrderStatistics.Year">
+    <Value>Year</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.CustomerStatistics">
+    <Value>New customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.CustomerStatistics.Month">
+    <Value>Month</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.CustomerStatistics.Week">
+    <Value>Week</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.CustomerStatistics.Year">
+    <Value>Year</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.LatestOrders">
+    <Value>Latest Orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.LatestOrders.ViewAll">
+    <Value>View All Orders</Value>
+  </LocaleResource>
 </Language>
 '
 

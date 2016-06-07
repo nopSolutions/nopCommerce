@@ -1943,6 +1943,7 @@ namespace Nop.Admin.Controllers
 
             return PartialView();
         }
+
         [HttpPost]
         public ActionResult ReportRegisteredCustomersList(DataSourceRequest command)
         {
@@ -1958,7 +1959,98 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-        
+
+        [ChildActionOnly]
+        public ActionResult CustomerStatistics()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return Content("");
+
+            var model = new CustomerStatisticsModel();
+
+            var nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
+            var timeZone = _dateTimeHelper.CurrentTimeZone;
+            var searchCustomerRoleIds = new [] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id };
+
+            //week statistics
+            var searchWeekDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-7).Month, nowDt.AddDays(-7).Day);
+            if (!timeZone.IsInvalidTime(searchWeekDateUser))
+            {
+                DateTime searchWeekDateUtc = _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone);
+
+                do
+                {
+                    model.ByWeekItems.Add(new CustomerStatisticsItemModel
+                    {
+                        Date = searchWeekDateUser.Date,
+                        Value = _customerService.GetAllCustomers(
+                            createdFromUtc: searchWeekDateUtc,
+                            createdToUtc: searchWeekDateUtc.AddDays(1),
+                            customerRoleIds: searchCustomerRoleIds,
+                            pageIndex: 0,
+                            pageSize: 1).TotalCount.ToString()
+                    });
+
+                    searchWeekDateUtc = searchWeekDateUtc.AddDays(1);
+                    searchWeekDateUser = searchWeekDateUser.AddDays(1);
+
+                } while (!(searchWeekDateUser.Month == nowDt.Month && searchWeekDateUser.Day > nowDt.Day));
+            }
+
+            //month statistics
+            var searchMonthDateUser = new DateTime(nowDt.Year, nowDt.AddMonths(-1).Month, nowDt.AddMonths(-1).Day);
+            if (!timeZone.IsInvalidTime(searchMonthDateUser))
+            {
+                DateTime searchMonthDateUtc = _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone);
+
+                do
+                {
+                    model.ByMonthItems.Add(new CustomerStatisticsItemModel
+                    {
+                        Date = searchMonthDateUser.Date,
+                        Value = _customerService.GetAllCustomers(
+                            createdFromUtc: searchMonthDateUtc,
+                            createdToUtc: searchMonthDateUtc.AddDays(1),
+                            customerRoleIds: searchCustomerRoleIds,
+                            pageIndex: 0,
+                            pageSize: 1).TotalCount.ToString()
+                    });
+
+                    searchMonthDateUtc = searchMonthDateUtc.AddDays(1);
+                    searchMonthDateUser = searchMonthDateUser.AddDays(1);
+
+                } while (!(searchMonthDateUser.Month == nowDt.Month && searchMonthDateUser.Day > nowDt.Day));
+            }
+
+            //year statistics
+            var yearAgoRoundedDt = nowDt.AddYears(-1).AddMonths(1);
+            var searchYearDateUser = new DateTime(yearAgoRoundedDt.Year, yearAgoRoundedDt.Month, 1);
+            if (!timeZone.IsInvalidTime(searchYearDateUser))
+            {
+                DateTime searchYearDateUtc = _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone);
+
+                do
+                {
+                    model.ByYearItems.Add(new CustomerStatisticsItemModel
+                    {
+                        Date = searchYearDateUser.Date,
+                        Value = _customerService.GetAllCustomers(
+                            createdFromUtc: searchYearDateUtc,
+                            createdToUtc: searchYearDateUtc.AddMonths(1),
+                            customerRoleIds: searchCustomerRoleIds,
+                            pageIndex: 0,
+                            pageSize: 1).TotalCount.ToString()
+                    });
+
+                    searchYearDateUtc = searchYearDateUtc.AddMonths(1);
+                    searchYearDateUser = searchYearDateUser.AddMonths(1);
+
+                } while (!(searchYearDateUser.Year == nowDt.Year && searchYearDateUser.Month > nowDt.Month));
+            }
+
+            return PartialView(model);
+        }
+
         #endregion
 
         #region Current shopping cart/ wishlist

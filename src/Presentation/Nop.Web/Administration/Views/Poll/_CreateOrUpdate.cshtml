@@ -42,12 +42,12 @@
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
-                <div class="form-group">
+                <div class="form-group" @(Model.AvailableLanguages.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.LanguageId)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopDropDownListFor(model => model.LanguageId, new SelectList(ViewBag.AllLanguages, "Id", "Name"))
+                        @Html.NopDropDownListFor(model => model.LanguageId, Model.AvailableLanguages)
                         @Html.ValidationMessageFor(model => model.LanguageId)
                     </div>
                 </div>

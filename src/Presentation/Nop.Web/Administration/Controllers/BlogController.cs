@@ -52,9 +52,26 @@ namespace Nop.Admin.Controllers
             this._storeMappingService = storeMappingService;
 		}
 
-		#endregion 
-        
+        #endregion
+
         #region Utilities
+
+        [NonAction]
+        protected virtual void PrepareLanguagesModel(BlogPostModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            var languages = _languageService.GetAllLanguages(true);
+            foreach (var language in languages)
+            {
+                model.AvailableLanguages.Add(new SelectListItem
+                {
+                    Text = language.Name,
+                    Value = language.Id.ToString()
+                });
+            }
+        }
 
         [NonAction]
         protected virtual void PrepareStoresMappingModel(BlogPostModel model, BlogPost blogPost, bool excludeProperties)
@@ -154,9 +171,10 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
-
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
+            
             var model = new BlogPostModel();
+            //languages
+            PrepareLanguagesModel(model);
             //Stores
             PrepareStoresMappingModel(model, null, false);
             //default values
@@ -198,8 +216,7 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
-            //Stores
+            PrepareLanguagesModel(model);
             PrepareStoresMappingModel(model, null, true);
             return View(model);
         }
@@ -214,10 +231,11 @@ namespace Nop.Admin.Controllers
                 //No blog post found with the specified id
                 return RedirectToAction("List");
 
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = blogPost.ToModel();
             model.StartDate = blogPost.StartDateUtc;
             model.EndDate = blogPost.EndDateUtc;
+            //languages
+            PrepareLanguagesModel(model);
             //Store
             PrepareStoresMappingModel(model, blogPost, false);
             return View(model);
@@ -260,9 +278,8 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
-            //Store
             PrepareStoresMappingModel(model, blogPost, true);
+            PrepareLanguagesModel(model);
             return View(model);
 		}
 
