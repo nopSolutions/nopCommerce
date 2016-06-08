@@ -19,8 +19,8 @@ namespace Nop.Web.Framework.UI
         void AppendMetaKeywordParts(string part);
         string GenerateMetaKeywords();
 
-        void AddScriptParts(ResourceLocation location, string part, bool excludeFromBundle);
-        void AppendScriptParts(ResourceLocation location, string part, bool excludeFromBundle);
+        void AddScriptParts(ResourceLocation location, string part, bool excludeFromBundle, bool isAync);
+        void AppendScriptParts(ResourceLocation location, string part, bool excludeFromBundle, bool isAsync);
         string GenerateScripts(UrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null);
 
         void AddCssFileParts(ResourceLocation location, string part);
