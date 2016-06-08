@@ -463,12 +463,12 @@ namespace Nop.Web.Controllers
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
-            bool downloadableProductsAnonymousCheckoutAllowed =
+            bool downloadableProductsRequireRegistration =
                 _customerSettings.RequireRegistrationForDownloadableProducts && cart.Any(sci => sci.Product.IsDownload);
 
             if (_workContext.CurrentCustomer.IsGuest() 
                 && (!_orderSettings.AnonymousCheckoutAllowed
-                    || downloadableProductsAnonymousCheckoutAllowed)
+                    || downloadableProductsRequireRegistration)
                 )
                 return new HttpUnauthorizedResult();
 

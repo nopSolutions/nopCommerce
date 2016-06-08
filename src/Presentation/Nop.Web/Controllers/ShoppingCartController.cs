@@ -851,13 +851,13 @@ namespace Nop.Web.Controllers
                         });
 
                     bool minOrderSubtotalAmountOk = _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
-                    bool downloadableProductsAnonymousCheckoutAllowed =
+                    bool downloadableProductsRequireRegistration =
                         _customerSettings.RequireRegistrationForDownloadableProducts && cart.Any(sci => sci.Product.IsDownload);
 
                     model.DisplayCheckoutButton = !_orderSettings.TermsOfServiceOnShoppingCartPage &&
                         minOrderSubtotalAmountOk &&
                         !checkoutAttributesExist &&
-                        !(downloadableProductsAnonymousCheckoutAllowed
+                        !(downloadableProductsRequireRegistration
                             && _workContext.CurrentCustomer.IsGuest());
 
                     //products. sort descending (recently added products)
@@ -2228,11 +2228,11 @@ namespace Nop.Web.Controllers
             //everything is OK
             if (_workContext.CurrentCustomer.IsGuest())
             {
-                bool downloadableProductsAnonymousCheckoutAllowed =
+                bool downloadableProductsRequireRegistration =
                     _customerSettings.RequireRegistrationForDownloadableProducts && cart.Any(sci => sci.Product.IsDownload);
 
                 if (!_orderSettings.AnonymousCheckoutAllowed 
-                    || downloadableProductsAnonymousCheckoutAllowed)
+                    || downloadableProductsRequireRegistration)
                     return new HttpUnauthorizedResult();
                 
                 return RedirectToRoute("LoginCheckoutAsGuest", new {returnUrl = Url.RouteUrl("ShoppingCart")});
