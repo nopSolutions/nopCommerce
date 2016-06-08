@@ -5,6 +5,12 @@ declare @resources xml
 --a resource will be deleted if its value is empty
 set @resources='
 <Language>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.PublishBackProductWhenCancellingOrders">
+    <Value>Publish back product when cancelling orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.PublishBackProductWhenCancellingOrders.Hint">
+    <Value>Check to publish back product when cancelling orders.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Forums.NotifyAboutPrivateMessages.Hint">
     <Value>Indicates whether a customer should be notified by email about new private messages.</Value>
   </LocaleResource>
