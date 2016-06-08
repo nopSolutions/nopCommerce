@@ -668,6 +668,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.RequireRegistrationForDownloadableProducts.Hint">
     <Value>Require account creation to purchase downloadable products.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.OrderGuid">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.OrderGuid.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

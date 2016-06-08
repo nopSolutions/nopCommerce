@@ -74,10 +74,6 @@ namespace Nop.Admin.Models.Orders
         [AllowHtml]
         public string OrderNotes { get; set; }
 
-        [NopResourceDisplayName("Admin.Orders.List.OrderGuid")]
-        [AllowHtml]
-        public string OrderGuid { get; set; }
-
         [NopResourceDisplayName("Admin.Orders.List.GoDirectlyToNumber")]
         [AllowHtml]
         public int GoDirectlyToNumber { get; set; }

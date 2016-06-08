@@ -203,14 +203,6 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.OrderGuid)
-                                    </div>
-                                    <div class="col-md-8">
-                                        @Html.NopEditorFor(model => model.OrderGuid)
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.BillingEmail)
                                     </div>
                                     <div class="col-md-8">
@@ -424,8 +416,7 @@
 
                                 $("".concat("#@Html.FieldIdFor(model => model.BillingEmail),",
                                     "#@Html.FieldIdFor(model => model.BillingLastName),",
-                                    "#@Html.FieldIdFor(model => model.OrderNotes),",
-                                    "#@Html.FieldIdFor(model => model.OrderGuid)")).keydown(function (event) {
+                                    "#@Html.FieldIdFor(model => model.OrderNotes)")).keydown(function (event) {
                                         if (event.keyCode === 13) {
                                             $("#search-orders").click();
                                             return false;
@@ -481,8 +472,7 @@
                                     BillingCountryId: $('#@Html.FieldIdFor(model => model.BillingCountryId)').val(),
                                     PaymentMethodSystemName: $('#@Html.FieldIdFor(model => model.PaymentMethodSystemName)').val(),
                                     ProductId: $('#@Html.FieldIdFor(model => model.ProductId)').val(),
-                                    OrderNotes: $('#@Html.FieldIdFor(model => model.OrderNotes)').val(),
-                                    OrderGuid: $('#@Html.FieldIdFor(model => model.OrderGuid)').val()
+                                    OrderNotes: $('#@Html.FieldIdFor(model => model.OrderNotes)').val()
                                 };
                                 addAntiForgeryToken(data);
                                 return data;

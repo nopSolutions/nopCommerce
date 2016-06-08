@@ -9474,12 +9474,6 @@
   <LocaleResource Name="Admin.Orders.List.GoDirectlyToNumber.Hint">
     <Value>Go directly to order #.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Orders.List.OrderGuid">
-    <Value>Order GUID</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Orders.List.OrderGuid.Hint">
-    <Value>Search by order GUID (Global unique identifier) or part of GUID. Leave empty to load all orders.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.OrderNotes">
     <Value>Order notes</Value>
   </LocaleResource>

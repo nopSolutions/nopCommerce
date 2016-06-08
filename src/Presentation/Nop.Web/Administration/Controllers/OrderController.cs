@@ -1131,7 +1131,6 @@ namespace Nop.Admin.Controllers
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
                 orderNotes: model.OrderNotes,
-                orderGuid: model.OrderGuid,
                 pageIndex: command.Page - 1, 
                 pageSize: command.PageSize);
             var gridModel = new DataSourceResult
@@ -1291,8 +1290,7 @@ namespace Nop.Admin.Controllers
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
-                orderNotes: model.OrderNotes,
-                orderGuid: model.OrderGuid);
+                orderNotes: model.OrderNotes);
 
             try
             {
@@ -1370,8 +1368,7 @@ namespace Nop.Admin.Controllers
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
-                orderNotes: model.OrderNotes,
-                orderGuid: model.OrderGuid);
+                orderNotes: model.OrderNotes);
 
             try
             {
@@ -1903,8 +1900,7 @@ namespace Nop.Admin.Controllers
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
-                orderNotes: model.OrderNotes,
-                orderGuid: model.OrderGuid);
+                orderNotes: model.OrderNotes);
 
             byte[] bytes;
             using (var stream = new MemoryStream())
