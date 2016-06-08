@@ -14,9 +14,9 @@
             @T("Admin.Customers.Reports.CustomerStatistics")
         </h3>
         <div class="box-tools pull-right">
-            <button class="btn btn-xs btn-info btn-flat margin-r-5" @if (hidePanel) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="year">@T("Admin.Customers.Reports.CustomerStatistics.Week")</button>
+            <button class="btn btn-xs btn-info btn-flat margin-r-5" @if (hidePanel) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="year">@T("Admin.Customers.Reports.CustomerStatistics.Year")</button>
             <button class="btn btn-xs btn-info btn-flat margin-r-5" @if (hidePanel) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="month">@T("Admin.Customers.Reports.CustomerStatistics.Month")</button>
-            <button class="btn btn-xs btn-info btn-flat" @if (hidePanel) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="week">@T("Admin.Customers.Reports.CustomerStatistics.Year")</button>
+            <button class="btn btn-xs btn-info btn-flat" @if (hidePanel) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="week">@T("Admin.Customers.Reports.CustomerStatistics.Week")</button>
             <button class="btn btn-box-tool margin-l-10" data-widget="collapse"><i class="fa fa-minus"></i></button>
         </div>
     </div>
@@ -35,7 +35,7 @@
             var collapsed = !$('#@(prefix)-box').hasClass('collapsed-box');
             saveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
             if (!collapsed) {
-                $('#@(prefix) button[data-chart-role="toggle-chart"]').removeAttr('disabled');
+                $('#@(prefix)-box button[data-chart-role="toggle-chart"]').removeAttr('disabled');
                 if (!csCurrentPeriod) {
                     $('#@(prefix)-box button[data-chart-role="toggle-chart"][data-chart-period="week"]').trigger('click');
                 }
