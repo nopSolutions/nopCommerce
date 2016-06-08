@@ -12,10 +12,19 @@
         <h3 class="box-title">
             <i class="fa fa-cart-plus"></i>
             @T("Admin.Dashboard.LatestOrders")
-            <a href="@Url.Action("List", "Order")" class="btn btn-xs btn-info btn-flat" style="margin-left: 10px;">@T("Admin.Dashboard.LatestOrders.ViewAll")</a>
+            <a href="@Url.Action("List", "Order")" class="btn btn-xs btn-info btn-flat margin-l-10">@T("Admin.Dashboard.LatestOrders.ViewAll")</a>
         </h3>
         <div class="box-tools pull-right">
-            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+            <button class="btn btn-box-tool" data-widget="collapse">
+                @if (hidePanel)
+                {
+                    <text><i class="fa fa-plus"></i></text>
+                }
+                else
+                {
+                    <text><i class="fa fa-minus"></i></text>
+                }
+            </button>
         </div>
     </div>
     <div class="box-body">

@@ -1,264 +1,173 @@
-﻿@model CustomerStatisticsModel
+﻿@using Nop.Core
+@using Nop.Services.Common
+
 @{
     Html.AppendScriptParts("~/Scripts/chartjs/Chart.min.js");
+
+    const string prefix = "customer-statistics";
+    const string hidePanelAttributeName = "HideCustomerStatisticsPanel";
+    var hidePanel = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
 }
-<div class="nav-tabs-custom nav-tabs-customer-statistics">
-    <ul class="nav nav-tabs pull-right">
-        @Html.RenderBootstrapTabHeader("tab-customer-statistics-week", @T("Admin.Customers.Reports.CustomerStatistics.Week"), true)
-        @Html.RenderBootstrapTabHeader("tab-customer-statistics-month", @T("Admin.Customers.Reports.CustomerStatistics.Month"))
-        @Html.RenderBootstrapTabHeader("tab-customer-statistics-year", @T("Admin.Customers.Reports.CustomerStatistics.Year"))
-        <li class="pull-left header">
-            <i class="fa fa-user-plus"></i>
+
+<div class="box box-info @if (hidePanel){<text>collapsed-box</text>}" id="@(prefix)-box">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <i class="fa fa-shopping-cart"></i>
             @T("Admin.Customers.Reports.CustomerStatistics")
-        </li>
-    </ul>
-    <div class="tab-content">
-        @Html.RenderBootstrapTabContent("tab-customer-statistics-week", @TabStatisticsWeek(), true)
-        @Html.RenderBootstrapTabContent("tab-customer-statistics-month", @TabStatisticsMonth())
-        @Html.RenderBootstrapTabContent("tab-customer-statistics-year", @TabStatisticsYear())
+        </h3>
+        <div class="box-tools pull-right">
+            <button class="btn btn-xs btn-info btn-flat margin-r-5" @if (hidePanel) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="year">@T("Admin.Customers.Reports.CustomerStatistics.Year")</button>
+            <button class="btn btn-xs btn-info btn-flat margin-r-5" @if (hidePanel) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="month">@T("Admin.Customers.Reports.CustomerStatistics.Month")</button>
+            <button class="btn btn-xs btn-info btn-flat" @if (hidePanel) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="week">@T("Admin.Customers.Reports.CustomerStatistics.Week")</button>
+            <button class="btn btn-box-tool margin-l-10" data-widget="collapse">
+                @if (hidePanel)
+                {
+                    <text><i class="fa fa-plus"></i></text>
+                }
+                else
+                {
+                    <text><i class="fa fa-minus"></i></text>
+                }
+            </button>
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="chart" style="height: 300px;">
+            <canvas id="@(prefix)-chart" height="300"></canvas>
+        </div>
     </div>
 </div>
 
-@helper TabStatisticsWeek()
-{
-    <div class="chart">
-        <canvas id="customer-statistics-chart-week" height="300"></canvas>
-    </div>
+<script>
+    $(document).ready(function () {
+        var csCurrentPeriod;
 
-    <script>
-        $(document).ready(function () {
-            var csWeekConfig = {
-                type: 'line',
-                data: {
-                    labels: [
-                        @foreach (var item in Model.ByWeekItems)
-                        {
-                            <text>'@item.Date.ToString("d dddd")',</text>
-                        }
-                    ],
-                    datasets: [
-                        {
-                            label: "@T("Admin.Customers.Reports.CustomerStatistics")",
-                            fillColor: "rgba(60,141,188,0.9)",
-                            strokeColor: "rgba(60,141,188,0.8)",
-                            pointColor: "#00a65a",
-                            pointStrokeColor: "rgba(0,166,90,1)",
-                            pointHighlightFill: "#fff",
-                            pointHighlightStroke: "rgba(0,166,90,1)",
-                            borderColor: 'rgba(0,166,90, 1)',
-                            backgroundColor: 'rgba(0,166,90,0.5)',
-                            pointBorderColor: 'rgba(0,166,90,0.7)',
-                            pointBackgroundColor: 'rgba(0,166,90,0.2)',
-                            pointBorderWidth: 1,
-                            data: [
-                                @foreach (var item in Model.ByWeekItems)
-                                {
-                                    <text>'@item.Value',</text>
-                                }
-                            ]
-                        }
-                    ]
-                },
-                options: {
-                    legend: {
-                        display: false
-                    },
-                    scales: {
-                        yAxes: [
-                            {
-                                display: true,
-                                ticks: {
-                                    userCallback: function (dataLabel, index) {
-                                        return (dataLabel ^ 0) === dataLabel ? dataLabel : '';
-                                    },
-                                    min: 0
-                                }
-                            }
-                        ]
-                    },
-                    showScale: true,
-                    scaleShowGridLines: false,
-                    scaleGridLineColor: "rgba(0,0,0,.05)",
-                    scaleGridLineWidth: 1,
-                    scaleShowHorizontalLines: true,
-                    scaleShowVerticalLines: true,
-                    bezierCurve: true,
-                    pointDot: false,
-                    pointDotRadius: 4,
-                    pointDotStrokeWidth: 1,
-                    pointHitDetectionRadius: 20,
-                    datasetStroke: true,
-                    datasetFill: true,
-                    maintainAspectRatio: false,
-                    responsive: true
+        $('#@(prefix)-box').on('click', 'button[data-widget="collapse"]', function () {
+            var collapsed = !$('#@(prefix)-box').hasClass('collapsed-box');
+            saveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
+            if (!collapsed) {
+                $('#@(prefix)-box button[data-chart-role="toggle-chart"]').removeAttr('disabled');
+                if (!csCurrentPeriod) {
+                    $('#@(prefix)-box button[data-chart-role="toggle-chart"][data-chart-period="week"]').trigger('click');
                 }
+            } else {
+                $('#@(prefix)-box button[data-chart-role="toggle-chart"]').attr('disabled', 'disabled');
             }
-
-            window.customerStatisticsWeek = new Chart(document.getElementById("customer-statistics-chart-week").getContext("2d"), csWeekConfig);
         });
-    </script>
-}
 
-@helper TabStatisticsMonth()
-{
-    <div class="chart">
-        <canvas id="customer-statistics-chart-moth" height="300"></canvas>
-    </div>
-
-    <script>
-        $(document).ready(function () {
-            var csMonthConfig = {
-                type: 'line',
-                data: {
-                    labels: [
-                        @foreach (var item in Model.ByMonthItems)
-                        {
-                            <text>'@item.Date.ToString("M")',</text>
-                        }
-                    ],
-                    datasets: [
-                        {
-                            label: "@T("Admin.Customers.Reports.CustomerStatistics")",
-                            fillColor: "rgba(60,141,188,0.9)",
-                            strokeColor: "rgba(60,141,188,0.8)",
-                            pointColor: "#00a65a",
-                            pointStrokeColor: "rgba(0,166,90,1)",
-                            pointHighlightFill: "#fff",
-                            pointHighlightStroke: "rgba(0,166,90,1)",
-                            borderColor: 'rgba(0,166,90, 1)',
-                            backgroundColor: 'rgba(0,166,90,0.5)',
-                            pointBorderColor: 'rgba(0,166,90,0.7)',
-                            pointBackgroundColor: 'rgba(0,166,90,0.2)',
-                            pointBorderWidth: 1,
-                            data: [
-                                @foreach (var item in Model.ByMonthItems)
-                                {
-                                    <text>'@item.Value',</text>
-                                }
-                            ]
-                        }
-                    ]
+        var csConfig = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: "@T("Admin.Customers.Reports.CustomerStatistics")",
+                        fillColor: "rgba(60,141,188,0.9)",
+                        strokeColor: "rgba(60,141,188,0.8)",
+                        pointColor: "#00a65a",
+                        pointStrokeColor: "rgba(0,166,90,1)",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(0,166,90,1)",
+                        borderColor: 'rgba(0,166,90, 1)',
+                        backgroundColor: 'rgba(0,166,90,0.5)',
+                        pointBorderColor: 'rgba(0,166,90,0.7)',
+                        pointBackgroundColor: 'rgba(0,166,90,0.2)',
+                        pointBorderWidth: 1,
+                        data: []
+                    }
+                ]
+            },
+            options: {
+                legend: {
+                    display: false
                 },
-                options: {
-                    legend: {
-                        display: false
-                    },
-                    scales: {
-                        xAxes: [{
-                            display: true,
-                            ticks: {
-                                userCallback: function (dataLabel, index) {
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        ticks: {
+                            userCallback: function (dataLabel, index) {
+                                if (window.customerStatistics && window.customerStatistics.config.data.labels.length > 12) {
                                     return index % 5 === 0 ? dataLabel : '';
                                 }
+                                return dataLabel;
                             }
-                        }],
-                        yAxes: [{
-                            display: true,
-                            ticks: {
-                                userCallback: function (dataLabel, index) {
-                                    return (dataLabel ^ 0) === dataLabel ? dataLabel : '';
-                                },
-                                min: 0
-                            }
-                        }]
-                    },
-                    showScale: true,
-                    scaleShowGridLines: false,
-                    scaleGridLineColor: "rgba(0,0,0,.05)",
-                    scaleGridLineWidth: 1,
-                    scaleShowHorizontalLines: true,
-                    scaleShowVerticalLines: true,
-                    bezierCurve: true,
-                    pointDot: false,
-                    pointDotRadius: 4,
-                    pointDotStrokeWidth: 1,
-                    pointHitDetectionRadius: 20,
-                    datasetStroke: true,
-                    datasetFill: true,
-                    maintainAspectRatio: false,
-                    responsive: true
-                }
-            }
-
-            window.customerStatisticsMoth = new Chart(document.getElementById("customer-statistics-chart-moth").getContext("2d"), csMonthConfig);
-        });
-    </script>
-}
-
-@helper TabStatisticsYear()
-{
-    <div class="chart">
-        <canvas id="customer-statistics-chart-year" height="300"></canvas>
-    </div>
-
-    <script>
-        $(document).ready(function () {
-            var csYearConfig = {
-                type: 'line',
-                data: {
-                    labels: [
-                        @foreach (var item in Model.ByYearItems)
-                        {
-                            <text>'@item.Date.ToString("Y")',</text>
                         }
-                    ],
-                    datasets: [
-                        {
-                            label: "@T("Admin.Customers.Reports.CustomerStatistics")",
-                            fillColor: "rgba(60,141,188,0.9)",
-                            strokeColor: "rgba(60,141,188,0.8)",
-                            pointColor: "#00a65a",
-                            pointStrokeColor: "rgba(0,166,90,1)",
-                            pointHighlightFill: "#fff",
-                            pointHighlightStroke: "rgba(0,166,90,1)",
-                            borderColor: 'rgba(0,166,90, 1)',
-                            backgroundColor: 'rgba(0,166,90,0.5)',
-                            pointBorderColor: 'rgba(0,166,90,0.7)',
-                            pointBackgroundColor: 'rgba(0,166,90,0.2)',
-                            pointBorderWidth: 1,
-                            data: [
-                                @foreach (var item in Model.ByYearItems)
-                                {
-                                    <text>'@item.Value',</text>
-                                }
-                            ]
+                    }],
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            userCallback: function (dataLabel, index) {
+                                return (dataLabel ^ 0) === dataLabel ? dataLabel : '';
+                            },
+                            min: 0
                         }
-                    ]
+                    }]
                 },
-                options: {
-                    legend: {
-                        display: false
-                    },
-                    scales: {
-                        yAxes: [{
-                            display: true,
-                            ticks: {
-                                userCallback: function (dataLabel, index) {
-                                    return (dataLabel ^ 0) === dataLabel ? dataLabel : '';
-                                },
-                                min: 0
-                            }
-                        }]
-                    },
-                    showScale: true,
-                    scaleShowGridLines: false,
-                    scaleGridLineColor: "rgba(0,0,0,.05)",
-                    scaleGridLineWidth: 1,
-                    scaleShowHorizontalLines: true,
-                    scaleShowVerticalLines: true,
-                    bezierCurve: true,
-                    pointDot: false,
-                    pointDotRadius: 4,
-                    pointDotStrokeWidth: 1,
-                    pointHitDetectionRadius: 20,
-                    datasetStroke: true,
-                    datasetFill: true,
-                    maintainAspectRatio: false,
-                    responsive: true
-                }
+                showScale: true,
+                scaleShowGridLines: false,
+                scaleGridLineColor: "rgba(0,0,0,.05)",
+                scaleGridLineWidth: 1,
+                scaleShowHorizontalLines: true,
+                scaleShowVerticalLines: true,
+                bezierCurve: true,
+                pointDot: false,
+                pointDotRadius: 4,
+                pointDotStrokeWidth: 1,
+                pointHitDetectionRadius: 20,
+                datasetStroke: true,
+                datasetFill: true,
+                maintainAspectRatio: false,
+                responsive: true
             }
+        };
 
-            window.customerStatisticsYear = new Chart(document.getElementById("customer-statistics-chart-year").getContext("2d"), csYearConfig);
+        function changeCsPeriod(period) {
+            var csLabels = [];
+            var csData = [];
+
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: '@Url.Action("LoadCustomerStatistics", "Customer")',
+                data: {
+                    period: period
+                },
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        csLabels.push(data[i].date);
+                        csData.push(data[i].value);
+                    }
+
+                    if (!window.customerStatistics) {
+                        csConfig.data.labels = csLabels;
+                        csConfig.data.datasets[0].data = csData;
+                        csConfig.data.scales =
+                        window.customerStatistics = new Chart(document.getElementById("@prefix-chart").getContext("2d"), csConfig);
+                    } else {
+                        window.customerStatistics.config.data.labels = csLabels;
+                        window.customerStatistics.config.data.datasets[0].data = csData;
+                        window.customerStatistics.update();
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Failed to load statistics.');
+                }
+            });
+        }
+
+        $('#@(prefix)-box button[data-chart-role="toggle-chart"]').on('click', function () {
+            var period = $(this).attr('data-chart-period');
+            csCurrentPeriod = period;
+            changeCsPeriod(period);
+            $('#@(prefix)-box button[data-chart-role="toggle-chart"]').removeClass('bg-light-blue');
+            $(this).addClass('bg-light-blue');
         });
-    </script>
-}
+
+        @if (!hidePanel)
+        {
+            <text>
+                $('#@(prefix)-box button[data-chart-role="toggle-chart"][data-chart-period="week"]').trigger('click');
+            </text>
+        }
+    });
+</script>

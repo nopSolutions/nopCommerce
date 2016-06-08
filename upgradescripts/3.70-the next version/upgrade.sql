@@ -659,6 +659,9 @@ set @resources='
   <LocaleResource Name="Admin.Dashboard.LatestOrders.ViewAll">
     <Value>View All Orders</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.CommonStatistics">
+    <Value>Common statistics</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.RequireRegistrationForDownloadableProducts">
     <Value>Require registration for downloadable products</Value>
   </LocaleResource>
