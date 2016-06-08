@@ -151,14 +151,6 @@
                                         </script>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.OrderNotes)
-                                    </div>
-                                    <div class="col-md-8">
-                                        @Html.NopEditorFor(model => model.OrderNotes)
-                                    </div>
-                                </div>
                                 <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                     <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.OrderStatusIds)
@@ -231,6 +223,14 @@
                                     </div>
                                     <div class="col-md-8">
                                         @Html.NopDropDownList("PaymentMethodSystemName", Model.AvailablePaymentMethods)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.OrderNotes)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopEditorFor(model => model.OrderNotes)
                                     </div>
                                 </div>
                                 <div class="form-group">
