@@ -2,6 +2,8 @@
 @using Nop.Services.Common
 
 @{
+    Html.AppendScriptParts("~/Scripts/chartjs/Chart.min.js");
+
     const string prefix = "order-statistics";
     const string hidePanelAttributeName = "HideOrderStatisticsPanel";
     var hidePanel = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
