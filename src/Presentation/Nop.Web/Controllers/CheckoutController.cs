@@ -69,6 +69,7 @@ namespace Nop.Web.Controllers
         private readonly PaymentSettings _paymentSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly AddressSettings _addressSettings;
+        private readonly CustomerSettings _customerSettings;
 
         #endregion
 
@@ -103,7 +104,8 @@ namespace Nop.Web.Controllers
             RewardPointsSettings rewardPointsSettings,
             PaymentSettings paymentSettings,
             ShippingSettings shippingSettings,
-            AddressSettings addressSettings)
+            AddressSettings addressSettings,
+            CustomerSettings customerSettings)
         {
             this._workContext = workContext;
             this._storeContext = storeContext;
@@ -136,6 +138,7 @@ namespace Nop.Web.Controllers
             this._paymentSettings = paymentSettings;
             this._shippingSettings = shippingSettings;
             this._addressSettings = addressSettings;
+            this._customerSettings = customerSettings;
         }
 
         #endregion
@@ -460,7 +463,11 @@ namespace Nop.Web.Controllers
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
-            if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
+            if (_workContext.CurrentCustomer.IsGuest() 
+                && (!_orderSettings.AnonymousCheckoutAllowed
+                    || (cart.Any(sci => sci.Product.IsDownload) 
+                        && _customerSettings.RequireRegistrationForDownloadableProducts))
+                )
                 return new HttpUnauthorizedResult();
 
             //reset checkout data

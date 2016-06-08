@@ -91,6 +91,7 @@ namespace Nop.Web.Controllers
         private readonly CaptchaSettings _captchaSettings;
         private readonly AddressSettings _addressSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
+        private readonly CustomerSettings _customerSettings;
 
         #endregion
 
@@ -137,7 +138,8 @@ namespace Nop.Web.Controllers
             TaxSettings taxSettings,
             CaptchaSettings captchaSettings, 
             AddressSettings addressSettings,
-            RewardPointsSettings rewardPointsSettings)
+            RewardPointsSettings rewardPointsSettings,
+            CustomerSettings customerSettings)
         {
             this._productService = productService;
             this._workContext = workContext;
@@ -183,6 +185,7 @@ namespace Nop.Web.Controllers
             this._captchaSettings = captchaSettings;
             this._addressSettings = addressSettings;
             this._rewardPointsSettings = rewardPointsSettings;
+            this._customerSettings = customerSettings;
         }
 
         #endregion
@@ -850,7 +853,9 @@ namespace Nop.Web.Controllers
                     bool minOrderSubtotalAmountOk = _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
                     model.DisplayCheckoutButton = !_orderSettings.TermsOfServiceOnShoppingCartPage &&
                         minOrderSubtotalAmountOk &&
-                        !checkoutAttributesExist;
+                        !checkoutAttributesExist &&
+                        !(_customerSettings.RequireRegistrationForDownloadableProducts 
+                            && _workContext.CurrentCustomer.IsGuest());
 
                     //products. sort descending (recently added products)
                     foreach (var sci in cart
@@ -2220,7 +2225,9 @@ namespace Nop.Web.Controllers
             //everything is OK
             if (_workContext.CurrentCustomer.IsGuest())
             {
-                if (!_orderSettings.AnonymousCheckoutAllowed)
+                if (!_orderSettings.AnonymousCheckoutAllowed 
+                    || (_customerSettings.RequireRegistrationForDownloadableProducts 
+                        && cart.Any(sci => sci.Product.IsDownload)))
                     return new HttpUnauthorizedResult();
                 
                 return RedirectToRoute("LoginCheckoutAsGuest", new {returnUrl = Url.RouteUrl("ShoppingCart")});
