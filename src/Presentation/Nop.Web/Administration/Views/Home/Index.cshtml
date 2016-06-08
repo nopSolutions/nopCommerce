@@ -46,7 +46,7 @@
             @Html.Widget("admin_dashboard_commonstatistics_after")
             @if (!Model.IsLoggedInAsVendor && (canManageOrders || canManageCustomers))
             {
-                <div class="row margin-bottom">
+                <div class="row">
                     @if (!Model.IsLoggedInAsVendor && canManageOrders)
                     {
                         <div class="col-md-6">

@@ -16,7 +16,14 @@
         </div>
         <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                <i class="fa fa-minus"></i>
+                @if (hidePanel)
+                {
+                    <text><i class="fa fa-plus"></i></text>
+                }
+                else
+                {
+                    <text><i class="fa fa-minus"></i></text>
+                }
             </button>
         </div>
     </div>

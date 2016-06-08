@@ -19,7 +19,16 @@
             <button class="btn btn-xs btn-info btn-flat margin-r-5" @if (hidePanel) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="year">@T("Admin.Customers.Reports.CustomerStatistics.Year")</button>
             <button class="btn btn-xs btn-info btn-flat margin-r-5" @if (hidePanel) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="month">@T("Admin.Customers.Reports.CustomerStatistics.Month")</button>
             <button class="btn btn-xs btn-info btn-flat" @if (hidePanel) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="week">@T("Admin.Customers.Reports.CustomerStatistics.Week")</button>
-            <button class="btn btn-box-tool margin-l-10" data-widget="collapse"><i class="fa fa-minus"></i></button>
+            <button class="btn btn-box-tool margin-l-10" data-widget="collapse">
+                @if (hidePanel)
+                {
+                    <text><i class="fa fa-plus"></i></text>
+                }
+                else
+                {
+                    <text><i class="fa fa-minus"></i></text>
+                }
+            </button>
         </div>
     </div>
     <div class="box-body">
