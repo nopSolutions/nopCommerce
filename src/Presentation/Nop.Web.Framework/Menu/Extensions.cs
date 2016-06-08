@@ -19,7 +19,7 @@ namespace Nop.Web.Framework.Menu
             if (String.IsNullOrWhiteSpace(systemName))
                 return false;
 
-            if (node.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
+            if (systemName.Equals(node.SystemName, StringComparison.InvariantCultureIgnoreCase))
                 return true;
 
             return node.ChildNodes.Any(cn => ContainsSystemName(cn, systemName));
