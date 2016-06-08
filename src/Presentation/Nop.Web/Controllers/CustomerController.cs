@@ -1232,13 +1232,97 @@ namespace Nop.Web.Controllers
         public ActionResult CustomerNavigation(int selectedTabId = 0)
         {
             var model = new CustomerNavigationModel();
-            model.HideAvatar = !_customerSettings.AllowCustomersToUploadAvatars;
-            model.HideRewardPoints = !_rewardPointsSettings.Enabled;
-            model.HideForumSubscriptions = !_forumSettings.ForumsEnabled || !_forumSettings.AllowCustomersToManageSubscriptions;
-            model.HideReturnRequests = !_orderSettings.ReturnRequestsEnabled ||
-                _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id, 0, null, 0, 1).Count == 0;
-            model.HideDownloadableProducts = _customerSettings.HideDownloadableProductsTab;
-            model.HideBackInStockSubscriptions = _customerSettings.HideBackInStockSubscriptionsTab;
+            var languageId = _workContext.WorkingLanguage.Id;
+
+            model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+            {
+                RouteName = "CustomerInfo",
+                Title = _localizationService.GetResource("Account.CustomerInfo", languageId),
+                Tab = CustomerNavigationEnum.Info
+            });
+
+            model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+            {
+                RouteName = "CustomerAddresses",
+                Title = _localizationService.GetResource("Account.CustomerAddresses", languageId),
+                Tab = CustomerNavigationEnum.Addresses
+            });
+
+            model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+            {
+                RouteName = "CustomerOrders",
+                Title = _localizationService.GetResource("Account.CustomerOrders", languageId),
+                Tab = CustomerNavigationEnum.Orders
+            });
+
+            if (_orderSettings.ReturnRequestsEnabled &&
+                _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id,
+                    _workContext.CurrentCustomer.Id, 0, null, 0, 1).Any())
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerReturnRequests",
+                    Title = _localizationService.GetResource("Account.CustomerReturnRequests", languageId),
+                    Tab = CustomerNavigationEnum.ReturnRequests
+                });
+            }
+
+            if (!_customerSettings.HideDownloadableProductsTab)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerDownloadableProducts",
+                    Title = _localizationService.GetResource("Account.DownloadableProducts", languageId),
+                    Tab = CustomerNavigationEnum.DownloadableProducts
+                });
+            }
+
+            if (!_customerSettings.HideBackInStockSubscriptionsTab)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerBackInStockSubscriptions",
+                    Title = _localizationService.GetResource("Account.BackInStockSubscriptions", languageId),
+                    Tab = CustomerNavigationEnum.BackInStockSubscriptions
+                });
+            }
+
+            if (_rewardPointsSettings.Enabled)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerRewardPoints",
+                    Title = _localizationService.GetResource("Account.RewardPoints", languageId),
+                    Tab = CustomerNavigationEnum.RewardPoints
+                });
+            }
+
+            model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+            {
+                RouteName = "CustomerChangePassword",
+                Title = _localizationService.GetResource("Account.ChangePassword", languageId),
+                Tab = CustomerNavigationEnum.ChangePassword
+            });
+
+            if (_customerSettings.AllowCustomersToUploadAvatars)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerAvatar",
+                    Title = _localizationService.GetResource("Account.Avatar", languageId),
+                    Tab = CustomerNavigationEnum.Avatar
+                });
+            }
+
+            if (_forumSettings.ForumsEnabled && _forumSettings.AllowCustomersToManageSubscriptions)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerForumSubscriptions",
+                    Title = _localizationService.GetResource("Account.ForumSubscriptions", languageId),
+                    Tab = CustomerNavigationEnum.ForumSubscriptions
+                });
+            }
 
             model.SelectedTab = (CustomerNavigationEnum)selectedTabId;
 
