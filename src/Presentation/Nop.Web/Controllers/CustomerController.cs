@@ -1232,26 +1232,25 @@ namespace Nop.Web.Controllers
         public ActionResult CustomerNavigation(int selectedTabId = 0)
         {
             var model = new CustomerNavigationModel();
-            var languageId = _workContext.WorkingLanguage.Id;
 
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerInfo",
-                Title = _localizationService.GetResource("Account.CustomerInfo", languageId),
+                Title = _localizationService.GetResource("Account.CustomerInfo"),
                 Tab = CustomerNavigationEnum.Info
             });
 
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerAddresses",
-                Title = _localizationService.GetResource("Account.CustomerAddresses", languageId),
+                Title = _localizationService.GetResource("Account.CustomerAddresses"),
                 Tab = CustomerNavigationEnum.Addresses
             });
 
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerOrders",
-                Title = _localizationService.GetResource("Account.CustomerOrders", languageId),
+                Title = _localizationService.GetResource("Account.CustomerOrders"),
                 Tab = CustomerNavigationEnum.Orders
             });
 
@@ -1262,7 +1261,7 @@ namespace Nop.Web.Controllers
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerReturnRequests",
-                    Title = _localizationService.GetResource("Account.CustomerReturnRequests", languageId),
+                    Title = _localizationService.GetResource("Account.CustomerReturnRequests"),
                     Tab = CustomerNavigationEnum.ReturnRequests
                 });
             }
@@ -1272,7 +1271,7 @@ namespace Nop.Web.Controllers
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerDownloadableProducts",
-                    Title = _localizationService.GetResource("Account.DownloadableProducts", languageId),
+                    Title = _localizationService.GetResource("Account.DownloadableProducts"),
                     Tab = CustomerNavigationEnum.DownloadableProducts
                 });
             }
@@ -1282,7 +1281,7 @@ namespace Nop.Web.Controllers
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerBackInStockSubscriptions",
-                    Title = _localizationService.GetResource("Account.BackInStockSubscriptions", languageId),
+                    Title = _localizationService.GetResource("Account.BackInStockSubscriptions"),
                     Tab = CustomerNavigationEnum.BackInStockSubscriptions
                 });
             }
@@ -1292,7 +1291,7 @@ namespace Nop.Web.Controllers
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerRewardPoints",
-                    Title = _localizationService.GetResource("Account.RewardPoints", languageId),
+                    Title = _localizationService.GetResource("Account.RewardPoints"),
                     Tab = CustomerNavigationEnum.RewardPoints
                 });
             }
@@ -1300,7 +1299,7 @@ namespace Nop.Web.Controllers
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerChangePassword",
-                Title = _localizationService.GetResource("Account.ChangePassword", languageId),
+                Title = _localizationService.GetResource("Account.ChangePassword"),
                 Tab = CustomerNavigationEnum.ChangePassword
             });
 
@@ -1309,7 +1308,7 @@ namespace Nop.Web.Controllers
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerAvatar",
-                    Title = _localizationService.GetResource("Account.Avatar", languageId),
+                    Title = _localizationService.GetResource("Account.Avatar"),
                     Tab = CustomerNavigationEnum.Avatar
                 });
             }
@@ -1319,7 +1318,7 @@ namespace Nop.Web.Controllers
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerForumSubscriptions",
-                    Title = _localizationService.GetResource("Account.ForumSubscriptions", languageId),
+                    Title = _localizationService.GetResource("Account.ForumSubscriptions"),
                     Tab = CustomerNavigationEnum.ForumSubscriptions
                 });
             }
