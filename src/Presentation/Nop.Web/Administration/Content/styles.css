@@ -730,6 +730,10 @@ width: 25px;
     margin-left: 10px;
 }
 
+.margin-t-5 {
+    margin-top: 5px;
+}
+
 @media (max-width: 1200px) {
     .form-horizontal .ico-help {
          display: none;
