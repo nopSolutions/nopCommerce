@@ -38,7 +38,9 @@
             @if (!Model.IsLoggedInAsVendor && canManageOrders && canManageCustomers && canManageProducts && canManageReturnRequests)
             {
                 <div class="row">
-                    @Html.Action("CommonStatistics", "Home")
+                    <div class="col-md-12">
+                        @Html.Action("CommonStatistics", "Home")
+                    </div>
                 </div>
             }
             @Html.Widget("admin_dashboard_commonstatistics_after")

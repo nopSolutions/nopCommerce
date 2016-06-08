@@ -8766,6 +8766,9 @@
   <LocaleResource Name="Admin.Dashboard">
     <Value>Dashboard</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.CommonStatistics">
+    <Value>Common statistics</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Dashboard.NumberOfOrders">
     <Value>Orders</Value>
   </LocaleResource>
