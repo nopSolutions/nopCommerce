@@ -110,41 +110,14 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            if (model.UseSandbox_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.UseSandbox, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.UseSandbox, storeScope);
-
-            if (model.TransactModeId_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.TransactMode, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.TransactMode, storeScope);
-
-            if (model.ApiAccountName_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.ApiAccountName, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.ApiAccountName, storeScope);
-
-            if (model.ApiAccountPassword_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.ApiAccountPassword, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.ApiAccountPassword, storeScope);
-
-            if (model.Signature_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.Signature, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.Signature, storeScope);
-
-            if (model.AdditionalFee_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.AdditionalFee, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.AdditionalFee, storeScope);
-
-            if (model.AdditionalFeePercentage_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.AdditionalFeePercentage, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
-
+            _settingService.SaveSettingOverridablePerStore(payPalDirectPaymentSettings, x => x.UseSandbox, model.UseSandbox_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalDirectPaymentSettings, x => x.TransactMode, model.TransactModeId_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalDirectPaymentSettings, x => x.ApiAccountName, model.ApiAccountName_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalDirectPaymentSettings, x => x.ApiAccountPassword, model.ApiAccountPassword_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalDirectPaymentSettings, x => x.Signature, model.Signature_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalDirectPaymentSettings, x => x.AdditionalFee, model.AdditionalFee_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalDirectPaymentSettings, x => x.AdditionalFeePercentage, model.AdditionalFeePercentage_OverrideForStore, storeScope, false);
+           
             //now clear settings cache
             _settingService.ClearCache();
 

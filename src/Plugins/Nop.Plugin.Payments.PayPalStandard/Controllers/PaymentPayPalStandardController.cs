@@ -128,61 +128,18 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            if (model.UseSandbox_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.UseSandbox, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.UseSandbox, storeScope);
-
-            if (model.BusinessEmail_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.BusinessEmail, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.BusinessEmail, storeScope);
-
-            if (model.PdtToken_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.PdtToken, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.PdtToken, storeScope);
-
-            if (model.PdtValidateOrderTotal_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.PdtValidateOrderTotal, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.PdtValidateOrderTotal, storeScope);
-
-            if (model.AdditionalFee_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.AdditionalFee, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.AdditionalFee, storeScope);
-
-            if (model.AdditionalFeePercentage_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
-
-            if (model.PassProductNamesAndTotals_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope);
-
-            if (model.EnableIpn_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.EnableIpn, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.EnableIpn, storeScope);
-
-            if (model.IpnUrl_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.IpnUrl, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.IpnUrl, storeScope);
-
-            if (model.AddressOverride_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.AddressOverride, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.AddressOverride, storeScope);
-
-            if (model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, storeScope);
-
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.UseSandbox, model.UseSandbox_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.BusinessEmail, model.BusinessEmail_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.PdtToken, model.PdtToken_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.PdtValidateOrderTotal, model.PdtValidateOrderTotal_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.AdditionalFee, model.AdditionalFee_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, model.AdditionalFeePercentage_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, model.PassProductNamesAndTotals_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.EnableIpn, model.EnableIpn_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.IpnUrl, model.IpnUrl_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.AddressOverride, model.AddressOverride_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore, storeScope, false);
+            
             //now clear settings cache
             _settingService.ClearCache();
 
