@@ -8,5 +8,7 @@
 <div class="page forum-group-page">
     @Html.Action("ForumBreadcrumb", new { forumGroupId = Model.Id })
     @Html.Partial("_ForumHeader")
+    @Html.Widget("boards_forumgroup_after_header")
     @Html.Partial("_ForumGroup", Model)
+    @Html.Widget("boards_forumgroup_bottom")
 </div>
