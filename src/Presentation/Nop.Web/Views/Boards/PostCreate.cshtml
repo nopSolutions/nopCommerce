@@ -5,4 +5,6 @@
 
     Html.AddTitleParts(T("Forum.PageTitle.PostNew").Text);
 }
+@Html.Widget("boards_postcreate_before", Model.Id)
 @Html.Partial("_CreateUpdatePost", Model)
+@Html.Widget("boards_postcreate_after", Model.Id)

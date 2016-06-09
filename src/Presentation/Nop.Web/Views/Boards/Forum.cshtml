@@ -10,6 +10,7 @@
 <div class="page forum-page">
     @Html.Action("ForumBreadcrumb", new { forumId = Model.Id })
     @Html.Partial("_ForumHeader")
+    @Html.Widget("boards_forum_after_header", Model.Id)
     <div class="forum-info">
         <div class="forum-name">
             @if (Model.ForumFeedsEnabled)
@@ -24,22 +25,22 @@
     </div>
     <div class="forum-actions">
         <div class="actions">
-            @Html.RouteLink(T("Forum.NewTopic").ToString(), "TopicCreate", new { id = Model.Id }, new { @class = "new-topic" })
+            @Html.RouteLink(T("Forum.NewTopic").ToString(), "TopicCreate", new {id = Model.Id}, new {@class = "new-topic"})
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 <a class="watch-forum" href="#" id="watch-forum">@Model.WatchForumText</a>
                 <script type="text/javascript">
-                    $(document).ready(function () {
-                        $('#watch-forum').click(function () {
+                    $(document).ready(function() {
+                        $('#watch-forum').click(function() {
                             $.ajax({
                                 cache: false,
                                 type: 'POST',
-                                url: '@Url.RouteUrl("ForumWatch", new { id = Model.Id })',
+                                url: '@Url.RouteUrl("ForumWatch", new {id = Model.Id})',
                                 dataType: 'json',
-                                success: function (data) {
+                                success: function(data) {
                                     $('#watch-forum').text(data.Text);
                                 },
-                                error: function (xhr, ajaxOptions, thrownError) {
+                                error: function(xhr, ajaxOptions, thrownError) {
                                     alert('Failed to watch');
                                 }
                             });
@@ -48,6 +49,7 @@
                 </script>
             }
         </div>
+        @Html.Widget("boards_forum_top", Model.Id)
         @{
             var pager = Html.Pager(new PagerModel
             {
@@ -67,7 +69,6 @@
             </div>
         }
     </div>
-
     <div class="forums-table-section topic-group">
         @if (Model.ForumTopics.Count > 0)
         {
@@ -185,4 +186,5 @@
             @pager
         </div>
     }
+    @Html.Widget("boards_forum_bottom", Model.Id)
 </div>
