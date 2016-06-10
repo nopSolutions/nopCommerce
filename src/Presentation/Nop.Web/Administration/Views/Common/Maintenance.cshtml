@@ -176,21 +176,21 @@
                 <div id="backup-data" style="display: none"></div>
 
                 <script type="text/javascript">
-                    function SubmitBackupAction(fileName, action) {
+                    function submitBackupAction(fileName, action) {
                         $("#backup-data").children().remove();
                         $("#backup-data").append('<input type="hidden" name="backupFileName" value="' + fileName + '"/>');
                         $("#backup-data").append('<input type="hidden" name="action" value="' + action + '"/>');
-                        ShowProgress();
+                        showProgress();
                     };
 
-                    function ShowProgress() {
+                    function showProgress() {
                         $("html, body").animate({ scrollTop: 0 }, 400);
                         showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.System.Maintenance.BackupDatabase.Progress").Text))');
                     };
 
                     $(document).ready(function () {
                         $("#backup-database").on("click", function () {
-                            ShowProgress();
+                            showProgress();
                         });
                     });
                 </script>
@@ -247,12 +247,12 @@
                                 }, {
                                     field: "Name",
                                     title: "@T("Admin.System.Maintenance.BackupDatabase.Restore")",
-                                    template: '<button type="submit" class="btn bg-green" onclick="SubmitBackupAction(\'#=Name#\',\'restore-backup\')">@T("Admin.System.Maintenance.BackupDatabase.Restore")</button>'
+                                    template: '<button type="submit" class="btn bg-green" onclick="submitBackupAction(\'#=Name#\',\'restore-backup\')">@T("Admin.System.Maintenance.BackupDatabase.Restore")</button>'
                                 },
                                 {
                                     field: "Name",
                                     title: "@T("Admin.System.Maintenance.BackupDatabase.Delete")",
-                                    template: '<button type="submit" class="btn bg-red" onclick="SubmitBackupAction(\'#=Name#\',\'delete-backup\')">@T("Admin.System.Maintenance.BackupDatabase.Delete")</button>'
+                                    template: '<button type="submit" class="btn bg-red" onclick="submitBackupAction(\'#=Name#\',\'delete-backup\')">@T("Admin.System.Maintenance.BackupDatabase.Delete")</button>'
                                 }
                             ]
                         });

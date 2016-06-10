@@ -140,6 +140,11 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public bool EnteringEmailTwice { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether registration is required for downloadable products
+        /// </summary>
+        public bool RequireRegistrationForDownloadableProducts { get; set; }
+
         #region Form fields
 
         /// <summary>

@@ -1,18 +1,42 @@
-﻿<div class="box box-info">
+﻿@using Nop.Core
+@using Nop.Services.Common
+@{
+    const string panelId = "latest-orders-box";
+    const string hidePanelAttributeName = "HideLatestOrdersPanel";
+    var hidePanel = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
+    var gridPageSize = 5;
+}
+
+<div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">
     <div class="box-header with-border">
         <h3 class="box-title">
             <i class="fa fa-cart-plus"></i>
             @T("Admin.Dashboard.LatestOrders")
+            <a href="@Url.Action("List", "Order")" class="btn btn-xs btn-info btn-flat margin-l-10">@T("Admin.Dashboard.LatestOrders.ViewAll")</a>
         </h3>
         <div class="box-tools pull-right">
-            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+            <button class="btn btn-box-tool" data-widget="collapse">
+                @if (hidePanel)
+                {
+                    <text><i class="fa fa-plus"></i></text>
+                }
+                else
+                {
+                    <text><i class="fa fa-minus"></i></text>
+                }
+            </button>
         </div>
     </div>
     <div class="box-body">
-        <div id="orders-grid" class="order-list"></div>
-        
+        <div id="orders-grid"></div>
+
         <script>
             $(document).ready(function () {
+                $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
+                    var collapsed = !$('#@panelId').hasClass('collapsed-box');
+                    saveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
+                });
+
                 $("#orders-grid").kendoGrid({
                     dataSource: {
                         type: "json",
@@ -34,7 +58,7 @@
                             // Cancel the changes
                             this.cancelChanges();
                         },
-                        pageSize: 7,
+                        pageSize: @(gridPageSize),
                         serverPaging: true,
                         serverFiltering: true,
                         serverSorting: true
@@ -53,11 +77,11 @@
                             field: "OrderStatus",
                             title: "@T("Admin.Orders.Fields.OrderStatus")",
                             width: 100,
-                            template: '<span class="order-status ' +
-                                '# if(OrderStatusId == 10) {# order-status-pending #} #' +
-                                '# if(OrderStatusId == 20) {# order-status-processing #} #' +
-                                '# if(OrderStatusId == 30) {# order-status-complete #} #' +
-                                '# if(OrderStatusId == 40) {# order-status-cancelled #} #' +
+                            template: '<span class="grid-report-item ' +
+                                                    '# if(OrderStatusId == 10) {# yellow #} #' +
+                                                    '# if(OrderStatusId == 20) {# blue #} #' +
+                                                    '# if(OrderStatusId == 30) {# green #} #' +
+                                                    '# if(OrderStatusId == 40) {# red #} #' +
                                 '">#=OrderStatus#</span>'
                         },
                         {
@@ -93,8 +117,5 @@
                 return data;
             }
         </script>
-    </div>
-    <div class="box-footer clearfix">
-        <a href="@Url.Action("List", "Order")" class="btn btn-sm btn-info btn-flat">@T("Admin.Dashboard.LatestOrders.ViewAll")</a>
     </div>
 </div>

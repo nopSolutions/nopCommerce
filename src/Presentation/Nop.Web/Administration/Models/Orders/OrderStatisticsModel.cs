@@ -8,9 +8,12 @@ namespace Nop.Admin.Models.Orders
     {
         public OrderStatisticsModel()
         {
+            ByWeekItems = new List<OrderStatisticsItemModel>();
             ByMonthItems = new List<OrderStatisticsItemModel>();
             ByYearItems = new List<OrderStatisticsItemModel>();
         }
+
+        public List<OrderStatisticsItemModel> ByWeekItems { get; set; }
 
         public List<OrderStatisticsItemModel> ByMonthItems { get; set; }
 

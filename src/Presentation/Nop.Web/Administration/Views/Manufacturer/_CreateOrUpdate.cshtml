@@ -115,7 +115,7 @@
     ))
         <div class="panel panel-default">
             <div class="panel-body">
-                <div class="form-group">
+                <div class="form-group" @(Model.AvailableManufacturerTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.ManufacturerTemplateId)
                     </div>

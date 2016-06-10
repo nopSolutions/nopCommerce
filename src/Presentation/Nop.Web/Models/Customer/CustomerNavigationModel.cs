@@ -1,21 +1,25 @@
-﻿using Nop.Web.Framework.Mvc;
+﻿using System.Collections.Generic;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Customer
 {
     public partial class CustomerNavigationModel : BaseNopModel
     {
-        public bool HideInfo { get; set; }
-        public bool HideAddresses { get; set; }
-        public bool HideOrders { get; set; }
-        public bool HideBackInStockSubscriptions { get; set; }
-        public bool HideReturnRequests { get; set; }
-        public bool HideDownloadableProducts { get; set; }
-        public bool HideRewardPoints { get; set; }
-        public bool HideChangePassword { get; set; }
-        public bool HideAvatar { get; set; }
-        public bool HideForumSubscriptions { get; set; }
+        public CustomerNavigationModel()
+        {
+            CustomerNavigationItems = new List<CustomerNavigationItemModel>();
+        }
+
+        public IList<CustomerNavigationItemModel> CustomerNavigationItems { get; set; }
 
         public CustomerNavigationEnum SelectedTab { get; set; }
+    }
+
+    public class CustomerNavigationItemModel
+    {
+        public string RouteName { get; set; }
+        public string Title { get; set; }
+        public CustomerNavigationEnum Tab { get; set; }
     }
 
     public enum CustomerNavigationEnum

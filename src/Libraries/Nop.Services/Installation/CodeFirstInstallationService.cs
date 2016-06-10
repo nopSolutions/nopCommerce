@@ -4788,6 +4788,7 @@ namespace Nop.Services.Installation
                 StoreLastVisitedPage = false,
                 SuffixDeletedCustomers = false,
                 EnteringEmailTwice = false,
+                RequireRegistrationForDownloadableProducts = false,
             });
 
             settingService.SaveSetting(new AddressSettings

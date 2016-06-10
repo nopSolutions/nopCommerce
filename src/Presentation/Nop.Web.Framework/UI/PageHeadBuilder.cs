@@ -195,7 +195,7 @@ namespace Nop.Web.Framework.UI
         }
     
 
-        public virtual void AddScriptParts(ResourceLocation location, string part, bool excludeFromBundle)
+        public virtual void AddScriptParts(ResourceLocation location, string part, bool excludeFromBundle, bool isAsync)
         {
             if (!_scriptParts.ContainsKey(location))
                 _scriptParts.Add(location, new List<ScriptReferenceMeta>());
@@ -206,10 +206,11 @@ namespace Nop.Web.Framework.UI
             _scriptParts[location].Add(new ScriptReferenceMeta
             {
                 ExcludeFromBundle = excludeFromBundle,
+                IsAsync = isAsync,
                 Part = part
             });
         }
-        public virtual void AppendScriptParts(ResourceLocation location, string part, bool excludeFromBundle)
+        public virtual void AppendScriptParts(ResourceLocation location, string part, bool excludeFromBundle, bool isAsync)
         {
             if (!_scriptParts.ContainsKey(location))
                 _scriptParts.Add(location, new List<ScriptReferenceMeta>());
@@ -220,6 +221,7 @@ namespace Nop.Web.Framework.UI
             _scriptParts[location].Insert(0, new ScriptReferenceMeta
             {
                 ExcludeFromBundle = excludeFromBundle,
+                IsAsync = isAsync,
                 Part = part
             });
         }
@@ -245,7 +247,7 @@ namespace Nop.Web.Framework.UI
                     .ToArray();
                 var partsToDontBundle = _scriptParts[location]
                     .Where(x => x.ExcludeFromBundle)
-                    .Select(x => x.Part)
+                    .Select(x => new  { x.Part, x.IsAsync})
                     .Distinct()
                     .ToArray();
 
@@ -278,9 +280,9 @@ namespace Nop.Web.Framework.UI
                 }
 
                 //parts to do not bundle
-                foreach (var path in partsToDontBundle)
+                foreach (var item in partsToDontBundle)
                 {
-                    result.AppendFormat("<script src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content(path), MimeTypes.TextJavascript);
+                    result.AppendFormat("<script {2}src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content(item.Part), MimeTypes.TextJavascript, item.IsAsync ? "async " : "");
                     result.Append(Environment.NewLine);
                 }
                 return result.ToString();
@@ -289,9 +291,9 @@ namespace Nop.Web.Framework.UI
             {
                 //bundling is disabled
                 var result = new StringBuilder();
-                foreach (var path in _scriptParts[location].Select(x => x.Part).Distinct())
+                foreach (var item in _scriptParts[location].Select(x => new { x.Part, x.IsAsync}).Distinct())
                 {
-                    result.AppendFormat("<script src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content(path), MimeTypes.TextJavascript);
+                    result.AppendFormat("<script {2}src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content(item.Part), MimeTypes.TextJavascript, item.IsAsync ? "async ":"");
                     result.Append(Environment.NewLine);
                 }
                 return result.ToString();
@@ -505,6 +507,8 @@ namespace Nop.Web.Framework.UI
         private class ScriptReferenceMeta
         {
             public bool ExcludeFromBundle { get; set; }
+
+            public bool IsAsync { get; set; }
 
             public string Part { get; set; }
         }

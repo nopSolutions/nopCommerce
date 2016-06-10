@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.ServiceModel.Syndication;
 using System.Web.Mvc;
@@ -94,8 +94,41 @@ namespace Nop.Admin.Controllers
                         return SyndicationFeed.Load(reader);
                     }
                 });
- 
-                return PartialView(rssData);
+                
+                var model = new NopCommerceNewsModel()
+                {
+                    HideAdvertisements = _commonSettings.HideAdvertisementsOnAdminArea
+                };
+                for (int i = 0; i < rssData.Items.Count(); i++)
+                {
+                    var item = rssData.Items.ElementAt(i);
+                    var newsItem = new NopCommerceNewsModel.NewsDetailsModel()
+                    {
+                        Title = item.Title.Text,
+                        Summary = item.Summary.Text,
+                        Url = item.Links.Any() ? item.Links.First().Uri.OriginalString : null,
+                        PublishDate = item.PublishDate
+                    };
+                    model.Items.Add(newsItem);
+
+                    //has new items?
+                    if (i == 0)
+                    {
+                        var firstRequest = String.IsNullOrEmpty(_commonSettings.LastNewsTitleAdminArea);
+                        if (_commonSettings.LastNewsTitleAdminArea != newsItem.Title)
+                        {
+                            _commonSettings.LastNewsTitleAdminArea = newsItem.Title;
+                            _settingService.SaveSetting(_commonSettings);
+
+                            if (!firstRequest)
+                            {
+                                //new item
+                                model.HasNewItems = true;
+                            }
+                        }
+                    }
+                }
+                return PartialView(model);
             }
             catch (Exception)
             {
@@ -120,11 +153,13 @@ namespace Nop.Admin.Controllers
                 !_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return Content("");
 
+            //a vendor doesn't have access to this report
+            if (_workContext.CurrentVendor != null)
+                return Content("");
+
             var model = new CommonStatisticsModel();
-            var vendorId = _workContext.CurrentVendor != null ? _workContext.CurrentVendor.Id : 0;
 
             model.NumberOfOrders = _orderService.SearchOrders(
-                vendorId: vendorId, 
                 pageIndex: 0, 
                 pageSize: 1).TotalCount;
 
@@ -138,8 +173,8 @@ namespace Nop.Admin.Controllers
                 pageIndex: 0, 
                 pageSize:1).TotalCount;
 
-            model.NumberOfLowStockProducts = _productService.GetLowStockProducts(vendorId, 0, 1).TotalCount +
-                                             _productService.GetLowStockProductCombinations(vendorId, 0, 1).TotalCount;
+            model.NumberOfLowStockProducts = _productService.GetLowStockProducts(0, 0, 1).TotalCount +
+                                             _productService.GetLowStockProductCombinations(0, 0, 1).TotalCount;
 
             return PartialView(model);
         }

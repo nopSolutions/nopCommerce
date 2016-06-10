@@ -107,23 +107,7 @@
                                         @Html.NopEditorFor(model => model.EndDate)
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.StoreId)
-                                    </div>
-                                    <div class="col-md-8">
-                                        @Html.NopDropDownList("StoreId", Model.AvailableStores)
-                                    </div>
-                                </div>
-                                <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                    <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.VendorId)
-                                    </div>
-                                    <div class="col-md-8">
-                                        @Html.NopDropDownList("VendorId", Model.AvailableVendors)
-                                    </div>
-                                </div>
-                                <div class="form-group">
+                                <div class="form-group" @(Model.AvailableWarehouses.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.WarehouseId)
                                     </div>
@@ -167,24 +151,6 @@
                                         </script>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.OrderNotes)
-                                    </div>
-                                    <div class="col-md-8">
-                                        @Html.NopEditorFor(model => model.OrderNotes)
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.OrderGuid)
-                                    </div>
-                                    <div class="col-md-8">
-                                        @Html.NopEditorFor(model => model.OrderGuid)
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-7">
                                 <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                     <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.OrderStatusIds)
@@ -209,6 +175,24 @@
                                         @Html.EditorFor(model => model.ShippingStatusIds, new { SelectList = Model.AvailableShippingStatuses })
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.StoreId)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopDropDownList("StoreId", Model.AvailableStores)
+                                    </div>
+                                </div>
+                                <div class="form-group" @(Model.AvailableVendors.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.VendorId)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopDropDownList("VendorId", Model.AvailableVendors)
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.BillingEmail)
@@ -225,7 +209,7 @@
                                         @Html.NopEditorFor(model => model.BillingLastName)
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" @(Model.AvailableCountries.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.BillingCountryId)
                                     </div>
@@ -233,12 +217,20 @@
                                         @Html.NopDropDownList("BillingCountryId", Model.AvailableCountries)
                                     </div>
                                 </div>
-                                <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                <div class="form-group" @(Model.AvailablePaymentMethods.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                     <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.PaymentMethodSystemName)
                                     </div>
                                     <div class="col-md-8">
                                         @Html.NopDropDownList("PaymentMethodSystemName", Model.AvailablePaymentMethods)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.OrderNotes)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopEditorFor(model => model.OrderNotes)
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -271,7 +263,7 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <div id="orders-grid" class="order-list"></div>
+                        <div id="orders-grid"></div>
 
                         <script>
                             $(document).ready(function() {
@@ -338,16 +330,16 @@
                                         {
                                             //a vendor does not have access to this functionality
                                             <text>{
-                                                field: "OrderStatus",
-                                                title: "@T("Admin.Orders.Fields.OrderStatus")",
-                                                width: 100,
-                                                template: '<span class="order-status ' +
-                                                    '# if(OrderStatusId == 10) {# order-status-pending #} #' +
-                                                    '# if(OrderStatusId == 20) {# order-status-processing #} #' +
-                                                    '# if(OrderStatusId == 30) {# order-status-complete #} #' +
-                                                    '# if(OrderStatusId == 40) {# order-status-cancelled #} #' +
-                                                    '">#=OrderStatus#</span>'
-                                            },</text>
+                                            field: "OrderStatus",
+                                            title: "@T("Admin.Orders.Fields.OrderStatus")",
+                                            width: 100,
+                                            template: '<span class="grid-report-item ' +
+                                                '# if(OrderStatusId == 10) {# yellow #} #' +
+                                                '# if(OrderStatusId == 20) {# blue #} #' +
+                                                '# if(OrderStatusId == 30) {# green #} #' +
+                                                '# if(OrderStatusId == 40) {# red #} #' +
+                                                '">#=OrderStatus#</span>'
+                                        },</text>
                                         }
                                         {
                                             field: "PaymentStatus",
@@ -358,10 +350,10 @@
                                         {
                                             //a vendor does not have access to this functionality
                                             <text>{
-                                                field: "ShippingStatus",
-                                                title: "@T("Admin.Orders.Fields.ShippingStatus")",
-                                                width: 150
-                                            },</text>
+                                            field: "ShippingStatus",
+                                            title: "@T("Admin.Orders.Fields.ShippingStatus")",
+                                            width: 150
+                                        },</text>
                                         }
                                         {
                                             field: "CustomerEmail",
@@ -384,15 +376,15 @@
                                         {
                                             //a vendor does not have access to this functionality
                                             <text>{
-                                                field: "OrderTotal",
-                                                title: "@T("Admin.Orders.Fields.OrderTotal")",
-                                                width: 100,
-                                                footerTemplate: '<div><strong>@T("Admin.Orders.Report.Summary")</strong></div>' +
-                                                                        '<div>@T("Admin.Orders.Report.Profit") <span id=\"aggregator-profit-block\"></span></div>' +
-                                                                        '<div>@T("Admin.Orders.Report.Shipping") <span id=\"aggregator-shipping-block\"></span></div>' +
-                                                                        '<div>@T("Admin.Orders.Report.Tax") <span id=\"aggregator-tax-block\"></span></div>' +
-                                                                        '<div>@T("Admin.Orders.Report.Total") <span id=\"aggregator-total-block\"></span></div>'
-                                            },</text>
+                                            field: "OrderTotal",
+                                            title: "@T("Admin.Orders.Fields.OrderTotal")",
+                                            width: 100,
+                                            footerTemplate: '<div><strong>@T("Admin.Orders.Report.Summary")</strong></div>' +
+                                                                    '<div>@T("Admin.Orders.Report.Profit") <span id=\"aggregator-profit-block\"></span></div>' +
+                                                                    '<div>@T("Admin.Orders.Report.Shipping") <span id=\"aggregator-shipping-block\"></span></div>' +
+                                                                    '<div>@T("Admin.Orders.Report.Tax") <span id=\"aggregator-tax-block\"></span></div>' +
+                                                                    '<div>@T("Admin.Orders.Report.Total") <span id=\"aggregator-total-block\"></span></div>'
+                                        },</text>
                                         }
                                         {
                                             field: "Id",
@@ -424,8 +416,7 @@
 
                                 $("".concat("#@Html.FieldIdFor(model => model.BillingEmail),",
                                     "#@Html.FieldIdFor(model => model.BillingLastName),",
-                                    "#@Html.FieldIdFor(model => model.OrderNotes),",
-                                    "#@Html.FieldIdFor(model => model.OrderGuid)")).keydown(function (event) {
+                                    "#@Html.FieldIdFor(model => model.OrderNotes)")).keydown(function (event) {
                                         if (event.keyCode === 13) {
                                             $("#search-orders").click();
                                             return false;
@@ -481,8 +472,7 @@
                                     BillingCountryId: $('#@Html.FieldIdFor(model => model.BillingCountryId)').val(),
                                     PaymentMethodSystemName: $('#@Html.FieldIdFor(model => model.PaymentMethodSystemName)').val(),
                                     ProductId: $('#@Html.FieldIdFor(model => model.ProductId)').val(),
-                                    OrderNotes: $('#@Html.FieldIdFor(model => model.OrderNotes)').val(),
-                                    OrderGuid: $('#@Html.FieldIdFor(model => model.OrderGuid)').val()
+                                    OrderNotes: $('#@Html.FieldIdFor(model => model.OrderNotes)').val()
                                 };
                                 addAntiForgeryToken(data);
                                 return data;
