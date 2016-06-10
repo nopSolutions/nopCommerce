@@ -4,6 +4,8 @@
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
     Html.AddTitleParts(T("PageTitle.SendPM").Text);
+    Html.AppendPageCssClassParts("html-private-messages");
+    Html.AppendPageCssClassParts("html-private-message-send-page");
 }
 @using (Html.BeginForm())
 {

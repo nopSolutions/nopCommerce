@@ -4,6 +4,8 @@
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
     Html.AddTitleParts(T("PageTitle.ViewPM").Text);
+    Html.AppendPageCssClassParts("html-private-messages");
+    Html.AppendPageCssClassParts("html-private-message-view-page");
 }
 <div class="page private-messages private-message-view-page">
     <div class="page-title">

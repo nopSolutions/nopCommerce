@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
     Html.AddTitleParts(Model.Subject);
+    Html.AddPageCssClassParts("html-forum-topic-page");
 }
 <div class="page forum-topic-page">
     @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })

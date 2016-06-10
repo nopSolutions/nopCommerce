@@ -4,6 +4,7 @@
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
     Html.AddTitleParts(T("Forum.PageTitle.ActiveDiscussions").Text);
+    Html.AddPageCssClassParts("html-active-discussions-page");
 }
 <div class="page active-discussions-page">
     @Html.Action("ForumBreadcrumb")

@@ -5,7 +5,8 @@
 @{   
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
-    Html.AddTitleParts(T("Forum.PageTitle.Search").Text);    
+    Html.AddTitleParts(T("Forum.PageTitle.Search").Text);
+    Html.AddPageCssClassParts("html-forum-search-page");
 }
 <script type="text/javascript">
     $(document).ready(function () {
