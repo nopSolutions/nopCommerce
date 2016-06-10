@@ -1,9 +1,13 @@
 ﻿@model VendorModel
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
     Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    //meta
     Html.AddMetaDescriptionParts(Model.MetaDescription);
     Html.AddMetaKeywordParts(Model.MetaKeywords);
+    //page class
     Html.AddPageCssClassParts("html-vendor-page");
 
     var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;

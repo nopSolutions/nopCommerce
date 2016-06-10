@@ -16,9 +16,13 @@
 
     if (!Model.IsPasswordProtected)
     {
+        //title
         Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+        //meta
         Html.AddMetaDescriptionParts(Model.MetaDescription);
         Html.AddMetaKeywordParts(Model.MetaKeywords);
+        //page class
+        Html.AddPageCssClassParts("html-topic-page");
     }
 
     var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
@@ -27,8 +31,6 @@
         var topicUrl = Url.RouteUrl("Topic", new { SeName = Model.SeName }, this.Request.Url.Scheme);
         Html.AddCanonicalUrlParts(topicUrl);
     }
-
-    Html.AddPageCssClassParts("html-topic-page");
 }
 @if (Model.IsPasswordProtected)
 {
