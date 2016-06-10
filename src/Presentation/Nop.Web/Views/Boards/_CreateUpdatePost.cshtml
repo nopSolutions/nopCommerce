@@ -1,6 +1,9 @@
 ﻿@model EditForumPostModel
 @using Nop.Core.Domain.Forums;
 @using Nop.Web.Models.Boards;
+@{
+    Html.AddPageCssClassParts("html-forum-edit-page");
+}
 
 @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.ForumTopicId })
 <div class="page forum-edit-page">

@@ -4,6 +4,7 @@
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
     Html.AddTitleParts(T("Forum.PageTitle.MoveTopic").Text);
+    Html.AddPageCssClassParts("html-move-topic-page");
 }
 @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })
 <div class="page move-topic-page">

@@ -7,6 +7,7 @@
     Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
     Html.AddMetaDescriptionParts(Model.MetaDescription);
     Html.AddMetaKeywordParts(Model.MetaKeywords);
+    Html.AddPageCssClassParts("html-news-item-page");
 }
 <div class="page news-item-page">
     <div class="page-title">

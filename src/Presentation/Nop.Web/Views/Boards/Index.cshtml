@@ -4,6 +4,7 @@
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
     Html.AddTitleParts(T("Forum.PageTitle.Default").Text);
+    Html.AddPageCssClassParts("html-forums-main-page");
 }
 <div class="page forums-main-page">
     @Html.Action("TopicBlock", "Topic", new { systemName = "ForumWelcomeMessage" })

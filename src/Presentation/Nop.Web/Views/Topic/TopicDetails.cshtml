@@ -27,6 +27,8 @@
         var topicUrl = Url.RouteUrl("Topic", new { SeName = Model.SeName }, this.Request.Url.Scheme);
         Html.AddCanonicalUrlParts(topicUrl);
     }
+
+    Html.AddPageCssClassParts("html-topic-page");
 }
 @if (Model.IsPasswordProtected)
 {
