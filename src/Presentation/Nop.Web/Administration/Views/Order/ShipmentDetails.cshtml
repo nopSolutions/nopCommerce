@@ -86,18 +86,18 @@
                                 @Html.NopLabelFor(model => model.TrackingNumber)
                             </div>
                             <div class="col-md-9">
-                                <div class="input-group">
+                                <div class="input-group input-group-short pull-left">
                                     @Html.NopEditorFor(model => model.TrackingNumber)
                                     <span class="input-group-btn">
                                         <button type="submit" name="settrackingnumber" class="btn btn-info">
                                             @T("Admin.Orders.Shipments.TrackingNumber.Button")
                                         </button>
-                                        @if (!string.IsNullOrEmpty(Model.TrackingNumberUrl))
-                                        {
-                                            <a href="@Model.TrackingNumberUrl" target="_blank" class="tracking-url">@T("Admin.Orders.Shipments.TrackingNumber.ViewOnline")</a>
-                                        }
                                     </span>
                                 </div>
+                                @if (!string.IsNullOrEmpty(Model.TrackingNumberUrl))
+                                {
+                                    <a href="@Model.TrackingNumberUrl" target="_blank" class="margin-l-10">@T("Admin.Orders.Shipments.TrackingNumber.ViewOnline")</a>
+                                }
                             </div>
                         </div>
                         <div class="form-group">
@@ -105,7 +105,7 @@
                                 @Html.NopLabelFor(model => model.AdminComment)
                             </div>
                             <div class="col-md-9">
-                                <div class="input-group">
+                                <div class="input-group input-group-short">
                                     @Html.NopEditorFor(model => model.AdminComment)
                                     <span class="input-group-btn">
                                         <button type="submit" name="setadmincomment" class="btn btn-info">
