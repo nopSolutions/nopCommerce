@@ -36,12 +36,12 @@
     Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.common.min.css", kendoVersion));
     Html.AppendCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
 
-    Html.AppendCssFileParts("~/Administration/Content/fontAwesome/font-awesome-4.6.3.min.css");
+    Html.AppendCssFileParts("~/Administration/Content/fontAwesome/css/font-awesome-4.6.3.min.css");
     @*<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">*@
     <!-- AdminLTE Skins. Choose a skin from the css/skins. Folder instead of downloading all of them to reduce the load. -->
     Html.AppendCssFileParts("~/Administration/Content/adminLTE/skins/_all-skins.min.css");
     Html.AppendCssFileParts("~/Administration/Content/adminLTE/AdminLTE-2.3.0.min.css");
-    Html.AppendCssFileParts("~/Administration/Content/bootstrap/bootstrap-3.3.5.min.css");
+    Html.AppendCssFileParts("~/Administration/Content/bootstrap/css/bootstrap.min.css");
 
 
     Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/kendo.web.min.js", kendoVersion));
@@ -54,7 +54,7 @@
     Html.AppendScriptParts("~/Scripts/jquery.validate.unobtrusive.min.js");
     Html.AppendScriptParts("~/Scripts/jquery.validate.min.js");
     Html.AppendScriptParts("~/Scripts/adminLTE/app.min.js");
-    Html.AppendScriptParts("~/Scripts/bootstrap/bootstrap-3.3.4.min.js");
+    Html.AppendScriptParts("~/Administration/Content/bootstrap/js/bootstrap.min.js");
     Html.AppendScriptParts("~/Scripts/jquery-1.10.2.min.js");
 
 
@@ -80,7 +80,11 @@
     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 
     //info: we specify "Admin" area for actions and widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
+
+    const string hideSidebarAttributeName = "HideSidebar";
+    var hideSidebar = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.GetAttribute<bool>(hideSidebarAttributeName);
 }
+
 <!DOCTYPE html>
 <html @(supportRtl ? Html.Raw("dir=\"rtl\"") : null)>
 <head>
@@ -91,7 +95,7 @@
     @Html.NopCssFiles(this.Url, ResourceLocation.Head)
     @Html.NopScripts(this.Url, ResourceLocation.Head)
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini @if(hideSidebar){<text>sidebar-collapse</text>}">
     <div class="throbber">
         <div class="curtain">
         </div>
@@ -109,7 +113,7 @@
     </div>
     <div class="wrapper">
         @if (IsSectionDefined("header"))
-            {
+        {
             @RenderSection("header")
         }
         else
@@ -203,7 +207,7 @@
             @Html.Widget("admin_header_after", area: "Admin")
         }
         @if (IsSectionDefined("headermenu"))
-            {
+        {
             @RenderSection("headermenu")
         }
         else
@@ -254,5 +258,13 @@
     </div>
     @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
     @Html.NopScripts(this.Url, ResourceLocation.Foot)
+
+
+    <script>
+        $('a.sidebar-toggle').on('click', function () {
+            var collapsed = !$('body').hasClass('sidebar-collapse');
+            saveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
+        });
+    </script>
 </body>
 </html>

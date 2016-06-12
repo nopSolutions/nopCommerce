@@ -151,7 +151,6 @@ namespace Nop.Services.Orders
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
-        /// <param name="orderGuid">Search by order GUID (Global unique identifier) or part of GUID. Leave empty to load all orders.</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Orders</returns>
@@ -162,8 +161,7 @@ namespace Nop.Services.Orders
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             string billingEmail = null, string billingLastName = "",
-            string orderNotes = null, string orderGuid = null,
-            int pageIndex = 0, int pageSize = int.MaxValue)
+            string orderNotes = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _orderRepository.Table;
             if (storeId > 0)
@@ -226,16 +224,6 @@ namespace Nop.Services.Orders
             query = query.Where(o => !o.Deleted);
             query = query.OrderByDescending(o => o.CreatedOnUtc);
 
-            
-           
-            if (!String.IsNullOrEmpty(orderGuid))
-            {
-                //filter by GUID. Filter in BLL because EF doesn't support casting of GUID to string
-                var orders = query.ToList();
-                orders = orders.FindAll(o => o.OrderGuid.ToString().ToLowerInvariant().Contains(orderGuid.ToLowerInvariant()));
-                return new PagedList<Order>(orders, pageIndex, pageSize);
-            }
-            
             //database layer paging
             return new PagedList<Order>(query, pageIndex, pageSize);
         }

@@ -97,16 +97,9 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            if (model.ClientKeyIdentifier_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(facebookExternalAuthSettings, x => x.ClientKeyIdentifier, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(facebookExternalAuthSettings, x => x.ClientKeyIdentifier, storeScope);
-
-            if (model.ClientSecret_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(facebookExternalAuthSettings, x => x.ClientSecret, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(facebookExternalAuthSettings, x => x.ClientSecret, storeScope);
-
+            _settingService.SaveSettingOverridablePerStore(facebookExternalAuthSettings, x => x.ClientKeyIdentifier, model.ClientKeyIdentifier_OverrideForStore , storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(facebookExternalAuthSettings, x => x.ClientSecret, model.ClientSecret_OverrideForStore, storeScope, false);
+           
             //now clear settings cache
             _settingService.ClearCache();
 

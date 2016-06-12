@@ -11,7 +11,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -264,6 +263,200 @@ namespace Nop.Admin.Controllers
                 }
             }
             return hasVendorProducts;
+        }
+
+	    /// <summary>
+	    /// Parse product attributes on the add product to order details page
+	    /// </summary>
+	    /// <param name="product">Product</param>
+	    /// <param name="form">Form</param>
+	    /// <returns>Parsed attributes</returns>
+	    [NonAction]
+        protected virtual string ParseProductAttributes(Product product, FormCollection form)
+        {
+            var attributesXml = string.Empty;
+
+            #region Product attributes
+
+            var productAttributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            foreach (var attribute in productAttributes)
+            {
+                var controlId = string.Format("product_attribute_{0}", attribute.Id);
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.ImageSquares:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                int selectedAttributeId = int.Parse(ctrlAttributes);
+                                if (selectedAttributeId > 0)
+                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                        attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Checkboxes:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                foreach (var item in ctrlAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    int selectedAttributeId = int.Parse(item);
+                                    if (selectedAttributeId > 0)
+                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                            attribute, selectedAttributeId.ToString());
+                                }
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            //load read-only (already server-side selected) values
+                            var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
+                            foreach (var selectedAttributeId in attributeValues
+                                .Where(v => v.IsPreSelected)
+                                .Select(v => v.Id)
+                                .ToList())
+                            {
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                    attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                string enteredText = ctrlAttributes.Trim();
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                    attribute, enteredText);
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Datepicker:
+                        {
+                            var day = form[controlId + "_day"];
+                            var month = form[controlId + "_month"];
+                            var year = form[controlId + "_year"];
+                            DateTime? selectedDate = null;
+                            try
+                            {
+                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(day));
+                            }
+                            catch { }
+                            if (selectedDate.HasValue)
+                            {
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                    attribute, selectedDate.Value.ToString("D"));
+                            }
+                        }
+                        break;
+                    case AttributeControlType.FileUpload:
+                        {
+                            Guid downloadGuid;
+                            Guid.TryParse(form[controlId], out downloadGuid);
+                            var download = _downloadService.GetDownloadByGuid(downloadGuid);
+                            if (download != null)
+                            {
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                        attribute, download.DownloadGuid.ToString());
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            //validate conditional attributes (if specified)
+            foreach (var attribute in productAttributes)
+            {
+                var conditionMet = _productAttributeParser.IsConditionMet(attribute, attributesXml);
+                if (conditionMet.HasValue && !conditionMet.Value)
+                {
+                    attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
+                }
+            }
+
+            #endregion
+
+            #region Gift cards
+
+            if (product.IsGiftCard)
+            {
+                string recipientName = "";
+                string recipientEmail = "";
+                string senderName = "";
+                string senderEmail = "";
+                string giftCardMessage = "";
+                foreach (string formKey in form.AllKeys)
+                {
+                    if (formKey.Equals(string.Format("giftcard_{0}.RecipientName", product.Id), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        recipientName = form[formKey];
+                        continue;
+                    }
+                    if (formKey.Equals(string.Format("giftcard_{0}.RecipientEmail", product.Id), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        recipientEmail = form[formKey];
+                        continue;
+                    }
+                    if (formKey.Equals(string.Format("giftcard_{0}.SenderName", product.Id), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        senderName = form[formKey];
+                        continue;
+                    }
+                    if (formKey.Equals(string.Format("giftcard_{0}.SenderEmail", product.Id), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        senderEmail = form[formKey];
+                        continue;
+                    }
+                    if (formKey.Equals(string.Format("giftcard_{0}.Message", product.Id), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        giftCardMessage = form[formKey];
+                        continue;
+                    }
+                }
+
+                attributesXml = _productAttributeParser.AddGiftCardAttribute(attributesXml,
+                    recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
+            }
+
+            #endregion
+
+            return attributesXml;
+        }
+
+        /// <summary>
+        /// Parse rental dates on the add product to order details page
+        /// </summary>
+        /// <param name="form">Form</param>
+        /// <param name="startDate">Start date</param>
+        /// <param name="endDate">End date</param>
+        [NonAction]
+        protected virtual void ParseRentalDates(FormCollection form,
+            out DateTime? startDate, out DateTime? endDate)
+        {
+            startDate = null;
+            endDate = null;
+
+            var ctrlStartDate = form["rental_start_date"];
+            var ctrlEndDate = form["rental_end_date"];
+            try
+            {
+                const string datePickerFormat = "MM/dd/yyyy";
+                startDate = DateTime.ParseExact(ctrlStartDate, datePickerFormat, CultureInfo.InvariantCulture);
+                endDate = DateTime.ParseExact(ctrlEndDate, datePickerFormat, CultureInfo.InvariantCulture);
+            }
+            catch
+            {
+            }
         }
 
         [NonAction]
@@ -666,8 +859,15 @@ namespace Nop.Admin.Controllers
                     Name = attribute.ProductAttribute.Name,
                     TextPrompt = attribute.TextPrompt,
                     IsRequired = attribute.IsRequired,
-                    AttributeControlType = attribute.AttributeControlType
+                    AttributeControlType = attribute.AttributeControlType,
+                    HasCondition = !String.IsNullOrEmpty(attribute.ConditionAttributeXml)
                 };
+                if (!String.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
+                {
+                    attributeModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
+                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                        .ToList();
+                }
 
                 if (attribute.ShouldHaveValues())
                 {
@@ -687,6 +887,7 @@ namespace Nop.Admin.Controllers
 
                 model.ProductAttributes.Add(attributeModel);
             }
+            model.HasCondition = model.ProductAttributes.Any(a => a.HasCondition);
             //gift card
             model.GiftCard.IsGiftCard = product.IsGiftCard;
             if (model.GiftCard.IsGiftCard)
@@ -930,7 +1131,6 @@ namespace Nop.Admin.Controllers
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
                 orderNotes: model.OrderNotes,
-                orderGuid: model.OrderGuid,
                 pageIndex: command.Page - 1, 
                 pageSize: command.PageSize);
             var gridModel = new DataSourceResult
@@ -1090,8 +1290,7 @@ namespace Nop.Admin.Controllers
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
-                orderNotes: model.OrderNotes,
-                orderGuid: model.OrderGuid);
+                orderNotes: model.OrderNotes);
 
             try
             {
@@ -1169,8 +1368,7 @@ namespace Nop.Admin.Controllers
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
-                orderNotes: model.OrderNotes,
-                orderGuid: model.OrderGuid);
+                orderNotes: model.OrderNotes);
 
             try
             {
@@ -1702,8 +1900,7 @@ namespace Nop.Admin.Controllers
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
-                orderNotes: model.OrderNotes,
-                orderGuid: model.OrderGuid);
+                orderNotes: model.OrderNotes);
 
             byte[] bytes;
             using (var stream = new MemoryStream())
@@ -1750,6 +1947,44 @@ namespace Nop.Admin.Controllers
                 bytes = stream.ToArray();
             }
             return File(bytes, MimeTypes.ApplicationPdf, "orders.pdf");
+        }
+
+        //currently we use this method on the add product to order details pages
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult ProductDetails_AttributeChange(int productId, bool validateAttributeConditions,
+	        FormCollection form)
+	    {
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                return new NullJsonResult();
+
+            var attributeXml = ParseProductAttributes(product, form);
+
+            //conditional attributes
+            var enabledAttributeMappingIds = new List<int>();
+            var disabledAttributeMappingIds = new List<int>();
+            if (validateAttributeConditions)
+            {
+                var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+                foreach (var attribute in attributes)
+                {
+                    var conditionMet = _productAttributeParser.IsConditionMet(attribute, attributeXml);
+                    if (conditionMet.HasValue)
+                    {
+                        if (conditionMet.Value)
+                            enabledAttributeMappingIds.Add(attribute.Id);
+                        else
+                            disabledAttributeMappingIds.Add(attribute.Id);
+                    }
+                }
+            }
+
+            return Json(new
+            {
+                enabledattributemappingids = enabledAttributeMappingIds.ToArray(),
+                disabledattributemappingids = disabledAttributeMappingIds.ToArray()
+            });
         }
 
         [HttpPost, ActionName("Edit")]
@@ -2325,146 +2560,11 @@ namespace Nop.Admin.Controllers
             decimal priceExclTax;
             decimal.TryParse(form["SubTotalExclTax"], out priceExclTax);
 
-            //attributes
             //warnings
             var warnings = new List<string>();
-            string attributesXml = "";
 
-            #region Product attributes
-
-            var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
-            foreach (var attribute in attributes)
-            {
-                string controlId = string.Format("product_attribute_{0}", attribute.Id);
-                switch (attribute.AttributeControlType)
-                {
-                    case AttributeControlType.DropdownList:
-                    case AttributeControlType.RadioList:
-                    case AttributeControlType.ColorSquares:
-                    case AttributeControlType.ImageSquares:
-                        {
-                            var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
-                            {
-                                int selectedAttributeId = int.Parse(ctrlAttributes);
-                                if (selectedAttributeId > 0)
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, selectedAttributeId.ToString());
-                            }
-                        }
-                        break;
-                    case AttributeControlType.Checkboxes:
-                        {
-                            var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
-                            {
-                                foreach (var item in ctrlAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                                {
-                                    int selectedAttributeId = int.Parse(item);
-                                    if (selectedAttributeId > 0)
-                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
-                                }
-                            }
-                        }
-                        break;
-                    case AttributeControlType.ReadonlyCheckboxes:
-                        {
-                            //load read-only (already server-side selected) values
-                            var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
-                            foreach (var selectedAttributeId in attributeValues
-                                .Where(v => v.IsPreSelected)
-                                .Select(v => v.Id)
-                                .ToList())
-                            {
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, selectedAttributeId.ToString());
-                            }
-                        }
-                        break;
-                    case AttributeControlType.TextBox:
-                    case AttributeControlType.MultilineTextbox:
-                        {
-                            var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
-                            {
-                                string enteredText = ctrlAttributes.Trim();
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, enteredText);
-                            }
-                        }
-                        break;
-                    case AttributeControlType.Datepicker:
-                        {
-                            var day = form[controlId + "_day"];
-                            var month = form[controlId + "_month"];
-                            var year = form[controlId + "_year"];
-                            DateTime? selectedDate = null;
-                            try
-                            {
-                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(day));
-                            }
-                            catch { }
-                            if (selectedDate.HasValue)
-                            {
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, selectedDate.Value.ToString("D"));
-                            }
-                        }
-                        break;
-                    case AttributeControlType.FileUpload:
-                        {
-                            var httpPostedFile = this.Request.Files[controlId];
-                            if ((httpPostedFile != null) && (!String.IsNullOrEmpty(httpPostedFile.FileName)))
-                            {
-                                var fileSizeOk = true;
-                                if (attribute.ValidationFileMaximumSize.HasValue)
-                                {
-                                    //compare in bytes
-                                    var maxFileSizeBytes = attribute.ValidationFileMaximumSize.Value * 1024;
-                                    if (httpPostedFile.ContentLength > maxFileSizeBytes)
-                                    {
-                                        warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), attribute.ValidationFileMaximumSize.Value));
-                                        fileSizeOk = false;
-                                    }
-                                }
-                                if (fileSizeOk)
-                                {
-                                    //save an uploaded file
-                                    var download = new Download
-                                    {
-                                        DownloadGuid = Guid.NewGuid(),
-                                        UseDownloadUrl = false,
-                                        DownloadUrl = "",
-                                        DownloadBinary = httpPostedFile.GetDownloadBits(),
-                                        ContentType = httpPostedFile.ContentType,
-                                        Filename = Path.GetFileNameWithoutExtension(httpPostedFile.FileName),
-                                        Extension = Path.GetExtension(httpPostedFile.FileName),
-                                        IsNew = true
-                                    };
-                                    _downloadService.InsertDownload(download);
-                                    //save attribute
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, download.DownloadGuid.ToString());
-                                }
-                            }
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-            //validate conditional attributes (if specified)
-            foreach (var attribute in attributes)
-            {
-                var conditionMet = _productAttributeParser.IsConditionMet(attribute, attributesXml);
-                if (conditionMet.HasValue && !conditionMet.Value)
-                {
-                    attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
-                }
-            }
-
-            #endregion
+            //attributes
+            var attributesXml = ParseProductAttributes(product, form);
 
             #region Gift cards
 
@@ -2516,18 +2616,7 @@ namespace Nop.Admin.Controllers
             DateTime? rentalEndDate = null;
             if (product.IsRental)
             {
-                var ctrlStartDate = form["rental_start_date"];
-                var ctrlEndDate = form["rental_end_date"];
-                try
-                {
-                    //currenly we support only this format (as in the \Views\Order\_ProductAddRentalInfo.cshtml file)
-                    const string datePickerFormat = "MM/dd/yyyy";
-                    rentalStartDate = DateTime.ParseExact(ctrlStartDate, datePickerFormat, CultureInfo.InvariantCulture);
-                    rentalEndDate = DateTime.ParseExact(ctrlEndDate, datePickerFormat, CultureInfo.InvariantCulture);
-                }
-                catch
-                {
-                }
+                ParseRentalDates(form, out rentalStartDate, out rentalEndDate);
             }
 
             #endregion
@@ -2541,7 +2630,7 @@ namespace Nop.Admin.Controllers
                 //no errors
 
                 //attributes
-                string attributeDescription = _productAttributeFormatter.FormatAttributes(product, attributesXml, order.Customer);
+                var attributeDescription = _productAttributeFormatter.FormatAttributes(product, attributesXml, order.Customer);
 
                 //save item
                 var orderItem = new OrderItem
@@ -4055,7 +4144,20 @@ namespace Nop.Admin.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult OrderStatistics()
+	    public ActionResult OrderStatistics()
+	    {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            //a vendor doesn't have access to this report
+            if (_workContext.CurrentVendor != null)
+                return Content("");
+
+            return PartialView();
+	    }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+	    public ActionResult LoadOrderStatistics(string period)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
@@ -4064,85 +4166,95 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 return Content("");
 
-            var model = new OrderStatisticsModel();
+            var result = new List<object>();
 
             var nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
             var timeZone = _dateTimeHelper.CurrentTimeZone;
 
-            //week statistics
-            var searchWeekDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-7).Month, nowDt.AddDays(-7).Day);
-            if (!timeZone.IsInvalidTime(searchWeekDateUser))
+            switch (period)
             {
-                DateTime searchWeekDateUtc = _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone);
+                case "year":
+                    //year statistics
 
-                do
-                {
-                    model.ByWeekItems.Add(new OrderStatisticsItemModel
+                    var yearAgoRoundedDt = nowDt.AddYears(-1).AddMonths(1);
+                    var searchYearDateUser = new DateTime(yearAgoRoundedDt.Year, yearAgoRoundedDt.Month, 1);
+                    if (!timeZone.IsInvalidTime(searchYearDateUser))
                     {
-                        Date = searchWeekDateUser.Date,
-                        Value = _orderService.SearchOrders(
-                            createdFromUtc: searchWeekDateUtc,
-                            createdToUtc: searchWeekDateUtc.AddDays(1),
-                            pageIndex: 0,
-                            pageSize: 1).TotalCount.ToString()
-                    });
+                        DateTime searchYearDateUtc = _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone);
 
-                    searchWeekDateUtc = searchWeekDateUtc.AddDays(1);
-                    searchWeekDateUser = searchWeekDateUser.AddDays(1);
+                        do
+                        {
+                            result.Add(new {
+                                date = searchYearDateUser.Date.ToString("Y"),
+                                value = _orderService.SearchOrders(
+                                    createdFromUtc: searchYearDateUtc,
+                                    createdToUtc: searchYearDateUtc.AddMonths(1),
+                                    pageIndex: 0,
+                                    pageSize: 1).TotalCount.ToString()
+                                });
 
-                } while (!(searchWeekDateUser.Month == nowDt.Month && searchWeekDateUser.Day > nowDt.Day));
+                            searchYearDateUtc = searchYearDateUtc.AddMonths(1);
+                            searchYearDateUser = searchYearDateUser.AddMonths(1);
+
+                        } while (!(searchYearDateUser.Year == nowDt.Year && searchYearDateUser.Month > nowDt.Month));
+                    }
+                    break;
+
+                case "month":
+                    //month statistics
+                    var searchMonthDateUser = new DateTime(nowDt.Year, nowDt.AddMonths(-1).Month, nowDt.AddMonths(-1).Day);
+                    if (!timeZone.IsInvalidTime(searchMonthDateUser))
+                    {
+                        DateTime searchMonthDateUtc = _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone);
+
+                        do
+                        {
+                            result.Add(new
+                            {
+                                date = searchMonthDateUser.Date.ToString("M"),
+                                value = _orderService.SearchOrders(
+                                    createdFromUtc: searchMonthDateUtc,
+                                    createdToUtc: searchMonthDateUtc.AddDays(1),
+                                    pageIndex: 0,
+                                    pageSize: 1).TotalCount.ToString()
+                            });
+
+                            searchMonthDateUtc = searchMonthDateUtc.AddDays(1);
+                            searchMonthDateUser = searchMonthDateUser.AddDays(1);
+
+                        } while (!(searchMonthDateUser.Month == nowDt.Month && searchMonthDateUser.Day > nowDt.Day));
+                    }
+                    break;
+
+                case "week":
+                default:
+                    //week statistics
+                    var searchWeekDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-7).Month, nowDt.AddDays(-7).Day);
+                    if (!timeZone.IsInvalidTime(searchWeekDateUser))
+                    {
+                        DateTime searchWeekDateUtc = _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone);
+
+                        do
+                        {
+                            result.Add(new
+                            {
+                                date = searchWeekDateUser.Date.ToString("d dddd"),
+                                value = _orderService.SearchOrders(
+                                    createdFromUtc: searchWeekDateUtc,
+                                    createdToUtc: searchWeekDateUtc.AddDays(1),
+                                    pageIndex: 0,
+                                    pageSize: 1).TotalCount.ToString()
+                            });
+
+                            searchWeekDateUtc = searchWeekDateUtc.AddDays(1);
+                            searchWeekDateUser = searchWeekDateUser.AddDays(1);
+
+                        } while (!(searchWeekDateUser.Month == nowDt.Month && searchWeekDateUser.Day > nowDt.Day));
+                    }
+                    break;
             }
 
-            //month statistics
-            var searchMonthDateUser = new DateTime(nowDt.Year, nowDt.AddMonths(-1).Month, nowDt.AddMonths(-1).Day);
-            if (!timeZone.IsInvalidTime(searchMonthDateUser))
-            {
-                DateTime searchMonthDateUtc = _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone);
-
-                do
-                {
-                    model.ByMonthItems.Add(new OrderStatisticsItemModel
-                    {
-                        Date = searchMonthDateUser.Date,
-                        Value = _orderService.SearchOrders(
-                            createdFromUtc: searchMonthDateUtc,
-                            createdToUtc: searchMonthDateUtc.AddDays(1),
-                            pageIndex: 0,
-                            pageSize: 1).TotalCount.ToString()
-                    });
-
-                    searchMonthDateUtc = searchMonthDateUtc.AddDays(1);
-                    searchMonthDateUser = searchMonthDateUser.AddDays(1);
-
-                } while (!(searchMonthDateUser.Month == nowDt.Month && searchMonthDateUser.Day > nowDt.Day));
-            }
-
-            //year statistics
-            var yearAgoRoundedDt = nowDt.AddYears(-1).AddMonths(1);
-            var searchYearDateUser = new DateTime(yearAgoRoundedDt.Year, yearAgoRoundedDt.Month, 1);
-            if (!timeZone.IsInvalidTime(searchYearDateUser))
-            {
-                DateTime searchYearDateUtc = _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone);
-
-                do
-                {
-                    model.ByYearItems.Add(new OrderStatisticsItemModel
-                    {
-                        Date = searchYearDateUser.Date,
-                        Value = _orderService.SearchOrders(
-                            createdFromUtc: searchYearDateUtc,
-                            createdToUtc: searchYearDateUtc.AddMonths(1),
-                            pageIndex: 0,
-                            pageSize: 1).TotalCount.ToString()
-                    });
-
-                    searchYearDateUtc = searchYearDateUtc.AddMonths(1);
-                    searchYearDateUser = searchYearDateUser.AddMonths(1);
-
-                } while (!(searchYearDateUser.Year == nowDt.Year && searchYearDateUser.Month > nowDt.Month));
-            }
-
-            return PartialView(model);
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [ChildActionOnly]

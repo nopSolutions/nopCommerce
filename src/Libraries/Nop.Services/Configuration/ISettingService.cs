@@ -109,6 +109,20 @@ namespace Nop.Services.Configuration
             int storeId = 0, bool clearCache = true) where T : ISettings, new();
 
         /// <summary>
+        /// Save settings object (per store). If the setting is not overridden per storem then it'll be delete
+        /// </summary>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <typeparam name="TPropType">Property type</typeparam>
+        /// <param name="settings">Settings</param>
+        /// <param name="keySelector">Key selector</param>
+        /// <param name="overrideForStore">A value indicating whether to setting is overridden in some store</param>
+        /// <param name="storeId">Store ID</param>
+        /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
+        void SaveSettingOverridablePerStore<T, TPropType>(T settings,
+            Expression<Func<T, TPropType>> keySelector,
+            bool overrideForStore, int storeId = 0, bool clearCache = true) where T : ISettings, new();
+
+        /// <summary>
         /// Delete all settings
         /// </summary>
         /// <typeparam name="T">Type</typeparam>

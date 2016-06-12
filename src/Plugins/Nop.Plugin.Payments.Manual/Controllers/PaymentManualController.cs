@@ -78,21 +78,10 @@ namespace Nop.Plugin.Payments.Manual.Controllers
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
 
-            if (model.TransactModeId_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(manualPaymentSettings, x => x.TransactMode, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(manualPaymentSettings, x => x.TransactMode, storeScope);
-
-            if (model.AdditionalFee_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(manualPaymentSettings, x => x.AdditionalFee, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(manualPaymentSettings, x => x.AdditionalFee, storeScope);
-
-            if (model.AdditionalFeePercentage_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(manualPaymentSettings, x => x.AdditionalFeePercentage, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(manualPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
-
+            _settingService.SaveSettingOverridablePerStore(manualPaymentSettings, x => x.TransactMode, model.TransactModeId_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(manualPaymentSettings, x => x.AdditionalFee, model.AdditionalFee_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(manualPaymentSettings, x => x.AdditionalFeePercentage, model.AdditionalFeePercentage_OverrideForStore, storeScope, false);
+            
             //now clear settings cache
             _settingService.ClearCache();
 

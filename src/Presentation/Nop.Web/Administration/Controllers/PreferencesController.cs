@@ -27,6 +27,7 @@ namespace Nop.Admin.Controllers
 
         #region Methods
 
+        [HttpPost]
         public ActionResult SavePreference(string name, bool value)
         {
             //permission validation is not required here

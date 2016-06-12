@@ -391,6 +391,11 @@ namespace Nop.Admin.Models.Orders
 
                 public List<string> Warnings { get; set; }
 
+                /// <summary>
+                /// A value indicating whether this attribute depends on some other attribute
+                /// </summary>
+                public bool HasCondition { get; set; }
+
             }
 
             public partial class ProductAttributeModel : BaseNopEntityModel
@@ -407,6 +412,13 @@ namespace Nop.Admin.Models.Orders
                 public string TextPrompt { get; set; }
 
                 public bool IsRequired { get; set; }
+
+                public bool HasCondition { get; set; }
+
+                /// <summary>
+                /// Allowed file extensions for customer uploaded files
+                /// </summary>
+                public IList<string> AllowedFileExtensions { get; set; }
 
                 public AttributeControlType AttributeControlType { get; set; }
 

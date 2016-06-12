@@ -480,11 +480,16 @@
     <Content Include="Content\adminLTE\skins\skin-yellow.min.css" />
     <Content Include="Content\adminLTE\skins\_all-skins.css" />
     <Content Include="Content\adminLTE\skins\_all-skins.min.css" />
-    <Content Include="Content\bootstrap\bootstrap-3.3.5.css" />
-    <Content Include="Content\bootstrap\bootstrap-3.3.5.min.css" />
-    <Content Include="Content\fontAwesome\font-awesome-4.6.3.css" />
-    <Content Include="Content\fontAwesome\font-awesome-4.6.3.min.css" />
-    <Content Include="Content\fonts\ionicons\ionicons.svg" />
+    <Content Include="Content\bootstrap\css\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap\css\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap\css\bootstrap.css" />
+    <Content Include="Content\bootstrap\css\bootstrap.min.css" />
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\bootstrap\js\bootstrap.js" />
+    <Content Include="Content\bootstrap\js\bootstrap.min.js" />
+    <Content Include="Content\bootstrap\js\npm.js" />
+    <Content Include="Content\fontAwesome\css\font-awesome-4.6.3.css" />
+    <Content Include="Content\fontAwesome\css\font-awesome-4.6.3.min.css" />
     <Content Include="Content\images\logo-mini.png" />
     <Content Include="Content\images\logo.png" />
     <Content Include="Content\images\search-icon.png" />
@@ -498,7 +503,7 @@
     <Content Include="Content\images\throbber-synchronizing.gif" />
     <Content Include="Content\images\warnings-ajax-loader.gif" />
     <Content Include="Content\styles.css" />
-    <Content Include="Content\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\fontAwesome\fonts\fontawesome-webfont.svg" />
     <Content Include="sitemap.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1006,15 +1011,11 @@
     <Content Include="Views\Common\LanguageSelector.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\fonts\FontAwesome.otf" />
-    <Content Include="Content\fonts\fontawesome-webfont.woff2" />
-    <Content Include="Content\fonts\fontawesome-webfont.woff" />
-    <Content Include="Content\fonts\fontawesome-webfont.ttf" />
-    <Content Include="Content\fonts\fontawesome-webfont.eot" />
-    <Content Include="Content\bootstrap\bootstrap-3.3.5.css.map" />
-    <Content Include="Content\fonts\ionicons\ionicons.eot" />
-    <Content Include="Content\fonts\ionicons\ionicons.ttf" />
-    <Content Include="Content\fonts\ionicons\ionicons.woff" />
+    <Content Include="Content\fontAwesome\fonts\FontAwesome.otf" />
+    <Content Include="Content\fontAwesome\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Content\fontAwesome\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\fontAwesome\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\fontAwesome\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\ionicons\fonts\ionicons.eot" />
     <Content Include="Content\ionicons\fonts\ionicons.ttf" />
     <Content Include="Content\ionicons\fonts\ionicons.woff" />
@@ -1022,6 +1023,14 @@
     <Content Include="Views\Order\OrderStatistics.cshtml" />
     <Content Include="Views\Customer\CustomerStatistics.cshtml" />
     <Content Include="Views\Order\LatestOrders.cshtml" />
+    <Content Include="Content\bootstrap\css\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap\css\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap\css\bootstrap.css.map" />
+    <Content Include="Content\bootstrap\css\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff2" />
     <None Include="Views\Product\_ProductAttributes.cshtml" />
     <Content Include="Views\Setting\_ReturnRequestReasons.cshtml" />
     <Content Include="Views\Setting\ReturnRequestReasonEdit.cshtml" />

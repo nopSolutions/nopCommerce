@@ -1232,13 +1232,96 @@ namespace Nop.Web.Controllers
         public ActionResult CustomerNavigation(int selectedTabId = 0)
         {
             var model = new CustomerNavigationModel();
-            model.HideAvatar = !_customerSettings.AllowCustomersToUploadAvatars;
-            model.HideRewardPoints = !_rewardPointsSettings.Enabled;
-            model.HideForumSubscriptions = !_forumSettings.ForumsEnabled || !_forumSettings.AllowCustomersToManageSubscriptions;
-            model.HideReturnRequests = !_orderSettings.ReturnRequestsEnabled ||
-                _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id, 0, null, 0, 1).Count == 0;
-            model.HideDownloadableProducts = _customerSettings.HideDownloadableProductsTab;
-            model.HideBackInStockSubscriptions = _customerSettings.HideBackInStockSubscriptionsTab;
+
+            model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+            {
+                RouteName = "CustomerInfo",
+                Title = _localizationService.GetResource("Account.CustomerInfo"),
+                Tab = CustomerNavigationEnum.Info
+            });
+
+            model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+            {
+                RouteName = "CustomerAddresses",
+                Title = _localizationService.GetResource("Account.CustomerAddresses"),
+                Tab = CustomerNavigationEnum.Addresses
+            });
+
+            model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+            {
+                RouteName = "CustomerOrders",
+                Title = _localizationService.GetResource("Account.CustomerOrders"),
+                Tab = CustomerNavigationEnum.Orders
+            });
+
+            if (_orderSettings.ReturnRequestsEnabled &&
+                _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id,
+                    _workContext.CurrentCustomer.Id, 0, null, 0, 1).Any())
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerReturnRequests",
+                    Title = _localizationService.GetResource("Account.CustomerReturnRequests"),
+                    Tab = CustomerNavigationEnum.ReturnRequests
+                });
+            }
+
+            if (!_customerSettings.HideDownloadableProductsTab)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerDownloadableProducts",
+                    Title = _localizationService.GetResource("Account.DownloadableProducts"),
+                    Tab = CustomerNavigationEnum.DownloadableProducts
+                });
+            }
+
+            if (!_customerSettings.HideBackInStockSubscriptionsTab)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerBackInStockSubscriptions",
+                    Title = _localizationService.GetResource("Account.BackInStockSubscriptions"),
+                    Tab = CustomerNavigationEnum.BackInStockSubscriptions
+                });
+            }
+
+            if (_rewardPointsSettings.Enabled)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerRewardPoints",
+                    Title = _localizationService.GetResource("Account.RewardPoints"),
+                    Tab = CustomerNavigationEnum.RewardPoints
+                });
+            }
+
+            model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+            {
+                RouteName = "CustomerChangePassword",
+                Title = _localizationService.GetResource("Account.ChangePassword"),
+                Tab = CustomerNavigationEnum.ChangePassword
+            });
+
+            if (_customerSettings.AllowCustomersToUploadAvatars)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerAvatar",
+                    Title = _localizationService.GetResource("Account.Avatar"),
+                    Tab = CustomerNavigationEnum.Avatar
+                });
+            }
+
+            if (_forumSettings.ForumsEnabled && _forumSettings.AllowCustomersToManageSubscriptions)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerForumSubscriptions",
+                    Title = _localizationService.GetResource("Account.ForumSubscriptions"),
+                    Tab = CustomerNavigationEnum.ForumSubscriptions
+                });
+            }
 
             model.SelectedTab = (CustomerNavigationEnum)selectedTabId;
 

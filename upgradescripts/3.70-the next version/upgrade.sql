@@ -659,6 +659,21 @@ set @resources='
   <LocaleResource Name="Admin.Dashboard.LatestOrders.ViewAll">
     <Value>View All Orders</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.CommonStatistics">
+    <Value>Common statistics</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.RequireRegistrationForDownloadableProducts">
+    <Value>Require registration for downloadable products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.RequireRegistrationForDownloadableProducts.Hint">
+    <Value>Require account creation to purchase downloadable products.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.OrderGuid">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.OrderGuid.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2434,5 +2449,13 @@ GO
  BEGIN
  	INSERT [Setting] ([Name], [Value], [StoreId])
  	VALUES (N'adminareasettings.popupgridpagesize', N'10', 0)
+ END
+ GO
+
+ --new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.requireregistrationfordownloadableproducts')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'customersettings.requireregistrationfordownloadableproducts', N'False', 0)
  END
  GO
