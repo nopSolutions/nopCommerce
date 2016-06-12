@@ -490,7 +490,6 @@
     <Content Include="Content\bootstrap\js\npm.js" />
     <Content Include="Content\fontAwesome\font-awesome-4.6.3.css" />
     <Content Include="Content\fontAwesome\font-awesome-4.6.3.min.css" />
-    <Content Include="Content\fonts\ionicons\ionicons.svg" />
     <Content Include="Content\images\logo-mini.png" />
     <Content Include="Content\images\logo.png" />
     <Content Include="Content\images\search-icon.png" />
@@ -1017,9 +1016,6 @@
     <Content Include="Content\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
-    <Content Include="Content\fonts\ionicons\ionicons.eot" />
-    <Content Include="Content\fonts\ionicons\ionicons.ttf" />
-    <Content Include="Content\fonts\ionicons\ionicons.woff" />
     <Content Include="Content\ionicons\fonts\ionicons.eot" />
     <Content Include="Content\ionicons\fonts\ionicons.ttf" />
     <Content Include="Content\ionicons\fonts\ionicons.woff" />
