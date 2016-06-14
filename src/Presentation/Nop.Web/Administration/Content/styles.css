@@ -336,17 +336,6 @@ td.k-state-focused.k-state-selected {
 .navbar-custom-menu > .navbar-nav > li {
     height: 50px;
 }
-.maintenance-menu {
-    position: relative;
-}
-.maintenance-menu .dropdown-menu {
-    width: 280px !important;
-    border: none !important;
-}
-.maintenance-menu .dropdown-menu a {
-    background-color: transparent !important;
-    color: #fff;
-}
 
 /* NAV TABS */
 .nav > li > a > img {
@@ -740,12 +729,5 @@ span.grid-report-item.red {
     }
     .form-horizontal .panel-search-popup .ico-help {
         display: none;
-    }
-}
-
-@media (max-width: 480px) {
-    /* NAV BAR */
-    .maintenance-menu .dropdown-menu {
-        left: 0;
     }
 }

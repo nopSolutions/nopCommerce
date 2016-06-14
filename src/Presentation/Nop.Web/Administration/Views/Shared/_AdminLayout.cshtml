@@ -185,18 +185,20 @@
                             </li>
                             @if (canManageMaintenance)
                             {
-                                <li class="dropdown maintenance-menu">
+                                <li class="dropdown">
                                     <a href="#" data-toggle="dropdown"><i class="fa fa-gears"></i></a>
-                                    <div class="dropdown-menu bg-light-blue">
-                                        <div class="col-xs-12">
-                                            <a class="btn btn-default btn-flat margin-r-10" href="@webHelper.ModifyQueryString(Url.Action("ClearCache", "Common", new RouteValueDictionary {{"area", "Admin"}}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">
+                                    <ul class="dropdown-menu bg-light-blue" role="menu">
+                                        <li>
+                                            <a class="bg-light-blue" href="@webHelper.ModifyQueryString(Url.Action("ClearCache", "Common", new RouteValueDictionary {{"area", "Admin"}}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">
                                                 <span>@T("Admin.Header.ClearCache")</span>
                                             </a>
-                                            <a class="btn btn-default btn-flat" id="restart-application" href="@webHelper.ModifyQueryString(Url.Action("RestartApplication", "Common", new RouteValueDictionary {{"area", "Admin"}}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">
+                                        </li>
+                                        <li>
+                                            <a class="bg-light-blue" id="restart-application" href="@webHelper.ModifyQueryString(Url.Action("RestartApplication", "Common", new RouteValueDictionary {{"area", "Admin"}}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">
                                                 <span>@T("Admin.Header.RestartApplication")</span>
                                             </a>
-                                        </div>
-                                    </div>
+                                        </li>
+                                    </ul>
                                 </li>
                             }
                         </ul>
