@@ -505,6 +505,10 @@ input[type=file].form-control {
     max-width: 100%;
 }
 
+.mce-container label {
+    max-width: inherit;
+}
+
 /* TABLES */
 table td .form-group {
     margin-bottom: 0;
