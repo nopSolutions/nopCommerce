@@ -22,7 +22,7 @@
 
 
     //CSS resources
-    Html.AppendCssFileParts("~/Content/typeahead/typeahead.css");
+    Html.AppendCssFileParts("~/Administration/Content/typeahead/typeahead.css");
     //if (supportRtl)
     //{
     //    Html.AppendCssFileParts("~/Administration/Content/styles.rtl.css");
@@ -31,10 +31,10 @@
     //{
     Html.AppendCssFileParts("~/Administration/Content/styles.css");
     //}
-    Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.rtl.min.css", kendoVersion));
-    Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.default.min.css", kendoVersion));
-    Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.common.min.css", kendoVersion));
-    Html.AppendCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
+    Html.AppendCssFileParts(string.Format("~/Administration/Content/kendo/{0}/kendo.rtl.min.css", kendoVersion));
+    Html.AppendCssFileParts(string.Format("~/Administration/Content/kendo/{0}/kendo.default.min.css", kendoVersion));
+    Html.AppendCssFileParts(string.Format("~/Administration/Content/kendo/{0}/kendo.common.min.css", kendoVersion));
+    Html.AppendCssFileParts("~/Administration/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
 
     Html.AppendCssFileParts("~/Administration/Content/fontAwesome/css/font-awesome-4.6.3.min.css");
     @*<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">*@
@@ -44,18 +44,18 @@
     Html.AppendCssFileParts("~/Administration/Content/bootstrap/css/bootstrap.min.css");
 
 
-    Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/kendo.web.min.js", kendoVersion));
-    Html.AppendScriptParts("~/Scripts/admin.search.js");
-    Html.AppendScriptParts("~/scripts/admin.navigation.js");
-    Html.AppendScriptParts("~/Scripts/admin.common.js");
-    Html.AppendScriptParts("~/Scripts/typeahead/typeahead.bundle.min.js");
-    Html.AppendScriptParts("~/Scripts/jquery-migrate-1.2.1.min.js");
-    Html.AppendScriptParts("~/Scripts/jquery-ui-1.10.3.custom.min.js");
-    Html.AppendScriptParts("~/Scripts/jquery.validate.unobtrusive.min.js");
-    Html.AppendScriptParts("~/Scripts/jquery.validate.min.js");
-    Html.AppendScriptParts("~/Scripts/adminLTE/app.min.js");
-    Html.AppendScriptParts("~/Administration/Content/bootstrap/js/bootstrap.min.js");
-    Html.AppendScriptParts("~/Scripts/jquery-1.10.2.min.js");
+    Html.AppendScriptParts(string.Format("~/Administration/Scripts/kendo/{0}/kendo.web.min.js", kendoVersion));
+    Html.AppendScriptParts("~/Administration/Scripts/admin.search.js");
+    Html.AppendScriptParts("~/Administration/scripts/admin.navigation.js");
+    Html.AppendScriptParts("~/Administration/Scripts/admin.common.js");
+    Html.AppendScriptParts("~/Administration/Scripts/typeahead/typeahead.bundle.min.js");
+    Html.AppendScriptParts("~/Administration/Scripts/jquery-migrate-1.2.1.min.js");
+    Html.AppendScriptParts("~/Administration/Scripts/jquery-ui-1.10.3.custom.min.js");
+    Html.AppendScriptParts("~/Administration/Scripts/jquery.validate.unobtrusive.min.js");
+    Html.AppendScriptParts("~/Administration/Scripts/jquery.validate.min.js");
+    Html.AppendScriptParts("~/Administration/Scripts/adminLTE/app.min.js");
+    Html.AppendScriptParts("~/Administration/Scripts/bootstrap/bootstrap.min.js");
+    Html.AppendScriptParts("~/Administration/Scripts/jquery-1.10.2.min.js");
 
 
     //page title
