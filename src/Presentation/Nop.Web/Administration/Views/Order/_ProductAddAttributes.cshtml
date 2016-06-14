@@ -31,82 +31,82 @@
                         @switch (attribute.AttributeControlType)
                         {
                             case AttributeControlType.DropdownList:
-                                {
-                                    <select name="@(controlId)" id="@(controlId)" class="form-control">
-                                        @if (!attribute.IsRequired)
-                                        {
-                                            <option value="0">---</option>
-                                        }
-                                        @foreach (var attributeValue in attribute.Values)
-                                        {
-                                            <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">
-                                                @attributeValue.Name
-                                            </option>
-                                        }
-                                    </select>
-                                }
+                            {
+                                <select name="@(controlId)" id="@(controlId)" class="form-control">
+                                    @if (!attribute.IsRequired)
+                                    {
+                                        <option value="0">---</option>
+                                    }
+                                    @foreach (var attributeValue in attribute.Values)
+                                    {
+                                        <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">
+                                            @attributeValue.Name
+                                        </option>
+                                    }
+                                </select>
+                            }
                                 break;
                             case AttributeControlType.RadioList:
                             case AttributeControlType.ColorSquares:
                             case AttributeControlType.ImageSquares:
+                            {
+                                foreach (var attributeValue in attribute.Values)
                                 {
-                                    foreach (var attributeValue in attribute.Values)
-                                    {
-                                        <div class="radio">
-                                            <label for="@(controlId)_@(attributeValue.Id)">
-                                                <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
-                                                @attributeValue.Name
-                                            </label>
-                                        </div>
-                                    }
+                                    <div class="radio">
+                                        <label for="@(controlId)_@(attributeValue.Id)">
+                                            <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected"/>
+                                            @attributeValue.Name
+                                        </label>
+                                    </div>
                                 }
+                            }
                                 break;
                             case AttributeControlType.Checkboxes:
                             case AttributeControlType.ReadonlyCheckboxes:
+                            {
+                                foreach (var attributeValue in attribute.Values)
                                 {
-                                    foreach (var attributeValue in attribute.Values)
-                                    {
-                                        <div class="checkbox">
-                                            <label for="@(controlId)_@(attributeValue.Id)">
-                                                <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
-                                                @attributeValue.Name
-                                            </label>
-                                        </div>
-                                    }
+                                    <div class="checkbox">
+                                        <label for="@(controlId)_@(attributeValue.Id)">
+                                            <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null)/>
+                                            @attributeValue.Name
+                                        </label>
+                                    </div>
                                 }
+                            }
                                 break;
                             case AttributeControlType.TextBox:
-                                {
-                                    <input name="@(controlId)" type="text" id="@(controlId)" class="form-control" />
-                                }
+                            {
+                                <input name="@(controlId)" type="text" id="@(controlId)" class="form-control"/>
+                            }
                                 break;
                             case AttributeControlType.MultilineTextbox:
-                                {
-                                    <textarea cols="20" id="@(controlId)" name="@(controlId)" rows="2" class="form-control"></textarea>
-                                }
+                            {
+                                <textarea cols="20" id="@(controlId)" name="@(controlId)" rows="2" class="form-control"></textarea>
+                            }
                                 break;
                             case AttributeControlType.Datepicker:
-                                {
-                                    @Html.DatePickerDropDowns(controlId + "_day", controlId + "_month", controlId + "_year", DateTime.Now.Year, DateTime.Now.Year + 1)
-                                }
+                            {
+                                @Html.DatePickerDropDowns(controlId + "_day", controlId + "_month", controlId + "_year", DateTime.Now.Year, DateTime.Now.Year + 1)
+                            }
                                 break;
                             case AttributeControlType.FileUpload:
-                                {
-                                    //register CSS and JS
-                                    Html.AddCssFileParts("~/Administration/Scripts/fineuploader/fineuploader-4.2.2.min.css");
-                                    Html.AddScriptParts("~/Administration/Scripts/fineuploader/jquery.fineuploader-4.2.2.min.js");
+                            {
+                                //register CSS and JS
+                                Html.AddCssFileParts("~/Administration/Scripts/fineuploader/fineuploader-4.2.2.min.css");
+                                Html.AddScriptParts("~/Administration/Scripts/fineuploader/jquery.fineuploader-4.2.2.min.js");
 
-                                    //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
-                                    var allowedFileExtensions = attribute.AllowedFileExtensions != null && attribute.AllowedFileExtensions.Any()
-                                        ? string.Join(", ", attribute.AllowedFileExtensions.Select(x => "'" + x.Trim() + "'").ToList())
-                                        : null;
+                                //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
+                                var allowedFileExtensions = attribute.AllowedFileExtensions != null && attribute.AllowedFileExtensions.Any()
+                                    ? string.Join(", ", attribute.AllowedFileExtensions.Select(x => "'" + x.Trim() + "'").ToList())
+                                    : null;
 
-                                    <input id="@(controlId)" name="@(controlId)" type="hidden" />
+                                <input id="@(controlId)" name="@(controlId)" type="hidden"/>
 
                                     @*fine uploader container*@
-                                    <div id="@(controlId)uploader"></div>
+                                <div id="@(controlId)uploader"></div>
                                     @*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
-                                    <script type="text/template" id="@(controlId)-qq-template">
+                                <script type="text/template" id="@(controlId)-qq-template">
                                         <div class="qq-uploader-selector qq-uploader">
                                             <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
                                                 <span>@T("Common.FileUploader.DropFiles")</span>
@@ -136,113 +136,117 @@
                                             </ul>
                                         </div>
                                     </script>
-                                    <script type="text/javascript">
-                                        $(document).ready(function() {
-                                            $("#@(controlId)uploader").fineUploader({
-                                                request: {
-                                                    endpoint: '@(Url.RouteUrl("UploadFileProductAttribute", new { attributeId = attribute.Id }))'
-                                                },
-                                                template: "@(controlId)-qq-template",
-                                                multiple: false,
-                                                validation: {
-                                                    @{
-                                            if (!string.IsNullOrEmpty(allowedFileExtensions))
-                                            {
-                                                @Html.Raw("allowedExtensions: [" + allowedFileExtensions + "]");
+                                <script type="text/javascript">
+                                    $(document).ready(function() {
+                                        $("#@(controlId)uploader").fineUploader({
+                                            request: {
+                                                endpoint: '@(Url.RouteUrl("UploadFileProductAttribute", new {attributeId = attribute.Id}))'
+                                            },
+                                            template: "@(controlId)-qq-template",
+                                            multiple: false,
+                                            validation: {
+                                                @{
+                                                    if (!string.IsNullOrEmpty(allowedFileExtensions))
+                                                    {
+                                                        @Html.Raw("allowedExtensions: [" + allowedFileExtensions + "]")
+                                                        ;
+                                                    }
+                                                }
+                                                
                                             }
-                                        }
-                                                }
-                                            }).on("complete", function(event, id, name, responseJSON, xhr) {
-                                                $("#@(controlId)").val(responseJSON.downloadGuid);
-                                                if (responseJSON.success) {
-                                                    $("#@(controlId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "'>@T("Common.FileUploader.DownloadUploadedFile")</a>");
-                                                    $("#@(controlId + "remove")").show();
-                                                }
-                                                if (responseJSON.message) {
-                                                    alert(responseJSON.message);
-                                                }
-                                            });
-
-                                            $("#@(controlId + "remove")").click(function(e) {
-                                                $("#@(controlId + "downloadurl")").html("");
-                                                $("#@(controlId)").val('');
-                                                $(this).hide();
-                                            });
+                                        }).on("complete", function(event, id, name, responseJSON, xhr) {
+                                            $("#@(controlId)").val(responseJSON.downloadGuid);
+                                            if (responseJSON.success) {
+                                                $("#@(controlId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "'>@T("Common.FileUploader.DownloadUploadedFile")</a>");
+                                                $("#@(controlId + "remove")").show();
+                                            }
+                                            if (responseJSON.message) {
+                                                alert(responseJSON.message);
+                                            }
                                         });
-                                    </script>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <span id="@(controlId + "remove")" class="btn btn-default margin-t-5" style="display: none;">@T("Admin.Download.RemoveDownload")</span>
-                                        </div>
+
+                                        $("#@(controlId + "remove")").click(function(e) {
+                                            $("#@(controlId + "downloadurl")").html("");
+                                            $("#@(controlId)").val('');
+                                            $(this).hide();
+                                        });
+                                    });
+                                </script>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <span id="@(controlId + "remove")" class="btn btn-default margin-t-5" style="display: none;">@T("Admin.Download.RemoveDownload")</span>
                                     </div>
-                                }
-                                break;
+                                </div>
                             }
+                                break;
+                        }
                     </div>
                 </div>
-             }
+            }
+
+            @*generate change event script*@
+            @foreach (var attribute in Model)
+            {
+                string controlId = string.Format("product_attribute_{0}", attribute.Id);
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                        {
+                            attributeChangeScriptsBuilder.AppendFormat("$('#{0}').change(function(){{{1}();}});\n", controlId, attributeChangeHandlerFuncName);
+                        }
+                        break;
+                    case AttributeControlType.RadioList:
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.ImageSquares:
+                        {
+                            foreach (var attributeValue in attribute.Values)
+                            {
+                                attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Checkboxes:
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            foreach (var attributeValue in attribute.Values)
+                            {
+                                attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @*render scripts*@
+            <script type="text/javascript">
+                function @(attributeChangeHandlerFuncName)() {
+                    $.ajax({
+                        cache: false,
+                        url: '@Html.Raw(Url.Action("productdetails_attributechange", "Order", new {productId = productId, validateAttributeConditions = attributesHaveConditions}))',
+                        data: $('#product-details-form').serialize(),
+                        type: 'post',
+                        success: function(data) {
+                            if (data.enabledattributemappingids) {
+                                for (var i = 0; i < data.enabledattributemappingids.length; i++) {
+                                    $('#product_attribute_row_' + data.enabledattributemappingids[i]).show();
+                                }
+                            }
+                            if (data.disabledattributemappingids) {
+                                for (var i = 0; i < data.disabledattributemappingids.length; i++) {
+                                    $('#product_attribute_row_' + data.disabledattributemappingids[i]).hide();
+                                }
+                            }
+                        }
+                    });
+                }
+
+                $(document).ready(function() {
+                    @(attributeChangeHandlerFuncName)();
+                    @Html.Raw(attributeChangeScriptsBuilder.ToString())
+                });
+            </script>
         </div>
     </div>
-    //generate change event script
-    foreach (var attribute in Model)
-    {
-        string controlId = string.Format("product_attribute_{0}", attribute.Id);
-        switch (attribute.AttributeControlType)
-        {
-            case AttributeControlType.DropdownList:
-                {
-                    attributeChangeScriptsBuilder.AppendFormat("$('#{0}').change(function(){{{1}();}});\n", controlId, attributeChangeHandlerFuncName);
-                }
-                break;
-            case AttributeControlType.RadioList:
-            case AttributeControlType.ColorSquares:
-            case AttributeControlType.ImageSquares:
-                {
-                    foreach (var attributeValue in attribute.Values)
-                    {
-                        attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
-                    }
-                }
-                break;
-            case AttributeControlType.Checkboxes:
-            case AttributeControlType.ReadonlyCheckboxes:
-                {
-                    foreach (var attributeValue in attribute.Values)
-                    {
-                        attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
-                    }
-                }
-                break;
-            default:
-                break;
-        }
-    }
-    //render scripts
-    <script type="text/javascript">
-        function @(attributeChangeHandlerFuncName)() {
-            $.ajax({
-                cache: false,
-                url: '@Html.Raw(Url.Action("productdetails_attributechange", "Order", new {productId = productId, validateAttributeConditions = attributesHaveConditions}))',
-                data: $('#product-details-form').serialize(),
-                type: 'post',
-                success: function(data) {
-                    if (data.enabledattributemappingids) {
-                        for (var i = 0; i < data.enabledattributemappingids.length; i++) {
-                            $('#product_attribute_row_' + data.enabledattributemappingids[i]).show();
-                        }
-                    }
-                    if (data.disabledattributemappingids) {
-                        for (var i = 0; i < data.disabledattributemappingids.length; i++) {
-                            $('#product_attribute_row_' + data.disabledattributemappingids[i]).hide();
-                        }
-                    }
-                }
-            });
-        }
-
-        $(document).ready(function() {
-            @(attributeChangeHandlerFuncName)();
-            @Html.Raw(attributeChangeScriptsBuilder.ToString())
-        });
-    </script>
     }
