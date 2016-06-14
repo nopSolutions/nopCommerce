@@ -563,6 +563,14 @@ namespace Nop.Plugin.Shipping.USPS
                         }
                         while (!((tr.Name == postageStr) && (tr.NodeType == XmlNodeType.EndElement)));
 
+                        //go to the next rate if the "First-Class Mail Letter" is not in the list of domestic services to offer
+                        if (isDomestic && !carrierServicesOffered.Contains("[letter]"))
+                        {
+                            var option = serviceCode.ToLowerInvariant();
+                            if (option.Contains("letter") || option.Contains("postcard"))
+                                continue;
+                        }
+
                         //USPS issue fixed
                         var reg = (char)174; // registered sign "\u00AE"
                         string tm = "\u2122"; // trademark sign
