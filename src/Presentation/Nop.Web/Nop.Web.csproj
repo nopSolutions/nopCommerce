@@ -502,7 +502,6 @@
     <Content Include="Content\files\Index.htm" />
     <Content Include="Content\Images\default-image.png" />
     <Content Include="Content\magnific-popup\magnific-popup.css" />
-    <Content Include="Content\morris\morris.css" />
     <Content Include="Content\samples\category_accessories.jpg" />
     <Content Include="Content\samples\category_apparel.jpeg" />
     <Content Include="Content\samples\category_apparel_accessories.jpg" />
