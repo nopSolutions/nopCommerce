@@ -237,7 +237,6 @@
     <Compile Include="Models\Common\SystemInfoModel.cs" />
     <Compile Include="Models\Customers\CustomerAttributeModel.cs" />
     <Compile Include="Models\Customers\CustomerAttributeValueModel.cs" />
-    <Compile Include="Models\Customers\CustomerStatisticsModel.cs" />
     <Compile Include="Models\Discounts\DiscountListModel.cs" />
     <Compile Include="Models\Home\NopCommerceNewsModel.cs" />
     <Compile Include="Models\Home\CommonStatisticsModel.cs" />
@@ -246,7 +245,6 @@
     <Compile Include="Models\Messages\TestMessageTemplateModel.cs" />
     <Compile Include="Models\Orders\CountryReportLineModel.cs" />
     <Compile Include="Models\Orders\CountryReportModel.cs" />
-    <Compile Include="Models\Orders\OrderStatisticsModel.cs" />
     <Compile Include="Models\Payments\PaymentMethodRestrictionModel.cs" />
     <Compile Include="Models\Plugins\OfficialFeedListModel.cs" />
     <Compile Include="Models\Plugins\PluginListModel.cs" />
