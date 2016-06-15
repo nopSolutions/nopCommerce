@@ -337,6 +337,7 @@
     <Compile Include="Models\Common\FooterModel.cs" />
     <Compile Include="Models\Common\FaviconModel.cs" />
     <Compile Include="Models\Common\PagerModel.cs" />
+    <Compile Include="Models\Common\SocialModel.cs" />
     <Compile Include="Models\Common\StoreThemeModel.cs" />
     <Compile Include="Models\Common\LanguageSelectorModel.cs" />
     <Compile Include="Models\Common\SitemapModel.cs" />
@@ -1002,6 +1003,7 @@
     <Content Include="Views\Catalog\_CatalogSelectors.cshtml" />
     <Content Include="Views\Vendor\ApplyVendor.cshtml" />
     <Content Include="Views\Product\_Discontinued.cshtml" />
+    <Content Include="Views\Common\Social.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="obj\" />
