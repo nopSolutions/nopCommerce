@@ -95,7 +95,8 @@
     @Html.NopCssFiles(this.Url, ResourceLocation.Head)
     @Html.NopScripts(this.Url, ResourceLocation.Head)
 </head>
-<body class="hold-transition skin-blue sidebar-mini @if(hideSidebar){<text>sidebar-collapse</text>}">
+<body class="hold-transition skin-blue sidebar-mini @if (hideSidebar)
+                                                    {<text>sidebar-collapse</text>}">
     <div class="throbber">
         <div class="curtain">
         </div>
@@ -258,14 +259,19 @@
             </div>
         </div>
     </div>
+
     @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
     @Html.NopScripts(this.Url, ResourceLocation.Foot)
 
-
+    <a id="backTop" class="btn btn-back-top bg-teal"></a>
     <script>
-        $('a.sidebar-toggle').on('click', function () {
-            var collapsed = !$('body').hasClass('sidebar-collapse');
-            saveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
+        $(document).ready(function () {
+            $('#backTop').backTop();
+
+            $('a.sidebar-toggle').on('click', function () {
+                var collapsed = !$('body').hasClass('sidebar-collapse');
+                saveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
+            });
         });
     </script>
 </body>

@@ -63,7 +63,6 @@ ul.common-list {
     animation: progress-bar-stripes 2s linear infinite;
     margin-left: 10px;
 }
-
 .new-item-notification span {
     font-size: 15px;
 }
@@ -72,6 +71,35 @@ ul.common-list {
 }
 .info-box-icon {
     min-height: 106px;
+}
+.btn-back-top {
+    display: none;
+    right: 40px;
+    bottom: 40px;
+    position: fixed;
+    width: 60px;
+    height: 48px;
+}
+.btn-back-top::before {
+    content: "";
+    display: block;
+    position: relative;
+    left: 7px;
+    top: 12px;
+    width: 22px;
+    height: 22px;
+    border-right: 6px solid white;
+    border-top: 6px solid white;
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    -ms-transition: all 0.2s;
+    -o-transition: all 0.2s;
+    transition: all 0.2s;
 }
 
 /*override font-awesome styles*/
