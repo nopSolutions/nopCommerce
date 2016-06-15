@@ -13,6 +13,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
 using Nop.Plugin.Payments.PayPalDirect.Controllers;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -33,6 +34,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
 
         private readonly PayPalDirectPaymentSettings _paypalDirectPaymentSettings;
         private readonly ISettingService _settingService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
         private readonly CurrencySettings _currencySettings;
@@ -44,12 +46,14 @@ namespace Nop.Plugin.Payments.PayPalDirect
 
         public PayPalDirectPaymentProcessor(PayPalDirectPaymentSettings paypalDirectPaymentSettings,
             ISettingService settingService, 
+            IGenericAttributeService genericAttributeService,
             ICurrencyService currencyService, ICustomerService customerService,
             CurrencySettings currencySettings, IWebHelper webHelper, 
             IOrderTotalCalculationService orderTotalCalculationService)
         {
             this._paypalDirectPaymentSettings = paypalDirectPaymentSettings;
             this._settingService = settingService;
+            this._genericAttributeService = genericAttributeService;
             this._currencyService = currencyService;
             this._customerService = customerService;
             this._currencySettings = currencySettings;
@@ -382,11 +386,23 @@ namespace Nop.Plugin.Payments.PayPalDirect
             string transactionId = refundPaymentRequest.Order.CaptureTransactionId;
 
             var req = new RefundTransactionReq();
-            req.RefundTransactionRequest = new RefundTransactionRequestType();
-            //NOTE: Specify amount in partial refund
-            req.RefundTransactionRequest.RefundType = RefundType.FULL;
-            req.RefundTransactionRequest.Version = GetApiVersion();
-            req.RefundTransactionRequest.TransactionID = transactionId;
+            req.RefundTransactionRequest = new RefundTransactionRequestType
+            {
+                Version = GetApiVersion(),
+                TransactionID = transactionId
+            };
+
+            if (refundPaymentRequest.IsPartialRefund)
+            {
+                req.RefundTransactionRequest.RefundType = RefundType.PARTIAL;
+                req.RefundTransactionRequest.Amount = new BasicAmountType
+                {
+                    currencyID = PaypalHelper.GetPaypalCurrency(_currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)),
+                    value = refundPaymentRequest.AmountToRefund.ToString()
+                };
+            }
+            else
+                req.RefundTransactionRequest.RefundType = RefundType.FULL;
 
             var service = GetService();
             RefundTransactionResponseType response = service.RefundTransaction(req);
@@ -395,13 +411,15 @@ namespace Nop.Plugin.Payments.PayPalDirect
             bool success = PaypalHelper.CheckSuccess(response, out error);
             if (success)
             {
-                result.NewPaymentStatus = PaymentStatus.Refunded;
-                //cancelPaymentResult.RefundTransactionID = response.RefundTransactionID;
+                result.NewPaymentStatus = (refundPaymentRequest.IsPartialRefund &&
+                    refundPaymentRequest.Order.RefundedAmount + refundPaymentRequest.AmountToRefund < refundPaymentRequest.Order.OrderTotal) ?
+                    PaymentStatus.PartiallyRefunded : PaymentStatus.Refunded;
+
+                //set refund transaction id for preventing refund twice
+                _genericAttributeService.SaveAttribute(refundPaymentRequest.Order, "RefundTransactionId", response.RefundTransactionID);
             }
             else
-            {
                 result.AddError(error);
-            }
 
             return result;
         }
@@ -687,7 +705,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         {
             get
             {
-                return false;
+                return true;
             }
         }
 
