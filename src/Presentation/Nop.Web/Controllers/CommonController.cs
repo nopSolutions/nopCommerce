@@ -428,6 +428,26 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
+
+        //social
+        [ChildActionOnly]
+        public ActionResult Social()
+        {
+            //model
+            var model = new SocialModel
+            {
+                FacebookLink = _storeInformationSettings.FacebookLink,
+                TwitterLink = _storeInformationSettings.TwitterLink,
+                YoutubeLink = _storeInformationSettings.YoutubeLink,
+                GooglePlusLink = _storeInformationSettings.GooglePlusLink,
+                WorkingLanguageId = _workContext.WorkingLanguage.Id,
+                NewsEnabled = _newsSettings.Enabled,
+            };
+
+            return PartialView(model);
+        }
+
+
         //footer
         [ChildActionOnly]
         public ActionResult Footer()
@@ -460,10 +480,6 @@ namespace Nop.Web.Controllers
                 ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 SitemapEnabled = _commonSettings.SitemapEnabled,
                 WorkingLanguageId = _workContext.WorkingLanguage.Id,
-                FacebookLink = _storeInformationSettings.FacebookLink,
-                TwitterLink = _storeInformationSettings.TwitterLink,
-                YoutubeLink = _storeInformationSettings.YoutubeLink,
-                GooglePlusLink = _storeInformationSettings.GooglePlusLink,
                 BlogEnabled = _blogSettings.Enabled,
                 CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,
                 ForumEnabled = _forumSettings.ForumsEnabled,
