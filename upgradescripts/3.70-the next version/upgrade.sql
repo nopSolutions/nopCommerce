@@ -48,7 +48,7 @@ set @resources='
     <Value>Page size</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PageSize.Hint">
-    <Value>Page size is for history of reward points on my account page</Value>
+    <Value>Set the page size for history of reward points on ''My account'' page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Resources.SaveBeforeEdit">
     <Value>You need to save the language before you can make or change resources for this language.</Value>

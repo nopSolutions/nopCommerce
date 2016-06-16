@@ -6331,7 +6331,7 @@
     <Value>Page size</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PageSize.Hint">
-    <Value>Page size is for history of reward points in account page.</Value>
+    <Value>Set the page size for history of reward points on 'My account' page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsAccumulatedForAllStores">
     <Value>Points accumulated for all stores</Value>
