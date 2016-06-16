@@ -748,11 +748,6 @@ span.grid-report-item.red {
         margin-top: -2px;
     }
 
-    /* SIDE BAR */
-    .main-sidebar, .left-side {
-        padding-top: 155px;
-    }
-
     /* FORM ELEMENTS */
     .form-horizontal .panel-search-popup .control-label {
         float: none;
