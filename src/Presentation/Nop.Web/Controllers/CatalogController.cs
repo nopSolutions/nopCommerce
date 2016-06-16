@@ -1399,7 +1399,6 @@ namespace Nop.Web.Controllers
                         keywords: searchTerms,
                         searchDescriptions: searchInDescriptions,
                         searchManufacturerPartNumber: searchInDescriptions,
-                        searchSku: searchInDescriptions,
                         searchProductTags: searchInProductTags,
                         languageId: _workContext.WorkingLanguage.Id,
                         orderBy: (ProductSortingEnum)command.OrderBy,
@@ -1472,8 +1471,6 @@ namespace Nop.Web.Controllers
             var products = _productService.SearchProducts(
                 storeId: _storeContext.CurrentStore.Id,
                 keywords: term,
-                searchManufacturerPartNumber: false,
-                searchSku: false,
                 languageId: _workContext.WorkingLanguage.Id,
                 visibleIndividuallyOnly: true,
                 pageSize: productNumber);
