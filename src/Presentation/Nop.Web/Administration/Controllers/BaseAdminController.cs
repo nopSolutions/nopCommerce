@@ -11,6 +11,7 @@ namespace Nop.Admin.Controllers
     [AdminValidateIpAddress]
     [AdminAuthorize]
     [AdminAntiForgery]
+    [AdminVendorValidation]
     public abstract partial class BaseAdminController : BaseController
     {
         /// <summary>
