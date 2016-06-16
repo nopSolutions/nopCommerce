@@ -1398,7 +1398,6 @@ namespace Nop.Web.Controllers
                         priceMax: maxPriceConverted,
                         keywords: searchTerms,
                         searchDescriptions: searchInDescriptions,
-                        searchManufacturerPartNumber: searchInDescriptions,
                         searchProductTags: searchInProductTags,
                         languageId: _workContext.WorkingLanguage.Id,
                         orderBy: (ProductSortingEnum)command.OrderBy,
