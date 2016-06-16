@@ -69,10 +69,10 @@ namespace Nop.Web.Controllers
         private readonly BlogSettings _blogSettings;
         private readonly ForumSettings _forumSettings;
         private readonly ICacheManager _cacheManager;
-        
+
         #endregion
 
-		#region Constructors
+        #region Constructors
 
         public CatalogController(ICategoryService categoryService, 
             IManufacturerService manufacturerService,

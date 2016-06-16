@@ -88,6 +88,7 @@ namespace Nop.Web.Controllers
         private readonly SecuritySettings _securitySettings;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
+        private readonly CatalogSettings _catalogSettings;
 
         #endregion
 
@@ -134,7 +135,8 @@ namespace Nop.Web.Controllers
             CaptchaSettings captchaSettings,
             SecuritySettings securitySettings,
             ExternalAuthenticationSettings externalAuthenticationSettings,
-            StoreInformationSettings storeInformationSettings)
+            StoreInformationSettings storeInformationSettings,
+            CatalogSettings catalogSettings)
         {
             this._authenticationService = authenticationService;
             this._dateTimeHelper = dateTimeHelper;
@@ -178,6 +180,7 @@ namespace Nop.Web.Controllers
             this._securitySettings = securitySettings;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._storeInformationSettings = storeInformationSettings;
+            this._catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -296,7 +299,7 @@ namespace Nop.Web.Controllers
 
             return result;
         }
-
+        
         [NonAction]
         protected virtual void PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer,
             bool excludeProperties, string overrideCustomCustomerAttributesXml = "")
@@ -1322,7 +1325,15 @@ namespace Nop.Web.Controllers
                     Tab = CustomerNavigationEnum.ForumSubscriptions
                 });
             }
-
+            if (_catalogSettings.ShowProductReviewsTabOnAccountPage)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerProductReviews",
+                    Title = _localizationService.GetResource("Account.CustomerProductReviews"),
+                    Tab = CustomerNavigationEnum.ProductReviews
+                });
+            }
             model.SelectedTab = (CustomerNavigationEnum)selectedTabId;
 
             return PartialView(model);

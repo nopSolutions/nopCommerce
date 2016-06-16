@@ -189,6 +189,18 @@
   <LocaleResource Name="Account.CustomerOrders.ReturnItems">
     <Value>Return Item(s)</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.CustomerProductReviews">
+    <Value>My product reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerProductReviews.ApprovalStatus.Approved">
+    <Value>Approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerProductReviews.ApprovalStatus.Pending">
+    <Value>Pending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerProductReviews.ProductReviewFor">
+    <Value>Product review for</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.CustomerReturnRequests">
     <Value>Return requests</Value>
   </LocaleResource>
@@ -4961,6 +4973,18 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsPerStore.Hint">
     <Value>Enable show reviews per store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsTabOnAccountPage">
+    <Value>Show product reviews tab on ''My account'' page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsTabOnAccountPage.Hint">
+    <Value>Check to show product reviews tab on '' My account'' page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsPageSizeOnAccountPage">
+    <Value>Product reviews page size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsPageSizeOnAccountPage.Hint">
+    <Value>Set the page size for product reviews e.g. ''10'' reviews per page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowShareButton">
     <Value>Show a share button</Value>
@@ -13379,6 +13403,9 @@
   </LocaleResource>
   <LocaleResource Name="PageTitle.ContactVendor">
     <Value>Contact Vendor - {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.CustomerProductReviews">
+    <Value>My product reviews</Value>
   </LocaleResource>
   <LocaleResource Name="PageTitle.ForumSubscriptions">
     <Value>Forum Subscriptions</Value>
