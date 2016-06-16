@@ -417,8 +417,8 @@ namespace Nop.Services.Catalog
                 pageIndex, pageSize, categoryIds, manufacturerId,
                 storeId, vendorId, warehouseId,
                 productType, visibleIndividuallyOnly, markedAsNewOnly, featuredProducts,
-                priceMin, priceMax, productTagId, keywords, searchDescriptions, searchSku,
-                searchProductTags, searchManufacturerPartNumber, languageId, filteredSpecs, 
+                priceMin, priceMax, productTagId, keywords, searchDescriptions, searchManufacturerPartNumber, searchSku,
+                searchProductTags, languageId, filteredSpecs, 
                 orderBy, showHidden, overridePublished);
         }
 
