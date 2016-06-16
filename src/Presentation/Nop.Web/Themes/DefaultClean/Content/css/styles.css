@@ -15,7 +15,7 @@
 	box-sizing: border-box;
 }
 html {
-	margin: 0 !important;
+	margin: 0;
 	-webkit-text-size-adjust: none;
 }
 ol, ul {
@@ -1607,7 +1607,6 @@ label, label + * {
 
 
 /********** PRODUCT PAGE **********/
-
 
 
 .product-details-page {
