@@ -163,7 +163,7 @@
                     });
                 </script>
 
-                <div class="form-group">
+                <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AddStoreId)
                     </div>
