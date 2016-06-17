@@ -48,7 +48,7 @@ set @resources='
     <Value>Page size</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PageSize.Hint">
-    <Value>Page size is for history of reward points on my account page</Value>
+    <Value>Set the page size for history of reward points on ''My account'' page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Resources.SaveBeforeEdit">
     <Value>You need to save the language before you can make or change resources for this language.</Value>
@@ -673,6 +673,33 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.OrderGuid.Hint">
     <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerProductReviews">
+    <Value>My product reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerProductReviews.ApprovalStatus.Approved">
+    <Value>Approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerProductReviews.ApprovalStatus.Pending">
+    <Value>Pending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerProductReviews.ProductReviewFor">
+    <Value>Product review for</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsTabOnAccountPage">
+    <Value>Show product reviews tab on ''My account'' page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsTabOnAccountPage.Hint">
+    <Value>Check to show product reviews tab on '' My account'' page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsPageSizeOnAccountPage">
+    <Value>Product reviews page size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsPageSizeOnAccountPage.Hint">
+    <Value>Set the page size for product reviews e.g. ''10'' reviews per page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.CustomerProductReviews">
+    <Value>My product reviews</Value>
   </LocaleResource>
 </Language>
 '
@@ -2458,4 +2485,41 @@ GO
  	INSERT [Setting] ([Name], [Value], [StoreId])
  	VALUES (N'customersettings.requireregistrationfordownloadableproducts', N'False', 0)
  END
+ GO
+
+ --new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.showproductreviewstabonaccountpage')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'catalogsettings.showproductreviewstabonaccountpage', N'True', 0)
+ END
+ GO
+
+ --new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.productreviewspagesizeonaccountpage')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'catalogsettings.productreviewspagesizeonaccountpage', N'10', 0)
+ END
+ GO
+
+--delete some settings
+ DELETE FROM [Setting]
+ WHERE [name] = N'catalogsettings.IgnoreDiscounts' and [StoreId] > 0
+ GO
+ 
+ DELETE FROM [Setting]
+ WHERE [name] = N'catalogsettings.IgnoreFeaturedProducts' and [StoreId] > 0
+ GO
+ 
+ DELETE FROM [Setting]
+ WHERE [name] = N'catalogsettings.IgnoreAcl' and [StoreId] > 0
+ GO
+ 
+ DELETE FROM [Setting]
+ WHERE [name] = N'catalogsettings.IgnoreStoreLimitations' and [StoreId] > 0
+ GO
+ 
+ DELETE FROM [Setting]
+ WHERE [name] = N'catalogsettings.CacheProductPrices' and [StoreId] > 0
  GO

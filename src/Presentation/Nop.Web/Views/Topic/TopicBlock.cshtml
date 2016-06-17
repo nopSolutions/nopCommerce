@@ -27,7 +27,7 @@
                             $('#ph-password-@Model.Id').hide();
                             $('#ph-topic-@Model.Id').show();
                         } else {
-                            $('#password-error-@Model.Id').text(data.Error);
+                            $('#password-error-@Model.Id').text(data.Error).fadeIn("slow");
                             $('#ph-password-@Model.Id #password-@Model.Id').select().focus();
                         }
                     }
@@ -53,9 +53,7 @@
                 @Html.Password("password", null, new { id = "password-" + @Model.Id })
                 <input type="submit" id="button-password-@Model.Id" value="@T("Topic.Button")" class="button-1 topic-password-button" />
             </div>
-            <div class="password-error">
-                <span id="password-error-@Model.Id"></span>
-            </div>
+            <div class="password-error" id="password-error-@Model.Id" style="display: none;"></div>
         }
     </div>
     <div class="topic-block" id="ph-topic-@Model.Id">

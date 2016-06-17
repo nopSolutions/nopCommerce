@@ -22,6 +22,7 @@ namespace Nop.Plugin.Shipping.USPS.Domain
         {
             {"NONE (disable all domestic services)", "NONE"},
             {"First-Class", "0"},
+            {"First-Class Mail Letter", "letter"},
             {"Priority Mail Express Sunday/Holiday Guarantee", "23"},
             {"Priority Mail Express Flat-Rate Envelope Sunday/Holiday Guarantee", "25"},
             {"Priority Mail Express Hold For Pickup", "2"},

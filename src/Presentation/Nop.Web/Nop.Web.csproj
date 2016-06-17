@@ -304,6 +304,7 @@
     <Compile Include="Models\Catalog\BackInStockSubscribeModel.cs" />
     <Compile Include="Models\Catalog\CategorySimpleModel.cs" />
     <Compile Include="Models\Catalog\CompareProductsModel.cs" />
+    <Compile Include="Models\Catalog\CustomerProductReviewModel.cs" />
     <Compile Include="Models\Catalog\VendorModel.cs" />
     <Compile Include="Models\Catalog\VendorNavigationModel.cs" />
     <Compile Include="Models\Catalog\ProductOverviewModel.cs" />
@@ -1004,6 +1005,7 @@
     <Content Include="Views\Vendor\ApplyVendor.cshtml" />
     <Content Include="Views\Product\_Discontinued.cshtml" />
     <Content Include="Views\Common\Social.cshtml" />
+    <Content Include="Views\Product\CustomerProductReviews.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="obj\" />

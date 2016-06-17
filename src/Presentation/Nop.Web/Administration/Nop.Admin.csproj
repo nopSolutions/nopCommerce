@@ -424,6 +424,7 @@
   <ItemGroup>
     <Content Include="Content\adminLTE\AdminLTE-2.3.0.css" />
     <Content Include="Content\adminLTE\AdminLTE-2.3.0.min.css" />
+    <Content Include="Content\adminLTE\AdminLTE-2.3.0.rtl.css" />
     <Content Include="Content\adminLTE\img\avatar.png" />
     <Content Include="Content\adminLTE\img\avatar04.png" />
     <Content Include="Content\adminLTE\img\avatar2.png" />
@@ -482,6 +483,7 @@
     <Content Include="Content\bootstrap\css\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap\css\bootstrap.css" />
     <Content Include="Content\bootstrap\css\bootstrap.min.css" />
+    <Content Include="Content\bootstrap\css\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\farbtastic\farbtastic.css" />
     <Content Include="Content\farbtastic\marker.png" />
@@ -949,6 +951,7 @@
     <Content Include="Content\Roxy_Fileman\js\utils.js" />
     <Content Include="Content\Roxy_Fileman\LICENSE.txt" />
     <Content Include="Content\Roxy_Fileman\third-party.txt" />
+    <Content Include="Content\styles.rtl.css" />
     <Content Include="Content\tagEditor\jquery.tag-editor.css" />
     <Content Include="Content\tinymce\license.txt" />
     <Content Include="Content\tinymce\plugins\advlist\plugin.min.js" />

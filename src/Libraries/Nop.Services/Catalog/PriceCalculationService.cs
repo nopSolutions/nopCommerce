@@ -395,8 +395,36 @@ namespace Nop.Services.Catalog
         /// <param name="discountAmount">Applied discount amount</param>
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Final price</returns>
+        public virtual decimal GetFinalPrice(Product product,
+            Customer customer,
+            decimal additionalCharge,
+            bool includeDiscounts,
+            int quantity,
+            DateTime? rentalStartDate,
+            DateTime? rentalEndDate,
+            out decimal discountAmount,
+            out Discount appliedDiscount)
+        {
+            return GetFinalPrice(product, customer, null, additionalCharge, includeDiscounts, quantity,
+                rentalStartDate, rentalEndDate, out discountAmount, out appliedDiscount);
+        }
+        /// <summary>
+        /// Gets the final price
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="customer">The customer</param>
+        /// <param name="overriddenProductPrice">Overridden product price. If specified, then it'll be used instead of a product price. For example, used with product attribute combinations</param>
+        /// <param name="additionalCharge">Additional charge</param>
+        /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
+        /// <param name="quantity">Shopping cart item quantity</param>
+        /// <param name="rentalStartDate">Rental period start date (for rental products)</param>
+        /// <param name="rentalEndDate">Rental period end date (for rental products)</param>
+        /// <param name="discountAmount">Applied discount amount</param>
+        /// <param name="appliedDiscount">Applied discount</param>
+        /// <returns>Final price</returns>
         public virtual decimal GetFinalPrice(Product product, 
             Customer customer,
+            decimal? overriddenProductPrice,
             decimal additionalCharge, 
             bool includeDiscounts,
             int quantity,
@@ -412,13 +440,14 @@ namespace Nop.Services.Catalog
             appliedDiscount = null;
 
             var cacheKey = string.Format(PriceCacheEventConsumer.PRODUCT_PRICE_MODEL_KEY,
-                product.Id, 
+                product.Id,
+                overriddenProductPrice.HasValue ? overriddenProductPrice.Value.ToString(CultureInfo.InvariantCulture) : null,
                 additionalCharge.ToString(CultureInfo.InvariantCulture),
                 includeDiscounts, 
                 quantity,
                 string.Join(",", customer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            var cacheTime = _catalogSettings.CacheProductPrices ? 60 : 0;
+             var cacheTime = _catalogSettings.CacheProductPrices ? 60 : 0;
             //we do not cache price for rental products
             //otherwise, it can cause memory leaks (to store all possible date period combinations)
             if (product.IsRental)
@@ -428,7 +457,7 @@ namespace Nop.Services.Catalog
                 var result = new ProductPriceForCaching();
 
                 //initial price
-                decimal price = product.Price;
+                decimal price = overriddenProductPrice.HasValue ? overriddenProductPrice.Value : product.Price;
 
                 //special price
                 var specialPrice = product.GetSpecialPrice();
@@ -571,7 +600,15 @@ namespace Nop.Services.Catalog
             var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
             if (combination != null && combination.OverriddenPrice.HasValue)
             {
-                finalPrice = combination.OverriddenPrice.Value;
+                finalPrice = GetFinalPrice(product,
+                        customer,
+                        combination.OverriddenPrice.Value,
+                        decimal.Zero,
+                        includeDiscounts,
+                        quantity,
+                        product.IsRental ? rentalStartDate : null,
+                        product.IsRental ? rentalEndDate : null,
+                        out discountAmount, out appliedDiscount);
             }
             else
             {
