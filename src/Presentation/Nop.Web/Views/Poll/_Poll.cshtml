@@ -29,7 +29,7 @@
             <input type="button" value="@T("Polls.Vote")" id="vote-poll-@(Model.Id)" class="button-2 vote-poll-button" />
             <span id="poll-voting-progress-@(Model.Id)" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
         </div>
-        <div class="poll-vote-error" id="block-poll-vote-error-@(Model.Id)">
+        <div class="poll-vote-error" id="block-poll-vote-error-@(Model.Id)" style="display:none">
         </div>
         
         <script type="text/javascript">
