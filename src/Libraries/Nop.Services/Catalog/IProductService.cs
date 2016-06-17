@@ -482,10 +482,13 @@ namespace Nop.Services.Catalog
         /// <param name="message">Search title or review text; null to load all records</param>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
         /// <param name="productId">The product identifier; pass 0 to load all records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Reviews</returns>
-        IList<ProductReview> GetAllProductReviews(int customerId, bool? approved,
+        IPagedList<ProductReview> GetAllProductReviews(int customerId, bool? approved,
             DateTime? fromUtc = null, DateTime? toUtc = null,
-            string message = null, int storeId = 0, int productId = 0);
+            string message = null, int storeId = 0, int productId = 0, 
+            int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets product review

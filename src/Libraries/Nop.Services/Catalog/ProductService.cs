@@ -1934,10 +1934,13 @@ namespace Nop.Services.Catalog
         /// <param name="message">Search title or review text; null to load all records</param>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
         /// <param name="productId">The product identifier; pass 0 to load all records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Reviews</returns>
-        public virtual IList<ProductReview> GetAllProductReviews(int customerId, bool? approved,
+        public virtual IPagedList<ProductReview> GetAllProductReviews(int customerId, bool? approved,
             DateTime? fromUtc = null, DateTime? toUtc = null,
-            string message = null, int storeId = 0, int productId = 0)
+            string message = null, int storeId = 0, int productId = 0,
+            int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _productReviewRepository.Table;
             if (approved.HasValue)
@@ -1956,8 +1959,10 @@ namespace Nop.Services.Catalog
                 query = query.Where(c => c.ProductId == productId);
 
             query = query.OrderBy(c => c.CreatedOnUtc);
-            var content = query.ToList();
-            return content;
+
+            var productReviews = new PagedList<ProductReview>(query, pageIndex, pageSize);
+
+            return productReviews;
         }
 
         /// <summary>

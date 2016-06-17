@@ -119,6 +119,16 @@ namespace Nop.Core.Domain.Catalog
         public bool ShowProductReviewsPerStore { get; set; }
 
         /// <summary>
+        /// Gets or sets a show product reviews tab on account page
+        /// </summary>
+        public bool ShowProductReviewsTabOnAccountPage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the page size for product reviews in account page
+        /// </summary>
+        public int ProductReviewsPageSizeOnAccountPage { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether product 'Email a friend' feature is enabled
         /// </summary>
         public bool EmailAFriendEnabled { get; set; }

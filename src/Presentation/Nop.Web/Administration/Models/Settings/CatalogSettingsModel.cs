@@ -82,6 +82,14 @@ namespace Nop.Admin.Models.Settings
         public bool ShowProductReviewsPerStore { get; set; }
         public bool ShowProductReviewsPerStore_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowProductReviewsTabOnAccountPage")]
+        public bool ShowProductReviewsTabOnAccountPage { get; set; }
+        public bool ShowProductReviewsOnAccountPage_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductReviewsPageSizeOnAccountPage")]
+        public int ProductReviewsPageSizeOnAccountPage { get; set; }
+        public bool ProductReviewsPageSizeOnAccountPage_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.EmailAFriendEnabled")]
         public bool EmailAFriendEnabled { get; set; }
         public bool EmailAFriendEnabled_OverrideForStore { get; set; }
