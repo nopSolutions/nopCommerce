@@ -321,8 +321,8 @@ td.k-state-focused.k-state-selected {
     border-radius: 2px;
 }
 .admin-search-box {
-    background: url(images/search-icon.png) no-repeat 97%;
-    /*padding-left: 30px;*/
+    background: url(images/search-icon.png) no-repeat 3%;
+    padding-left: 30px;
 }
 
 /* NAV BAR */
