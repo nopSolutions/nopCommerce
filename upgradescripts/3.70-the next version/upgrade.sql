@@ -2502,3 +2502,24 @@ GO
  	VALUES (N'catalogsettings.productreviewspagesizeonaccountpage', N'10', 0)
  END
  GO
+
+--delete some settings
+ DELETE FROM [Setting]
+ WHERE [name] = N'catalogsettings.IgnoreDiscounts' and [StoreId] > 0
+ GO
+ 
+ DELETE FROM [Setting]
+ WHERE [name] = N'catalogsettings.IgnoreFeaturedProducts' and [StoreId] > 0
+ GO
+ 
+ DELETE FROM [Setting]
+ WHERE [name] = N'catalogsettings.IgnoreAcl' and [StoreId] > 0
+ GO
+ 
+ DELETE FROM [Setting]
+ WHERE [name] = N'catalogsettings.IgnoreStoreLimitations' and [StoreId] > 0
+ GO
+ 
+ DELETE FROM [Setting]
+ WHERE [name] = N'catalogsettings.CacheProductPrices' and [StoreId] > 0
+ GO
