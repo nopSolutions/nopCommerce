@@ -383,10 +383,36 @@ namespace Nop.Plugin.Payments.PayPalDirect
 
             var req = new RefundTransactionReq();
             req.RefundTransactionRequest = new RefundTransactionRequestType();
-            //NOTE: Specify amount in partial refund
-            req.RefundTransactionRequest.RefundType = RefundType.FULL;
-            req.RefundTransactionRequest.Version = GetApiVersion();
-            req.RefundTransactionRequest.TransactionID = transactionId;
+
+            bool shouldTry = true;
+
+            if (refundPaymentRequest.IsPartialRefund)
+            {                
+                CurrencyCodeType currencyCode;
+                if (!Enum.TryParse(refundPaymentRequest.Order.CustomerCurrencyCode, out currencyCode) || !Enum.IsDefined(typeof (CurrencyCodeType), currencyCode))
+                {
+                    result.AddError("Currency code does not exist or is not supported by PayPal.");
+                    shouldTry = false;
+                }
+
+                req.RefundTransactionRequest.RefundType = RefundType.PARTIAL;
+                req.RefundTransactionRequest.Amount = new BasicAmountType
+                {
+                    value = string.Format("{0:N}", refundPaymentRequest.AmountToRefund),
+                    currencyID = currencyCode
+                };
+            }
+            else
+            {
+                req.RefundTransactionRequest.RefundType = RefundType.FULL;
+                req.RefundTransactionRequest.Version = GetApiVersion();
+                req.RefundTransactionRequest.TransactionID = transactionId;
+            }
+            
+            if (!shouldTry)
+            {
+                return result;
+            }
 
             var service = GetService();
             RefundTransactionResponseType response = service.RefundTransaction(req);
@@ -395,7 +421,16 @@ namespace Nop.Plugin.Payments.PayPalDirect
             bool success = PaypalHelper.CheckSuccess(response, out error);
             if (success)
             {
-                result.NewPaymentStatus = PaymentStatus.Refunded;
+                if (refundPaymentRequest.IsPartialRefund &&
+                    ((refundPaymentRequest.Order.OrderTotal - refundPaymentRequest.Order.RefundedAmount) > refundPaymentRequest.AmountToRefund))
+                {
+                    result.NewPaymentStatus = PaymentStatus.PartiallyRefunded;
+                }
+                else
+                {
+                    result.NewPaymentStatus = PaymentStatus.Refunded;
+                }
+
                 //cancelPaymentResult.RefundTransactionID = response.RefundTransactionID;
             }
             else
@@ -687,7 +722,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         {
             get
             {
-                return false;
+                return true;
             }
         }
 
