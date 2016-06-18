@@ -25,7 +25,8 @@
             <button type="button" name="importcsv" class="btn bg-olive" data-toggle="modal" data-target="#importcsv-window">
                 <i class="fa fa-upload"></i>
                 @T("Admin.Common.ImportFromCsv")
-            </button>        </div>
+            </button>
+        </div>
     </div>
 
     <div class="content">
@@ -67,7 +68,7 @@
                                         @Html.NopDropDownList("ActiveId", Model.ActiveList)
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.StoreId)
                                     </div>

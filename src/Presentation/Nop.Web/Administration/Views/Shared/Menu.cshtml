@@ -1,26 +1,31 @@
-﻿@using Nop.Web.Framework.Menu;
+﻿@using Nop.Core
+@using Nop.Core.Domain.Localization
+@using Nop.Web.Framework.Menu;
 
 @{
     //load sitemap
     var siteMap = new Nop.Web.Framework.Menu.XmlSiteMap();
     siteMap.LoadFrom("~/Administration/sitemap.config");
+
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl &&
+    !EngineContext.Current.Resolve<LocalizationSettings>().IgnoreRtlPropertyForAdminArea;
 }
 
-@helper RenderMenuItem(Nop.Web.Framework.Menu.SiteMapNode item)
+@helper RenderMenuItem(Nop.Web.Framework.Menu.SiteMapNode item, bool supportRtl)
 {
-string url = null;
-if (!string.IsNullOrEmpty(item.ControllerName) && !string.IsNullOrEmpty(item.ActionName))
-{
-    url = Url.Action(item.ActionName, item.ControllerName, item.RouteValues, null, null);
-}
-else if (!string.IsNullOrEmpty(item.Url))
-{
-    url = item.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(item.Url) : item.Url;
-}
-var isActive = item.ContainsSystemName(Html.GetActiveMenuItemSystemName());
+    string url = null;
+    if (!string.IsNullOrEmpty(item.ControllerName) && !string.IsNullOrEmpty(item.ActionName))
+    {
+        url = Url.Action(item.ActionName, item.ControllerName, item.RouteValues, null, null);
+    }
+    else if (!string.IsNullOrEmpty(item.Url))
+    {
+        url = item.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(item.Url) : item.Url;
+    }
+    var isActive = item.ContainsSystemName(Html.GetActiveMenuItemSystemName());
 
-if (!String.IsNullOrEmpty(url))
-{
+    if (!String.IsNullOrEmpty(url))
+    {
         <li @(isActive ? Html.Raw("class=\"active\"") : null)>
             <a href="@url" class="menu-item-link">
                 @if (!String.IsNullOrEmpty(item.IconClass))
@@ -32,9 +37,9 @@ if (!String.IsNullOrEmpty(url))
                 <span class="menu-item-title">@item.Title</span>
             </a>
         </li>
-}
-else
-{
+    }
+    else
+    {
         <li class="treeview @(isActive ? Html.Raw("active") : null)">
             <a href="#">
                 @if (!String.IsNullOrEmpty(item.IconClass))
@@ -44,7 +49,14 @@ else
                     </text>
                 }
                 <span>@item.Title</span>
-                <i class="fa fa-angle-left pull-right"></i>
+                @if (supportRtl)
+                {
+                    <i class="fa fa-angle-right pull-right"></i>
+                }
+                else
+                {
+                    <i class="fa fa-angle-left pull-right"></i>
+                }
             </a>
 
             @{ var childNodes = item.ChildNodes.Where(x => x.Visible).ToList(); }
@@ -53,12 +65,12 @@ else
                 <ul class="treeview-menu">
                     @foreach (var childItem in childNodes)
                     {
-                        @RenderMenuItem(childItem)
+                        @RenderMenuItem(childItem, supportRtl)
                     }
                 </ul>
             }
         </li>
-                }
+    }
 }
 
 <ul class="sidebar-menu">
@@ -85,6 +97,6 @@ else
     }
     @foreach (var item in rootNode.ChildNodes.Where(x => x.Visible))
     {
-        @RenderMenuItem(item)
+        @RenderMenuItem(item, supportRtl)
     }
 </ul>

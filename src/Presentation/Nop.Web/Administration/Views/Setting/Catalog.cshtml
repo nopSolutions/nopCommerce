@@ -502,7 +502,6 @@
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.IgnoreAcl_OverrideForStore, model => model.IgnoreAcl, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.IgnoreAcl)
                     </div>
                     <div class="col-md-9">
@@ -512,7 +511,6 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.IgnoreStoreLimitations_OverrideForStore, model => model.IgnoreStoreLimitations, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.IgnoreStoreLimitations)
                     </div>
                     <div class="col-md-9">
@@ -522,7 +520,6 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.IgnoreDiscounts_OverrideForStore, model => model.IgnoreDiscounts, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.IgnoreDiscounts)
                     </div>
                     <div class="col-md-9">
@@ -532,7 +529,6 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.IgnoreFeaturedProducts_OverrideForStore, model => model.IgnoreFeaturedProducts, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.IgnoreFeaturedProducts)
                     </div>
                     <div class="col-md-9">
@@ -542,7 +538,6 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.CacheProductPrices_OverrideForStore, model => model.CacheProductPrices, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.CacheProductPrices)
                     </div>
                     <div class="col-md-9">
@@ -557,6 +552,22 @@
 
 @helper TabProductReviews()
 {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#@Html.FieldIdFor(model => model.ShowProductReviewsTabOnAccountPage)").click(toggleProductReviewsPageSizeOnAccountPage);
+
+            toggleProductReviewsPageSizeOnAccountPage();
+        });
+
+        function toggleProductReviewsPageSizeOnAccountPage() {
+            if ($('#@Html.FieldIdFor(model => model.ShowProductReviewsTabOnAccountPage)').is(':checked')) {
+                $('#pnlProductReviewsPageSizeOnAccountPage').show();
+            }
+            else {
+                $('#pnlProductReviewsPageSizeOnAccountPage').hide();
+            }
+        }
+    </script>
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -598,6 +609,26 @@
                     <div class="col-md-9">
                         @Html.NopEditorFor(model => model.ShowProductReviewsPerStore)
                         @Html.ValidationMessageFor(model => model.ShowProductReviewsPerStore)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ShowProductReviewsOnAccountPage_OverrideForStore, model => model.ShowProductReviewsTabOnAccountPage, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ShowProductReviewsTabOnAccountPage)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.ShowProductReviewsTabOnAccountPage)
+                        @Html.ValidationMessageFor(model => model.ShowProductReviewsTabOnAccountPage)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlProductReviewsPageSizeOnAccountPage">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ProductReviewsPageSizeOnAccountPage_OverrideForStore, model => model.ProductReviewsPageSizeOnAccountPage, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ProductReviewsPageSizeOnAccountPage)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.ProductReviewsPageSizeOnAccountPage)
+                        @Html.ValidationMessageFor(model => model.ProductReviewsPageSizeOnAccountPage)
                     </div>
                 </div>
             </div>

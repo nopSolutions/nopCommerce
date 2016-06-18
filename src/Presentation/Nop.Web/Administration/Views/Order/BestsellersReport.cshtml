@@ -43,7 +43,7 @@
                                     @Html.NopEditorFor(model => model.EndDate)
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                 <div class="col-md-4">
                                     @Html.NopLabelFor(model => model.StoreId)
                                 </div>
