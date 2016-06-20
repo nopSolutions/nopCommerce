@@ -361,7 +361,6 @@ BEGIN
 	)
 
 	SET @sql = '
-	INSERT INTO #DisplayOrderTmp ([ProductId])
 	SELECT p.Id
 	FROM
 		Product p with (NOLOCK)'
@@ -576,6 +575,30 @@ BEGIN
 			))'
 	END
 	
+    --prepare filterable specification attribute option identifier (if requested)
+    IF @LoadFilterableSpecificationAttributeOptionIds = 1
+	BEGIN		
+		CREATE TABLE #FilterableSpecs 
+		(
+			[SpecificationAttributeOptionId] int NOT NULL
+		)
+        DECLARE @sql_filterableSpecs nvarchar(max)
+        SET @sql_filterableSpecs = '
+	        INSERT INTO #FilterableSpecs ([SpecificationAttributeOptionId])
+	        SELECT DISTINCT [psam].SpecificationAttributeOptionId
+	        FROM [Product_SpecificationAttribute_Mapping] [psam] WITH (NOLOCK)
+	            WHERE [psam].[AllowFiltering] = 1
+	            AND [psam].[ProductId] IN (' + @sql + ')'
+
+        EXEC sp_executesql @sql_filterableSpecs
+
+		--build comma separated list of filterable identifiers
+		SELECT @FilterableSpecificationAttributeOptionIds = COALESCE(@FilterableSpecificationAttributeOptionIds + ',' , '') + CAST(SpecificationAttributeOptionId as nvarchar(4000))
+		FROM #FilterableSpecs
+
+		DROP TABLE #FilterableSpecs
+ 	END
+
 	--filter by specification attribution options
 	SET @FilteredSpecs = isnull(@FilteredSpecs, '')	
 	CREATE TABLE #FilteredSpecs
@@ -583,29 +606,43 @@ BEGIN
 		SpecificationAttributeOptionId int not null
 	)
 	INSERT INTO #FilteredSpecs (SpecificationAttributeOptionId)
-	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@FilteredSpecs, ',')
-	DECLARE @SpecAttributesCount int	
-	SET @SpecAttributesCount = (SELECT COUNT(1) FROM #FilteredSpecs)
+	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@FilteredSpecs, ',') 
+
+    CREATE TABLE #FilteredSpecsWithAttributes
+	(
+        SpecificationAttributeId int not null,
+		SpecificationAttributeOptionId int not null
+	)
+	INSERT INTO #FilteredSpecsWithAttributes (SpecificationAttributeId, SpecificationAttributeOptionId)
+	SELECT sao.SpecificationAttributeId, fs.SpecificationAttributeOptionId
+    FROM #FilteredSpecs fs INNER JOIN SpecificationAttributeOption sao ON sao.Id = fs.SpecificationAttributeOptionId
+    ORDER BY sao.SpecificationAttributeId 
+
+    DECLARE @SpecAttributesCount int	
+	SET @SpecAttributesCount = (SELECT COUNT(1) FROM #FilteredSpecsWithAttributes)
 	IF @SpecAttributesCount > 0
 	BEGIN
 		--do it for each specified specification option
 		DECLARE @SpecificationAttributeOptionId int
+        DECLARE @SpecificationAttributeId int
+        DECLARE @LastSpecificationAttributeId int
+        SET @LastSpecificationAttributeId = 0
 		DECLARE cur_SpecificationAttributeOption CURSOR FOR
-		SELECT [SpecificationAttributeOptionId]
-		FROM [#FilteredSpecs]
+		SELECT SpecificationAttributeId, SpecificationAttributeOptionId
+		FROM #FilteredSpecsWithAttributes
+
 		OPEN cur_SpecificationAttributeOption
-		FETCH NEXT FROM cur_SpecificationAttributeOption INTO @SpecificationAttributeOptionId
-		WHILE @@FETCH_STATUS = 0
-		BEGIN
-			SET @sql = @sql + '
-			AND p.Id in (select psam.ProductId from [Product_SpecificationAttribute_Mapping] psam with (NOLOCK) where psam.AllowFiltering = 1 and psam.SpecificationAttributeOptionId = ' + CAST(@SpecificationAttributeOptionId AS nvarchar(max)) + ')'
-			--fetch next identifier
-			FETCH NEXT FROM cur_SpecificationAttributeOption INTO @SpecificationAttributeOptionId
-		END
+        FOREACH:
+            FETCH NEXT FROM cur_SpecificationAttributeOption INTO @SpecificationAttributeId, @SpecificationAttributeOptionId
+            IF (@LastSpecificationAttributeId <> 0 AND @SpecificationAttributeId <> @LastSpecificationAttributeId OR @@FETCH_STATUS <> 0) 
+			    SET @sql = @sql + '
+        AND p.Id in (select psam.ProductId from [Product_SpecificationAttribute_Mapping] psam with (NOLOCK) where psam.AllowFiltering = 1 and psam.SpecificationAttributeOptionId IN (SELECT SpecificationAttributeOptionId FROM #FilteredSpecsWithAttributes WHERE SpecificationAttributeId = ' + CAST(@LastSpecificationAttributeId AS nvarchar(max)) + '))'
+            SET @LastSpecificationAttributeId = @SpecificationAttributeId
+		IF @@FETCH_STATUS = 0 GOTO FOREACH
 		CLOSE cur_SpecificationAttributeOption
 		DEALLOCATE cur_SpecificationAttributeOption
 	END
-	
+
 	--sorting
 	SET @sql_orderby = ''	
 	IF @OrderBy = 5 /* Name: A to Z */
@@ -638,11 +675,15 @@ BEGIN
 	SET @sql = @sql + '
 	ORDER BY' + @sql_orderby
 	
+    SET @sql = '
+    INSERT INTO #DisplayOrderTmp ([ProductId])' + @sql
+
 	--PRINT (@sql)
 	EXEC sp_executesql @sql
 
 	DROP TABLE #FilteredCategoryIds
 	DROP TABLE #FilteredSpecs
+    DROP TABLE #FilteredSpecsWithAttributes
 	DROP TABLE #FilteredCustomerRoleIds
 	DROP TABLE #KeywordProducts
 
@@ -661,26 +702,6 @@ BEGIN
 	SET @TotalRecords = @@rowcount
 	
 	DROP TABLE #DisplayOrderTmp
-
-	--prepare filterable specification attribute option identifier (if requested)
-	IF @LoadFilterableSpecificationAttributeOptionIds = 1
-	BEGIN		
-		CREATE TABLE #FilterableSpecs 
-		(
-			[SpecificationAttributeOptionId] int NOT NULL
-		)
-		INSERT INTO #FilterableSpecs ([SpecificationAttributeOptionId])
-		SELECT DISTINCT [psam].SpecificationAttributeOptionId
-		FROM [Product_SpecificationAttribute_Mapping] [psam] with (NOLOCK)
-		WHERE [psam].[AllowFiltering] = 1
-		AND [psam].[ProductId] IN (SELECT [pi].ProductId FROM #PageIndex [pi])
-
-		--build comma separated list of filterable identifiers
-		SELECT @FilterableSpecificationAttributeOptionIds = COALESCE(@FilterableSpecificationAttributeOptionIds + ',' , '') + CAST(SpecificationAttributeOptionId as nvarchar(4000))
-		FROM #FilterableSpecs
-
-		DROP TABLE #FilterableSpecs
- 	END
 
 	--return products
 	SELECT TOP (@RowsToReturn)

@@ -54,6 +54,7 @@ namespace Nop.Services.Catalog
         private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
         private readonly IRepository<ProductReview> _productReviewRepository;
         private readonly IRepository<ProductWarehouseInventory> _productWarehouseInventoryRepository;
+        private readonly IRepository<SpecificationAttributeOption> _specificationAttributeOptionRepository;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ILanguageService _languageService;
@@ -87,6 +88,7 @@ namespace Nop.Services.Catalog
         /// <param name="productPictureRepository">Product picture repository</param>
         /// <param name="productSpecificationAttributeRepository">Product specification attribute repository</param>
         /// <param name="productReviewRepository">Product review repository</param>
+        /// <param name="specificationAttributeOptionRepository">Specification attribute option repository</param>
         /// <param name="productWarehouseInventoryRepository">Product warehouse inventory repository</param>
         /// <param name="productAttributeService">Product attribute service</param>
         /// <param name="productAttributeParser">Product attribute parser service</param>
@@ -113,6 +115,7 @@ namespace Nop.Services.Catalog
             IRepository<ProductSpecificationAttribute> productSpecificationAttributeRepository,
             IRepository<ProductReview>  productReviewRepository,
             IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository,
+            IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository,
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
             ILanguageService languageService,
@@ -139,6 +142,7 @@ namespace Nop.Services.Catalog
             this._productSpecificationAttributeRepository = productSpecificationAttributeRepository;
             this._productReviewRepository = productReviewRepository;
             this._productWarehouseInventoryRepository = productWarehouseInventoryRepository;
+            this._specificationAttributeOptionRepository = specificationAttributeOptionRepository;
             this._productAttributeService = productAttributeService;
             this._productAttributeParser = productAttributeParser;
             this._languageService = languageService;
@@ -876,18 +880,6 @@ namespace Nop.Services.Catalog
                             where !p.LimitedToStores || storeId == sm.StoreId
                             select p;
                 }
-                
-                //search by specs
-                if (filteredSpecs != null && filteredSpecs.Count > 0)
-                {
-                    query = from p in query
-                            where !filteredSpecs
-                                       .Except(
-                                           p.ProductSpecificationAttributes.Where(psa => psa.AllowFiltering).Select(
-                                               psa => psa.SpecificationAttributeOptionId))
-                                       .Any()
-                            select p;
-                }
 
                 //category filtering
                 if (categoryIds != null && categoryIds.Count > 0)
@@ -946,6 +938,33 @@ namespace Nop.Services.Catalog
                     query = from p in query
                             from pt in p.ProductTags.Where(pt => pt.Id == productTagId)
                             select p;
+                }
+
+                //get filterable specification attribute option identifier
+                if (loadFilterableSpecificationAttributeOptionIds)
+                {
+                    var querySpecs = from p in query
+                                     join psa in _productSpecificationAttributeRepository.Table on p.Id equals psa.ProductId
+                                     where psa.AllowFiltering
+                                     select psa.SpecificationAttributeOptionId;
+                    //only distinct attributes
+                    filterableSpecificationAttributeOptionIds = querySpecs.Distinct().ToList();
+                }
+
+                //search by specs
+                if (filteredSpecs != null && filteredSpecs.Count > 0)
+                {
+                    var filteredAttributes = _specificationAttributeOptionRepository.Table
+                        .Where(sao => filteredSpecs.Contains(sao.Id)).Select(sao => sao.SpecificationAttributeId).Distinct();
+
+                    query = query.Where(p => !filteredAttributes.Except
+                        (
+                            _specificationAttributeOptionRepository.Table.Where(
+                                sao => p.ProductSpecificationAttributes.Where(
+                                    psa => psa.AllowFiltering && filteredSpecs.Contains(psa.SpecificationAttributeOptionId))
+                                .Select(psa => psa.SpecificationAttributeOptionId).Contains(sao.Id))
+                            .Select(sao => sao.SpecificationAttributeId).Distinct()
+                        ).Any());
                 }
 
                 //only distinct products (group by ID)
@@ -1008,18 +1027,6 @@ namespace Nop.Services.Catalog
 
                 var products = new PagedList<Product>(query, pageIndex, pageSize);
 
-                //get filterable specification attribute option identifier
-                if (loadFilterableSpecificationAttributeOptionIds)
-                {
-                    var querySpecs = from p in query
-                                     join psa in _productSpecificationAttributeRepository.Table on p.Id equals psa.ProductId
-                                     where psa.AllowFiltering
-                                     select psa.SpecificationAttributeOptionId;
-                    //only distinct attributes
-                    filterableSpecificationAttributeOptionIds = querySpecs
-                        .Distinct()
-                        .ToList();
-                }
 
                 //return products
                 return products;
