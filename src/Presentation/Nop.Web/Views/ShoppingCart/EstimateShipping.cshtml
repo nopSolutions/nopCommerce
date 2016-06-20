@@ -52,36 +52,31 @@
                     @Html.TextBoxFor(model => model.ZipPostalCode, new { @class = "zip-input" })
                 </div>
                 <div class="buttons">
-                    <input type="submit" name="estimateshipping" value="@T("ShoppingCart.EstimateShipping.Button")" class="button-2 estimate-shipping-button" />
+                    <input id="estimate-shipping-button" type="button" value="@T("ShoppingCart.EstimateShipping.Button")" class="button-2 estimate-shipping-button" />
                 </div>
             </div>
-            @if (Model.ShippingOptions.Count > 0)
-            {
-                <ul class="shipping-results">
-                    @foreach (var shippingOption in Model.ShippingOptions)
-                    {
-                        <li class="shipping-option-item">
-                            <strong class="option-name">
-                                @T("ShoppingCart.EstimateShipping.ShippingOptionWithRate", shippingOption.Name, shippingOption.Price)
-                            </strong>
-                            <span class="option-description">
-                                @Html.Raw(shippingOption.Description)
-                            </span>
-                        </li>
-                    }
-                </ul>
-            }
-            else if (Model.Warnings.Count > 0)
-            {
-                <div class="message-error">
-                    <ul>
-                        @foreach (var error in Model.Warnings)
-                        {
-                            <li>@error</li>
-                        }
-                    </ul>
-                </div>
-            }
+            <div class="estimate-shipping-result"></div>
         </div>
     </div>
 }
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#estimate-shipping-button').click(function() {
+            displayAjaxLoading(true);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@(Url.RouteUrl("EstimateShipping"))",
+                data: $("#shopping-cart-form").serialize(),
+                success: function(data) {
+                    displayAjaxLoading();
+                    $('.estimate-shipping-result').html(data);
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    displayAjaxLoading();
+                    alert('Failed to retrieve estimate shipping.');
+                }
+            });
+        });
+    });
+</script>
