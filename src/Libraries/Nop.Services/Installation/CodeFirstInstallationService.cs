@@ -76,6 +76,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly IRepository<DeliveryDate> _deliveryDateRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
+        private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
         private readonly IRepository<ProductTemplate> _productTemplateRepository;
         private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
@@ -88,6 +89,12 @@ namespace Nop.Services.Installation
         private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IRepository<Vendor> _vendorRepository;
         private readonly IRepository<Affiliate> _affiliateRepository;
+        private readonly IRepository<Order> _orderRepository;
+        private readonly IRepository<OrderItem> _orderItemRepository;
+        private readonly IRepository<GiftCard> _giftCardRepository;
+        private readonly IRepository<Shipment> _shipmentRepository;
+        private readonly IRepository<SearchTerm> _searchTermRepository;
+        private readonly IRepository<ShipmentItem> _shipmentItemRepository;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
 
@@ -125,6 +132,7 @@ namespace Nop.Services.Installation
             IRepository<ShippingMethod> shippingMethodRepository,
             IRepository<DeliveryDate> deliveryDateRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
+            IRepository<ActivityLog> activityLogRepository,
             IRepository<ProductTag> productTagRepository,
             IRepository<ProductTemplate> productTemplateRepository,
             IRepository<CategoryTemplate> categoryTemplateRepository,
@@ -137,6 +145,12 @@ namespace Nop.Services.Installation
             IRepository<Warehouse> warehouseRepository,
             IRepository<Vendor> vendorRepository,
             IRepository<Affiliate> affiliateRepository,
+            IRepository<Order> orderRepository,
+            IRepository<OrderItem> orderItemRepository,
+            IRepository<GiftCard> giftCardRepository,
+            IRepository<Shipment> shipmentRepository,
+            IRepository<ShipmentItem> shipmentItemRepository,
+            IRepository<SearchTerm> searchTermRepository,
             IGenericAttributeService genericAttributeService,
             IWebHelper webHelper)
         {
@@ -170,6 +184,7 @@ namespace Nop.Services.Installation
             this._shippingMethodRepository = shippingMethodRepository;
             this._deliveryDateRepository = deliveryDateRepository;
             this._activityLogTypeRepository = activityLogTypeRepository;
+            this._activityLogRepository = activityLogRepository;
             this._productTagRepository = productTagRepository;
             this._productTemplateRepository = productTemplateRepository;
             this._categoryTemplateRepository = categoryTemplateRepository;
@@ -182,6 +197,12 @@ namespace Nop.Services.Installation
             this._warehouseRepository = warehouseRepository;
             this._vendorRepository = vendorRepository;
             this._affiliateRepository = affiliateRepository;
+            this._orderRepository = orderRepository;
+            this._orderItemRepository = orderItemRepository;
+            this._giftCardRepository = giftCardRepository;
+            this._shipmentRepository = shipmentRepository;
+            this._shipmentItemRepository = shipmentItemRepository;
+            this._searchTermRepository = searchTermRepository;
             this._genericAttributeService = genericAttributeService;
             this._webHelper = webHelper;
         }
@@ -4054,6 +4075,205 @@ namespace Nop.Services.Installation
             _genericAttributeService.SaveAttribute(adminUser, SystemCustomerAttributeNames.LastName, "Smith");
 
 
+            //second user
+            var secondUserEmail = "steve_gates@test.com";
+            var secondUser = new Customer
+            {
+                CustomerGuid = Guid.NewGuid(),
+                Email = secondUserEmail,
+                Username = secondUserEmail,
+                Password = "123456",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = "",
+                Active = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                LastActivityDateUtc = DateTime.UtcNow,
+            };
+            var defaultSecondUserAddress = new Address
+            {
+                FirstName = "Steve",
+                LastName = "Gates",
+                PhoneNumber = "87654321",
+                Email = secondUserEmail,
+                FaxNumber = "",
+                Company = "Steve Company",
+                Address1 = "750 Bel Air Rd.",
+                Address2 = "",
+                City = "Los Angeles",
+                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "California"),
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
+                ZipPostalCode = "90077",
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            secondUser.Addresses.Add(defaultSecondUserAddress);
+            secondUser.BillingAddress = defaultSecondUserAddress;
+            secondUser.ShippingAddress = defaultSecondUserAddress;
+            secondUser.CustomerRoles.Add(crRegistered);
+            secondUser.CustomerRoles.Add(crAdministrators);
+            _customerRepository.Insert(secondUser);
+            //set default customer name
+            _genericAttributeService.SaveAttribute(secondUser, SystemCustomerAttributeNames.FirstName, defaultSecondUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(secondUser, SystemCustomerAttributeNames.LastName, defaultSecondUserAddress.LastName);
+
+
+            //third user
+            var thirdUserEmail = "arthur_holmes@test.com";
+            var thirdUser = new Customer
+            {
+                CustomerGuid = Guid.NewGuid(),
+                Email = thirdUserEmail,
+                Username = thirdUserEmail,
+                Password = "123456",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = "",
+                Active = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                LastActivityDateUtc = DateTime.UtcNow,
+            };
+            var defaultthirdUserAddress = new Address
+            {
+                FirstName = "Arthur",
+                LastName = "Holmes",
+                PhoneNumber = "111222333",
+                Email = thirdUserEmail,
+                FaxNumber = "",
+                Company = "Holmes Company",
+                Address1 = "221B Baker Street",
+                Address2 = "",
+                City = "London",
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "United Kingdom"),
+                ZipPostalCode = "NW1 6XE",
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            thirdUser.Addresses.Add(defaultthirdUserAddress);
+            thirdUser.BillingAddress = defaultthirdUserAddress;
+            thirdUser.ShippingAddress = defaultthirdUserAddress;
+            thirdUser.CustomerRoles.Add(crRegistered);
+            _customerRepository.Insert(thirdUser);
+            //set default customer name
+            _genericAttributeService.SaveAttribute(thirdUser, SystemCustomerAttributeNames.FirstName, defaultthirdUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(thirdUser, SystemCustomerAttributeNames.LastName, defaultthirdUserAddress.LastName);
+
+            
+            //fourth user
+            var fourthUserEmail = "james_pan@test.com";
+            var fourthUser = new Customer
+            {
+                CustomerGuid = Guid.NewGuid(),
+                Email = fourthUserEmail,
+                Username = fourthUserEmail,
+                Password = "123456",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = "",
+                Active = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                LastActivityDateUtc = DateTime.UtcNow,
+            };
+            var defaultfourthUserAddress = new Address
+            {
+                FirstName = "James",
+                LastName = "Pan",
+                PhoneNumber = "369258147",
+                Email = fourthUserEmail,
+                FaxNumber = "",
+                Company = "Pan Company",
+                Address1 = "St Katharine’s West 16",
+                Address2 = "",
+                City = "St Andrews",
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "United Kingdom"),
+                ZipPostalCode = "KY16 9AX",
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            fourthUser.Addresses.Add(defaultfourthUserAddress);
+            fourthUser.BillingAddress = defaultfourthUserAddress;
+            fourthUser.ShippingAddress = defaultfourthUserAddress;
+            fourthUser.CustomerRoles.Add(crRegistered);
+            _customerRepository.Insert(fourthUser);
+            //set default customer name
+            _genericAttributeService.SaveAttribute(fourthUser, SystemCustomerAttributeNames.FirstName, defaultfourthUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(fourthUser, SystemCustomerAttributeNames.LastName, defaultfourthUserAddress.LastName);
+
+
+            //fifth user
+            var fifthUserEmail = "brenda_lindgren@test.com";
+            var fifthUser = new Customer
+            {
+                CustomerGuid = Guid.NewGuid(),
+                Email = fifthUserEmail,
+                Username = fifthUserEmail,
+                Password = "123456",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = "",
+                Active = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                LastActivityDateUtc = DateTime.UtcNow,
+            };
+            var defaultfifthUserAddress = new Address
+            {
+                FirstName = "Brenda",
+                LastName = "Lindgren",
+                PhoneNumber = "14785236",
+                Email = fifthUserEmail,
+                FaxNumber = "",
+                Company = "Brenda Company",
+                Address1 = "1249 Tongass Avenue, Suite B",
+                Address2 = "",
+                City = "Ketchikan",
+                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "Alaska"),
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
+                ZipPostalCode = "99901",
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            fifthUser.Addresses.Add(defaultfifthUserAddress);
+            fifthUser.BillingAddress = defaultfifthUserAddress;
+            fifthUser.ShippingAddress = defaultfifthUserAddress;
+            fifthUser.CustomerRoles.Add(crRegistered);
+            _customerRepository.Insert(fifthUser);
+            //set default customer name
+            _genericAttributeService.SaveAttribute(fifthUser, SystemCustomerAttributeNames.FirstName, defaultfifthUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(fifthUser, SystemCustomerAttributeNames.LastName, defaultfifthUserAddress.LastName);
+
+
+            //sixth user
+            var sixthUserEmail = "victoria_victoria@test.com";
+            var sixthUser = new Customer
+            {
+                CustomerGuid = Guid.NewGuid(),
+                Email = sixthUserEmail,
+                Username = sixthUserEmail,
+                Password = "123456",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = "",
+                Active = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                LastActivityDateUtc = DateTime.UtcNow,
+            };
+            var defaultsixthUserAddress = new Address
+            {
+                FirstName = "Victoria",
+                LastName = "Terces",
+                PhoneNumber = "45612378",
+                Email = sixthUserEmail,
+                FaxNumber = "",
+                Company = "Terces Company",
+                Address1 = "201 1st Avenue South",
+                Address2 = "",
+                City = "Saskatoon",
+                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "Saskatchewan"),
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "Canada"),
+                ZipPostalCode = "S7K 1J9",
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            sixthUser.Addresses.Add(defaultsixthUserAddress);
+            sixthUser.BillingAddress = defaultsixthUserAddress;
+            sixthUser.ShippingAddress = defaultsixthUserAddress;
+            sixthUser.CustomerRoles.Add(crRegistered);
+            _customerRepository.Insert(sixthUser);
+            //set default customer name
+            _genericAttributeService.SaveAttribute(sixthUser, SystemCustomerAttributeNames.FirstName, defaultsixthUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(sixthUser, SystemCustomerAttributeNames.LastName, defaultsixthUserAddress.LastName);
+
+
             //search engine (crawler) built-in user
             var searchEngineUser = new Customer
             {
@@ -4086,6 +4306,804 @@ namespace Nop.Services.Installation
             };
             backgroundTaskUser.CustomerRoles.Add(crGuests);
             _customerRepository.Insert(backgroundTaskUser);
+        }
+
+        protected virtual void InstallOrders()
+        {
+            //default store
+            var defaultStore = _storeRepository.Table.FirstOrDefault();
+            if (defaultStore == null)
+                throw new Exception("No default store could be loaded");
+
+            //first order
+            var firstCustomer = _customerRepository.Table.First(c => c.Email.Equals("steve_gates@test.com"));
+            var firstOrder = new Order()
+            {
+                StoreId = defaultStore.Id,
+                OrderGuid = Guid.NewGuid(),
+                Customer = firstCustomer,
+                CustomerLanguageId = _languageRepository.Table.First().Id,
+                CustomerIp = "127.0.0.1",
+                OrderSubtotalInclTax = 3270M,
+                OrderSubtotalExclTax = 3270M,
+                OrderSubTotalDiscountInclTax = decimal.Zero,
+                OrderSubTotalDiscountExclTax = decimal.Zero,
+                OrderShippingInclTax = decimal.Zero,
+                OrderShippingExclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeInclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeExclTax = decimal.Zero,
+                TaxRates = "0:0;",
+                OrderTax = decimal.Zero,
+                OrderTotal = 3270M,
+                RefundedAmount = decimal.Zero,
+                OrderDiscount = decimal.Zero,
+                CheckoutAttributeDescription = string.Empty,
+                CheckoutAttributesXml = string.Empty,
+                CustomerCurrencyCode = "USD",
+                CurrencyRate = 1M,
+                AffiliateId = 0,
+                OrderStatus = OrderStatus.Processing,
+                AllowStoringCreditCardNumber = false,
+                CardType = string.Empty,
+                CardName = string.Empty,
+                CardNumber = string.Empty,
+                MaskedCreditCardNumber = string.Empty,
+                CardCvv2 = string.Empty,
+                CardExpirationMonth = string.Empty,
+                CardExpirationYear = string.Empty,
+                PaymentMethodSystemName = "Payments.CheckMoneyOrder",
+                AuthorizationTransactionId = string.Empty,
+                AuthorizationTransactionCode = string.Empty,
+                AuthorizationTransactionResult = string.Empty,
+                CaptureTransactionId = string.Empty,
+                CaptureTransactionResult = string.Empty,
+                SubscriptionTransactionId = string.Empty,
+                PaymentStatus = PaymentStatus.Paid,
+                PaidDateUtc = DateTime.Now,
+                BillingAddress = firstCustomer.BillingAddress,
+                ShippingAddress = firstCustomer.ShippingAddress,
+                ShippingStatus = ShippingStatus.NotYetShipped,
+                ShippingMethod = "Ground",
+                PickUpInStore = false,
+                ShippingRateComputationMethodSystemName = "Shipping.FixedRate",
+                CustomValuesXml = string.Empty,
+                VatNumber = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+            _orderRepository.Insert(firstOrder);
+
+            //item Apple iCam
+            var firstOrderItem1 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = firstOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Apple iCam")).Id,
+                UnitPriceInclTax = 1300M,
+                UnitPriceExclTax = 1300M,
+                PriceInclTax = 1300M,
+                PriceExclTax = 1300M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(firstOrderItem1);
+
+            //item Leica T Mirrorless Digital Camera
+            var fierstOrderItem2 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = firstOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Leica T Mirrorless Digital Camera")).Id,
+                UnitPriceInclTax = 530M,
+                UnitPriceExclTax = 530M,
+                PriceInclTax = 530M,
+                PriceExclTax = 530M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(fierstOrderItem2);
+
+            //item $25 Virtual Gift Card
+            var firstOrderItem3 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = firstOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("$25 Virtual Gift Card")).Id,
+                UnitPriceInclTax = 25M,
+                UnitPriceExclTax = 25M,
+                PriceInclTax = 25M,
+                PriceExclTax = 25M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = "From: Steve Gates &lt;steve_gates@gmail.com&gt;<br />For: Brenda Lindgren &lt;brenda_lindgren@test.com&gt;",
+                AttributesXml = "<Attributes><GiftCardInfo><RecipientName>Brenda Lindgren</RecipientName><RecipientEmail>brenda_lindgren@test.com</RecipientEmail><SenderName>Steve Gates</SenderName><SenderEmail>steve_gates@gmail.com</SenderEmail><Message></Message></GiftCardInfo></Attributes>",
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(firstOrderItem3);
+
+            var firstOrderGiftcard = new GiftCard
+            {
+                GiftCardType = GiftCardType.Virtual,
+                PurchasedWithOrderItem = firstOrderItem3,
+                Amount = 25M,
+                IsGiftCardActivated = false,
+                GiftCardCouponCode = string.Empty,
+                RecipientName = "Brenda Lindgren",
+                RecipientEmail = "brenda_lindgren@test.com",
+                SenderName = "Steve Gates",
+                SenderEmail = "steve_gates@test.com",
+                Message = string.Empty,
+                IsRecipientNotified = false,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+            _giftCardRepository.Insert(firstOrderGiftcard);
+
+            
+            //second order
+            var secondCustomer = _customerRepository.Table.First(c => c.Email.Equals("arthur_holmes@test.com"));
+            var secondOrder = new Order()
+            {
+                StoreId = defaultStore.Id,
+                OrderGuid = Guid.NewGuid(),
+                Customer = secondCustomer,
+                CustomerLanguageId = _languageRepository.Table.First().Id,
+                CustomerIp = "127.0.0.1",
+                OrderSubtotalInclTax = 929M,
+                OrderSubtotalExclTax = 929M,
+                OrderSubTotalDiscountInclTax = decimal.Zero,
+                OrderSubTotalDiscountExclTax = decimal.Zero,
+                OrderShippingInclTax = decimal.Zero,
+                OrderShippingExclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeInclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeExclTax = decimal.Zero,
+                TaxRates = "0:0;",
+                OrderTax = decimal.Zero,
+                OrderTotal = 929M,
+                RefundedAmount = decimal.Zero,
+                OrderDiscount = decimal.Zero,
+                CheckoutAttributeDescription = string.Empty,
+                CheckoutAttributesXml = string.Empty,
+                CustomerCurrencyCode = "USD",
+                CurrencyRate = 1M,
+                AffiliateId = 0,
+                OrderStatus = OrderStatus.Pending,
+                AllowStoringCreditCardNumber = false,
+                CardType = string.Empty,
+                CardName = string.Empty,
+                CardNumber = string.Empty,
+                MaskedCreditCardNumber = string.Empty,
+                CardCvv2 = string.Empty,
+                CardExpirationMonth = string.Empty,
+                CardExpirationYear = string.Empty,
+                PaymentMethodSystemName = "Payments.CheckMoneyOrder",
+                AuthorizationTransactionId = string.Empty,
+                AuthorizationTransactionCode = string.Empty,
+                AuthorizationTransactionResult = string.Empty,
+                CaptureTransactionId = string.Empty,
+                CaptureTransactionResult = string.Empty,
+                SubscriptionTransactionId = string.Empty,
+                PaymentStatus = PaymentStatus.Pending,
+                PaidDateUtc = DateTime.Now,
+                BillingAddress = secondCustomer.BillingAddress,
+                ShippingAddress = secondCustomer.ShippingAddress,
+                ShippingStatus = ShippingStatus.NotYetShipped,
+                ShippingMethod = "Next Day Air",
+                PickUpInStore = false,
+                ShippingRateComputationMethodSystemName = "Shipping.FixedRate",
+                CustomValuesXml = string.Empty,
+                VatNumber = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+            _orderRepository.Insert(secondOrder);
+
+            //item Elegant Gemstone Necklace
+            var secondOrderItem1 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = secondOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Elegant Gemstone Necklace")).Id,
+                UnitPriceInclTax = 360M,
+                UnitPriceExclTax = 360M,
+                PriceInclTax = 360M,
+                PriceExclTax = 360M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(secondOrderItem1);
+
+            //item Flower Girl Bracelet
+            var secondOrderItem2 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = secondOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Flower Girl Bracelet")).Id,
+                UnitPriceInclTax = 569M,
+                UnitPriceExclTax = 569M,
+                PriceInclTax = 569M,
+                PriceExclTax = 569M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(secondOrderItem2);
+
+
+            //third order
+            var thirdCustomer = _customerRepository.Table.First(c => c.Email.Equals("james_pan@test.com"));
+            var thirdOrder = new Order()
+            {
+                StoreId = defaultStore.Id,
+                OrderGuid = Guid.NewGuid(),
+                Customer = thirdCustomer,
+                CustomerLanguageId = _languageRepository.Table.First().Id,
+                CustomerIp = "127.0.0.1",
+                OrderSubtotalInclTax = 8.80M,
+                OrderSubtotalExclTax = 8.80M,
+                OrderSubTotalDiscountInclTax = decimal.Zero,
+                OrderSubTotalDiscountExclTax = decimal.Zero,
+                OrderShippingInclTax = decimal.Zero,
+                OrderShippingExclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeInclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeExclTax = decimal.Zero,
+                TaxRates = "0:0;",
+                OrderTax = decimal.Zero,
+                OrderTotal = 8.80M,
+                RefundedAmount = decimal.Zero,
+                OrderDiscount = decimal.Zero,
+                CheckoutAttributeDescription = string.Empty,
+                CheckoutAttributesXml = string.Empty,
+                CustomerCurrencyCode = "USD",
+                CurrencyRate = 1M,
+                AffiliateId = 0,
+                OrderStatus = OrderStatus.Pending,
+                AllowStoringCreditCardNumber = false,
+                CardType = string.Empty,
+                CardName = string.Empty,
+                CardNumber = string.Empty,
+                MaskedCreditCardNumber = string.Empty,
+                CardCvv2 = string.Empty,
+                CardExpirationMonth = string.Empty,
+                CardExpirationYear = string.Empty,
+                PaymentMethodSystemName = "Payments.CheckMoneyOrder",
+                AuthorizationTransactionId = string.Empty,
+                AuthorizationTransactionCode = string.Empty,
+                AuthorizationTransactionResult = string.Empty,
+                CaptureTransactionId = string.Empty,
+                CaptureTransactionResult = string.Empty,
+                SubscriptionTransactionId = string.Empty,
+                PaymentStatus = PaymentStatus.Pending,
+                PaidDateUtc = DateTime.Now,
+                BillingAddress = thirdCustomer.BillingAddress,
+                ShippingAddress = thirdCustomer.ShippingAddress,
+                ShippingStatus = ShippingStatus.ShippingNotRequired,
+                ShippingMethod = "Next Day Air",
+                PickUpInStore = false,
+                ShippingRateComputationMethodSystemName = string.Empty,
+                CustomValuesXml = string.Empty,
+                VatNumber = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+            _orderRepository.Insert(thirdOrder);
+
+            //item If You Wait
+            var thirdOrderItem1 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = thirdOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("If You Wait")).Id,
+                UnitPriceInclTax = 3M,
+                UnitPriceExclTax = 3M,
+                PriceInclTax = 3M,
+                PriceExclTax = 3M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(thirdOrderItem1);
+
+            //item Night Visions
+            var thirdOrderItem2 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = thirdOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Night Visions")).Id,
+                UnitPriceInclTax = 2.8M,
+                UnitPriceExclTax = 2.8M,
+                PriceInclTax = 2.8M,
+                PriceExclTax = 2.8M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(thirdOrderItem2);
+
+            //item Science & Faith
+            var thirdOrderItem3 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = thirdOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Science & Faith")).Id,
+                UnitPriceInclTax = 3M,
+                UnitPriceExclTax = 3M,
+                PriceInclTax = 3M,
+                PriceExclTax = 3M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(thirdOrderItem3);
+
+
+            //fourth order
+            var fourthCustomer = _customerRepository.Table.First(c => c.Email.Equals("brenda_lindgren@test.com"));
+            var fourthOrder = new Order()
+            {
+                StoreId = defaultStore.Id,
+                OrderGuid = Guid.NewGuid(),
+                Customer = fourthCustomer,
+                CustomerLanguageId = _languageRepository.Table.First().Id,
+                CustomerIp = "127.0.0.1",
+                OrderSubtotalInclTax = 102M,
+                OrderSubtotalExclTax = 102M,
+                OrderSubTotalDiscountInclTax = decimal.Zero,
+                OrderSubTotalDiscountExclTax = decimal.Zero,
+                OrderShippingInclTax = decimal.Zero,
+                OrderShippingExclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeInclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeExclTax = decimal.Zero,
+                TaxRates = "0:0;",
+                OrderTax = decimal.Zero,
+                OrderTotal = 102M,
+                RefundedAmount = decimal.Zero,
+                OrderDiscount = decimal.Zero,
+                CheckoutAttributeDescription = string.Empty,
+                CheckoutAttributesXml = string.Empty,
+                CustomerCurrencyCode = "USD",
+                CurrencyRate = 1M,
+                AffiliateId = 0,
+                OrderStatus = OrderStatus.Processing,
+                AllowStoringCreditCardNumber = false,
+                CardType = string.Empty,
+                CardName = string.Empty,
+                CardNumber = string.Empty,
+                MaskedCreditCardNumber = string.Empty,
+                CardCvv2 = string.Empty,
+                CardExpirationMonth = string.Empty,
+                CardExpirationYear = string.Empty,
+                PaymentMethodSystemName = "Payments.CheckMoneyOrder",
+                AuthorizationTransactionId = string.Empty,
+                AuthorizationTransactionCode = string.Empty,
+                AuthorizationTransactionResult = string.Empty,
+                CaptureTransactionId = string.Empty,
+                CaptureTransactionResult = string.Empty,
+                SubscriptionTransactionId = string.Empty,
+                PaymentStatus = PaymentStatus.Paid,
+                PaidDateUtc = DateTime.Now,
+                BillingAddress = fourthCustomer.BillingAddress,
+                ShippingAddress = fourthCustomer.ShippingAddress,
+                ShippingStatus = ShippingStatus.Shipped,
+                ShippingMethod = "In-Store Pickup",
+                PickUpInStore = false,
+                ShippingRateComputationMethodSystemName = "Shipping.FixedRate",
+                CustomValuesXml = string.Empty,
+                VatNumber = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+            _orderRepository.Insert(fourthOrder);
+
+            //item Pride and Prejudice
+            var fourthOrderItem1 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = fourthOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Pride and Prejudice")).Id,
+                UnitPriceInclTax = 24M,
+                UnitPriceExclTax = 24M,
+                PriceInclTax = 24M,
+                PriceExclTax = 24M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(fourthOrderItem1);
+
+            //item First Prize Pies
+            var fourthOrderItem2 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = fourthOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("First Prize Pies")).Id,
+                UnitPriceInclTax = 51M,
+                UnitPriceExclTax = 51M,
+                PriceInclTax = 51M,
+                PriceExclTax = 51M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(fourthOrderItem2);
+
+            //item Fahrenheit 451 by Ray Bradbury
+            var fourthOrderItem3 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = fourthOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Fahrenheit 451 by Ray Bradbury")).Id,
+                UnitPriceInclTax = 27M,
+                UnitPriceExclTax = 27M,
+                PriceInclTax = 27M,
+                PriceExclTax = 27M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(fourthOrderItem3);
+
+            //shipments
+            //shipment 1
+            var fourthOrderShipment1 = new Shipment
+            {
+                Order = fourthOrder,
+                TrackingNumber = string.Empty,
+                TotalWeight = 4M,
+                ShippedDateUtc = DateTime.Now.AddDays(-1),
+                DeliveryDateUtc = DateTime.Now,
+                AdminComment = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow.AddDays(-1)
+            };
+            _shipmentRepository.Insert(fourthOrderShipment1);
+
+            var fourthOrderShipment1Item1 = new ShipmentItem()
+            {
+                OrderItemId = fourthOrderItem1.Id,
+                Quantity = 1,
+                WarehouseId = 0,
+                Shipment = fourthOrderShipment1
+            };
+            _shipmentItemRepository.Insert(fourthOrderShipment1Item1);
+
+            var fourthOrderShipment1Item2 = new ShipmentItem()
+            {
+                OrderItemId = fourthOrderItem2.Id,
+                Quantity = 1,
+                WarehouseId = 0,
+                Shipment = fourthOrderShipment1
+            };
+            _shipmentItemRepository.Insert(fourthOrderShipment1Item2);
+
+            //shipment 2
+            var fourthOrderShipment2 = new Shipment
+            {
+                Order = fourthOrder,
+                TrackingNumber = string.Empty,
+                TotalWeight = 2M,
+                ShippedDateUtc = DateTime.Now.AddDays(-1),
+                DeliveryDateUtc = DateTime.Now,
+                AdminComment = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow.AddDays(-1)
+            };
+            _shipmentRepository.Insert(fourthOrderShipment2);
+
+            var fourthOrderShipment2Item1 = new ShipmentItem()
+            {
+                OrderItemId = fourthOrderItem3.Id,
+                Quantity = 1,
+                WarehouseId = 0,
+                Shipment = fourthOrderShipment2
+            };
+            _shipmentItemRepository.Insert(fourthOrderShipment2Item1);
+
+
+
+
+            //fifth order
+            var fifthCustomer = _customerRepository.Table.First(c => c.Email.Equals("victoria_victoria@test.com"));
+            var fifthOrder = new Order()
+            {
+                StoreId = defaultStore.Id,
+                OrderGuid = Guid.NewGuid(),
+                Customer = fifthCustomer,
+                CustomerLanguageId = _languageRepository.Table.First().Id,
+                CustomerIp = "127.0.0.1",
+                OrderSubtotalInclTax = 102M,
+                OrderSubtotalExclTax = 102M,
+                OrderSubTotalDiscountInclTax = decimal.Zero,
+                OrderSubTotalDiscountExclTax = decimal.Zero,
+                OrderShippingInclTax = decimal.Zero,
+                OrderShippingExclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeInclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeExclTax = decimal.Zero,
+                TaxRates = "0:0;",
+                OrderTax = decimal.Zero,
+                OrderTotal = 102M,
+                RefundedAmount = decimal.Zero,
+                OrderDiscount = decimal.Zero,
+                CheckoutAttributeDescription = string.Empty,
+                CheckoutAttributesXml = string.Empty,
+                CustomerCurrencyCode = "USD",
+                CurrencyRate = 1M,
+                AffiliateId = 0,
+                OrderStatus = OrderStatus.Complete,
+                AllowStoringCreditCardNumber = false,
+                CardType = string.Empty,
+                CardName = string.Empty,
+                CardNumber = string.Empty,
+                MaskedCreditCardNumber = string.Empty,
+                CardCvv2 = string.Empty,
+                CardExpirationMonth = string.Empty,
+                CardExpirationYear = string.Empty,
+                PaymentMethodSystemName = "Payments.CheckMoneyOrder",
+                AuthorizationTransactionId = string.Empty,
+                AuthorizationTransactionCode = string.Empty,
+                AuthorizationTransactionResult = string.Empty,
+                CaptureTransactionId = string.Empty,
+                CaptureTransactionResult = string.Empty,
+                SubscriptionTransactionId = string.Empty,
+                PaymentStatus = PaymentStatus.Paid,
+                PaidDateUtc = DateTime.Now,
+                BillingAddress = fifthCustomer.BillingAddress,
+                ShippingAddress = fifthCustomer.ShippingAddress,
+                ShippingStatus = ShippingStatus.Shipped,
+                ShippingMethod = "Ground",
+                PickUpInStore = false,
+                ShippingRateComputationMethodSystemName = "Shipping.FixedRate",
+                CustomValuesXml = string.Empty,
+                VatNumber = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+            _orderRepository.Insert(fifthOrder);
+
+            //item Levi's 511 Jeans
+            var fifthOrderItem1 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = fifthOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Levi's 511 Jeans")).Id,
+                UnitPriceInclTax = 43.50M,
+                UnitPriceExclTax = 43.50M,
+                PriceInclTax = 43.50M,
+                PriceExclTax = 43.50M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(fifthOrderItem1);
+
+            //shipment 2
+            var fifthOrderShipment1 = new Shipment
+            {
+                Order = fifthOrder,
+                TrackingNumber = string.Empty,
+                TotalWeight = 2M,
+                ShippedDateUtc = DateTime.Now.AddDays(-1),
+                DeliveryDateUtc = DateTime.Now,
+                AdminComment = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow.AddDays(-1)
+            };
+            _shipmentRepository.Insert(fifthOrderShipment1);
+
+            var fifthOrderShipment1Item1 = new ShipmentItem()
+            {
+                OrderItemId = fifthOrderItem1.Id,
+                Quantity = 1,
+                WarehouseId = 0,
+                Shipment = fifthOrderShipment1
+            };
+            _shipmentItemRepository.Insert(fifthOrderShipment1Item1);
+        }
+
+        protected virtual void InstallActivityLog()
+        {
+            var firstCustomer = _customerRepository.Table.First(c => c.Email.Equals("steve_gates@test.com"));
+            var firstLog = new ActivityLog()
+            {
+                ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("EditCategory")),
+                Comment = "Edited a category ('Computers')",
+                CreatedOnUtc = DateTime.Now,
+                Customer = firstCustomer,
+                IpAddress = "127.0.0.1"
+            };
+            _activityLogRepository.Insert(firstLog);
+            var secondLog = new ActivityLog()
+            {
+                ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("EditDiscount")),
+                Comment = "Edited a discount ('Sample discount with coupon code')",
+                CreatedOnUtc = DateTime.Now,
+                Customer = firstCustomer,
+                IpAddress = "127.0.0.1"
+            };
+            _activityLogRepository.Insert(secondLog);
+            var thirdLog = new ActivityLog()
+            {
+                ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("EditSpecAttribute")),
+                Comment = "Edited a specification attribute ('CPU Type')",
+                CreatedOnUtc = DateTime.Now,
+                Customer = firstCustomer,
+                IpAddress = "127.0.0.1"
+            };
+            _activityLogRepository.Insert(thirdLog);
+            var fourthLog = new ActivityLog()
+            {
+                ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("AddNewProductAttribute")),
+                Comment = "Added a new product attribute ('Some attribute')",
+                CreatedOnUtc = DateTime.Now,
+                Customer = firstCustomer,
+                IpAddress = "127.0.0.1"
+            };
+            _activityLogRepository.Insert(fourthLog);
+            var fifthLog = new ActivityLog()
+            {
+                ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("DeleteGiftCard")),
+                Comment = "Deleted a gift card ('bdbbc0ef-be57')",
+                CreatedOnUtc = DateTime.Now,
+                Customer = firstCustomer,
+                IpAddress = "127.0.0.1"
+            };
+            _activityLogRepository.Insert(fifthLog);
+        }
+
+        protected virtual void InstallSearchTerms()
+        {
+            //default store
+            var defaultStore = _storeRepository.Table.FirstOrDefault();
+            if (defaultStore == null)
+                throw new Exception("No default store could be loaded");
+
+            var firstSearchTerm = new SearchTerm()
+            {
+                Count = 34,
+                Keyword = "computer",
+                StoreId = defaultStore.Id
+            };
+            _searchTermRepository.Insert(firstSearchTerm);
+
+            var secondSearchTerm = new SearchTerm()
+            {
+                Count = 30,
+                Keyword = "camera",
+                StoreId = defaultStore.Id
+            };
+            _searchTermRepository.Insert(secondSearchTerm);
+
+            var thirdSearchTerm = new SearchTerm()
+            {
+                Count = 27,
+                Keyword = "jewelry",
+                StoreId = defaultStore.Id
+            };
+            _searchTermRepository.Insert(thirdSearchTerm);
+
+            var fourthSearchTerm = new SearchTerm()
+            {
+                Count = 26,
+                Keyword = "shoes",
+                StoreId = defaultStore.Id
+            };
+            _searchTermRepository.Insert(fourthSearchTerm);
+
+            var fifthSearchTerm = new SearchTerm()
+            {
+                Count = 19,
+                Keyword = "jeans",
+                StoreId = defaultStore.Id
+            };
+            _searchTermRepository.Insert(fifthSearchTerm);
+
+            var sixthSearchTerm = new SearchTerm()
+            {
+                Count = 10,
+                Keyword = "gift",
+                StoreId = defaultStore.Id
+            };
+            _searchTermRepository.Insert(sixthSearchTerm);
         }
 
         protected virtual void HashDefaultCustomerPassword(string defaultUserEmail, string defaultUserPassword)
@@ -8021,7 +9039,7 @@ namespace Nop.Services.Installation
                 Height = 7,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
+                StockQuantity = 0,
                 NotifyAdminForQuantityBelow = 1,
                 AllowBackInStockSubscriptions = false,
                 DisplayStockAvailability = true,
@@ -10325,6 +11343,9 @@ namespace Nop.Services.Installation
                 InstallWarehouses();
                 InstallVendors();
                 InstallAffiliates();
+                InstallOrders();
+                InstallActivityLog();
+                InstallSearchTerms();
             }
         }
 
