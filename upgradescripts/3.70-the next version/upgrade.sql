@@ -3238,7 +3238,7 @@ GO
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ReturnRequest]') and NAME='CustomNumber')
 BEGIN
 	ALTER TABLE [ReturnRequest]
-	ADD [CustomNumber] NVARCHAR(200) NOT NULL DEFAULT ''
+	ADD [CustomNumber] NVARCHAR(MAX) NOT NULL DEFAULT ''
 END
 GO
 

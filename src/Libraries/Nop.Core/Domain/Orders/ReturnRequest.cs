@@ -8,7 +8,11 @@ namespace Nop.Core.Domain.Orders
     /// </summary>
     public partial class ReturnRequest : BaseEntity
     {
+        /// <summary>
+        /// Custom number of return request
+        /// </summary>
         public string CustomNumber { get; set; }
+
         /// <summary>
         /// Gets or sets the store identifier
         /// </summary>
