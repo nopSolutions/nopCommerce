@@ -701,6 +701,39 @@ set @resources='
   <LocaleResource Name="PageTitle.CustomerProductReviews">
     <Value>My product reviews</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestNumberMask">
+    <Value>Return request number mask</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestNumberMask.Hint">
+    <Value>Return request number mask. For example, RMA-{ID}-{YYYY}-{MM}-{DD}.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestNumberMask.Description.ID">
+    <Value>{ID} - Return request identifier</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestNumberMask.Description.YYYY">
+    <Value>{YYYY} - year of return request creation date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestNumberMask.Description.YY">
+    <Value>{YY} - last two digits of year of return request creation date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestNumberMask.Description.MM">
+    <Value>{MM} - month of return request creation date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestNumberMask.Description.DD">
+    <Value>{DD} - day of return request creation date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.CustomNumber">
+    <Value>ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.CustomNumber.Hint">
+    <Value>Return request identifier.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ID">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ID.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2522,4 +2555,28 @@ GO
  
  DELETE FROM [Setting]
  WHERE [name] = N'catalogsettings.CacheProductPrices' and [StoreId] > 0
+ GO
+
+ --update message templates
+ UPDATE [MessageTemplate] SET [Body] = REPLACE([Body], 'ReturnRequest.ID', 'ReturnRequest.CustomNumber')
+ GO
+
+  --new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.returnrequestnumbermask')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'ordersettings.returnrequestnumbermask', N'{ID}', 0)
+ END
+ GO
+
+ --new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ReturnRequest]') and NAME='CustomNumber')
+BEGIN
+	ALTER TABLE [ReturnRequest]
+	ADD [CustomNumber] NVARCHAR(200) NOT NULL DEFAULT ''
+END
+GO
+
+ --update
+ UPDATE [ReturnRequest] SET [CustomNumber] = CAST([Id] AS NVARCHAR(200)) WHERE [CustomNumber] = null OR [CustomNumber] = N''
  GO
