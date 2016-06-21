@@ -4129,7 +4129,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
             };
-            var defaultthirdUserAddress = new Address
+            var defaultThirdUserAddress = new Address
             {
                 FirstName = "Arthur",
                 LastName = "Holmes",
@@ -4144,14 +4144,14 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "NW1 6XE",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            thirdUser.Addresses.Add(defaultthirdUserAddress);
-            thirdUser.BillingAddress = defaultthirdUserAddress;
-            thirdUser.ShippingAddress = defaultthirdUserAddress;
+            thirdUser.Addresses.Add(defaultThirdUserAddress);
+            thirdUser.BillingAddress = defaultThirdUserAddress;
+            thirdUser.ShippingAddress = defaultThirdUserAddress;
             thirdUser.CustomerRoles.Add(crRegistered);
             _customerRepository.Insert(thirdUser);
             //set default customer name
-            _genericAttributeService.SaveAttribute(thirdUser, SystemCustomerAttributeNames.FirstName, defaultthirdUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(thirdUser, SystemCustomerAttributeNames.LastName, defaultthirdUserAddress.LastName);
+            _genericAttributeService.SaveAttribute(thirdUser, SystemCustomerAttributeNames.FirstName, defaultThirdUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(thirdUser, SystemCustomerAttributeNames.LastName, defaultThirdUserAddress.LastName);
 
             
             //fourth user
@@ -4168,7 +4168,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
             };
-            var defaultfourthUserAddress = new Address
+            var defaultFourthUserAddress = new Address
             {
                 FirstName = "James",
                 LastName = "Pan",
@@ -4183,14 +4183,14 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "KY16 9AX",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            fourthUser.Addresses.Add(defaultfourthUserAddress);
-            fourthUser.BillingAddress = defaultfourthUserAddress;
-            fourthUser.ShippingAddress = defaultfourthUserAddress;
+            fourthUser.Addresses.Add(defaultFourthUserAddress);
+            fourthUser.BillingAddress = defaultFourthUserAddress;
+            fourthUser.ShippingAddress = defaultFourthUserAddress;
             fourthUser.CustomerRoles.Add(crRegistered);
             _customerRepository.Insert(fourthUser);
             //set default customer name
-            _genericAttributeService.SaveAttribute(fourthUser, SystemCustomerAttributeNames.FirstName, defaultfourthUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(fourthUser, SystemCustomerAttributeNames.LastName, defaultfourthUserAddress.LastName);
+            _genericAttributeService.SaveAttribute(fourthUser, SystemCustomerAttributeNames.FirstName, defaultFourthUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(fourthUser, SystemCustomerAttributeNames.LastName, defaultFourthUserAddress.LastName);
 
 
             //fifth user
@@ -4207,7 +4207,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
             };
-            var defaultfifthUserAddress = new Address
+            var defaultFifthUserAddress = new Address
             {
                 FirstName = "Brenda",
                 LastName = "Lindgren",
@@ -4223,14 +4223,14 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "99901",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            fifthUser.Addresses.Add(defaultfifthUserAddress);
-            fifthUser.BillingAddress = defaultfifthUserAddress;
-            fifthUser.ShippingAddress = defaultfifthUserAddress;
+            fifthUser.Addresses.Add(defaultFifthUserAddress);
+            fifthUser.BillingAddress = defaultFifthUserAddress;
+            fifthUser.ShippingAddress = defaultFifthUserAddress;
             fifthUser.CustomerRoles.Add(crRegistered);
             _customerRepository.Insert(fifthUser);
             //set default customer name
-            _genericAttributeService.SaveAttribute(fifthUser, SystemCustomerAttributeNames.FirstName, defaultfifthUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(fifthUser, SystemCustomerAttributeNames.LastName, defaultfifthUserAddress.LastName);
+            _genericAttributeService.SaveAttribute(fifthUser, SystemCustomerAttributeNames.FirstName, defaultFifthUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(fifthUser, SystemCustomerAttributeNames.LastName, defaultFifthUserAddress.LastName);
 
 
             //sixth user
@@ -4247,7 +4247,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
             };
-            var defaultsixthUserAddress = new Address
+            var defaultSixthUserAddress = new Address
             {
                 FirstName = "Victoria",
                 LastName = "Terces",
@@ -4263,14 +4263,14 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "S7K 1J9",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            sixthUser.Addresses.Add(defaultsixthUserAddress);
-            sixthUser.BillingAddress = defaultsixthUserAddress;
-            sixthUser.ShippingAddress = defaultsixthUserAddress;
+            sixthUser.Addresses.Add(defaultSixthUserAddress);
+            sixthUser.BillingAddress = defaultSixthUserAddress;
+            sixthUser.ShippingAddress = defaultSixthUserAddress;
             sixthUser.CustomerRoles.Add(crRegistered);
             _customerRepository.Insert(sixthUser);
             //set default customer name
-            _genericAttributeService.SaveAttribute(sixthUser, SystemCustomerAttributeNames.FirstName, defaultsixthUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(sixthUser, SystemCustomerAttributeNames.LastName, defaultsixthUserAddress.LastName);
+            _genericAttributeService.SaveAttribute(sixthUser, SystemCustomerAttributeNames.FirstName, defaultSixthUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(sixthUser, SystemCustomerAttributeNames.LastName, defaultSixthUserAddress.LastName);
 
 
             //search engine (crawler) built-in user
@@ -4323,8 +4323,8 @@ namespace Nop.Services.Installation
                 Customer = firstCustomer,
                 CustomerLanguageId = _languageRepository.Table.First().Id,
                 CustomerIp = "127.0.0.1",
-                OrderSubtotalInclTax = 3270M,
-                OrderSubtotalExclTax = 3270M,
+                OrderSubtotalInclTax = 1855M,
+                OrderSubtotalExclTax = 1855M,
                 OrderSubTotalDiscountInclTax = decimal.Zero,
                 OrderSubTotalDiscountExclTax = decimal.Zero,
                 OrderShippingInclTax = decimal.Zero,
@@ -4333,7 +4333,7 @@ namespace Nop.Services.Installation
                 PaymentMethodAdditionalFeeExclTax = decimal.Zero,
                 TaxRates = "0:0;",
                 OrderTax = decimal.Zero,
-                OrderTotal = 3270M,
+                OrderTotal = 1855M,
                 RefundedAmount = decimal.Zero,
                 OrderDiscount = decimal.Zero,
                 CheckoutAttributeDescription = string.Empty,
@@ -4359,8 +4359,8 @@ namespace Nop.Services.Installation
                 SubscriptionTransactionId = string.Empty,
                 PaymentStatus = PaymentStatus.Paid,
                 PaidDateUtc = DateTime.Now,
-                BillingAddress = firstCustomer.BillingAddress,
-                ShippingAddress = firstCustomer.ShippingAddress,
+                BillingAddress = (Address)firstCustomer.BillingAddress.Clone(),
+                ShippingAddress = (Address)firstCustomer.ShippingAddress.Clone(),
                 ShippingStatus = ShippingStatus.NotYetShipped,
                 ShippingMethod = "Ground",
                 PickUpInStore = false,
@@ -4508,9 +4508,9 @@ namespace Nop.Services.Installation
                 CaptureTransactionResult = string.Empty,
                 SubscriptionTransactionId = string.Empty,
                 PaymentStatus = PaymentStatus.Pending,
-                PaidDateUtc = DateTime.Now,
-                BillingAddress = secondCustomer.BillingAddress,
-                ShippingAddress = secondCustomer.ShippingAddress,
+                PaidDateUtc = null,
+                BillingAddress = (Address)firstCustomer.BillingAddress.Clone(),
+                ShippingAddress = (Address)firstCustomer.ShippingAddress.Clone(),
                 ShippingStatus = ShippingStatus.NotYetShipped,
                 ShippingMethod = "Next Day Air",
                 PickUpInStore = false,
@@ -4616,11 +4616,11 @@ namespace Nop.Services.Installation
                 CaptureTransactionResult = string.Empty,
                 SubscriptionTransactionId = string.Empty,
                 PaymentStatus = PaymentStatus.Pending,
-                PaidDateUtc = DateTime.Now,
-                BillingAddress = thirdCustomer.BillingAddress,
-                ShippingAddress = thirdCustomer.ShippingAddress,
+                PaidDateUtc = null,
+                BillingAddress = (Address)firstCustomer.BillingAddress.Clone(),
+                ShippingAddress = null,
                 ShippingStatus = ShippingStatus.ShippingNotRequired,
-                ShippingMethod = "Next Day Air",
+                ShippingMethod = string.Empty,
                 PickUpInStore = false,
                 ShippingRateComputationMethodSystemName = string.Empty,
                 CustomValuesXml = string.Empty,
@@ -4750,8 +4750,8 @@ namespace Nop.Services.Installation
                 SubscriptionTransactionId = string.Empty,
                 PaymentStatus = PaymentStatus.Paid,
                 PaidDateUtc = DateTime.Now,
-                BillingAddress = fourthCustomer.BillingAddress,
-                ShippingAddress = fourthCustomer.ShippingAddress,
+                BillingAddress = (Address)firstCustomer.BillingAddress.Clone(),
+                ShippingAddress = (Address)firstCustomer.ShippingAddress.Clone(),
                 ShippingStatus = ShippingStatus.Shipped,
                 ShippingMethod = "In-Store Pickup",
                 PickUpInStore = false,
@@ -4903,8 +4903,8 @@ namespace Nop.Services.Installation
                 Customer = fifthCustomer,
                 CustomerLanguageId = _languageRepository.Table.First().Id,
                 CustomerIp = "127.0.0.1",
-                OrderSubtotalInclTax = 102M,
-                OrderSubtotalExclTax = 102M,
+                OrderSubtotalInclTax = 43.50M,
+                OrderSubtotalExclTax = 43.50M,
                 OrderSubTotalDiscountInclTax = decimal.Zero,
                 OrderSubTotalDiscountExclTax = decimal.Zero,
                 OrderShippingInclTax = decimal.Zero,
@@ -4913,7 +4913,7 @@ namespace Nop.Services.Installation
                 PaymentMethodAdditionalFeeExclTax = decimal.Zero,
                 TaxRates = "0:0;",
                 OrderTax = decimal.Zero,
-                OrderTotal = 102M,
+                OrderTotal = 43.50M,
                 RefundedAmount = decimal.Zero,
                 OrderDiscount = decimal.Zero,
                 CheckoutAttributeDescription = string.Empty,
@@ -4939,9 +4939,9 @@ namespace Nop.Services.Installation
                 SubscriptionTransactionId = string.Empty,
                 PaymentStatus = PaymentStatus.Paid,
                 PaidDateUtc = DateTime.Now,
-                BillingAddress = fifthCustomer.BillingAddress,
-                ShippingAddress = fifthCustomer.ShippingAddress,
-                ShippingStatus = ShippingStatus.Shipped,
+                BillingAddress = (Address)firstCustomer.BillingAddress.Clone(),
+                ShippingAddress = (Address)firstCustomer.ShippingAddress.Clone(),
+                ShippingStatus = ShippingStatus.Delivered,
                 ShippingMethod = "Ground",
                 PickUpInStore = false,
                 ShippingRateComputationMethodSystemName = "Shipping.FixedRate",
@@ -4976,7 +4976,7 @@ namespace Nop.Services.Installation
             };
             _orderItemRepository.Insert(fifthOrderItem1);
 
-            //shipment 2
+            //shipment 1
             var fifthOrderShipment1 = new Shipment
             {
                 Order = fifthOrder,
