@@ -16,6 +16,7 @@ namespace Nop.Web.Models.Order
         #region Nested classes
         public partial class ReturnRequestModel : BaseNopEntityModel
         {
+            public string CustomNumber { get; set; }
             public string ReturnRequestStatus { get; set; }
             public int ProductId { get; set; }
             public string ProductName { get; set; }

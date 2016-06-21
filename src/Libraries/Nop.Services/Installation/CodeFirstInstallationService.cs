@@ -5226,7 +5226,7 @@ namespace Nop.Services.Installation
                                        {
                                            Name = "NewReturnRequest.StoreOwnerNotification",
                                            Subject = "%Store.Name%. New return request.",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% has just submitted a new return request. Details are below:<br />Request ID: %ReturnRequest.ID%<br />Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%<br />Reason for return: %ReturnRequest.Reason%<br />Requested action: %ReturnRequest.RequestedAction%<br />Customer comments:<br />%ReturnRequest.CustomerComment%</p>",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% has just submitted a new return request. Details are below:<br />Request ID: %ReturnRequest.CustomNumber%<br />Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%<br />Reason for return: %ReturnRequest.Reason%<br />Requested action: %ReturnRequest.RequestedAction%<br />Customer comments:<br />%ReturnRequest.CustomerComment%</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -5338,7 +5338,7 @@ namespace Nop.Services.Installation
                                        {
                                            Name = "ReturnRequestStatusChanged.CustomerNotification",
                                            Subject = "%Store.Name%. Return request status was changed.",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Customer.FullName%,<br />Your return request #%ReturnRequest.ID% status has been changed.</p>",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Customer.FullName%,<br />Your return request #%ReturnRequest.CustomNumber% status has been changed.</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -5935,6 +5935,7 @@ namespace Nop.Services.Installation
 
             settingService.SaveSetting(new OrderSettings
             {
+                ReturnRequestNumberMask = "{ID}",
                 IsReOrderAllowed = true,
                 MinOrderSubtotalAmount = 0,
                 MinOrderSubtotalAmountIncludingTax = false,

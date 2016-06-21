@@ -267,7 +267,7 @@
                     <li>
                         @T("Admin.Configuration.Settings.Order.ReturnRequestsDescription2")
                     </li>
-                </ul>   
+                </ul>
                 <div class="form-group">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.ReturnRequestsEnabled_OverrideForStore, model => model.ReturnRequestsEnabled, Model.ActiveStoreScopeConfiguration)
@@ -276,6 +276,33 @@
                     <div class="col-md-9">
                         @Html.NopEditorFor(model => model.ReturnRequestsEnabled)
                         @Html.ValidationMessageFor(model => model.ReturnRequestsEnabled)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ReturnRequestNumberMask_OverrideForStore, model => model.ReturnRequestNumberMask, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ReturnRequestNumberMask)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.ReturnRequestNumberMask)
+                        @Html.ValidationMessageFor(model => model.ReturnRequestNumberMask)
+                        <ul class="common-list">
+                            <li>
+                                @T("Admin.Configuration.Settings.Order.ReturnRequestNumberMask.Description.ID")
+                            </li>
+                            <li>
+                                @T("Admin.Configuration.Settings.Order.ReturnRequestNumberMask.Description.YYYY")
+                            </li>
+                            <li>
+                                @T("Admin.Configuration.Settings.Order.ReturnRequestNumberMask.Description.YY")
+                            </li>
+                            <li>
+                                @T("Admin.Configuration.Settings.Order.ReturnRequestNumberMask.Description.MM")
+                            </li>
+                            <li>
+                                @T("Admin.Configuration.Settings.Order.ReturnRequestNumberMask.Description.DD")
+                            </li>
+                        </ul>
                     </div>
                 </div>
                 <div class="form-group">
