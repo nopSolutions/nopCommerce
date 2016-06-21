@@ -273,6 +273,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<ReturnRequestService>().As<IReturnRequestService>().InstancePerLifetimeScope();
             builder.RegisterType<RewardPointService>().As<IRewardPointService>().InstancePerLifetimeScope();
             builder.RegisterType<ShoppingCartService>().As<IShoppingCartService>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomNumberFormatter>().As<ICustomNumberFormatter>().InstancePerLifetimeScope();
 
             builder.RegisterType<PaymentService>().As<IPaymentService>().InstancePerLifetimeScope();
 

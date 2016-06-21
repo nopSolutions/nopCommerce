@@ -701,7 +701,7 @@ namespace Nop.Services.Messages
 
         public virtual void AddReturnRequestTokens(IList<Token> tokens, ReturnRequest returnRequest, OrderItem orderItem)
         {
-            tokens.Add(new Token("ReturnRequest.ID", returnRequest.Id.ToString()));
+            tokens.Add(new Token("ReturnRequest.CustomNumber", returnRequest.CustomNumber));
             tokens.Add(new Token("ReturnRequest.OrderId", orderItem.OrderId.ToString()));
             tokens.Add(new Token("ReturnRequest.Product.Quantity", returnRequest.Quantity.ToString()));
             tokens.Add(new Token("ReturnRequest.Product.Name", orderItem.Product.Name));
@@ -992,7 +992,7 @@ namespace Nop.Services.Messages
                 "%Shipment.TrackingNumberURL%",
                 "%Shipment.Product(s)%",
                 "%Shipment.URLForCustomer%",
-                "%ReturnRequest.ID%",
+                "%ReturnRequest.CustomNumber%",
                 "%ReturnRequest.OrderId%",
                 "%ReturnRequest.Product.Quantity%",
                 "%ReturnRequest.Product.Name%", 

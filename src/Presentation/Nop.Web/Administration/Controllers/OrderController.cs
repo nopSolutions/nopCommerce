@@ -806,8 +806,14 @@ namespace Nop.Admin.Controllers
                 }
 
                 //return requests
-                orderItemModel.ReturnRequestIds = _returnRequestService.SearchReturnRequests(orderItemId: orderItem.Id)
-                    .Select(rr => rr.Id).ToList();
+                orderItemModel.ReturnRequests = _returnRequestService
+                    .SearchReturnRequests(orderItemId: orderItem.Id)
+                    .Select(item => new OrderModel.OrderItemModel.ReturnRequestBriefModel
+                    {
+                        CustomNumber = item.CustomNumber,
+                        Id = item.Id
+                    }).ToList();
+
                 //gift cards
                 orderItemModel.PurchasedGiftCardIds = _giftCardService.GetGiftCardsByPurchasedWithOrderItemId(orderItem.Id)
                     .Select(gc => gc.Id).ToList();

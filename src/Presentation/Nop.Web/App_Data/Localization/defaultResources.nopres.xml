@@ -6240,6 +6240,27 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.Updated">
     <Value>The return request action has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestNumberMask">
+    <Value>Return request number mask</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestNumberMask.Hint">
+    <Value>Return request number mask. For example, RMA-{ID}-{YYYY}-{MM}-{DD}.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestNumberMask.Description.DD">
+    <Value>{DD} - day of return request creation date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestNumberMask.Description.ID">
+    <Value>{ID} - Return request identifier</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestNumberMask.Description.MM">
+    <Value>{MM} - month of return request creation date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestNumberMask.Description.YYYY">
+    <Value>{YYYY} - year of return request creation date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestNumberMask.Description.YY">
+    <Value>{YY} - last two digits of year of return request creation date</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons">
     <Value>Return request reasons</Value>
   </LocaleResource>
@@ -10509,10 +10530,10 @@
   <LocaleResource Name="Admin.ReturnRequests.Fields.CustomerComments.Hint">
     <Value>Entered customer comments.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ReturnRequests.Fields.ID">
+  <LocaleResource Name="Admin.ReturnRequests.Fields.CustomNumber">
     <Value>ID</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ReturnRequests.Fields.ID.Hint">
+  <LocaleResource Name="Admin.ReturnRequests.Fields.CustomNumber.Hint">
     <Value>Return request identifier.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Fields.Order">
