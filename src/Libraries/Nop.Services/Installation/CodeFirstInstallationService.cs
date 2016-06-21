@@ -4999,15 +4999,19 @@ namespace Nop.Services.Installation
             _shipmentItemRepository.Insert(fifthOrderShipment1Item1);
         }
 
-        protected virtual void InstallActivityLog()
+        protected virtual void InstallActivityLog(string defaultUserEmail)
         {
-            var firstCustomer = _customerRepository.Table.First(c => c.Email.Equals("steve_gates@nopCommerce.com"));
+            //default customer/user
+            var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail);
+            if (defaultCustomer == null)
+                throw new Exception("Cannot load default customer");
+
             var firstLog = new ActivityLog()
             {
                 ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("EditCategory")),
                 Comment = "Edited a category ('Computers')",
                 CreatedOnUtc = DateTime.Now,
-                Customer = firstCustomer,
+                Customer = defaultCustomer,
                 IpAddress = "127.0.0.1"
             };
             _activityLogRepository.Insert(firstLog);
@@ -5016,7 +5020,7 @@ namespace Nop.Services.Installation
                 ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("EditDiscount")),
                 Comment = "Edited a discount ('Sample discount with coupon code')",
                 CreatedOnUtc = DateTime.Now,
-                Customer = firstCustomer,
+                Customer = defaultCustomer,
                 IpAddress = "127.0.0.1"
             };
             _activityLogRepository.Insert(secondLog);
@@ -5025,7 +5029,7 @@ namespace Nop.Services.Installation
                 ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("EditSpecAttribute")),
                 Comment = "Edited a specification attribute ('CPU Type')",
                 CreatedOnUtc = DateTime.Now,
-                Customer = firstCustomer,
+                Customer = defaultCustomer,
                 IpAddress = "127.0.0.1"
             };
             _activityLogRepository.Insert(thirdLog);
@@ -5034,7 +5038,7 @@ namespace Nop.Services.Installation
                 ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("AddNewProductAttribute")),
                 Comment = "Added a new product attribute ('Some attribute')",
                 CreatedOnUtc = DateTime.Now,
-                Customer = firstCustomer,
+                Customer = defaultCustomer,
                 IpAddress = "127.0.0.1"
             };
             _activityLogRepository.Insert(fourthLog);
@@ -5043,7 +5047,7 @@ namespace Nop.Services.Installation
                 ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("DeleteGiftCard")),
                 Comment = "Deleted a gift card ('bdbbc0ef-be57')",
                 CreatedOnUtc = DateTime.Now,
-                Customer = firstCustomer,
+                Customer = defaultCustomer,
                 IpAddress = "127.0.0.1"
             };
             _activityLogRepository.Insert(fifthLog);
@@ -11346,7 +11350,7 @@ namespace Nop.Services.Installation
                 InstallVendors();
                 InstallAffiliates();
                 InstallOrders();
-                InstallActivityLog();
+                InstallActivityLog(defaultUserEmail);
                 InstallSearchTerms();
             }
         }
