@@ -3034,7 +3034,7 @@ BEGIN
 			))'
 	END
 	
-	--show hidden and filter by store
+	--filter by store
 	IF @StoreId > 0
 	BEGIN
 		SET @sql = @sql + '
