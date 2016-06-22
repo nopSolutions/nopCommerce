@@ -200,12 +200,12 @@
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.PageTitleSeparator_OverrideForStore, model => model.SeoSettings.PageTitleSeparator, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.SeoSettings.PageTitleSeparator)
+                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultTitle_OverrideForStore, model => model.SeoSettings.DefaultTitle, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.SeoSettings.DefaultTitle)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.SeoSettings.PageTitleSeparator)
-                        @Html.ValidationMessageFor(model => model.SeoSettings.PageTitleSeparator)
+                        @Html.NopEditorFor(model => model.SeoSettings.DefaultTitle)
+                        @Html.ValidationMessageFor(model => model.SeoSettings.DefaultTitle)
                     </div>
                 </div>
                 <div class="form-group">
@@ -220,12 +220,12 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultTitle_OverrideForStore, model => model.SeoSettings.DefaultTitle, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.SeoSettings.DefaultTitle)
+                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.PageTitleSeparator_OverrideForStore, model => model.SeoSettings.PageTitleSeparator, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.SeoSettings.PageTitleSeparator)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.SeoSettings.DefaultTitle)
-                        @Html.ValidationMessageFor(model => model.SeoSettings.DefaultTitle)
+                        @Html.NopEditorFor(model => model.SeoSettings.PageTitleSeparator)
+                        @Html.ValidationMessageFor(model => model.SeoSettings.PageTitleSeparator)
                     </div>
                 </div>
                 <div class="form-group">
@@ -260,36 +260,6 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.ConvertNonWesternChars_OverrideForStore, model => model.SeoSettings.ConvertNonWesternChars, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.SeoSettings.ConvertNonWesternChars)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.SeoSettings.ConvertNonWesternChars)
-                        @Html.ValidationMessageFor(model => model.SeoSettings.ConvertNonWesternChars)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.CanonicalUrlsEnabled_OverrideForStore, model => model.SeoSettings.CanonicalUrlsEnabled, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.SeoSettings.CanonicalUrlsEnabled)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.SeoSettings.CanonicalUrlsEnabled)
-                        @Html.ValidationMessageFor(model => model.SeoSettings.CanonicalUrlsEnabled)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.WwwRequirement_OverrideForStore, model => model.SeoSettings.WwwRequirement, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.SeoSettings.WwwRequirement)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopDropDownListFor(model => model.SeoSettings.WwwRequirement, Model.SeoSettings.WwwRequirementValues)
-                        @Html.ValidationMessageFor(model => model.SeoSettings.WwwRequirement)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.EnableJsBundling_OverrideForStore, model => model.SeoSettings.EnableJsBundling, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.SeoSettings.EnableJsBundling)
                     </div>
@@ -306,6 +276,36 @@
                     <div class="col-md-9">
                         @Html.NopEditorFor(model => model.SeoSettings.EnableCssBundling)
                         @Html.ValidationMessageFor(model => model.SeoSettings.EnableCssBundling)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.WwwRequirement_OverrideForStore, model => model.SeoSettings.WwwRequirement, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.SeoSettings.WwwRequirement)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDropDownListFor(model => model.SeoSettings.WwwRequirement, Model.SeoSettings.WwwRequirementValues)
+                        @Html.ValidationMessageFor(model => model.SeoSettings.WwwRequirement)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.ConvertNonWesternChars_OverrideForStore, model => model.SeoSettings.ConvertNonWesternChars, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.SeoSettings.ConvertNonWesternChars)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.SeoSettings.ConvertNonWesternChars)
+                        @Html.ValidationMessageFor(model => model.SeoSettings.ConvertNonWesternChars)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.CanonicalUrlsEnabled_OverrideForStore, model => model.SeoSettings.CanonicalUrlsEnabled, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.SeoSettings.CanonicalUrlsEnabled)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.SeoSettings.CanonicalUrlsEnabled)
+                        @Html.ValidationMessageFor(model => model.SeoSettings.CanonicalUrlsEnabled)
                     </div>
                 </div>
                 <div class="form-group">
@@ -378,22 +378,6 @@
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.SecuritySettings.EncryptionKey)
-                    </div>
-                    <div class="col-md-9">
-                        <div class="input-group input-group-short">
-                            @Html.NopEditorFor(model => model.SecuritySettings.EncryptionKey)
-                            <span class="input-group-btn">
-                                <button type="submit" name="changeencryptionkey" id="changeencryptionkey" class="btn btn-info" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
-                                    @T("Admin.Common.Change")
-                                </button>
-                            </span>
-                        </div>
-                        @Html.ValidationMessageFor(model => model.SecuritySettings.EncryptionKey)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses)
                     </div>
                     <div class="col-md-9">
@@ -435,6 +419,22 @@
                     <div class="col-md-9">
                         @Html.NopEditorFor(model => model.SecuritySettings.HoneypotEnabled)
                         @Html.ValidationMessageFor(model => model.SecuritySettings.HoneypotEnabled)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.SecuritySettings.EncryptionKey)
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group input-group-short">
+                            @Html.NopEditorFor(model => model.SecuritySettings.EncryptionKey)
+                            <span class="input-group-btn">
+                                <button type="submit" name="changeencryptionkey" id="changeencryptionkey" class="btn btn-info" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+                                    @T("Admin.Common.Change")
+                                </button>
+                            </span>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.SecuritySettings.EncryptionKey)
                     </div>
                 </div>
             </div>
@@ -578,32 +578,12 @@
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.LetterPageSizeEnabled_OverrideForStore, model => model.PdfSettings.LetterPageSizeEnabled, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.PdfSettings.LetterPageSizeEnabled)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.PdfSettings.LetterPageSizeEnabled)
-                        @Html.ValidationMessageFor(model => model.PdfSettings.LetterPageSizeEnabled)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.LogoPictureId_OverrideForStore, "pdf-logo-picture", Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.PdfSettings.LogoPictureId)
                     </div>
                     <div class="col-md-9" id="pdf-logo-picture">
                         @Html.NopEditorFor(model => model.PdfSettings.LogoPictureId)
                         @Html.ValidationMessageFor(model => model.PdfSettings.LogoPictureId)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders_OverrideForStore, model => model.PdfSettings.DisablePdfInvoicesForPendingOrders, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders)
-                        @Html.ValidationMessageFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders)
                     </div>
                 </div>
                 <div class="form-group">
@@ -626,6 +606,26 @@
                         @Html.ValidationMessageFor(model => model.PdfSettings.InvoiceFooterTextColumn2)
                     </div>
                 </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.LetterPageSizeEnabled_OverrideForStore, model => model.PdfSettings.LetterPageSizeEnabled, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.PdfSettings.LetterPageSizeEnabled)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.PdfSettings.LetterPageSizeEnabled)
+                        @Html.ValidationMessageFor(model => model.PdfSettings.LetterPageSizeEnabled)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders_OverrideForStore, model => model.PdfSettings.DisablePdfInvoicesForPendingOrders, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders)
+                        @Html.ValidationMessageFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders)
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -636,33 +636,6 @@
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.LocalizationSettings.UseImagesForLanguageSelection)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.LocalizationSettings.UseImagesForLanguageSelection)
-                        @Html.ValidationMessageFor(model => model.LocalizationSettings.UseImagesForLanguageSelection)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
-                        @Html.ValidationMessageFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.LocalizationSettings.AutomaticallyDetectLanguage)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.LocalizationSettings.AutomaticallyDetectLanguage)
-                        @Html.ValidationMessageFor(model => model.LocalizationSettings.AutomaticallyDetectLanguage)
-                    </div>
-                </div>
                 <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)
@@ -688,6 +661,33 @@
                     <div class="col-md-9">
                         @Html.NopEditorFor(model => model.LocalizationSettings.LoadAllUrlRecordsOnStartup)
                         @Html.ValidationMessageFor(model => model.LocalizationSettings.LoadAllUrlRecordsOnStartup)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.LocalizationSettings.UseImagesForLanguageSelection)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.LocalizationSettings.UseImagesForLanguageSelection)
+                        @Html.ValidationMessageFor(model => model.LocalizationSettings.UseImagesForLanguageSelection)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                        @Html.ValidationMessageFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.LocalizationSettings.AutomaticallyDetectLanguage)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.LocalizationSettings.AutomaticallyDetectLanguage)
+                        @Html.ValidationMessageFor(model => model.LocalizationSettings.AutomaticallyDetectLanguage)
                     </div>
                 </div>
             </div>
