@@ -72,7 +72,7 @@ set @resources='
     <Value>Reviews per store</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsPerStore.Hint">
-    <Value>Enable show reviews per store.</Value>
+    <Value>Check to display reviews written in the current store only (on a product details page).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions.ShouldHaveUniqueItems">
     <Value>Page Size options should have unique items.</Value>
