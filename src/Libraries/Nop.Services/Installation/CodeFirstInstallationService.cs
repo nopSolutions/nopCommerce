@@ -5919,7 +5919,7 @@ namespace Nop.Services.Installation
             {
                 StoreClosed = false,
                 DefaultStoreTheme = "DefaultClean",
-                AllowCustomerToSelectTheme = true,
+                AllowCustomerToSelectTheme = false,
                 DisplayMiniProfilerInPublicStore = false,
                 DisplayEuCookieLawWarning = false,
                 FacebookLink = "http://www.facebook.com/nopCommerce",
