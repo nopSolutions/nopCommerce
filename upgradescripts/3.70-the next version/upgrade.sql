@@ -734,6 +734,12 @@ set @resources='
   <LocaleResource Name="Admin.ReturnRequests.Fields.ID.Hint">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.AllowNotRegisteredUsersToLeaveComments">
+    <Value>Allow guests to leave comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.AllowNotRegisteredUsersToLeaveComments.Hint">
+    <Value>Check to allow guests to leave comments.</Value>
+  </LocaleResource>
 </Language>
 '
 

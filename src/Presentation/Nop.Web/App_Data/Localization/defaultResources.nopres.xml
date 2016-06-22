@@ -4600,10 +4600,10 @@
     <Value>Blog settings</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Blog.AllowNotRegisteredUsersToLeaveComments">
-    <Value>Allow not registered users to leave comments</Value>
+    <Value>Allow guests to leave comments</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Blog.AllowNotRegisteredUsersToLeaveComments.Hint">
-    <Value>Check to allow not registered users to leave comments.</Value>
+    <Value>Check to allow guests to leave comments.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Blog.Enabled">
     <Value>Blog enabled</Value>
