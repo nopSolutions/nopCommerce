@@ -4361,7 +4361,7 @@ namespace Nop.Services.Installation
                 CaptureTransactionResult = string.Empty,
                 SubscriptionTransactionId = string.Empty,
                 PaymentStatus = PaymentStatus.Paid,
-                PaidDateUtc = DateTime.Now,
+                PaidDateUtc = DateTime.UtcNow,
                 BillingAddress = (Address)firstCustomer.BillingAddress.Clone(),
                 ShippingAddress = (Address)firstCustomer.ShippingAddress.Clone(),
                 ShippingStatus = ShippingStatus.NotYetShipped,
@@ -4467,21 +4467,18 @@ namespace Nop.Services.Installation
             _giftCardRepository.Insert(firstOrderGiftcard);
 
             //order notes
-            var firstOrderNote1 = new OrderNote()
+            _orderNoteRepository.Insert(new OrderNote()
             {
-                CreatedOnUtc = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
                 Order = firstOrder
-            };
-            _orderNoteRepository.Insert(firstOrderNote1);
-
-            var firstOrderNote2 = new OrderNote()
+            });
+            _orderNoteRepository.Insert(new OrderNote()
             {
-                CreatedOnUtc = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order paid",
                 Order = firstOrder
-            };
-            _orderNoteRepository.Insert(firstOrderNote2);
+            });
 
 
             //second order
@@ -4542,13 +4539,12 @@ namespace Nop.Services.Installation
             _orderRepository.Insert(secondOrder);
 
             //order notes
-            var secondOrderNote1 = new OrderNote()
+            _orderNoteRepository.Insert(new OrderNote()
             {
-                CreatedOnUtc = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
                 Order = secondOrder
-            };
-            _orderNoteRepository.Insert(secondOrderNote1);
+            });
 
             //item Elegant Gemstone Necklace
             var secondOrderItem1 = new OrderItem()
@@ -4659,13 +4655,12 @@ namespace Nop.Services.Installation
             _orderRepository.Insert(thirdOrder);
 
             //order notes
-            var thirdOrderNote1 = new OrderNote()
+            _orderNoteRepository.Insert(new OrderNote()
             {
-                CreatedOnUtc = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
                 Order = thirdOrder
-            };
-            _orderNoteRepository.Insert(thirdOrderNote1);
+            });
 
             //item If You Wait
             var thirdOrderItem1 = new OrderItem()
@@ -4787,7 +4782,7 @@ namespace Nop.Services.Installation
                 CaptureTransactionResult = string.Empty,
                 SubscriptionTransactionId = string.Empty,
                 PaymentStatus = PaymentStatus.Paid,
-                PaidDateUtc = DateTime.Now,
+                PaidDateUtc = DateTime.UtcNow,
                 BillingAddress = (Address)fourthCustomer.BillingAddress.Clone(),
                 ShippingAddress = (Address)fourthCustomer.ShippingAddress.Clone(),
                 ShippingStatus = ShippingStatus.Shipped,
@@ -4801,29 +4796,24 @@ namespace Nop.Services.Installation
             _orderRepository.Insert(fourthOrder);
 
             //order notes
-            var fourthOrderNote1 = new OrderNote()
+            _orderNoteRepository.Insert(new OrderNote()
             {
-                CreatedOnUtc = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
                 Order = fourthOrder
-            };
-            _orderNoteRepository.Insert(fourthOrderNote1);
-
-            var fourthOrderNote2 = new OrderNote()
+            });
+            _orderNoteRepository.Insert(new OrderNote()
             {
-                CreatedOnUtc = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order paid",
                 Order = fourthOrder
-            };
-            _orderNoteRepository.Insert(fourthOrderNote2);
-
-            var fourthOrderNote3 = new OrderNote()
+            });
+            _orderNoteRepository.Insert(new OrderNote()
             {
-                CreatedOnUtc = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order shipped",
                 Order = fourthOrder
-            };
-            _orderNoteRepository.Insert(fourthOrderNote3);
+            });
 
             //item Pride and Prejudice
             var fourthOrderItem1 = new OrderItem()
@@ -4907,8 +4897,8 @@ namespace Nop.Services.Installation
                 Order = fourthOrder,
                 TrackingNumber = string.Empty,
                 TotalWeight = 4M,
-                ShippedDateUtc = DateTime.Now,
-                DeliveryDateUtc = DateTime.Now,
+                ShippedDateUtc = DateTime.UtcNow,
+                DeliveryDateUtc = DateTime.UtcNow,
                 AdminComment = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow
             };
@@ -4938,8 +4928,8 @@ namespace Nop.Services.Installation
                 Order = fourthOrder,
                 TrackingNumber = string.Empty,
                 TotalWeight = 2M,
-                ShippedDateUtc = DateTime.Now,
-                DeliveryDateUtc = DateTime.Now,
+                ShippedDateUtc = DateTime.UtcNow,
+                DeliveryDateUtc = DateTime.UtcNow,
                 AdminComment = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow
             };
@@ -5001,7 +4991,7 @@ namespace Nop.Services.Installation
                 CaptureTransactionResult = string.Empty,
                 SubscriptionTransactionId = string.Empty,
                 PaymentStatus = PaymentStatus.Paid,
-                PaidDateUtc = DateTime.Now,
+                PaidDateUtc = DateTime.UtcNow,
                 BillingAddress = (Address)fifthCustomer.BillingAddress.Clone(),
                 ShippingAddress = (Address)fifthCustomer.ShippingAddress.Clone(),
                 ShippingStatus = ShippingStatus.Delivered,
@@ -5015,37 +5005,30 @@ namespace Nop.Services.Installation
             _orderRepository.Insert(fifthOrder);
 
             //order notes
-            var fifthOrderNote1 = new OrderNote()
+            _orderNoteRepository.Insert(new OrderNote()
             {
-                CreatedOnUtc = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
                 Order = fifthOrder
-            };
-            _orderNoteRepository.Insert(fifthOrderNote1);
-
-            var fifthOrderNote2 = new OrderNote()
+            });
+            _orderNoteRepository.Insert(new OrderNote()
             {
-                CreatedOnUtc = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order paid",
                 Order = fifthOrder
-            };
-            _orderNoteRepository.Insert(fifthOrderNote2);
-
-            var fifthOrderNote3 = new OrderNote()
+            });
+            _orderNoteRepository.Insert(new OrderNote()
             {
-                CreatedOnUtc = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order shipped",
                 Order = fifthOrder
-            };
-            _orderNoteRepository.Insert(fifthOrderNote3);
-
-            var fifthOrderNote4 = new OrderNote()
+            });
+            _orderNoteRepository.Insert(new OrderNote()
             {
-                CreatedOnUtc = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order delivered",
                 Order = fifthOrder
-            };
-            _orderNoteRepository.Insert(fifthOrderNote4);
+            });
 
             //item Levi's 511 Jeans
             var fifthOrderItem1 = new OrderItem()
@@ -5078,8 +5061,8 @@ namespace Nop.Services.Installation
                 Order = fifthOrder,
                 TrackingNumber = string.Empty,
                 TotalWeight = 2M,
-                ShippedDateUtc = DateTime.Now,
-                DeliveryDateUtc = DateTime.Now,
+                ShippedDateUtc = DateTime.UtcNow,
+                DeliveryDateUtc = DateTime.UtcNow,
                 AdminComment = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow
             };
@@ -5102,51 +5085,46 @@ namespace Nop.Services.Installation
             if (defaultCustomer == null)
                 throw new Exception("Cannot load default customer");
 
-            var firstLog = new ActivityLog()
+            _activityLogRepository.Insert(new ActivityLog()
             {
                 ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("EditCategory")),
                 Comment = "Edited a category ('Computers')",
-                CreatedOnUtc = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
                 Customer = defaultCustomer,
                 IpAddress = "127.0.0.1"
-            };
-            _activityLogRepository.Insert(firstLog);
-            var secondLog = new ActivityLog()
+            });
+            _activityLogRepository.Insert(new ActivityLog()
             {
                 ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("EditDiscount")),
                 Comment = "Edited a discount ('Sample discount with coupon code')",
-                CreatedOnUtc = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
                 Customer = defaultCustomer,
                 IpAddress = "127.0.0.1"
-            };
-            _activityLogRepository.Insert(secondLog);
-            var thirdLog = new ActivityLog()
+            });
+            _activityLogRepository.Insert(new ActivityLog()
             {
                 ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("EditSpecAttribute")),
                 Comment = "Edited a specification attribute ('CPU Type')",
-                CreatedOnUtc = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
                 Customer = defaultCustomer,
                 IpAddress = "127.0.0.1"
-            };
-            _activityLogRepository.Insert(thirdLog);
-            var fourthLog = new ActivityLog()
+            });
+            _activityLogRepository.Insert(new ActivityLog()
             {
                 ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("AddNewProductAttribute")),
                 Comment = "Added a new product attribute ('Some attribute')",
-                CreatedOnUtc = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
                 Customer = defaultCustomer,
                 IpAddress = "127.0.0.1"
-            };
-            _activityLogRepository.Insert(fourthLog);
-            var fifthLog = new ActivityLog()
+            });
+            _activityLogRepository.Insert(new ActivityLog()
             {
                 ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("DeleteGiftCard")),
                 Comment = "Deleted a gift card ('bdbbc0ef-be57')",
-                CreatedOnUtc = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
                 Customer = defaultCustomer,
                 IpAddress = "127.0.0.1"
-            };
-            _activityLogRepository.Insert(fifthLog);
+            });
         }
 
         protected virtual void InstallSearchTerms()
@@ -5156,53 +5134,42 @@ namespace Nop.Services.Installation
             if (defaultStore == null)
                 throw new Exception("No default store could be loaded");
 
-            var firstSearchTerm = new SearchTerm()
+            _searchTermRepository.Insert(new SearchTerm()
             {
                 Count = 34,
                 Keyword = "computer",
                 StoreId = defaultStore.Id
-            };
-            _searchTermRepository.Insert(firstSearchTerm);
-
-            var secondSearchTerm = new SearchTerm()
+            });
+            _searchTermRepository.Insert(new SearchTerm()
             {
                 Count = 30,
                 Keyword = "camera",
                 StoreId = defaultStore.Id
-            };
-            _searchTermRepository.Insert(secondSearchTerm);
-
-            var thirdSearchTerm = new SearchTerm()
+            });
+            _searchTermRepository.Insert(new SearchTerm()
             {
                 Count = 27,
                 Keyword = "jewelry",
                 StoreId = defaultStore.Id
-            };
-            _searchTermRepository.Insert(thirdSearchTerm);
-
-            var fourthSearchTerm = new SearchTerm()
+            });
+            _searchTermRepository.Insert(new SearchTerm()
             {
                 Count = 26,
                 Keyword = "shoes",
                 StoreId = defaultStore.Id
-            };
-            _searchTermRepository.Insert(fourthSearchTerm);
-
-            var fifthSearchTerm = new SearchTerm()
+            });
+            _searchTermRepository.Insert(new SearchTerm()
             {
                 Count = 19,
                 Keyword = "jeans",
                 StoreId = defaultStore.Id
-            };
-            _searchTermRepository.Insert(fifthSearchTerm);
-
-            var sixthSearchTerm = new SearchTerm()
+            });
+            _searchTermRepository.Insert(new SearchTerm()
             {
                 Count = 10,
                 Keyword = "gift",
                 StoreId = defaultStore.Id
-            };
-            _searchTermRepository.Insert(sixthSearchTerm);
+            });
         }
 
         protected virtual void HashDefaultCustomerPassword(string defaultUserEmail, string defaultUserPassword)
