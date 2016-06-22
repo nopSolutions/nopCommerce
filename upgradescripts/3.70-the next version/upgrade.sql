@@ -812,6 +812,9 @@ set @resources='
   <LocaleResource Name="Vendors.ApplyAccount.Picture.ErrorMessage">
     <Value>You can add only picture file</Value>
   </LocaleResource>
+  <LocaleResource Name="Filtering.SpecificationFilter.Separator">
+    <Value>or </Value>
+  </LocaleResource>
 </Language>
 '
 
