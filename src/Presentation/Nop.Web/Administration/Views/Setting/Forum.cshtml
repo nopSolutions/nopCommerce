@@ -30,7 +30,9 @@
             <script type="text/javascript">
                 $(document).ready(function () {
                     $("#@Html.FieldIdFor(model => model.AllowPostVoting)").click(toggleAllowVoting);
+                    $("#@Html.FieldIdFor(model => model.AllowPrivateMessages)").click(toggleAllowPrivateMessages);
                     toggleAllowVoting();
+                    toggleAllowPrivateMessages();
                 });
 
                 function toggleAllowVoting() {
@@ -39,6 +41,17 @@
                     }
                     else {
                         $('#pnlMaxVotes').hide();
+                    }
+                }
+
+                function toggleAllowPrivateMessages() {
+                    if ($('#@Html.FieldIdFor(model => model.AllowPrivateMessages)').is(':checked')) {
+                        $('#pnlShowAlertForPM').show();
+                        $('#pnlNotifyAboutPrivateMessages').show();
+                    }
+                    else {
+                        $('#pnlShowAlertForPM').hide();
+                        $('#pnlNotifyAboutPrivateMessages').hide();
                     }
                 }
             </script>
@@ -86,7 +99,7 @@
                                 @Html.ValidationMessageFor(model => model.AllowPrivateMessages)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="pnlShowAlertForPM">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.ShowAlertForPM_OverrideForStore, model => model.ShowAlertForPM, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.ShowAlertForPM)
@@ -96,7 +109,7 @@
                                 @Html.ValidationMessageFor(model => model.ShowAlertForPM)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="pnlNotifyAboutPrivateMessages">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.NotifyAboutPrivateMessages_OverrideForStore, model => model.NotifyAboutPrivateMessages, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.NotifyAboutPrivateMessages)
