@@ -365,6 +365,11 @@ td.k-state-focused.k-state-selected {
     height: 50px;
 }
 
+.maintenance-menu.dropdown-menu button {
+    border: none;
+    padding: 3px 20px;
+}
+
 /* NAV TABS */
 .nav > li > a > img {
     margin-right: 8px;

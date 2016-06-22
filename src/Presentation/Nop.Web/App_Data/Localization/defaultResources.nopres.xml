@@ -4557,6 +4557,9 @@
   <LocaleResource Name="Admin.Configuration.Plugins.ReloadList">
     <Value>Reload list of plugins</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.ReloadList.Progress">
+    <Value>Reloading plugin list...</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Stores">
     <Value>Stores</Value>
   </LocaleResource>
