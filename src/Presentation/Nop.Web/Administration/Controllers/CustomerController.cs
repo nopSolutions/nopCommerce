@@ -971,7 +971,7 @@ namespace Nop.Admin.Controllers
                 
 
                 //ensure that a customer with a vendor associated is not in "Administrators" role
-                //otherwise, he won't be have access to the other functionality in admin area
+                //otherwise, he won't have access to other functionality in admin area
                 if (customer.IsAdmin() && customer.VendorId > 0)
                 {
                     customer.VendorId = 0;

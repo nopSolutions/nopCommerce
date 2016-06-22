@@ -130,14 +130,14 @@
                                             @item.VendorName
                                         </p>
                                     }
-                                    @if (item.ReturnRequestIds.Count > 0)
+                                    @if (item.ReturnRequests.Count > 0)
                                     {
                                         <p>
                                             @T("Admin.Orders.Products.ReturnRequests")<text>:</text>
-                                            @for (int i = 0; i < item.ReturnRequestIds.Count; i++)
+                                            @for (int i = 0; i < item.ReturnRequests.Count; i++)
                                             {
-                                                <a href="@Url.Action("Edit", "ReturnRequest", new {id = item.ReturnRequestIds[i]})">@item.ReturnRequestIds[i]</a>
-                                                if (i != item.ReturnRequestIds.Count - 1)
+                                                <a href="@Url.Action("Edit", "ReturnRequest", new {id = item.ReturnRequests[i].Id})">@item.ReturnRequests[i].CustomNumber</a>
+                                                if (i != item.ReturnRequests.Count - 1)
                                                 {
                                                     <text>,</text>
                                                 }
