@@ -91,6 +91,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Affiliate> _affiliateRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderItem> _orderItemRepository;
+        private readonly IRepository<OrderNote> _orderNoteRepository;
         private readonly IRepository<GiftCard> _giftCardRepository;
         private readonly IRepository<Shipment> _shipmentRepository;
         private readonly IRepository<SearchTerm> _searchTermRepository;
@@ -147,6 +148,7 @@ namespace Nop.Services.Installation
             IRepository<Affiliate> affiliateRepository,
             IRepository<Order> orderRepository,
             IRepository<OrderItem> orderItemRepository,
+            IRepository<OrderNote> orderNoteRepository,
             IRepository<GiftCard> giftCardRepository,
             IRepository<Shipment> shipmentRepository,
             IRepository<ShipmentItem> shipmentItemRepository,
@@ -199,6 +201,7 @@ namespace Nop.Services.Installation
             this._affiliateRepository = affiliateRepository;
             this._orderRepository = orderRepository;
             this._orderItemRepository = orderItemRepository;
+            this._orderNoteRepository = orderNoteRepository;
             this._giftCardRepository = giftCardRepository;
             this._shipmentRepository = shipmentRepository;
             this._shipmentItemRepository = shipmentItemRepository;
@@ -4140,7 +4143,7 @@ namespace Nop.Services.Installation
                 Address1 = "221B Baker Street",
                 Address2 = "",
                 City = "London",
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "United Kingdom"),
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "GBR"),
                 ZipPostalCode = "NW1 6XE",
                 CreatedOnUtc = DateTime.UtcNow,
             };
@@ -4179,7 +4182,7 @@ namespace Nop.Services.Installation
                 Address1 = "St Katharine’s West 16",
                 Address2 = "",
                 City = "St Andrews",
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "United Kingdom"),
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "GBR"),
                 ZipPostalCode = "KY16 9AX",
                 CreatedOnUtc = DateTime.UtcNow,
             };
@@ -4259,7 +4262,7 @@ namespace Nop.Services.Installation
                 Address2 = "",
                 City = "Saskatoon",
                 StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "Saskatchewan"),
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "Canada"),
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "CAN"),
                 ZipPostalCode = "S7K 1J9",
                 CreatedOnUtc = DateTime.UtcNow,
             };
@@ -4463,7 +4466,24 @@ namespace Nop.Services.Installation
             };
             _giftCardRepository.Insert(firstOrderGiftcard);
 
-            
+            //order notes
+            var firstOrderNote1 = new OrderNote()
+            {
+                CreatedOnUtc = DateTime.Now,
+                Note = "Order placed",
+                Order = firstOrder
+            };
+            _orderNoteRepository.Insert(firstOrderNote1);
+
+            var firstOrderNote2 = new OrderNote()
+            {
+                CreatedOnUtc = DateTime.Now,
+                Note = "Order paid",
+                Order = firstOrder
+            };
+            _orderNoteRepository.Insert(firstOrderNote2);
+
+
             //second order
             var secondCustomer = _customerRepository.Table.First(c => c.Email.Equals("arthur_holmes@nopCommerce.com"));
             var secondOrder = new Order()
@@ -4509,8 +4529,8 @@ namespace Nop.Services.Installation
                 SubscriptionTransactionId = string.Empty,
                 PaymentStatus = PaymentStatus.Pending,
                 PaidDateUtc = null,
-                BillingAddress = (Address)firstCustomer.BillingAddress.Clone(),
-                ShippingAddress = (Address)firstCustomer.ShippingAddress.Clone(),
+                BillingAddress = (Address)secondCustomer.BillingAddress.Clone(),
+                ShippingAddress = (Address)secondCustomer.ShippingAddress.Clone(),
                 ShippingStatus = ShippingStatus.NotYetShipped,
                 ShippingMethod = "Next Day Air",
                 PickUpInStore = false,
@@ -4520,6 +4540,15 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow
             };
             _orderRepository.Insert(secondOrder);
+
+            //order notes
+            var secondOrderNote1 = new OrderNote()
+            {
+                CreatedOnUtc = DateTime.Now,
+                Note = "Order placed",
+                Order = secondOrder
+            };
+            _orderNoteRepository.Insert(secondOrderNote1);
 
             //item Elegant Gemstone Necklace
             var secondOrderItem1 = new OrderItem()
@@ -4617,7 +4646,7 @@ namespace Nop.Services.Installation
                 SubscriptionTransactionId = string.Empty,
                 PaymentStatus = PaymentStatus.Pending,
                 PaidDateUtc = null,
-                BillingAddress = (Address)firstCustomer.BillingAddress.Clone(),
+                BillingAddress = (Address)thirdCustomer.BillingAddress.Clone(),
                 ShippingAddress = null,
                 ShippingStatus = ShippingStatus.ShippingNotRequired,
                 ShippingMethod = string.Empty,
@@ -4628,6 +4657,15 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow
             };
             _orderRepository.Insert(thirdOrder);
+
+            //order notes
+            var thirdOrderNote1 = new OrderNote()
+            {
+                CreatedOnUtc = DateTime.Now,
+                Note = "Order placed",
+                Order = thirdOrder
+            };
+            _orderNoteRepository.Insert(thirdOrderNote1);
 
             //item If You Wait
             var thirdOrderItem1 = new OrderItem()
@@ -4750,8 +4788,8 @@ namespace Nop.Services.Installation
                 SubscriptionTransactionId = string.Empty,
                 PaymentStatus = PaymentStatus.Paid,
                 PaidDateUtc = DateTime.Now,
-                BillingAddress = (Address)firstCustomer.BillingAddress.Clone(),
-                ShippingAddress = (Address)firstCustomer.ShippingAddress.Clone(),
+                BillingAddress = (Address)fourthCustomer.BillingAddress.Clone(),
+                ShippingAddress = (Address)fourthCustomer.ShippingAddress.Clone(),
                 ShippingStatus = ShippingStatus.Shipped,
                 ShippingMethod = "In-Store Pickup",
                 PickUpInStore = false,
@@ -4761,6 +4799,31 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow
             };
             _orderRepository.Insert(fourthOrder);
+
+            //order notes
+            var fourthOrderNote1 = new OrderNote()
+            {
+                CreatedOnUtc = DateTime.Now,
+                Note = "Order placed",
+                Order = fourthOrder
+            };
+            _orderNoteRepository.Insert(fourthOrderNote1);
+
+            var fourthOrderNote2 = new OrderNote()
+            {
+                CreatedOnUtc = DateTime.Now,
+                Note = "Order paid",
+                Order = fourthOrder
+            };
+            _orderNoteRepository.Insert(fourthOrderNote2);
+
+            var fourthOrderNote3 = new OrderNote()
+            {
+                CreatedOnUtc = DateTime.Now,
+                Note = "Order shipped",
+                Order = fourthOrder
+            };
+            _orderNoteRepository.Insert(fourthOrderNote3);
 
             //item Pride and Prejudice
             var fourthOrderItem1 = new OrderItem()
@@ -4844,10 +4907,10 @@ namespace Nop.Services.Installation
                 Order = fourthOrder,
                 TrackingNumber = string.Empty,
                 TotalWeight = 4M,
-                ShippedDateUtc = DateTime.Now.AddDays(-1),
+                ShippedDateUtc = DateTime.Now,
                 DeliveryDateUtc = DateTime.Now,
                 AdminComment = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow.AddDays(-1)
+                CreatedOnUtc = DateTime.UtcNow
             };
             _shipmentRepository.Insert(fourthOrderShipment1);
 
@@ -4875,10 +4938,10 @@ namespace Nop.Services.Installation
                 Order = fourthOrder,
                 TrackingNumber = string.Empty,
                 TotalWeight = 2M,
-                ShippedDateUtc = DateTime.Now.AddDays(-1),
+                ShippedDateUtc = DateTime.Now,
                 DeliveryDateUtc = DateTime.Now,
                 AdminComment = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow.AddDays(-1)
+                CreatedOnUtc = DateTime.UtcNow
             };
             _shipmentRepository.Insert(fourthOrderShipment2);
 
@@ -4939,8 +5002,8 @@ namespace Nop.Services.Installation
                 SubscriptionTransactionId = string.Empty,
                 PaymentStatus = PaymentStatus.Paid,
                 PaidDateUtc = DateTime.Now,
-                BillingAddress = (Address)firstCustomer.BillingAddress.Clone(),
-                ShippingAddress = (Address)firstCustomer.ShippingAddress.Clone(),
+                BillingAddress = (Address)fifthCustomer.BillingAddress.Clone(),
+                ShippingAddress = (Address)fifthCustomer.ShippingAddress.Clone(),
                 ShippingStatus = ShippingStatus.Delivered,
                 ShippingMethod = "Ground",
                 PickUpInStore = false,
@@ -4950,6 +5013,39 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow
             };
             _orderRepository.Insert(fifthOrder);
+
+            //order notes
+            var fifthOrderNote1 = new OrderNote()
+            {
+                CreatedOnUtc = DateTime.Now,
+                Note = "Order placed",
+                Order = fifthOrder
+            };
+            _orderNoteRepository.Insert(fifthOrderNote1);
+
+            var fifthOrderNote2 = new OrderNote()
+            {
+                CreatedOnUtc = DateTime.Now,
+                Note = "Order paid",
+                Order = fifthOrder
+            };
+            _orderNoteRepository.Insert(fifthOrderNote2);
+
+            var fifthOrderNote3 = new OrderNote()
+            {
+                CreatedOnUtc = DateTime.Now,
+                Note = "Order shipped",
+                Order = fifthOrder
+            };
+            _orderNoteRepository.Insert(fifthOrderNote3);
+
+            var fifthOrderNote4 = new OrderNote()
+            {
+                CreatedOnUtc = DateTime.Now,
+                Note = "Order delivered",
+                Order = fifthOrder
+            };
+            _orderNoteRepository.Insert(fifthOrderNote4);
 
             //item Levi's 511 Jeans
             var fifthOrderItem1 = new OrderItem()
@@ -4982,10 +5078,10 @@ namespace Nop.Services.Installation
                 Order = fifthOrder,
                 TrackingNumber = string.Empty,
                 TotalWeight = 2M,
-                ShippedDateUtc = DateTime.Now.AddDays(-1),
+                ShippedDateUtc = DateTime.Now,
                 DeliveryDateUtc = DateTime.Now,
                 AdminComment = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow.AddDays(-1)
+                CreatedOnUtc = DateTime.UtcNow
             };
             _shipmentRepository.Insert(fifthOrderShipment1);
 
