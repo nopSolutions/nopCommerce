@@ -631,7 +631,7 @@ span.grid-report-item.red {
 }
 
 /*advanced settings*/
-.basic-settings-mode div.advanced-setting {
+.basic-settings-mode .advanced-setting {
     display: none !important;
 }
 
