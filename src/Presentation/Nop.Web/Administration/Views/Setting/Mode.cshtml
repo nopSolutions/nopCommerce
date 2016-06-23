@@ -1,8 +1,8 @@
-﻿@model bool
+﻿@model ModeModel
 <div class="form-group">
     <div class="col-md-12">
         <div class="onoffswitch">
-            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="advanced-settings-mode" checked="@Model">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="advanced-settings-mode" checked="@Model.Enabled">
             <label class="onoffswitch-label" for="advanced-settings-mode">
                 <span class="onoffswitch-inner"></span>
                 <span class="onoffswitch-switch"></span>
@@ -22,7 +22,7 @@
             $(document).ready(function() {
                 $("#advanced-settings-mode").click(function() {
                     checkAdvancedSettingsMode($(this).is(':checked'));
-                    saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', 'settings-advanced-mode', $(this).is(':checked'));
+                    saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@Model.ModeName', $(this).is(':checked'));
                 });
             });
         </script>

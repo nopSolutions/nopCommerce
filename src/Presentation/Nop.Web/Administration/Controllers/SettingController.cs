@@ -160,10 +160,14 @@ namespace Nop.Admin.Controllers
         #region Methods
 
         [ChildActionOnly]
-        public ActionResult Mode()
+        public ActionResult Mode(string modeName = "settings-advanced-mode")
         {
-            var advancedMode = _workContext.CurrentCustomer.GetAttribute<bool>("settings-advanced-mode");
-            return PartialView(advancedMode);
+            var model = new ModeModel()
+            {
+                ModeName = modeName,
+                Enabled = _workContext.CurrentCustomer.GetAttribute<bool>(modeName)
+            };
+            return PartialView(model);
         }
 
         [ChildActionOnly]

@@ -249,6 +249,7 @@
     <Compile Include="Models\Plugins\OfficialFeedListModel.cs" />
     <Compile Include="Models\Plugins\PluginListModel.cs" />
     <Compile Include="Models\Settings\AllSettingsListModel.cs" />
+    <Compile Include="Models\Settings\ModeModel.cs" />
     <Compile Include="Models\Settings\ReturnRequestActionModel.cs" />
     <Compile Include="Models\Settings\ReturnRequestReasonModel.cs" />
     <Compile Include="Models\Settings\SortOptionModel.cs" />
