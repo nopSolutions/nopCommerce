@@ -5647,7 +5647,7 @@
     <Value>The public store theme. You can download themes from the extensions page at www.nopcommerce.com.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultTitle">
-    <Value>Default title</Value>
+    <Value>Default page title</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultTitle.Hint">
     <Value>The default title for pages in your store.</Value>

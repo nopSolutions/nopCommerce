@@ -797,6 +797,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreInformationSettings">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultTitle">
+    <Value>Default page title</Value>
+  </LocaleResource>
 </Language>
 '
 
