@@ -127,7 +127,6 @@ namespace Nop.Services.Orders
         /// <param name="endTimeUtc">End date</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
-        /// <param name="ignoreCancelledOrders">A value indicating whether to ignore cancelled orders</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
         public virtual OrderAverageReportLine GetOrderAverageReportLine(int storeId = 0,

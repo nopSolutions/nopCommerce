@@ -272,7 +272,7 @@
 
             $('a.sidebar-toggle').on('click', function () {
                 var collapsed = $('body').hasClass('sidebar-collapse');
-                saveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
+                saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
             });
         });
     </script>

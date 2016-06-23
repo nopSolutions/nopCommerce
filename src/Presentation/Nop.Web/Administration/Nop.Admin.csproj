@@ -2127,6 +2127,7 @@
     <Content Include="Content\Roxy_Fileman\lang\it.json" />
     <Content Include="Content\Roxy_Fileman\lang\pl.json" />
     <Content Include="Content\Roxy_Fileman\lang\pt.json" />
+    <Content Include="Views\Measure\List.cshtml" />
     <None Include="Views\Product\_ProductAttributes.cshtml" />
     <Content Include="Views\Setting\_ReturnRequestReasons.cshtml" />
     <Content Include="Views\Setting\ReturnRequestReasonEdit.cshtml" />

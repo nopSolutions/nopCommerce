@@ -83,6 +83,67 @@
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AnonymousCheckoutAllowed_OverrideForStore, model => model.AnonymousCheckoutAllowed, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AnonymousCheckoutAllowed)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.AnonymousCheckoutAllowed)
+                        @Html.ValidationMessageFor(model => model.AnonymousCheckoutAllowed)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.OnePageCheckoutEnabled_OverrideForStore, model => model.OnePageCheckoutEnabled, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.OnePageCheckoutEnabled)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.OnePageCheckoutEnabled)
+                        @Html.ValidationMessageFor(model => model.OnePageCheckoutEnabled)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab_OverrideForStore, model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab)
+                        @Html.ValidationMessageFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.TermsOfServiceOnShoppingCartPage_OverrideForStore, model => model.TermsOfServiceOnShoppingCartPage, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.TermsOfServiceOnShoppingCartPage)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.TermsOfServiceOnShoppingCartPage)
+                        @Html.ValidationMessageFor(model => model.TermsOfServiceOnShoppingCartPage)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.TermsOfServiceOnOrderConfirmPage_OverrideForStore, model => model.TermsOfServiceOnOrderConfirmPage, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.TermsOfServiceOnOrderConfirmPage)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.TermsOfServiceOnOrderConfirmPage)
+                        @Html.ValidationMessageFor(model => model.TermsOfServiceOnOrderConfirmPage)
+                    </div>
+                </div>
+                @if (Model.OrderIdent.HasValue)
+                {
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.OrderIdent)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.OrderIdent)
+                        </div>
+                    </div>
+                }
+                <div class="form-group">
+                    <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.IsReOrderAllowed_OverrideForStore, model => model.IsReOrderAllowed, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.IsReOrderAllowed)
                     </div>
@@ -119,56 +180,6 @@
                     <div class="col-md-9">
                         @Html.NopEditorFor(model => model.MinOrderTotalAmount)
                         @Html.ValidationMessageFor(model => model.MinOrderTotalAmount) @Model.PrimaryStoreCurrencyCode
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.AnonymousCheckoutAllowed_OverrideForStore, model => model.AnonymousCheckoutAllowed, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.AnonymousCheckoutAllowed)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.AnonymousCheckoutAllowed)
-                        @Html.ValidationMessageFor(model => model.AnonymousCheckoutAllowed)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.TermsOfServiceOnShoppingCartPage_OverrideForStore, model => model.TermsOfServiceOnShoppingCartPage, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.TermsOfServiceOnShoppingCartPage)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.TermsOfServiceOnShoppingCartPage)
-                        @Html.ValidationMessageFor(model => model.TermsOfServiceOnShoppingCartPage)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.TermsOfServiceOnOrderConfirmPage_OverrideForStore, model => model.TermsOfServiceOnOrderConfirmPage, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.TermsOfServiceOnOrderConfirmPage)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.TermsOfServiceOnOrderConfirmPage)
-                        @Html.ValidationMessageFor(model => model.TermsOfServiceOnOrderConfirmPage)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.OnePageCheckoutEnabled_OverrideForStore, model => model.OnePageCheckoutEnabled, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.OnePageCheckoutEnabled)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.OnePageCheckoutEnabled)
-                        @Html.ValidationMessageFor(model => model.OnePageCheckoutEnabled)
-                    </div>
-                </div>
-                <div class="form-group" id="pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab">
-                    <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab_OverrideForStore, model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab)
-                        @Html.ValidationMessageFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab)
                     </div>
                 </div>
                 <div class="form-group">
@@ -239,17 +250,6 @@
                         @Html.ValidationMessageFor(model => model.GiftCards_Deactivated_OrderStatusId)
                     </div>
                 </div>
-                @if (Model.OrderIdent.HasValue)
-                {
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.OrderIdent)
-                        </div>
-                        <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.OrderIdent)
-                        </div>
-                    </div>
-                }
             </div>
         </div>
     </div>
