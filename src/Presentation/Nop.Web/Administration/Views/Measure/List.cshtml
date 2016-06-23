@@ -1,0 +1,39 @@
+﻿@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Measures").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Measures");
+}
+
+@Html.AntiForgeryToken()
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Configuration.Measures")
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h4>@T("Admin.Configuration.Measures.Dimensions")</h4>
+                        @Html.Partial("Dimensions")
+                    </div>
+                </div>
+            </div>
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h4>@T("Admin.Configuration.Measures.Weights")</h4>
+                        @Html.Partial("Weights")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

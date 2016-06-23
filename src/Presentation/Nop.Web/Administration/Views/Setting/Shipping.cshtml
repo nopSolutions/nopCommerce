@@ -80,26 +80,6 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.UseWarehouseLocation_OverrideForStore, model => model.UseWarehouseLocation, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.UseWarehouseLocation)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.UseWarehouseLocation)
-                                @Html.ValidationMessageFor(model => model.UseWarehouseLocation)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations_OverrideForStore, model => model.NotifyCustomerAboutShippingFromMultipleLocations, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations)
-                                @Html.ValidationMessageFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.FreeShippingOverXEnabled_OverrideForStore, model => model.FreeShippingOverXEnabled, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.FreeShippingOverXEnabled)
                             </div>
@@ -136,6 +116,26 @@
                             <div class="col-md-9">
                                 @Html.NopEditorFor(model => model.EstimateShippingEnabled)
                                 @Html.ValidationMessageFor(model => model.EstimateShippingEnabled)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.UseWarehouseLocation_OverrideForStore, model => model.UseWarehouseLocation, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.UseWarehouseLocation)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.UseWarehouseLocation)
+                                @Html.ValidationMessageFor(model => model.UseWarehouseLocation)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations_OverrideForStore, model => model.NotifyCustomerAboutShippingFromMultipleLocations, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations)
+                                @Html.ValidationMessageFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations)
                             </div>
                         </div>
                         <div class="form-group">

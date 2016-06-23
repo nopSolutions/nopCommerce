@@ -38,21 +38,22 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
 		}
 
-		#endregion 
+        #endregion
 
-		#region Methods
-        
-        #region Weights
+        #region Methods
 
-        public ActionResult Weights()
+        public ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
                 return AccessDeniedView();
 
             return View();
-		}
+        }
 
-		[HttpPost]
+        #region Weights
+
+
+        [HttpPost]
         public ActionResult Weights(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
@@ -147,14 +148,6 @@ namespace Nop.Admin.Controllers
         #endregion
 
         #region Dimensions
-
-        public ActionResult Dimensions()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
-                return AccessDeniedView();
-
-            return View();
-        }
 
         [HttpPost]
         public ActionResult Dimensions(DataSourceRequest command)

@@ -1005,6 +1005,7 @@
     <Content Include="Views\Vendor\ApplyVendor.cshtml" />
     <Content Include="Views\Product\_Discontinued.cshtml" />
     <Content Include="Views\Common\Social.cshtml" />
+    <Content Include="Views\ShoppingCart\_EstimateShippingResult.cshtml" />
     <Content Include="Views\Product\CustomerProductReviews.cshtml" />
   </ItemGroup>
   <ItemGroup>

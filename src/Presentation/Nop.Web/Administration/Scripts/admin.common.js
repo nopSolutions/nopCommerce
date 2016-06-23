@@ -102,7 +102,7 @@ function addAntiForgeryToken(data) {
     return data;
 };
 
-function saveDashboardPreferences(url, name, value) {
+function saveUserPreferences(url, name, value) {
     var postData = {
         name: name,
         value: value

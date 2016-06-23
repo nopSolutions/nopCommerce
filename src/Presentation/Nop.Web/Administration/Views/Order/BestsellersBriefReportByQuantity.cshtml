@@ -44,7 +44,7 @@
             $(document).ready(function () {
                 $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
                     var collapsed = !$('#@panelId').hasClass('collapsed-box');
-                    saveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
+                    saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
                 });
 
                 $("#bestsellers-byquantity-grid").kendoGrid({
