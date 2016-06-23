@@ -2138,6 +2138,7 @@
     <Content Include="Views\Setting\ReturnRequestActionCreate.cshtml" />
     <Content Include="Views\Setting\ReturnRequestActionEdit.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\MultiSelect.cshtml" />
+    <Content Include="Views\Setting\Mode.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Product\AddAttributeCombinationPopup.cshtml" />

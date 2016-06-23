@@ -22,37 +22,11 @@
         </div>
     </div>
 
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $("#@Html.FieldIdFor(model => model.AllowPickUpInStore)").click(toggleAllowPickUpInStore);
-            $("#@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)").click(toggleFreeShippingOverX);
-            toggleAllowPickUpInStore();
-            toggleFreeShippingOverX();
-        });
-
-        function toggleAllowPickUpInStore() {
-            if ($('#@Html.FieldIdFor(model => model.AllowPickUpInStore)').is(':checked')) {
-                $('#pnlPickUpInStoreFee').show();
-            } else {
-                $('#pnlPickUpInStoreFee').hide();
-            }
-        }
-
-        function toggleFreeShippingOverX() {
-            if ($('#@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)').is(':checked')) {
-                $('#pnlValueOfX').show();
-                $('#pnlValueOfXincltax').show();
-            } else {
-                $('#pnlValueOfX').hide();
-                $('#pnlValueOfXincltax').hide();
-            }
-        }
-
-    </script>
 
     <div class="content">
         <div class="form-horizontal">
             @Html.Action("StoreScopeConfiguration", "Setting")
+            @Html.Action("Mode", "Setting")
             @Html.ValidationSummary(false)
 
             <div class="panel-group">
@@ -68,7 +42,7 @@
                                 @Html.ValidationMessageFor(model => model.AllowPickUpInStore)
                             </div>
                         </div>
-                        <div class="form-group" id="pnlPickUpInStoreFee">
+                        <div class="form-group advanced-setting" id="pnlPickUpInStoreFee">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.PickUpInStoreFee_OverrideForStore, model => model.PickUpInStoreFee, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.PickUpInStoreFee)
@@ -98,7 +72,7 @@
                                 @Html.ValidationMessageFor(model => model.FreeShippingOverXValue)
                             </div>
                         </div>
-                        <div class="form-group" id="pnlValueOfXincltax">
+                        <div class="form-group advanced-setting" id="pnlValueOfXincltax">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.FreeShippingOverXIncludingTax_OverrideForStore, model => model.FreeShippingOverXIncludingTax, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.FreeShippingOverXIncludingTax)
@@ -118,7 +92,7 @@
                                 @Html.ValidationMessageFor(model => model.EstimateShippingEnabled)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.UseWarehouseLocation_OverrideForStore, model => model.UseWarehouseLocation, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.UseWarehouseLocation)
@@ -128,7 +102,7 @@
                                 @Html.ValidationMessageFor(model => model.UseWarehouseLocation)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations_OverrideForStore, model => model.NotifyCustomerAboutShippingFromMultipleLocations, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations)
@@ -138,7 +112,7 @@
                                 @Html.ValidationMessageFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.DisplayShipmentEventsToCustomers_OverrideForStore, model => model.DisplayShipmentEventsToCustomers, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.DisplayShipmentEventsToCustomers)
@@ -148,7 +122,7 @@
                                 @Html.ValidationMessageFor(model => model.DisplayShipmentEventsToCustomers)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.DisplayShipmentEventsToStoreOwner_OverrideForStore, model => model.DisplayShipmentEventsToStoreOwner, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.DisplayShipmentEventsToStoreOwner)
@@ -158,7 +132,7 @@
                                 @Html.ValidationMessageFor(model => model.DisplayShipmentEventsToStoreOwner)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore, model => model.BypassShippingMethodSelectionIfOnlyOne, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.BypassShippingMethodSelectionIfOnlyOne)
@@ -168,6 +142,37 @@
                                 @Html.ValidationMessageFor(model => model.BypassShippingMethodSelectionIfOnlyOne)
                             </div>
                         </div>
+                    </div>
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $("#@Html.FieldIdFor(model => model.AllowPickUpInStore)").click(toggleAllowPickUpInStore);
+                            $("#@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)").click(toggleFreeShippingOverX);
+                            toggleAllowPickUpInStore();
+                            toggleFreeShippingOverX();
+                        });
+
+                        function toggleAllowPickUpInStore() {
+                            if ($('#@Html.FieldIdFor(model => model.AllowPickUpInStore)').is(':checked')) {
+                                $('#pnlPickUpInStoreFee').show();
+                            } else {
+                                $('#pnlPickUpInStoreFee').hide();
+                            }
+                        }
+
+                        function toggleFreeShippingOverX() {
+                            if ($('#@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)').is(':checked')) {
+                                $('#pnlValueOfX').show();
+                                $('#pnlValueOfXincltax').show();
+                            } else {
+                                $('#pnlValueOfX').hide();
+                                $('#pnlValueOfXincltax').hide();
+                            }
+                        }
+
+                    </script>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.ShippingOriginAddress_OverrideForStore, "pnlShippingOriginAddress", Model.ActiveStoreScopeConfiguration)

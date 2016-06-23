@@ -160,6 +160,13 @@ namespace Nop.Admin.Controllers
         #region Methods
 
         [ChildActionOnly]
+        public ActionResult Mode()
+        {
+            var advancedMode = _workContext.CurrentCustomer.GetAttribute<bool>("settings-advanced-mode");
+            return PartialView(advancedMode);
+        }
+
+        [ChildActionOnly]
         public ActionResult StoreScopeConfiguration()
         {
             var allStores = _storeService.GetAllStores();
@@ -886,9 +893,6 @@ namespace Nop.Admin.Controllers
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
-
-            //selected tab
-            SaveSelectedTabName();
 
             return RedirectToAction("Catalog");
         }
@@ -1959,10 +1963,7 @@ namespace Nop.Admin.Controllers
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
-
-            //selected tab
-            SaveSelectedTabName();
-
+            
             return RedirectToAction("GeneralCommon");
         }
         [HttpPost, ActionName("GeneralCommon")]
@@ -2043,10 +2044,6 @@ namespace Nop.Admin.Controllers
             {
                 ErrorNotification(exc);
             }
-
-            //selected tab
-            SaveSelectedTabName();
-
             return RedirectToAction("GeneralCommon");
         }
         [HttpPost, ActionName("GeneralCommon")]
@@ -2086,10 +2083,7 @@ namespace Nop.Admin.Controllers
             {
                 ErrorNotification(exc);
             }
-
-            //selected tab
-            SaveSelectedTabName();
-
+            
             return RedirectToAction("GeneralCommon");
         }
 

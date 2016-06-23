@@ -25,6 +25,7 @@
     <div class="content">
         <div class="form-horizontal">
             @Html.Action("StoreScopeConfiguration", "Setting")
+            @Html.Action("Mode", "Setting")
             @Html.ValidationSummary(false)
 
             <div class="panel-group">
@@ -50,7 +51,7 @@
                                 @Html.ValidationMessageFor(model => model.AllowCustomersToContactVendors)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.AllowSearchByVendor_OverrideForStore, model => model.AllowSearchByVendor, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.AllowSearchByVendor)
@@ -60,7 +61,7 @@
                                 @Html.ValidationMessageFor(model => model.AllowSearchByVendor)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.ShowVendorOnProductDetailsPage_OverrideForStore, model => model.ShowVendorOnProductDetailsPage, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.ShowVendorOnProductDetailsPage)
@@ -70,7 +71,7 @@
                                 @Html.ValidationMessageFor(model => model.ShowVendorOnProductDetailsPage)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.VendorsBlockItemsToDisplay_OverrideForStore, model => model.VendorsBlockItemsToDisplay, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.VendorsBlockItemsToDisplay)
@@ -80,7 +81,7 @@
                                 @Html.ValidationMessageFor(model => model.VendorsBlockItemsToDisplay)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.MaximumProductNumber_OverrideForStore, model => model.MaximumProductNumber, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.MaximumProductNumber)

@@ -22,86 +22,16 @@
         </div>
     </div>
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectTaxDisplayType)").click(toggleTaxDisplayType);
-            $("#@Html.FieldIdFor(model => model.ShippingIsTaxable)").click(toggleShipping);
-            $("#@Html.FieldIdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)").click(togglePayment);
-            $("#@Html.FieldIdFor(model => model.EuVatEnabled)").click(toggleEUVAT);
-
-            toggleTaxDisplayType();
-            toggleShipping();
-            togglePayment();
-            toggleEUVAT();
-        });
-
-        function toggleTaxDisplayType() {
-            if ($('#@Html.FieldIdFor(model => model.AllowCustomersToSelectTaxDisplayType)').is(':checked')) {
-                $('#pnlTaxDisplayType').hide();
-            }
-            else {
-                $('#pnlTaxDisplayType').show();
-            }
-        }
-
-        function toggleShipping() {
-            if ($('#@Html.FieldIdFor(model => model.ShippingIsTaxable)').is(':checked')) {
-                $('#pnlShippingPriceIncludesTax').show();
-                $('#pnlShippingTaxClass').show();
-            }
-            else {
-                $('#pnlShippingPriceIncludesTax').hide();
-                $('#pnlShippingTaxClass').hide();
-            }
-        }
-
-        function togglePayment() {
-            if ($('#@Html.FieldIdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)').is(':checked')) {
-                $('#pnlPaymentMethodAdditionalFeeIncludesTax').show();
-                $('#pnlPaymentMethodAdditionalFeeTaxClass').show();
-            }
-            else {
-                $('#pnlPaymentMethodAdditionalFeeIncludesTax').hide();
-                $('#pnlPaymentMethodAdditionalFeeTaxClass').hide();
-            }
-        }
-
-        function toggleEUVAT() {
-            if ($('#@Html.FieldIdFor(model => model.EuVatEnabled)').is(':checked')) {
-                $('#pnlEuVatShopCountry').show();
-                $('#pnlEuVatAllowVATExemption').show();
-                $('#pnlEuVatAssumeValid').show();
-                $('#pnlEuVatUseWebService').show();
-                $('#pnlEuVatEmailAdminWhenNewVATSubmitted').show();
-            }
-            else {
-                $('#pnlEuVatShopCountry').hide();
-                $('#pnlEuVatAllowVATExemption').hide();
-                $('#pnlEuVatAssumeValid').hide();
-                $('#pnlEuVatUseWebService').hide();
-                $('#pnlEuVatEmailAdminWhenNewVATSubmitted').hide();
-            }
-        }
-    </script>
 
     <div class="content">
         <div class="form-horizontal">
             @Html.Action("StoreScopeConfiguration", "Setting")
+            @Html.Action("Mode", "Setting")
             @Html.ValidationSummary(false)
 
             <div class="panel-group">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.PricesIncludeTax_OverrideForStore, model => model.PricesIncludeTax, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.PricesIncludeTax)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.PricesIncludeTax)
-                                @Html.ValidationMessageFor(model => model.PricesIncludeTax)
-                            </div>
-                        </div>
                         <div class="form-group">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.AllowCustomersToSelectTaxDisplayType_OverrideForStore, model => model.AllowCustomersToSelectTaxDisplayType, Model.ActiveStoreScopeConfiguration)
@@ -122,7 +52,17 @@
                                 @Html.ValidationMessageFor(model => model.TaxDisplayType)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.PricesIncludeTax_OverrideForStore, model => model.PricesIncludeTax, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.PricesIncludeTax)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.PricesIncludeTax)
+                                @Html.ValidationMessageFor(model => model.PricesIncludeTax)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxSuffix_OverrideForStore, model => model.DisplayTaxSuffix, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.DisplayTaxSuffix)
@@ -132,7 +72,7 @@
                                 @Html.ValidationMessageFor(model => model.DisplayTaxSuffix)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxRates_OverrideForStore, model => model.DisplayTaxRates, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.DisplayTaxRates)
@@ -142,7 +82,7 @@
                                 @Html.ValidationMessageFor(model => model.DisplayTaxRates)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.HideZeroTax_OverrideForStore, model => model.HideZeroTax, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.HideZeroTax)
@@ -152,7 +92,7 @@
                                 @Html.ValidationMessageFor(model => model.HideZeroTax)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.HideTaxInOrderSummary_OverrideForStore, model => model.HideTaxInOrderSummary, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.HideTaxInOrderSummary)
@@ -162,7 +102,7 @@
                                 @Html.ValidationMessageFor(model => model.HideTaxInOrderSummary)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.ForceTaxExclusionFromOrderSubtotal_OverrideForStore, model => model.ForceTaxExclusionFromOrderSubtotal, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.ForceTaxExclusionFromOrderSubtotal)
@@ -172,6 +112,26 @@
                                 @Html.ValidationMessageFor(model => model.ForceTaxExclusionFromOrderSubtotal)
                             </div>
                         </div>
+                    </div>
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectTaxDisplayType)").click(toggleTaxDisplayType);
+
+                            toggleTaxDisplayType();
+                        });
+
+                        function toggleTaxDisplayType() {
+                            if ($('#@Html.FieldIdFor(model => model.AllowCustomersToSelectTaxDisplayType)').is(':checked')) {
+                                $('#pnlTaxDisplayType').hide();
+                            } else {
+                                $('#pnlTaxDisplayType').show();
+                            }
+                        }
+
+                    </script>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.TaxBasedOn_OverrideForStore, model => model.TaxBasedOn, Model.ActiveStoreScopeConfiguration)
@@ -191,6 +151,10 @@
                         <div id="pnlDefaultTaxAddress">
                             @Html.EditorFor(x => x.DefaultTaxAddress, "Address")
                         </div>
+                    </div>
+                </div>
+                <div class="panel panel-default advanced-setting">
+                    <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.ShippingIsTaxable_OverrideForStore, model => model.ShippingIsTaxable, Model.ActiveStoreScopeConfiguration)
@@ -221,6 +185,27 @@
                                 @Html.ValidationMessageFor(model => model.ShippingTaxClassId)
                             </div>
                         </div>
+                    </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("#@Html.FieldIdFor(model => model.ShippingIsTaxable)").click(toggleShipping);
+
+                            toggleShipping();
+                        });
+
+                        function toggleShipping() {
+                            if ($('#@Html.FieldIdFor(model => model.ShippingIsTaxable)').is(':checked')) {
+                                $('#pnlShippingPriceIncludesTax').show();
+                                $('#pnlShippingTaxClass').show();
+                            } else {
+                                $('#pnlShippingPriceIncludesTax').hide();
+                                $('#pnlShippingTaxClass').hide();
+                            }
+                        }
+                    </script>
+                </div>
+                <div class="panel panel-default advanced-setting">
+                    <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeIsTaxable_OverrideForStore, model => model.PaymentMethodAdditionalFeeIsTaxable, Model.ActiveStoreScopeConfiguration)
@@ -251,6 +236,29 @@
                                 @Html.ValidationMessageFor(model => model.PaymentMethodAdditionalFeeTaxClassId)
                             </div>
                         </div>
+                    </div>
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $("#@Html.FieldIdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)").click(togglePayment);
+
+                            togglePayment();
+                        });
+
+
+                        function togglePayment() {
+                            if ($('#@Html.FieldIdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)').is(':checked')) {
+                                $('#pnlPaymentMethodAdditionalFeeIncludesTax').show();
+                                $('#pnlPaymentMethodAdditionalFeeTaxClass').show();
+                            } else {
+                                $('#pnlPaymentMethodAdditionalFeeIncludesTax').hide();
+                                $('#pnlPaymentMethodAdditionalFeeTaxClass').hide();
+                            }
+                        }
+
+                    </script>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.EuVatEnabled_OverrideForStore, model => model.EuVatEnabled, Model.ActiveStoreScopeConfiguration)
@@ -311,6 +319,30 @@
                                 @Html.ValidationMessageFor(model => model.EuVatEmailAdminWhenNewVatSubmitted)
                             </div>
                         </div>
+                        <script type="text/javascript">
+                            $(document).ready(function() {
+                                $("#@Html.FieldIdFor(model => model.EuVatEnabled)").click(toggleEUVAT);
+
+                                toggleEUVAT();
+                            });
+
+
+                            function toggleEUVAT() {
+                                if ($('#@Html.FieldIdFor(model => model.EuVatEnabled)').is(':checked')) {
+                                    $('#pnlEuVatShopCountry').show();
+                                    $('#pnlEuVatAllowVATExemption').show();
+                                    $('#pnlEuVatAssumeValid').show();
+                                    $('#pnlEuVatUseWebService').show();
+                                    $('#pnlEuVatEmailAdminWhenNewVATSubmitted').show();
+                                } else {
+                                    $('#pnlEuVatShopCountry').hide();
+                                    $('#pnlEuVatAllowVATExemption').hide();
+                                    $('#pnlEuVatAssumeValid').hide();
+                                    $('#pnlEuVatUseWebService').hide();
+                                    $('#pnlEuVatEmailAdminWhenNewVATSubmitted').hide();
+                                }
+                            }
+                        </script>
                     </div>
                 </div>
             </div>
