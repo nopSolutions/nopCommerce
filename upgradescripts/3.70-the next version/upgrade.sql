@@ -797,6 +797,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreInformationSettings">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.ReloadList.Progress">
+    <Value>Reloading plugin list...</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultTitle">
     <Value>Default page title</Value>
   </LocaleResource>

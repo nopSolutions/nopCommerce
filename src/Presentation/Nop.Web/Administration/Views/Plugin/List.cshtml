@@ -15,7 +15,14 @@
             @T("Admin.Configuration.Plugins.Local")
         </h1>
         <div class="pull-right">
-            <a href="@Url.Action("ReloadList")" class="btn bg-blue">@T("Admin.Configuration.Plugins.ReloadList")</a>
+            <button type="submit" name="plugin-reload-grid" class="btn bg-blue">@T("Admin.Configuration.Plugins.ReloadList")</button>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $("button[name='plugin-reload-grid']").on("click", function (e) {
+                        showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Configuration.Plugins.ReloadList.Progress").Text))');
+                    });
+                });
+            </script>
         </div>
     </div>
 

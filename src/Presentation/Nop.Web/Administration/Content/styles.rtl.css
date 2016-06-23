@@ -365,16 +365,10 @@ td.k-state-focused.k-state-selected {
 .navbar-custom-menu > .navbar-nav > li {
     height: 50px;
 }
-.maintenance-menu {
-    position: relative;
-}
-.maintenance-menu .dropdown-menu {
-    width: 280px !important;
-    border: none !important;
-}
-.maintenance-menu .dropdown-menu a {
-    background-color: transparent !important;
-    color: #fff;
+
+.maintenance-menu.dropdown-menu button {
+    border: none;
+    padding: 3px 20px;
 }
 
 /* NAV TABS */
