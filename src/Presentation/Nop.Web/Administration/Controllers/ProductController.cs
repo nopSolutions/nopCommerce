@@ -309,6 +309,27 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
+        protected virtual void SaveCategoryMappings(Product product, ProductModel model)
+        {
+            var existingProductCategories = _categoryService.GetProductCategoriesByProductId(product.Id, showHidden: true);
+
+            //delete categories
+            foreach (var existingProductCategory in existingProductCategories)
+                if (!model.CategoryIds.Contains(existingProductCategory.CategoryId))
+                    _categoryService.DeleteProductCategory(existingProductCategory);
+
+            //add categories
+            foreach (var categoryId in model.CategoryIds)
+                if (existingProductCategories.FindProductCategory(product.Id, categoryId) == null)
+                    _categoryService.InsertProductCategory(new ProductCategory
+                    {
+                        ProductId = product.Id,
+                        CategoryId = categoryId,
+                        DisplayOrder = model.DisplayOrder
+                    });
+        }
+
+        [NonAction]
         protected virtual void SaveStoreMappings(Product product, ProductModel model)
         {
             var existingStoreMappings = _storeMappingService.GetStoreMappings(product);
@@ -500,13 +521,16 @@ namespace Nop.Admin.Controllers
                 }
 
                 //categories
+                var categoryIds = _categoryService.GetProductCategoriesByProductId(product.Id, true).Select(c => c.CategoryId).ToList();
+                model.CategoryIds = categoryIds;
                 var allCategories = _categoryService.GetAllCategories(showHidden: true);
                 foreach (var category in allCategories)
                 {
                     model.AvailableCategories.Add(new SelectListItem
                     {
                         Text = category.GetFormattedBreadCrumb(allCategories),
-                        Value = category.Id.ToString()
+                        Value = category.Id.ToString(),
+                        Selected = categoryIds.Contains(category.Id)
                     });
                 }
 
@@ -998,6 +1022,8 @@ namespace Nop.Admin.Controllers
                 _urlRecordService.SaveSlug(product, model.SeName, 0);
                 //locales
                 UpdateLocales(product, model);
+                //categories
+                SaveCategoryMappings(product, model);
                 //ACL (customer roles)
                 SaveProductAcl(product, model);
                 //Stores
@@ -1121,6 +1147,8 @@ namespace Nop.Admin.Controllers
                 SaveProductTags(product, ParseProductTags(model.ProductTags));
                 //warehouses
                 SaveProductWarehouseInventory(product, model);
+                //categories
+                SaveCategoryMappings(product, model);
                 //ACL (customer roles)
                 SaveProductAcl(product, model);
                 //Stores
@@ -1370,146 +1398,6 @@ namespace Nop.Admin.Controllers
             gridModel.Total = products.TotalCount;
 
             return Json(gridModel);
-        }
-
-        #endregion
-        
-        #region Product categories
-
-        [HttpPost]
-        public ActionResult ProductCategoryList(DataSourceRequest command, int productId)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-            {
-                var product = _productService.GetProductById(productId);
-                if (product != null&& product.VendorId != _workContext.CurrentVendor.Id)
-                {
-                    return Content("This is not your product");
-                }
-            }
-
-            var productCategories = _categoryService.GetProductCategoriesByProductId(productId, true);
-            var productCategoriesModel = productCategories
-                .Select(x => new ProductModel.ProductCategoryModel
-                {
-                    Id = x.Id,
-                    Category = _categoryService.GetCategoryById(x.CategoryId).GetFormattedBreadCrumb(_categoryService),
-                    ProductId = x.ProductId,
-                    CategoryId = x.CategoryId,
-                    IsFeaturedProduct = x.IsFeaturedProduct,
-                    DisplayOrder  = x.DisplayOrder
-                })
-                .ToList();
-
-            var gridModel = new DataSourceResult
-            {
-                Data = productCategoriesModel,
-                Total = productCategoriesModel.Count
-            };
-
-            return Json(gridModel);
-        }
-
-        [HttpPost]
-        public ActionResult ProductCategoryInsert(ProductModel.ProductCategoryModel model)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
-            var productId = model.ProductId;
-            var categoryId = model.CategoryId;
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-            {
-                var product = _productService.GetProductById(productId);
-                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
-                {
-                    return Content("This is not your product");
-                }
-            }
-
-            var existingProductCategories = _categoryService.GetProductCategoriesByCategoryId(categoryId, showHidden: true);
-            if (existingProductCategories.FindProductCategory(productId, categoryId) == null)
-            {
-                var productCategory = new ProductCategory
-                {
-                    ProductId = productId,
-                    CategoryId = categoryId,
-                    DisplayOrder = model.DisplayOrder
-                };
-                //a vendor cannot edit "IsFeaturedProduct" property
-                if (_workContext.CurrentVendor == null)
-                {
-                    productCategory.IsFeaturedProduct = model.IsFeaturedProduct;
-                }
-                _categoryService.InsertProductCategory(productCategory);
-            }
-
-            return new NullJsonResult();
-        }
-
-        [HttpPost]
-        public ActionResult ProductCategoryUpdate(ProductModel.ProductCategoryModel model)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
-            var productCategory = _categoryService.GetProductCategoryById(model.Id);
-            if (productCategory == null)
-                throw new ArgumentException("No product category mapping found with the specified id");
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-            {
-                var product = _productService.GetProductById(productCategory.ProductId);
-                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
-                {
-                    return Content("This is not your product");
-                }
-            }
-
-            productCategory.CategoryId = model.CategoryId;
-            productCategory.DisplayOrder = model.DisplayOrder;
-            //a vendor cannot edit "IsFeaturedProduct" property
-            if (_workContext.CurrentVendor == null)
-            {
-                productCategory.IsFeaturedProduct = model.IsFeaturedProduct;
-            }
-            _categoryService.UpdateProductCategory(productCategory);
-
-            return new NullJsonResult();
-        }
-
-        [HttpPost]
-        public ActionResult ProductCategoryDelete(int id)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
-            var productCategory = _categoryService.GetProductCategoryById(id);
-            if (productCategory == null)
-                throw new ArgumentException("No product category mapping found with the specified id");
-
-            var productId = productCategory.ProductId;
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-            {
-                var product = _productService.GetProductById(productId);
-                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
-                {
-                    return Content("This is not your product");
-                }
-            }
-
-            _categoryService.DeleteProductCategory(productCategory);
-
-            return new NullJsonResult();
         }
 
         #endregion

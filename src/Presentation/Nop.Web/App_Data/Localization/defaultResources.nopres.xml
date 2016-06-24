@@ -2214,20 +2214,14 @@
   <LocaleResource Name="Admin.Catalog.Products.Categories">
     <Value>Category mappings</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Categories.Fields.Category">
-    <Value>Category</Value>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.CategoryIds">
+    <Value>Categories</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Categories.Fields.DisplayOrder">
-    <Value>Display order</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Categories.Fields.IsFeaturedProduct">
-    <Value>Is featured product?</Value>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.CategoryIds.Hint">
+    <Value>Product category mappings.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Categories.NoCategoriesAvailable">
-    <Value>No categories available. Create at least one category before mapping.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Categories.SaveBeforeEdit">
-    <Value>You need to save the product before you can map categories for this product page.</Value>
+    <Value>No categories available. Create at least one category.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Copy">
     <Value>Copy product</Value>

@@ -734,6 +734,27 @@ set @resources='
   <LocaleResource Name="Admin.ReturnRequests.Fields.ID.Hint">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Categories.Fields.Category">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Categories.Fields.IsFeaturedProduct">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Categories.Fields.DisplayOrder">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Categories.SaveBeforeEdit">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Categories.NoCategoriesAvailable">
+    <Value>No categories available. Create at least one category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.CategoryIds">
+    <Value>Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.CategoryIds.Hint">
+    <Value>Product category mappings.</Value>
+  </LocaleResource>
 </Language>
 '
 

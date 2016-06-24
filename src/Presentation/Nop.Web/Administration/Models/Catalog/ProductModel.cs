@@ -28,6 +28,7 @@ namespace Nop.Admin.Models.Catalog
             AvailableTaxCategories = new List<SelectListItem>();
             AvailableDeliveryDates = new List<SelectListItem>();
             AvailableWarehouses = new List<SelectListItem>();
+            CategoryIds = new List<int>();
             AvailableCategories = new List<SelectListItem>();
             AvailableManufacturers = new List<SelectListItem>();
             AvailableProductAttributes = new List<SelectListItem>();
@@ -400,6 +401,9 @@ namespace Nop.Admin.Models.Catalog
 
 
         //categories
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.CategoryIds")]
+        [UIHint("MultiSelect")]
+        public IList<int> CategoryIds { get; set; }
         public IList<SelectListItem> AvailableCategories { get; set; }
         //manufacturers
         public IList<SelectListItem> AvailableManufacturers { get; set; }
@@ -522,22 +526,6 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute")]
             [AllowHtml]
             public string OverrideTitleAttribute { get; set; }
-        }
-        
-        public partial class ProductCategoryModel : BaseNopEntityModel
-        {
-            [NopResourceDisplayName("Admin.Catalog.Products.Categories.Fields.Category")]
-            public string Category { get; set; }
-
-            public int ProductId { get; set; }
-
-            public int CategoryId { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.Categories.Fields.IsFeaturedProduct")]
-            public bool IsFeaturedProduct { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.Categories.Fields.DisplayOrder")]
-            public int DisplayOrder { get; set; }
         }
 
         public partial class ProductManufacturerModel : BaseNopEntityModel

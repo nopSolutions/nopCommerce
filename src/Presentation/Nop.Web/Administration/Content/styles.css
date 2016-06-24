@@ -289,7 +289,10 @@ td.k-state-focused.k-state-selected {
     box-shadow: none !important;
 }
 .k-multiselect-wrap {
-    height: 34px;
+    min-height: 34px;
+}
+.k-multiselect-wrap>.k-input {
+    height: 28px;
 }
 .k-multiselect-wrap li {
     line-height: 27px;
