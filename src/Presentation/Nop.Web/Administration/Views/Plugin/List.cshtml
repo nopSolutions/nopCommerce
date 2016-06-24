@@ -15,7 +15,14 @@
             @T("Admin.Configuration.Plugins.Local")
         </h1>
         <div class="pull-right">
-            <a href="@Url.Action("ReloadList")" class="btn bg-blue">@T("Admin.Configuration.Plugins.ReloadList")</a>
+            <button type="submit" name="plugin-reload-grid" class="btn bg-blue">@T("Admin.Configuration.Plugins.ReloadList")</button>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $("button[name='plugin-reload-grid']").on("click", function (e) {
+                        showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Configuration.Plugins.ReloadList.Progress").Text))');
+                    });
+                });
+            </script>
         </div>
     </div>
 
@@ -156,7 +163,7 @@
                                         }, {
                                             field: "Installed",
                                             title: "@T("Admin.Configuration.Plugins.Fields.Installation")",
-                                            template: '# if(Installed) {# <button type="submit" name="uninstall-plugin-link-#=SystemName#" class="btn bg-green uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall")</button> #} else {#  <button type="submit" name="install-plugin-link-#=SystemName#" class="btn bg-red install-plugin-link" value="@T("Admin.Configuration.Plugins.Fields.Install")"></button> #} #',
+                                            template: '# if(Installed) {# <button type="submit" name="uninstall-plugin-link-#=SystemName#" class="btn bg-green uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall")</button> #} else {#  <button type="submit" name="install-plugin-link-#=SystemName#" class="btn bg-red install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install")</button> #} #',
                                             headerAttributes: { style: "text-align:center" },
                                             attributes: { style: "text-align:center" }
                                         }

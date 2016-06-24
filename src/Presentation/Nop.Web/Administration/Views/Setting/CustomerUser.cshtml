@@ -33,20 +33,18 @@
 
     <div class="content">
         <div class="form-horizontal">
+            @Html.Action("Mode", "Setting")
+
             <div id="customersettings-edit" class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     @Html.RenderBootstrapTabHeader("tab-customer", @T("Admin.Configuration.Settings.CustomerUser.CustomerSettings"), true)
                     @Html.RenderBootstrapTabHeader("tab-customerformfields", @T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields"))
                     @Html.RenderBootstrapTabHeader("tab-addressformfields", @T("Admin.Configuration.Settings.CustomerUser.AddressFormFields"))
-                    @Html.RenderBootstrapTabHeader("tab-datetime", @T("Admin.Configuration.Settings.CustomerUser.DateTimeSettings"))
-                    @Html.RenderBootstrapTabHeader("tab-externalauth", @T("Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationSettings"))
                 </ul>
                 <div class="tab-content">
                     @Html.RenderBootstrapTabContent("tab-customer", @TabCustomerSettings(), true)
                     @Html.RenderBootstrapTabContent("tab-customerformfields", @TabCustomerFormFields())
                     @Html.RenderBootstrapTabContent("tab-addressformfields", @TabAddressFormFields())
-                    @Html.RenderBootstrapTabContent("tab-datetime", @TabDateTimeSettings())
-                    @Html.RenderBootstrapTabContent("tab-externalauth", @TabExternalAuthenticationSettings())
                 </div>
             </div>
         </div>
@@ -68,118 +66,17 @@
 
 @helper TabCustomerSettings()
 {
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#@Html.FieldIdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)").click(toggleAvatar);
-            $("#@Html.FieldIdFor(model => model.CustomerSettings.UsernamesEnabled)").click(toggleUsername);
-
-            toggleAvatar();
-            toggleUsername();
-        });
-
-        function toggleAvatar() {
-            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)').is(':checked')) {
-                $('#pnlDefaultAvatarEnabled').show();
-            }
-            else {
-                $('#pnlDefaultAvatarEnabled').hide();
-            }
-        }
-
-        function toggleUsername() {
-            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.UsernamesEnabled)').is(':checked')) {
-                $('#pnlAllowUsersToChangeUsernames').show();
-                $('#pnlCheckUsernameAvailability').show();
-            }
-            else {
-                $('#pnlAllowUsersToChangeUsernames').hide();
-                $('#pnlCheckUsernameAvailability').hide();
-            }
-        }
-    </script>
 
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.UsernamesEnabled)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerSettings.UsernamesEnabled)
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.UsernamesEnabled)
-                    </div>
-                </div>
-                <div class="form-group" id="pnlAllowUsersToChangeUsernames">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.AllowUsersToChangeUsernames)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerSettings.AllowUsersToChangeUsernames)
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.AllowUsersToChangeUsernames)
-                    </div>
-                </div>
-                <div class="form-group" id="pnlCheckUsernameAvailability">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.CheckUsernameAvailabilityEnabled)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerSettings.CheckUsernameAvailabilityEnabled)
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.CheckUsernameAvailabilityEnabled)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.UserRegistrationType)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopDropDownListFor(model => model.CustomerSettings.UserRegistrationType, ((UserRegistrationType)Model.CustomerSettings.UserRegistrationType).ToSelectList())
+                        @Html.NopDropDownListFor(model => model.CustomerSettings.UserRegistrationType, ((UserRegistrationType) Model.CustomerSettings.UserRegistrationType).ToSelectList())
                         @Html.ValidationMessageFor(model => model.CustomerSettings.UserRegistrationType)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)
-                    </div>
-                </div>
-                <div class="form-group" id="pnlDefaultAvatarEnabled">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.DefaultAvatarEnabled)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerSettings.DefaultAvatarEnabled)
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.DefaultAvatarEnabled)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.ShowCustomersLocation)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerSettings.ShowCustomersLocation)
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.ShowCustomersLocation)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.ShowCustomersJoinDate)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerSettings.ShowCustomersJoinDate)
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.ShowCustomersJoinDate)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.AllowViewingProfiles)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerSettings.AllowViewingProfiles)
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.AllowViewingProfiles)
                     </div>
                 </div>
                 <div class="form-group">
@@ -193,6 +90,78 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.UsernamesEnabled)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.UsernamesEnabled)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.UsernamesEnabled)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting" id="pnlAllowUsersToChangeUsernames">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.AllowUsersToChangeUsernames)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.AllowUsersToChangeUsernames)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.AllowUsersToChangeUsernames)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting" id="pnlCheckUsernameAvailability">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.CheckUsernameAvailabilityEnabled)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.CheckUsernameAvailabilityEnabled)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.CheckUsernameAvailabilityEnabled)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.AllowViewingProfiles)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.AllowViewingProfiles)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.AllowViewingProfiles)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting" id="pnlDefaultAvatarEnabled">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.DefaultAvatarEnabled)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.DefaultAvatarEnabled)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.DefaultAvatarEnabled)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.ShowCustomersLocation)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.ShowCustomersLocation)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.ShowCustomersLocation)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.ShowCustomersJoinDate)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.ShowCustomersJoinDate)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.ShowCustomersJoinDate)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.RequireRegistrationForDownloadableProducts)
                     </div>
                     <div class="col-md-9">
@@ -200,43 +169,16 @@
                         @Html.ValidationMessageFor(model => model.CustomerSettings.RequireRegistrationForDownloadableProducts)
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.HideDownloadableProductsTab)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerSettings.HideDownloadableProductsTab)
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.HideDownloadableProductsTab)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.HideBackInStockSubscriptionsTab)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerSettings.HideBackInStockSubscriptionsTab)
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.HideBackInStockSubscriptionsTab)
-                    </div>
-                </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.CustomerNameFormat)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopDropDownListFor(model => model.CustomerSettings.CustomerNameFormat, ((CustomerNameFormat)Model.CustomerSettings.CustomerNameFormat).ToSelectList())
+                        @Html.NopDropDownListFor(model => model.CustomerSettings.CustomerNameFormat, ((CustomerNameFormat) Model.CustomerSettings.CustomerNameFormat).ToSelectList())
                         @Html.ValidationMessageFor(model => model.CustomerSettings.CustomerNameFormat)
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.DefaultPasswordFormat)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopDropDownListFor(model => model.CustomerSettings.DefaultPasswordFormat, ((PasswordFormat)Model.CustomerSettings.DefaultPasswordFormat).ToSelectList())
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.DefaultPasswordFormat)
-                    </div>
-                </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.PasswordMinLength)
                     </div>
@@ -245,7 +187,16 @@
                         @Html.ValidationMessageFor(model => model.CustomerSettings.PasswordMinLength)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.DefaultPasswordFormat)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDropDownListFor(model => model.CustomerSettings.DefaultPasswordFormat, ((PasswordFormat) Model.CustomerSettings.DefaultPasswordFormat).ToSelectList())
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.DefaultPasswordFormat)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.PasswordRecoveryLinkDaysValid)
                     </div>
@@ -254,7 +205,34 @@
                         @Html.ValidationMessageFor(model => model.CustomerSettings.PasswordRecoveryLinkDaysValid)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.EnteringEmailTwice)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.EnteringEmailTwice)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.EnteringEmailTwice)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.HideDownloadableProductsTab)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.HideDownloadableProductsTab)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.HideDownloadableProductsTab)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.HideBackInStockSubscriptionsTab)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.HideBackInStockSubscriptionsTab)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.HideBackInStockSubscriptionsTab)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.HideNewsletterBlock)
                     </div>
@@ -263,7 +241,7 @@
                         @Html.ValidationMessageFor(model => model.CustomerSettings.HideNewsletterBlock)
                     </div>
                 </div>
-                <div class="form-group" id="pnlNewsletterBlockAllowToUnsubscribe">
+                <div class="form-group advanced-setting" id="pnlNewsletterBlockAllowToUnsubscribe">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.NewsletterBlockAllowToUnsubscribe)
                     </div>
@@ -272,7 +250,7 @@
                         @Html.ValidationMessageFor(model => model.CustomerSettings.NewsletterBlockAllowToUnsubscribe)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.StoreLastVisitedPage)
                     </div>
@@ -281,13 +259,66 @@
                         @Html.ValidationMessageFor(model => model.CustomerSettings.StoreLastVisitedPage)
                     </div>
                 </div>
+            </div>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $("#@Html.FieldIdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)").click(toggleAvatar);
+                    $("#@Html.FieldIdFor(model => model.CustomerSettings.UsernamesEnabled)").click(toggleUsername);
+
+                    toggleAvatar();
+                    toggleUsername();
+                });
+
+                function toggleAvatar() {
+                    if ($('#@Html.FieldIdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)').is(':checked')) {
+                        $('#pnlDefaultAvatarEnabled').show();
+                    } else {
+                        $('#pnlDefaultAvatarEnabled').hide();
+                    }
+                }
+
+                function toggleUsername() {
+                    if ($('#@Html.FieldIdFor(model => model.CustomerSettings.UsernamesEnabled)').is(':checked')) {
+                        $('#pnlAllowUsersToChangeUsernames').show();
+                        $('#pnlCheckUsernameAvailability').show();
+                    } else {
+                        $('#pnlAllowUsersToChangeUsernames').hide();
+                        $('#pnlCheckUsernameAvailability').hide();
+                    }
+                }
+            </script>
+        </div>
+        <div class="panel panel-default advanced-setting">
+            <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.EnteringEmailTwice)
+                        @Html.NopLabelFor(model => model.DateTimeSettings.AllowCustomersToSetTimeZone)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerSettings.EnteringEmailTwice)
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.EnteringEmailTwice)
+                        @Html.NopEditorFor(model => model.DateTimeSettings.AllowCustomersToSetTimeZone)
+                        @Html.ValidationMessageFor(model => model.DateTimeSettings.AllowCustomersToSetTimeZone)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.DateTimeSettings.DefaultStoreTimeZoneId)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDropDownListFor(model => model.DateTimeSettings.DefaultStoreTimeZoneId, Model.DateTimeSettings.AvailableTimeZones)
+                        @Html.ValidationMessageFor(model => model.DateTimeSettings.DefaultStoreTimeZoneId)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default advanced-setting">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.ExternalAuthenticationSettings.AutoRegisterEnabled)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.ExternalAuthenticationSettings.AutoRegisterEnabled)
+                        @Html.ValidationMessageFor(model => model.ExternalAuthenticationSettings.AutoRegisterEnabled)
                     </div>
                 </div>
             </div>
@@ -886,52 +917,5 @@
         </div>
         @*render custom address attributes*@
         @Html.Action("ListBlock", "AddressAttribute")
-    </div>
-}
-
-@helper TabDateTimeSettings()
-{
-    <div class="panel-group">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.DateTimeSettings.AllowCustomersToSetTimeZone)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.DateTimeSettings.AllowCustomersToSetTimeZone)
-                        @Html.ValidationMessageFor(model => model.DateTimeSettings.AllowCustomersToSetTimeZone)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.DateTimeSettings.DefaultStoreTimeZoneId)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopDropDownListFor(model => model.DateTimeSettings.DefaultStoreTimeZoneId, Model.DateTimeSettings.AvailableTimeZones)
-                        @Html.ValidationMessageFor(model => model.DateTimeSettings.DefaultStoreTimeZoneId)
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-}
-
-@helper TabExternalAuthenticationSettings()
-{
-    <div class="panel-group">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.ExternalAuthenticationSettings.AutoRegisterEnabled)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.ExternalAuthenticationSettings.AutoRegisterEnabled)
-                        @Html.ValidationMessageFor(model => model.ExternalAuthenticationSettings.AutoRegisterEnabled)
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 }

@@ -121,14 +121,6 @@
         }
         else
         {
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    $("#restart-application").click(function (e) {
-                        showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Header.RestartApplication.Progress").Text))');
-                    });
-                });
-            </script>
-
             @Html.Widget("admin_header_before", area: "Admin")
             <div class="main-header">
                 <a href="@Url.Content("~/admin")" class="logo">
@@ -142,71 +134,88 @@
                         <span class="sr-only">&nbsp;</span>
                     </a>
                     @Html.Widget("admin_header_toggle_after", area: "Admin")
-                    <div class="navbar-custom-menu">
-                        @Html.Widget("admin_header_navbar_before", area: "Admin")
-                        <ul class="nav navbar-nav">
-                            <li>
-                                @Html.Action("LanguageSelector", "Common", new { area = "Admin" })
-                            </li>
-                            @if (currentCustomer.IsRegistered())
-                            {
-                                <li class="dropdown user user-menu">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        <img src="@avatarUrl" class="user-image" alt="">
-                                        <span class="hidden-xs">@currentCustomer.GetFullName()</span>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <!-- User image -->
-                                        <li class="user-header">
-                                            <img src="@avatarUrl" class="img-circle" alt="">
-                                            <p>
-                                                @currentCustomer.GetFullName()
-                                                <small>@currentCustomer.Email</small>
-                                            </p>
-                                        </li>
-                                        <!-- Menu Footer-->
-                                        <li class="user-footer">
-                                            <div class="pull-left">
-                                                <a href="@Url.Action("Edit", "Customer", new {id = currentCustomer.Id})" class="btn btn-default btn-flat">Profile</a>
-                                            </div>
-                                            <div class="pull-right">
-                                                <a href="@Url.Action("Logout", "Customer", new {area = ""}, null)" class="btn btn-default btn-flat">@T("Admin.Header.Logout")</a>
-                                            </div>
-                                        </li>
-                                    </ul>
+                        <div class="navbar-custom-menu">
+                            @Html.Widget("admin_header_navbar_before", area: "Admin")
+                            <ul class="nav navbar-nav">
+                                <li>
+                                    @Html.Action("LanguageSelector", "Common", new { area = "Admin" })
                                 </li>
-                            }
-                            <li>
-                                @Html.Widget("admin_header_middle", area: "Admin")
-                            </li>
-                            <li>
-                                <span class="public-store">
+                                @if (currentCustomer.IsRegistered())
+                                {
+                                    <li class="dropdown user user-menu">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                            <img src="@avatarUrl" class="user-image" alt="">
+                                            <span class="hidden-xs">@currentCustomer.GetFullName()</span>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <!-- User image -->
+                                            <li class="user-header">
+                                                <img src="@avatarUrl" class="img-circle" alt="">
+                                                <p>
+                                                    @currentCustomer.GetFullName()
+                                                    <small>@currentCustomer.Email</small>
+                                                </p>
+                                            </li>
+                                            <!-- Menu Footer-->
+                                            <li class="user-footer">
+                                                <div class="pull-left">
+                                                    <a href="@Url.Action("Edit", "Customer", new {id = currentCustomer.Id})" class="btn btn-default btn-flat">Profile</a>
+                                                </div>
+                                                <div class="pull-right">
+                                                    <a href="@Url.Action("Logout", "Customer", new {area = ""}, null)" class="btn btn-default btn-flat">@T("Admin.Header.Logout")</a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                }
+                                <li>
+                                    @Html.Widget("admin_header_middle", area: "Admin")
+                                </li>
+                                <li>
+                                    <span class="public-store">
                                     <a href="@Url.Action("Index", "Home", new {area = ""})">
                                         @T("Admin.Header.PublicStore")
                                     </a>
                                 </span>
-                            </li>
-                            @if (canManageMaintenance)
-                            {
-                                <li class="dropdown">
-                                    <a href="#" data-toggle="dropdown"><i class="fa fa-gears"></i></a>
-                                    <ul class="dropdown-menu bg-light-blue" role="menu">
-                                        <li>
-                                            <a class="bg-light-blue" href="@webHelper.ModifyQueryString(Url.Action("ClearCache", "Common", new RouteValueDictionary {{"area", "Admin"}}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">
-                                                <span>@T("Admin.Header.ClearCache")</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="bg-light-blue" id="restart-application" href="@webHelper.ModifyQueryString(Url.Action("RestartApplication", "Common", new RouteValueDictionary {{"area", "Admin"}}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">
-                                                <span>@T("Admin.Header.RestartApplication")</span>
-                                            </a>
-                                        </li>
-                                    </ul>
                                 </li>
-                            }
-                        </ul>
-                        @Html.Widget("admin_header_navbar_after", area: "Admin")
-                    </div>
+                                @if (canManageMaintenance)
+                                {
+                                    <li class="dropdown">
+                                        <a href="#" data-toggle="dropdown"><i class="fa fa-gears"></i></a>
+                                        <ul class="maintenance-menu dropdown-menu bg-light-blue" role="menu">
+                                            <li>
+                                                @using (Html.BeginForm("ClearCache", "Common", new {area = "Admin"}))
+                                                {
+                                                    @Html.AntiForgeryToken()
+                                                    @Html.Hidden("returnurl", HttpContext.Current.Request.RawUrl)
+                                                    <button type="submit" class="bg-light-blue">
+                                                        <span>@T("Admin.Header.ClearCache")</span>
+                                                    </button>
+                                                }
+                                            </li>
+                                            <li>
+                                                @using (Html.BeginForm("RestartApplication", "Common", new { area = "Admin" }))
+                                                {
+                                                    @Html.AntiForgeryToken()
+                                                    @Html.Hidden("returnurl", HttpContext.Current.Request.RawUrl)
+                                                    <button id="restart-application" type="submit" class="bg-light-blue">
+                                                        <span>@T("Admin.Header.RestartApplication")</span>
+                                                    </button>
+                                                    <script type="text/javascript">
+                                                        $(document).ready(function () {
+                                                            $("#restart-application").click(function (e) {
+                                                                showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Header.RestartApplication.Progress").Text))');
+                                                            });
+                                                        });
+                                                    </script>
+                                                }
+                                            </li>
+                                        </ul>
+                                    </li>
+                                }
+                            </ul>
+                            @Html.Widget("admin_header_navbar_after", area: "Admin")
+                        </div>
                 </div>
             </div>
             @Html.Widget("admin_header_after", area: "Admin")
@@ -272,7 +281,7 @@
 
             $('a.sidebar-toggle').on('click', function () {
                 var collapsed = $('body').hasClass('sidebar-collapse');
-                saveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
+                saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
             });
         });
     </script>
