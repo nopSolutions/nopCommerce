@@ -803,6 +803,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultTitle">
     <Value>Default page title</Value>
   </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Picture.ErrorMessage">
+    <Value>You can add only picture file</Value>
+  </LocaleResource>
 </Language>
 '
 
