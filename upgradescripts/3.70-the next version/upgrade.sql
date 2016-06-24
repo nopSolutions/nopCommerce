@@ -836,6 +836,27 @@ set @resources='
   <LocaleResource Name="Filtering.SpecificationFilter.Separator">
     <Value>or </Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Manufacturers.Fields.Manufacturer">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Manufacturers.Fields.IsFeaturedProduct">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Manufacturers.Fields.DisplayOrder">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Manufacturers.SaveBeforeEdit">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Manufacturers.NoManufacturersAvailable">
+    <Value>No manufacturers available. Create at least one manufacturer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerIds">
+     <Value>Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerIds.Hint">
+     <Value>Product manufacturer mappings.</Value>
+  </LocaleResource>
 </Language>
 '
 

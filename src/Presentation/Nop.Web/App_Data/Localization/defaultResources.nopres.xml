@@ -2574,6 +2574,12 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManageInventoryMethod.Hint">
     <Value>Select manage inventory method. When enabled, stock quantities are automatically adjusted when a customer makes a purchase. You can also set low stock activity actions and receive notifications.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerIds">
+    <Value>Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerIds.Hint">
+    <Value>Product manufacturer mappings.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerPartNumber">
     <Value>Manufacturer part number</Value>
   </LocaleResource>
@@ -2994,20 +3000,8 @@
   <LocaleResource Name="Admin.Catalog.Products.Manufacturers">
     <Value>Manufacturer mappings</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Manufacturers.Fields.DisplayOrder">
-    <Value>Display order</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Manufacturers.Fields.IsFeaturedProduct">
-    <Value>Is featured product?</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Manufacturers.Fields.Manufacturer">
-    <Value>Manufacturer</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Manufacturers.NoManufacturersAvailable">
-    <Value>No manufacturers available. Create at least one manufacturer before mapping.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Manufacturers.SaveBeforeEdit">
-    <Value>You need to save the product before you can map manufacturers for this product page.</Value>
+    <Value>No manufacturers available. Create at least one manufacturer.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Pictures">
     <Value>Pictures</Value>

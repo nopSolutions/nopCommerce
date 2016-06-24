@@ -30,6 +30,7 @@ namespace Nop.Admin.Models.Catalog
             AvailableWarehouses = new List<SelectListItem>();
             CategoryIds = new List<int>();
             AvailableCategories = new List<SelectListItem>();
+            ManufacturerIds = new List<int>();
             AvailableManufacturers = new List<SelectListItem>();
             AvailableProductAttributes = new List<SelectListItem>();
             AddPictureModel = new ProductPictureModel();
@@ -405,8 +406,13 @@ namespace Nop.Admin.Models.Catalog
         [UIHint("MultiSelect")]
         public IList<int> CategoryIds { get; set; }
         public IList<SelectListItem> AvailableCategories { get; set; }
+
         //manufacturers
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ManufacturerIds")]
+        [UIHint("MultiSelect")]
+        public IList<int> ManufacturerIds { get; set; }
         public IList<SelectListItem> AvailableManufacturers { get; set; }
+
         //product attributes
         public IList<SelectListItem> AvailableProductAttributes { get; set; }
         
@@ -526,22 +532,6 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute")]
             [AllowHtml]
             public string OverrideTitleAttribute { get; set; }
-        }
-
-        public partial class ProductManufacturerModel : BaseNopEntityModel
-        {
-            [NopResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.Manufacturer")]
-            public string Manufacturer { get; set; }
-
-            public int ProductId { get; set; }
-
-            public int ManufacturerId { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.IsFeaturedProduct")]
-            public bool IsFeaturedProduct { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.DisplayOrder")]
-            public int DisplayOrder { get; set; }
         }
 
         public partial class RelatedProductModel : BaseNopEntityModel

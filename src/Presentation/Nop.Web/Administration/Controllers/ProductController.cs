@@ -330,6 +330,27 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
+        protected virtual void SaveManufacturerMappings(Product product, ProductModel model)
+        {
+            var existingProductManufacturers = _manufacturerService.GetProductManufacturersByProductId(product.Id, showHidden: true);
+
+            //delete manufacturers
+            foreach (var existingProductManufacturer in existingProductManufacturers)
+                if (!model.ManufacturerIds.Contains(existingProductManufacturer.ManufacturerId))
+                    _manufacturerService.DeleteProductManufacturer(existingProductManufacturer);
+
+            //add manufacturers
+            foreach (var manufacturerId in model.ManufacturerIds)
+                if (existingProductManufacturers.FindProductManufacturer(product.Id, manufacturerId) == null)
+                    _manufacturerService.InsertProductManufacturer(new ProductManufacturer()
+                    {
+                        ProductId = product.Id,
+                        ManufacturerId = manufacturerId,
+                        DisplayOrder = model.DisplayOrder
+                    });
+        }
+
+        [NonAction]
         protected virtual void SaveStoreMappings(Product product, ProductModel model)
         {
             var existingStoreMappings = _storeMappingService.GetStoreMappings(product);
@@ -511,12 +532,15 @@ namespace Nop.Admin.Controllers
                 }
 
                 //manufacturers
+                var manufacturerIds = _manufacturerService.GetProductManufacturersByProductId(product.Id, true).Select(c => c.ManufacturerId).ToList();
+                model.ManufacturerIds = manufacturerIds;
                 foreach (var manufacturer in _manufacturerService.GetAllManufacturers(showHidden: true))
                 {
                     model.AvailableManufacturers.Add(new SelectListItem
                     {
                         Text = manufacturer.Name,
-                        Value = manufacturer.Id.ToString()
+                        Value = manufacturer.Id.ToString(),
+                        Selected = manufacturerIds.Contains(manufacturer.Id)
                     });
                 }
 
@@ -1024,6 +1048,8 @@ namespace Nop.Admin.Controllers
                 UpdateLocales(product, model);
                 //categories
                 SaveCategoryMappings(product, model);
+                //manufacturers
+                SaveManufacturerMappings(product, model);
                 //ACL (customer roles)
                 SaveProductAcl(product, model);
                 //Stores
@@ -1149,6 +1175,8 @@ namespace Nop.Admin.Controllers
                 SaveProductWarehouseInventory(product, model);
                 //categories
                 SaveCategoryMappings(product, model);
+                //manufacturers
+                SaveManufacturerMappings(product, model);
                 //ACL (customer roles)
                 SaveProductAcl(product, model);
                 //Stores
@@ -1400,146 +1428,6 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        #endregion
-
-        #region Product manufacturers
-
-        [HttpPost]
-        public ActionResult ProductManufacturerList(DataSourceRequest command, int productId)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-            {
-                var product = _productService.GetProductById(productId);
-                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
-                {
-                    return Content("This is not your product");
-                }
-            }
-
-            var productManufacturers = _manufacturerService.GetProductManufacturersByProductId(productId, true);
-            var productManufacturersModel = productManufacturers
-                .Select(x => new ProductModel.ProductManufacturerModel
-                {
-                    Id = x.Id,
-                    Manufacturer = _manufacturerService.GetManufacturerById(x.ManufacturerId).Name,
-                    ProductId = x.ProductId,
-                    ManufacturerId = x.ManufacturerId,
-                    IsFeaturedProduct = x.IsFeaturedProduct,
-                    DisplayOrder = x.DisplayOrder
-                })
-                .ToList();
-
-            var gridModel = new DataSourceResult
-            {
-                Data = productManufacturersModel,
-                Total = productManufacturersModel.Count
-            };
-
-            return Json(gridModel);
-        }
-
-        [HttpPost]
-        public ActionResult ProductManufacturerInsert(ProductModel.ProductManufacturerModel model)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
-            var productId = model.ProductId;
-            var manufacturerId = model.ManufacturerId;
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-            {
-                var product = _productService.GetProductById(productId);
-                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
-                {
-                    return Content("This is not your product");
-                }
-            }
-
-            var existingProductmanufacturers = _manufacturerService.GetProductManufacturersByManufacturerId(manufacturerId, showHidden: true);
-            if (existingProductmanufacturers.FindProductManufacturer(productId, manufacturerId) == null)
-            {
-                var productManufacturer = new ProductManufacturer
-                {
-                    ProductId = productId,
-                    ManufacturerId = manufacturerId,
-                    DisplayOrder = model.DisplayOrder
-                };
-                //a vendor cannot edit "IsFeaturedProduct" property
-                if (_workContext.CurrentVendor == null)
-                {
-                    productManufacturer.IsFeaturedProduct = model.IsFeaturedProduct;
-                }
-                _manufacturerService.InsertProductManufacturer(productManufacturer);
-            }
-
-            return new NullJsonResult();
-        }
-
-        [HttpPost]
-        public ActionResult ProductManufacturerUpdate(ProductModel.ProductManufacturerModel model)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
-            var productManufacturer = _manufacturerService.GetProductManufacturerById(model.Id);
-            if (productManufacturer == null)
-                throw new ArgumentException("No product manufacturer mapping found with the specified id");
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-            {
-                var product = _productService.GetProductById(productManufacturer.ProductId);
-                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
-                {
-                    return Content("This is not your product");
-                }
-            }
-
-            productManufacturer.ManufacturerId = model.ManufacturerId;
-            productManufacturer.DisplayOrder = model.DisplayOrder;
-            //a vendor cannot edit "IsFeaturedProduct" property
-            if (_workContext.CurrentVendor == null)
-            {
-                productManufacturer.IsFeaturedProduct = model.IsFeaturedProduct;
-            }
-            _manufacturerService.UpdateProductManufacturer(productManufacturer);
-
-            return new NullJsonResult();
-        }
-
-        [HttpPost]
-        public ActionResult ProductManufacturerDelete(int id)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
-            var productManufacturer = _manufacturerService.GetProductManufacturerById(id);
-            if (productManufacturer == null)
-                throw new ArgumentException("No product manufacturer mapping found with the specified id");
-
-            var productId = productManufacturer.ProductId;
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-            {
-                var product = _productService.GetProductById(productId);
-                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
-                {
-                    return Content("This is not your product");
-                }
-            }
-
-            _manufacturerService.DeleteProductManufacturer(productManufacturer);
-
-            return new NullJsonResult();
-        }
-        
         #endregion
 
         #region Related products
