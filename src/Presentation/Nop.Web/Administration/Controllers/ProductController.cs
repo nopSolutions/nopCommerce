@@ -311,7 +311,7 @@ namespace Nop.Admin.Controllers
         [NonAction]
         protected virtual void SaveCategoryMappings(Product product, ProductModel model)
         {
-            var existingProductCategories = _categoryService.GetProductCategoriesByProductId(product.Id, showHidden: true);
+            var existingProductCategories = _categoryService.GetProductCategoriesByProductId(product.Id, true);
 
             //delete categories
             foreach (var existingProductCategory in existingProductCategories)
@@ -321,18 +321,25 @@ namespace Nop.Admin.Controllers
             //add categories
             foreach (var categoryId in model.CategoryIds)
                 if (existingProductCategories.FindProductCategory(product.Id, categoryId) == null)
+                {
+                    //find next display order
+                    var displayOrder = 1;
+                    var existingCategoryMapping = _categoryService.GetProductCategoriesByCategoryId(categoryId, showHidden: true);
+                    if (existingCategoryMapping.Any())
+                        displayOrder = existingCategoryMapping.Max(x => x.DisplayOrder) + 1;
                     _categoryService.InsertProductCategory(new ProductCategory
                     {
                         ProductId = product.Id,
                         CategoryId = categoryId,
-                        DisplayOrder = model.DisplayOrder
+                        DisplayOrder = displayOrder
                     });
+                }
         }
 
         [NonAction]
         protected virtual void SaveManufacturerMappings(Product product, ProductModel model)
         {
-            var existingProductManufacturers = _manufacturerService.GetProductManufacturersByProductId(product.Id, showHidden: true);
+            var existingProductManufacturers = _manufacturerService.GetProductManufacturersByProductId(product.Id, true);
 
             //delete manufacturers
             foreach (var existingProductManufacturer in existingProductManufacturers)
@@ -342,12 +349,19 @@ namespace Nop.Admin.Controllers
             //add manufacturers
             foreach (var manufacturerId in model.ManufacturerIds)
                 if (existingProductManufacturers.FindProductManufacturer(product.Id, manufacturerId) == null)
+                {
+                    //find next display order
+                    var displayOrder = 1;
+                    var existingManufacturerMapping = _manufacturerService.GetProductManufacturersByManufacturerId(manufacturerId, showHidden: true);
+                    if (existingManufacturerMapping.Any())
+                        displayOrder = existingManufacturerMapping.Max(x => x.DisplayOrder) + 1;
                     _manufacturerService.InsertProductManufacturer(new ProductManufacturer()
                     {
                         ProductId = product.Id,
                         ManufacturerId = manufacturerId,
-                        DisplayOrder = model.DisplayOrder
+                        DisplayOrder = displayOrder
                     });
+                }
         }
 
         [NonAction]
