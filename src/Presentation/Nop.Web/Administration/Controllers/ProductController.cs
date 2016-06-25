@@ -531,7 +531,7 @@ namespace Nop.Admin.Controllers
             }
 
             //little performance hack here
-            //there's no need to load attributes, categories, manufacturers when creating a new product
+            //there's no need to load attributes when creating a new product
             //anyway they're not used (you need to save a product before you map add them)
             if (product != null)
             {
@@ -545,32 +545,10 @@ namespace Nop.Admin.Controllers
                     });
                 }
 
-                //manufacturers
-                var manufacturerIds = _manufacturerService.GetProductManufacturersByProductId(product.Id, true).Select(c => c.ManufacturerId).ToList();
-                model.ManufacturerIds = manufacturerIds;
-                foreach (var manufacturer in _manufacturerService.GetAllManufacturers(showHidden: true))
-                {
-                    model.AvailableManufacturers.Add(new SelectListItem
-                    {
-                        Text = manufacturer.Name,
-                        Value = manufacturer.Id.ToString(),
-                        Selected = manufacturerIds.Contains(manufacturer.Id)
-                    });
-                }
-
                 //categories
-                var categoryIds = _categoryService.GetProductCategoriesByProductId(product.Id, true).Select(c => c.CategoryId).ToList();
-                model.CategoryIds = categoryIds;
-                var allCategories = _categoryService.GetAllCategories(showHidden: true);
-                foreach (var category in allCategories)
-                {
-                    model.AvailableCategories.Add(new SelectListItem
-                    {
-                        Text = category.GetFormattedBreadCrumb(allCategories),
-                        Value = category.Id.ToString(),
-                        Selected = categoryIds.Contains(category.Id)
-                    });
-                }
+                model.CategoryIds = _categoryService.GetProductCategoriesByProductId(product.Id, true).Select(c => c.CategoryId).ToList();
+                //manufacturers
+                model.ManufacturerIds = _manufacturerService.GetProductManufacturersByProductId(product.Id, true).Select(c => c.ManufacturerId).ToList();
 
                 //specification attributes
                 model.AddSpecificationAttributeModel.AvailableAttributes = _cacheManager
@@ -601,6 +579,27 @@ namespace Nop.Admin.Controllers
                 }
                 //default specs values
                 model.AddSpecificationAttributeModel.ShowOnProductPage = true;
+            }
+            //categories
+            var allCategories = _categoryService.GetAllCategories(showHidden: true);
+            foreach (var category in allCategories)
+            {
+                model.AvailableCategories.Add(new SelectListItem
+                {
+                    Text = category.GetFormattedBreadCrumb(allCategories),
+                    Value = category.Id.ToString(),
+                    Selected = model.CategoryIds.Contains(category.Id)
+                });
+            }
+            //manufacturers
+            foreach (var manufacturer in _manufacturerService.GetAllManufacturers(showHidden: true))
+            {
+                model.AvailableManufacturers.Add(new SelectListItem
+                {
+                    Text = manufacturer.Name,
+                    Value = manufacturer.Id.ToString(),
+                    Selected = model.ManufacturerIds.Contains(manufacturer.Id)
+                });
             }
 
 
