@@ -612,7 +612,7 @@ namespace Nop.Admin.Controllers
             return Redirect(returnUrl);
         }
 
-
+        [HttpPost]
         public ActionResult ClearCache(string returnUrl = "")
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
@@ -630,7 +630,7 @@ namespace Nop.Admin.Controllers
             return Redirect(returnUrl);
         }
 
-
+        [HttpPost]
         public ActionResult RestartApplication(string returnUrl = "")
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))

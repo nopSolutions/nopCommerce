@@ -680,6 +680,11 @@ namespace Nop.Web.Controllers
 
             //model
             var model = PrepareShippingAddressModel(prePopulateNewAddressWithCustomerFields: true);
+            if (_shippingSettings.AllowPickUpInStore && _shippingService.LoadActiveShippingRateComputationMethods(_storeContext.CurrentStore.Id).Count == 0)
+            {
+                model.PickUpInStoreOnly = true;
+                model.PickUpInStore = true;
+            }
             return View(model);
         }
         public ActionResult SelectShippingAddress(int addressId)
@@ -1470,6 +1475,12 @@ namespace Nop.Web.Controllers
                 {
                     //shipping is required
                     var shippingAddressModel = PrepareShippingAddressModel(prePopulateNewAddressWithCustomerFields: true);
+                    if (_shippingSettings.AllowPickUpInStore && _shippingService.LoadActiveShippingRateComputationMethods(_storeContext.CurrentStore.Id).Count == 0)
+                    {
+                        shippingAddressModel.PickUpInStoreOnly = true;
+                        shippingAddressModel.PickUpInStore = true;
+                    }
+
                     return Json(new
                     {
                         update_section = new UpdateSectionJsonModel

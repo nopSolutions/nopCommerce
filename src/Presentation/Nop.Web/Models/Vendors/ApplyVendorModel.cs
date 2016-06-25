@@ -17,6 +17,10 @@ namespace Nop.Web.Models.Vendors
         [AllowHtml]
         public string Email { get; set; }
 
+        [NopResourceDisplayName("Vendors.ApplyAccount.Description")]
+        [AllowHtml]
+        public string Description { get; set; }
+        
         public bool DisplayCaptcha { get; set; }
 
         public bool DisableFormInput { get; set; }

@@ -586,8 +586,11 @@ namespace Nop.Services.Orders
                     shippingAddress = customer.ShippingAddress;
 
                 var shippingRateComputationMethods = _shippingService.LoadActiveShippingRateComputationMethods(_storeContext.CurrentStore.Id);
-                if (shippingRateComputationMethods == null || shippingRateComputationMethods.Count == 0)
-                    throw new NopException("Shipping rate computation method could not be loaded");
+                if (shippingRateComputationMethods.Count == 0)
+                    if (_shippingSettings.AllowPickUpInStore)
+                        shippingTotal = _shippingSettings.PickUpInStoreFee;
+                    else
+                        throw new NopException("Shipping rate computation method could not be loaded");
 
                 if (shippingRateComputationMethods.Count == 1)
                 {

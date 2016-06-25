@@ -12,73 +12,76 @@
                             pickupInStoreName = T("Checkout.PickUpInStoreAndFee", Model.PickUpInStoreFee).Text;
                         }
                     }
-                    @Html.CheckBoxFor(x => x.PickUpInStore, new { @onclick = "Shipping.togglePickUpInStore(this)" })
+                    @Html.CheckBoxFor(x => x.PickUpInStore, Model.PickUpInStoreOnly ? new { @onclick = "return false" } : new { @onclick = "Shipping.togglePickUpInStore(this)" })
                     <label for="@Html.FieldIdFor(model => model.PickUpInStore)">@pickupInStoreName</label>
                 </p>
                 <p class="description"><i>@T("Checkout.PickUpInStore.Description")</i></p>
             </div>
         }
-    <div class="shipping-addresses" id="shipping-addresses-form">
-        @Html.Widget("op_checkout_shipping_address_top")
-        @if (Model.ExistingAddresses.Count > 0)
-        {
-            <div class="section select-shipping-address">
-                <label for="shipping-address-select">@T("Checkout.SelectShippingAddressOrEnterNewOne")</label>
-                <div>
-                    <select name="shipping_address_id" id="shipping-address-select" class="address-select"
-                            title="" onchange="Shipping.newAddress(!this.value)">
-                        @foreach (var address in Model.ExistingAddresses)
-                        {
-                            var addressLine = "";
-                            addressLine += address.FirstName;
-                            addressLine += " " + address.LastName;
-                            if (address.StreetAddressEnabled && !String.IsNullOrEmpty(address.Address1))
+    @if (!Model.PickUpInStoreOnly)
+    {
+        <div class="shipping-addresses" id="shipping-addresses-form">
+            @Html.Widget("op_checkout_shipping_address_top")
+            @if (Model.ExistingAddresses.Count > 0)
+            {
+                <div class="section select-shipping-address">
+                    <label for="shipping-address-select">@T("Checkout.SelectShippingAddressOrEnterNewOne")</label>
+                    <div>
+                        <select name="shipping_address_id" id="shipping-address-select" class="address-select"
+                                title="" onchange="Shipping.newAddress(!this.value)">
+                            @foreach (var address in Model.ExistingAddresses)
                             {
-                                addressLine += ", " + address.Address1;
+                                var addressLine = "";
+                                addressLine += address.FirstName;
+                                addressLine += " " + address.LastName;
+                                if (address.StreetAddressEnabled && !String.IsNullOrEmpty(address.Address1))
+                                {
+                                    addressLine += ", " + address.Address1;
+                                }
+                                if (address.CityEnabled && !String.IsNullOrEmpty(address.City))
+                                {
+                                    addressLine += ", " + address.City;
+                                }
+                                if (address.StateProvinceEnabled && !String.IsNullOrEmpty(address.StateProvinceName))
+                                {
+                                    addressLine += ", " + address.StateProvinceName;
+                                }
+                                if (address.ZipPostalCodeEnabled && !String.IsNullOrEmpty(address.ZipPostalCode))
+                                {
+                                    addressLine += " " + address.ZipPostalCode;
+                                }
+                                if (address.CountryEnabled && !String.IsNullOrWhiteSpace(address.CountryName))
+                                {
+                                    addressLine += ", " + address.CountryName;
+                                }
+                                //how should we render "FormattedCustomAddressAttributes" here?
+                                <option value="@(address.Id)">@(addressLine)</option>
                             }
-                            if (address.CityEnabled && !String.IsNullOrEmpty(address.City))
-                            {
-                                addressLine += ", " + address.City;
-                            }
-                            if (address.StateProvinceEnabled && !String.IsNullOrEmpty(address.StateProvinceName))
-                            {
-                                addressLine += ", " + address.StateProvinceName;
-                            }
-                            if (address.ZipPostalCodeEnabled && !String.IsNullOrEmpty(address.ZipPostalCode))
-                            {
-                                addressLine += " " + address.ZipPostalCode;
-                            }
-                            if (address.CountryEnabled && !String.IsNullOrWhiteSpace(address.CountryName))
-                            {
-                                addressLine += ", " + address.CountryName;
-                            }
-                            //how should we render "FormattedCustomAddressAttributes" here?
-                            <option value="@(address.Id)">@(addressLine)</option>
-                        }
-                        <option value="" selected="@Model.NewAddressPreselected">@T("Checkout.NewAddress")</option>
-                    </select>
+                            <option value="" selected="@Model.NewAddressPreselected">@T("Checkout.NewAddress")</option>
+                        </select>
+                    </div>
+                </div>
+            }
+            @Html.Widget("op_checkout_shipping_address_middle")
+            <div class="section new-shipping-address" id="shipping-new-address-form">
+                <div class="enter-address">
+                    @{
+                        var validationSummary = Html.ValidationSummary(true);
+                    }
+                    @if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                    {
+                        <div class="message-error">@validationSummary</div>
+                    }
+                    @{
+                        var dataDictAddress = new ViewDataDictionary();
+                        //Merge ModelState (required for validation)
+                        dataDictAddress.ModelState.Merge(ViewData.ModelState);
+                        dataDictAddress.TemplateInfo.HtmlFieldPrefix = "ShippingNewAddress";
+                        @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)
+                    }
                 </div>
             </div>
-        }
-        @Html.Widget("op_checkout_shipping_address_middle")
-        <div class="section new-shipping-address" id="shipping-new-address-form">
-            <div class="enter-address">
-                @{
-                    var validationSummary = Html.ValidationSummary(true);
-                }
-                @if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
-                {
-                    <div class="message-error">@validationSummary</div>
-                }
-                @{
-                    var dataDictAddress = new ViewDataDictionary();
-                    //Merge ModelState (required for validation)
-                    dataDictAddress.ModelState.Merge(ViewData.ModelState);
-                    dataDictAddress.TemplateInfo.HtmlFieldPrefix = "ShippingNewAddress";
-                    @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)
-                }
-            </div>
+            @Html.Widget("op_checkout_shipping_address_bottom")
         </div>
-        @Html.Widget("op_checkout_shipping_address_bottom")
-    </div>
+    }
 </div>
