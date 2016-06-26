@@ -8,7 +8,6 @@
     var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl &&
         !EngineContext.Current.Resolve<LocalizationSettings>().IgnoreRtlPropertyForAdminArea;
 
-
     //CSS resources
     if (supportRtl)
     {
@@ -26,13 +25,11 @@
     Html.AppendCssFileParts(string.Format("~/Administration/Content/kendo/{0}/kendo.default.min.css", kendoVersion));
     Html.AppendCssFileParts(string.Format("~/Administration/Content/kendo/{0}/kendo.common.min.css", kendoVersion));
     Html.AppendCssFileParts("~/Administration/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
-
-     <!-- Font Awesome -->
     Html.AppendCssFileParts("~/Administration/Content/fontAwesome/css/font-awesome-4.6.3.min.css");
-    <!-- AdminLTE Skins. Choose a skin from the css/skins. Folder instead of downloading all of them to reduce the load. -->
+    <!-- AdminLTE Skins (choose a skin from the css/skins) -->
     Html.AppendCssFileParts("~/Administration/Content/adminLTE/skins/_all-skins.min.css");
 
-
+    //scripts
     Html.AppendScriptParts(string.Format("~/Administration/Scripts/kendo/{0}/kendo.web.min.js", kendoVersion));
     Html.AppendScriptParts("~/Administration/Scripts/admin.common.js");
     Html.AppendScriptParts("~/Administration/Scripts/jquery-migrate-1.2.1.min.js");
@@ -42,14 +39,9 @@
     Html.AppendScriptParts("~/Administration/Scripts/adminLTE/app.min.js");
     Html.AppendScriptParts("~/Administration/Scripts/bootstrap/bootstrap.min.js");
     Html.AppendScriptParts("~/Administration/Scripts/jquery-1.10.2.min.js");
-
-
+    
     //page title
-    string adminPageTitle = "";
-    if (!String.IsNullOrWhiteSpace(ViewBag.Title))
-    {
-        adminPageTitle = ViewBag.Title + " / ";
-    }
+    string adminPageTitle = !String.IsNullOrWhiteSpace(ViewBag.Title) ? ViewBag.Title + " / " : "";
     adminPageTitle += T("Admin.PageTitle").Text;
 
     //X-UA-Compatible tag
