@@ -3368,3 +3368,10 @@ GO
  --update
  UPDATE [ReturnRequest] SET [CustomNumber] = CAST([Id] AS NVARCHAR(200)) WHERE [CustomNumber] = null OR [CustomNumber] = N''
  GO
+
+
+--delete some settings
+ DELETE FROM [Setting]
+ WHERE [name] = N'LocalizationSettings.IgnoreRtlPropertyForAdminArea'
+ GO
+ 

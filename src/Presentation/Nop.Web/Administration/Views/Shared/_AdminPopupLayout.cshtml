@@ -1,12 +1,10 @@
-﻿@using Nop.Core.Domain.Localization
-@using Nop.Web.Framework.UI;
+﻿@using Nop.Web.Framework.UI;
 @using Nop.Core;
 @using Nop.Core.Domain.Common;
 
 @{
     var kendoVersion = "2014.1.318";
-    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl &&
-        !EngineContext.Current.Resolve<LocalizationSettings>().IgnoreRtlPropertyForAdminArea;
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
 
     //CSS resources
     if (supportRtl)
