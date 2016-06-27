@@ -2236,7 +2236,7 @@ label, label + * {
 }
 .tooltip-container {
     position: absolute;
-    width:200px;
+    width: 200px;
     color: #000000;
     background: #FFFFFF;
     border: 1px solid #eeeeee;
