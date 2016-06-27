@@ -3563,7 +3563,7 @@ label, label + * {
 }
 
 .order-review-data ul,
-.order-details-area ul,
+.order-details-area > div,
 .shipment-details-area ul {
 	width: 350px;
 	max-width: 100%;
@@ -3589,6 +3589,9 @@ label, label + * {
 .order-details-area .title:first-child,
 .shipment-details-area .title:first-child {
 	margin-top: 0;
+}
+.order-details-area .side-list-wrap {
+    margin-top: 20px;
 }
 .order-completed .details {
 	margin: 0 0 30px;
@@ -3798,7 +3801,7 @@ label, label + * {
 }
 .order-details-page .actions input {
 	display: inline-block;
-	min-width: 180px;
+	min-width: 165px;
 	margin: 5px;
 	border: none;
 	background-color: #aaa;
@@ -3817,10 +3820,13 @@ label, label + * {
 	background-color: #248ece;
 }
 
+.order-details-page .totals.section {
+    width: 370px;
+    padding: 0 10px;
+    max-width: 100%;
+    margin: 0 auto 50px;
+}
 .order-details-page .total-info {
-	width: 350px;
-	max-width: 100%;
-	margin: 0 auto 50px;
 	background-color: #f9f9f9;
 	padding: 15px 20px;
 	color: #444;
@@ -5598,7 +5604,7 @@ pre {
 	overflow: hidden;
 }
 .order-review-data ul,
-.order-details-area ul,
+.order-details-area > div,
 .shipment-details-area ul {
 	float: left;
 	width: 48%;
@@ -5615,12 +5621,12 @@ pre {
 .order-details-page .selected-checkout-attributes {
 	padding: 0 10px;
 }
-.order-details-page .totals {
-	overflow: hidden;
+.order-details-page .tax-shipping-info {
+    text-align: right;
 }
-.order-details-page .total-info {
+.order-details-page .totals {
 	float: right;
-	margin: 0 5px;
+	clear: both;
 }
 .shipment-details-page .tracking-number .tracking-url {
     color: #4ab2f1;
