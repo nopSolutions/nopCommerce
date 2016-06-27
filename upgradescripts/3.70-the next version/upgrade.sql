@@ -3368,3 +3368,12 @@ GO
  --update
  UPDATE [ReturnRequest] SET [CustomNumber] = CAST([Id] AS NVARCHAR(200)) WHERE [CustomNumber] = null OR [CustomNumber] = N''
  GO
+
+  --new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.GeneratePdfInvoiceInCustomerLanguage')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'ordersettings.GeneratePdfInvoiceInCustomerLanguage', N'true', 0)
+ END
+ GO
+

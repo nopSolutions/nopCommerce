@@ -176,7 +176,7 @@ namespace Nop.Services.Common
         /// <param name="order">Order</param>
         /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
         /// <returns>A path of generated file</returns>
-        public virtual string PrintOrderToPdf(Order order, int languageId)
+        public virtual string PrintOrderToPdf(Order order, int languageId = 0)
         {
             if (order == null)
                 throw new ArgumentNullException("order");

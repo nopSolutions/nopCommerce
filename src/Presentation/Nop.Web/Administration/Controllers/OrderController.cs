@@ -86,6 +86,7 @@ namespace Nop.Admin.Controllers
 	    private readonly IPictureService _pictureService;
         private readonly ICustomerActivityService _customerActivityService;
 
+        private readonly OrderSettings _orderSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly TaxSettings _taxSettings;
         private readonly MeasureSettings _measureSettings;
@@ -137,6 +138,7 @@ namespace Nop.Admin.Controllers
             IAffiliateService affiliateService,
             IPictureService pictureService,
             ICustomerActivityService customerActivityService,
+            OrderSettings orderSettings,
             CurrencySettings currencySettings, 
             TaxSettings taxSettings,
             MeasureSettings measureSettings,
@@ -184,6 +186,7 @@ namespace Nop.Admin.Controllers
             this._affiliateService = affiliateService;
             this._pictureService = pictureService;
             this._customerActivityService = customerActivityService;
+            this._orderSettings = orderSettings;
             this._currencySettings = currencySettings;
             this._taxSettings = taxSettings;
             this._measureSettings = measureSettings;
@@ -1858,7 +1861,7 @@ namespace Nop.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id);
+                _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
             return File(bytes, MimeTypes.ApplicationPdf, string.Format("order_{0}.pdf", order.Id));
@@ -1911,7 +1914,7 @@ namespace Nop.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id);
+                _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
             return File(bytes, MimeTypes.ApplicationPdf, "orders.pdf");
@@ -1949,7 +1952,7 @@ namespace Nop.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id);
+                _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
             return File(bytes, MimeTypes.ApplicationPdf, "orders.pdf");
@@ -3506,7 +3509,7 @@ namespace Nop.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage.Id);
+                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
             return File(bytes, MimeTypes.ApplicationPdf, string.Format("packagingslip_{0}.pdf", shipment.Id));
@@ -3551,7 +3554,7 @@ namespace Nop.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage.Id);
+                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
             return File(bytes, MimeTypes.ApplicationPdf, "packagingslips.pdf");
@@ -3588,7 +3591,7 @@ namespace Nop.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage.Id);
+                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
             return File(bytes, MimeTypes.ApplicationPdf, "packagingslips.pdf");

@@ -6012,6 +6012,7 @@ namespace Nop.Services.Installation
                 DisableOrderCompletedPage = false,
                 AttachPdfInvoiceToOrderPlacedEmail = false,
                 AttachPdfInvoiceToOrderCompletedEmail = false,
+                GeneratePdfInvoiceInCustomerLanguage = true,
                 AttachPdfInvoiceToOrderPaidEmail = false,
                 ReturnRequestsEnabled = true,
                 NumberOfDaysReturnRequestAvailable = 365,

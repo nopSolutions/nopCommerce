@@ -851,6 +851,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                     .ForMember(dest => dest.ReturnRequestNumberMask_OverrideForStore, mo => mo.Ignore());
                 cfg.CreateMap<OrderSettingsModel, OrderSettings>()
+                    .ForMember(dest => dest.GeneratePdfInvoiceInCustomerLanguage, mo => mo.Ignore())
                     .ForMember(dest => dest.MinimumOrderPlacementInterval, mo => mo.Ignore());
                 cfg.CreateMap<ShoppingCartSettings, ShoppingCartSettingsModel>()
                     .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())

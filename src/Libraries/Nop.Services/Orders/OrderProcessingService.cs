@@ -698,7 +698,7 @@ namespace Nop.Services.Orders
             }
 
             var orderPlacedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
-                _pdfService.PrintOrderToPdf(order, order.CustomerLanguageId) : null;
+                _pdfService.PrintOrderToPdf(order) : null;
             var orderPlacedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
                 "order.pdf" : null;
             var orderPlacedCustomerNotificationQueuedEmailId = _workflowMessageService
@@ -870,7 +870,7 @@ namespace Nop.Services.Orders
             {
                 //notification
                 var orderCompletedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
-                    _pdfService.PrintOrderToPdf(order, 0) : null;
+                    _pdfService.PrintOrderToPdf(order) : null;
                 var orderCompletedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
                     "order.pdf" : null;
                 int orderCompletedCustomerNotificationQueuedEmailId = _workflowMessageService
@@ -950,7 +950,7 @@ namespace Nop.Services.Orders
                 //remove this "if" statement if you want to send it in this case
 
                 var orderPaidAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPaidEmail ?
-                    _pdfService.PrintOrderToPdf(order, 0) : null;
+                    _pdfService.PrintOrderToPdf(order) : null;
                 var orderPaidAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPaidEmail ?
                     "order.pdf" : null;
                 _workflowMessageService.SendOrderPaidCustomerNotification(order, order.CustomerLanguageId,
