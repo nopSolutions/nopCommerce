@@ -1,4 +1,5 @@
 ﻿@using Nop.Core
+@using Nop.Core.Domain.Localization
 @using Nop.Web.Framework.Menu;
 
 @{
@@ -6,7 +7,8 @@
     var siteMap = new Nop.Web.Framework.Menu.XmlSiteMap();
     siteMap.LoadFrom("~/Administration/sitemap.config");
 
-    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl &&
+        !EngineContext.Current.Resolve<LocalizationSettings>().IgnoreRtlPropertyForAdminArea;
 }
 
 @helper RenderMenuItem(Nop.Web.Framework.Menu.SiteMapNode item, bool supportRtl)

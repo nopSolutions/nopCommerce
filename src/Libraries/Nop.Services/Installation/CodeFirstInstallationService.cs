@@ -5825,7 +5825,8 @@ namespace Nop.Services.Installation
                 AutomaticallyDetectLanguage = false,
                 LoadAllLocaleRecordsOnStartup = true,
                 LoadAllLocalizedPropertiesOnStartup = true,
-                LoadAllUrlRecordsOnStartup = false
+                LoadAllUrlRecordsOnStartup = false,
+                IgnoreRtlPropertyForAdminArea = false
             });
 
             settingService.SaveSetting(new CustomerSettings
