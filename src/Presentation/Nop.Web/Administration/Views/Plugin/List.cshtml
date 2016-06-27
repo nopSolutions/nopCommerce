@@ -1,8 +1,12 @@
 ﻿@model PluginListModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Plugins.Local").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Local plugins");
 }
+
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "plugins-form" }))
 {
     @Html.AntiForgeryToken()
@@ -11,7 +15,14 @@
             @T("Admin.Configuration.Plugins.Local")
         </h1>
         <div class="pull-right">
-            <a href="@Url.Action("ReloadList")" class="btn btn-default">@T("Admin.Configuration.Plugins.ReloadList")</a>
+            <button type="submit" name="plugin-reload-grid" class="btn bg-blue">@T("Admin.Configuration.Plugins.ReloadList")</button>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $("button[name='plugin-reload-grid']").on("click", function (e) {
+                        showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Configuration.Plugins.ReloadList.Progress").Text))');
+                    });
+                });
+            </script>
         </div>
     </div>
 
@@ -36,43 +47,46 @@
             </script>
 
             <div class="panel-group">
-                <div class="panel panel-default">
+                <div class="panel panel-default panel-search">
                     <div class="panel-body">
-                        <p>
-                            <h4>@T("Admin.Configuration.Plugins.Description")</h4>
-                            <ol>
-                                <li>@T("Admin.Configuration.Plugins.Description.Step1")</li>
-                                <li>@T("Admin.Configuration.Plugins.Description.Step2")</li>
-                                <li>@T("Admin.Configuration.Plugins.Description.Step3")</li>
-                                <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
-                                <li>@T("Admin.Configuration.Plugins.Description.Step5")</li>
-                            </ol>
-                            You can download more nopCommerce plugins on our <a href="http://www.nopcommerce.com/extensions-and-themes.aspx?utm_source=admin-panel&utm_medium=plugins&utm_campaign=admin-panel" target="_blank">extensions directory</a>
-                        </p>
-                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>
+                                    <h4>@T("Admin.Configuration.Plugins.Description")</h4>
+                                    <ol>
+                                        <li>@T("Admin.Configuration.Plugins.Description.Step1")</li>
+                                        <li>@T("Admin.Configuration.Plugins.Description.Step2")</li>
+                                        <li>@T("Admin.Configuration.Plugins.Description.Step3")</li>
+                                        <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
+                                        <li>@T("Admin.Configuration.Plugins.Description.Step5")</li>
+                                    </ol>
+                                    You can download more nopCommerce plugins on our <a href="http://www.nopcommerce.com/extensions-and-themes.aspx?utm_source=admin-panel&utm_medium=plugins&utm_campaign=admin-panel" target="_blank">extensions directory</a>
+                                </p>
 
-                        <div class="form-group">
-                            <div class="col-sm-3">
-                                @Html.NopLabelFor(model => model.SearchLoadModeId)
-                            </div>
-                            <div class="col-sm-9">
-                                @Html.NopDropDownList("SearchLoadModeId", Model.AvailableLoadModes)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-3">
-                                @Html.NopLabelFor(model => model.SearchGroup)
-                            </div>
-                            <div class="col-sm-9">
-                                @Html.NopDropDownList("SearchGroup", Model.AvailableGroups)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-3">
-                                &nbsp;
-                            </div>
-                            <div class="col-sm-9">
-                                <input type="button" id="search-plugins" class="btn btn-default" value="@T("Admin.Common.Search")"/>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.SearchLoadModeId)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopDropDownList("SearchLoadModeId", Model.AvailableLoadModes)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.SearchGroup)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopDropDownList("SearchGroup", Model.AvailableGroups)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-8 col-md-offset-4">
+                                        <button type="button" id="search-plugins" class="btn btn-primary btn-search">
+                                            <i class="fa fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -81,6 +95,7 @@
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div id="plugins-grid"></div>
+
                         <script>
                             $(document).ready(function () {
                                 $("#plugins-grid").kendoGrid({
@@ -134,19 +149,21 @@
                                             field: "FriendlyName",
                                             title: "@T("Admin.Configuration.Plugins.Info")",
                                             template: '<b>#:FriendlyName#</b>' +
-                                                '<br />@T("Admin.Configuration.Plugins.Fields.Version") #:Version#' +
-                                                '<br />@T("Admin.Configuration.Plugins.Fields.Author") #:Author#' +
-                                                '<br />@T("Admin.Configuration.Plugins.Fields.SystemName") #:SystemName#' +
-                                                '<br />@T("Admin.Configuration.Plugins.Fields.DisplayOrder") #:DisplayOrder#' +
-                                                '<br />@T("Admin.Configuration.Plugins.Fields.Installed") <img src="@Url.Content("~/Administration/Content/images/")active-#=Installed#.gif" />' +
-                                                '# if(CanChangeEnabled) {# <br />@T("Admin.Configuration.Plugins.Fields.IsEnabled") <img src="@Url.Content("~/Administration/Content/images/")active-#=IsEnabled#.gif" /> #} #' +
+                                                '<ul class="common-list">' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.Version") #:Version#</li>' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.Author") #:Author#</li>' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.SystemName") #:SystemName#</li>' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.DisplayOrder") #:DisplayOrder#</li>' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.Installed")  # if(Installed) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #</li>' +
+                                                '# if(CanChangeEnabled) {# <li>@T("Admin.Configuration.Plugins.Fields.IsEnabled") # if(IsEnabled) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} # </li> #} #' +
+                                                '</ul>' +
                                                 //allow configuration only when a plugin has a configuration URL specified
-                                                '<br /># if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="btn btn-default" href="#=ConfigurationUrl#">@T("Admin.Configuration.Plugins.Fields.Configure")</a>&nbsp;&nbsp;&nbsp; #} #' +
-                                                '<a class="btn btn-default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=#=SystemName#&btnId=btnRefresh&formId=plugins-form\', 800, 300, true);">@T("Admin.Common.Edit")</a>'
+                                                '# if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="btn btn-primary" href="#=ConfigurationUrl#">@T("Admin.Configuration.Plugins.Fields.Configure")</a>&nbsp;&nbsp;&nbsp; #} #' +
+                                                '<a class="btn bg-aqua" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=#=SystemName#&btnId=btnRefresh&formId=plugins-form\', 800, 500, true);">@T("Admin.Common.Edit")</a>'
                                         }, {
                                             field: "Installed",
                                             title: "@T("Admin.Configuration.Plugins.Fields.Installation")",
-                                            template: '# if(Installed) {# <input type="submit" name="uninstall-plugin-link-#=SystemName#" class="btn btn-default" value="@T("Admin.Configuration.Plugins.Fields.Uninstall")" /> #} else {#  <input type="submit" name="install-plugin-link-#=SystemName#" class="plugin-button install-plugin-link" value="@T("Admin.Configuration.Plugins.Fields.Install")" /> #} #',
+                                            template: '# if(Installed) {# <button type="submit" name="uninstall-plugin-link-#=SystemName#" class="btn bg-green uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall")</button> #} else {#  <button type="submit" name="install-plugin-link-#=SystemName#" class="btn bg-red install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install")</button> #} #',
                                             headerAttributes: { style: "text-align:center" },
                                             attributes: { style: "text-align:center" }
                                         }
@@ -170,6 +187,7 @@
                                 });
                             });
                         </script>
+
                         <script type="text/javascript">
                             $(document).ready(function () {
                                 //search button
@@ -190,7 +208,6 @@
                                 addAntiForgeryToken(data);
                                 return data;
                             }
-
                         </script>
                     </div>
                 </div>

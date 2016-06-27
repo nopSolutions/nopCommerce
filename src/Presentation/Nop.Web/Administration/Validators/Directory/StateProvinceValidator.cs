@@ -7,7 +7,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Directory
 {
-    public class StateProvinceValidator : BaseNopValidator<StateProvinceModel>
+    public partial class StateProvinceValidator : BaseNopValidator<StateProvinceModel>
     {
         public StateProvinceValidator(ILocalizationService localizationService, IDbContext dbContext)
         {

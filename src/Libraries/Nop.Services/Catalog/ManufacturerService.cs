@@ -150,8 +150,8 @@ namespace Nop.Services.Catalog
             query = query.Where(m => !m.Deleted);
             query = query.OrderBy(m => m.DisplayOrder);
 
-            if ((!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations)) || storeId > 0)
-            { 
+            if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) || (!showHidden && !_catalogSettings.IgnoreAcl))
+            {
                 if (!showHidden && !_catalogSettings.IgnoreAcl)
                 {
                     //ACL (access control list)
@@ -163,7 +163,7 @@ namespace Nop.Services.Catalog
                             where !m.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                             select m;
                 }
-                if ((!showHidden && !_catalogSettings.IgnoreStoreLimitations) || storeId > 0)
+                if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
                 {
                     //Store mapping
                     query = from m in query

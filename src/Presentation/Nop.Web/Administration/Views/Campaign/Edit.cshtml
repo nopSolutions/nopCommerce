@@ -2,19 +2,31 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Promotions.Campaigns.EditCampaignDetails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Campaigns");
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Promotions.Campaigns.EditCampaignDetails") - @Model.Name 
-            <small>@Html.ActionLink("(" + T("Admin.Promotions.Campaigns.BackToList") + ")", "List")</small>
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Promotions.Campaigns.BackToList").Text, "List")</small>
         </h1>
         <div class="pull-right">
-            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
-            <input type="submit" name="save-continue" class="btn btn-default" value="@T("Admin.Common.SaveContinue")" />
-            <span id="campaign-delete" class="btn btn-default">@T("Admin.Common.Delete")</span>
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="campaign-delete" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Common.Delete")
+            </span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)

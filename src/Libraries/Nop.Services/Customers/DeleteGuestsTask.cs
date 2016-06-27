@@ -1,6 +1,5 @@
 ﻿using System;
 using Nop.Core.Domain.Common;
-using Nop.Services.Configuration;
 using Nop.Services.Tasks;
 
 namespace Nop.Services.Customers
@@ -28,7 +27,6 @@ namespace Nop.Services.Customers
             // Default value in case 0 is returned.  0 would effectively disable this service and harm performance.
             olderThanMinutes = olderThanMinutes == 0 ? 1440 : olderThanMinutes;
     
-            //Do not delete more than 1000 records per time. This way the system is not slowed down
             _customerService.DeleteGuestCustomers(null, DateTime.UtcNow.AddMinutes(-olderThanMinutes), true);
         }
     }

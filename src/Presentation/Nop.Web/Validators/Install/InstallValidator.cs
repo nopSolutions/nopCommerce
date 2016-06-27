@@ -5,7 +5,7 @@ using Nop.Web.Models.Install;
 
 namespace Nop.Web.Validators.Install
 {
-    public class InstallValidator : BaseNopValidator<InstallModel>
+    public partial class InstallValidator : BaseNopValidator<InstallModel>
     {
         public InstallValidator(IInstallationLocalizationService locService)
         {

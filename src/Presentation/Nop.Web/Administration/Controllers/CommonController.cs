@@ -141,6 +141,7 @@ namespace Nop.Admin.Controllers
             model.ServerTimeZone = TimeZone.CurrentTimeZone.StandardName;
             model.ServerLocalTime = DateTime.Now;
             model.UtcTime = DateTime.UtcNow;
+            model.CurrentUserTime = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
             model.HttpHost = _webHelper.ServerVariables("HTTP_HOST");
             foreach (var key in _httpContext.Request.ServerVariables.AllKeys)
             {
@@ -162,7 +163,6 @@ namespace Nop.Admin.Controllers
             }
             return View(model);
         }
-
 
         public ActionResult Warnings()
         {
@@ -612,7 +612,7 @@ namespace Nop.Admin.Controllers
             return Redirect(returnUrl);
         }
 
-
+        [HttpPost]
         public ActionResult ClearCache(string returnUrl = "")
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
@@ -630,7 +630,7 @@ namespace Nop.Admin.Controllers
             return Redirect(returnUrl);
         }
 
-
+        [HttpPost]
         public ActionResult RestartApplication(string returnUrl = "")
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
@@ -772,24 +772,8 @@ namespace Nop.Admin.Controllers
         [ChildActionOnly]
         public ActionResult MultistoreDisabledWarning()
         {
-            //default setting
-            bool enabled = _catalogSettings.IgnoreStoreLimitations;
-            if (!enabled)
-            {
-                //overridden settings
-                var stores = _storeService.GetAllStores();
-                foreach (var store in stores)
-                {
-                    if (!enabled)
-                    {
-                        var catalogSettings = _settingService.LoadSetting<CatalogSettings>(store.Id);
-                        enabled = catalogSettings.IgnoreStoreLimitations;
-                    }
-                }
-            }
-
             //This setting is disabled. No warnings.
-            if (!enabled)
+            if (!_catalogSettings.IgnoreStoreLimitations)
                 return Content("");
 
             return PartialView();
@@ -798,24 +782,8 @@ namespace Nop.Admin.Controllers
         [ChildActionOnly]
         public ActionResult AclDisabledWarning()
         {
-            //default setting
-            bool enabled = _catalogSettings.IgnoreAcl;
-            if (!enabled)
-            {
-                //overridden settings
-                var stores = _storeService.GetAllStores();
-                foreach (var store in stores)
-                {
-                    if (!enabled)
-                    {
-                        var catalogSettings = _settingService.LoadSetting<CatalogSettings>(store.Id);
-                        enabled = catalogSettings.IgnoreAcl;
-                    }
-                }
-            }
-
             //This setting is disabled. No warnings.
-            if (!enabled)
+            if (!_catalogSettings.IgnoreAcl)
                 return Content("");
 
             return PartialView();

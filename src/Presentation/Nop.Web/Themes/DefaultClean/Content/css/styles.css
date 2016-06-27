@@ -15,7 +15,7 @@
 	box-sizing: border-box;
 }
 html {
-	margin: 0 !important;
+	margin: 0;
 	-webkit-text-size-adjust: none;
 }
 ol, ul {
@@ -354,6 +354,23 @@ label, label + * {
     white-space: nowrap;
 	font-weight: normal;
 }
+.forum-table th.replies,
+.forum-table th.views,
+.forum-table th.votes,
+.forum-table th.latest-post,
+.forum-table th.topics,
+.forum-table th.posts,
+.forum-table td.replies,
+.forum-table td.views,
+.forum-table td.votes,
+.forum-table td.latest-post,
+.forum-table td.topics,
+.forum-table td.posts{
+    display: none;
+}
+.forum-table td.image {
+    min-width: 0;
+}
 .cart td,
 .data-table td,
 .forum-table td {
@@ -367,6 +384,7 @@ label, label + * {
 }
 .forum-table td {
 	min-width: 90px;
+    padding: 10px;
 }
 .cart a,
 .data-table a,
@@ -383,10 +401,12 @@ label, label + * {
 .data-table .product,
 .data-table .message,
 .data-table .info,
-.data-table .name,
+.data-table .name {
+    min-width: 225px;
+	text-align: left;
+}
 .forum-table .forum-details,
 .forum-table .topic-details {
-	min-width: 225px;
 	text-align: left;
 }
 .cart .product a,
@@ -1607,7 +1627,6 @@ label, label + * {
 
 
 /********** PRODUCT PAGE **********/
-
 
 
 .product-details-page {
@@ -4520,6 +4539,13 @@ label, label + * {
 	padding: 0 10px 20px;
 	line-height: 22px;
 	color: #444;
+    margin-bottom: 0;
+}
+
+.topic-post .post-vote{
+    text-align: center;
+    display: table;
+    margin: 0 auto 20px;
 }
 
 .topic-post .user-posted-image,
@@ -4542,6 +4568,28 @@ label, label + * {
     font-style: italic;
 }
 
+.topic-post .post-vote span.vote {
+	cursor: pointer;
+    display: block;
+    width: 40px;
+    height: 24px;
+}
+.topic-post .post-vote span.up{
+    background: url('../images/vote-up.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.vote.up.selected{
+    background: url('../images/vote-up-selected.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.down{
+    background: url('../images/vote-down.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.vote.down.selected{
+    background: url('../images/vote-down-selected.png') no-repeat 50% 50%;
+}
+.topic-post .vote-count-post {
+    display: block;
+    font-size: 160%;
+}
 /* forum edit & send message */
 
 .forum-edit-page .page-title,
@@ -5193,6 +5241,34 @@ pre {
 	margin: 1px;
 }
 
+.topic-post .post-body {
+    float: left;
+    max-width: 90.5%;
+    text-align: left;
+}
+
+.forum-group .forum-table th.latest-post,
+.forum-group .forum-table th.topics,
+.forum-group .forum-table th.posts,
+.forum-group .forum-table td.latest-post,
+.forum-group .forum-table td.topics,
+.forum-group .forum-table td.posts {
+    display: table-cell;
+}
+
+.topic-group .forum-table th.latest-post,
+.topic-group .forum-table td.latest-post {
+    display: table-cell;
+}
+
+.forum-table td.image {
+    max-width: 40px;
+}
+
+.forum-table td.image div {
+    max-width: 100%;
+    background-size: contain;
+}
 }
 
 
@@ -5729,8 +5805,31 @@ pre {
 	border-left: 1px solid #ddd;
 	text-align: center;
 }
+
 .topic-post .post-body {
 	padding: 20px;
+}
+
+.topic-post .post-vote{
+    padding: 20px 0;
+}
+
+.forum-table th.replies,
+.forum-table th.views,
+.forum-table th.votes,
+.forum-table td.replies,
+.forum-table td.views,
+.forum-table td.votes {
+    display: table-cell;
+}
+
+.forum-table td.image {
+    max-width: none;
+}
+
+.forum-table td.image div {
+    max-width: none;
+    background-size: initial;
 }
 
 .ui-tabs-nav {
@@ -6475,7 +6574,6 @@ pre {
 .forum-search-box .advanced a {
 	line-height: normal;
 }
-
 .forums-table-section td {
 	min-width: 150px;
 }
@@ -6485,12 +6583,17 @@ pre {
 .forums-table-section .view-all {
 	text-align: right;
 }
-
 .topic-actions .pager.upper {
 	display: block;
 	max-width: 400px;
 }
-
+.forum-table .forum-details,
+.forum-table .topic-details {
+	min-width: 225px;
+}
+.forum-table td {
+    padding: 20px;
+}
 .forum-edit-page textarea,
 .private-message-send-page textarea {
 	width: 600px;
@@ -6632,6 +6735,11 @@ pre {
 .forum-actions .pager,
 .topic-actions .pager {
 	max-width: 600px !important;
+}
+
+.topic-post .post-body {
+    width: 941px;
+    max-width: 100%;
 }
 
 }

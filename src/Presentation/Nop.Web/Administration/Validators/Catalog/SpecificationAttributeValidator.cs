@@ -5,7 +5,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Catalog
 {
-    public class SpecificationAttributeValidator : BaseNopValidator<SpecificationAttributeModel>
+    public partial class SpecificationAttributeValidator : BaseNopValidator<SpecificationAttributeModel>
     {
         public SpecificationAttributeValidator(ILocalizationService localizationService)
         {

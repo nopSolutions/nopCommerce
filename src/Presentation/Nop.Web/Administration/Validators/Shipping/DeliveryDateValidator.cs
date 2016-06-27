@@ -7,7 +7,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Shipping
 {
-    public class DeliveryDateValidator : BaseNopValidator<DeliveryDateModel>
+    public partial class DeliveryDateValidator : BaseNopValidator<DeliveryDateModel>
     {
         public DeliveryDateValidator(ILocalizationService localizationService, IDbContext dbContext)
         {

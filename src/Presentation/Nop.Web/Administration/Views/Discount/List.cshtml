@@ -1,59 +1,67 @@
 ﻿@model DiscountListModel
+
 @{
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
     //page title
     ViewBag.Title = T("Admin.Promotions.Discounts").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Discounts");
 }
-@Html.AntiForgeryToken()
 
+@Html.AntiForgeryToken()
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Promotions.Discounts")
     </h1>
     <div class="pull-right">
-        <a href="@Url.Action("Create")" class="btn btn-default">@T("Admin.Common.AddNew")</a>
+        <a href="@Url.Action("Create")" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
     </div>
 </div>
-
-
 
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default">
+            <div class="panel panel-default panel-search">
                 <div class="panel-body">
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SearchDiscountName)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.SearchDiscountName)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SearchDiscountCouponCode)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.SearchDiscountCouponCode)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SearchDiscountTypeId)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.NopDropDownList("SearchDiscountTypeId", Model.AvailableDiscountTypes)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            &nbsp;
-                        </div>
-                        <div class="col-sm-9">
-                            <input type="button" id="search-discounts" class="btn btn-default" value="@T("Admin.Common.Search")"/>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.SearchDiscountName)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopEditorFor(model => model.SearchDiscountName)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.SearchDiscountCouponCode)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopEditorFor(model => model.SearchDiscountCouponCode)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.SearchDiscountTypeId)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopDropDownList("SearchDiscountTypeId", Model.AvailableDiscountTypes)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <button type="button" id="search-discounts" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -61,7 +69,6 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="discounts-grid"></div>
 
                     <script>
@@ -136,15 +143,13 @@
                                     title: "@T("Admin.Common.Edit")",
                                     width: 100,
                                     template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-                                    }
+                                }
                                 ]
                             });
                         });
                     </script>
                     <script type="text/javascript">
-
                         $(document).ready(function() {
-
                             $('#search-discounts').click(function() {
                                 var grid = $('#discounts-grid').data('kendoGrid');
                                 grid.dataSource.page(1); //new search. Set page size to 1
@@ -155,11 +160,11 @@
 
                         $("".concat("#@Html.FieldIdFor(model => model.SearchDiscountName),",
                             "#@Html.FieldIdFor(model => model.SearchDiscountCouponCode)")).keydown(function(event) {
-                            if (event.keyCode === 13) {
-                                $("#search-discounts").click();
-                                return false;
-                            }
-                        });
+                                if (event.keyCode === 13) {
+                                    $("#search-discounts").click();
+                                    return false;
+                                }
+                            });
 
                         function additionalData() {
                             var data = {
@@ -170,7 +175,6 @@
                             addAntiForgeryToken(data);
                             return data;
                         }
-
                     </script>
                 </div>
             </div>

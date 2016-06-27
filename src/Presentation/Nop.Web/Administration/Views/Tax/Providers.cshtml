@@ -1,10 +1,11 @@
 ﻿@{    
     //page title
     ViewBag.Title = T("Admin.Configuration.Tax.Providers").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Tax providers");
 }
+
 @Html.AntiForgeryToken()
-
-
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Tax.Providers")
@@ -19,7 +20,6 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="tax-providers-grid"></div>
 
                     <script>
@@ -75,12 +75,12 @@
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPrimaryTaxProvider#.gif" />'
+                                    template: '# if(IsPrimaryTaxProvider) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "SystemName",
                                     title: "@T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider")",
                                     width: 200,
-                                    template: '<a href="@Url.Content("~/Admin/Tax/MarkAsPrimaryProvider/")?systemName=#=SystemName#" class="btn btn-default">@T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider")</a>'
+                                    template: '<a href="@Url.Content("~/Admin/Tax/MarkAsPrimaryProvider/")?systemName=#=SystemName#" class="btn bg-green">@T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider")</a>'
                                 }, {
                                     field: "SystemName",
                                     title: "@T("Admin.Configuration.Tax.Providers.Configure")",

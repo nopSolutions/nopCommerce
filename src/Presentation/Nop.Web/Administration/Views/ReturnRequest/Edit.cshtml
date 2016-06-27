@@ -1,21 +1,37 @@
 ﻿@model ReturnRequestModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.ReturnRequests.EditReturnRequestDetails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Return requests");
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.ReturnRequests.EditReturnRequestDetails") 
-            <small>@Html.ActionLink("(" + T("Admin.ReturnRequests.BackToList") + ")", "List")</small>
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.ReturnRequests.BackToList").Text, "List")</small>
         </h1>
         <div class="pull-right">
-            <input type="submit" name="notify-customer" class="btn btn-default" value="@T("Admin.ReturnRequests.NotifyCustomer")" />
-            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
-            <input type="submit" name="save-continue" class="btn btn-default" value="@T("Admin.Common.SaveContinue")" />
-            <span id="returnrequest-delete" class="btn btn-default">@T("Admin.Common.Delete")</span>
+            <button type="submit" name="notify-customer" class="btn bg-aqua">
+                <i class="fa fa-envelope-o"></i>
+                @T("Admin.ReturnRequests.NotifyCustomer")
+            </button>
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="returnrequest-delete" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Common.Delete")
+            </span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)

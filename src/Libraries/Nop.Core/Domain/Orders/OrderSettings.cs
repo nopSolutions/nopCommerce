@@ -77,6 +77,11 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether "Return requests" are allowed
         /// </summary>
         public bool ReturnRequestsEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value "Return requests" number mask
+        /// </summary>
+        public string ReturnRequestNumberMask { get; set; }
         
         /// <summary>
         /// Gets or sets a number of days that the Return Request Link will be available for customers after order placing.

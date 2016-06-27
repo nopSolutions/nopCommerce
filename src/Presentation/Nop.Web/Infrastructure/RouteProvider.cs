@@ -46,6 +46,11 @@ namespace Nop.Web.Infrastructure
                             "cart/",
                             new { controller = "ShoppingCart", action = "Cart" },
                             new[] { "Nop.Web.Controllers" });
+            //estimate shipping
+            routes.MapLocalizedRoute("EstimateShipping",
+                            "cart/estimateshipping",
+                            new {controller = "ShoppingCart", action = "GetEstimateShipping"},
+                            new[] {"Nop.Web.Controllers"});
             //wishlist
             routes.MapLocalizedRoute("Wishlist",
                             "wishlist/{customerGuid}",
@@ -192,6 +197,15 @@ namespace Nop.Web.Infrastructure
             routes.MapLocalizedRoute("ProductReviews",
                             "productreviews/{productId}",
                             new { controller = "Product", action = "ProductReviews" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("CustomerProductReviews",
+                            "customer/productreviews",
+                            new { controller = "Product", action = "CustomerProductReviews" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("CustomerProductReviewsPaged",
+                            "customer/productreviews/page/{page}",
+                            new { controller = "Product", action = "CustomerProductReviews" },
+                            new { page = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             //back in stock notifications
             routes.MapLocalizedRoute("BackInStockSubscribePopup",

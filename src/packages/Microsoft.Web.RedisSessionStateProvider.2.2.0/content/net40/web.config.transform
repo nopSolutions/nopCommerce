@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <system.web>
+    <sessionState mode="Custom" customProvider="MySessionStateStore">
+      <providers>
+        <!-- For more details check https://github.com/Azure/aspnet-redis-providers/wiki -->
+        <!-- Either use 'connectionString' OR 'settingsClassName' and 'settingsMethodName' OR use 'host','port','accessKey','ssl','connectionTimeoutInMilliseconds' and 'operationTimeoutInMilliseconds'. -->
+        <!-- 'throwOnError','retryTimeoutInMilliseconds','databaseId' and 'applicationName' can be used with both options. -->
+        <!--
+          <add name="MySessionStateStore" 
+            host = "127.0.0.1" [String]
+            port = "" [number]
+            accessKey = "" [String]
+            ssl = "false" [true|false]
+            throwOnError = "true" [true|false]
+            retryTimeoutInMilliseconds = "5000" [number]
+            databaseId = "0" [number]
+            applicationName = "" [String]
+            connectionTimeoutInMilliseconds = "5000" [number]
+            operationTimeoutInMilliseconds = "1000" [number]
+            connectionString = "<Valid StackExchange.Redis connection string>" [String]
+            settingsClassName = "<Assembly qualified class name that contains settings method specified below. Which basically return 'connectionString' value>" [String]
+            settingsMethodName = "<Settings method should be defined in settingsClass. It should be public, static, does not take any parameters and should have a return type of 'String', which is basically 'connectionString' value.>" [String]
+            loggingClassName = "<Assembly qualified class name that contains logging method specified below>" [String]
+            loggingMethodName = "<Logging method should be defined in loggingClass. It should be public, static, does not take any parameters and should have a return type of System.IO.TextWriter.>" [String]
+          />
+        -->
+        <add name="MySessionStateStore" type="Microsoft.Web.Redis.RedisSessionStateProvider"
+             host=""
+             accessKey=""
+             ssl="true" />
+      </providers>
+    </sessionState>
+  </system.web>    
+</configuration>

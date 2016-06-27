@@ -1,9 +1,10 @@
-﻿@using Nop.Core.Domain.Catalog
-@model ProductAttributeConditionModel
+﻿@model ProductAttributeConditionModel
+
+@using Nop.Core.Domain.Catalog
+
 @{
     Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
-}
-@{
+
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition").Text;
 }
@@ -21,12 +22,11 @@
 
     @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
     @using (Html.BeginForm("ProductAttributeConditionPopup", "Product",
-                new RouteValueDictionary(new { productAttributeMappingId = Model.ProductAttributeMappingId, btnId = ViewBag.btnId, formId = ViewBag.formId }),
-                FormMethod.Post,
-                new Dictionary<string, Object> { { "enctype", "multipart/form-data" } }))
+                        new RouteValueDictionary(new { productAttributeMappingId = Model.ProductAttributeMappingId, btnId = ViewBag.btnId, formId = ViewBag.formId }),
+                        FormMethod.Post,
+                        new Dictionary<string, Object> { { "enctype", "multipart/form-data" } }))
     {
         @Html.AntiForgeryToken()
-        @Html.ValidationSummary(false)
         <div class="content-header clearfix">
             <h1 class="pull-left">
                 @T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition")
@@ -37,8 +37,8 @@
         </div>
 
         <div class="content">
+            @Html.ValidationSummary(false)
             <div class="form-horizontal">
-
                 <script type="text/javascript">
                     $(document).ready(function() {
                         $("#@Html.FieldIdFor(model => model.EnableCondition)").click(toggleEnableCondition);
@@ -62,28 +62,28 @@
                             </p>
 
                             <div class="form-group">
-                                <div class="col-sm-3">
+                                <div class="col-md-3">
                                     @Html.NopLabelFor(model => model.EnableCondition)
                                 </div>
-                                <div class="col-sm-9">
+                                <div class="col-md-9">
                                     @Html.NopEditorFor(model => model.EnableCondition)
                                     @Html.ValidationMessageFor(model => model.EnableCondition)
                                 </div>
                             </div>
 
-                            <div id="pnlAttributes">
+                            <div id="pnlAttributes" style="margin-bottom: 10px;">
                                 @if (Model.ProductAttributes.Count > 0)
                                 {
                                     var attributesList = new List<SelectListItem>();
                                     foreach (var attribute in Model.ProductAttributes)
                                     {
-                                        attributesList.Add(new SelectListItem {Text = attribute.Name, Value = attribute.Id.ToString()});
+                                        attributesList.Add(new SelectListItem { Text = attribute.Name, Value = attribute.Id.ToString() });
                                     }
                                     <div class="form-group" id="pnlBasepriceUnit">
-                                        <div class="col-sm-3">
+                                        <div class="col-md-3">
                                             @Html.NopLabelFor(model => model.SelectedProductAttributeId)
                                         </div>
-                                        <div class="col-sm-9">
+                                        <div class="col-md-9">
                                             @Html.NopDropDownListFor(model => model.SelectedProductAttributeId, attributesList)
 
                                             <script type="text/javascript">
@@ -102,10 +102,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <div class="col-sm-3">
-                                            &nbsp;
-                                        </div>
-                                        <div class="col-sm-9">
+                                        <div class="col-md-9 col-md-offset-3">
                                             @foreach (var attribute in Model.ProductAttributes)
                                             {
                                                 string controlId = string.Format("product_attribute_{0}", attribute.Id);
@@ -113,48 +110,48 @@
                                                     @switch (attribute.AttributeControlType)
                                                     {
                                                         case AttributeControlType.DropdownList:
-                                                        {
-                                                            <select name="@(controlId)" id="@(controlId)" class="form-control">
-                                                                @if (!attribute.IsRequired)
-                                                                {
-                                                                    <option value="0">---</option>
-                                                                }
-                                                                @foreach (var attributeValue in attribute.Values)
-                                                                {
-                                                                    <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">
-                                                                        @attributeValue.Name
-                                                                    </option>
-                                                                }
-                                                            </select>
-                                                        }
+                                                            {
+                                                                <select name="@(controlId)" id="@(controlId)" class="form-control">
+                                                                    @if (!attribute.IsRequired)
+                                                                    {
+                                                                        <option value="0">---</option>
+                                                                    }
+                                                                    @foreach (var attributeValue in attribute.Values)
+                                                                    {
+                                                                        <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">
+                                                                            @attributeValue.Name
+                                                                        </option>
+                                                                    }
+                                                                </select>
+                                                            }
                                                             break;
                                                         case AttributeControlType.RadioList:
                                                         case AttributeControlType.ColorSquares:
                                                         case AttributeControlType.ImageSquares:
-                                                        {
-                                                            <ul class="option-list">
-                                                                @foreach (var attributeValue in attribute.Values)
+                                                            {
+                                                                foreach (var attributeValue in attribute.Values)
                                                                 {
-                                                                    <li>
-                                                                        <input id="@(controlId)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected"/>
-                                                                        <label for="@(controlId)">@attributeValue.Name</label>
-                                                                    </li>
+                                                                    <div class="radio">
+                                                                        <label>
+                                                                            <input id="@(controlId)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                                                            @attributeValue.Name
+                                                                        </label>
+                                                                    </div>
                                                                 }
-                                                            </ul>
-                                                        }
+                                                            }
                                                             break;
                                                         case AttributeControlType.Checkboxes:
-                                                        {
-                                                            <ul class="option-list">
-                                                                @foreach (var attributeValue in attribute.Values)
+                                                            {
+                                                                foreach (var attributeValue in attribute.Values)
                                                                 {
-                                                                    <li>
-                                                                        <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null)/>
-                                                                        <label for="@(controlId)">@attributeValue.Name</label>
-                                                                    </li>
+                                                                    <div class="radio">
+                                                                        <label>
+                                                                            <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                                                                            @attributeValue.Name
+                                                                        </label>
+                                                                    </div>
                                                                 }
-                                                            </ul>
-                                                        }
+                                                            }
                                                             break;
                                                         case AttributeControlType.ReadonlyCheckboxes:
                                                         case AttributeControlType.TextBox:
@@ -172,15 +169,18 @@
                                 }
                                 else
                                 {
-                                    <text>No attribute exists that could be used as condition</text>
+                                    <div class="form-group" id="pnlBasepriceUnit">
+                                        <div class="col-md-9 col-md-offset-3">
+                                            No attribute exists that could be used as condition
+                                        </div>
+                                    </div>
                                 }
                             </div>
                             <div class="form-group">
-                                <div class="col-sm-3">
-                                    &nbsp;
-                                </div>
-                                <div class="col-sm-9">
-                                    <input type="submit" class="btn btn-default" value="@T("Admin.Common.Save")" />
+                                <div class="col-md-9 col-md-offset-3">
+                                    <button type="submit" class="btn btn-primary">
+                                        @T("Admin.Common.Save")
+                                    </button>
                                 </div>
                             </div>
                         </div>

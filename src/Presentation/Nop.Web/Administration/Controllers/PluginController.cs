@@ -336,6 +336,8 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("plugin-reload-grid")]
         public ActionResult ReloadList()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))

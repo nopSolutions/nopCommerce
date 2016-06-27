@@ -79,11 +79,6 @@ namespace Nop.Services.Payments
         #region Recurring payments
 
         /// <summary>
-        /// Gets or sets a value idicating whether it's a recurring payment (initial payment was already processed)
-        /// </summary>
-        public bool IsRecurringPayment { get; set; }
-
-        /// <summary>
         /// Gets or sets an initial (parent) order identifier if order is recurring
         /// </summary>
         public int InitialOrderId { get; set; }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -12,6 +11,7 @@ namespace Nop.Admin.Controllers
     [AdminValidateIpAddress]
     [AdminAuthorize]
     [AdminAntiForgery]
+    [AdminVendorValidation]
     public abstract partial class BaseAdminController : BaseController
     {
         /// <summary>
@@ -48,32 +48,29 @@ namespace Nop.Admin.Controllers
         }
 
         /// <summary>
-        /// Save selected TAB index
+        /// Save selected TAB name
         /// </summary>
-        /// <param name="index">Index to save; null to automatically detect it</param>
+        /// <param name="tabName">Tab name to save; empty to automatically detect it</param>
         /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request</param>
-        protected void SaveSelectedTabIndex(int? index = null, bool persistForTheNextRequest = true)
+        protected void SaveSelectedTabName(string tabName = "", bool persistForTheNextRequest = true)
         {
             //keep this method synchronized with
-            //"GetSelectedTabIndex" method of \Nop.Web.Framework\ViewEngines\Razor\WebViewPage.cs
-            if (!index.HasValue)
+            //"GetSelectedTabName" method of \Nop.Web.Framework\HtmlExtensions.cs
+            if (string.IsNullOrEmpty(tabName))
             {
-                int tmp;
-                if (int.TryParse(this.Request.Form["selected-tab-index"], out tmp))
-                {
-                    index = tmp;
-                }
+                tabName = this.Request.Form["selected-tab-name"];
             }
-            if (index.HasValue)
+            
+            if (!string.IsNullOrEmpty(tabName))
             {
-                string dataKey = "nop.selected-tab-index";
+                const string dataKey = "nop.selected-tab-name";
                 if (persistForTheNextRequest)
                 {
-                    TempData[dataKey] = index;
+                    TempData[dataKey] = tabName;
                 }
                 else
                 {
-                    ViewData[dataKey] = index;
+                    ViewData[dataKey] = tabName;
                 }
             }
         }

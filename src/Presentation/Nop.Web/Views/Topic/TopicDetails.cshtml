@@ -16,7 +16,9 @@
 
     if (!Model.IsPasswordProtected)
     {
+        //title
         Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+        //meta
         Html.AddMetaDescriptionParts(Model.MetaDescription);
         Html.AddMetaKeywordParts(Model.MetaKeywords);
     }
@@ -27,6 +29,9 @@
         var topicUrl = Url.RouteUrl("Topic", new { SeName = Model.SeName }, this.Request.Url.Scheme);
         Html.AddCanonicalUrlParts(topicUrl);
     }
+
+    //page class
+    Html.AddPageCssClassParts("html-topic-page");
 }
 @if (Model.IsPasswordProtected)
 {
@@ -65,7 +70,7 @@
                             $('#ph-topic').show();
                         }
                         else {
-                            $('#password-error').text(data.Error);
+                            $('#password-error').text(data.Error).fadeIn("slow");
                             $('#ph-password #password').select().focus();
                         }
                     }
@@ -91,9 +96,7 @@
                 @Html.Password("password")
                 <input type="submit" id="button-password" value="@T("Topic.Button")" class="button-1 topic-password-button" />
             </div>
-            <div class="password-error">
-                <span id="password-error"></span>
-            </div>
+            <div class="password-error" id="password-error" style="display: none;"></div>
         }
     </div>
 }

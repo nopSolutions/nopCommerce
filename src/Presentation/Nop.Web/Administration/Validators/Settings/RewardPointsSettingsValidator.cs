@@ -6,7 +6,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Settings
 {
-    public class RewardPointsSettingsValidator : BaseNopValidator<RewardPointsSettingsModel>
+    public partial class RewardPointsSettingsValidator : BaseNopValidator<RewardPointsSettingsModel>
     {
         public RewardPointsSettingsValidator(ILocalizationService localizationService)
         {

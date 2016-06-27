@@ -21,7 +21,7 @@ namespace Nop.Services.Tax
         public decimal TaxRate { get; set; }
 
         /// <summary>
-        /// Gets or sets an errors
+        /// Gets or sets errors
         /// </summary>
         public IList<string> Errors { get; set; }
 

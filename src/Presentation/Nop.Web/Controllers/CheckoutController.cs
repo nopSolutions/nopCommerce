@@ -69,6 +69,7 @@ namespace Nop.Web.Controllers
         private readonly PaymentSettings _paymentSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly AddressSettings _addressSettings;
+        private readonly CustomerSettings _customerSettings;
 
         #endregion
 
@@ -103,7 +104,8 @@ namespace Nop.Web.Controllers
             RewardPointsSettings rewardPointsSettings,
             PaymentSettings paymentSettings,
             ShippingSettings shippingSettings,
-            AddressSettings addressSettings)
+            AddressSettings addressSettings,
+            CustomerSettings customerSettings)
         {
             this._workContext = workContext;
             this._storeContext = storeContext;
@@ -136,6 +138,7 @@ namespace Nop.Web.Controllers
             this._paymentSettings = paymentSettings;
             this._shippingSettings = shippingSettings;
             this._addressSettings = addressSettings;
+            this._customerSettings = customerSettings;
         }
 
         #endregion
@@ -460,7 +463,13 @@ namespace Nop.Web.Controllers
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
-            if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
+            bool downloadableProductsRequireRegistration =
+                _customerSettings.RequireRegistrationForDownloadableProducts && cart.Any(sci => sci.Product.IsDownload);
+
+            if (_workContext.CurrentCustomer.IsGuest() 
+                && (!_orderSettings.AnonymousCheckoutAllowed
+                    || downloadableProductsRequireRegistration)
+                )
                 return new HttpUnauthorizedResult();
 
             //reset checkout data
@@ -671,6 +680,11 @@ namespace Nop.Web.Controllers
 
             //model
             var model = PrepareShippingAddressModel(prePopulateNewAddressWithCustomerFields: true);
+            if (_shippingSettings.AllowPickUpInStore && _shippingService.LoadActiveShippingRateComputationMethods(_storeContext.CurrentStore.Id).Count == 0)
+            {
+                model.PickUpInStoreOnly = true;
+                model.PickUpInStore = true;
+            }
             return View(model);
         }
         public ActionResult SelectShippingAddress(int addressId)
@@ -924,7 +938,7 @@ namespace Nop.Web.Controllers
             if (_orderSettings.OnePageCheckoutEnabled)
                 return RedirectToRoute("CheckoutOnePage");
 
-            if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
+            if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                 return new HttpUnauthorizedResult();
 
             //Check whether payment workflow is required
@@ -1345,7 +1359,7 @@ namespace Nop.Web.Controllers
             if (!_orderSettings.OnePageCheckoutEnabled)
                 return RedirectToRoute("Checkout");
 
-            if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
+            if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                 return new HttpUnauthorizedResult();
 
             var model = new OnePageCheckoutModel
@@ -1461,6 +1475,12 @@ namespace Nop.Web.Controllers
                 {
                     //shipping is required
                     var shippingAddressModel = PrepareShippingAddressModel(prePopulateNewAddressWithCustomerFields: true);
+                    if (_shippingSettings.AllowPickUpInStore && _shippingService.LoadActiveShippingRateComputationMethods(_storeContext.CurrentStore.Id).Count == 0)
+                    {
+                        shippingAddressModel.PickUpInStoreOnly = true;
+                        shippingAddressModel.PickUpInStore = true;
+                    }
+
                     return Json(new
                     {
                         update_section = new UpdateSectionJsonModel

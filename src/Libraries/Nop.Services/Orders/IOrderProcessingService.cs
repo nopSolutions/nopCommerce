@@ -33,10 +33,11 @@ namespace Nop.Services.Orders
 
 
         /// <summary>
-        /// Process next recurring psayment
+        /// Process next recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
-        void ProcessNextRecurringPayment(RecurringPayment recurringPayment);
+        /// <param name="paymentResult">Process payment result (info about last payment for automatic recurring payments)</param>
+        void ProcessNextRecurringPayment(RecurringPayment recurringPayment, ProcessPaymentResult paymentResult = null);
 
         /// <summary>
         /// Cancels a recurring payment

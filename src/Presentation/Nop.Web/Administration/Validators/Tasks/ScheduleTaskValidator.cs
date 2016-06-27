@@ -5,7 +5,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Tasks
 {
-    public class ScheduleTaskValidator : BaseNopValidator<ScheduleTaskModel>
+    public partial class ScheduleTaskValidator : BaseNopValidator<ScheduleTaskModel>
     {
         public ScheduleTaskValidator(ILocalizationService localizationService)
         {

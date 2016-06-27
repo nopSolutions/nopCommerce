@@ -2,29 +2,32 @@
 @using Nop.Web.Models.Checkout;
 <div class="checkout-data">
     @Html.Widget("op_checkout_confirm_top")
-    <div class="section confirm-order">
-        <div>
-            @if (!String.IsNullOrEmpty(Model.MinOrderTotalWarning))
+    @if (!string.IsNullOrEmpty(Model.MinOrderTotalWarning) || Model.Warnings.Count > 0)
+    {
+        <div class="section confirm-order">
+            @if (!string.IsNullOrEmpty(Model.MinOrderTotalWarning))
             {
-                <span class="min-order-warning">@Model.MinOrderTotalWarning</span>
+                <div>
+                    <span class="min-order-warning">@Model.MinOrderTotalWarning</span>
+                </div>
+            }
+            @if (Model.Warnings.Count > 0)
+            {
+                <div class="message-error">
+                    <ul>
+                        @foreach (var warning in Model.Warnings)
+                        {
+                            <li>@warning</li>
+                        }
+                    </ul>
+                </div>
             }
         </div>
-        @if (Model.Warnings.Count > 0)
-        {
-            <div class="message-error">
-                <ul>
-                    @foreach (var warning in Model.Warnings)
-                    {
-                        <li>@warning</li>
-                    }
-                </ul>
-            </div>
-        }
-    </div>
+    }
     @Html.Widget("op_checkout_confirm_bottom")
     <div class="section order-summary">
         @Html.Action("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = true })
-    </div>    
+    </div>
     @if (String.IsNullOrEmpty(Model.MinOrderTotalWarning) && Model.TermsOfServiceOnOrderConfirmPage)
     {
         <div id="terms-of-service-warning-box" title="@T("Checkout.TermsOfService")" style="display:none;">

@@ -39,6 +39,7 @@ namespace Nop.Services.Media
         private readonly IDbContext _dbContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly MediaSettings _mediaSettings;
+        private readonly IDataProvider _dataProvider;
 
         #endregion
 
@@ -55,6 +56,7 @@ namespace Nop.Services.Media
         /// <param name="dbContext">Database context</param>
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="mediaSettings">Media settings</param>
+        /// <param name="dataProvider">Data provider</param>
         public PictureService(IRepository<Picture> pictureRepository,
             IRepository<ProductPicture> productPictureRepository,
             ISettingService settingService,
@@ -62,7 +64,8 @@ namespace Nop.Services.Media
             ILogger logger,
             IDbContext dbContext,
             IEventPublisher eventPublisher,
-            MediaSettings mediaSettings)
+            MediaSettings mediaSettings,
+            IDataProvider dataProvider)
         {
             this._pictureRepository = pictureRepository;
             this._productPictureRepository = productPictureRepository;
@@ -72,6 +75,7 @@ namespace Nop.Services.Media
             this._dbContext = dbContext;
             this._eventPublisher = eventPublisher;
             this._mediaSettings = mediaSettings;
+            this._dataProvider = dataProvider;
         }
 
         #endregion
@@ -89,30 +93,31 @@ namespace Nop.Services.Media
         protected virtual Size CalculateDimensions(Size originalSize, int targetSize,
             ResizeType resizeType = ResizeType.LongestSide, bool ensureSizePositive = true)
         {
-            var newSize = new Size();
+            float width, height;
+
             switch (resizeType)
             {
                 case ResizeType.LongestSide:
                     if (originalSize.Height > originalSize.Width)
                     {
-                        // portrait 
-                        newSize.Width = (int)(originalSize.Width * (float)(targetSize / (float)originalSize.Height));
-                        newSize.Height = targetSize;
+                        // portrait
+                        width = originalSize.Width * (targetSize / (float)originalSize.Height);
+                        height = targetSize;
                     }
                     else
                     {
                         // landscape or square
-                        newSize.Height = (int)(originalSize.Height * (float)(targetSize / (float)originalSize.Width));
-                        newSize.Width = targetSize;
+                        width = targetSize;
+                        height = originalSize.Height * (targetSize / (float) originalSize.Width);
                     }
                     break;
                 case ResizeType.Width:
-                    newSize.Height = (int)(originalSize.Height * (float)(targetSize / (float)originalSize.Width));
-                    newSize.Width = targetSize;
+                    width = targetSize;
+                    height = originalSize.Height * (targetSize / (float)originalSize.Width);
                     break;
                 case ResizeType.Height:
-                    newSize.Width = (int)(originalSize.Width * (float)(targetSize / (float)originalSize.Height));
-                    newSize.Height = targetSize;
+                    width = originalSize.Width * (targetSize / (float)originalSize.Height);
+                    height = targetSize;
                     break;
                 default:
                     throw new Exception("Not supported ResizeType");
@@ -120,13 +125,14 @@ namespace Nop.Services.Media
 
             if (ensureSizePositive)
             {
-                if (newSize.Width < 1)
-                    newSize.Width = 1;
-                if (newSize.Height < 1)
-                    newSize.Height = 1;
+                if (width < 1)
+                    width = 1;
+                if (height < 1)
+                    height = 1;
             }
 
-            return newSize;
+            //we invoke Math.Round to ensure that no white background is rendered - http://www.nopcommerce.com/boards/t/40616/image-resizing-bug.aspx
+            return new Size((int)Math.Round(width), (int)Math.Round(height));
         }
 
         /// <summary>
@@ -782,6 +788,41 @@ namespace Nop.Services.Media
             }
         }
 
+        /// <summary>
+        /// Helper class for making pictures hashes from DB
+        /// </summary>
+        private class HashItem: IComparable, IComparable<HashItem>
+        {
+            public int PictureId { get; set; }
+            public byte[] Hash { get; set; }
+
+            public int CompareTo(object obj)
+            {
+                return CompareTo(obj as HashItem);
+            }
+
+            public int CompareTo(HashItem other)
+            {
+                return other == null ? -1 : PictureId.CompareTo(other.PictureId);
+            }
+        }
+
+        /// <summary>
+        /// Get pictures hashes
+        /// </summary>
+        /// <param name="picturesIds">Pictures Ids</param>
+        /// <returns></returns>
+        public IDictionary<int, string> GetPicturesHash(int[] picturesIds)
+        {
+            var supportedLengthOfBinaryHash = _dataProvider.SupportedLengthOfBinaryHash();
+            if(supportedLengthOfBinaryHash == 0 || !picturesIds.Any())
+                return new Dictionary<int, string>();
+
+            const string strCommand = "SELECT [Id] as [PictureId], HASHBYTES('sha1', substring([PictureBinary], 0, {0})) as [Hash] FROM [Picture] where id in ({1})";
+            return _dbContext.SqlQuery<HashItem>(String.Format(strCommand, supportedLengthOfBinaryHash, picturesIds.Select(p => p.ToString()).Aggregate((all, current) => all + ", " + current))).Distinct()
+                .ToDictionary(p => p.PictureId, p => BitConverter.ToString(p.Hash).Replace("-", ""));
+        }
+
         #endregion
 
         #region Properties
@@ -866,4 +907,7 @@ namespace Nop.Services.Media
 
         #endregion
     }
+
+    
+
 }

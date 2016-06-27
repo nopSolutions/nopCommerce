@@ -288,7 +288,7 @@ namespace Nop.Admin.Controllers
 
         #endregion
         
-        #region List / tree
+        #region List
 
         public ActionResult Index()
         {
@@ -328,29 +328,6 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
         
-        public ActionResult Tree()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-
-            return View();
-        }
-
-        [HttpPost,]
-        public ActionResult TreeLoadChildren(int id = 0)
-        {
-            var categories = _categoryService.GetAllCategoriesByParentCategoryId(id, true)
-                .Select(x => new
-                             {
-                                 id = x.Id,
-                                 Name = x.Name,
-                                 hasChildren = _categoryService.GetAllCategoriesByParentCategoryId(x.Id, true).Count > 0,
-                                 imageUrl = Url.Content("~/Administration/Content/images/ico-content.png")
-                             });
-
-            return Json(categories);
-        }
-
         #endregion
 
         #region Create / Edit / Delete
@@ -419,7 +396,15 @@ namespace Nop.Admin.Controllers
                 _customerActivityService.InsertActivity("AddNewCategory", _localizationService.GetResource("ActivityLog.AddNewCategory"), category.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Categories.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = category.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = category.Id });
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
@@ -532,7 +517,7 @@ namespace Nop.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    SaveSelectedTabName();
 
                     return RedirectToAction("Edit", new {id = category.Id});
                 }
@@ -606,7 +591,7 @@ namespace Nop.Admin.Controllers
             {
                 var bytes =_exportManager.ExportCategoriesToXlsx(_categoryService.GetAllCategories(showHidden: true).Where(p=>!p.Deleted));
                  
-                return File(bytes, MimeTypes.TextXls, "categories.xlsx");
+                return File(bytes, MimeTypes.TextXlsx, "categories.xlsx");
             }
             catch (Exception exc)
             {
@@ -637,7 +622,7 @@ namespace Nop.Admin.Controllers
                     ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
                     return RedirectToAction("List");
                 }
-                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Category.Imported"));
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Categories.Imported"));
                 return RedirectToAction("List");
             }
             catch (Exception exc)

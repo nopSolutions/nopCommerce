@@ -1,13 +1,12 @@
-﻿@{
-    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
-}
-
-@model CustomerAttributeValueModel
+﻿@model CustomerAttributeValueModel
 
 @{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerAttributes.Values.AddNew").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -16,7 +15,10 @@
             @T("Admin.Customers.CustomerAttributes.Values.AddNew")
         </h1>
         <div class="pull-right">
-            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdateValue", Model)

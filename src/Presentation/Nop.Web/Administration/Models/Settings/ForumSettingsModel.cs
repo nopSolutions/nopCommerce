@@ -37,6 +37,14 @@ namespace Nop.Admin.Models.Settings
         public bool AllowCustomersToDeletePosts { get; set; }
         public bool AllowCustomersToDeletePosts_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Forums.AllowPostVoting")]
+        public bool AllowPostVoting { get; set; }
+        public bool AllowPostVoting_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Forums.MaxVotesPerDay")]
+        public int MaxVotesPerDay { get; set; }
+        public bool MaxVotesPerDay_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Forums.AllowCustomersToManageSubscriptions")]
         public bool AllowCustomersToManageSubscriptions { get; set; }
         public bool AllowCustomersToManageSubscriptions_OverrideForStore { get; set; }

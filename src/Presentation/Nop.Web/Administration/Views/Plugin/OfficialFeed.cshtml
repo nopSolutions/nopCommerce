@@ -2,72 +2,74 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Plugins.OfficialFeed").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("All plugins and themes catalog");
 
     //currently we support only 15 page size for this page
     var defaultGridPageSize = 15;
 }
+
 @Html.AntiForgeryToken()
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Plugins.OfficialFeed")
     </h1>
-    <div class="pull-right">
-        &nbsp;
-    </div>
 </div>
 
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default">
+            <div class="panel panel-default panel-search">
                 <div class="panel-body">
-                    <p>
-                        Here you can find third-party extensions and themes which are developed by our community and partners.
-                        They are also available in our
-                        <a href="http://www.nopcommerce.com/extensions-and-themes.aspx?utm_source=admin-panel&utm_medium=official-plugins&utm_campaign=admin-panel" target="_blank">
-                            extensions directory
-                        </a>
-                    </p>
-                    <br />
-
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SearchName)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.SearchName)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SearchVersionId)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.NopDropDownList("SearchVersionId", Model.AvailableVersions)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SearchCategoryId)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.NopDropDownList("SearchCategoryId", Model.AvailableCategories)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SearchPriceId)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.NopDropDownList("SearchPriceId", Model.AvailablePrices)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            &nbsp;
-                        </div>
-                        <div class="col-sm-9">
-                            <input type="button" id="search-plugins" class="btn btn-default" value="@T("Admin.Common.Search")" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p>
+                                Here you can find third-party extensions and themes which are developed by our community and partners.
+                                They are also available in our
+                                <a href="http://www.nopcommerce.com/extensions-and-themes.aspx?utm_source=admin-panel&utm_medium=official-plugins&utm_campaign=admin-panel" target="_blank">
+                                    extensions directory
+                                </a>
+                            </p>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.SearchName)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopEditorFor(model => model.SearchName)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.SearchVersionId)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopDropDownList("SearchVersionId", Model.AvailableVersions)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.SearchCategoryId)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopDropDownList("SearchCategoryId", Model.AvailableCategories)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.SearchPriceId)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopDropDownList("SearchPriceId", Model.AvailablePrices)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <button type="button" id="search-plugins" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -133,7 +135,7 @@
                                         field: "Url",
                                         width: 150,
                                         title: "@T("Admin.Configuration.Plugins.OfficialFeed.Download")",
-                                        template: '<a href="#=Url#?utm_source=admin-panel&utm_medium=official-plugins&utm_campaign=admin-panel" class="plugin-download-link" target="_blank">@T("Admin.Configuration.Plugins.OfficialFeed.Download")</a>',
+                                        template: '<a href="#=Url#?utm_source=admin-panel&utm_medium=official-plugins&utm_campaign=admin-panel" target="_blank">@T("Admin.Configuration.Plugins.OfficialFeed.Download")</a>',
                                         headerAttributes: { style: "text-align:center" },
                                         attributes: { style: "text-align:center" }
                                     },

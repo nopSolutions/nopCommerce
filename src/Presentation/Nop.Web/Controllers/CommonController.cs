@@ -37,6 +37,7 @@ using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
+using Nop.Web.Framework.UI;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
@@ -69,6 +70,7 @@ namespace Nop.Web.Controllers
         private readonly ICacheManager _cacheManager;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IVendorService _vendorService;
+        private readonly IPageHeadBuilder _pageHeadBuilder;
 
         private readonly CustomerSettings _customerSettings;
         private readonly TaxSettings _taxSettings;
@@ -108,6 +110,7 @@ namespace Nop.Web.Controllers
             ICacheManager cacheManager,
             ICustomerActivityService customerActivityService,
             IVendorService vendorService,
+            IPageHeadBuilder pageHeadBuilder,
             CustomerSettings customerSettings,
             TaxSettings taxSettings,
             CatalogSettings catalogSettings,
@@ -142,6 +145,8 @@ namespace Nop.Web.Controllers
             this._cacheManager = cacheManager;
             this._customerActivityService = customerActivityService;
             this._vendorService = vendorService;
+            this._pageHeadBuilder = pageHeadBuilder;
+
 
             this._customerSettings = customerSettings;
             this._taxSettings = taxSettings;
@@ -417,10 +422,31 @@ namespace Nop.Web.Controllers
                 ImpersonatedCustomerEmailUsername = customer.IsRegistered() ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
                 IsCustomerImpersonated = _workContext.OriginalCustomerIfImpersonated != null,
                 DisplayAdminLink = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel),
+                EditPageUrl = _pageHeadBuilder.GetEditPageUrl()
             };
 
             return PartialView(model);
         }
+
+
+        //social
+        [ChildActionOnly]
+        public ActionResult Social()
+        {
+            //model
+            var model = new SocialModel
+            {
+                FacebookLink = _storeInformationSettings.FacebookLink,
+                TwitterLink = _storeInformationSettings.TwitterLink,
+                YoutubeLink = _storeInformationSettings.YoutubeLink,
+                GooglePlusLink = _storeInformationSettings.GooglePlusLink,
+                WorkingLanguageId = _workContext.WorkingLanguage.Id,
+                NewsEnabled = _newsSettings.Enabled,
+            };
+
+            return PartialView(model);
+        }
+
 
         //footer
         [ChildActionOnly]
@@ -454,10 +480,6 @@ namespace Nop.Web.Controllers
                 ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 SitemapEnabled = _commonSettings.SitemapEnabled,
                 WorkingLanguageId = _workContext.WorkingLanguage.Id,
-                FacebookLink = _storeInformationSettings.FacebookLink,
-                TwitterLink = _storeInformationSettings.TwitterLink,
-                YoutubeLink = _storeInformationSettings.YoutubeLink,
-                GooglePlusLink = _storeInformationSettings.GooglePlusLink,
                 BlogEnabled = _blogSettings.Enabled,
                 CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,
                 ForumEnabled = _forumSettings.ForumsEnabled,
@@ -855,12 +877,12 @@ namespace Nop.Web.Controllers
         {
             var sb = new StringBuilder();
 
-            //if robots.txt exists, let's use it
-            string robotsFile = System.IO.Path.Combine(CommonHelper.MapPath("~/"), "robots.custom.txt");
-            if (System.IO.File.Exists(robotsFile))
+            //if robots.custom.txt exists, let's use it instead of hard-coded data below
+            string robotsFilePath = System.IO.Path.Combine(CommonHelper.MapPath("~/"), "robots.custom.txt");
+            if (System.IO.File.Exists(robotsFilePath))
             {
                 //the robots.txt file exists
-                string robotsFileContent = System.IO.File.ReadAllText(robotsFile);
+                string robotsFileContent = System.IO.File.ReadAllText(robotsFilePath);
                 sb.Append(robotsFileContent);
             }
             else

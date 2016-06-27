@@ -91,6 +91,7 @@ namespace Nop.Web.Controllers
         private readonly CaptchaSettings _captchaSettings;
         private readonly AddressSettings _addressSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
+        private readonly CustomerSettings _customerSettings;
 
         #endregion
 
@@ -137,7 +138,8 @@ namespace Nop.Web.Controllers
             TaxSettings taxSettings,
             CaptchaSettings captchaSettings, 
             AddressSettings addressSettings,
-            RewardPointsSettings rewardPointsSettings)
+            RewardPointsSettings rewardPointsSettings,
+            CustomerSettings customerSettings)
         {
             this._productService = productService;
             this._workContext = workContext;
@@ -183,6 +185,7 @@ namespace Nop.Web.Controllers
             this._captchaSettings = captchaSettings;
             this._addressSettings = addressSettings;
             this._rewardPointsSettings = rewardPointsSettings;
+            this._customerSettings = customerSettings;
         }
 
         #endregion
@@ -848,9 +851,14 @@ namespace Nop.Web.Controllers
                         });
 
                     bool minOrderSubtotalAmountOk = _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
+                    bool downloadableProductsRequireRegistration =
+                        _customerSettings.RequireRegistrationForDownloadableProducts && cart.Any(sci => sci.Product.IsDownload);
+
                     model.DisplayCheckoutButton = !_orderSettings.TermsOfServiceOnShoppingCartPage &&
                         minOrderSubtotalAmountOk &&
-                        !checkoutAttributesExist;
+                        !checkoutAttributesExist &&
+                        !(downloadableProductsRequireRegistration
+                            && _workContext.CurrentCustomer.IsGuest());
 
                     //products. sort descending (recently added products)
                     foreach (var sci in cart
@@ -2220,7 +2228,11 @@ namespace Nop.Web.Controllers
             //everything is OK
             if (_workContext.CurrentCustomer.IsGuest())
             {
-                if (!_orderSettings.AnonymousCheckoutAllowed)
+                bool downloadableProductsRequireRegistration =
+                    _customerSettings.RequireRegistrationForDownloadableProducts && cart.Any(sci => sci.Product.IsDownload);
+
+                if (!_orderSettings.AnonymousCheckoutAllowed 
+                    || downloadableProductsRequireRegistration)
                     return new HttpUnauthorizedResult();
                 
                 return RedirectToRoute("LoginCheckoutAsGuest", new {returnUrl = Url.RouteUrl("ShoppingCart")});
@@ -2352,40 +2364,35 @@ namespace Nop.Web.Controllers
 
         [ValidateInput(false)]
         [PublicAntiForgery]
-        [HttpPost, ActionName("Cart")]
-        [FormValueRequired("estimateshipping")]
-        public ActionResult GetEstimateShipping(EstimateShippingModel shippingModel, FormCollection form)
+        [HttpPost]
+        public ActionResult GetEstimateShipping(int? countryId, int? stateProvinceId, string zipPostalCode, FormCollection form)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            
+
             //parse and save checkout attributes
             ParseAndSaveCheckoutAttributes(cart, form);
-            
-            var model = new ShoppingCartModel();
-            model.EstimateShipping.CountryId = shippingModel.CountryId;
-            model.EstimateShipping.StateProvinceId = shippingModel.StateProvinceId;
-            model.EstimateShipping.ZipPostalCode = shippingModel.ZipPostalCode;
-            PrepareShoppingCartModel(model, cart,setEstimateShippingDefaultAddress: false);
+
+            var model = new EstimateShippingResultModel();
 
             if (cart.RequiresShipping())
             {
                 var address = new Address
                 {
-                    CountryId = shippingModel.CountryId,
-                    Country = shippingModel.CountryId.HasValue ? _countryService.GetCountryById(shippingModel.CountryId.Value) : null,
-                    StateProvinceId  = shippingModel.StateProvinceId,
-                    StateProvince = shippingModel.StateProvinceId.HasValue ? _stateProvinceService.GetStateProvinceById(shippingModel.StateProvinceId.Value) : null,
-                    ZipPostalCode = shippingModel.ZipPostalCode,
+                    CountryId = countryId,
+                    Country = countryId.HasValue ? _countryService.GetCountryById(countryId.Value) : null,
+                    StateProvinceId = stateProvinceId,
+                    StateProvince = stateProvinceId.HasValue ? _stateProvinceService.GetStateProvinceById(stateProvinceId.Value) : null,
+                    ZipPostalCode = zipPostalCode,
                 };
                 GetShippingOptionResponse getShippingOptionResponse = _shippingService
                     .GetShippingOptions(cart, address, "", _storeContext.CurrentStore.Id);
                 if (!getShippingOptionResponse.Success)
                 {
                     foreach (var error in getShippingOptionResponse.Errors)
-                        model.EstimateShipping.Warnings.Add(error);
+                        model.Warnings.Add(error);
                 }
                 else
                 {
@@ -2393,7 +2400,7 @@ namespace Nop.Web.Controllers
                     {
                         foreach (var shippingOption in getShippingOptionResponse.ShippingOptions)
                         {
-                            var soModel = new EstimateShippingModel.ShippingOptionModel
+                            var soModel = new EstimateShippingResultModel.ShippingOptionModel
                             {
                                 Name = shippingOption.Name,
                                 Description = shippingOption.Description,
@@ -2407,13 +2414,13 @@ namespace Nop.Web.Controllers
                             decimal rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
                             decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
                             soModel.Price = _priceFormatter.FormatShippingPrice(rate, true);
-                            model.EstimateShipping.ShippingOptions.Add(soModel);
+                            model.ShippingOptions.Add(soModel);
                         }
 
                         //pickup in store?
                         if (_shippingSettings.AllowPickUpInStore)
                         {
-                            var soModel = new EstimateShippingModel.ShippingOptionModel
+                            var soModel = new EstimateShippingResultModel.ShippingOptionModel
                             {
                                 Name = _localizationService.GetResource("Checkout.PickUpInStore"),
                                 Description = _localizationService.GetResource("Checkout.PickUpInStore.Description"),
@@ -2422,17 +2429,17 @@ namespace Nop.Web.Controllers
                             decimal rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
                             decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
                             soModel.Price = _priceFormatter.FormatShippingPrice(rate, true);
-                            model.EstimateShipping.ShippingOptions.Add(soModel);
+                            model.ShippingOptions.Add(soModel);
                         }
                     }
                     else
                     {
-                       model.EstimateShipping.Warnings.Add(_localizationService.GetResource("Checkout.ShippingIsNotAllowed"));
+                        model.Warnings.Add(_localizationService.GetResource("Checkout.ShippingIsNotAllowed"));
                     }
                 }
             }
 
-            return View(model);
+            return PartialView("_EstimateShippingResult", model);
         }
 
         [ChildActionOnly]

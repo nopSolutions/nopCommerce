@@ -4,9 +4,11 @@
 
     //page title
     ViewBag.Title = T("Admin.Customers.OnlineCustomers").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Online customers");
 }
-@Html.AntiForgeryToken()
 
+@Html.AntiForgeryToken()
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Customers.OnlineCustomers")
@@ -21,7 +23,6 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="onlinecustomers-grid"></div>
 
                     <script>

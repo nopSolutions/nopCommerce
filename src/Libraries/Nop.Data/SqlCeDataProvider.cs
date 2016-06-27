@@ -63,5 +63,15 @@ namespace Nop.Data
         {
             return new SqlParameter();
         }
+
+        /// <summary>
+        /// Maximum length of the data for HASHBYTES functions
+        /// returns 0 if HASHBYTES function is not supported
+        /// </summary>
+        /// <returns>Length of the data for HASHBYTES functions</returns>
+        public int SupportedLengthOfBinaryHash()
+        {
+            return 0; //HASHBYTES functions is missing in SQL CE
+        }
     }
 }

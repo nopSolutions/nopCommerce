@@ -54,7 +54,7 @@ namespace Nop.Web.Infrastructure
 
 
             //the last route. it's used when none of registered routes could be used for the current request
-            //but it this case we cannot process non-registered routes (/controller/action)
+            //but in this case we cannot process non-registered routes (/controller/action)
             //routes.MapLocalizedRoute(
             //    "PageNotFound-Wildchar",
             //    "{*url}",

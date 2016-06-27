@@ -132,6 +132,16 @@ namespace Nop.Data
             return new SqlParameter();
         }
 
+        /// <summary>
+        /// Maximum length of the data for HASHBYTES functions
+        /// returns 0 if HASHBYTES function is not supported
+        /// </summary>
+        /// <returns>Length of the data for HASHBYTES functions</returns>
+        public int SupportedLengthOfBinaryHash()
+        {
+            return 8000; //for SQL Server 2008 and above HASHBYTES function has a limit of 8000 characters.
+        }
+
         #endregion
     }
 }

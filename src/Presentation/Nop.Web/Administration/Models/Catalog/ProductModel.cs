@@ -28,7 +28,9 @@ namespace Nop.Admin.Models.Catalog
             AvailableTaxCategories = new List<SelectListItem>();
             AvailableDeliveryDates = new List<SelectListItem>();
             AvailableWarehouses = new List<SelectListItem>();
+            CategoryIds = new List<int>();
             AvailableCategories = new List<SelectListItem>();
+            ManufacturerIds = new List<int>();
             AvailableManufacturers = new List<SelectListItem>();
             AvailableProductAttributes = new List<SelectListItem>();
             AddPictureModel = new ProductPictureModel();
@@ -267,6 +269,9 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AllowAddingOnlyExistingAttributeCombinations")]
         public bool AllowAddingOnlyExistingAttributeCombinations { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.NotReturnable")]
+        public bool NotReturnable { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisableBuyButton")]
         public bool DisableBuyButton { get; set; }
 
@@ -397,9 +402,17 @@ namespace Nop.Admin.Models.Catalog
 
 
         //categories
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.CategoryIds")]
+        [UIHint("MultiSelect")]
+        public IList<int> CategoryIds { get; set; }
         public IList<SelectListItem> AvailableCategories { get; set; }
+
         //manufacturers
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ManufacturerIds")]
+        [UIHint("MultiSelect")]
+        public IList<int> ManufacturerIds { get; set; }
         public IList<SelectListItem> AvailableManufacturers { get; set; }
+
         //product attributes
         public IList<SelectListItem> AvailableProductAttributes { get; set; }
         
@@ -519,38 +532,6 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute")]
             [AllowHtml]
             public string OverrideTitleAttribute { get; set; }
-        }
-        
-        public partial class ProductCategoryModel : BaseNopEntityModel
-        {
-            [NopResourceDisplayName("Admin.Catalog.Products.Categories.Fields.Category")]
-            public string Category { get; set; }
-
-            public int ProductId { get; set; }
-
-            public int CategoryId { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.Categories.Fields.IsFeaturedProduct")]
-            public bool IsFeaturedProduct { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.Categories.Fields.DisplayOrder")]
-            public int DisplayOrder { get; set; }
-        }
-
-        public partial class ProductManufacturerModel : BaseNopEntityModel
-        {
-            [NopResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.Manufacturer")]
-            public string Manufacturer { get; set; }
-
-            public int ProductId { get; set; }
-
-            public int ManufacturerId { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.IsFeaturedProduct")]
-            public bool IsFeaturedProduct { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.DisplayOrder")]
-            public int DisplayOrder { get; set; }
         }
 
         public partial class RelatedProductModel : BaseNopEntityModel

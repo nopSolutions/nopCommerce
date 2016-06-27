@@ -1,9 +1,11 @@
 ﻿@{    
     //page title
     ViewBag.Title = T("Admin.Configuration.Payment.Methods").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Payment methods");
 }
-@Html.AntiForgeryToken()
 
+@Html.AntiForgeryToken()
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Payment.Methods")
@@ -18,7 +20,6 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="paymentmethods-grid"></div>
 
                     <script>
@@ -102,31 +103,31 @@
                                 }, {
                                     field: "SupportCapture",
                                     title: "@T("Admin.Configuration.Payment.Methods.Fields.SupportCapture")",
-                                    width: 100,
+                                    width: 150,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=SupportCapture#.gif" />'
+                                    template: '# if(SupportCapture) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "SupportRefund",
                                     title: "@T("Admin.Configuration.Payment.Methods.Fields.SupportRefund")",
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=SupportRefund#.gif" />'
+                                    template: '# if(SupportRefund) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "SupportPartiallyRefund",
                                     title: "@T("Admin.Configuration.Payment.Methods.Fields.SupportPartiallyRefund")",
-                                    width: 100,
+                                    width: 150,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=SupportPartiallyRefund#.gif" />'
+                                    template: '# if(SupportPartiallyRefund) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "SupportVoid",
                                     title: "@T("Admin.Configuration.Payment.Methods.Fields.SupportVoid")",
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=SupportVoid#.gif" />'
+                                    template: '# if(SupportVoid) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "RecurringPaymentType",
                                     title: "@T("Admin.Configuration.Payment.Methods.Fields.RecurringPaymentType")",
@@ -136,14 +137,14 @@
                                     title: "@T("Admin.Configuration.Payment.Methods.Fields.DisplayOrder")",
                                     //integer format
                                     format: "{0:0}",
-                                    width: 100
+                                    width: 150
                                 }, {
                                     field: "IsActive",
                                     title: "@T("Admin.Configuration.Payment.Methods.Fields.IsActive")",
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsActive#.gif" />'
+                                    template: '# if(IsActive) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "SystemName",
                                     title: "@T("Admin.Configuration.Payment.Methods.Configure")",

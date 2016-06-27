@@ -7,7 +7,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Catalog
 {
-    public class ProductAttributeValueModelValidator : BaseNopValidator<ProductModel.ProductAttributeValueModel>
+    public partial class ProductAttributeValueModelValidator : BaseNopValidator<ProductModel.ProductAttributeValueModel>
     {
         public ProductAttributeValueModelValidator(ILocalizationService localizationService, IDbContext dbContext)
         {

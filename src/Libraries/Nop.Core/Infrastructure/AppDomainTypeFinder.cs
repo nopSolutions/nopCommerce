@@ -33,7 +33,7 @@ namespace Nop.Core.Infrastructure
             get { return AppDomain.CurrentDomain; }
         }
 
-        /// <summary>Gets or sets wether Nop should iterate assemblies in the app domain when loading Nop types. Loading patterns are applied when loading these assemblies.</summary>
+        /// <summary>Gets or sets whether Nop should iterate assemblies in the app domain when loading Nop types. Loading patterns are applied when loading these assemblies.</summary>
         public bool LoadAppDomainAssemblies
         {
             get { return loadAppDomainAssemblies; }
@@ -179,7 +179,7 @@ namespace Nop.Core.Infrastructure
         }
 
         /// <summary>
-        /// Adds specificly configured assemblies.
+        /// Adds specifically configured assemblies.
         /// </summary>
         /// <param name="addedAssemblyNames"></param>
         /// <param name="assemblies"></param>

@@ -2,57 +2,73 @@
 @{
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-    
+
     //page title
     ViewBag.Title = T("Admin.Configuration.ActivityLog.ActivityLog").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Activity log list");
 }
 
 @Html.AntiForgeryToken()
-
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.ActivityLog.ActivityLog")
     </h1>
     <div class="pull-right">
-        <a href="@Url.Action("ClearAll")" class="btn btn-default">@T("Admin.Common.Clear")</a>
+        <a href="@Url.Action("ClearAll")" class="btn bg-red">
+            <i class="fa fa-trash-o"></i>
+            @T("Admin.Common.Clear")
+        </a>
     </div>
 </div>
 
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default">
+            <div class="panel panel-default panel-search">
                 <div class="panel-body">
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.CreatedOnFrom)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.CreatedOnFrom)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.CreatedOnTo)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.CreatedOnTo)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.ActivityLogTypeId)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.NopDropDownList("ActivityLogTypeId", Model.ActivityLogType)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            &nbsp;
-                        </div>
-                        <div class="col-sm-9">
-                            <input type="button" id="search-log" class="btn btn-default" value="@T("Admin.Common.Search")"/>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.CreatedOnFrom)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopEditorFor(model => model.CreatedOnFrom)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.CreatedOnTo)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopEditorFor(model => model.CreatedOnTo)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.IpAddress)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopEditorFor(model => model.IpAddress)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.ActivityLogTypeId)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopDropDownList("ActivityLogTypeId", Model.ActivityLogType)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <button type="button" id="search-log" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -60,8 +76,8 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="activityLog-grid"></div>
+
                     <script>
                         $(document).ready(function() {
                             $("#activityLog-grid").kendoGrid({
@@ -125,6 +141,10 @@
                                     width: 100,
                                     template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
                                 }, {
+                                    field: "IpAddress",
+                                    title: "@T("Admin.Customers.Customers.ActivityLog.IpAddress")",
+                                    width: 100
+                                }, {
                                     field: "Comment",
                                     title: "@T("Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment")"
                                 }, {
@@ -143,9 +163,7 @@
                         });
                     </script>
                     <script type="text/javascript">
-
                         $(document).ready(function() {
-
                             $('#search-log').click(function() {
                                 var grid = $('#activityLog-grid').data('kendoGrid');
                                 grid.dataSource.page(1); //new search. Set page size to 1
@@ -158,6 +176,7 @@
                             var data = {
                                 CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
                                 CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
+                                IpAddress: $('#@Html.FieldIdFor(model => model.IpAddress)').val(),
                                 ActivityLogTypeId: $('#ActivityLogTypeId').val()
                             };
                             addAntiForgeryToken(data);

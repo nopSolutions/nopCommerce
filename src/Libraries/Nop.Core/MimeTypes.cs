@@ -52,7 +52,7 @@
 
         public const string TextPlain = "text/plain";
 
-        public const string TextXls = "text/xls";
+        public const string TextXlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
         #endregion text/*
     }

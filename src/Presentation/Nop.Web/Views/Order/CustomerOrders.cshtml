@@ -4,6 +4,9 @@
 
     //title
     Html.AddTitleParts(T("PageTitle.Account").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-account-page");
+    Html.AppendPageCssClassParts("html-order-list-page");
 }
 @using Nop.Web.Models.Customer
 @using Nop.Web.Models.Order;

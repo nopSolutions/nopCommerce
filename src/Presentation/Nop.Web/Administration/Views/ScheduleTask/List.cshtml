@@ -1,7 +1,10 @@
 ﻿@{
     //page title
     ViewBag.Title = T("Admin.System.ScheduleTasks").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Schedule tasks");
 }
+
 @Html.AntiForgeryToken()
 <div class="content-header clearfix">
     <h1 class="pull-left">
@@ -29,6 +32,7 @@
                         <strong>@T("Admin.System.ScheduleTasks.RestartApplication")</strong>
                     </p>
                     <div id="schedule-tasks-grid"></div>
+
                     <script>
                         $(document).ready(function () {
                             $("#schedule-tasks-grid").kendoGrid({
@@ -93,21 +97,21 @@
                                 }, {
                                     field: "Seconds",
                                     title: "@T("Admin.System.ScheduleTasks.Seconds")",
-                                    width: 50
+                                    width: 150
                                 }, {
                                     field: "Enabled",
                                     title: "@T("Admin.System.ScheduleTasks.Enabled")",
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Enabled#.gif" />'
+                                    template: '# if(Enabled) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "StopOnError",
                                     title: "@T("Admin.System.ScheduleTasks.StopOnError")",
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=StopOnError#.gif" />'
+                                    template: '# if(StopOnError) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "LastStartUtc",
                                     title: "@T("Admin.System.ScheduleTasks.LastStart")",
@@ -130,7 +134,7 @@
                                     field: "Id",
                                     title: "@T("Admin.System.ScheduleTasks.RunNow")",
                                     width: 100,
-                                    template: '<a href="@Url.Content("~/Admin/ScheduleTask/RunNow/")#=Id#" class="btn btn-default run-now">@T("Admin.System.ScheduleTasks.RunNow")</a>'
+                                    template: '<a href="@Url.Content("~/Admin/ScheduleTask/RunNow/")#=Id#" class="btn bg-green">@T("Admin.System.ScheduleTasks.RunNow")</a>'
                                 }, {
                                     command: {
                                         name: "edit",

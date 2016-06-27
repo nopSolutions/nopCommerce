@@ -376,7 +376,7 @@ namespace Nop.Web.Controllers
 
             //purchased products
             model.ShowSku = _catalogSettings.ShowProductSku;
-            var orderItems = _orderService.GetAllOrderItems(order.Id, null, null, null, null, null, null);
+            var orderItems = order.OrderItems;
             foreach (var orderItem in orderItems)
             {
                 var orderItemModel = new OrderDetailsModel.OrderItemModel

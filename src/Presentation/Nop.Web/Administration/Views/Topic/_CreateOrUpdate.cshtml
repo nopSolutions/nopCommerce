@@ -1,67 +1,48 @@
 ﻿@model TopicModel
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
+
 <script>
     $(document).ready(function () {
-        $("#topic-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
+        bindBootstrapTabSelectEvent('topic-edit');
     });
 </script>
 
 <div class="content">
     <div class="form-horizontal">
-        <div id="topic-edit">
-            <ul>
-                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                    @T("Admin.ContentManagement.Topics.Info")
-                </li>
-                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                    @T("Admin.Common.SEO")
-                </li>
-                <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-                    @T("Admin.ContentManagement.Topics.Acl")
-                </li>
-                <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
-                    @T("Admin.ContentManagement.Topics.Stores")
-                </li>
+        <div id="topic-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.ContentManagement.Topics.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"))
+                @Html.RenderBootstrapTabHeader("tab-acl", @T("Admin.ContentManagement.Topics.Acl"))
+                @Html.RenderBootstrapTabHeader("tab-stores", @T("Admin.ContentManagement.Topics.Stores"))
             </ul>
-            <div>
-                @TabInfo()
-            </div>
-            <div>
-                @TabSeo()
-            </div>
-            <div>
-                @TabAcl()
-            </div>
-            <div>
-                @TabStores()
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-seo", @TabSeo())
+                @Html.RenderBootstrapTabContent("tab-acl", @TabAcl())
+                @Html.RenderBootstrapTabContent("tab-stores", @TabStores())
             </div>
         </div>
     </div>
 </div>
 
 @{
-            //custom tabs
-            var eventMessage = new AdminTabStripCreated(this.Html, "topic-edit");
-            EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
-            foreach (var eventBlock in eventMessage.BlocksToRender)
-            {
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "topic-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
         @eventBlock
     }
 }
 
-@*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
-        {
+{
     <script type="text/javascript">
         $(document).ready(function () {
             $("#@Html.FieldIdFor(model => model.IsPasswordProtected)").click(togglePassword);
@@ -76,63 +57,64 @@
             }
         }
     </script>
+
     <div class="panel-group">
-        <div class="panel panel-default">
-            @(Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-info-localized",
-            @<div class="panel-body">
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.Locales[item].Title)
+        @(Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-info-localized",
+            @<div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Locales[item].Title)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Locales[item].Title)
+                            @Html.ValidationMessageFor(model => model.Locales[item].Title)
+                        </div>
                     </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.Locales[item].Title)
-                        @Html.ValidationMessageFor(model => model.Locales[item].Title)
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Locales[item].Body)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.EditorFor(model => model.Locales[item].Body, "RichEditor")
+                            @Html.ValidationMessageFor(model => model.Locales[item].Body)
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.Locales[item].Body)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.EditorFor(model => model.Locales[item].Body, "RichEditor")
-                        @Html.ValidationMessageFor(model => model.Locales[item].Body)
-                    </div>
-                </div>
-                <div>
                     @Html.HiddenFor(model => model.Locales[item].LanguageId)
                 </div>
             </div>
-        ,
-            @<div class="panel-body">
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.Title)
+    ,
+            @<div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Title)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Title)
+                            @Html.ValidationMessageFor(model => model.Title)
+                        </div>
                     </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.Title)
-                        @Html.ValidationMessageFor(model => model.Title)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.Body)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.EditorFor(x => x.Body, "RichEditor")
-                        @Html.ValidationMessageFor(model => model.Body)
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Body)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.EditorFor(x => x.Body, "RichEditor")
+                            @Html.ValidationMessageFor(model => model.Body)
+                        </div>
                     </div>
                 </div>
             </div>
-                          ))
-        </div>
+    ))
 
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.SystemName)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.SystemName)
                         @Html.ValidationMessageFor(model => model.SystemName)
                     </div>
@@ -140,109 +122,109 @@
                 @if (Model.Id > 0)
                 {
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Url)
                         </div>
-                        <div class="col-sm-9">
-                            <a href="@Model.Url">@Model.Url</a>
+                        <div class="col-md-9">
+                            <a href="@Model.Url"> @Model.Url </a>
                         </div>
                     </div>
                 }
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Published)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.Published)
                         @Html.ValidationMessageFor(model => model.Published)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IsPasswordProtected)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.IsPasswordProtected)
                         @Html.ValidationMessageFor(model => model.IsPasswordProtected)
                     </div>
                 </div>
                 <div class="form-group" id="pnlPasswordEnabled">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Password)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.Password)
                         @Html.ValidationMessageFor(model => model.Password)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IncludeInSitemap)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(x => x.IncludeInSitemap)
                         @Html.ValidationMessageFor(model => model.IncludeInSitemap)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IncludeInTopMenu)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(x => x.IncludeInTopMenu)
                         @Html.ValidationMessageFor(model => model.IncludeInTopMenu)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IncludeInFooterColumn1)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(x => x.IncludeInFooterColumn1)
                         @Html.ValidationMessageFor(model => model.IncludeInFooterColumn1)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IncludeInFooterColumn2)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(x => x.IncludeInFooterColumn2)
                         @Html.ValidationMessageFor(model => model.IncludeInFooterColumn2)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IncludeInFooterColumn3)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(x => x.IncludeInFooterColumn3)
                         @Html.ValidationMessageFor(model => model.IncludeInFooterColumn3)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.DisplayOrder)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(x => x.DisplayOrder)
                         @Html.ValidationMessageFor(model => model.DisplayOrder)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AccessibleWhenStoreClosed)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(x => x.AccessibleWhenStoreClosed)
                         @Html.ValidationMessageFor(model => model.AccessibleWhenStoreClosed)
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
+                <div class="form-group" @(Model.AvailableTopicTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.TopicTemplateId)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopDropDownListFor(model => model.TopicTemplateId, Model.AvailableTopicTemplates)
                         @Html.ValidationMessageFor(model => model.TopicTemplateId)
                     </div>
@@ -251,133 +233,130 @@
         </div>
     </div>
 }
+
 @helper TabSeo()
-        {
+{
     <div class="panel-group">
-        <div class="panel panel-default">
-            @(Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-seo-localized",
-            @<div class="panel-body">
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.Locales[item].MetaKeywords)
+        @(Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-seo-localized",
+            @<div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Locales[item].MetaKeywords)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Locales[item].MetaKeywords)
+                            @Html.ValidationMessageFor(model => model.Locales[item].MetaKeywords)
+                        </div>
                     </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.Locales[item].MetaKeywords)
-                        @Html.ValidationMessageFor(model => model.Locales[item].MetaKeywords)
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Locales[item].MetaDescription)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopTextAreaFor(model => model.Locales[item].MetaDescription)
+                            @Html.ValidationMessageFor(model => model.Locales[item].MetaDescription)
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.Locales[item].MetaDescription)
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Locales[item].MetaTitle)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Locales[item].MetaTitle)
+                            @Html.ValidationMessageFor(model => model.Locales[item].MetaTitle)
+                        </div>
                     </div>
-                    <div class="col-sm-9">
-                        @Html.NopTextAreaFor(model => model.Locales[item].MetaDescription)
-                        @Html.ValidationMessageFor(model => model.Locales[item].MetaDescription)
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Locales[item].SeName)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Locales[item].SeName)
+                            @Html.ValidationMessageFor(model => model.Locales[item].SeName)
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.Locales[item].MetaTitle)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.Locales[item].MetaTitle)
-                        @Html.ValidationMessageFor(model => model.Locales[item].MetaTitle)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.Locales[item].SeName)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.Locales[item].SeName)
-                        @Html.ValidationMessageFor(model => model.Locales[item].SeName)
-                    </div>
-                </div>
-                <div class="form-group">
                     @Html.HiddenFor(model => model.Locales[item].LanguageId)
                 </div>
             </div>
-               ,
-            @<div class="panel-body">
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.MetaKeywords)
+    ,
+            @<div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.MetaKeywords)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(x => x.MetaKeywords)
+                            @Html.ValidationMessageFor(model => model.MetaKeywords)
+                        </div>
                     </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(x => x.MetaKeywords)
-                        @Html.ValidationMessageFor(model => model.MetaKeywords)
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.MetaDescription)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopTextAreaFor(x => x.MetaDescription)
+                            @Html.ValidationMessageFor(model => model.MetaDescription)
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.MetaDescription)
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.MetaTitle)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(x => x.MetaTitle)
+                            @Html.ValidationMessageFor(model => model.MetaTitle)
+                        </div>
                     </div>
-                    <div class="col-sm-9">
-                        @Html.NopTextAreaFor(x => x.MetaDescription)
-                        @Html.ValidationMessageFor(model => model.MetaDescription)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.MetaTitle)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(x => x.MetaTitle)
-                        @Html.ValidationMessageFor(model => model.MetaTitle)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.SeName)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(x => x.SeName)
-                        @Html.ValidationMessageFor(model => model.SeName)
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.SeName)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(x => x.SeName)
+                            @Html.ValidationMessageFor(model => model.SeName)
+                        </div>
                     </div>
                 </div>
             </div>))
-        </div>
     </div>
 }
 
 @helper TabAcl()
-        {
+{
     <script type="text/javascript">
         $(document).ready(function () {
-
             $("#@Html.FieldIdFor(model => model.SubjectToAcl)").click(toggleAcl);
-
             toggleAcl();
         });
-
 
         function toggleAcl() {
             if ($('#@Html.FieldIdFor(model => model.SubjectToAcl)').is(':checked')) {
                 $('#pnl-acl').show();
-            }
-            else {
+            } else {
                 $('#pnl-acl').hide();
             }
         }
-
     </script>
+
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.SubjectToAcl)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.SubjectToAcl)
                         @Html.ValidationMessageFor(model => model.SubjectToAcl)
                     </div>
                 </div>
                 <div class="form-group" id="pnl-acl">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AvailableCustomerRoles)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @if (Model.AvailableCustomerRoles != null && Model.AvailableCustomerRoles.Count > 0)
                         {
                             @Html.Action("AclDisabledWarning", "Common")
@@ -403,43 +382,39 @@
 }
 
 @helper TabStores()
-        {
+{
     <script type="text/javascript">
         $(document).ready(function () {
-
             $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
-
             toggleStoreMapping();
         });
-
 
         function toggleStoreMapping() {
             if ($('#@Html.FieldIdFor(model => model.LimitedToStores)').is(':checked')) {
                 $('#pnl-available-stores').show();
-            }
-            else {
+            } else {
                 $('#pnl-available-stores').hide();
             }
         }
-
     </script>
+
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.LimitedToStores)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.LimitedToStores)
                         @Html.ValidationMessageFor(model => model.LimitedToStores)
                     </div>
                 </div>
                 <div class="form-group" id="pnl-available-stores">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AvailableStores)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
                         {
                             @Html.Action("MultistoreDisabledWarning", "Common")

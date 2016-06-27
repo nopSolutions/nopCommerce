@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -38,6 +39,7 @@ namespace Nop.Web.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly LocalizationSettings _localizationSettings;
         private readonly ICacheManager _cacheManager;
+        private readonly ICustomNumberFormatter _customNumberFormatter;
 
         #endregion
 
@@ -55,7 +57,8 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService,
             IDateTimeHelper dateTimeHelper,
             LocalizationSettings localizationSettings,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager, 
+            ICustomNumberFormatter customNumberFormatter)
         {
             this._returnRequestService = returnRequestService;
             this._orderService = orderService;
@@ -70,6 +73,7 @@ namespace Nop.Web.Controllers
             this._dateTimeHelper = dateTimeHelper;
             this._localizationSettings = localizationSettings;
             this._cacheManager = cacheManager;
+            this._customNumberFormatter = customNumberFormatter;
         }
 
         #endregion
@@ -115,8 +119,8 @@ namespace Nop.Web.Controllers
                     return actions;
                 });
 
-            //products
-            var orderItems = _orderService.GetAllOrderItems(order.Id, null, null, null, null, null, null);
+            //returnable products
+            var orderItems = order.OrderItems.Where(oi => !oi.Product.NotReturnable);
             foreach (var orderItem in orderItems)
             {
                 var orderItemModel = new SubmitReturnRequestModel.OrderItemModel
@@ -172,6 +176,7 @@ namespace Nop.Web.Controllers
                     var itemModel = new CustomerReturnRequestsModel.ReturnRequestModel
                     {
                         Id = returnRequest.Id,
+                        CustomNumber = returnRequest.CustomNumber,
                         ReturnRequestStatus = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext),
                         ProductId = product.Id,
                         ProductName = product.GetLocalized(x => x.Name),
@@ -217,7 +222,10 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             int count = 0;
-            foreach (var orderItem in order.OrderItems)
+
+            //returnable products
+            var orderItems = order.OrderItems.Where(oi => !oi.Product.NotReturnable);
+            foreach (var orderItem in orderItems)
             {
                 int quantity = 0; //parse quantity
                 foreach (string formKey in form.AllKeys)
@@ -233,6 +241,7 @@ namespace Nop.Web.Controllers
 
                     var rr = new ReturnRequest
                     {
+                        CustomNumber = "",
                         StoreId = _storeContext.CurrentStore.Id,
                         OrderItemId = orderItem.Id,
                         Quantity = quantity,
@@ -246,6 +255,9 @@ namespace Nop.Web.Controllers
                         UpdatedOnUtc = DateTime.UtcNow
                     };
                     _workContext.CurrentCustomer.ReturnRequests.Add(rr);
+                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                    //set return request custom number
+                    rr.CustomNumber = _customNumberFormatter.GenerateReturnRequestCustomNumber(rr);
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                     //notify store owner here (email)
                     _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, orderItem, _localizationSettings.DefaultAdminLanguageId);

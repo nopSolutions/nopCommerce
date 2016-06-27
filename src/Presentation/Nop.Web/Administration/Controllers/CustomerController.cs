@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
@@ -973,7 +971,7 @@ namespace Nop.Admin.Controllers
                 
 
                 //ensure that a customer with a vendor associated is not in "Administrators" role
-                //otherwise, he won't be have access to the other functionality in admin area
+                //otherwise, he won't have access to other functionality in admin area
                 if (customer.IsAdmin() && customer.VendorId > 0)
                 {
                     customer.VendorId = 0;
@@ -997,7 +995,15 @@ namespace Nop.Admin.Controllers
                 _customerActivityService.InsertActivity("AddNewCustomer", _localizationService.GetResource("ActivityLog.AddNewCustomer"), customer.Id);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = customer.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new {id = customer.Id});
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
@@ -1045,7 +1051,14 @@ namespace Nop.Admin.Controllers
                 ModelState.AddModelError("", customerRolesError);
                 ErrorNotification(customerRolesError, false);
             }
-            
+
+            // Ensure that valid email address is entered if Registered role is checked to avoid registered customers with empty email address
+            if (newCustomerRoles.Count > 0 && newCustomerRoles.FirstOrDefault(c => c.SystemName == SystemCustomerRoleNames.Registered) != null && !CommonHelper.IsValidEmail(model.Email))
+            {
+                ModelState.AddModelError("", "Valid Email is required for customer to be in 'Registered' role");
+                ErrorNotification("Valid Email is required for customer to be in 'Registered' role", false);
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -1232,7 +1245,7 @@ namespace Nop.Admin.Controllers
                     if (continueEditing)
                     {
                         //selected tab
-                        SaveSelectedTabIndex();
+                        SaveSelectedTabName();
 
                         return RedirectToAction("Edit",  new {id = customer.Id});
                     }
@@ -1389,6 +1402,11 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Edit", customer.Id);
             }
 
+            //activity log
+            _customerActivityService.InsertActivity("Impersonation.Started", 
+                _localizationService.GetResource("ActivityLog.Impersonation.Started.StoreOwner"), customer.Email, customer.Id);
+            _customerActivityService.InsertActivity(customer, "Impersonation.Started",
+                _localizationService.GetResource("ActivityLog.Impersonation.Started.Customer"), _workContext.CurrentCustomer.Email, _workContext.CurrentCustomer.Id);
 
             _genericAttributeService.SaveAttribute<int?>(_workContext.CurrentCustomer,
                 SystemCustomerAttributeNames.ImpersonatedCustomerId, customer.Id);
@@ -1798,6 +1816,7 @@ namespace Nop.Admin.Controllers
                         {
                             Id = order.Id, 
                             OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                            OrderStatusId = order.OrderStatusId,
                             PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
                             ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
                             OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false),
@@ -1935,6 +1954,7 @@ namespace Nop.Admin.Controllers
 
             return PartialView();
         }
+
         [HttpPost]
         public ActionResult ReportRegisteredCustomersList(DataSourceRequest command)
         {
@@ -1950,7 +1970,121 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-        
+
+        [ChildActionOnly]
+	    public ActionResult CustomerStatistics()
+	    {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            //a vendor doesn't have access to this report
+            if (_workContext.CurrentVendor != null)
+                return Content("");
+
+            return PartialView();
+	    }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult LoadCustomerStatistics(string period)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return Content("");
+
+            var result = new List<object>();
+
+            var nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
+            var timeZone = _dateTimeHelper.CurrentTimeZone;
+            var searchCustomerRoleIds = new [] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id };
+
+            switch (period)
+            {
+                case "year":
+                    //year statistics
+                    var yearAgoRoundedDt = nowDt.AddYears(-1).AddMonths(1);
+                    var searchYearDateUser = new DateTime(yearAgoRoundedDt.Year, yearAgoRoundedDt.Month, 1);
+                    if (!timeZone.IsInvalidTime(searchYearDateUser))
+                    {
+                        DateTime searchYearDateUtc = _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone);
+
+                        do
+                        {
+                            result.Add(new
+                            {
+                                date = searchYearDateUser.Date.ToString("Y"),
+                                value = _customerService.GetAllCustomers(
+                                    createdFromUtc: searchYearDateUtc,
+                                    createdToUtc: searchYearDateUtc.AddMonths(1),
+                                    customerRoleIds: searchCustomerRoleIds,
+                                    pageIndex: 0,
+                                    pageSize: 1).TotalCount.ToString()
+                            });
+
+                            searchYearDateUtc = searchYearDateUtc.AddMonths(1);
+                            searchYearDateUser = searchYearDateUser.AddMonths(1);
+
+                        } while (!(searchYearDateUser.Year == nowDt.Year && searchYearDateUser.Month > nowDt.Month));
+                    }
+                    break;
+
+                case "month":
+                    //month statistics
+                    var searchMonthDateUser = new DateTime(nowDt.Year, nowDt.AddMonths(-1).Month, nowDt.AddMonths(-1).Day);
+                    if (!timeZone.IsInvalidTime(searchMonthDateUser))
+                    {
+                        DateTime searchMonthDateUtc = _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone);
+
+                        do
+                        {
+                            result.Add(new
+                            {
+                                date = searchMonthDateUser.Date.ToString("M"),
+                                value = _customerService.GetAllCustomers(
+                                    createdFromUtc: searchMonthDateUtc,
+                                    createdToUtc: searchMonthDateUtc.AddDays(1),
+                                    customerRoleIds: searchCustomerRoleIds,
+                                    pageIndex: 0,
+                                    pageSize: 1).TotalCount.ToString()
+                            });
+
+                            searchMonthDateUtc = searchMonthDateUtc.AddDays(1);
+                            searchMonthDateUser = searchMonthDateUser.AddDays(1);
+
+                        } while (!(searchMonthDateUser.Month == nowDt.Month && searchMonthDateUser.Day > nowDt.Day));
+                    }
+                    break;
+
+                case "week":
+                default:
+                    //week statistics
+                    var searchWeekDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-7).Month, nowDt.AddDays(-7).Day);
+                    if (!timeZone.IsInvalidTime(searchWeekDateUser))
+                    {
+                        DateTime searchWeekDateUtc = _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone);
+
+                        do
+                        {
+                            result.Add(new
+                            {
+                                date = searchWeekDateUser.Date.ToString("d dddd"),
+                                value = _customerService.GetAllCustomers(
+                                    createdFromUtc: searchWeekDateUtc,
+                                    createdToUtc: searchWeekDateUtc.AddDays(1),
+                                    customerRoleIds: searchCustomerRoleIds,
+                                    pageIndex: 0,
+                                    pageSize: 1).TotalCount.ToString()
+                            });
+
+                            searchWeekDateUtc = searchWeekDateUtc.AddDays(1);
+                            searchWeekDateUser = searchWeekDateUser.AddDays(1);
+
+                        } while (!(searchWeekDateUser.Month == nowDt.Month && searchWeekDateUser.Day > nowDt.Day));
+                    }
+                    break;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
         #endregion
 
         #region Current shopping cart/ wishlist
@@ -2010,7 +2144,8 @@ namespace Nop.Admin.Controllers
                         Id = x.Id,
                         ActivityLogTypeName = x.ActivityLogType.Name,
                         Comment = x.Comment,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
+                        IpAddress = x.IpAddress
                     };
                     return m;
 
@@ -2090,7 +2225,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 byte[] bytes = _exportManager.ExportCustomersToXlsx(customers);
-                return File(bytes, MimeTypes.TextXls, "customers.xlsx");
+                return File(bytes, MimeTypes.TextXlsx, "customers.xlsx");
             }
             catch (Exception exc)
             {
@@ -2118,7 +2253,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 byte[] bytes = _exportManager.ExportCustomersToXlsx(customers);
-                return File(bytes, MimeTypes.TextXls, "customers.xlsx");
+                return File(bytes, MimeTypes.TextXlsx, "customers.xlsx");
             }
             catch (Exception exc)
             {

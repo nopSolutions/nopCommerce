@@ -1,8 +1,12 @@
 ﻿@model SystemInfoModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.System.SystemInfo").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("System information");
 }
+
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.System.SystemInfo")
@@ -40,101 +44,117 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.NopVersion)
                         </div>
-                        <div class="col-sm-9">
-                            @Html.DisplayFor(model => model.NopVersion)
+                        <div class="col-md-9">
+                            @Html.NopDisplayFor(model => model.NopVersion)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.OperatingSystem)
                         </div>
-                        <div class="col-sm-9">
-                            @Html.DisplayFor(model => model.OperatingSystem)
+                        <div class="col-md-9">
+                            @Html.NopDisplayFor(model => model.OperatingSystem)
                         </div>
                     </div>  
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.AspNetInfo)
                         </div>
-                        <div class="col-sm-9">
-                            @Html.DisplayFor(model => model.AspNetInfo)
+                        <div class="col-md-9">
+                            @Html.NopDisplayFor(model => model.AspNetInfo)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.IsFullTrust)
                         </div>
-                        <div class="col-sm-9">
-                            @Html.DisplayFor(model => model.IsFullTrust)
+                        <div class="col-md-9">
+                            @Html.NopDisplayFor(model => model.IsFullTrust)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.ServerTimeZone)
                         </div>
-                        <div class="col-sm-9">
-                            @Html.DisplayFor(model => model.ServerTimeZone)
+                        <div class="col-md-9">
+                            @Html.NopDisplayFor(model => model.ServerTimeZone)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.ServerLocalTime)
                         </div>
-                        <div class="col-sm-9">
-                            @Model.ServerLocalTime.ToString("F")
+                        <div class="col-md-9">
+                            @Html.NopDisplay(Model.ServerLocalTime.ToString("F"))
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.UtcTime)
                         </div>
-                        <div class="col-sm-9">
-                            @Model.UtcTime.ToString("F")
+                        <div class="col-md-9">
+                            @Html.NopDisplay(Model.UtcTime.ToString("F"))
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.CurrentUserTime)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDisplay(Model.CurrentUserTime.ToString("F"))
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.HttpHost)
                         </div>
-                        <div class="col-sm-9">
-                            @Model.HttpHost
+                        <div class="col-md-9">
+                            @Html.NopDisplayFor(model => model.HttpHost)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.ServerVariables)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             <a id="serverVariablesShowHide" href="javascript:toggleLoadedServerVariables();">@T("Admin.Common.Show")</a>
-                            <div id="pnlServerVariables" style="display:none">
-                                @foreach (var serverVariable in Model.ServerVariables)
-                                {
-                                    @serverVariable.Name<text>:</text> @serverVariable.Value
-                                    <br />
-                                }
+                            <div id="pnlServerVariables" style="display: none; word-break: break-all">
+                                <ul class="common-list">
+                                    @foreach (var serverVariable in Model.ServerVariables)
+                                    {
+                                        <li>
+                                            @serverVariable.Name<text>:</text>
+                                            @serverVariable.Value
+                                        </li>
+                                    }
+                                </ul>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.LoadedAssemblies)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             <a id="loadedAssembliesShowHide" href="javascript:toggleLoadedAssemblies();">@T("Admin.Common.Show")</a>
-                            <div id="pnlLoadedAssemblies" style="display:none">
-                                @foreach (var assembly in Model.LoadedAssemblies)
-                                {
-                                    @assembly.FullName
-                                    if (!String.IsNullOrEmpty(assembly.Location))
+                            <div id="pnlLoadedAssemblies" style="display: none">
+                                <ul class="common-list">
+                                    @foreach (var assembly in Model.LoadedAssemblies)
                                     {
-                                        <br />
-                                        <em>@assembly.Location</em>
+                                        <li>
+                                            <div>@assembly.FullName</div>
+                                            @if (!String.IsNullOrEmpty(assembly.Location))
+                                            {
+                                                <div>
+                                                    <em>@assembly.Location</em>
+                                                </div>
+                                            }
+                                        </li>
                                     }
-                                    <br />
-                                }
+                                </ul>
                             </div>
                         </div>
                     </div>  
