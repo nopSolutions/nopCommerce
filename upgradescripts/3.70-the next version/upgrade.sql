@@ -1888,18 +1888,6 @@ GO
  	VALUES (N'taxsettings.logerrors', N'True', 0)
  END
  GO
- 
- 
- --new message temaplate
- IF NOT EXISTS (
-    SELECT 1
-    FROM [MessageTemplate]
-    WHERE [Name] = N'Customer.AdminApprovalMessage')
-BEGIN
-  INSERT [MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId], [LimitedToStores], [AttachedDownloadId])
-  VALUES (N'Customer.AdminApprovalMessage', null, N'Welcome to %Store.Name%', N'We welcome you to <a href="%Store.URL%"> %Store.Name%</a>.<br /><br />After an administrator approves this account you can take part in the various services we have to offer you. Some of these services include:<br /><br />Permanent Cart - Any products added to your online cart remain there until you remove them, or check them out.<br />Address Book - We can now deliver your products to another address other than yours! This is perfect to send birthday gifts direct to the birthday-person themselves.<br />Order History - View your history of purchases that you have made with us.<br />Products Reviews - Share your opinions on products with our other customers.<br /><br />For help with any of our online services, please email the store-owner: <a href="mailto:%Store.Email%">%Store.Email%</a>.<br /><br />Note: This email address was provided on our registration page. If you own the email and did not register on our site, please send an email to <a href="mailto:%Store.Email%">%Store.Email%</a>.', 1, 0, 1, 0)
-END
-GO
 
 
 

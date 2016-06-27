@@ -32,14 +32,6 @@ namespace Nop.Services.Messages
         int SendCustomerWelcomeMessage(Customer customer, int languageId);
 
         /// <summary>
-        /// Sends a welcome message to a customer, telling him the registered account needs to be approved by an admin
-        /// </summary>
-        /// <param name="customer">Customer instance</param>
-        /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        int SendCustomerAdminApprovalMessage(Customer customer, int languageId);
-
-        /// <summary>
         /// Sends an email validation message to a customer
         /// </summary>
         /// <param name="customer">Customer instance</param>
