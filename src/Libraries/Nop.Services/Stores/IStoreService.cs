@@ -38,5 +38,11 @@ namespace Nop.Services.Stores
         /// </summary>
         /// <param name="store">Store</param>
         void UpdateStore(Store store);
+
+        /// <summary>
+        /// Update HasDiscountsApplied property (used for performance optimization)
+        /// </summary>
+        /// <param name="store">Store</param>
+        void UpdateHasDiscountsApplied(Store store);
     }
 }

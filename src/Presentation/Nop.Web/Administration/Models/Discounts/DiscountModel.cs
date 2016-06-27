@@ -16,6 +16,7 @@ namespace Nop.Admin.Models.Discounts
         {
             AvailableDiscountRequirementRules = new List<SelectListItem>();
             DiscountRequirementMetaInfos = new List<DiscountRequirementMetaInfo>();
+            AppliedToStores = new List<AppliedToStoreModel>();
         }
 
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.Name")]
@@ -80,7 +81,10 @@ namespace Nop.Admin.Models.Discounts
         public IList<SelectListItem> AvailableDiscountRequirementRules { get; set; }
 
         public IList<DiscountRequirementMetaInfo> DiscountRequirementMetaInfos { get; set; }
-        
+
+        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.AppliedToStores")]
+        public IList<AppliedToStoreModel> AppliedToStores { get; set; }
+
 
         #region Nested classes
 
@@ -181,6 +185,19 @@ namespace Nop.Admin.Models.Discounts
             public int DiscountId { get; set; }
 
             public int[] SelectedProductIds { get; set; }
+        }
+
+        public class AppliedToStoreModel : BaseNopModel
+        {
+            public int StoreId { get; set; }
+
+            public string StoreName { get; set; }
+        }
+        public partial class AddStoreToDiscountModel : BaseNopModel
+        {
+            public int DiscountId { get; set; }
+
+            public int[] SelectedStoreIds { get; set; }
         }
 
         #endregion

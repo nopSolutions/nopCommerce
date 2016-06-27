@@ -15,6 +15,7 @@ namespace Nop.Admin.Models.Stores
         {
             Locales = new List<StoreLocalizedModel>();
             AvailableLanguages = new List<SelectListItem>();
+            AvailableDiscounts = new List<StoreDiscountModel>();
         }
 
         [NopResourceDisplayName("Admin.Configuration.Stores.Fields.Name")]
@@ -63,6 +64,11 @@ namespace Nop.Admin.Models.Stores
 
 
         public IList<StoreLocalizedModel> Locales { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.Discounts")]
+        [AllowHtml]
+        public int[] SelectedDiscountIds { get; set; }
+        public List<StoreDiscountModel> AvailableDiscounts { get; set; }
     }
 
     public partial class StoreLocalizedModel : ILocalizedModelLocal
@@ -71,6 +77,13 @@ namespace Nop.Admin.Models.Stores
 
         [NopResourceDisplayName("Admin.Configuration.Stores.Fields.Name")]
         [AllowHtml]
+        public string Name { get; set; }
+    }
+
+    public partial class StoreDiscountModel
+    {
+        public int Id { get; set; }
+
         public string Name { get; set; }
     }
 }

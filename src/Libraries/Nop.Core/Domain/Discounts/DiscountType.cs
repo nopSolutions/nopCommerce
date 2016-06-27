@@ -29,5 +29,9 @@ namespace Nop.Core.Domain.Discounts
         /// Assigned to order subtotal
         /// </summary>
         AssignedToOrderSubTotal = 20,
+        /// <summary>
+        /// Assigned to stores (all products in a store)
+        /// </summary>
+        AssignedToStores = 40,
     }
 }

@@ -223,6 +223,32 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Gets allowed discounts applied to store
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Discounts</returns>
+        protected virtual IList<Discount> GetAllowedDiscountsAppliedToCurrentStore(Customer customer)
+        {
+            var allowedDiscounts = new List<Discount>();
+            if (_catalogSettings.IgnoreDiscounts)
+                return allowedDiscounts;
+
+            //we use this property ("HasDiscountsApplied") for performance optimziation to avoid unnecessary database calls
+            if (_storeContext.CurrentStore.HasDiscountsApplied)
+            {
+                foreach (var discount in _storeContext.CurrentStore.AppliedDiscounts)
+                {
+                    if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                        discount.DiscountType == DiscountType.AssignedToStores &&
+                        !allowedDiscounts.Contains(discount))
+                        allowedDiscounts.Add(discount);
+                }
+            }
+
+            return allowedDiscounts;
+        }
+
+        /// <summary>
         /// Gets allowed discounts
         /// </summary>
         /// <param name="product">Product</param>
@@ -246,6 +272,11 @@ namespace Nop.Services.Catalog
 
             //discounts applied to manufacturers
             foreach (var discount in GetAllowedDiscountsAppliedToManufacturers(product, customer))
+                if (!allowedDiscounts.ContainsDiscount(discount))
+                    allowedDiscounts.Add(discount);
+
+            //discounts applied to stores
+            foreach (var discount in GetAllowedDiscountsAppliedToCurrentStore(customer))
                 if (!allowedDiscounts.ContainsDiscount(discount))
                     allowedDiscounts.Add(discount);
 

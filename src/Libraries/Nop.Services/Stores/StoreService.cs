@@ -148,6 +148,19 @@ namespace Nop.Services.Stores
             _eventPublisher.EntityUpdated(store);
         }
 
+        /// <summary>
+        /// Update HasDiscountsApplied property (used for performance optimization)
+        /// </summary>
+        /// <param name="store">Store</param>
+        public virtual void UpdateHasDiscountsApplied(Store store)
+        {
+            if (store == null)
+                throw new ArgumentNullException(nameof(store));
+
+            store.HasDiscountsApplied = store.AppliedDiscounts.Count > 0;
+            UpdateStore(store);
+        }
+
         #endregion
     }
 }

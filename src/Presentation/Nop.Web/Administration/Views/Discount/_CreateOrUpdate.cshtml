@@ -25,6 +25,7 @@
                 @Html.RenderBootstrapTabHeader("tab-applied-to-products", @T("Admin.Promotions.Discounts.AppliedToProducts"))
                 @Html.RenderBootstrapTabHeader("tab-applied-to-categories", @T("Admin.Promotions.Discounts.AppliedToCategories"))
                 @Html.RenderBootstrapTabHeader("tab-applied-to-manufacturers", @T("Admin.Promotions.Discounts.AppliedToManufacturers"))
+                @Html.RenderBootstrapTabHeader("tab-applied-to-stores", @T("Admin.Promotions.Discounts.AppliedToStores"))
                 @if (Model.Id > 0)
                 {
                     @Html.RenderBootstrapTabHeader("tab-history", @T("Admin.Promotions.Discounts.History"))
@@ -36,6 +37,7 @@
                 @Html.RenderBootstrapTabContent("tab-applied-to-products", @TabAppliedToProducts())
                 @Html.RenderBootstrapTabContent("tab-applied-to-categories", @TabAppliedToCategories())
                 @Html.RenderBootstrapTabContent("tab-applied-to-manufacturers", @TabAppliedToManufacturers())
+                @Html.RenderBootstrapTabContent("tab-applied-to-stores", @TabAppliedToStores())
                 @if (Model.Id > 0)
                 {
                     @Html.RenderBootstrapTabContent("tab-history", @TabHistory())
@@ -79,24 +81,35 @@
                 $('[data-tab-name=tab-applied-to-categories]').show();
             $('[data-tab-name=tab-applied-to-manufacturers]').hide();
             $('[data-tab-name=tab-applied-to-products]').hide();
+            $('[data-tab-name=tab-applied-to-stores]').hide();
             $('#pnlMaximumDiscountedQuantity').show();
             $('#pnlAppliedToSubCategories').show();
         } else if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToManufacturers).ToString())) {
             $('[data-tab-name=tab-applied-to-categories]').hide();
             $('[data-tab-name=tab-applied-to-manufacturers]').show();
             $('[data-tab-name=tab-applied-to-products]').hide();
+            $('[data-tab-name=tab-applied-to-stores]').hide();
             $('#pnlMaximumDiscountedQuantity').show();
             $('#pnlAppliedToSubCategories').hide();
         } else if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToSkus).ToString())) {
             $('[data-tab-name=tab-applied-to-categories]').hide();
             $('[data-tab-name=tab-applied-to-manufacturers]').hide();
             $('[data-tab-name=tab-applied-to-products]').show();
+            $('[data-tab-name=tab-applied-to-stores]').hide();
+            $('#pnlMaximumDiscountedQuantity').show();
+            $('#pnlAppliedToSubCategories').hide();
+        } else if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToStores).ToString())) {
+            $('[data-tab-name=tab-applied-to-categories]').hide();
+            $('[data-tab-name=tab-applied-to-manufacturers]').hide();
+            $('[data-tab-name=tab-applied-to-products]').hide();
+            $('[data-tab-name=tab-applied-to-stores]').show();
             $('#pnlMaximumDiscountedQuantity').show();
             $('#pnlAppliedToSubCategories').hide();
         } else {
                 $('[data-tab-name=tab-applied-to-categories]').hide();
         $('[data-tab-name=tab-applied-to-manufacturers]').hide();
         $('[data-tab-name=tab-applied-to-products]').hide();
+        $('[data-tab-name=tab-applied-to-stores]').hide();
         $('#pnlMaximumDiscountedQuantity').hide();
         $('#pnlAppliedToSubCategories').hide();
         }
@@ -793,6 +806,118 @@
             {
                 <div class="panel-body">
                     @T("Admin.Promotions.Discounts.AppliedToManufacturers.SaveBeforeEdit")
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@helper TabAppliedToStores()
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            @if (Model.Id > 0)
+            {
+                <div class="panel-body">
+                    <div id="stores-grid"></div>
+
+                    <script>
+                        $(document).ready(function() {
+                            $("#stores-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("StoreList", "Discount", new {discountId = Model.Id}))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("StoreDelete", "Discount", new {discountId = Model.Id}))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "StoreId",
+                                            fields: {
+                                                StoreName: { editable: false, type: "string" },
+                                                StoreId: { editable: false, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "StoreName",
+                                        title: "@T("Admin.Promotions.Discounts.AppliedToStores.Store")"
+                                    }, {
+                                        field: "StoreId",
+                                        title: "@T("Admin.Common.View")",
+                                        width: 150,
+                                        template: '<a href="@Url.Content("~/Admin/Store/Edit/")#=StoreId#">@T("Admin.Common.View")</a>'
+                                    }, {
+                                        command: [
+                                            {
+                                                name: "destroy",
+                                                text: "@T("Admin.Common.Delete")"
+                                            }
+                                        ],
+                                        width: 150
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+                <div class="panel-footer">
+                    <button type="submit" id="btnAddNewStore" onclick="javascript:OpenWindow('@(Url.Action("StoreAddPopup", "Discount", new {discountId = Model.Id, btnId = "btnRefreshStores", formId = "discount-form"}))', 800, 800, true); return false;" class="btn btn-primary">
+                        @T("Admin.Promotions.Discounts.AppliedToStores.AddNew")
+                    </button>
+                    <input type="submit" id="btnRefreshStores" style="display: none" />
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $('#btnRefreshStores').click(function() {
+                                //refresh grid
+                                var grid = $("#stores-grid").data('kendoGrid');
+                                grid.dataSource.read();
+
+                                //return false to don't reload a page
+                                return false;
+                            });
+                        });
+                    </script>
+                </div>
+            }
+            else
+            {
+                <div class="panel-body">
+                    @T("Admin.Promotions.Discounts.AppliedToStores.SaveBeforeEdit")
                 </div>
             }
         </div>

@@ -1,4 +1,6 @@
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
+using System.Collections.Generic;
 
 namespace Nop.Core.Domain.Stores
 {
@@ -7,6 +9,8 @@ namespace Nop.Core.Domain.Stores
     /// </summary>
     public partial class Store : BaseEntity, ILocalizedEntity
     {
+        private ICollection<Discount> _appliedDiscounts;
+
         /// <summary>
         /// Gets or sets the store name
         /// </summary>
@@ -61,5 +65,23 @@ namespace Nop.Core.Domain.Stores
         /// Gets or sets the company VAT (used in Europe Union countries)
         /// </summary>
         public string CompanyVat { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this store has discounts applied
+        /// <remarks>The same as if we run this.AppliedDiscounts.Count > 0
+        /// We use this property for performance optimization:
+        /// if this property is set to false, then we do not need to load Applied Discounts navigation property
+        /// </remarks>
+        /// </summary>
+        public bool HasDiscountsApplied { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of applied discounts
+        /// </summary>
+        public virtual ICollection<Discount> AppliedDiscounts
+        {
+            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<Discount>()); }
+            protected set { _appliedDiscounts = value; }
+        }
     }
 }

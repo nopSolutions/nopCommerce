@@ -288,6 +288,17 @@ namespace Nop.Admin.Controllers
                     foreach (var p in products)
                         _productService.UpdateHasDiscountsApplied(p);
                 }
+                if (prevDiscountType == DiscountType.AssignedToStores
+                    && discount.DiscountType != DiscountType.AssignedToStores)
+                {
+                    //applied to stores
+                    var stores = discount.AppliedToStores.ToList();
+                    discount.AppliedToStores.Clear();
+                    _discountService.UpdateDiscount(discount);
+                    //update "HasDiscountsApplied" property
+                    foreach (var store in stores)
+                        _storeService.UpdateHasDiscountsApplied(store);
+                }
 
                 //activity log
                 _customerActivityService.InsertActivity("EditDiscount", _localizationService.GetResource("ActivityLog.EditDiscount"), discount.Name);
@@ -323,12 +334,16 @@ namespace Nop.Admin.Controllers
             
             //applied to products
             var products = discount.AppliedToProducts.ToList();
+            //applied to stores
+            var stores = discount.AppliedToStores.ToList();
 
             _discountService.DeleteDiscount(discount);
             
             //update "HasDiscountsApplied" properties
             foreach (var p in products)
                 _productService.UpdateHasDiscountsApplied(p);
+            foreach (var store in stores)
+                _storeService.UpdateHasDiscountsApplied(store);
 
             //activity log
             _customerActivityService.InsertActivity("DeleteDiscount", _localizationService.GetResource("ActivityLog.DeleteDiscount"), discount.Name);
@@ -777,8 +792,118 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
+        #region Applied to stores
+
+        [HttpPost]
+        public ActionResult StoreList(DataSourceRequest command, int discountId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var discount = _discountService.GetDiscountById(discountId);
+            if (discount == null)
+                throw new Exception("No discount found with the specified id");
+
+            var stores = discount
+                .AppliedToStores
+                .ToList();
+            var gridModel = new DataSourceResult
+            {
+                Data = stores.Select(x => new DiscountModel.AppliedToStoreModel
+                {
+                    StoreId = x.Id,
+                    StoreName = x.Name
+                }),
+                Total = stores.Count
+            };
+
+            return Json(gridModel);
+        }
+
+        public ActionResult StoreDelete(int discountId, int storeId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var discount = _discountService.GetDiscountById(discountId);
+            if (discount == null)
+                throw new Exception("No discount found with the specified id");
+
+            var store = _storeService.GetStoreById(storeId);
+            if (store == null)
+                throw new Exception("No product found with the specified id");
+
+            //remove discount
+            if (store.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
+                store.AppliedDiscounts.Remove(discount);
+
+            _storeService.UpdateStore(store);
+            _storeService.UpdateHasDiscountsApplied(store);
+
+            return new NullJsonResult();
+        }
+
+        public ActionResult StoreAddPopup(int discountId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var model = new DiscountModel.AddStoreToDiscountModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult StoreAddPopupList(DataSourceRequest command, DiscountModel.AddStoreToDiscountModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var stores = _storeService.GetAllStores();
+            var gridModel = new DataSourceResult
+            {
+                Data = stores.Select(x => x.ToModel()),
+                Total = stores.Count
+            };
+
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        [FormValueRequired("save")]
+        public ActionResult StoreAddPopup(string btnId, string formId, DiscountModel.AddStoreToDiscountModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var discount = _discountService.GetDiscountById(model.DiscountId);
+            if (discount == null)
+                throw new Exception("No discount found with the specified id");
+
+            if (model.SelectedStoreIds != null)
+            {
+                foreach (int id in model.SelectedStoreIds)
+                {
+                    var store = _storeService.GetStoreById(id);
+                    if (store != null)
+                    {
+                        if (store.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
+                            store.AppliedDiscounts.Add(discount);
+
+                        _storeService.UpdateStore(store);
+                    }
+                }
+            }
+
+            ViewBag.RefreshPage = true;
+            ViewBag.btnId = btnId;
+            ViewBag.formId = formId;
+            return View(model);
+        }
+
+        #endregion
+
         #region Discount usage history
-        
+
         [HttpPost]
         public ActionResult UsageHistoryList(int discountId, DataSourceRequest command)
         {

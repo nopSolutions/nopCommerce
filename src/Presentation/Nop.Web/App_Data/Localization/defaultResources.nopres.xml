@@ -10092,6 +10092,18 @@
   <LocaleResource Name="Admin.Promotions.Discounts.AppliedToProducts.AddNew">
     <Value>Add a new product</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToStores">
+    <Value>Applied to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToStores.SaveBeforeEdit">
+    <Value>You need to save the discount before you can add stores for this discount page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToStores.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToStores.AddNew">
+    <Value>Add a new store</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.BackToList">
     <Value>back to discount list</Value>
   </LocaleResource>
@@ -12317,6 +12329,9 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Discounts.DiscountType.AssignedToSkus">
     <Value>Assigned to products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Discounts.DiscountType.AssignedToStores">
+    <Value>Assigned to stores</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Forums.EditorType.BBCodeEditor">
     <Value>BBCode editor</Value>
