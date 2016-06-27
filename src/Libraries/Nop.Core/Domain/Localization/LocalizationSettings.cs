@@ -38,10 +38,5 @@ namespace Nop.Core.Domain.Localization
         /// A value indicating whether to load all search engine friendly names (slugs) on application startup
         /// </summary>
         public bool LoadAllUrlRecordsOnStartup { get; set; }
-
-        /// <summary>
-        /// A value indicating whether to we should ignore RTL language property for admin area
-        /// </summary>
-        public bool IgnoreRtlPropertyForAdminArea { get; set; }
     }
 }
