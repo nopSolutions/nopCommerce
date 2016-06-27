@@ -25,6 +25,7 @@
     <div class="content">
         <div class="form-horizontal">
             @Html.Action("StoreScopeConfiguration", "Setting")
+            @Html.Action("Mode", "Setting")
             @Html.ValidationSummary(false)
 
             <div class="panel-group">
@@ -55,27 +56,7 @@
                                 <span>@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note")</span>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.AvatarPictureSize_OverrideForStore, model => model.AvatarPictureSize, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.AvatarPictureSize)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.AvatarPictureSize)
-                                @Html.ValidationMessageFor(model => model.AvatarPictureSize)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.ProductThumbPictureSize_OverrideForStore, model => model.ProductThumbPictureSize, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.ProductThumbPictureSize)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.ProductThumbPictureSize)
-                                @Html.ValidationMessageFor(model => model.ProductThumbPictureSize)
-                            </div>
-                        </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.ProductDetailsPictureSize_OverrideForStore, model => model.ProductDetailsPictureSize, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.ProductDetailsPictureSize)
@@ -85,7 +66,17 @@
                                 @Html.ValidationMessageFor(model => model.ProductDetailsPictureSize)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ProductThumbPictureSize_OverrideForStore, model => model.ProductThumbPictureSize, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ProductThumbPictureSize)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.ProductThumbPictureSize)
+                                @Html.ValidationMessageFor(model => model.ProductThumbPictureSize)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.ProductThumbPictureSizeOnProductDetailsPage_OverrideForStore, model => model.ProductThumbPictureSizeOnProductDetailsPage, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.ProductThumbPictureSizeOnProductDetailsPage)
@@ -95,7 +86,7 @@
                                 @Html.ValidationMessageFor(model => model.ProductThumbPictureSizeOnProductDetailsPage)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.AssociatedProductPictureSize_OverrideForStore, model => model.AssociatedProductPictureSize, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.AssociatedProductPictureSize)
@@ -105,7 +96,7 @@
                                 @Html.ValidationMessageFor(model => model.AssociatedProductPictureSize)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.CategoryThumbPictureSize_OverrideForStore, model => model.CategoryThumbPictureSize, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.CategoryThumbPictureSize)
@@ -115,7 +106,7 @@
                                 @Html.ValidationMessageFor(model => model.CategoryThumbPictureSize)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.ManufacturerThumbPictureSize_OverrideForStore, model => model.ManufacturerThumbPictureSize, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.ManufacturerThumbPictureSize)
@@ -125,7 +116,7 @@
                                 @Html.ValidationMessageFor(model => model.ManufacturerThumbPictureSize)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.VendorThumbPictureSize_OverrideForStore, model => model.VendorThumbPictureSize, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.VendorThumbPictureSize)
@@ -135,7 +126,7 @@
                                 @Html.ValidationMessageFor(model => model.VendorThumbPictureSize)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.CartThumbPictureSize_OverrideForStore, model => model.CartThumbPictureSize, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.CartThumbPictureSize)
@@ -145,7 +136,7 @@
                                 @Html.ValidationMessageFor(model => model.CartThumbPictureSize)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.MiniCartThumbPictureSize_OverrideForStore, model => model.MiniCartThumbPictureSize, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.MiniCartThumbPictureSize)
@@ -155,7 +146,17 @@
                                 @Html.ValidationMessageFor(model => model.MiniCartThumbPictureSize)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.AvatarPictureSize_OverrideForStore, model => model.AvatarPictureSize, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.AvatarPictureSize)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.AvatarPictureSize)
+                                @Html.ValidationMessageFor(model => model.AvatarPictureSize)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.MaximumImageSize_OverrideForStore, model => model.MaximumImageSize, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.MaximumImageSize)
@@ -165,7 +166,7 @@
                                 @Html.ValidationMessageFor(model => model.MaximumImageSize)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.MultipleThumbDirectories_OverrideForStore, model => model.MultipleThumbDirectories, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.MultipleThumbDirectories)
@@ -175,7 +176,7 @@
                                 @Html.ValidationMessageFor(model => model.MultipleThumbDirectories)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.DefaultImageQuality_OverrideForStore, model => model.DefaultImageQuality, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.DefaultImageQuality)
@@ -185,7 +186,7 @@
                                 @Html.ValidationMessageFor(model => model.DefaultImageQuality)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.ImportProductImagesUsingHash_OverrideForStore, model => model.ImportProductImagesUsingHash, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.ImportProductImagesUsingHash)

@@ -160,6 +160,17 @@ namespace Nop.Admin.Controllers
         #region Methods
 
         [ChildActionOnly]
+        public ActionResult Mode(string modeName = "settings-advanced-mode")
+        {
+            var model = new ModeModel()
+            {
+                ModeName = modeName,
+                Enabled = _workContext.CurrentCustomer.GetAttribute<bool>(modeName)
+            };
+            return PartialView(model);
+        }
+
+        [ChildActionOnly]
         public ActionResult StoreScopeConfiguration()
         {
             var allStores = _storeService.GetAllStores();
@@ -886,9 +897,6 @@ namespace Nop.Admin.Controllers
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
-
-            //selected tab
-            SaveSelectedTabName();
 
             return RedirectToAction("Catalog");
         }
@@ -1959,10 +1967,7 @@ namespace Nop.Admin.Controllers
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
-
-            //selected tab
-            SaveSelectedTabName();
-
+            
             return RedirectToAction("GeneralCommon");
         }
         [HttpPost, ActionName("GeneralCommon")]
@@ -2043,10 +2048,6 @@ namespace Nop.Admin.Controllers
             {
                 ErrorNotification(exc);
             }
-
-            //selected tab
-            SaveSelectedTabName();
-
             return RedirectToAction("GeneralCommon");
         }
         [HttpPost, ActionName("GeneralCommon")]
@@ -2086,10 +2087,7 @@ namespace Nop.Admin.Controllers
             {
                 ErrorNotification(exc);
             }
-
-            //selected tab
-            SaveSelectedTabName();
-
+            
             return RedirectToAction("GeneralCommon");
         }
 

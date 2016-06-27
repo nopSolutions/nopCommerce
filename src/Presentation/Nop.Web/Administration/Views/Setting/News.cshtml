@@ -25,6 +25,7 @@
     <div class="content">
         <div class="form-horizontal">
             @Html.Action("StoreScopeConfiguration", "Setting")
+            @Html.Action("Mode", "Setting")
             @Html.ValidationSummary(false)
 
             <div class="panel-group">
@@ -38,6 +39,16 @@
                             <div class="col-md-9">
                                 @Html.NopEditorFor(model => model.Enabled)
                                 @Html.ValidationMessageFor(model => model.Enabled)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ShowNewsOnMainPage_OverrideForStore, model => model.ShowNewsOnMainPage, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ShowNewsOnMainPage)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.ShowNewsOnMainPage)
+                                @Html.ValidationMessageFor(model => model.ShowNewsOnMainPage)
                             </div>
                         </div>
                         <div class="form-group">
@@ -60,17 +71,7 @@
                                 @Html.ValidationMessageFor(model => model.NotifyAboutNewNewsComments)
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.ShowNewsOnMainPage_OverrideForStore, model => model.ShowNewsOnMainPage, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.ShowNewsOnMainPage)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.ShowNewsOnMainPage)
-                                @Html.ValidationMessageFor(model => model.ShowNewsOnMainPage)
-                            </div>
-                        </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.MainPageNewsCount_OverrideForStore, model => model.MainPageNewsCount, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.MainPageNewsCount)
@@ -80,7 +81,7 @@
                                 @Html.ValidationMessageFor(model => model.MainPageNewsCount)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.NewsArchivePageSize_OverrideForStore, model => model.NewsArchivePageSize, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.NewsArchivePageSize)
@@ -90,7 +91,7 @@
                                 @Html.ValidationMessageFor(model => model.NewsArchivePageSize)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.ShowHeaderRssUrl_OverrideForStore, model => model.ShowHeaderRssUrl, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.ShowHeaderRssUrl)

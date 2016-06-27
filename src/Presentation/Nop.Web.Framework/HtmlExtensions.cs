@@ -256,9 +256,10 @@ namespace Nop.Web.Framework
         /// <param name="title">Tab title</param>
         /// <param name="isDefaultTab">Indicates that the tab is default</param>
         /// <param name="tabNameToSelect">Tab name to select</param>
+        /// <param name="customCssClass">Tab name to select</param>
         /// <returns>MvcHtmlString</returns>
         public static MvcHtmlString RenderBootstrapTabHeader(this HtmlHelper helper, string currentTabName,
-            LocalizedString title, bool isDefaultTab = false, string tabNameToSelect = "")
+            LocalizedString title, bool isDefaultTab = false, string tabNameToSelect = "", string customCssClass = "")
         {
             if (helper == null)
                 throw new ArgumentNullException("helper");
@@ -279,11 +280,23 @@ namespace Nop.Web.Framework
                 },
                 InnerHtml = title.Text
             };
+            var liClassValue = "";
+            if (tabNameToSelect == currentTabName)
+            {
+                liClassValue = "active";
+            }
+            if (!String.IsNullOrEmpty(customCssClass))
+            {
+                if (!String.IsNullOrEmpty(liClassValue))
+                    liClassValue += " ";
+                liClassValue += customCssClass;
+            }
+
             var li = new TagBuilder("li")
             {
                 Attributes =
                 {
-                    new KeyValuePair<string, string>("class", tabNameToSelect == currentTabName ? "active" : ""),
+                    new KeyValuePair<string, string>("class", liClassValue),
                 },
                 InnerHtml = a.ToString(TagRenderMode.Normal)
             };

@@ -982,7 +982,6 @@
     <Content Include="Views\Checkout\OpcPaymentInfo.cshtml" />
     <Content Include="Views\Checkout\OpcConfirmOrder.cshtml" />
     <Content Include="Views\Shared\_Print.cshtml" />
-    <Content Include="Views\Shared\LanguageAttributes.cshtml" />
     <Content Include="Views\Customer\_CheckUsernameAvailability.cshtml" />
     <Content Include="Views\Boards\ActiveDiscussionsSmall.cshtml" />
     <Content Include="Views\Product\_BackInStockSubscription.cshtml" />

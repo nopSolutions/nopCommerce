@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web;
+using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
@@ -11,6 +13,7 @@ using Nop.Services.Vendors;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Vendors;
+using Nop.Services.Media;
 
 namespace Nop.Web.Controllers
 {
@@ -24,6 +27,7 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IVendorService _vendorService;
         private readonly IUrlRecordService _urlRecordService;
+        private readonly IPictureService _pictureService;
 
         private readonly LocalizationSettings _localizationSettings;
         private readonly VendorSettings _vendorSettings;
@@ -39,6 +43,7 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService,
             IVendorService vendorService,
             IUrlRecordService urlRecordService,
+            IPictureService pictureService,
             LocalizationSettings localizationSettings,
             VendorSettings vendorSettings,
             CaptchaSettings captchaSettings)
@@ -49,6 +54,7 @@ namespace Nop.Web.Controllers
             this._workflowMessageService = workflowMessageService;
             this._vendorService = vendorService;
             this._urlRecordService = urlRecordService;
+            this._pictureService = pictureService;
 
             this._localizationSettings = localizationSettings;
             this._vendorSettings = vendorSettings;
@@ -85,7 +91,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("ApplyVendor")]
         [PublicAntiForgery]
         [CaptchaValidator]
-        public ActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid)
+        public ActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, HttpPostedFileBase uploadedFile)
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
                 return RedirectToRoute("HomePage");
@@ -99,8 +105,28 @@ namespace Nop.Web.Controllers
                 ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
             }
 
+            int pictureId = 0;
+
+            if (uploadedFile != null && !string.IsNullOrEmpty(uploadedFile.FileName))
+            {
+                try
+                {
+                    var contentType = uploadedFile.ContentType;
+                    var vendorPictureBinary = uploadedFile.GetPictureBits();
+                    var picture = _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
+
+                    if (picture != null)
+                        pictureId = picture.Id;
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError("", _localizationService.GetResource("Vendors.ApplyAccount.Picture.ErrorMessage"));
+                }
+            }
+
             if (ModelState.IsValid)
             {
+                var description = Core.Html.HtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
                 //disabled by default
                 var vendor = new Vendor
                 {
@@ -109,7 +135,9 @@ namespace Nop.Web.Controllers
                     //some default settings
                     PageSize = 6,
                     AllowCustomersToSelectPageSize = true,
-                    PageSizeOptions = _vendorSettings.DefaultVendorPageSizeOptions
+                    PageSizeOptions = _vendorSettings.DefaultVendorPageSizeOptions,
+                    PictureId = pictureId,
+                    Description = description
                 };
                 _vendorService.InsertVendor(vendor);
                 //search engine name (the same as vendor name)

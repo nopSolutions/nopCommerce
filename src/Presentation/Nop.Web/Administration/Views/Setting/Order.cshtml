@@ -31,6 +31,7 @@
     <div class="content">
         <div class="form-horizontal">
             @Html.Action("StoreScopeConfiguration", "Setting")
+            @Html.Action("Mode", "Setting")
             @Html.ValidationSummary(false)
 
             <div id="ordersettings-edit" class="nav-tabs-custom">
@@ -101,7 +102,7 @@
                         @Html.ValidationMessageFor(model => model.OnePageCheckoutEnabled)
                     </div>
                 </div>
-                <div class="form-group" id="pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab">
+                <div class="form-group advanced-setting" id="pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab_OverrideForStore, model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab)
@@ -111,7 +112,7 @@
                         @Html.ValidationMessageFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.TermsOfServiceOnShoppingCartPage_OverrideForStore, model => model.TermsOfServiceOnShoppingCartPage, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.TermsOfServiceOnShoppingCartPage)
@@ -121,7 +122,7 @@
                         @Html.ValidationMessageFor(model => model.TermsOfServiceOnShoppingCartPage)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.TermsOfServiceOnOrderConfirmPage_OverrideForStore, model => model.TermsOfServiceOnOrderConfirmPage, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.TermsOfServiceOnOrderConfirmPage)
@@ -133,7 +134,7 @@
                 </div>
                 @if (Model.OrderIdent.HasValue)
                 {
-                    <div class="form-group">
+                    <div class="form-group advanced-setting">
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.OrderIdent)
                         </div>
@@ -142,7 +143,7 @@
                         </div>
                     </div>
                 }
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.IsReOrderAllowed_OverrideForStore, model => model.IsReOrderAllowed, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.IsReOrderAllowed)
@@ -152,7 +153,7 @@
                         @Html.ValidationMessageFor(model => model.IsReOrderAllowed)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.MinOrderSubtotalAmount_OverrideForStore, model => model.MinOrderSubtotalAmount, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.MinOrderSubtotalAmount)
@@ -162,7 +163,7 @@
                         @Html.ValidationMessageFor(model => model.MinOrderSubtotalAmount) @Model.PrimaryStoreCurrencyCode
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.MinOrderSubtotalAmountIncludingTax_OverrideForStore, model => model.MinOrderSubtotalAmountIncludingTax, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.MinOrderSubtotalAmountIncludingTax)
@@ -172,7 +173,7 @@
                         @Html.ValidationMessageFor(model => model.MinOrderSubtotalAmountIncludingTax)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.MinOrderTotalAmount_OverrideForStore, model => model.MinOrderTotalAmount, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.MinOrderTotalAmount)
@@ -182,7 +183,7 @@
                         @Html.ValidationMessageFor(model => model.MinOrderTotalAmount) @Model.PrimaryStoreCurrencyCode
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.DisableBillingAddressCheckoutStep_OverrideForStore, model => model.DisableBillingAddressCheckoutStep, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.DisableBillingAddressCheckoutStep)
@@ -192,7 +193,7 @@
                         @Html.ValidationMessageFor(model => model.DisableBillingAddressCheckoutStep)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.DisableOrderCompletedPage_OverrideForStore, model => model.DisableOrderCompletedPage, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.DisableOrderCompletedPage)
@@ -202,7 +203,7 @@
                         @Html.ValidationMessageFor(model => model.DisableOrderCompletedPage)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.AttachPdfInvoiceToOrderPlacedEmail_OverrideForStore, model => model.AttachPdfInvoiceToOrderPlacedEmail, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.AttachPdfInvoiceToOrderPlacedEmail)
@@ -212,7 +213,7 @@
                         @Html.ValidationMessageFor(model => model.AttachPdfInvoiceToOrderPlacedEmail)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.AttachPdfInvoiceToOrderPaidEmail_OverrideForStore, model => model.AttachPdfInvoiceToOrderPaidEmail, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.AttachPdfInvoiceToOrderPaidEmail)
@@ -222,7 +223,7 @@
                         @Html.ValidationMessageFor(model => model.AttachPdfInvoiceToOrderPaidEmail)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore, model => model.AttachPdfInvoiceToOrderCompletedEmail, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.AttachPdfInvoiceToOrderCompletedEmail)
@@ -232,7 +233,7 @@
                         @Html.ValidationMessageFor(model => model.AttachPdfInvoiceToOrderCompletedEmail)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.GiftCards_Activated_OrderStatusId)
                     </div>
@@ -241,7 +242,7 @@
                         @Html.ValidationMessageFor(model => model.GiftCards_Activated_OrderStatusId)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.GiftCards_Deactivated_OrderStatusId)
                     </div>
@@ -278,7 +279,7 @@
                         @Html.ValidationMessageFor(model => model.ReturnRequestsEnabled)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.ReturnRequestNumberMask_OverrideForStore, model => model.ReturnRequestNumberMask, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.ReturnRequestNumberMask)
@@ -305,7 +306,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.NumberOfDaysReturnRequestAvailable_OverrideForStore, model => model.NumberOfDaysReturnRequestAvailable, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.NumberOfDaysReturnRequestAvailable)
