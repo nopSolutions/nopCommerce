@@ -162,9 +162,7 @@ namespace Nop.Services.Orders
 
             appliedDiscount = allowedDiscounts.GetPreferredDiscount(shippingTotal);
             if (appliedDiscount != null)
-            {
                 shippingDiscountAmount = appliedDiscount.GetDiscountAmount(shippingTotal);
-            }
 
             if (shippingDiscountAmount < decimal.Zero)
                 shippingDiscountAmount = decimal.Zero;
