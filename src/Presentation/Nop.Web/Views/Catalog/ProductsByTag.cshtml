@@ -5,7 +5,7 @@
     //title
     Html.AddTitleParts(string.Format(T("PageTitle.ProductsByTag").Text, Model.TagName));
     //page class
-    Html.AddPageCssClassParts("html-product-tag-page");
+    Html.AppendPageCssClassParts("html-product-tag-page");
 
     //canonical URL
     var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;

@@ -3,7 +3,7 @@
 @using Nop.Web.Models.Boards;
 @{
     //page class
-    Html.AddPageCssClassParts("html-forum-edit-page");
+    Html.AppendPageCssClassParts("html-forum-edit-page");
 }
 
 @Html.Action("ForumBreadcrumb", new { forumId = Model.ForumId, forumTopicId = Model.Id })
