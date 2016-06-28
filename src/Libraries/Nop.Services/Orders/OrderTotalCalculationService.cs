@@ -127,9 +127,7 @@ namespace Nop.Services.Orders
                                !allowedDiscounts.ContainsDiscount(discount))
                         allowedDiscounts.Add(discount);
 
-            appliedDiscount = allowedDiscounts.GetPreferredDiscount(orderSubTotal);
-            if (appliedDiscount != null)
-                discountAmount = appliedDiscount.GetDiscountAmount(orderSubTotal);
+            appliedDiscount = allowedDiscounts.GetPreferredDiscount(orderSubTotal, out discountAmount);
 
             if (discountAmount < decimal.Zero)
                 discountAmount = decimal.Zero;
@@ -160,9 +158,7 @@ namespace Nop.Services.Orders
                                !allowedDiscounts.ContainsDiscount(discount))
                         allowedDiscounts.Add(discount);
 
-            appliedDiscount = allowedDiscounts.GetPreferredDiscount(shippingTotal);
-            if (appliedDiscount != null)
-                shippingDiscountAmount = appliedDiscount.GetDiscountAmount(shippingTotal);
+            appliedDiscount = allowedDiscounts.GetPreferredDiscount(shippingTotal, out shippingDiscountAmount);
 
             if (shippingDiscountAmount < decimal.Zero)
                 shippingDiscountAmount = decimal.Zero;
@@ -196,9 +192,7 @@ namespace Nop.Services.Orders
                                !allowedDiscounts.ContainsDiscount(discount))
                         allowedDiscounts.Add(discount);
 
-            appliedDiscount = allowedDiscounts.GetPreferredDiscount(orderTotal);
-            if (appliedDiscount != null)
-                discountAmount = appliedDiscount.GetDiscountAmount(orderTotal);
+            appliedDiscount = allowedDiscounts.GetPreferredDiscount(orderTotal, out discountAmount);
 
             if (discountAmount < decimal.Zero)
                 discountAmount = decimal.Zero;

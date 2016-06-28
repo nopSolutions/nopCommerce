@@ -40,20 +40,21 @@ namespace Nop.Services.Discounts
         /// Get preferred discount (with maximum discount value)
         /// </summary>
         /// <param name="discounts">A list of discounts to check</param>
-        /// <param name="amount">Amount</param>
+        /// <param name="amount">Amount (initial value)</param>
+        /// <param name="discountAmount">Discount amount</param>
         /// <returns>Preferred discount</returns>
         public static Discount GetPreferredDiscount(this IList<Discount> discounts,
-            decimal amount)
+            decimal amount, out decimal discountAmount)
         {
             Discount preferredDiscount = null;
-            decimal maximumDiscountValue = decimal.Zero;
+            discountAmount = decimal.Zero;
             foreach (var discount in discounts)
             {
                 decimal currentDiscountValue = discount.GetDiscountAmount(amount);
-                if (currentDiscountValue > maximumDiscountValue)
+                if (currentDiscountValue > discountAmount)
                 {
-                    maximumDiscountValue = currentDiscountValue;
                     preferredDiscount = discount;
+                    discountAmount = currentDiscountValue;
                 }
             }
 

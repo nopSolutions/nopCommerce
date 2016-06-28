@@ -322,21 +322,13 @@ namespace Nop.Services.Catalog
             if (allowedDiscounts.Count == 0)
                 return appliedDiscountAmount;
 
-            appliedDiscount = allowedDiscounts.GetPreferredDiscount(productPriceWithoutDiscount);
-
-            if (appliedDiscount != null)
-                appliedDiscountAmount = appliedDiscount.GetDiscountAmount(productPriceWithoutDiscount);
-
+            appliedDiscount = allowedDiscounts.GetPreferredDiscount(productPriceWithoutDiscount, out appliedDiscountAmount);
             return appliedDiscountAmount;
         }
-
 
         #endregion
 
         #region Methods
-
-
-
 
         /// <summary>
         /// Gets the final price
