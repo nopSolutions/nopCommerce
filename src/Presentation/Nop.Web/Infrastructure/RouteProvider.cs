@@ -473,6 +473,11 @@ namespace Nop.Web.Infrastructure
                             "vendor/apply",
                             new { controller = "Vendor", action = "ApplyVendor" },
                             new[] { "Nop.Web.Controllers" });
+            //vendor info
+            routes.MapLocalizedRoute("CustomerVendorInfo",
+                            "customer/vendorinfo",
+                            new { controller = "Vendor", action = "Info" },
+                            new[] { "Nop.Web.Controllers" });
 
             //poll vote AJAX link
             routes.MapLocalizedRoute("PollVote",

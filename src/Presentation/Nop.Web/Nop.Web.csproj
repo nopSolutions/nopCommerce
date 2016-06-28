@@ -402,6 +402,7 @@
     <Compile Include="Models\ShoppingCart\EstimateShippingModel.cs" />
     <Compile Include="Models\ShoppingCart\ShoppingCartModel.cs" />
     <Compile Include="Models\Topics\TopicModel.cs" />
+    <Compile Include="Models\Vendors\VendorInfoModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validators\Blogs\BlogPostValidator.cs" />
     <Compile Include="Validators\Boards\EditForumPostValidator.cs" />
@@ -422,6 +423,7 @@
     <Compile Include="Validators\Customer\RegisterValidator.cs" />
     <Compile Include="Validators\Customer\CustomerInfoValidator.cs" />
     <Compile Include="Validators\Common\ContactUsValidator.cs" />
+    <Compile Include="Validators\Vendors\VendorInfoValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\browscap.xml" />
@@ -1006,6 +1008,7 @@
     <Content Include="Views\Common\Social.cshtml" />
     <Content Include="Views\ShoppingCart\_EstimateShippingResult.cshtml" />
     <Content Include="Views\Product\CustomerProductReviews.cshtml" />
+    <Content Include="Views\Vendor\Info.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="obj\" />

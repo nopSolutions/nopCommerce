@@ -1,0 +1,69 @@
+﻿@model VendorInfoModel
+@using Nop.Web.Models.Customer
+@using Nop.Web.Models.Vendors
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.VendorInfo").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-account-page");
+    Html.AppendPageCssClassParts("html-vendorinfo-page");
+}
+@section left
+{
+    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.VendorInfo })
+}
+@using (Html.BeginRouteForm("CustomerVendorInfo", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="page account-page vendorinfo-page">
+        <div class="page-title">
+            <h1>@T("Account.MyAccount") - @T("Account.VendorInfo")</h1>
+        </div>
+        <div class="page-body">
+            @{
+                var validationSummary = Html.ValidationSummary(true);
+            }
+            @if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+            {
+                <div class="message-error">@validationSummary</div>
+            }
+            <div class="fieldset">
+                <div class="form-fields">
+                    <div class="inputs">
+                        @Html.LabelFor(model => model.Name, new {}, ":")
+                        @Html.EditorFor(model => model.Name)
+                        @Html.RequiredHint()
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </div>
+                    <div class="inputs">
+                        @Html.LabelFor(model => model.Email, new {}, ":")
+                        @Html.EditorFor(model => model.Email)
+                        @Html.RequiredHint()
+                        @Html.ValidationMessageFor(model => model.Email)
+                    </div>
+                    <div class="inputs">
+                        @Html.LabelFor(model => model.Description, new {}, ":")
+                        @Html.TextAreaFor(model => model.Description)
+                        @Html.ValidationMessageFor(model => model.Description)
+                    </div>
+                    <div class="inputs">
+                        @Html.LabelFor(model => model.PictureUrl, new { }, ":")
+                        <input name="uploadedFile" type="file" />
+                        @if (!String.IsNullOrEmpty(Model.PictureUrl))
+                        {
+                            <div class="vendor-picture">
+                                <img src="@(Model.PictureUrl)" alt="picture"/>
+                                <input type="submit" name="remove-picture" class="button-2 remove-picture-button" value="@T("Account.VendorInfo.Picture.Remove")" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="buttons">
+                <input type="submit" value="@T("Common.Save")" name="save-info-button" class="button-1 save-vendorinfo-button" />
+            </div>
+        </div>
+    </div>
+                }
