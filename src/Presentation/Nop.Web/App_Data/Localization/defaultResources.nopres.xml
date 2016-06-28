@@ -10194,6 +10194,12 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.EndDate.Hint">
     <Value>The end of the discount period in Coordinated Universal Time (UTC).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsCumulative">
+    <Value>Cumulative with other discounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsCumulative.Hint">
+    <Value>If checked, this discount can be used with other ones simultaneously. Please note that this feature works only for discounts with the same discount type. Right now discounts with distinct types are already cumulative.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.LimitationTimes">
     <Value>N times</Value>
   </LocaleResource>
