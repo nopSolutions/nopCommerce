@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
@@ -34,7 +35,7 @@ namespace Nop.Services.Catalog
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
         /// <param name="quantity">Shopping cart item quantity</param>
         /// <param name="discountAmount">Applied discount amount</param>
-        /// <param name="appliedDiscount">Applied discount</param>
+        /// <param name="appliedDiscounts">Applied discounts</param>
         /// <returns>Final price</returns>
         decimal GetFinalPrice(Product product,
             Customer customer,
@@ -42,7 +43,7 @@ namespace Nop.Services.Catalog
             bool includeDiscounts,
             int quantity,
             out decimal discountAmount,
-            out Discount appliedDiscount);
+            out List<Discount> appliedDiscounts);
         /// <summary>
         /// Gets the final price
         /// </summary>
@@ -54,7 +55,7 @@ namespace Nop.Services.Catalog
         /// <param name="rentalStartDate">Rental period start date (for rental products)</param>
         /// <param name="rentalEndDate">Rental period end date (for rental products)</param>
         /// <param name="discountAmount">Applied discount amount</param>
-        /// <param name="appliedDiscount">Applied discount</param>
+        /// <param name="appliedDiscounts">Applied discounts</param>
         /// <returns>Final price</returns>
         decimal GetFinalPrice(Product product,
             Customer customer,
@@ -64,7 +65,7 @@ namespace Nop.Services.Catalog
             DateTime? rentalStartDate,
             DateTime? rentalEndDate,
             out decimal discountAmount,
-            out Discount appliedDiscount);
+            out List<Discount> appliedDiscounts);
 
 
 
@@ -82,12 +83,12 @@ namespace Nop.Services.Catalog
         /// <param name="shoppingCartItem">The shopping cart item</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
         /// <param name="discountAmount">Applied discount amount</param>
-        /// <param name="appliedDiscount">Applied discount</param>
+        /// <param name="appliedDiscounts">Applied discounts</param>
         /// <returns>Shopping cart unit price (one item)</returns>
         decimal GetUnitPrice(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts,
             out decimal discountAmount,
-            out Discount appliedDiscount);
+            out List<Discount> appliedDiscounts);
         /// <summary>
         /// Gets the shopping cart unit price (one item)
         /// </summary>
@@ -101,7 +102,7 @@ namespace Nop.Services.Catalog
         /// <param name="rentalEndDate">Rental end date (null for not rental products)</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
         /// <param name="discountAmount">Applied discount amount</param>
-        /// <param name="appliedDiscount">Applied discount</param>
+        /// <param name="appliedDiscounts">Applied discounts</param>
         /// <returns>Shopping cart unit price (one item)</returns>
         decimal GetUnitPrice(Product product,
             Customer customer,
@@ -112,7 +113,7 @@ namespace Nop.Services.Catalog
             DateTime? rentalStartDate, DateTime? rentalEndDate,
             bool includeDiscounts,
             out decimal discountAmount,
-            out Discount appliedDiscount);
+            out List<Discount> appliedDiscounts);
         /// <summary>
         /// Gets the shopping cart item sub total
         /// </summary>
@@ -127,12 +128,12 @@ namespace Nop.Services.Catalog
         /// <param name="shoppingCartItem">The shopping cart item</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
         /// <param name="discountAmount">Applied discount amount</param>
-        /// <param name="appliedDiscount">Applied discount</param>
+        /// <param name="appliedDiscounts">Applied discounts</param>
         /// <returns>Shopping cart item sub total</returns>
         decimal GetSubTotal(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts,
             out decimal discountAmount,
-            out Discount appliedDiscount);
+            out List<Discount> appliedDiscounts);
 
 
 

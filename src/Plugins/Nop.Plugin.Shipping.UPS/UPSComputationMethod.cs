@@ -150,12 +150,12 @@ namespace Nop.Plugin.Shipping.UPS
             //get subTotalWithoutDiscountBase, for use as insured value (when Settings.InsurePackage)
             //(note: prior versions used "with discount", but "without discount" better reflects true value to insure.)
             decimal orderSubTotalDiscountAmount;
-            Discount orderSubTotalAppliedDiscount;
+            List<Discount> orderSubTotalAppliedDiscounts;
             decimal subTotalWithoutDiscountBase;
             decimal subTotalWithDiscountBase;
             //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal
             _orderTotalCalculationService.GetShoppingCartSubTotal(getShippingOptionRequest.Items.Select(x=>x.ShoppingCartItem).ToList(),
-                false, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
+                false, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscounts,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
 
             if (_upsSettings.Tracing)

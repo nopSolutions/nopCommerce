@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Discounts;
 
 namespace Nop.Services.Discounts
@@ -43,22 +44,46 @@ namespace Nop.Services.Discounts
         /// <param name="amount">Amount (initial value)</param>
         /// <param name="discountAmount">Discount amount</param>
         /// <returns>Preferred discount</returns>
-        public static Discount GetPreferredDiscount(this IList<Discount> discounts,
+        public static List<Discount> GetPreferredDiscount(this IList<Discount> discounts,
             decimal amount, out decimal discountAmount)
         {
-            Discount preferredDiscount = null;
+            if (discounts == null)
+                throw new ArgumentNullException("discounts");
+
+            var result = new List<Discount>();
             discountAmount = decimal.Zero;
+            if (discounts.Count == 0)
+                return result;
+
+            //first we check simple discounts
             foreach (var discount in discounts)
             {
                 decimal currentDiscountValue = discount.GetDiscountAmount(amount);
                 if (currentDiscountValue > discountAmount)
                 {
-                    preferredDiscount = discount;
                     discountAmount = currentDiscountValue;
+
+                    result.Clear();
+                    result.Add(discount);
+                }
+            }
+            //now let's check cumulative discounts
+            //right now we calculate discount values based on the original amount value
+            //please keep it in mind if you're going to use discounts with "percentage"
+            var cumulativeDiscounts = discounts.Where(x => x.IsCumulative).OrderBy(x => x.Name).ToList();
+            if (cumulativeDiscounts.Count > 1)
+            {
+                var cumulativeDiscountAmount = cumulativeDiscounts.Sum(d => d.GetDiscountAmount(amount));
+                if (cumulativeDiscountAmount > discountAmount)
+                {
+                    discountAmount = cumulativeDiscountAmount;
+
+                    result.Clear();
+                    result.AddRange(cumulativeDiscounts);
                 }
             }
 
-            return preferredDiscount;
+            return result;
         }
 
         /// <summary>
