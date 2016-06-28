@@ -899,6 +899,18 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerIds.Hint">
      <Value>Product manufacturer mappings.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerRole">
+     <Value>Limited to customer role</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerRole.Hint">
+     <Value>Choose a customer role which subscribers will get this email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.List.Stores">
+     <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.List.Stores.Hint">
+     <Value>Search by a specific store.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3404,12 +3416,14 @@ GO
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ReturnRequest]') and NAME='CustomNumber')
 BEGIN
 	ALTER TABLE [ReturnRequest]
-	ADD [CustomNumber] NVARCHAR(MAX) NOT NULL DEFAULT ''
+	ADD [CustomNumber] NVARCHAR(MAX) NULL
 END
 GO
 
- --update
- UPDATE [ReturnRequest] SET [CustomNumber] = CAST([Id] AS NVARCHAR(200)) WHERE [CustomNumber] = null OR [CustomNumber] = N''
+ UPDATE [ReturnRequest] SET [CustomNumber] = CAST([Id] AS NVARCHAR(200)) WHERE [CustomNumber] IS NULL OR [CustomNumber] = N''
+ GO
+
+ ALTER TABLE [ReturnRequest] ALTER COLUMN [CustomNumber] NVARCHAR(MAX) NOT NULL
  GO
 
  --new setting
@@ -3442,4 +3456,20 @@ GO
  	INSERT [Setting] ([Name], [Value], [StoreId])
  	VALUES (N'ordersettings.GeneratePdfInvoiceInCustomerLanguage', N'true', 0)
  END
+ GO
+
+ --new column
+ IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Campaign]') and NAME='CustomerRoleId')
+ BEGIN
+ 	ALTER TABLE [Campaign]
+	ADD [CustomerRoleId] INT NULL
+ END
+ GO
+
+ UPDATE [Campaign]
+ SET [CustomerRoleId] = 0
+ WHERE [CustomerRoleId] IS NULL
+ GO
+
+ ALTER TABLE [Campaign] ALTER COLUMN [CustomerRoleId] INT NOT NULL
  GO

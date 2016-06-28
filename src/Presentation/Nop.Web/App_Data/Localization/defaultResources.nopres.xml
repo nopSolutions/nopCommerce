@@ -10032,6 +10032,12 @@
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerRole">
+    <Value>Limited to customer role</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerRole.Hint">
+    <Value>Choose a customer role which subscribers will get this email.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.DontSendBeforeDate">
     <Value>Planned date of sending</Value>
   </LocaleResource>
@@ -10067,6 +10073,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.TestEmail.Hint">
     <Value>The email address to which you want to send your test email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.List.Stores">
+     <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.List.Stores.Hint">
+     <Value>Search by a specific store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.MassEmailSentToCustomers">
     <Value>{0} emails have been successfully queued.</Value>
