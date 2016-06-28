@@ -9,6 +9,7 @@ using Nop.Admin.Extensions;
 using Nop.Admin.Infrastructure.Cache;
 using Nop.Admin.Models.Catalog;
 using Nop.Admin.Models.Orders;
+using Nop.Admin.Models.Settings;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
@@ -38,6 +39,7 @@ using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Vendors;
+using Nop.Services.Configuration;
 
 namespace Nop.Admin.Controllers
 {
@@ -85,6 +87,7 @@ namespace Nop.Admin.Controllers
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IDownloadService _downloadService;
+        private readonly ISettingService _settingService;
         private readonly VendorSettings _vendorSettings;
 
         #endregion
@@ -131,6 +134,7 @@ namespace Nop.Admin.Controllers
             IProductAttributeFormatter productAttributeFormatter,
             IProductAttributeParser productAttributeParser,
             IDownloadService downloadService,
+            ISettingService settingService,
             VendorSettings vendorSettings)
         {
             this._productService = productService;
@@ -173,6 +177,7 @@ namespace Nop.Admin.Controllers
             this._productAttributeFormatter = productAttributeFormatter;
             this._productAttributeParser = productAttributeParser;
             this._downloadService = downloadService;
+            this._settingService = settingService;
             this._vendorSettings = vendorSettings;
         }
 
@@ -750,6 +755,10 @@ namespace Nop.Admin.Controllers
                 model.Published = true;
                 model.VisibleIndividually = true;
             }
+
+            //editor settings
+            var productEditorSettings = _settingService.LoadSetting<ProductEditorSettings>();
+            model.ProductEditorSettingsModel = productEditorSettings.ToModel();
         }
 
         [NonAction]
@@ -4490,6 +4499,29 @@ namespace Nop.Admin.Controllers
                 _productAttributeService.InsertProductAttributeCombination(combination);
             }
             return Json(new { Success = true });
+        }
+
+        #endregion
+
+        #region Product editor settings
+
+        [HttpPost]
+        public ActionResult SaveProductEditorSettings(ProductModel model, string returnUrl = "")
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var productEditorSettings = _settingService.LoadSetting<ProductEditorSettings>();
+            productEditorSettings = model.ProductEditorSettingsModel.ToEntity(productEditorSettings);
+            _settingService.SaveSetting(productEditorSettings);
+
+            //product list
+            if (String.IsNullOrEmpty(returnUrl))
+                return RedirectToAction("List");
+            //prevent open redirection attack
+            if (!Url.IsLocalUrl(returnUrl))
+                return RedirectToAction("List");
+            return Redirect(returnUrl);
         }
 
         #endregion

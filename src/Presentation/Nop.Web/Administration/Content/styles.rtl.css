@@ -25,9 +25,6 @@
 .field-validation-error, .validation-summary-errors {
     color: red;
 }
-.modal-dialog {
-    margin-top: 200px;
-}
 .uploaded-image {
     margin-bottom: 5px;
 }
@@ -532,6 +529,25 @@ input[type=file].form-control {
 }
 .dropdown-menu > li > a > .fa {
     margin-left: 0;
+}
+.editor-settings-modal-dialog {
+    width: 985px;
+}
+.editor-settings-modal-dialog .modal-body {
+    position: relative;
+    padding: 5px 23px 15px 23px;
+}
+.editor-settings-modal-dialog .form-group input[type=checkbox] {
+    margin-top: 4px;
+}
+.editor-settings-modal-dialog .panel-group {
+    margin-bottom: 0;
+}
+.editor-settings-modal-dialog .panel-body {
+    padding: 10px 5px;
+}
+.editor-settings-modal-dialog .col-md-4 {
+    padding: 7px;
 }
 
 /* TINY MCE */

@@ -6273,6 +6273,222 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.TermsOfServiceOnShoppingCartPage.Hint">
     <Value>Require customers to accept or decline terms of service before processing the order (on the shopping cart page).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ACL">
+    <Value>Access control list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AdditionalShippingCharge">
+    <Value>Additional shipping charge</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AdminComment">
+    <Value>Admin comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AllowBackInStockSubscriptions">
+    <Value>Allow back in stock subscriptions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AllowCustomerReviews">
+    <Value>Allow customer reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AllowedQuantities">
+    <Value>Allowed quantities</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AllowAddingOnlyExistingAttributeCombinations">
+    <Value>Allow only existing attribute combinations</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AvailableEndDate">
+    <Value>Available end date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AvailableForPreOrder">
+    <Value>Available for pre-order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AvailableStartDate">
+    <Value>Available start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Backorders">
+    <Value>Backorders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.CommonInfo">
+    <Value>Commom info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.AdvancedProductTypes">
+    <Value>Advanced product types</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Price">
+    <Value>Price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Tax">
+    <Value>Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Shipping">
+    <Value>Shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Security">
+    <Value>Security</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Inventory">
+    <Value>Inventory</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Mappings">
+    <Value>Mappings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.LinkedProducts">
+    <Value>Linked products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Button">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.CallForPrice">
+    <Value>Call for price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.CrossSellsProducts">
+    <Value>Cross-sells products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.CustomerEntersPrice">
+    <Value>Customer enters price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DeliveryDate">
+    <Value>Delivery date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisableBuyButton">
+    <Value>Disable buy button</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisableWishlistButton">
+    <Value>Disable wishlist button</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Discounts">
+    <Value>Discounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayStockAvailability">
+    <Value>Display stock availability</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayStockQuantity">
+    <Value>Display stock quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DownloadableProduct">
+    <Value>Downloadable product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.FreeShipping">
+    <Value>Free shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.GTIN">
+    <Value>GTIN (global trade item number)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Id">
+    <Value>ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.IsGiftCard">
+    <Value>Is gift card</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.IsRental">
+    <Value>Is rental</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.LowStockActivity">
+    <Value>Low stock activity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ManufacturerPartNumber">
+    <Value>Manufacturer part number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MarkAsNew">
+    <Value>Mark as new</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MarkAsNewEndDate">
+    <Value>Mark as new. End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MarkAsNewStartDate">
+    <Value>Mark as new. Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MaximumCartQuantity">
+    <Value>Maximum cart quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MinimumCartQuantity">
+    <Value>Minimum cart quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MinimumStockQuantity">
+    <Value>Minimum stock quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ModalDescription">
+    <Value>Check fields you want to see on the product edit page in the "basic" mode.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ModalTitle">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.NotifyAdminForQuantityBelow">
+    <Value>Notify admin for quantity below</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.NotReturnable">
+    <Value>Not returnable</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.PAngV">
+    <Value>PAngV (base price) enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ProductCost">
+    <Value>Product cost</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ProductTags">
+    <Value>Product tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ProductTemplate">
+    <Value>Product template</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ProductType">
+    <Value>Product type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.RecurringProduct">
+    <Value>Recurring product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.RelatedProducts">
+    <Value>Related products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.RequireOtherProductsAddedToTheCart">
+    <Value>Require other products added to the cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ShipSeparately">
+    <Value>Ship separately</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ShowOnHomePage">
+    <Value>Show on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.SpecialPrice">
+    <Value>Special price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.SpecialPriceEndDate">
+    <Value>Special price end date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.SpecialPriceStartDate">
+    <Value>Special price start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Stores">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.TelecommunicationsBroadcastingElectronicServices">
+    <Value>Telecommunications, broadcasting and electronic services</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.TierPrices">
+    <Value>Tier prices</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.VisibleIndividually">
+    <Value>Visible individually</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.UpdatedOn">
+    <Value>Updated on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.UseMultipleWarehouses">
+    <Value>Use multiple warehouses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Warehouse">
+    <Value>Warehouses</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints">
     <Value>Reward points</Value>
   </LocaleResource>

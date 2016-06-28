@@ -5,8 +5,10 @@ using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Models.Customers;
 using Nop.Admin.Models.Discounts;
+using Nop.Admin.Models.Settings;
 using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Catalog;
+using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
@@ -36,6 +38,7 @@ namespace Nop.Admin.Models.Catalog
             AddPictureModel = new ProductPictureModel();
             AddSpecificationAttributeModel = new AddProductSpecificationAttributeModel();
             ProductWarehouseInventoryModels = new List<ProductWarehouseInventoryModel>();
+            ProductEditorSettingsModel = new ProductEditorSettingsModel();
         }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ID")]
@@ -439,7 +442,13 @@ namespace Nop.Admin.Models.Catalog
 
         //copy product
         public CopyProductModel CopyProductModel { get; set; }
+
         
+
+
+        //editor settings
+        public ProductEditorSettingsModel ProductEditorSettingsModel { get; set; }
+
         #region Nested classes
 
         public partial class AddRequiredProductModel : BaseNopModel

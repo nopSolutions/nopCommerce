@@ -23,7 +23,7 @@
     </div>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             bindBootstrapTabSelectEvent('generalsettings-edit');
         });
     </script>
@@ -33,7 +33,6 @@
             @Html.Action("StoreScopeConfiguration", "Setting")
             @Html.Action("Mode", "Setting")
             @Html.ValidationSummary(false)
-
 
             <div class="panel-group">
                 <div class="panel panel-default">
@@ -51,7 +50,7 @@
                                             <label style="padding-left: 0; padding-right: 20px;">
                                                 <span style="display: block">
                                                     <input type="radio" style="margin: 0 5px 8px 0;" name="@Html.FieldNameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.ThemeName"
-                                                           @if (theme.ThemeName == Model.StoreInformationSettings.DefaultStoreTheme) { <text> checked="checked" </text>       }>
+                                                           @if (theme.ThemeName == Model.StoreInformationSettings.DefaultStoreTheme) { <text> checked="checked" </text>        }>
                                                     @theme.ThemeTitle
                                                 </span>
                                                 <img src="@Url.Content(theme.PreviewImageUrl)" alt="@theme.PreviewText" title="@theme.PreviewText" width="175">
@@ -483,40 +482,40 @@
                         </div>
                     </div>
                     <script type="text/javascript">
-                $(document).ready(function() {
-                    $("#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)").click(toggleReCaptcha);
-                    toggleReCaptcha();
-                });
+                        $(document).ready(function () {
+                            $("#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)").click(toggleReCaptcha);
+                            toggleReCaptcha();
+                        });
 
-                function toggleReCaptcha() {
-                    if ($('#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)').is(':checked')) {
-                        $('#ssCaptchaShowOnLoginPagepnl').show();
-                        $('#ssCaptchaShowOnRegistrationPagepnl').show();
-                        $('#ssCaptchaShowOnContactUsPagepnl').show();
-                        $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
-                        $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
-                        $('#ssCaptchaShowOnBlogCommentPagepnl').show();
-                        $('#ssCaptchaShowOnNewsCommentPagepnl').show();
-                        $('#ssCaptchaShowOnProductReviewPagepnl').show();
-                        $('#ssCaptchaShowOnApplyVendorPagepnl').show();
-                        $('#ssReCaptchaPublicKeypnl').show();
-                        $('#ssReCaptchaPrivateKeypnl').show();
-                        $('#ssReCaptchaVersionpnl').show();
-                    } else {
-                        $('#ssCaptchaShowOnLoginPagepnl').hide();
-                        $('#ssCaptchaShowOnRegistrationPagepnl').hide();
-                        $('#ssCaptchaShowOnContactUsPagepnl').hide();
-                        $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
-                        $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();
-                        $('#ssCaptchaShowOnBlogCommentPagepnl').hide();
-                        $('#ssCaptchaShowOnNewsCommentPagepnl').hide();
-                        $('#ssCaptchaShowOnProductReviewPagepnl').hide();
-                        $('#ssCaptchaShowOnApplyVendorPagepnl').hide();
-                        $('#ssReCaptchaPublicKeypnl').hide();
-                        $('#ssReCaptchaPrivateKeypnl').hide();
-                        $('#ssReCaptchaVersionpnl').hide();
-                    }
-                }
+                        function toggleReCaptcha() {
+                            if ($('#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)').is(':checked')) {
+                                $('#ssCaptchaShowOnLoginPagepnl').show();
+                                $('#ssCaptchaShowOnRegistrationPagepnl').show();
+                                $('#ssCaptchaShowOnContactUsPagepnl').show();
+                                $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
+                                $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
+                                $('#ssCaptchaShowOnBlogCommentPagepnl').show();
+                                $('#ssCaptchaShowOnNewsCommentPagepnl').show();
+                                $('#ssCaptchaShowOnProductReviewPagepnl').show();
+                                $('#ssCaptchaShowOnApplyVendorPagepnl').show();
+                                $('#ssReCaptchaPublicKeypnl').show();
+                                $('#ssReCaptchaPrivateKeypnl').show();
+                                $('#ssReCaptchaVersionpnl').show();
+                            } else {
+                                $('#ssCaptchaShowOnLoginPagepnl').hide();
+                                $('#ssCaptchaShowOnRegistrationPagepnl').hide();
+                                $('#ssCaptchaShowOnContactUsPagepnl').hide();
+                                $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
+                                $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();
+                                $('#ssCaptchaShowOnBlogCommentPagepnl').hide();
+                                $('#ssCaptchaShowOnNewsCommentPagepnl').hide();
+                                $('#ssCaptchaShowOnProductReviewPagepnl').hide();
+                                $('#ssCaptchaShowOnApplyVendorPagepnl').hide();
+                                $('#ssReCaptchaPublicKeypnl').hide();
+                                $('#ssReCaptchaPrivateKeypnl').hide();
+                                $('#ssReCaptchaVersionpnl').hide();
+                            }
+                        }
                     </script>
                 </div>
                 <div class="panel panel-default advanced-setting">

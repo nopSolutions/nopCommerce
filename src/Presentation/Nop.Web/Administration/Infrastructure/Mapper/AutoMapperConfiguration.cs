@@ -910,6 +910,9 @@ namespace Nop.Admin.Infrastructure.Mapper
                 cfg.CreateMap<AddressSettings, CustomerUserSettingsModel.AddressSettingsModel>()
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<CustomerUserSettingsModel.AddressSettingsModel, AddressSettings>();
+                cfg.CreateMap<ProductEditorSettings, ProductEditorSettingsModel>()
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                cfg.CreateMap<ProductEditorSettingsModel, ProductEditorSettings>();
 
                 //return request reasons
                 cfg.CreateMap<ReturnRequestReason, ReturnRequestReasonModel>()
