@@ -653,7 +653,7 @@ namespace Nop.Services.Catalog
 
                 var pAllowedCustomerRoleIds = _dataProvider.GetParameter();
                 pAllowedCustomerRoleIds.ParameterName = "AllowedCustomerRoleIds";
-                pAllowedCustomerRoleIds.Value = commaSeparatedAllowedCustomerRoleIds;
+                pAllowedCustomerRoleIds.Value = !_catalogSettings.IgnoreAcl ? commaSeparatedAllowedCustomerRoleIds : "";
                 pAllowedCustomerRoleIds.DbType = DbType.String;
 
                 var pPageIndex = _dataProvider.GetParameter();

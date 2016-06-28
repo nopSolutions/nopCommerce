@@ -3012,6 +3012,8 @@ BEGIN
 	)
 	INSERT INTO #FilteredCustomerRoleIds (CustomerRoleId)
 	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@AllowedCustomerRoleIds, ',')
+	DECLARE @FilteredCustomerRoleIdsCount int	
+	SET @FilteredCustomerRoleIdsCount = (SELECT COUNT(1) FROM #FilteredCustomerRoleIds)
 	
 	--paging
 	DECLARE @PageLowerBound int
@@ -3218,7 +3220,7 @@ BEGIN
 	END
 	
 	--show hidden and ACL
-	IF @ShowHidden = 0
+	IF  @ShowHidden = 0 and @FilteredCustomerRoleIdsCount > 0
 	BEGIN
 		SET @sql = @sql + '
 		AND (p.SubjectToAcl = 0 OR EXISTS (
@@ -3385,7 +3387,6 @@ BEGIN
 	DROP TABLE #PageIndex
 END
 GO
- GO
 
  --update message templates
  UPDATE [MessageTemplate] SET [Body] = REPLACE([Body], 'ReturnRequest.ID', 'ReturnRequest.CustomNumber')
