@@ -16,7 +16,6 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Vendors;
-using Nop.Services.Media;
 
 namespace Nop.Web.Controllers
 {
@@ -167,6 +166,9 @@ namespace Nop.Web.Controllers
                 //if he wants to grant access to admin area
                 _workContext.CurrentCustomer.VendorId = vendor.Id;
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
+                //update picture seo file name
+                UpdatePictureSeoNames(vendor);
 
                 //notify store owner here (email)
                 _workflowMessageService.SendNewVendorAccountApplyStoreOwnerNotification(_workContext.CurrentCustomer,
