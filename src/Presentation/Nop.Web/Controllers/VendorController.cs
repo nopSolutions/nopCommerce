@@ -4,12 +4,15 @@ using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
+using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Seo;
 using Nop.Services.Vendors;
+using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Vendors;
@@ -19,7 +22,7 @@ namespace Nop.Web.Controllers
 {
     public partial class VendorController : BasePublicController
     {
-		#region Fields
+        #region Fields
 
         private readonly IWorkContext _workContext;
         private readonly ILocalizationService _localizationService;
@@ -32,12 +35,13 @@ namespace Nop.Web.Controllers
         private readonly LocalizationSettings _localizationSettings;
         private readonly VendorSettings _vendorSettings;
         private readonly CaptchaSettings _captchaSettings;
+        private readonly MediaSettings _mediaSettings;
 
         #endregion
 
         #region Constructors
 
-        public VendorController(IWorkContext workContext, 
+        public VendorController(IWorkContext workContext,
             ILocalizationService localizationService,
             ICustomerService customerService,
             IWorkflowMessageService workflowMessageService,
@@ -46,7 +50,8 @@ namespace Nop.Web.Controllers
             IPictureService pictureService,
             LocalizationSettings localizationSettings,
             VendorSettings vendorSettings,
-            CaptchaSettings captchaSettings)
+            CaptchaSettings captchaSettings,
+            MediaSettings mediaSettings)
         {
             this._workContext = workContext;
             this._localizationService = localizationService;
@@ -59,10 +64,23 @@ namespace Nop.Web.Controllers
             this._localizationSettings = localizationSettings;
             this._vendorSettings = vendorSettings;
             this._captchaSettings = captchaSettings;
+            this._mediaSettings = mediaSettings;
         }
 
         #endregion
-        
+
+        #region Utilites
+
+        [NonAction]
+        protected virtual void UpdatePictureSeoNames(Vendor vendor)
+        {
+            var picture = _pictureService.GetPictureById(vendor.PictureId);
+            if (picture != null)
+                _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(vendor.Name));
+        }
+
+        #endregion
+
         #region Methods
 
         [NopHttpsRequirement(SslRequirement.Yes)]
@@ -162,6 +180,122 @@ namespace Nop.Web.Controllers
             //If we got this far, something failed, redisplay form
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage;
             return View(model);
+        }
+
+        [NopHttpsRequirement(SslRequirement.Yes)]
+        public ActionResult Info()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return new HttpUnauthorizedResult();
+
+            if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
+                return RedirectToRoute("CustomerInfo");
+
+            var vendor = _workContext.CurrentVendor;
+            var picture = _pictureService.GetPictureById(vendor.PictureId);
+            var pictureSize = _mediaSettings.AvatarPictureSize;
+            var model = new VendorInfoModel
+            {
+                Description = vendor.Description,
+                Email = vendor.Email,
+                Name = vendor.Name,
+                PictureUrl = picture != null ? _pictureService.GetPictureUrl(picture, pictureSize) : string.Empty
+            };
+
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Info")]
+        [PublicAntiForgery]
+        [ValidateInput(false)]
+        [FormValueRequired("save-info-button")]
+        public ActionResult Info(VendorInfoModel model, HttpPostedFileBase uploadedFile)
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return new HttpUnauthorizedResult();
+
+            if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
+                return RedirectToRoute("CustomerInfo");
+            
+            Picture picture = null;
+            var pictureSize = _mediaSettings.AvatarPictureSize;
+
+            if (uploadedFile != null && !string.IsNullOrEmpty(uploadedFile.FileName))
+            {
+                try
+                 {
+                    var contentType = uploadedFile.ContentType;
+                    var vendorPictureBinary = uploadedFile.GetPictureBits();
+                    picture = _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError("", _localizationService.GetResource("Account.VendorInfo.Picture.ErrorMessage"));
+                }
+            }
+
+            var vendor = _workContext.CurrentVendor;
+            var prevPicture = _pictureService.GetPictureById(vendor.PictureId);
+
+            if (ModelState.IsValid)
+            {
+                var description = Core.Html.HtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
+
+                vendor.Name = model.Name;
+                vendor.Email = model.Email;
+                vendor.Description = description;
+
+                if (picture != null)
+                {
+                    vendor.PictureId = picture.Id;
+
+                    if (prevPicture != null)
+                        _pictureService.DeletePicture(prevPicture);
+                }
+
+                //update picture seo file name
+                UpdatePictureSeoNames(vendor);
+
+                _vendorService.UpdateVendor(vendor);
+
+                //notifications
+                if (_vendorSettings.NotifyStoreOwnerAboutVendorInformationChange)
+                    _workflowMessageService.SendVendorInformationChangeNotification(vendor, _localizationSettings.DefaultAdminLanguageId);
+
+                return RedirectToAction("Info");
+            }
+
+            //If we got this far, something failed, redisplay form
+            model.PictureUrl = _pictureService.GetPictureUrl(prevPicture, pictureSize);
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Info")]
+        [PublicAntiForgery]
+        [ValidateInput(false)]
+        [FormValueRequired("remove-picture")]
+        public ActionResult RemovePicture()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return new HttpUnauthorizedResult();
+
+            if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
+                return RedirectToRoute("CustomerInfo");
+
+            var vendor = _workContext.CurrentVendor;
+            var picture = _pictureService.GetPictureById(vendor.PictureId);
+
+            if (picture != null)
+                _pictureService.DeletePicture(picture);
+
+            vendor.PictureId = 0;
+            _vendorService.UpdateVendor(vendor);
+
+            //notifications
+            if (_vendorSettings.NotifyStoreOwnerAboutVendorInformationChange)
+                _workflowMessageService.SendVendorInformationChangeNotification(vendor, _localizationSettings.DefaultAdminLanguageId);
+
+            return RedirectToAction("Info");
         }
 
         #endregion
