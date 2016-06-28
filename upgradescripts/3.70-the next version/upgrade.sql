@@ -899,6 +899,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerIds.Hint">
      <Value>Product manufacturer mappings.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists">
+    <Value>At least one administrator account should exists.</Value>
+  </LocaleResource>
 </Language>
 '
 

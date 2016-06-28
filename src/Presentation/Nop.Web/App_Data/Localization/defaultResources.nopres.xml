@@ -8184,6 +8184,9 @@
   <LocaleResource Name="Admin.Customers.Customers.Addresses.Updated">
     <Value>The address has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists">
+    <Value>At least one administrator account should exists.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.AdminCouldNotbeVendor">
     <Value>A customer with a vendor associated could not be in "Administrators" role.</Value>
   </LocaleResource>
