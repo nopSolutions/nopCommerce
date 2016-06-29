@@ -98,6 +98,15 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.CustomerRoleId)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDropDownListFor(model => model.CustomerRoleId, Model.AvailableCustomerRoles)
+                            @Html.ValidationMessageFor(model => model.CustomerRoleId)
+                        </div>
+                    </div>
+                    <div class="form-group">
                         
                         <script type="text/javascript">
                             function toggleLoadedAllowedTokens() {

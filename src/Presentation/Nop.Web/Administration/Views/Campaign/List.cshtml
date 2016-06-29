@@ -1,4 +1,5 @@
-﻿@{
+﻿@model CampaignListModel
+@{
     //page title
     ViewBag.Title = T("Admin.Promotions.Campaigns").Text;
     //active menu item (system name)
@@ -21,6 +22,30 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
+            <div class="panel panel-default panel-search" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.StoreId)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopDropDownList("StoreId", Model.AvailableStores)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <button type="button" id="search-campaigns" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div id="campaigns-grid"></div>
@@ -35,7 +60,7 @@
                                             url: "@Html.Raw(Url.Action("List", "Campaign"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: addAntiForgeryToken
+                                            data: additionalData
                                         }
                                     },
                                     schema: {
@@ -64,30 +89,49 @@
                                 },
                                 scrollable: false,
                                 columns: [
-                                {
-                                    field: "Name",
-                                    title: "@T("Admin.Promotions.Campaigns.Fields.Name")"
-                                }, {
-                                    field: "CreatedOn",
-                                    title: "@T("Admin.Promotions.Campaigns.Fields.CreatedOn")",
-                                    width: 200,
-                                    type: "date",
-                                    format: "{0:G}"
-                                }, {
-                                    field: "DontSendBeforeDate",
-                                    title: "@T("Admin.Promotions.Campaigns.Fields.DontSendBeforeDate")",
-                                    width: 200,
-                                    type: "date",
-                                    format: "{0:G}"
-                                }, {
-                                    field: "Id",
-                                    title: "@T("Admin.Common.Edit")",
-                                    width: 100,
-                                    template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                                    {
+                                        field: "Name",
+                                        title: "@T("Admin.Promotions.Campaigns.Fields.Name")"
+                                    }, {
+                                        field: "CreatedOn",
+                                        title: "@T("Admin.Promotions.Campaigns.Fields.CreatedOn")",
+                                        width: 200,
+                                        type: "date",
+                                        format: "{0:G}"
+                                    }, {
+                                        field: "DontSendBeforeDate",
+                                        title: "@T("Admin.Promotions.Campaigns.Fields.DontSendBeforeDate")",
+                                        width: 200,
+                                        type: "date",
+                                        format: "{0:G}"
+                                    }, {
+                                        field: "Id",
+                                        title: "@T("Admin.Common.Edit")",
+                                        width: 100,
+                                        template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
                                     }
                                 ]
                             });
                         });
+                    </script>
+
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#search-campaigns').click(function () {
+                                var grid = $('#campaigns-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                return false;
+                            });
+                        });
+
+                        function additionalData() {
+                            var data = {
+                                StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val()
+                            };
+                            addAntiForgeryToken(data);
+                            return data;
+                        }
                     </script>
                 </div>
             </div>

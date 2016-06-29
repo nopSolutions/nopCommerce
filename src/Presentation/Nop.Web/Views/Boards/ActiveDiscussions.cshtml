@@ -6,7 +6,7 @@
     //title
     Html.AddTitleParts(T("Forum.PageTitle.ActiveDiscussions").Text);
     //page class
-    Html.AddPageCssClassParts("html-active-discussions-page");
+    Html.AppendPageCssClassParts("html-active-discussions-page");
 }
 <div class="page active-discussions-page">
     @Html.Action("ForumBreadcrumb")
