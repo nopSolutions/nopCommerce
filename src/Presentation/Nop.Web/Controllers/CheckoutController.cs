@@ -1242,6 +1242,36 @@ namespace Nop.Web.Controllers
         #region Methods (one page checkout)
 
         [NonAction]
+        protected JsonResult OpcLoadStepAfterShippingAddress(List<ShoppingCartItem> cart)
+        {
+            var shippingMethodModel = PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
+
+            if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
+                shippingMethodModel.ShippingMethods.Count == 1)
+            {
+                //if we have only one shipping method, then a customer doesn't have to choose a shipping method
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+                    SystemCustomerAttributeNames.SelectedShippingOption,
+                    shippingMethodModel.ShippingMethods.First().ShippingOption,
+                    _storeContext.CurrentStore.Id);
+
+                //load next step
+                return OpcLoadStepAfterShippingMethod(cart);
+            }
+
+
+            return Json(new
+            {
+                update_section = new UpdateSectionJsonModel
+                {
+                    name = "shipping-method",
+                    html = this.RenderPartialViewToString("OpcShippingMethods", shippingMethodModel)
+                },
+                goto_section = "shipping_method"
+            });
+        }
+
+        [NonAction]
         protected JsonResult OpcLoadStepAfterShippingMethod(List<ShoppingCartItem> cart)
         {
             //Check whether payment workflow is required
@@ -1556,9 +1586,9 @@ namespace Nop.Web.Controllers
                             ShippingRateComputationMethodSystemName = null
                         };
                         _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                        SystemCustomerAttributeNames.SelectedShippingOption,
-                        pickUpInStoreShippingOption,
-                        _storeContext.CurrentStore.Id);
+                            SystemCustomerAttributeNames.SelectedShippingOption,
+                            pickUpInStoreShippingOption,
+                            _storeContext.CurrentStore.Id);
 
                         //load next step
                         return OpcLoadStepAfterShippingMethod(cart);
@@ -1646,31 +1676,7 @@ namespace Nop.Web.Controllers
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                 }
 
-                var shippingMethodModel = PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
-
-                if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
-                    shippingMethodModel.ShippingMethods.Count == 1)
-                {
-                    //if we have only one shipping method, then a customer doesn't have to choose a shipping method
-                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                        SystemCustomerAttributeNames.SelectedShippingOption,
-                        shippingMethodModel.ShippingMethods.First().ShippingOption,
-                        _storeContext.CurrentStore.Id);
-
-                    //load next step
-                    return OpcLoadStepAfterShippingMethod(cart);
-                }
-
-                
-                return Json(new
-                {
-                    update_section = new UpdateSectionJsonModel
-                    {
-                        name = "shipping-method",
-                        html = this.RenderPartialViewToString("OpcShippingMethods", shippingMethodModel)
-                    },
-                    goto_section = "shipping_method"
-                });
+                return OpcLoadStepAfterShippingAddress(cart);
             }
             catch (Exception exc)
             {
