@@ -53,9 +53,8 @@
             function onRentalDatePickerSelect() {
                 @{
                     //almost the same implementation is used in the \Views\Product\_ProductAttributes.cshtml file
-                    var dynamicPriceUpdate = EngineContext.Current.Resolve<CatalogSettings>().AjaxProcessAttributeChange;
                     var productId = Model.Id;
-                    if (dynamicPriceUpdate)
+                    if (EngineContext.Current.Resolve<CatalogSettings>().AjaxProcessAttributeChange)
                     {
                         <text>
                         $.ajax({
