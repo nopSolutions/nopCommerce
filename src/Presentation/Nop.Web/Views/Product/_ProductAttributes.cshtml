@@ -4,7 +4,6 @@
 @using Nop.Core.Domain.Media;
 @using Nop.Core.Infrastructure;
 @using System.Text;
-@using System.Globalization;
 @if (Model.Count > 0)
 {
     <div class="attributes">
@@ -272,6 +271,7 @@
 {
     //dynamic update support
     var attributesHaveConditions = Model.Any(x => x.HasCondition);
+    var attributesHaveAssociatedPictures = Model.Any(x => x.ProductId > 0);
     var attributeChangeScriptsBuilder = new StringBuilder();
     var productId = Model.First().ProductId;
     var attributeChangeHandlerFuncName = string.Format("attribute_change_handler_{0}", productId);
@@ -317,7 +317,7 @@
             function @(attributeChangeHandlerFuncName)() {
                 $.ajax({
                     cache: false,
-                    url: '@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new {productId = productId, validateAttributeConditions = attributesHaveConditions}))',
+                    url: '@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new {productId = productId, validateAttributeConditions = attributesHaveConditions, loadPicture = attributesHaveAssociatedPictures }))',
                     data: $('#product-details-form').serialize(),
                     type: 'post',
                     success: function(data) {
@@ -348,6 +348,12 @@
                                 $('#product_attribute_input_' + data.disabledattributemappingids[i]).hide();
                             }
                         }
+                        if (data.pictureDefaultSizeUrl) {
+                            $('#main-product-img-@productId').attr("src", data.pictureDefaultSizeUrl);
+                        }
+                        if (data.pictureFullSizeUrl) {
+                            $('#main-product-img-lightbox-anchor-@productId').attr("href", data.pictureFullSizeUrl);
+                        }
                     }
                 });
             }
@@ -356,149 +362,5 @@
                 @Html.Raw(attributeChangeScriptsBuilder.ToString())
             });
         </script>
-    }
-}
-@if (Model.Count > 0)
-{
-    //attribute picture update
-    var pictureAdjustmentTableScripts = new StringBuilder();
-    var pictureAttributeScripts = new StringBuilder();
-    string pictureAdjustmentTableName = "";
-    string pictureAdjustmentFuncName = "";
-    string pictureDefaultSizePrefix = "defaultsize";
-    string pictureFullSizePrefix = "fullsize";
-    var pictureSizes = new [] { pictureDefaultSizePrefix, pictureFullSizePrefix };
-    foreach (var attribute in Model)
-    {
-        string controlId = string.Format("product_attribute_{0}", attribute.Id);
-
-        pictureAdjustmentTableName = string.Format("productAttributeValueAdjustmentTable_{0}", attribute.ProductId);
-        pictureAdjustmentFuncName = string.Format("adjustProductAttributeValuePicture_{0}", attribute.ProductId);
-
-        switch (attribute.AttributeControlType)
-        {
-            case AttributeControlType.DropdownList:
-                {
-                    pictureAttributeScripts.AppendFormat("$('#{0}').change(function(){{{1}('{2}',{3});}});\n", controlId, pictureAdjustmentFuncName, controlId, attribute.ProductId);
-
-                    foreach (var pictureSize in pictureSizes)
-                    {
-                        pictureAdjustmentTableScripts.AppendFormat("{0}['{1}_{2}'] = new Array(", pictureAdjustmentTableName, controlId, pictureSize);
-                        int numberOfJsArrayItems = 0;
-                        if (!attribute.IsRequired)
-                        {
-                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "'{0}',", "");
-                            numberOfJsArrayItems++;
-                        }
-                        foreach (var attributeValue in attribute.Values)
-                        {
-                            var pictureUrl = attributeValue.PictureModel.ImageUrl;
-                            if (pictureSize == pictureDefaultSizePrefix)
-                            {
-                                pictureUrl = attributeValue.PictureModel.ImageUrl;
-                            }
-                            else if (pictureSize == pictureFullSizePrefix)
-                            {
-                                pictureUrl = attributeValue.PictureModel.FullSizeImageUrl;
-                            }
-
-                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "'{0}',", pictureUrl);
-                            numberOfJsArrayItems++;
-                        }
-                        //If you create an array with a single numeric parameter, that number is used for specifying the number of elements in this array.
-                        //so have a little hack here (we need at least two elements)
-                        if (numberOfJsArrayItems == 1)
-                        {
-                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "'{0}',", "");
-                        }
-                        pictureAdjustmentTableScripts.Length -= 1;
-                        pictureAdjustmentTableScripts.Append(");\n");
-                    }
-                }
-                break;
-            case AttributeControlType.RadioList:
-            case AttributeControlType.ColorSquares:
-            case AttributeControlType.ImageSquares:
-                {
-                    foreach (var attributeValue in attribute.Values)
-                    {
-                        pictureAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}('{3}_{4}',{5});}});\n", controlId, attributeValue.Id, pictureAdjustmentFuncName, controlId, attributeValue.Id, attribute.ProductId);
-                        foreach (var pictureSize in pictureSizes)
-                        {
-                            var pictureUrl = attributeValue.PictureModel.ImageUrl;
-                            if (pictureSize == pictureDefaultSizePrefix)
-                            {
-                                pictureUrl = attributeValue.PictureModel.ImageUrl;
-                            }
-                            else if (pictureSize == pictureFullSizePrefix)
-                            {
-                                pictureUrl = attributeValue.PictureModel.FullSizeImageUrl;
-                            }
-                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}_{3}'] = '{4}';\n", pictureAdjustmentTableName, controlId, attributeValue.Id, pictureSize, pictureUrl);
-                        }
-                    }
-                }
-                break;
-            case AttributeControlType.Checkboxes:
-            case AttributeControlType.ReadonlyCheckboxes:
-                {
-                    foreach (var attributeValue in attribute.Values)
-                    {
-                        pictureAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}('{3}_{4}',{5});}});\n", controlId, attributeValue.Id, pictureAdjustmentFuncName, controlId, attributeValue.Id, attribute.ProductId);
-                        foreach (var pictureSize in pictureSizes)
-                        {
-                            var pictureUrl = attributeValue.PictureModel.ImageUrl;
-                            if (pictureSize == pictureDefaultSizePrefix)
-                            {
-                                pictureUrl = attributeValue.PictureModel.ImageUrl;
-                            }
-                            else if (pictureSize == pictureFullSizePrefix)
-                            {
-                                pictureUrl = attributeValue.PictureModel.FullSizeImageUrl;
-                            }
-                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}_{3}'] = '{4}';\n", pictureAdjustmentTableName, controlId, attributeValue.Id, pictureSize, pictureUrl);
-                        }
-                    }
-                }
-                break;
-            default:
-                break;
-        }
-    }
-    if (!String.IsNullOrEmpty(pictureAttributeScripts.ToString()))
-    {
-    <script type="text/javascript">
-            
-        //Picture adjustment table
-        var @(pictureAdjustmentTableName) = new Array();
-        //Picture adjustment table initialize
-        @Html.Raw(pictureAdjustmentTableScripts.ToString())
-        //Picture adjustment function
-        function @(pictureAdjustmentFuncName)(controlId, productId) {
-            var ctrl = $('#' + controlId);
-            var pictureDefaultSizeUrl = '';
-            var pictureFullSizeUrl = '';
-            if((ctrl.is(':radio') && ctrl.is(':checked')) || (ctrl.is(':checkbox') && ctrl.is(':checked'))) {
-                pictureDefaultSizeUrl = @(pictureAdjustmentTableName)[controlId + '_@(pictureDefaultSizePrefix)'];
-                pictureFullSizeUrl = @(pictureAdjustmentTableName)[controlId + '_@(pictureFullSizePrefix)'];
-            } else if(ctrl.is('select')) {
-                var idx = $('#' + controlId + " option").index($('#' + controlId + " option:selected"));
-                if(idx != -1) {
-                    pictureDefaultSizeUrl = @(pictureAdjustmentTableName)[controlId + '_@(pictureDefaultSizePrefix)'][idx];
-                    pictureFullSizeUrl = @(pictureAdjustmentTableName)[controlId + '_@(pictureFullSizePrefix)'][idx];
-                }
-            }
-            if (typeof pictureDefaultSizeUrl == 'string' && pictureDefaultSizeUrl != '') {
-                $('#main-product-img-' + productId).attr("src", pictureDefaultSizeUrl);
-            }
-            if (typeof pictureFullSizeUrl == 'string' && pictureFullSizeUrl != '') {
-                $('#main-product-img-lightbox-anchor-' + productId).attr("href", pictureFullSizeUrl);
-            }
-        }
-        // Picture attributes handlers
-        $(document).ready(function() {
-            @Html.Raw(pictureAttributeScripts.ToString())
-        });
-    </script>
     }
 }

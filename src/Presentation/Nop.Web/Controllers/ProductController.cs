@@ -702,27 +702,9 @@ namespace Nop.Web.Controllers
                         }
 
                         //picture of a product attribute value
-                        if (attributeValue.PictureId > 0)
-                        {
-                            var productAttributePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_PICTURE_MODEL_KEY,
-                                attributeValue.PictureId,
-                                _webHelper.IsCurrentConnectionSecured(),
-                                _storeContext.CurrentStore.Id);
-                            valueModel.PictureModel = _cacheManager.Get(productAttributePictureCacheKey, () =>
-                            {
-                                var valuePicture = _pictureService.GetPictureById(attributeValue.PictureId);
-                                if (valuePicture != null)
-                                {
-                                    return new PictureModel
-                                    {
-                                        FullSizeImageUrl = _pictureService.GetPictureUrl(valuePicture),
-                                        ImageUrl = _pictureService.GetPictureUrl(valuePicture, defaultPictureSize)
-                                    };
-                                }
-                                return new PictureModel();
-                            });
-                        }
+                        valueModel.PictureId = attributeValue.PictureId;
                     }
+
                 }
 
                 //set already selected attributes (if we're going to update the existing shopping cart item)

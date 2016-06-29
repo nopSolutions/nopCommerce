@@ -1806,7 +1806,8 @@ namespace Nop.Web.Controllers
         //currently we use this method on the product details pages
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult ProductDetails_AttributeChange(int productId, bool validateAttributeConditions, FormCollection form)
+        public ActionResult ProductDetails_AttributeChange(int productId, bool validateAttributeConditions,
+            bool loadPicture, FormCollection form)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -1868,6 +1869,40 @@ namespace Nop.Web.Controllers
                 }
             }
 
+            //picture. used when we want to override a default product picture when some attribute is selected
+            var pictureFullSizeUrl = "";
+            var pictureDefaultSizeUrl = "";
+            if (loadPicture)
+            {
+                //just load (return) the first found picture (in case if we have several distinct attributes with associated pictures)
+                //actually we're going to support pictures associated to attribute combinations (not attribute values) soon. it'll more flexible approach
+                var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributeXml);
+                var attributeValueWithPicture = attributeValues.FirstOrDefault(x => x.PictureId > 0);
+                if (attributeValueWithPicture != null)
+                {
+                    var productAttributePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_PICTURE_MODEL_KEY,
+                                    attributeValueWithPicture.PictureId,
+                                    _webHelper.IsCurrentConnectionSecured(),
+                                    _storeContext.CurrentStore.Id);
+                    var pictureModel = _cacheManager.Get(productAttributePictureCacheKey, () =>
+                    {
+                        var valuePicture = _pictureService.GetPictureById(attributeValueWithPicture.PictureId);
+                        if (valuePicture != null)
+                        {
+                            return new PictureModel
+                            {
+                                FullSizeImageUrl = _pictureService.GetPictureUrl(valuePicture),
+                                ImageUrl = _pictureService.GetPictureUrl(valuePicture, _mediaSettings.ProductDetailsPictureSize)
+                            };
+                        }
+                        return new PictureModel();
+                    });
+                    pictureFullSizeUrl = pictureModel.FullSizeImageUrl;
+                    pictureDefaultSizeUrl = pictureModel.ImageUrl;
+                }
+
+            }
+
             return Json(new
             {
                 gtin = gtin,
@@ -1876,7 +1911,9 @@ namespace Nop.Web.Controllers
                 price = price,
                 stockAvailability = stockAvailability,
                 enabledattributemappingids = enabledAttributeMappingIds.ToArray(),
-                disabledattributemappingids = disabledAttributeMappingIds.ToArray()
+                disabledattributemappingids = disabledAttributeMappingIds.ToArray(),
+                pictureFullSizeUrl = pictureFullSizeUrl,
+                pictureDefaultSizeUrl = pictureDefaultSizeUrl
             });
         }
 
