@@ -6,7 +6,7 @@
     //title
     Html.AddTitleParts(T("Forum.PageTitle.Default").Text);
     //page class
-    Html.AddPageCssClassParts("html-forums-main-page");
+    Html.AppendPageCssClassParts("html-forums-main-page");
 }
 <div class="page forums-main-page">
     @Html.Action("TopicBlock", "Topic", new { systemName = "ForumWelcomeMessage" })
