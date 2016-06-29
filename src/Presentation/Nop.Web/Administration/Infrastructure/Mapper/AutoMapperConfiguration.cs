@@ -285,6 +285,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.BaseWeightIn, mo => mo.Ignore())
                     .ForMember(dest => dest.Locales, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableDiscounts, mo => mo.Ignore())
+                    .ForMember(dest => dest.CategoryIds, mo => mo.Ignore())
+                    .ForMember(dest => dest.ManufacturerIds, mo => mo.Ignore())
                     .ForMember(dest => dest.SelectedDiscountIds, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableDeliveryDates, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableWarehouses, mo => mo.Ignore())
@@ -713,6 +715,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.AllowCustomersToContactVendors_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowCustomersToApplyForVendorAccount_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowSearchByVendor_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.AllowVendorsToEditInfo_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.NotifyStoreOwnerAboutVendorInformationChange_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                     .ForMember(dest => dest.MaximumProductNumber_OverrideForStore, mo => mo.Ignore());
                 cfg.CreateMap<VendorSettingsModel, VendorSettings>()
