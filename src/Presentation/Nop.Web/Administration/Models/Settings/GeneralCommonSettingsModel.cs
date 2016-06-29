@@ -80,7 +80,23 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.UseSystemEmailForContactUsForm")]
             public bool UseSystemEmailForContactUsForm { get; set; }
             public bool UseSystemEmailForContactUsForm_OverrideForStore { get; set; }
-            
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SitemapEnabled")]
+            public bool SitemapEnabled { get; set; }
+            public bool SitemapEnabled_OverrideForStore { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SitemapIncludeCategories")]
+            public bool SitemapIncludeCategories { get; set; }
+            public bool SitemapIncludeCategories_OverrideForStore { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SitemapIncludeManufacturers")]
+            public bool SitemapIncludeManufacturers { get; set; }
+            public bool SitemapIncludeManufacturers_OverrideForStore { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SitemapIncludeProducts")]
+            public bool SitemapIncludeProducts { get; set; }
+            public bool SitemapIncludeProducts_OverrideForStore { get; set; }
+
             #region Nested classes
 
             public partial class ThemeConfigurationModel

@@ -905,6 +905,30 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsCumulative.Hint">
     <Value>If checked, this discount can be used with other ones simultaneously. Please note that this feature works only for discounts with the same discount type. Right now discounts with distinct types are already cumulative.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapEnabled">
+    <Value>Sitemap enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapEnabled.Hint">
+    <Value>Check to enable sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeCategories">
+    <Value>Sitemap includes categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeCategories.Hint">
+    <Value>Check if you want to include categories in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeManufacturers">
+    <Value>Sitemap includes manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeManufacturers.Hint">
+    <Value>Check if you want to include manufacturers in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeProducts">
+    <Value>Sitemap includes products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeProducts.Hint">
+    <Value>Check if you want to include products in sitemap.</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -5868,6 +5868,30 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Hint">
     <Value>When enabled, your URLs will be http://www.yourStore.com/en/ or http://www.yourStore.com/ru/ (SEO friendly).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapEnabled">
+    <Value>Sitemap enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapEnabled.Hint">
+    <Value>Check to enable sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeCategories">
+    <Value>Sitemap includes categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeCategories.Hint">
+    <Value>Check if you want to include categories in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeManufacturers">
+    <Value>Sitemap includes manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeManufacturers.Hint">
+    <Value>Check if you want to include manufacturers in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeProducts">
+    <Value>Sitemap includes products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeProducts.Hint">
+    <Value>Check if you want to include products in sitemap.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreClosed">
     <Value>Store closed</Value>
   </LocaleResource>
