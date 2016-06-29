@@ -16,7 +16,12 @@ namespace Nop.Core.Domain.Shipping
         public List<string> ActiveShippingRateComputationMethodSystemNames { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether customers can choose "Pick Up in Store" option during checkout
+        /// Gets or sets a value indicating "Ship to the same address" option is enabled
+        /// </summary>
+        public bool ShipToSameAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether customers can choose "Pick Up in Store" option during checkout (displayed on the "billing address" checkout step)
         /// </summary>
         public bool AllowPickUpInStore { get; set; }
 
