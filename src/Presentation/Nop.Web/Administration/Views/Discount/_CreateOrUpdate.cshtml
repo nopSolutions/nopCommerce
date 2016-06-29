@@ -201,6 +201,24 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.RequiresCouponCode)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.RequiresCouponCode)
+                        @Html.ValidationMessageFor(model => model.RequiresCouponCode)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlCouponCode">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CouponCode)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CouponCode)
+                        @Html.ValidationMessageFor(model => model.CouponCode)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.StartDateUtc)
                     </div>
                     <div class="col-md-9">
@@ -219,20 +237,11 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.RequiresCouponCode)
+                        @Html.NopLabelFor(model => model.IsCumulative)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.RequiresCouponCode)
-                        @Html.ValidationMessageFor(model => model.RequiresCouponCode)
-                    </div>
-                </div>
-                <div class="form-group" id="pnlCouponCode">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CouponCode)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CouponCode)
-                        @Html.ValidationMessageFor(model => model.CouponCode)
+                        @Html.NopEditorFor(model => model.IsCumulative)
+                        @Html.ValidationMessageFor(model => model.IsCumulative)
                     </div>
                 </div>
                 <div class="form-group">

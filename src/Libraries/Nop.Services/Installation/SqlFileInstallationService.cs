@@ -133,14 +133,14 @@ namespace Nop.Services.Installation
         public virtual void InstallData(string defaultUserEmail,
             string defaultUserPassword, bool installSampleData = true)
         {
-            ExecuteSqlFile(CommonHelper.MapPath("~/App_Data/Install/create_required_data.sql"));
+            ExecuteSqlFile(CommonHelper.MapPath("~/App_Data/Install/Fast/create_required_data.sql"));
             InstallLocaleResources();
             UpdateDefaultCustomer(defaultUserEmail, defaultUserPassword);
             UpdateDefaultStoreUrl();
 
             if (installSampleData)
             {
-                ExecuteSqlFile(CommonHelper.MapPath("~/App_Data/Install/create_sample_data.sql"));
+                ExecuteSqlFile(CommonHelper.MapPath("~/App_Data/Install/Fast/create_sample_data.sql"));
             }
         }
 
