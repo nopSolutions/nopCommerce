@@ -376,7 +376,7 @@ td.k-state-focused.k-state-selected {
     vertical-align: baseline;
 }
 .nav-tabs-custom {
-    margin-bottom: 0;
+    margin-bottom: 5px;
 }
 .nav-tabs-custom .tab-pane > .panel {
     border: none;
@@ -547,6 +547,11 @@ input[type=file].form-control {
 }
 .editor-settings-modal-dialog .col-md-4 {
     padding: 7px;
+}
+
+/* PRODUCT EDIT/CREATE */
+.form-group + .product-info-localized-block .nav-tabs-custom{
+    margin-top: 15px;
 }
 
 /* TINY MCE */

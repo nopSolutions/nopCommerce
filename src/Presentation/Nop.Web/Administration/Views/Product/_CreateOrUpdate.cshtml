@@ -27,17 +27,8 @@
                 @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Catalog.Products.Info"), true)
                 @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"))
                 @Html.RenderBootstrapTabHeader("tab-pictures", @T("Admin.Catalog.Products.Pictures"))
-                @Html.RenderBootstrapTabHeader("tab-categories", @T("Admin.Catalog.Products.Categories"))
-                @Html.RenderBootstrapTabHeader("tab-manufacturers", @T("Admin.Catalog.Products.Manufacturers"))
                 @Html.RenderBootstrapTabHeader("tab-specification-attributes", @T("Admin.Catalog.Products.SpecificationAttributes"))
                 @Html.RenderBootstrapTabHeader("tab-product-attributes", @T("Admin.Catalog.Products.ProductAttributes"))
-                @Html.RenderBootstrapTabHeader("tab-tier-prices", @T("Admin.Catalog.Products.TierPrices"))
-                @Html.RenderBootstrapTabHeader("tab-discounts", @T("Admin.Catalog.Products.Discounts"))
-                @Html.RenderBootstrapTabHeader("tab-acl", @T("Admin.Catalog.Products.Acl"))
-                @Html.RenderBootstrapTabHeader("tab-stores", @T("Admin.Catalog.Products.Stores"))
-                @Html.RenderBootstrapTabHeader("tab-related-products", @T("Admin.Catalog.Products.RelatedProducts"))
-                @Html.RenderBootstrapTabHeader("tab-cross-sells", @T("Admin.Catalog.Products.CrossSells"))
-                @Html.RenderBootstrapTabHeader("tab-associated-products", @T("Admin.Catalog.Products.AssociatedProducts"))
                 @if (Model.Id > 0)
                 {
                     @Html.RenderBootstrapTabHeader("tab-purchased-with-orders", @T("Admin.Catalog.Products.PurchasedWithOrders"))
@@ -47,17 +38,8 @@
                 @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
                 @Html.RenderBootstrapTabContent("tab-seo", @TabSeo())
                 @Html.RenderBootstrapTabContent("tab-pictures", @TabPictures())
-                @Html.RenderBootstrapTabContent("tab-categories", @TabCategories())
-                @Html.RenderBootstrapTabContent("tab-manufacturers", @TabManufacturers())
                 @Html.RenderBootstrapTabContent("tab-specification-attributes", @TabSpecificationAttributes())
                 @Html.RenderBootstrapTabContent("tab-product-attributes", @TabProductAttributes())
-                @Html.RenderBootstrapTabContent("tab-tier-prices", @TabTierPrices())
-                @Html.RenderBootstrapTabContent("tab-discounts", @TabDiscounts())
-                @Html.RenderBootstrapTabContent("tab-acl", @TabAcl())
-                @Html.RenderBootstrapTabContent("tab-stores", @TabStores())
-                @Html.RenderBootstrapTabContent("tab-related-products", @TabRelatedProducts())
-                @Html.RenderBootstrapTabContent("tab-cross-sells", @TabCrossSells())
-                @Html.RenderBootstrapTabContent("tab-associated-products", @TabAssociatedProducts())
                 @if (Model.Id > 0)
                 {
                     @Html.RenderBootstrapTabContent("tab-purchased-with-orders", @TabPurchasedWithOrders())
@@ -90,16 +72,6 @@
     @Html.Partial("_CreateOrUpdate.SEO", Model)
 }
 
-@helper TabCategories()
-{
-    @Html.Partial("_CreateOrUpdate.Categories", Model)
-}
-
-@helper TabManufacturers()
-{
-    @Html.Partial("_CreateOrUpdate.Manufacturers", Model)
-}
-
 @helper TabPictures()
 {
     @Html.Partial("_CreateOrUpdate.Pictures", Model)
@@ -110,44 +82,9 @@
     @Html.Partial("_CreateOrUpdate.SpecificationAttributes", Model)
 }
 
-@helper TabAcl()
-{
-    @Html.Partial("_CreateOrUpdate.Acl", Model)
-}
-
-@helper TabStores()
-{
-    @Html.Partial("_CreateOrUpdate.Stores", Model)
-}
-
-@helper TabTierPrices()
-{
-    @Html.Partial("_CreateOrUpdate.TierPrices", Model)
-}
-
 @helper TabProductAttributes()
 {
     @Html.Partial("_CreateOrUpdate.ProductAttributes", Model)
-}
-
-@helper TabDiscounts()
-{
-    @Html.Partial("_CreateOrUpdate.Discounts", Model)
-}
-
-@helper TabRelatedProducts()
-{
-    @Html.Partial("_CreateOrUpdate.RelatedProducts", Model)
-}
-
-@helper TabCrossSells()
-{
-    @Html.Partial("_CreateOrUpdate.CrossSells", Model)
-}
-
-@helper TabAssociatedProducts()
-{
-    @Html.Partial("_CreateOrUpdate.AssociatedProducts", Model)
 }
 
 @helper TabPurchasedWithOrders()

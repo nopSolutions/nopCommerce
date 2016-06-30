@@ -749,10 +749,10 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Categories.NoCategoriesAvailable">
     <Value>No categories available. Create at least one category.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.CategoryIds">
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCategoryIds">
     <Value>Categories</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.CategoryIds.Hint">
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCategoryIds.Hint">
     <Value>Product category mappings.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Blog.AllowNotRegisteredUsersToLeaveComments">
@@ -851,10 +851,10 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Manufacturers.NoManufacturersAvailable">
     <Value>No manufacturers available. Create at least one manufacturer.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerIds">
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedManufacturerIds">
      <Value>Manufacturers</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerIds.Hint">
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedManufacturerIds.Hint">
      <Value>Product manufacturer mappings.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ACL">
@@ -891,7 +891,7 @@ set @resources='
      <Value>Backorders</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.CommonInfo">
-     <Value>Commom info</Value>
+     <Value>General information</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.AdvancedProductTypes">
      <Value>Advanced product types</Value>
@@ -1072,6 +1072,83 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Warehouse">
      <Value>Warehouses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Prices">
+     <Value>Prices</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.CommonInfo">
+     <Value>General information</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AdvancedProductTypes">
+     <Value>Advanced product types</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Inventory">
+     <Value>Inventory</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Shipping">
+     <Value>Shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Mappings">
+     <Value>Mappings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Security">
+     <Value>Security</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.RequireOtherProducts">
+     <Value>Require other products</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Admin.Catalog.Products.Categories">
+     <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Categories.NoCategoriesAvailable">
+     <Value>No categories available.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Manufacturers">
+     <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Manufacturers.NoManufacturersAvailable">
+     <Value>No manufacturers available.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AclCustomerRoles">
+     <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AclCustomerRoles.Hint">
+     <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableStores">
+     <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableStores.Hint">
+     <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedDiscountIds">
+     <Value>Discounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedDiscountIds.Hint">
+     <Value>Select discounts.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Discounts">
+     <Value></Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedStoreIds">
+     <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedStoreIds.Hint">
+     <Value>Select stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCustomerRoleIds">
+     <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCustomerRoleIds.Hint">
+     <Value>Select customer roles.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Acl">
+     <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Stores">
+     <Value></Value>
   </LocaleResource>
 </Language>
 '

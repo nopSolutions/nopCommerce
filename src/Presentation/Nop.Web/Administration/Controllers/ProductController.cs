@@ -258,16 +258,19 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableCustomerRoles = _customerService
-                .GetAllCustomerRoles(true)
-                .Select(cr => cr.ToModel())
-                .ToList();
             if (!excludeProperties)
-            {
                 if (product != null)
+                    model.SelectedCustomerRoleIds = _aclService.GetCustomerRoleIdsWithAccess(product).ToList();
+
+            var allRoles = _customerService.GetAllCustomerRoles(true);
+            foreach (var role in allRoles)
+            {
+                model.AvailableCustomerRoles.Add(new SelectListItem
                 {
-                    model.SelectedCustomerRoleIds = _aclService.GetCustomerRoleIdsWithAccess(product);
-                }
+                    Text = role.Name,
+                    Value = role.Id.ToString(),
+                    Selected = model.SelectedCustomerRoleIds.Contains(role.Id)
+                });
             }
         }
 
@@ -300,16 +303,19 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
             if (!excludeProperties)
-            {
                 if (product != null)
+                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(product).ToList();
+
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
+            {
+                model.AvailableStores.Add(new SelectListItem
                 {
-                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(product);
-                }
+                    Text = store.Name,
+                    Value = store.Id.ToString(),
+                    Selected = model.SelectedStoreIds.Contains(store.Id)
+                });
             }
         }
 
@@ -320,11 +326,11 @@ namespace Nop.Admin.Controllers
 
             //delete categories
             foreach (var existingProductCategory in existingProductCategories)
-                if (!model.CategoryIds.Contains(existingProductCategory.CategoryId))
+                if (!model.SelectedCategoryIds.Contains(existingProductCategory.CategoryId))
                     _categoryService.DeleteProductCategory(existingProductCategory);
 
             //add categories
-            foreach (var categoryId in model.CategoryIds)
+            foreach (var categoryId in model.SelectedCategoryIds)
                 if (existingProductCategories.FindProductCategory(product.Id, categoryId) == null)
                 {
                     //find next display order
@@ -348,11 +354,11 @@ namespace Nop.Admin.Controllers
 
             //delete manufacturers
             foreach (var existingProductManufacturer in existingProductManufacturers)
-                if (!model.ManufacturerIds.Contains(existingProductManufacturer.ManufacturerId))
+                if (!model.SelectedManufacturerIds.Contains(existingProductManufacturer.ManufacturerId))
                     _manufacturerService.DeleteProductManufacturer(existingProductManufacturer);
 
             //add manufacturers
-            foreach (var manufacturerId in model.ManufacturerIds)
+            foreach (var manufacturerId in model.SelectedManufacturerIds)
                 if (existingProductManufacturers.FindProductManufacturer(product.Id, manufacturerId) == null)
                 {
                     //find next display order
@@ -550,11 +556,6 @@ namespace Nop.Admin.Controllers
                     });
                 }
 
-                //categories
-                model.CategoryIds = _categoryService.GetProductCategoriesByProductId(product.Id, true).Select(c => c.CategoryId).ToList();
-                //manufacturers
-                model.ManufacturerIds = _manufacturerService.GetProductManufacturersByProductId(product.Id, true).Select(c => c.ManufacturerId).ToList();
-
                 //specification attributes
                 model.AddSpecificationAttributeModel.AvailableAttributes = _cacheManager
                     .Get(ModelCacheEventConsumer.SPEC_ATTRIBUTES_MODEL_KEY, () =>
@@ -585,7 +586,11 @@ namespace Nop.Admin.Controllers
                 //default specs values
                 model.AddSpecificationAttributeModel.ShowOnProductPage = true;
             }
+
             //categories
+            if(product != null)
+                model.SelectedCategoryIds = _categoryService.GetProductCategoriesByProductId(product.Id, true).Select(c => c.CategoryId).ToList();
+
             var allCategories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var category in allCategories)
             {
@@ -593,21 +598,24 @@ namespace Nop.Admin.Controllers
                 {
                     Text = category.GetFormattedBreadCrumb(allCategories),
                     Value = category.Id.ToString(),
-                    Selected = model.CategoryIds.Contains(category.Id)
+                    Selected = model.SelectedCategoryIds.Contains(category.Id)
                 });
             }
+
             //manufacturers
+            if (product != null)
+                model.SelectedManufacturerIds = _manufacturerService.GetProductManufacturersByProductId(product.Id, true).Select(c => c.ManufacturerId).ToList();
+
             foreach (var manufacturer in _manufacturerService.GetAllManufacturers(showHidden: true))
             {
                 model.AvailableManufacturers.Add(new SelectListItem
                 {
                     Text = manufacturer.Name,
                     Value = manufacturer.Id.ToString(),
-                    Selected = model.ManufacturerIds.Contains(manufacturer.Id)
+                    Selected = model.SelectedManufacturerIds.Contains(manufacturer.Id)
                 });
             }
-
-
+            
             //copy product
             if (product != null)
             {
@@ -727,13 +735,17 @@ namespace Nop.Admin.Controllers
                 model.AvailableBasepriceBaseUnits.Add(new SelectListItem { Text = mw.Name, Value = mw.Id.ToString(), Selected = product != null && !setPredefinedValues && mw.Id == product.BasepriceBaseUnitId });
 
             //discounts
-            model.AvailableDiscounts = _discountService
-                .GetAllDiscounts(DiscountType.AssignedToSkus, showHidden: true)
-                .Select(d => d.ToModel())
-                .ToList();
             if (!excludeProperties && product != null)
+                model.SelectedDiscountIds = product.AppliedDiscounts.Select(d => d.Id).ToList();
+
+            foreach (var discount in _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, showHidden: true))
             {
-                model.SelectedDiscountIds = product.AppliedDiscounts.Select(d => d.Id).ToArray();
+                model.AvailableDiscounts.Add(new SelectListItem
+                {
+                    Text = discount.Name,
+                    Value = discount.Id.ToString(),
+                    Selected = model.SelectedDiscountIds.Contains(discount.Id)
+                });
             }
 
             //default values

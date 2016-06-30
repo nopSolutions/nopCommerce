@@ -2178,14 +2178,14 @@
   <LocaleResource Name="Admin.Catalog.Products">
     <Value>Products</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Acl">
-    <Value>Access control list</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Added">
     <Value>The new product has been added successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.AddNew">
     <Value>Add a new product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AdvancedProductTypes">
+     <Value>Advanced product types</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts">
     <Value>Associated products (variants)</Value>
@@ -2211,17 +2211,11 @@
   <LocaleResource Name="Admin.Catalog.Products.BackToList">
     <Value>back to product list</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Categories">
-    <Value>Category mappings</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.CategoryIds">
-    <Value>Categories</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.CategoryIds.Hint">
-    <Value>Product category mappings.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Categories.NoCategoriesAvailable">
-    <Value>No categories available. Create at least one category.</Value>
+    <Value>No categories available.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.CommonInfo">
+     <Value>General information</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Copy">
     <Value>Copy product</Value>
@@ -2259,9 +2253,6 @@
   <LocaleResource Name="Admin.Catalog.Products.Deleted">
     <Value>The product has been deleted successfully.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Discounts">
-    <Value>Discounts</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Discounts.NoDiscounts">
     <Value>No discounts available. Create at least one discount before mapping.</Value>
   </LocaleResource>
@@ -2270,12 +2261,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ExceededMaximumNumber">
     <Value>The maximum allowed number of products has been exceeded ({0})</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.AclCustomerRoles">
-    <Value>Customer roles</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.AclCustomerRoles.Hint">
-    <Value>Select customer roles for which the product will be shown.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.AdditionalShippingCharge">
     <Value>Additional shipping charge</Value>
@@ -2342,12 +2327,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableStartDateTime.Hint">
     <Value>The start of the product's availability in Coordinated Universal Time (UTC).</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableStores">
-    <Value>Stores</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableStores.Hint">
-    <Value>Select stores for which the product will be shown.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.BackorderMode">
     <Value>Backorders</Value>
@@ -2441,9 +2420,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayStockQuantity.Hint">
     <Value>Check to display stock quantity. When enabled, customers will see stock quantity.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.Download">
-    <Value>Download file</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Download.Hint">
     <Value>The download file.</Value>
@@ -2576,12 +2552,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerIds">
     <Value>Manufacturers</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerIds.Hint">
-    <Value>Product manufacturer mappings.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerPartNumber">
-    <Value>Manufacturer part number</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerPartNumber.Hint">
     <Value>The manufacturer's part number for this product.</Value>
@@ -2802,6 +2772,36 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.SeName.Hint">
     <Value>Set a search engine friendly page name e.g. 'the-best-product' to make your page URL 'http://www.yourStore.com/the-best-product'. Leave empty to generate it automatically based on the name of the product.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCategoryIds">
+    <Value>Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCategoryIds.Hint">
+    <Value>Product category mappings.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCustomerRoleIds">
+     <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCustomerRoleIds.Hint">
+     <Value>Select customer roles.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedDiscountIds">
+     <Value>Discounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedDiscountIds.Hint">
+     <Value>Select discounts.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedManufacturerIds">
+     <Value>Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedManufacturerIds.Hint">
+     <Value>Product manufacturer mappings.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedStoreIds">
+     <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedStoreIds.Hint">
+     <Value>Select stores.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShipSeparately">
     <Value>Ship separately</Value>
   </LocaleResource>
@@ -2922,6 +2922,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Info">
     <Value>Product Info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Inventory">
+     <Value>Inventory</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.List.DownloadPDF">
     <Value>Download catalog as PDF</Value>
   </LocaleResource>
@@ -2997,11 +3000,11 @@
   <LocaleResource Name="Admin.Catalog.Products.List.SearchWarehouse.Hint">
     <Value>Search by a specific warehouse.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Manufacturers">
-    <Value>Manufacturer mappings</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Manufacturers.NoManufacturersAvailable">
-    <Value>No manufacturers available. Create at least one manufacturer.</Value>
+    <Value>No manufacturers available.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Mappings">
+     <Value>Mappings</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Pictures">
     <Value>Pictures</Value>
@@ -3038,6 +3041,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Pictures.SaveBeforeEdit">
     <Value>You need to save the product before you can upload pictures for this product page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Prices">
+     <Value>Prices</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes">
     <Value>Product attributes</Value>
@@ -3348,6 +3354,15 @@
   <LocaleResource Name="Admin.Catalog.Products.RelatedProducts.SaveBeforeEdit">
     <Value>You need to save the product before you can add related products for this product page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.RequireOtherProducts">
+     <Value>Require other products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Security">
+     <Value>Security</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Shipping">
+     <Value>Shipping</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes">
     <Value>Specification attributes</Value>
   </LocaleResource>
@@ -3407,9 +3422,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.SaveBeforeEdit">
     <Value>You need to save the product before you can add product specification attributes for this product page.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Stores">
-    <Value>Stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.TierPrices">
     <Value>Tier prices</Value>
@@ -6307,7 +6319,7 @@
     <Value>Backorders</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.CommonInfo">
-    <Value>Commom info</Value>
+    <Value>General information</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.AdvancedProductTypes">
     <Value>Advanced product types</Value>
