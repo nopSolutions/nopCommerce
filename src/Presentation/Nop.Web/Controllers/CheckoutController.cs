@@ -606,6 +606,7 @@ namespace Nop.Web.Controllers
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                 //reset selected shipping method (in case if "pick up in store" was selected)
                 _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedPickUpInStore, false, _storeContext.CurrentStore.Id);
                 //limitation - "Ship to the same address" doesn't properly work in "pick up in store only" case (when no shipping plugins are available) 
                 return RedirectToRoute("CheckoutShippingMethod");
             }
@@ -671,6 +672,7 @@ namespace Nop.Web.Controllers
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                     //reset selected shipping method (in case if "pick up in store" was selected)
                     _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
+                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedPickUpInStore, false, _storeContext.CurrentStore.Id);
                     //limitation - "Ship to the same address" doesn't properly work in "pick up in store only" case (when no shipping plugins are available) 
                     return RedirectToRoute("CheckoutShippingMethod");
                 }
@@ -1550,6 +1552,7 @@ namespace Nop.Web.Controllers
                         _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                         //reset selected shipping method (in case if "pick up in store" was selected)
                         _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
+                        _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedPickUpInStore, false, _storeContext.CurrentStore.Id);
                         //limitation - "Ship to the same address" doesn't properly work in "pick up in store only" case (when no shipping plugins are available) 
                         return OpcLoadStepAfterShippingAddress(cart);
                     }
