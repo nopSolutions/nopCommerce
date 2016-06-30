@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using ImageResizer;
 using Nop.Core;
 using Nop.Core.Data;
@@ -472,6 +473,7 @@ namespace Nop.Services.Media
 
             string lastPart = GetFileExtensionFromMimeType(picture.MimeType);
             string thumbFileName;
+            string thumbFilePath;
             if (picture.IsNew)
             {
                 DeletePictureThumbs(picture);
@@ -486,65 +488,84 @@ namespace Nop.Services.Media
                     false,
                     false);
             }
-            lock (s_lock)
+
+            var seoFileName = picture.SeoFilename; // = GetPictureSeName(picture.SeoFilename); //just for sure
+
+            if (targetSize == 0)
             {
-                string seoFileName = picture.SeoFilename; // = GetPictureSeName(picture.SeoFilename); //just for sure
-                if (targetSize == 0)
-                {
-                    //original size (no resizing required)
-                    thumbFileName = !String.IsNullOrEmpty(seoFileName) ?
-                        string.Format("{0}_{1}.{2}", picture.Id.ToString("0000000"), seoFileName, lastPart) :
-                        string.Format("{0}.{1}", picture.Id.ToString("0000000"), lastPart);
-                    var thumbFilePath = GetThumbLocalPath(thumbFileName);
+                thumbFileName = !String.IsNullOrEmpty(seoFileName)
+                    ? string.Format("{0}_{1}.{2}", picture.Id.ToString("0000000"), seoFileName, lastPart)
+                    : string.Format("{0}.{1}", picture.Id.ToString("0000000"), lastPart);
+                thumbFilePath = GetThumbLocalPath(thumbFileName);
+            }
+            else
+            {
+                thumbFileName = !String.IsNullOrEmpty(seoFileName)
+                    ? string.Format("{0}_{1}_{2}.{3}", picture.Id.ToString("0000000"), seoFileName, targetSize, lastPart)
+                    : string.Format("{0}_{1}.{2}", picture.Id.ToString("0000000"), targetSize, lastPart);
+                thumbFilePath = GetThumbLocalPath(thumbFileName);
+            }
+
+            //the named mutex helps to avoid creating the same files in different threads,
+            //and does not decrease performance significantly, because the code is blocked only for the specific file.
+            using (var mutex = new Mutex(false, thumbFileName))
+            {
+                if(!GeneratedThumbExists(thumbFilePath, thumbFileName))
+                { 
+                    mutex.WaitOne();
+
+                    //check, if the file was created, while we were waiting for the release of the mutex.
                     if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                     {
-                        SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
-                    }
-                }
-                else
-                {
-                    //resizing required
-                    thumbFileName = !String.IsNullOrEmpty(seoFileName) ?
-                        string.Format("{0}_{1}_{2}.{3}", picture.Id.ToString("0000000"), seoFileName, targetSize, lastPart) :
-                        string.Format("{0}_{1}.{2}", picture.Id.ToString("0000000"), targetSize, lastPart);
-                    var thumbFilePath = GetThumbLocalPath(thumbFileName);
-                    if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
-                    {
-                        using (var stream = new MemoryStream(pictureBinary))
+                        //resizing required
+                        if (targetSize != 0)
                         {
-                            Bitmap b = null;
-                            try
+                            byte[] destBinary;
+
+                            using (var stream = new MemoryStream(pictureBinary))
                             {
-                                //try-catch to ensure that picture binary is really OK. Otherwise, we can get "Parameter is not valid" exception if binary is corrupted for some reasons
-                                b = new Bitmap(stream);
-                            }
-                            catch (ArgumentException exc)
-                            {
-                                _logger.Error(string.Format("Error generating picture thumb. ID={0}", picture.Id), exc);
-                            }
-                            if (b == null)
-                            {
-                                //bitmap could not be loaded for some reasons
-                                return url;
+                                Bitmap b = null;
+                                try
+                                {
+                                    //try-catch to ensure that picture binary is really OK. Otherwise, we can get "Parameter is not valid" exception if binary is corrupted for some reasons
+                                    b = new Bitmap(stream);
+                                }
+                                catch (ArgumentException exc)
+                                {
+                                    _logger.Error(string.Format("Error generating picture thumb. ID={0}", picture.Id),
+                                        exc);
+                                }
+
+                                if (b == null)
+                                {
+                                    //bitmap could not be loaded for some reasons
+                                    return url;
+                                }
+
+                                using (var destStream = new MemoryStream())
+                                {
+                                    var newSize = CalculateDimensions(b.Size, targetSize);
+                                    ImageBuilder.Current.Build(b, destStream, new ResizeSettings
+                                    {
+                                        Width = newSize.Width,
+                                        Height = newSize.Height,
+                                        Scale = ScaleMode.Both,
+                                        Quality = _mediaSettings.DefaultImageQuality
+                                    });
+                                    destBinary = destStream.ToArray();
+                                    b.Dispose();
+                                }
                             }
 
-                            using (var destStream = new MemoryStream())
-                            {
-                                var newSize = CalculateDimensions(b.Size, targetSize);
-                                ImageBuilder.Current.Build(b, destStream, new ResizeSettings
-                                {
-                                    Width = newSize.Width,
-                                    Height = newSize.Height,
-                                    Scale = ScaleMode.Both,
-                                    Quality = _mediaSettings.DefaultImageQuality
-                                });
-                                var destBinary = destStream.ToArray();
-                                SaveThumb(thumbFilePath, thumbFileName, destBinary);
-                                b.Dispose();
-                            }
+                            pictureBinary = destBinary;
                         }
+
+                        SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
                     }
+                    
+                    mutex.ReleaseMutex();
                 }
+                
             }
             url = GetThumbUrl(thumbFileName, storeLocation);
             return url;
