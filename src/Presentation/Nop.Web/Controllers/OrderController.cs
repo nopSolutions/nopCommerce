@@ -198,6 +198,15 @@ namespace Nop.Web.Controllers
                         addressSettings: _addressSettings,
                         addressAttributeFormatter: _addressAttributeFormatter);
                 }
+                else
+                    if (order.PickupAddress != null)
+                        model.PickupAddress = new AddressModel
+                        {
+                            Address1 = order.PickupAddress.Address1,
+                            City = order.PickupAddress.City,
+                            CountryName = order.PickupAddress.Country != null ? order.PickupAddress.Country.Name : string.Empty,
+                            ZipPostalCode = order.PickupAddress.ZipPostalCode
+                        };
                 model.ShippingMethod = order.ShippingMethod;
    
 

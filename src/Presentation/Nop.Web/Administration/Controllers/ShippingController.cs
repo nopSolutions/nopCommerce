@@ -196,7 +196,98 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-        
+
+        #region Pickup point providers
+
+        public ActionResult PickupPointProviders()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult PickupPointProviders(DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            var pickupPointProviderModel = new List<PickupPointProviderModel>();
+            var allProviders = _shippingService.LoadAllPickupPointProviders();
+            foreach (var provider in allProviders)
+            {
+                var model = provider.ToModel();
+                model.IsActive = provider.IsPickupPointProviderActive(_shippingSettings);
+                model.LogoUrl = provider.PluginDescriptor.GetLogoUrl(_webHelper);
+                pickupPointProviderModel.Add(model);
+            }
+
+            var gridModel = new DataSourceResult
+            {
+                Data = pickupPointProviderModel,
+                Total = pickupPointProviderModel.Count
+            };
+
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        public ActionResult PickupPointProviderUpdate([Bind(Exclude = "ConfigurationRouteValues")] PickupPointProviderModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            var pickupPointProvider = _shippingService.LoadPickupPointProviderBySystemName(model.SystemName);
+            if (pickupPointProvider.IsPickupPointProviderActive(_shippingSettings))
+            {
+                if (!model.IsActive)
+                {
+                    //mark as disabled
+                    _shippingSettings.ActivePickupPointProviderSystemNames.Remove(pickupPointProvider.PluginDescriptor.SystemName);
+                    _settingService.SaveSetting(_shippingSettings);
+                }
+            }
+            else
+            {
+                if (model.IsActive)
+                {
+                    //mark as active
+                    _shippingSettings.ActivePickupPointProviderSystemNames.Add(pickupPointProvider.PluginDescriptor.SystemName);
+                    _settingService.SaveSetting(_shippingSettings);
+                }
+            }
+            var pluginDescriptor = pickupPointProvider.PluginDescriptor;
+            pluginDescriptor.DisplayOrder = model.DisplayOrder;
+            PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
+            //reset plugin cache
+            _pluginFinder.ReloadPlugins();
+
+            return new NullJsonResult();
+        }
+
+        public ActionResult ConfigurePickupPointProvider(string systemName)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            var pickupPointProvider = _shippingService.LoadPickupPointProviderBySystemName(systemName);
+            if (pickupPointProvider == null)
+                return RedirectToAction("PickupPointProviders");
+
+            var model = pickupPointProvider.ToModel();
+            string actionName;
+            string controllerName;
+            RouteValueDictionary routeValues;
+            pickupPointProvider.GetConfigurationRoute(out actionName, out controllerName, out routeValues);
+            model.ConfigurationActionName = actionName;
+            model.ConfigurationControllerName = controllerName;
+            model.ConfigurationRouteValues = routeValues;
+            return View(model);
+        }
+
+        #endregion
+
         #region Shipping methods
 
         public ActionResult Methods()

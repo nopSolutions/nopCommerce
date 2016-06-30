@@ -6044,7 +6044,7 @@ namespace Nop.Services.Installation
                 ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedRate" },
                 ShipToSameAddress = false,
                 AllowPickUpInStore = true,
-                PickUpInStoreFee = decimal.Zero,
+                DisplayPickupPointsOnMap = false,
                 UseWarehouseLocation = false,
                 NotifyCustomerAboutShippingFromMultipleLocations = false,
                 FreeShippingOverXEnabled = false,

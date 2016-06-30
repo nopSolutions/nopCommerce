@@ -415,6 +415,45 @@ namespace Nop.Services.Shipping
 
         #endregion
 
+        #region Pickup points
+
+        /// <summary>
+        /// Load active pickup point providers
+        /// </summary>
+        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <returns>Pickup point providers</returns>
+        public virtual IList<IPickupPointProvider> LoadActivePickupPointProviders(int storeId = 0)
+        {
+            return LoadAllPickupPointProviders(storeId).Where(provider =>
+                _shippingSettings.ActivePickupPointProviderSystemNames.Contains(provider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase)).ToList();
+        }
+
+        /// <summary>
+        /// Load pickup point provider by system name
+        /// </summary>
+        /// <param name="systemName">System name</param>
+        /// <returns>Found pickup point provider</returns>
+        public virtual IPickupPointProvider LoadPickupPointProviderBySystemName(string systemName)
+        {
+            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IPickupPointProvider>(systemName);
+            if (descriptor != null)
+                return descriptor.Instance<IPickupPointProvider>();
+
+            return null;
+        }
+
+        /// <summary>
+        /// Load all pickup point providers
+        /// </summary>
+        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <returns>Pickup point providers</returns>
+        public virtual IList<IPickupPointProvider> LoadAllPickupPointProviders(int storeId = 0)
+        {
+            return _pluginFinder.GetPlugins<IPickupPointProvider>(storeId: storeId).ToList();
+        }
+
+        #endregion
+
         #region Workflow
 
         /// <summary>
@@ -903,6 +942,49 @@ namespace Nop.Services.Shipping
             if (!result.ShippingOptions.Any() && !result.Errors.Any())
                 result.Errors.Add(_localizationService.GetResource("Checkout.ShippingOptionCouldNotBeLoaded"));
             
+            return result;
+        }
+
+        /// <summary>
+        /// Gets available pickup points
+        /// </summary>
+        /// <param name="address">Address</param>
+        /// <param name="providerSystemName">Filter by provider identifier; null to load pickup points of all providers</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <returns>Pickup points</returns>
+        public virtual GetPickupPointsResponse GetPickupPoints(Address address, string providerSystemName = null, int storeId = 0)
+        {
+            var result = new GetPickupPointsResponse();
+            var pickupPointsProviders = LoadActivePickupPointProviders(storeId);
+            if (!string.IsNullOrEmpty(providerSystemName))
+                pickupPointsProviders = pickupPointsProviders
+                    .Where(x => x.PluginDescriptor.SystemName.Equals(providerSystemName, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            if (pickupPointsProviders.Count == 0)
+                return result;
+
+            var allPickupPoints = new List<PickupPoint>();
+            foreach (var provider in pickupPointsProviders)
+            {
+                var pickPointsResponse = provider.GetPickupPoints(address);
+                if (pickPointsResponse.Success)
+                    allPickupPoints.AddRange(pickPointsResponse.PickupPoints);
+                else
+                {
+                    foreach (string error in pickPointsResponse.Errors)
+                    {
+                        result.AddError(error);
+                        _logger.Warning(string.Format("PickupPoints ({0}). {1}", provider.PluginDescriptor.FriendlyName, error));
+                    }
+                }
+            }
+
+            //any pickup points is enough
+            if (allPickupPoints.Count > 0)
+            {
+                result.Errors.Clear();
+                result.PickupPoints = allPickupPoints;
+            }
+
             return result;
         }
 

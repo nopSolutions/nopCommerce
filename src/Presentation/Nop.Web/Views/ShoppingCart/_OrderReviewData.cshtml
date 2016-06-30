@@ -187,6 +187,38 @@
                         </li>
                     }
                 }
+                else
+                {
+                     <li class="title">
+                        @T("Order.PickupAddress")
+                    </li>
+                    if (!string.IsNullOrEmpty(Model.PickupAddress.Address1))
+                    {
+                        <li class="address1">
+                            @Model.PickupAddress.Address1
+                        </li>
+                    }
+                    if (!string.IsNullOrEmpty(Model.PickupAddress.City) || !string.IsNullOrEmpty(Model.PickupAddress.ZipPostalCode))
+                    {
+                        <li class="city-state-zip">
+                            @if (!string.IsNullOrEmpty(Model.PickupAddress.City))
+                            {
+                                @Model.PickupAddress.City
+                            }
+                            @if (!string.IsNullOrEmpty(Model.PickupAddress.ZipPostalCode))
+                            {
+                                <text>,</text>
+                                @Model.PickupAddress.ZipPostalCode
+                            }
+                        </li>
+                    }
+                    if (!string.IsNullOrEmpty(Model.PickupAddress.CountryName))
+                    {
+                        <li class="country">
+                            @Model.PickupAddress.CountryName
+                        </li>
+                    }
+                }
                 <li class="title">
                     @T("Order.Shipping")
                 </li>

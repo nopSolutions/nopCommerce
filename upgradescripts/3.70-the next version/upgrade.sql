@@ -1544,6 +1544,99 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.Description">
     <Value>Product attributes are quantifiable or descriptive aspects of a product (such as, color). For example, if you were to create an attribute for color, with the values of blue, green, yellow, and so on, you may want to apply this attribute to shirts, which you sell in various colors (you can adjust a price or weight for any of existing attribute values). You can add attribute for your product using existing list of attributes, or if you need to create a new one go to Catalog > Attributes > Product attributes. Please notice that if you want to manage inventory by product attributes (e.g. 5 green shirts and 3 blue ones), then ensure that Inventory method is set to Track inventory by product attributes.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickUpInStore.Hint">
+    <Value>A value indicating whether "Pick Up in Store" option is enabled during checkout. Please ensure that you have at least one active pickup point provider.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.DisplayPickupPointsOnMap">
+    <Value>Display pickup points on the map</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.DisplayPickupPointsOnMap.Hint">
+    <Value>Check to display pickup points on the map.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.GoogleMapsApiKey">
+    <Value>Google maps API key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.GoogleMapsApiKey.Hint">
+    <Value>Specify Google maps API key.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.PickUpInStoreFee">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.PickUpInStoreFee.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPointProviders">
+    <Value>Pickup point providers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPointProviders.BackToList">
+    <Value>back to pickup point provider list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPointProviders.Configure">
+    <Value>Configure</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPointProviders.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPointProviders.Fields.FriendlyName">
+    <Value>Friendly name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPointProviders.Fields.IsActive">
+    <Value>Is active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPointProviders.Fields.Logo">
+    <Value>Logo</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPointProviders.Fields.SystemName">
+    <Value>System name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoints">
+    <Value>Pickup points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.PickupAddress">
+    <Value>Pickup point address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.PickupAddress.Hint">
+    <Value>Pickup point address info.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.PickupAddress.ViewOnGoogleMaps">
+    <Value>View address on Google Maps</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickUpInStore">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickUpInStoreAndFee">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickUpInStore.Description">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickUpInStore.MethodName">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickupPoints">
+    <Value>Pickup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickupPoints.Description">
+    <Value>Pick up your items at the store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickupPoints.Name">
+    <Value>Pickup at {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickupPoints.NotAvailable">
+    <Value>Pickup points could not be loaded</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickupPoints.SelectPickupPoint">
+    <Value>Select pickup point</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.PickupAddress">
+    <Value>Pickup point address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.PickupAddress">
+    <Value>Pickup point address</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.Pickup">
+    <Value>Pickup point:</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -4108,8 +4201,6 @@ GO
  GO
  GO
 
-
-
 --new column
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Discount]') and NAME='IsCumulative')
 BEGIN
@@ -4142,7 +4233,6 @@ GO
  END
  GO
 
-
 --new activity types
 IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'EditActivityLogTypes')
 BEGIN
@@ -4159,8 +4249,6 @@ BEGIN
 END
 GO
 
-
-
 --new setting
  IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings.logopictureid')
  BEGIN
@@ -4168,3 +4256,51 @@ GO
  	VALUES (N'storeinformationsettings.logopictureid', N'0', 0)
  END
  GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [name] = N'shippingsettings.pickupinstorefee'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.displaypickuppointsonmap')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'shippingsettings.displaypickuppointsonmap', N'false', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.googlemapsapikey')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'shippingsettings.googlemapsapikey', N'', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.activepickuppointprovidersystemnames')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'shippingsettings.activepickuppointprovidersystemnames', N'', 0)
+END
+GO
+
+ --new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='PickupAddressId')
+BEGIN
+	ALTER TABLE [Order]
+	ADD [PickupAddressId] int NULL
+END
+GO
+
+IF EXISTS (SELECT 1 FROM sys.objects WHERE name = 'Order_PickupAddress' AND parent_object_id = Object_id('Order') AND Objectproperty(object_id, N'IsForeignKey') = 1)
+BEGIN
+    ALTER TABLE [dbo].[Order]
+    DROP CONSTRAINT [Order_PickupAddress]
+END
+GO
+
+ALTER TABLE [dbo].[Order] WITH CHECK ADD CONSTRAINT [Order_PickupAddress] FOREIGN KEY([PickupAddressId])
+REFERENCES [dbo].[Address] ([Id])
+GO

@@ -493,6 +493,15 @@ namespace Nop.Admin.Extensions
 
         #endregion
 
+        #region Pickup point providers
+
+        public static PickupPointProviderModel ToModel(this IPickupPointProvider entity)
+        {
+            return entity.MapTo<IPickupPointProvider, PickupPointProviderModel>();
+        }
+
+        #endregion
+
         #region Shipping methods
 
         public static ShippingMethodModel ToModel(this ShippingMethod entity)

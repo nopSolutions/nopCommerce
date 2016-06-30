@@ -560,15 +560,7 @@ namespace Nop.Services.Orders
             if (shippingOption != null)
             {
                 //use last shipping option (get from cache)
-
-                var pickUpInStore = _shippingSettings.AllowPickUpInStore && 
-                    customer.GetAttribute<bool>(SystemCustomerAttributeNames.SelectedPickUpInStore, _storeContext.CurrentStore.Id);
-                shippingTotal =  pickUpInStore ?
-                    //"pick up in store" fee
-                    //we do not adjust shipping rate ("AdjustShippingRate" method) for pickup in store
-                    _shippingSettings.PickUpInStoreFee :
-                    //adjust shipping rate
-                    AdjustShippingRate(shippingOption.Rate, cart, out appliedDiscounts);
+                shippingTotal = AdjustShippingRate(shippingOption.Rate, cart, out appliedDiscounts);
             }
             else
             {
@@ -578,10 +570,7 @@ namespace Nop.Services.Orders
                     shippingAddress = customer.ShippingAddress;
 
                 var shippingRateComputationMethods = _shippingService.LoadActiveShippingRateComputationMethods(_storeContext.CurrentStore.Id);
-                if (!shippingRateComputationMethods.Any())
-                    if (_shippingSettings.AllowPickUpInStore)
-                        shippingTotal = _shippingSettings.PickUpInStoreFee;
-                    else
+                if (!shippingRateComputationMethods.Any() && !_shippingSettings.AllowPickUpInStore)
                         throw new NopException("Shipping rate computation method could not be loaded");
 
                 if (shippingRateComputationMethods.Count == 1)

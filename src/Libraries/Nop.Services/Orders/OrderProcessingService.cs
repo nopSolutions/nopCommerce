@@ -72,6 +72,7 @@ namespace Nop.Services.Orders
         private readonly IPdfService _pdfService;
         private readonly IRewardPointService _rewardPointService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ICountryService _countryService;
 
         private readonly ShippingSettings _shippingSettings;
         private readonly PaymentSettings _paymentSettings;
@@ -119,6 +120,7 @@ namespace Nop.Services.Orders
         /// <param name="pdfService">PDF service</param>
         /// <param name="rewardPointService">Reward point service</param>
         /// <param name="genericAttributeService">Generic attribute service</param>
+        /// <param name="countryService">Country service</param>
         /// <param name="paymentSettings">Payment settings</param>
         /// <param name="shippingSettings">Shipping settings</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
@@ -157,6 +159,7 @@ namespace Nop.Services.Orders
             IPdfService pdfService,
             IRewardPointService rewardPointService,
             IGenericAttributeService genericAttributeService,
+            ICountryService countryService,
             ShippingSettings shippingSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
@@ -196,6 +199,7 @@ namespace Nop.Services.Orders
             this._pdfService = pdfService;
             this._rewardPointService = rewardPointService;
             this._genericAttributeService = genericAttributeService;
+            this._countryService = countryService;
 
             this._paymentSettings = paymentSettings;
             this._shippingSettings = shippingSettings;
@@ -232,6 +236,7 @@ namespace Nop.Services.Orders
             public string ShippingMethodName { get; set; }
             public string ShippingRateComputationMethodSystemName { get; set; }
             public bool PickUpInStore { get; set; }
+            public Address PickupAddress { get; set; }
 
             public bool IsRecurringShoppingCart { get; set; }
             //initial order (used with recurring payments)
@@ -384,10 +389,20 @@ namespace Nop.Services.Orders
             //shipping info
             if (details.Cart.RequiresShipping())
             {
-                details.PickUpInStore = _shippingSettings.AllowPickUpInStore &&
-                        details.Customer.GetAttribute<bool>(SystemCustomerAttributeNames.SelectedPickUpInStore, processPaymentRequest.StoreId);
-
-                if (!details.PickUpInStore)
+                var pickupPoint = details.Customer.GetAttribute<PickupPoint>(SystemCustomerAttributeNames.SelectedPickupPoint, processPaymentRequest.StoreId);
+                if (_shippingSettings.AllowPickUpInStore && pickupPoint != null)
+                {
+                    details.PickUpInStore = true;
+                    details.PickupAddress = new Address
+                    {
+                        Address1 = pickupPoint.Address,
+                        City = pickupPoint.City,
+                        Country = _countryService.GetCountryByTwoLetterIsoCode(pickupPoint.CountryCode),
+                        ZipPostalCode = pickupPoint.ZipPostalCode,
+                        CreatedOnUtc = DateTime.UtcNow,
+                    };
+                }
+                else
                 {
                     if (details.Customer.ShippingAddress == null)
                         throw new NopException("Shipping address is not provided");
@@ -563,6 +578,9 @@ namespace Nop.Services.Orders
                     if (details.ShippingAddress.Country != null && !details.ShippingAddress.Country.AllowsShipping)
                         throw new NopException(string.Format("Country '{0}' is not allowed for shipping", details.ShippingAddress.Country.Name));
                 }
+                else
+                    if (details.InitialOrder.PickupAddress != null)
+                        details.PickupAddress = (Address)details.InitialOrder.PickupAddress.Clone();
                 details.ShippingMethodName = details.InitialOrder.ShippingMethod;
                 details.ShippingRateComputationMethodSystemName = details.InitialOrder.ShippingRateComputationMethodSystemName;
                 details.ShippingStatus = ShippingStatus.NotYetShipped;
@@ -651,6 +669,7 @@ namespace Nop.Services.Orders
                 ShippingStatus = details.ShippingStatus,
                 ShippingMethod = details.ShippingMethodName,
                 PickUpInStore = details.PickUpInStore,
+                PickupAddress = details.PickupAddress,
                 ShippingRateComputationMethodSystemName = details.ShippingRateComputationMethodSystemName,
                 CustomValuesXml = processPaymentRequest.SerializeCustomValues(),
                 VatNumber = details.VatNumber,

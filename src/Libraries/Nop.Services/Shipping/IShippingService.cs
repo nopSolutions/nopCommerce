@@ -10,6 +10,8 @@ namespace Nop.Services.Shipping
     /// </summary>
     public partial interface IShippingService
     {
+        #region Shipping rate computation methods
+
         /// <summary>
         /// Load active shipping rate computation methods
         /// </summary>
@@ -31,10 +33,9 @@ namespace Nop.Services.Shipping
         /// <returns>Shipping rate computation methods</returns>
         IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods(int storeId = 0);
 
+        #endregion
 
-
-
-
+        #region Shipping methods
 
         /// <summary>
         /// Deletes a shipping method
@@ -69,7 +70,9 @@ namespace Nop.Services.Shipping
         /// <param name="shippingMethod">Shipping method</param>
         void UpdateShippingMethod(ShippingMethod shippingMethod);
 
+        #endregion
 
+        #region Delivery dates
 
         /// <summary>
         /// Deletes a delivery date
@@ -102,7 +105,10 @@ namespace Nop.Services.Shipping
         /// <param name="deliveryDate">Delivery date</param>
         void UpdateDeliveryDate(DeliveryDate deliveryDate);
 
-        
+        #endregion
+
+        #region Warehouses
+
         /// <summary>
         /// Deletes a warehouse
         /// </summary>
@@ -134,8 +140,34 @@ namespace Nop.Services.Shipping
         /// <param name="warehouse">Warehouse</param>
         void UpdateWarehouse(Warehouse warehouse);
 
+        #endregion
 
+        #region Pickup points
 
+        /// <summary>
+        /// Load active pickup point providers
+        /// </summary>
+        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <returns>Pickup point providers</returns>
+        IList<IPickupPointProvider> LoadActivePickupPointProviders(int storeId = 0);
+
+        /// <summary>
+        /// Load pickup point provider by system name
+        /// </summary>
+        /// <param name="systemName">System name</param>
+        /// <returns>Found pickup point provider</returns>
+        IPickupPointProvider LoadPickupPointProviderBySystemName(string systemName);
+
+        /// <summary>
+        /// Load all pickup point providers
+        /// </summary>
+        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <returns>Pickup point providers</returns>
+        IList<IPickupPointProvider> LoadAllPickupPointProviders(int storeId = 0);
+
+        #endregion
+
+        #region Workflow
 
         /// <summary>
         /// Gets shopping cart item weight (of one item)
@@ -201,5 +233,16 @@ namespace Nop.Services.Shipping
         /// <returns>Shipping options</returns>
         GetShippingOptionResponse GetShippingOptions(IList<ShoppingCartItem> cart, Address shippingAddress,
             string allowedShippingRateComputationMethodSystemName = "", int storeId = 0);
+
+        /// <summary>
+        /// Gets available pickup points
+        /// </summary>
+        /// <param name="address">Address</param>
+        /// <param name="providerSystemName">Filter by provider identifier; null to load pickup points of all providers</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <returns>Pickup points</returns>
+        GetPickupPointsResponse GetPickupPoints(Address address, string providerSystemName = null, int storeId = 0);
+
+        #endregion
     }
 }
