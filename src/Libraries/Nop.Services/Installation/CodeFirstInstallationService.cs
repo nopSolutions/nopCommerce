@@ -5498,7 +5498,15 @@ namespace Nop.Services.Installation
                                            Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just submitted for a vendor account. Details are below:<br />Vendor name: %Vendor.Name%<br />Vendor email: %Vendor.Email%<br /><br />You can activate it in admin area.</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
-                                       }
+                                       },
+                                   new MessageTemplate
+                                   {
+                                       Name = "VendorInformationChange.StoreOwnerNotification",
+                                       Subject = "%Store.Name%. Vendor information change.",
+                                       Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Vendor %Vendor.Name% (%Vendor.Email%) has just changed information about itself.</p>",
+                                       IsActive = true,
+                                       EmailAccountId = eaGeneral.Id
+                                   }
                                };
             _messageTemplateRepository.Insert(messageTemplates);
         }
@@ -5825,7 +5833,8 @@ namespace Nop.Services.Installation
                 AutomaticallyDetectLanguage = false,
                 LoadAllLocaleRecordsOnStartup = true,
                 LoadAllLocalizedPropertiesOnStartup = true,
-                LoadAllUrlRecordsOnStartup = false
+                LoadAllUrlRecordsOnStartup = false,
+                IgnoreRtlPropertyForAdminArea = false
             });
 
             settingService.SaveSetting(new CustomerSettings
@@ -6011,6 +6020,7 @@ namespace Nop.Services.Installation
                 DisableOrderCompletedPage = false,
                 AttachPdfInvoiceToOrderPlacedEmail = false,
                 AttachPdfInvoiceToOrderCompletedEmail = false,
+                GeneratePdfInvoiceInCustomerLanguage = true,
                 AttachPdfInvoiceToOrderPaidEmail = false,
                 ReturnRequestsEnabled = true,
                 NumberOfDaysReturnRequestAvailable = 365,
@@ -6031,6 +6041,7 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new ShippingSettings
             {
                 ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedRate" },
+                ShipToSameAddress = false,
                 AllowPickUpInStore = true,
                 PickUpInStoreFee = decimal.Zero,
                 UseWarehouseLocation = false,
@@ -6157,6 +6168,8 @@ namespace Nop.Services.Installation
                 ShowVendorOnProductDetailsPage = true,
                 AllowCustomersToContactVendors = true,
                 AllowCustomersToApplyForVendorAccount = true,
+                AllowVendorsToEditInfo = false,
+                NotifyStoreOwnerAboutVendorInformationChange = true,
                 MaximumProductNumber = 3000
             });
 

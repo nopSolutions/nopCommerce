@@ -228,6 +228,8 @@ namespace Nop.Services.Seo
 
             var query = from ur in _urlRecordRepository.Table
                         where ur.Slug == slug
+                        //first, try to find an active record
+                        orderby ur.IsActive descending, ur.Id
                         select ur;
             var urlRecord = query.FirstOrDefault();
             return urlRecord;
@@ -251,6 +253,8 @@ namespace Nop.Services.Seo
                 var source = GetAllUrlRecordsCached();
                 var query = from ur in source
                             where ur.Slug.Equals(slug, StringComparison.InvariantCultureIgnoreCase)
+                            //first, try to find an active record
+                            orderby ur.IsActive descending, ur.Id
                             select ur;
                 var urlRecordForCaching = query.FirstOrDefault();
                 return urlRecordForCaching;

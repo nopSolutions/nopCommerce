@@ -15,6 +15,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Vendors;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Common;
@@ -30,6 +31,7 @@ using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
+using Nop.Services.Vendors;
 using Nop.Web.Extensions;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -89,6 +91,7 @@ namespace Nop.Web.Controllers
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly CatalogSettings _catalogSettings;
+        private readonly VendorSettings _vendorSettings;
 
         #endregion
 
@@ -136,7 +139,8 @@ namespace Nop.Web.Controllers
             SecuritySettings securitySettings,
             ExternalAuthenticationSettings externalAuthenticationSettings,
             StoreInformationSettings storeInformationSettings,
-            CatalogSettings catalogSettings)
+            CatalogSettings catalogSettings, 
+            VendorSettings vendorSettings)
         {
             this._authenticationService = authenticationService;
             this._dateTimeHelper = dateTimeHelper;
@@ -181,6 +185,7 @@ namespace Nop.Web.Controllers
             this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._storeInformationSettings = storeInformationSettings;
             this._catalogSettings = catalogSettings;
+            this._vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -1334,6 +1339,16 @@ namespace Nop.Web.Controllers
                     Tab = CustomerNavigationEnum.ProductReviews
                 });
             }
+            if (_vendorSettings.AllowVendorsToEditInfo && _workContext.CurrentVendor != null)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerVendorInfo",
+                    Title = _localizationService.GetResource("Account.VendorInfo"),
+                    Tab = CustomerNavigationEnum.VendorInfo
+                });
+            }
+
             model.SelectedTab = (CustomerNavigationEnum)selectedTabId;
 
             return PartialView(model);

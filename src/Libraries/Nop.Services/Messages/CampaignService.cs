@@ -109,13 +109,20 @@ namespace Nop.Services.Messages
         /// <summary>
         /// Gets all campaigns
         /// </summary>
+        /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <returns>Campaigns</returns>
-        public virtual IList<Campaign> GetAllCampaigns()
+        public virtual IList<Campaign> GetAllCampaigns(int storeId = 0)
         {
 
-            var query = from c in _campaignRepository.Table
-                        orderby c.CreatedOnUtc
-                        select c;
+            var query = _campaignRepository.Table;
+
+            if (storeId > 0)
+            {
+                query = query.Where(c => c.StoreId == storeId);
+            }
+
+            query = query.OrderBy(c => c.CreatedOnUtc);
+
             var campaigns = query.ToList();
 
             return campaigns;

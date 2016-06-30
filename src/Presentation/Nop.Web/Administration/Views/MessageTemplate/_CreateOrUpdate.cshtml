@@ -112,7 +112,7 @@
                             @Html.NopLabelFor(model => model.Locales[item].EmailAccountId)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopDropDownListFor(model => model.Locales[item].EmailAccountId, new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName", Model.Locales[item].EmailAccountId))
+                            @Html.NopDropDownListFor(model => model.Locales[item].EmailAccountId, Model.Locales[item].AvailableEmailAccounts)
                             @Html.ValidationMessageFor(model => model.Locales[item].EmailAccountId)
                         </div>
                     </div>
@@ -162,7 +162,7 @@
                             @Html.NopLabelFor(model => model.EmailAccountId)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopDropDownListFor(model => model.EmailAccountId, new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName"))
+                            @Html.NopDropDownListFor(model => model.EmailAccountId, Model.AvailableEmailAccounts)
                             @Html.ValidationMessageFor(model => model.EmailAccountId)
                         </div>
                     </div>

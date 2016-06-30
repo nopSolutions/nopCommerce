@@ -594,6 +594,33 @@
   <LocaleResource Name="Account.ShoppingCart">
     <Value>Shopping Cart</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo">
+    <Value>Vendor info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Email">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Email.Required">
+    <Value>Email is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Name.Required">
+    <Value>Vendor name is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Picture.ErrorMessage">
+    <Value>You can add only picture file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Picture.Remove">
+    <Value>Remove picture</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.YourAddress">
     <Value>Your Address</Value>
   </LocaleResource>
@@ -6423,6 +6450,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.PickUpInStoreFee.Hint">
     <Value>Specify "Pick Up in Store" fee.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShipToSameAddress">
+    <Value>Ship to the same address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShipToSameAddress.Hint">
+    <Value>Check to display "ship to the same address" option during checkout ("billing address" step). In this case case "shipping address" with appropriate options (e.g. pick up in store) will be skipped. Also note that all billing countries should support shipping ("Allow shipping" checkbox ticked).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingOriginAddress">
     <Value>Shipping Origin</Value>
   </LocaleResource>
@@ -6708,11 +6741,23 @@
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowSearchByVendor.Hint">
     <Value>Check to allow customers to search by vendor on advanced search page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowVendorsToEditInfo">
+    <Value>Allow vendors to edit info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowVendorsToEditInfo.Hint">
+    <Value>Check to allow vendors to edit information about themselves (in public store). Please note that localizable properties (name, description) are not supported in case if you have multiple languages (only standard values can be edited in this case).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.MaximumProductNumber">
     <Value>Maximum number of products</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.MaximumProductNumber.Hint">
     <Value>Sets a maximum number of products per vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.NotifyStoreOwnerAboutVendorInformationChange">
+    <Value>Notify about vendor information changes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.NotifyStoreOwnerAboutVendorInformationChange.Hint">
+    <Value>Check to notify a store owner about vendor information changes.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.ShowVendorOnProductDetailsPage">
     <Value>Show vendor on product details page</Value>
@@ -7346,6 +7391,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.EmailAccount">
     <Value>Email account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.EmailAccount.Standard">
+    <Value>Standard</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.EmailAccount.Hint">
     <Value>The email account that will be used to send this message template.</Value>
@@ -9993,6 +10041,12 @@
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerRole">
+    <Value>Limited to customer role</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerRole.Hint">
+    <Value>Choose a customer role which subscribers will get this email.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.DontSendBeforeDate">
     <Value>Planned date of sending</Value>
   </LocaleResource>
@@ -10028,6 +10082,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.TestEmail.Hint">
     <Value>The email address to which you want to send your test email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.List.Stores">
+     <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.List.Stores.Hint">
+     <Value>Search by a specific store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.MassEmailSentToCustomers">
     <Value>{0} emails have been successfully queued.</Value>
@@ -10154,6 +10214,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.EndDate.Hint">
     <Value>The end of the discount period in Coordinated Universal Time (UTC).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsCumulative">
+    <Value>Cumulative with other discounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsCumulative.Hint">
+    <Value>If checked, this discount can be used with other ones simultaneously. Please note that this feature works only for discounts with the same discount type. Right now discounts with distinct types are already cumulative.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.LimitationTimes">
     <Value>N times</Value>
@@ -11829,6 +11895,9 @@
   <LocaleResource Name="Checkout.ShippingOptionCouldNotBeLoaded">
     <Value>Shipping options could not be loaded</Value>
   </LocaleResource>
+  <LocaleResource Name="Checkout.ShipToSameAddress">
+    <Value>Ship to the same address</Value>
+  </LocaleResource>
   <LocaleResource Name="Checkout.ShipToThisAddress">
     <Value>Ship to this address</Value>
   </LocaleResource>
@@ -13442,6 +13511,9 @@
   </LocaleResource>
   <LocaleResource Name="PageTitle.StoreClosed">
     <Value>Store closed</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.VendorInfo">
+    <Value>Vendor info</Value>
   </LocaleResource>
   <LocaleResource Name="PageTitle.Vendors">
     <Value>Vendors</Value>

@@ -34,6 +34,7 @@ namespace Nop.Web.Models.Customer
         ChangePassword = 70,
         Avatar = 80,
         ForumSubscriptions = 90,
-        ProductReviews = 100
+        ProductReviews = 100,
+        VendorInfo = 110
     }
 }

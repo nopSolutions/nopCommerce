@@ -6,7 +6,7 @@
     //title
     Html.AddTitleParts(T("Forum.PageTitle.MoveTopic").Text);
     //page class
-    Html.AddPageCssClassParts("html-move-topic-page");
+    Html.AppendPageCssClassParts("html-move-topic-page");
 }
 @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })
 <div class="page move-topic-page">
