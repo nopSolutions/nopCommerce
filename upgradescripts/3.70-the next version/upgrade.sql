@@ -962,6 +962,9 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.UseSandbox.Hint">
     <Value>Check to enable Sandbox (testing environment).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.EmailAccount.Standard">
+    <Value>Standard</Value>
+  </LocaleResource>
 </Language>
 '
 
