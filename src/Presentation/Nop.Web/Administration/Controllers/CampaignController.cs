@@ -275,13 +275,18 @@ namespace Nop.Admin.Controllers
             if (campaign == null)
                 //No campaign found with the specified id
                 return RedirectToAction("List");
-
-
+            
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
             //customer roles
             PrepareCustomerRolesModel(model);
+
+            if (!CommonHelper.IsValidEmail(model.TestEmail))
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Common.WrongEmail"), false);
+                return View(model);
+            }
 
             try
             {
