@@ -1079,9 +1079,6 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.CommonInfo">
      <Value>General information</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.AdvancedProductTypes">
-     <Value>Advanced product types</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Inventory">
      <Value>Inventory</Value>
   </LocaleResource>
@@ -1097,7 +1094,6 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.RequireOtherProducts">
      <Value>Require other products</Value>
   </LocaleResource>
-
   <LocaleResource Name="Admin.Catalog.Products.Categories">
      <Value></Value>
   </LocaleResource>
@@ -1131,7 +1127,6 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Discounts">
      <Value></Value>
   </LocaleResource>
-
   <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedStoreIds">
      <Value>Stores</Value>
   </LocaleResource>
@@ -1149,6 +1144,18 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Stores">
      <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.GiftCard">
+     <Value>Gift card</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.DownloadableProduct">
+     <Value>Downloadable product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.RecurringProduct">
+     <Value>Recurring product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Rental">
+     <Value>Rental</Value>
   </LocaleResource>
 </Language>
 '
