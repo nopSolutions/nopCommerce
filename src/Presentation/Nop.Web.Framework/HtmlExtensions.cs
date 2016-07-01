@@ -328,14 +328,14 @@ namespace Nop.Web.Framework
 
         public static MvcHtmlString Hint(this HtmlHelper helper, string value)
         {
-            // Create tag builder
+            //create tag builder
             var builder = new TagBuilder("div");
             builder.MergeAttribute("title", value);
             builder.MergeAttribute("class", "ico-help");
             var icon = new StringBuilder();
             icon.Append("<i class='fa fa-question-circle'></i>");
             builder.InnerHtml = icon.ToString();
-            // Render tag
+            //render tag
             return MvcHtmlString.Create(builder.ToString());
         }
 
@@ -346,6 +346,8 @@ namespace Nop.Web.Framework
             var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
             var hintResource = string.Empty;
             object value;
+
+            result.Append(helper.LabelFor(expression, new { title = hintResource, @class = "control-label" }));
 
             if (metadata.AdditionalValues.TryGetValue("NopResourceDisplayName", out value))
             {
@@ -361,9 +363,12 @@ namespace Nop.Web.Framework
                     }
                 }
             }
-            result.Append(helper.LabelFor(expression, new { title = hintResource, @class = "control-label" }));
 
-            return MvcHtmlString.Create(result.ToString());
+            var laberWrapper = new TagBuilder("div");
+            laberWrapper.Attributes.Add("class", "label-wrapper");
+            laberWrapper.InnerHtml = result.ToString();
+
+            return MvcHtmlString.Create(laberWrapper.ToString());
         }
 
         public static MvcHtmlString NopEditorFor<TModel, TValue>(this HtmlHelper<TModel> helper,
