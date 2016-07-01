@@ -9,7 +9,6 @@ using Nop.Admin.Extensions;
 using Nop.Admin.Infrastructure.Cache;
 using Nop.Admin.Models.Catalog;
 using Nop.Admin.Models.Orders;
-using Nop.Admin.Models.Settings;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;

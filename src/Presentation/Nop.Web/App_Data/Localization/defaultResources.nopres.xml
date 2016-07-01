@@ -2184,9 +2184,6 @@
   <LocaleResource Name="Admin.Catalog.Products.AddNew">
     <Value>Add a new product</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.AdvancedProductTypes">
-     <Value>Advanced product types</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts">
     <Value>Associated products (variants)</Value>
   </LocaleResource>
@@ -2255,6 +2252,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Discounts.NoDiscounts">
     <Value>No discounts available. Create at least one discount before mapping.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.DownloadableProduct">
+    <Value>Downloadable product</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.EditProductDetails">
     <Value>Edit product details</Value>
@@ -2916,6 +2916,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.Width.Hint">
     <Value>The width of the product.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.GiftCard">
+    <Value>Gift card</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Imported">
     <Value>Products have been imported successfully.</Value>
   </LocaleResource>
@@ -3339,6 +3342,9 @@
   <LocaleResource Name="Admin.Catalog.Products.PurchasedWithOrders.Hint">
     <Value>Here you can see a list of orders in which this product was purchased.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.RecurringProduct">
+    <Value>Recurring product</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.RelatedProducts">
     <Value>Related products</Value>
   </LocaleResource>
@@ -3356,6 +3362,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.RequireOtherProducts">
      <Value>Require other products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Rental">
+    <Value>Rental</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Security">
      <Value>Security</Value>
