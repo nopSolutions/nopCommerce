@@ -137,35 +137,43 @@
                                     columns: [
                                         {
                                             field: "Group",
-                                            title: "@T("Admin.Configuration.Plugins.Fields.Group")"
+                                            title: "@T("Admin.Configuration.Plugins.Fields.Group")",
+                                            width: 150
                                         }, {
                                             field: "LogoUrl",
                                             title: "@T("Admin.Configuration.Plugins.Fields.Logo")",
-                                            width: 100,
+                                            width: 200,
                                             template: '<img src="#=LogoUrl#" />',
                                             headerAttributes: { style: "text-align:center" },
                                             attributes: { style: "text-align:center" }
                                         }, {
-                                            field: "FriendlyName",
+                                            field: "Description",
                                             title: "@T("Admin.Configuration.Plugins.Info")",
                                             template: '<b>#:FriendlyName#</b>' +
-                                                '<ul class="common-list">' +
+                                                '# if(Description) {# <br />#:Description# #} #' +
+                                                //allow configuration only when a plugin has a configuration URL specified
+                                                '<br /> # if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="btn btn-primary" href="#=ConfigurationUrl#">@T("Admin.Configuration.Plugins.Fields.Configure")</a>&nbsp;&nbsp;&nbsp; #} #' +
+                                                '<a class="btn bg-aqua" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=#=SystemName#&btnId=btnRefresh&formId=plugins-form\', 800, 500, true);">@T("Admin.Common.Edit")</a>',
+                                            attributes: { style: "vertical-align:top;" },
+                                            width: 400
+                                        }, {
+                                            field: "FriendlyName",
+                                            title: "@T("Admin.Configuration.Plugins.AdditionalInfo")",
+                                            template: '<ul class="common-list">' +
                                                 '<li>@T("Admin.Configuration.Plugins.Fields.Version") #:Version#</li>' +
                                                 '<li>@T("Admin.Configuration.Plugins.Fields.Author") #:Author#</li>' +
                                                 '<li>@T("Admin.Configuration.Plugins.Fields.SystemName") #:SystemName#</li>' +
                                                 '<li>@T("Admin.Configuration.Plugins.Fields.DisplayOrder") #:DisplayOrder#</li>' +
                                                 '<li>@T("Admin.Configuration.Plugins.Fields.Installed")  # if(Installed) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #</li>' +
                                                 '# if(CanChangeEnabled) {# <li>@T("Admin.Configuration.Plugins.Fields.IsEnabled") # if(IsEnabled) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} # </li> #} #' +
-                                                '</ul>' +
-                                                //allow configuration only when a plugin has a configuration URL specified
-                                                '# if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="btn btn-primary" href="#=ConfigurationUrl#">@T("Admin.Configuration.Plugins.Fields.Configure")</a>&nbsp;&nbsp;&nbsp; #} #' +
-                                                '<a class="btn bg-aqua" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=#=SystemName#&btnId=btnRefresh&formId=plugins-form\', 800, 500, true);">@T("Admin.Common.Edit")</a>'
+                                                '</ul>'
                                         }, {
                                             field: "Installed",
                                             title: "@T("Admin.Configuration.Plugins.Fields.Installation")",
                                             template: '# if(Installed) {# <button type="submit" name="uninstall-plugin-link-#=SystemName#" class="btn bg-green uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall")</button> #} else {#  <button type="submit" name="install-plugin-link-#=SystemName#" class="btn bg-red install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install")</button> #} #',
                                             headerAttributes: { style: "text-align:center" },
-                                            attributes: { style: "text-align:center" }
+                                            attributes: { style: "text-align:center" },
+                                            width: 150
                                         }
                                     ]
                                 });
@@ -181,7 +189,7 @@
                                     //refresh grid
                                     var grid = $("#plugins-grid").data('kendoGrid');
                                     grid.dataSource.read();
-
+                                   
                                     //return false to don't reload a page
                                     return false;
                                 });

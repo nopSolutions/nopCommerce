@@ -44,6 +44,9 @@ namespace Nop.Admin.Models.Plugins
 
         [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.Installed")]
         public bool Installed { get; set; }
+        
+        [AllowHtml]
+        public string Description { get; set; }
 
         public bool CanChangeEnabled { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.IsEnabled")]

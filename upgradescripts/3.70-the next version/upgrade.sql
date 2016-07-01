@@ -965,6 +965,9 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.EmailAccount.Standard">
     <Value>Standard</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.AdditionalInfo">
+    <Value>Additional info</Value>
+  </LocaleResource>
 </Language>
 '
 

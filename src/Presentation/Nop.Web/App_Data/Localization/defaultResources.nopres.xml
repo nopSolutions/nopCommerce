@@ -4410,6 +4410,9 @@
   <LocaleResource Name="Admin.Configuration.Plugins">
     <Value>Plugins</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.AdditionalInfo">
+    <Value>Additional info</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Description">
     <Value>Manual plugin installation</Value>
   </LocaleResource>
