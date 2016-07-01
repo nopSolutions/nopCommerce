@@ -447,16 +447,18 @@ td.k-state-focused.k-state-selected {
 }
 
 /* FORM ELEMENTS */
-.form-horizontal .control-label {
+.form-horizontal .label-wrapper {
+    display: table;
     float: right;
-    max-width: 90%;
 }
-.form-horizontal .ico-help {
-    float: right;
-    margin-top: 6px;
-    margin-left: 6px;
+.form-horizontal .label-wrapper .control-label {
+    display: table-cell;
+}
+.form-horizontal .label-wrapper .ico-help {
+    display: table-cell;
     color: #3c8dbc;
     font-size: 1.17em;
+    padding-left: 6px;
 }
 .form-horizontal span.required {
     float: right;
@@ -772,7 +774,7 @@ span.grid-report-item.red {
     }
 
     /*FORM ELEMENTS*/
-    .form-horizontal .ico-help {
+    .form-horizontal .label-wrapper .ico-help {
         display: none;
     }
     .form-horizontal .panel-search-popup .ico-help {
@@ -793,17 +795,14 @@ span.grid-report-item.red {
 
 @media (max-width: 992px) {
     /*FORM ELEMENTS*/
-    .form-horizontal .control-label {
+    .form-horizontal .label-wrapper {
         float: none;
-        margin-bottom: 5px;
-        width: 100%;
-        text-align: left;
-        padding-top: 0;
+        margin-bottom: 3px;
+        margin-top: 5px;
     }
-    .form-horizontal .panel-search-popup .control-label {
+    .form-horizontal .panel-search-popup .label-wrapper {
         float: right;
-        width: auto;
-        padding-top: 6px;
+        margin: 0;
     }
     .form-horizontal span.required {
         float: none;
@@ -833,12 +832,7 @@ span.grid-report-item.red {
     }
 
     /* FORM ELEMENTS */
-    .form-horizontal .panel-search-popup .control-label {
-        float: none;
-        width: 100%;
-        padding-top: 0;
-    }
-    .form-horizontal .panel-search-popup .ico-help {
-        display: none;
+    .form-horizontal .panel-search-popup .label-wrapper {
+        float: left;
     }
 }
