@@ -413,7 +413,7 @@ namespace Nop.Web.Framework
 
         public static MvcHtmlString NopTextAreaFor<TModel, TValue>(this HtmlHelper<TModel> helper,
             Expression<Func<TModel, TValue>> expression, object htmlAttributes = null,
-            bool renderFormControlClass = true, int rows = 8, int columns = 20)
+            bool renderFormControlClass = true, int rows = 4, int columns = 20)
         {
             var result = new StringBuilder();
 
