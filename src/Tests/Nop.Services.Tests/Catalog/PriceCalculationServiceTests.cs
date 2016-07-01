@@ -338,5 +338,71 @@ namespace Nop.Services.Tests.Catalog
             _priceCalcService.GetSubTotal(sci1).ShouldEqual(24.68);
 
         }
+
+        [Test]
+        [TestCase(12.00009, 12.00)]
+        [TestCase(12.119, 12.12)]
+        [TestCase(12.115, 12.12)]
+        [TestCase(12.114, 12.11)]        
+        public void Test_GetUnitPrice_WhenRoundPricesDuringCalculationIsTrue_PriceMustBeRounded(decimal inputPrice, decimal expectedPrice)
+        {
+            // arrange
+            ShoppingCartItem shoppingCartItem = CreateTestShopCartItem(inputPrice);
+
+            // act
+            _shoppingCartSettings.RoundPricesDuringCalculation = true;
+            decimal resultPrice = _priceCalcService.GetUnitPrice(shoppingCartItem);
+
+            // assert
+            resultPrice.ShouldEqual(expectedPrice);
+        }
+
+        [Test]
+        [TestCase(12.00009, 12.00009)]
+        [TestCase(12.119, 12.119)]
+        [TestCase(12.115, 12.115)]
+        [TestCase(12.114, 12.114)]
+        public void Test_GetUnitPrice_WhenNotRoundPricesDuringCalculationIsFalse_PriceMustNotBeRounded(decimal inputPrice, decimal expectedPrice)
+        {
+            // arrange            
+            ShoppingCartItem shoppingCartItem = CreateTestShopCartItem(inputPrice);
+
+            // act
+            _shoppingCartSettings.RoundPricesDuringCalculation = false;
+            decimal resultPrice = _priceCalcService.GetUnitPrice(shoppingCartItem);
+
+            // assert
+            resultPrice.ShouldEqual(expectedPrice);
+        }
+
+        private ShoppingCartItem CreateTestShopCartItem(decimal productPrice, int quantity = 1)
+        {
+            //customer
+            Customer customer = new Customer();
+
+            //shopping cart
+            Product product = new Product
+            {
+                Id = 1,
+                Name = "Product name 1",
+                Price = productPrice,
+                CustomerEntersPrice = false,
+                Published = true,
+            };
+
+            ShoppingCartItem shoppingCartItem = new ShoppingCartItem
+            {
+                Customer = customer,
+                CustomerId = customer.Id,
+                Product = product,
+                ProductId = product.Id,
+                Quantity = quantity
+            };
+
+            _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
+            _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToManufacturers)).Return(new List<Discount>());
+
+            return shoppingCartItem;
+        }
     }
 }
