@@ -6852,11 +6852,14 @@
   <LocaleResource Name="Admin.Configuration.Shipping.Methods.Fields.Name.Required">
     <Value>Please provide a name.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Methods.Manage">
+    <Value>Manage shipping methods</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Methods.Updated">
     <Value>The shipping method has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Providers">
-    <Value>Shipping rate computation methods</Value>
+    <Value>Shipping providers</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Providers.BackToList">
     <Value>back to shipping rate computation method list</Value>
@@ -6879,6 +6882,9 @@
   <LocaleResource Name="Admin.Configuration.Shipping.Providers.Fields.SystemName">
     <Value>System name</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Providers.Title">
+    <Value>Shipping rate computation methods (providers)</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Restrictions">
     <Value>Shipping method restrictions</Value>
   </LocaleResource>
@@ -6887,6 +6893,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Description">
     <Value>Please mark the checkbox(es) for the country or countries in which you want the shipping method(s) not available</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Manage">
+    <Value>Shipping method restrictions</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Updated">
     <Value>The settings have been updated successfully.</Value>

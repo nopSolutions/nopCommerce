@@ -5,7 +5,7 @@ using Nop.Core.Domain.Localization;
 namespace Nop.Core.Domain.Shipping
 {
     /// <summary>
-    /// Represents a shipping method (used for offline shipping rate computation methods)
+    /// Represents a shipping method (used by offline shipping rate computation methods)
     /// </summary>
     public partial class ShippingMethod : BaseEntity, ILocalizedEntity
     {

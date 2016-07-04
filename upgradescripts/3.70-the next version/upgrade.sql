@@ -965,6 +965,18 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.EmailAccount.Standard">
     <Value>Standard</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Methods.Manage">
+    <Value>Manage shipping methods</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Manage">
+    <Value>Shipping method restrictions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Providers">
+    <Value>Shipping providers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Providers.Title">
+    <Value>Shipping rate computation methods (providers)</Value>
+  </LocaleResource>
 </Language>
 '
 
