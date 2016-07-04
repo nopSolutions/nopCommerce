@@ -254,6 +254,15 @@
                                     <div class="panel-body">
                                         <div class="form-group">
                                             <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.OldPrice)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.OldPrice)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.OldPrice)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
                                                 @Html.NopLabelFor(model => model.ProductEditorSettingsModel.ProductCost)
                                             </div>
                                             <div class="col-md-2">
@@ -566,7 +575,6 @@
 
                                     </div>
                                 </div>
-
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Mappings")
@@ -622,6 +630,31 @@
                                             <div class="col-md-2">
                                                 @Html.NopEditorFor(model => model.ProductEditorSettingsModel.CrossSellsProducts)
                                                 @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.CrossSellsProducts)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Tabs")
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.SEO)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.SEO)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.SEO)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.PurchasedWithOrders)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.PurchasedWithOrders)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.PurchasedWithOrders)
                                             </div>
                                         </div>
                                     </div>

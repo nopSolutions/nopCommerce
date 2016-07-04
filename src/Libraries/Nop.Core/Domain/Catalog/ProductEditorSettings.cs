@@ -126,6 +126,11 @@ namespace Nop.Core.Domain.Catalog
         public bool CallForPrice { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether 'Old price' field is shown
+        /// </summary>
+        public bool OldPrice { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether 'Customer enters price' field is shown
         /// </summary>
         public bool CustomerEntersPrice { get; set; }
@@ -304,5 +309,15 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether 'Cross-sells products' block is shown
         /// </summary>
         public bool CrossSellsProducts { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'SEO' tab is shown
+        /// </summary>
+        public bool SEO { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Purchased with orders' tab is shown
+        /// </summary>
+        public bool PurchasedWithOrders { get; set; }
     }
 }

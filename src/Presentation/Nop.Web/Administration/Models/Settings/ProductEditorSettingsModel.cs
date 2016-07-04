@@ -77,6 +77,9 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.CallForPrice")]
         public bool CallForPrice { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.OldPrice")]
+        public bool OldPrice { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.CustomerEntersPrice")]
         public bool CustomerEntersPrice { get; set; }
 
@@ -184,5 +187,11 @@ namespace Nop.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.CrossSellsProducts")]
         public bool CrossSellsProducts { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.SEO")]
+        public bool SEO { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.PurchasedWithOrders")]
+        public bool PurchasedWithOrders { get; set; }
     }
 }

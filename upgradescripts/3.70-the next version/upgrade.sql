@@ -746,9 +746,6 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Categories.SaveBeforeEdit">
     <Value></Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Categories.NoCategoriesAvailable">
-    <Value>No categories available. Create at least one category.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCategoryIds">
     <Value>Categories</Value>
   </LocaleResource>
@@ -848,9 +845,6 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Manufacturers.SaveBeforeEdit">
     <Value></Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Manufacturers.NoManufacturersAvailable">
-    <Value>No manufacturers available. Create at least one manufacturer.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedManufacturerIds">
      <Value>Manufacturers</Value>
   </LocaleResource>
@@ -948,10 +942,10 @@ set @resources='
      <Value>Display order</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayStockAvailability">
-     <Value>Display stock availability</Value>
+     <Value>Display availability</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayStockQuantity">
-     <Value>Display stock quantity</Value>
+     <Value>Display stock qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DownloadableProduct">
      <Value>Downloadable product</Value>
@@ -990,10 +984,10 @@ set @resources='
      <Value>Maximum cart quantity</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MinimumCartQuantity">
-     <Value>Minimum cart quantity</Value>
+     <Value>Minimum cart qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MinimumStockQuantity">
-     <Value>Minimum stock quantity</Value>
+     <Value>Minimum stock qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ModalDescription">
      <Value>Check fields you want to see on the product edit page in the "basic" mode.</Value>
@@ -1002,7 +996,7 @@ set @resources='
      <Value>Settings</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.NotifyAdminForQuantityBelow">
-     <Value>Notify admin for quantity below</Value>
+     <Value>Notify for qty below</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.NotReturnable">
      <Value>Not returnable</Value>
@@ -1032,7 +1026,7 @@ set @resources='
      <Value>Related products</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.RequireOtherProductsAddedToTheCart">
-     <Value>Require other products added to the cart</Value>
+     <Value>Require other products</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ShipSeparately">
      <Value>Ship separately</Value>
@@ -1156,6 +1150,48 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Rental">
      <Value>Rental</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Fields.StockQuantity">
+     <Value>Stock qty</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.UseMultipleWarehouses">
+     <Value>Multiple warehouses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayStockAvailability">
+     <Value>Display availability</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MinStockQuantity">
+    <Value>Minimum stock qty</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.NotifyAdminForQuantityBelow">
+    <Value>Notify for qty below</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.OrderMinimumQuantity">
+    <Value>Minimum cart qty</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.OrderMaximumQuantity">
+    <Value>Maximum cart qty</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ManageInventoryMethod">
+    <Value>Inventory method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.OldPrice">
+    <Value>Old price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Stores.NoStoresAvailable">
+    <Value>No stores available.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Tabs">
+    <Value>Tabs</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.SEO">
+    <Value>SEO</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.PurchasedWithOrders">
+    <Value>Purchased with orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.RequireOtherProducts">
+    <Value>Require other products</Value>
   </LocaleResource>
 </Language>
 '

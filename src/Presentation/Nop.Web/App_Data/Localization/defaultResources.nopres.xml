@@ -2410,7 +2410,7 @@
     <Value>Display order of the product. 1 represents the top of the list.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayStockAvailability">
-    <Value>Display stock availability</Value>
+    <Value>Display availability</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayStockAvailability.Hint">
     <Value>Check to display stock availability. When enabled, customers will see stock availability.</Value>
@@ -2545,7 +2545,7 @@
     <Value>Action to be taken when your current stock quantity falls below (reaches) the 'Minimum stock quantity'.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManageInventoryMethod">
-    <Value>Manage inventory method</Value>
+    <Value>Inventory method</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManageInventoryMethod.Hint">
     <Value>Select manage inventory method. When enabled, stock quantities are automatically adjusted when a customer makes a purchase. You can also set low stock activity actions and receive notifications.</Value>
@@ -2611,13 +2611,13 @@
     <Value>Enter a minimum amount.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.MinStockQuantity">
-    <Value>Minimum stock quantity</Value>
+    <Value>Minimum stock qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.MinStockQuantity.Hint">
     <Value>If you have enabled 'Manage Stock' you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.UseMultipleWarehouses">
-    <Value>Use multiple warehouses</Value>
+    <Value>Multiple warehouses</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.UseMultipleWarehouses.Hint">
     <Value>Check if you want to support shipping and inventory management from multiple warehouses.</Value>
@@ -2632,7 +2632,7 @@
     <Value>Please provide a name.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.NotifyAdminForQuantityBelow">
-    <Value>Notify admin for quantity below</Value>
+    <Value>Notify for qty below</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.NotifyAdminForQuantityBelow.Hint">
     <Value>When the current stock quantity falls below (reaches) this quantity, a store owner will receive a notification.</Value>
@@ -2650,13 +2650,13 @@
     <Value>The old price of the product. If you set an old price, this will display alongside the current price on the product page to show the difference in price.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.OrderMaximumQuantity">
-    <Value>Maximum cart quantity</Value>
+    <Value>Maximum cart qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.OrderMaximumQuantity.Hint">
     <Value>Set the maximum quantity allowed in a customer's shopping cart e.g. set to 5 to only allow customers to purchase 5 of this product.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.OrderMinimumQuantity">
-    <Value>Minimum cart quantity</Value>
+    <Value>Minimum cart qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.OrderMinimumQuantity.Hint">
     <Value>Set the minimum quantity allowed in a customer's shopping cart e.g. set to 3 to only allow customers to purchase 3 or more of this product.</Value>
@@ -2755,7 +2755,7 @@
     <Value>Specify comma separated list of required product IDs. NOTE: Ensure that there are no circular references (for example, A requires B, and B requires A).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RequireOtherProducts">
-    <Value>Require other products added to the cart</Value>
+    <Value>Require other products</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RequireOtherProducts.Hint">
     <Value>Check if this product requires that other products are added to the cart.</Value>
@@ -3322,7 +3322,7 @@
     <Value>Reserved qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Fields.StockQuantity">
-    <Value>Stock quantity</Value>
+    <Value>Stock qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse">
     <Value>Warehouse</Value>
@@ -3431,6 +3431,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.SaveBeforeEdit">
     <Value>You need to save the product before you can add product specification attributes for this product page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Stores.NoStoresAvailable">
+    <Value>No stores available.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.TierPrices">
     <Value>Tier prices</Value>
@@ -6336,6 +6339,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Price">
     <Value>Price</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Tabs">
+    <Value>Tabs</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Tax">
     <Value>Tax</Value>
   </LocaleResource>
@@ -6385,10 +6391,10 @@
     <Value>Display order</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayStockAvailability">
-    <Value>Display stock availability</Value>
+    <Value>Display availability</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayStockQuantity">
-    <Value>Display stock quantity</Value>
+    <Value>Display stock qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DownloadableProduct">
     <Value>Downloadable product</Value>
@@ -6424,13 +6430,13 @@
     <Value>Mark as new. Start date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MaximumCartQuantity">
-    <Value>Maximum cart quantity</Value>
+    <Value>Maximum cart qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MinimumCartQuantity">
-    <Value>Minimum cart quantity</Value>
+    <Value>Minimum cart qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MinimumStockQuantity">
-    <Value>Minimum stock quantity</Value>
+    <Value>Minimum stock qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ModalDescription">
     <Value>Check fields you want to see on the product edit page in the "basic" mode.</Value>
@@ -6439,10 +6445,13 @@
     <Value>Settings</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.NotifyAdminForQuantityBelow">
-    <Value>Notify admin for quantity below</Value>
+    <Value>Notify for qty below</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.NotReturnable">
     <Value>Not returnable</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.OldPrice">
+    <Value>Old price</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.PAngV">
     <Value>PAngV (base price) enabled</Value>
@@ -6462,6 +6471,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Published">
     <Value>Published</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.PurchasedWithOrders">
+    <Value>Purchased with orders</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.RecurringProduct">
     <Value>Recurring product</Value>
   </LocaleResource>
@@ -6469,7 +6481,10 @@
     <Value>Related products</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.RequireOtherProductsAddedToTheCart">
-    <Value>Require other products added to the cart</Value>
+    <Value>Require other products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.SEO">
+    <Value>SEO</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ShipSeparately">
     <Value>Ship separately</Value>
@@ -6505,7 +6520,7 @@
     <Value>Updated on</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.UseMultipleWarehouses">
-    <Value>Use multiple warehouses</Value>
+    <Value>Multiple warehouses</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Warehouse">
     <Value>Warehouses</Value>
