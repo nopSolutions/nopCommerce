@@ -517,11 +517,11 @@ namespace Nop.Services.Media
                     //check, if the file was created, while we were waiting for the release of the mutex.
                     if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                     {
+                        byte[] pictureBinaryResized;
+
                         //resizing required
                         if (targetSize != 0)
                         {
-                            byte[] destBinary;
-
                             using (var stream = new MemoryStream(pictureBinary))
                             {
                                 Bitmap b = null;
@@ -552,15 +552,18 @@ namespace Nop.Services.Media
                                         Scale = ScaleMode.Both,
                                         Quality = _mediaSettings.DefaultImageQuality
                                     });
-                                    destBinary = destStream.ToArray();
+                                    pictureBinaryResized = destStream.ToArray();
                                     b.Dispose();
                                 }
                             }
-
-                            pictureBinary = destBinary;
+                        }
+                        else
+                        {
+                            //create a deep copy of pictureBinary
+                            pictureBinaryResized = pictureBinary.ToArray();
                         }
 
-                        SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
+                        SaveThumb(thumbFilePath, thumbFileName, pictureBinaryResized);
                     }
                     
                     mutex.ReleaseMutex();
