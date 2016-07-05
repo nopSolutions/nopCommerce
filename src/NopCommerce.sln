@@ -83,6 +83,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LanguagePack", "LanguagePac
 	ProjectSection(SolutionItems) = preProject
 		..\..\..\..\..\MySite\nopcommerce\LanguagePack\3.1_Chinese(Simplified).xml = ..\..\..\..\..\MySite\nopcommerce\LanguagePack\3.1_Chinese(Simplified).xml
 		..\..\..\..\..\MySite\nopcommerce\LanguagePack\language_pack.3.7.xml = ..\..\..\..\..\MySite\nopcommerce\LanguagePack\language_pack.3.7.xml
+		..\..\..\..\..\MySite\nopcommerce\LanguagePack\language_pack_3.8.v1.xml = ..\..\..\..\..\MySite\nopcommerce\LanguagePack\language_pack_3.8.v1.xml
 		..\..\..\..\..\MySite\nopcommerce\LanguagePack\language_SimplifiedChinese_2.5.xml = ..\..\..\..\..\MySite\nopcommerce\LanguagePack\language_SimplifiedChinese_2.5.xml
 	EndProjectSection
 EndProject
