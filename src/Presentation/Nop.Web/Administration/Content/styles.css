@@ -490,6 +490,10 @@ td.k-state-focused.k-state-selected {
     width: 200px !important;
     max-width: 100%;
 }
+.form-group .col-md-12 .control-label {
+    float: left;
+    margin-right: 10px;
+}
 .tag-editor {
     border: 1px solid #d2d6de !important;
     line-height: 26px !important;
