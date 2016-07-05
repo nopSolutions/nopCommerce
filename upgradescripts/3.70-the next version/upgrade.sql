@@ -1001,6 +1001,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeProducts.Hint">
     <Value>Check if you want to include products in sitemap.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CustomHeadTags">
+    <Value><![CDATA[Custom <head> tag]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CustomHeadTags.Hint">
+    <Value><![CDATA[Enter a custom <head> tag(s) here. For example, some custom <meta> tag. Or leave empty if ignore this setting.]]></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3588,5 +3594,13 @@ GO
  BEGIN
  	INSERT [Setting] ([Name], [Value], [StoreId])
  	VALUES (N'shippingsettings.shiptosameaddress', N'False', 0)
+ END
+ GO
+
+ --new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'seosettings.customheadtags')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'seosettings.customheadtags', N'', 0)
  END
  GO

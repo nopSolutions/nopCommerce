@@ -173,6 +173,11 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.OpenGraphMetaTags")]
             public bool OpenGraphMetaTags { get; set; }
             public bool OpenGraphMetaTags_OverrideForStore { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CustomHeadTags")]
+            [AllowHtml]
+            public string CustomHeadTags { get; set; }
+            public bool CustomHeadTags_OverrideForStore { get; set; }
         }
 
         public partial class SecuritySettingsModel : BaseNopModel
