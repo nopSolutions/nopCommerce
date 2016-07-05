@@ -81,6 +81,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.ExchangeRate.Ecb
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LanguagePack", "LanguagePack", "{2ED28996-F151-49E8-AC02-D0DB78C961DA}"
 	ProjectSection(SolutionItems) = preProject
+		..\..\..\..\..\MySite\nopcommerce\LanguagePack\3.1_Chinese(Simplified).xml = ..\..\..\..\..\MySite\nopcommerce\LanguagePack\3.1_Chinese(Simplified).xml
+		..\..\..\..\..\MySite\nopcommerce\LanguagePack\language_pack.3.7.xml = ..\..\..\..\..\MySite\nopcommerce\LanguagePack\language_pack.3.7.xml
 		..\..\..\..\..\MySite\nopcommerce\LanguagePack\language_SimplifiedChinese_2.5.xml = ..\..\..\..\..\MySite\nopcommerce\LanguagePack\language_SimplifiedChinese_2.5.xml
 	EndProjectSection
 EndProject
