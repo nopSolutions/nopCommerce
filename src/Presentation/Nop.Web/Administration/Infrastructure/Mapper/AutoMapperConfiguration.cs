@@ -185,6 +185,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowedTokens, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
+                    .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
                     .ForMember(dest => dest.TestEmail, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<CampaignModel, Campaign>()
