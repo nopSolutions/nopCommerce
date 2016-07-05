@@ -1077,7 +1077,7 @@ namespace Nop.Admin.Controllers
                     if (!customer.IsAdmin() || model.Active || SecondAdminAccountExists(customer))
                         customer.Active = model.Active;
                     else
-                        ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists"));
+                        ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.Deactivate"));
 
                     //email
                     if (!String.IsNullOrWhiteSpace(model.Email))
@@ -1218,7 +1218,7 @@ namespace Nop.Admin.Controllers
                             //prevent attempts to delete the administrator role from the user, if the user is the last active administrator
                             if (customerRole.SystemName == SystemCustomerRoleNames.Administrators && !SecondAdminAccountExists(customer))
                             {
-                                ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists"));
+                                ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.DeleteRole"));
                                 continue;
                             }
 
@@ -1376,7 +1376,7 @@ namespace Nop.Admin.Controllers
                 //prevent attempts to delete the user, if it is the last active administrator
                 if (customer.IsAdmin() && !SecondAdminAccountExists(customer))
                 {
-                    ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists"));
+                    ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator"));
                     return RedirectToAction("Edit", new { id = customer.Id });
                 }
 

@@ -899,8 +899,14 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerIds.Hint">
      <Value>Product manufacturer mappings.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists">
-    <Value>At least one administrator account should exists.</Value>
+  <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.Deactivate">
+    <Value>You can''t deactivate the last administrator. At least one administrator account should exists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.DeleteRole">
+    <Value>You can''t remove the Administrator role. At least one administrator account should exists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator">
+    <Value>You can''t delete the last administrator. At least one administrator account should exists.</Value>
   </LocaleResource>
 </Language>
 '
