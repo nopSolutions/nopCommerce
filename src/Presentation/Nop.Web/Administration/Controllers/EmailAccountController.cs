@@ -185,6 +185,12 @@ namespace Nop.Admin.Controllers
                 //No email account found with the specified id
                 return RedirectToAction("List");
 
+            if (!CommonHelper.IsValidEmail(model.SendTestEmailTo))
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Common.WrongEmail"), false);
+                return View(model);
+            }
+
             try
             {
                 if (String.IsNullOrWhiteSpace(model.SendTestEmailTo))
