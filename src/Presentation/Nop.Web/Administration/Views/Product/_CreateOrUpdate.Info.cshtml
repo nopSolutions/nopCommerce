@@ -70,25 +70,27 @@
         var selectedProductTypeId = $("#@Html.FieldIdFor(model => model.ProductTypeId)").val();
         if (!selectedProductTypeId || selectedProductTypeId == @(((int) ProductType.SimpleProduct).ToString())) {
             $('#group-prices').show();
-        $('#group-required-other-products').show();
-        $('#group-giftcard').show();
-        $('#group-downloads').show();
-        $('#group-recurring').show();
-        $('#group-rental').show();
-        $('#group-shipping').show();
-        $('#group-inventory').show();
-        $('#block-associated-products').hide();
-    } else if (selectedProductTypeId == @(((int) ProductType.GroupedProduct).ToString())) {
-        $('#group-prices').hide();
-        $('#group-required-other-products').hide();
-        $('#group-giftcard').hide();
-        $('#group-downloads').hide();
-        $('#group-recurring').hide();
-        $('#group-rental').hide();
-        $('#group-shipping').hide();
-        $('#group-inventory').hide();
-        $('#block-associated-products').show();
-    }
+            $('#tier-prices').show();
+            $('#group-required-other-products').show();
+            $('#group-giftcard').show();
+            $('#group-downloads').show();
+            $('#group-recurring').show();
+            $('#group-rental').show();
+            $('#group-shipping').show();
+            $('#group-inventory').show();
+            $('#group-associated-products').hide();
+        } else if (selectedProductTypeId == @(((int) ProductType.GroupedProduct).ToString())) {
+            $('#group-prices').hide();
+            $('#tier-prices').hide();
+            $('#group-required-other-products').hide();
+            $('#group-giftcard').hide();
+            $('#group-downloads').hide();
+            $('#group-recurring').hide();
+            $('#group-rental').hide();
+            $('#group-shipping').hide();
+            $('#group-inventory').hide();
+            $('#group-associated-products').show();
+        }
     }
 
     function togglePreOrder() {
@@ -432,7 +434,7 @@
                     </div>
                     @if (Model.Id > 0 && Model.AssociatedToProductId > 0)
                     {
-                        <div class="form-group">
+                        <div class="form-group @(Model.ProductEditorSettingsModel.ProductType ? null : Html.Raw("advanced-setting"))">
                             <div class="col-md-3">
                                 @Html.NopLabelFor(model => model.AssociatedToProductId)
                             </div>
@@ -494,7 +496,7 @@
                             </div>
                             @Html.HiddenFor(model => model.Locales[item].LanguageId)
                         </div>
-    ,@<div>
+                        ,@<div>
                             <div class="form-group">
                                 <div class="col-md-3">
                                     @Html.NopLabelFor(model => model.Name)
@@ -666,7 +668,7 @@
                     }
                 </div>
             </div>
-            <div class="panel panel-default @(Model.ProductEditorSettingsModel.IsGiftCard ? null : Html.Raw("advanced-setting"))">
+            <div class="panel panel-default @(Model.ProductEditorSettingsModel.IsGiftCard ? null : Html.Raw("advanced-setting"))" id="group-giftcard">
                 <div class="panel-heading">
                     @T("Admin.Catalog.Products.GiftCard")
                 </div>
@@ -700,7 +702,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default @(Model.ProductEditorSettingsModel.DownloadableProduct ? null : Html.Raw("advanced-setting"))">
+            <div class="panel panel-default @(Model.ProductEditorSettingsModel.DownloadableProduct ? null : Html.Raw("advanced-setting"))" id="group-downloads">
                 <div class="panel-heading">
                     @T("Admin.Catalog.Products.DownloadableProduct")
                 </div>
@@ -790,14 +792,14 @@
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.SampleDownloadId)
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-5">
                             @Html.NopEditorFor(model => model.SampleDownloadId)
                             @Html.ValidationMessageFor(model => model.SampleDownloadId)
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default @(Model.ProductEditorSettingsModel.RecurringProduct ? null : Html.Raw("advanced-setting"))">
+            <div class="panel panel-default @(Model.ProductEditorSettingsModel.RecurringProduct ? null : Html.Raw("advanced-setting"))" id="group-recurring">
                 <div class="panel-heading">
                     @T("Admin.Catalog.Products.RecurringProduct")
                 </div>
@@ -840,7 +842,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default @(Model.ProductEditorSettingsModel.IsRental ? null : Html.Raw("advanced-setting"))">
+            <div class="panel panel-default @(Model.ProductEditorSettingsModel.IsRental ? null : Html.Raw("advanced-setting"))" id="group-rental">
                 <div class="panel-heading">
                     @T("Admin.Catalog.Products.Rental")
                 </div>
@@ -1107,12 +1109,11 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default @(Model.ProductEditorSettingsModel.TierPrices ? null : Html.Raw("advanced-setting"))">
+            <div class="panel panel-default @(Model.ProductEditorSettingsModel.TierPrices ? null : Html.Raw("advanced-setting"))"  id="tier-prices">
                 <div class="panel-heading">
                     @T("Admin.Catalog.Products.TierPrices")
                 </div>
                 <div class="panel-body">
-
                     @if (Model.Id > 0)
                     {
                         <div id="tierprices-grid"></div>
@@ -1315,7 +1316,7 @@
     </div>
     <div class="col-md-5">
         <div class="panel-group">
-            <div class="panel panel-default margin-bottom" id="block-associated-products">
+            <div class="panel panel-default margin-bottom" id="group-associated-products">
                 <div class="panel-heading">
                     @T("Admin.Catalog.Products.AssociatedProducts")
                 </div>
@@ -1497,7 +1498,7 @@
                         </div>
                     </div>
                     <div class="form-group @(Model.ProductEditorSettingsModel.UseMultipleWarehouses ? null : Html.Raw("advanced-setting"))" id="pnlMultipleWarehouses">
-                        <div class="col-md-12">
+                        <div class="col-md-12" style="overflow-x: scroll;">
                             @if (Model.ProductWarehouseInventoryModels.Count > 0)
                             {
                                 <table class="table table-hover table-bordered text-center">
@@ -1522,7 +1523,7 @@
                                     </thead>
                                     <tbody>
                                         @foreach (var item in Model.ProductWarehouseInventoryModels)
-                {
+                                        {
                                             <tr>
                                                 <td style="width: 36%;">
                                                     <div style="padding-left: 10px; padding-right: 10px;">
@@ -1793,16 +1794,16 @@
                                     });
 
                                     @if (Model.AvailableCategories.Count == 0)
-                        {
-                            <text>
-                                    categoryIdsInput.setOptions({
-                                        enable: false,
-                                        placeholder: '@T("Admin.Catalog.Products.Categories.NoCategoriesAvailable")'
-                                    });
-                                    categoryIdsInput._placeholder();
-                                    categoryIdsInput._enable();
-                                    </text>
-                        }
+                                    {
+                                        <text>
+                                            categoryIdsInput.setOptions({
+                                                enable: false,
+                                                placeholder: '@T("Admin.Catalog.Products.Categories.NoCategoriesAvailable")'
+                                            });
+                                            categoryIdsInput._placeholder();
+                                            categoryIdsInput._enable();
+                                        </text>
+                                    }
                                 });
                             </script>
                         </div>
@@ -1849,16 +1850,16 @@
                                     });
 
                                     @if (Model.AvailableStores.Count == 0)
-                        {
-                            <text>
-                                    storesIdsInput.setOptions({
-                                        enable: false,
-                                        placeholder: '@T("Admin.Catalog.Products.Stores.NoStoresAvailable")'
-                                    });
-                                    storesIdsInput._placeholder();
-                                    storesIdsInput._enable();
-                                    </text>
-                        }
+                                    {
+                                        <text>
+                                            storesIdsInput.setOptions({
+                                                enable: false,
+                                                placeholder: '@T("Admin.Catalog.Products.Stores.NoStoresAvailable")'
+                                            });
+                                            storesIdsInput._placeholder();
+                                            storesIdsInput._enable();
+                                        </text>
+                                    }
                                 });
                             </script>
                         </div>
@@ -1874,7 +1875,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default @(Model.ProductEditorSettingsModel.ACL ? null : Html.Raw("advanced-setting"))" id="group-required-other-products">
+            <div class="panel panel-default @(Model.ProductEditorSettingsModel.ACL ? null : Html.Raw("advanced-setting"))">
                 <div class="panel-heading">
                     @T("Admin.Catalog.Products.Security")
                 </div>
@@ -1893,16 +1894,16 @@
                                     });
 
                                     @if (Model.AvailableCustomerRoles.Count == 0)
-                        {
-                            <text>
-                                    rolesIdsInput.setOptions({
-                                        enable: false,
-                                        placeholder: '@T("Admin.Catalog.Products.CustomerRoles.NoCustomerRolesAvailable")'
-                                    });
-                                    rolesIdsInput._placeholder();
-                                    rolesIdsInput._enable();
-                                    </text>
-                        }
+                                    {
+                                        <text>
+                                            rolesIdsInput.setOptions({
+                                                enable: false,
+                                                placeholder: '@T("Admin.Catalog.Products.CustomerRoles.NoCustomerRolesAvailable")'
+                                            });
+                                            rolesIdsInput._placeholder();
+                                            rolesIdsInput._enable();
+                                        </text>
+                                    }
                                 });
                             </script>
                         </div>
