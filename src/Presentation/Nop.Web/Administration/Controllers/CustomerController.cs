@@ -1073,7 +1073,7 @@ namespace Nop.Admin.Controllers
                     customer.AdminComment = model.AdminComment;
                     customer.IsTaxExempt = model.IsTaxExempt;
 
-                    //prevents deactivation of the last active administrator
+                    //prevent deactivation of the last active administrator
                     if (!customer.IsAdmin() || model.Active || SecondAdminAccountExists(customer))
                         customer.Active = model.Active;
                     else
@@ -1215,7 +1215,7 @@ namespace Nop.Admin.Controllers
                         }
                         else
                         {
-                            //prevents attempts to delete an administrator role from the user, if the user is the last active administrator.
+                            //prevent attempts to delete the administrator role from the user, if the user is the last active administrator
                             if (customerRole.SystemName == SystemCustomerRoleNames.Administrators && !SecondAdminAccountExists(customer))
                             {
                                 ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists"));
@@ -1223,7 +1223,8 @@ namespace Nop.Admin.Controllers
                             }
 
                             //remove role
-                            customer.CustomerRoles.Remove(customerRole);
+                            if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) > 0)
+                                customer.CustomerRoles.Remove(customerRole);
                         }
                     }
                     _customerService.UpdateCustomer(customer);
@@ -1372,7 +1373,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                //prevents attempts to delete a user, if it is the last active administrator.
+                //prevent attempts to delete the user, if it is the last active administrator
                 if (customer.IsAdmin() && !SecondAdminAccountExists(customer))
                 {
                     ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists"));
