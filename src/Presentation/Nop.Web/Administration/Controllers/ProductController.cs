@@ -4417,7 +4417,7 @@ namespace Nop.Admin.Controllers
 
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
                 ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
-            if (warnings.Count == 0)
+            if (!warnings.Any())
             {
                 //save combination
                 var combination = new ProductAttributeCombination

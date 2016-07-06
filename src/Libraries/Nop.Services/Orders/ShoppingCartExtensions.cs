@@ -124,7 +124,7 @@ namespace Nop.Services.Orders
         /// <returns>Customer of shopping cart</returns>
         public static Customer GetCustomer(this IList<ShoppingCartItem> shoppingCart)
         {
-            if (shoppingCart.Count == 0)
+            if (!shoppingCart.Any())
                 return null;
 
             return shoppingCart[0].Customer;

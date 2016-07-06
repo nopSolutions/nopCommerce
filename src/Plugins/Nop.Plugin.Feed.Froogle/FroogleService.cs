@@ -314,7 +314,7 @@ namespace Nop.Plugin.Feed.Froogle
                                 writer.WriteElementString("g", "additional_image_link", googleBaseNamespace, imageUrl);
                             }
                         }
-                        if (pictures.Count == 0)
+                        if (!pictures.Any())
                         {
                             //no picture? submit a default one
                             var imageUrl = _pictureService.GetDefaultPictureUrl(_froogleSettings.ProductPictureSize, storeLocation: store.Url);

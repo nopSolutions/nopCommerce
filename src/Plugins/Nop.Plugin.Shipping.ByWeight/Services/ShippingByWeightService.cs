@@ -77,7 +77,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
             foreach (var sbw in existingRates)
                 if (storeId == sbw.StoreId)
                     matchedByStore.Add(sbw);
-            if (matchedByStore.Count == 0)
+            if (!matchedByStore.Any())
                 foreach (var sbw in existingRates)
                     if (sbw.StoreId == 0)
                         matchedByStore.Add(sbw);
@@ -87,7 +87,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
             foreach (var sbw in matchedByStore)
                 if (warehouseId == sbw.WarehouseId)
                     matchedByWarehouse.Add(sbw);
-            if (matchedByWarehouse.Count == 0)
+            if (!matchedByWarehouse.Any())
                 foreach (var sbw in matchedByStore)
                     if (sbw.WarehouseId == 0)
                         matchedByWarehouse.Add(sbw);
@@ -97,7 +97,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
             foreach (var sbw in matchedByWarehouse)
                 if (countryId == sbw.CountryId)
                     matchedByCountry.Add(sbw);
-            if (matchedByCountry.Count == 0)
+            if (!matchedByCountry.Any())
                 foreach (var sbw in matchedByWarehouse)
                     if (sbw.CountryId == 0)
                         matchedByCountry.Add(sbw);
@@ -107,7 +107,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
             foreach (var sbw in matchedByCountry)
                 if (stateProvinceId == sbw.StateProvinceId)
                     matchedByStateProvince.Add(sbw);
-            if (matchedByStateProvince.Count == 0)
+            if (!matchedByStateProvince.Any())
                 foreach (var sbw in matchedByCountry)
                     if (sbw.StateProvinceId == 0)
                         matchedByStateProvince.Add(sbw);
@@ -120,7 +120,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
                     (zip.Equals(sbw.Zip, StringComparison.InvariantCultureIgnoreCase)))
                     matchedByZip.Add(sbw);
 
-            if (matchedByZip.Count == 0)
+            if (!matchedByZip.Any())
                 foreach (var taxRate in matchedByStateProvince)
                     if (String.IsNullOrWhiteSpace(taxRate.Zip))
                         matchedByZip.Add(taxRate);

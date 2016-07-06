@@ -860,7 +860,7 @@ namespace Nop.Services.Media
                         pageIndex++;
 
                         //all pictures converted?
-                        if (pictures.Count == 0)
+                        if (!pictures.Any())
                             break;
 
                         foreach (var picture in pictures)

@@ -538,7 +538,7 @@ namespace Nop.Admin.Controllers
             //tax
             model.Tax = _priceFormatter.FormatPrice(order.OrderTax, true, false);
             SortedDictionary<decimal, decimal> taxRates = order.TaxRatesDictionary;
-            bool displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count > 0;
+            bool displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
             bool displayTax = !displayTaxRates;
             foreach (var tr in order.TaxRatesDictionary)
             {
@@ -1728,7 +1728,7 @@ namespace Nop.Admin.Controllers
 
                 LogEditOrder(order.Id);
 
-                if (errors.Count == 0)
+                if (!errors.Any())
                 {
                     //success
                     ViewBag.RefreshPage = true;
@@ -1943,7 +1943,7 @@ namespace Nop.Admin.Controllers
             }
 
             //ensure that we at least one order selected
-            if (orders.Count == 0)
+            if (!orders.Any())
             {
                 ErrorNotification(_localizationService.GetResource("Admin.Orders.PdfInvoice.NoOrders"));
                 return RedirectToAction("List");
@@ -2243,7 +2243,7 @@ namespace Nop.Admin.Controllers
             if (orderItem == null)
                 throw new ArgumentException("No order item found with the specified id");
 
-            if (_giftCardService.GetGiftCardsByPurchasedWithOrderItemId(orderItem.Id).Count > 0)
+            if (_giftCardService.GetGiftCardsByPurchasedWithOrderItemId(orderItem.Id).Any())
             {
                 //we cannot delete an order item with associated gift cards
                 //a store owner should delete them first
@@ -2634,7 +2634,7 @@ namespace Nop.Admin.Controllers
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(order.Customer, ShoppingCartType.ShoppingCart, product, quantity, attributesXml));
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemGiftCardWarnings(ShoppingCartType.ShoppingCart, product, attributesXml));
             warnings.AddRange(_shoppingCartService.GetRentalProductWarnings(product, rentalStartDate, rentalEndDate));
-            if (warnings.Count == 0)
+            if (!warnings.Any())
             {
                 //no errors
 
@@ -2769,7 +2769,7 @@ namespace Nop.Admin.Controllers
                 model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
             //states
             var states = address.Country != null ? _stateProvinceService.GetStateProvincesByCountryId(address.Country.Id, showHidden: true).ToList() : new List<StateProvince>();
-            if (states.Count > 0)
+            if (states.Any())
             {
                 foreach (var s in states)
                     model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
@@ -2860,7 +2860,7 @@ namespace Nop.Admin.Controllers
                 model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
             //states
             var states = address.Country != null ? _stateProvinceService.GetStateProvincesByCountryId(address.Country.Id, showHidden: true).ToList() : new List<StateProvince>();
-            if (states.Count > 0)
+            if (states.Any())
             {
                 foreach (var s in states)
                     model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
@@ -3231,7 +3231,7 @@ namespace Nop.Admin.Controllers
             }
 
             //if we have at least one item in the shipment, then save it
-            if (shipment != null && shipment.ShipmentItems.Count > 0)
+            if (shipment != null && shipment.ShipmentItems.Any())
             {
                 shipment.TotalWeight = totalWeight;
                 _shipmentService.InsertShipment(shipment);
@@ -3545,7 +3545,7 @@ namespace Nop.Admin.Controllers
                 createdToUtc: endDateValue);
 
             //ensure that we at least one shipment selected
-            if (shipments.Count == 0)
+            if (!shipments.Any())
             {
                 ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.NoShipmentsSelected"));
                 return RedirectToAction("ShipmentList");
@@ -3582,7 +3582,7 @@ namespace Nop.Admin.Controllers
             }
 
             //ensure that we at least one shipment selected
-            if (shipments.Count == 0)
+            if (!shipments.Any())
             {
                 ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.NoShipmentsSelected"));
                 return RedirectToAction("ShipmentList");

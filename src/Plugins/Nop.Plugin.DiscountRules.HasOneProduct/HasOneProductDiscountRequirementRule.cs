@@ -53,7 +53,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
                 .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => x.Trim())
                 .ToList();
-            if (restrictedProducts.Count == 0)
+            if (!restrictedProducts.Any())
                 return result;
             
             //group products in the cart by product ID

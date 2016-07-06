@@ -280,7 +280,7 @@ namespace Nop.Web.Framework.UI.Paging
             }
 
 			var url = UrlHelper.GenerateUrl(null, null, null, routeValues, RouteTable.Routes, viewContext.RequestContext, true);
-            if (renderEmptyParameters && parametersWithEmptyValues.Count > 0)
+            if (renderEmptyParameters && parametersWithEmptyValues.Any())
             {
                 //we add such parameters manually because UrlHelper.GenerateUrl() ignores them
                 var webHelper = EngineContext.Current.Resolve<IWebHelper>();
