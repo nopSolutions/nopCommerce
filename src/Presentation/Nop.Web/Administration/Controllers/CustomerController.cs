@@ -745,7 +745,7 @@ namespace Nop.Admin.Controllers
         {
             var customers = _customerService.GetAllCustomers(customerRoleIds: new[] {_customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Administrators).Id});
 
-            return customers.Count(p => p.Active && p.Id != customer.Id) > 0;
+            return customers.Any(c => c.Active && c.Id != customer.Id);
         }
         #endregion
 
