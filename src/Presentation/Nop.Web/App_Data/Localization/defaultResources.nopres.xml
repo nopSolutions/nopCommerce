@@ -8232,6 +8232,15 @@
   <LocaleResource Name="Admin.Customers.Customers.Addresses.Updated">
     <Value>The address has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.Deactivate">
+    <Value>You can't deactivate the last administrator. At least one administrator account should exists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.DeleteRole">
+    <Value>You can't remove the Administrator role. At least one administrator account should exists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator">
+    <Value>You can't delete the last administrator. At least one administrator account should exists.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.AdminCouldNotbeVendor">
     <Value>A customer with a vendor associated could not be in "Administrators" role.</Value>
   </LocaleResource>

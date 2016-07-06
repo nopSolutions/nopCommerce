@@ -1007,6 +1007,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CustomHeadTags.Hint">
     <Value><![CDATA[Enter a custom <head> tag(s) here. For example, some custom <meta> tag. Or leave empty if ignore this setting.]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.Deactivate">
+    <Value>You can''t deactivate the last administrator. At least one administrator account should exists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.DeleteRole">
+    <Value>You can''t remove the Administrator role. At least one administrator account should exists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator">
+    <Value>You can''t delete the last administrator. At least one administrator account should exists.</Value>
+  </LocaleResource>
 </Language>
 '
 

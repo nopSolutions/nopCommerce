@@ -388,7 +388,7 @@ namespace Nop.Services.Customers
             }
             return sortedCustomers;
         }
-
+        
         /// <summary>
         /// Gets a customer by GUID
         /// </summary>

@@ -82,7 +82,7 @@ namespace Nop.Services.Customers
         /// <param name="customerIds">Customer identifiers</param>
         /// <returns>Customers</returns>
         IList<Customer> GetCustomersByIds(int[] customerIds);
-
+        
         /// <summary>
         /// Gets a customer by GUID
         /// </summary>

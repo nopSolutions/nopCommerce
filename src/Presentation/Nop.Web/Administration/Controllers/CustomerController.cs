@@ -740,6 +740,13 @@ namespace Nop.Admin.Controllers
             model.Address.PrepareCustomAddressAttributes(address, _addressAttributeService, _addressAttributeParser);
         }
 
+        [NonAction]
+        private bool SecondAdminAccountExists(Customer customer)
+        {
+            var customers = _customerService.GetAllCustomers(customerRoleIds: new[] {_customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Administrators).Id});
+
+            return customers.Count(p => p.Active && p.Id != customer.Id) > 0;
+        }
         #endregion
 
         #region Customers
@@ -1065,7 +1072,13 @@ namespace Nop.Admin.Controllers
                 {
                     customer.AdminComment = model.AdminComment;
                     customer.IsTaxExempt = model.IsTaxExempt;
-                    customer.Active = model.Active;
+
+                    //prevent deactivation of the last active administrator
+                    if (!customer.IsAdmin() || model.Active || SecondAdminAccountExists(customer))
+                        customer.Active = model.Active;
+                    else
+                        ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.Deactivate"));
+
                     //email
                     if (!String.IsNullOrWhiteSpace(model.Email))
                     {
@@ -1202,6 +1215,13 @@ namespace Nop.Admin.Controllers
                         }
                         else
                         {
+                            //prevent attempts to delete the administrator role from the user, if the user is the last active administrator
+                            if (customerRole.SystemName == SystemCustomerRoleNames.Administrators && !SecondAdminAccountExists(customer))
+                            {
+                                ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.DeleteRole"));
+                                continue;
+                            }
+
                             //remove role
                             if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) > 0)
                                 customer.CustomerRoles.Remove(customerRole);
@@ -1256,7 +1276,7 @@ namespace Nop.Admin.Controllers
             PrepareCustomerModel(model, customer, true);
             return View(model);
         }
-        
+
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("changepassword")]
         public ActionResult ChangePassword(CustomerModel model)
@@ -1353,6 +1373,13 @@ namespace Nop.Admin.Controllers
 
             try
             {
+                //prevent attempts to delete the user, if it is the last active administrator
+                if (customer.IsAdmin() && !SecondAdminAccountExists(customer))
+                {
+                    ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator"));
+                    return RedirectToAction("Edit", new { id = customer.Id });
+                }
+
                 _customerService.DeleteCustomer(customer);
 
                 //remove newsletter subscription (if exists)
