@@ -643,19 +643,21 @@
                             }
                         </p>
                         @if (Model.FullTextSettings.Supported)
-                {
+                        {
                             <div class="form-group">
                                 <div class="col-md-3">
-                                    <label class="control-label">
-                                        @if (Model.FullTextSettings.Enabled)
-                                        {
-                                            @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyEnabled")
-                                        }
-                                        else
-                                        {
-                                            @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyDisabled")
-                                        }
-                                    </label>
+                                    <div class="label-wrapper">
+                                        <label class="control-label">
+                                            @if (Model.FullTextSettings.Enabled)
+                                            {
+                                                @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyEnabled")
+                                            }
+                                            else
+                                            {
+                                                @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyDisabled")
+                                            }
+                                        </label>
+                                    </div>
                                 </div>
                                 <div class="col-md-9">
                                     <button type="submit" name="togglefulltext" class="btn btn-primary">
