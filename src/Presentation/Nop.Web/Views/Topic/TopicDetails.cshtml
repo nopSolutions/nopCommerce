@@ -8,11 +8,6 @@
     {
         Layout = "~/Views/Shared/_ColumnsOne.cshtml";
     }
-    else
-    {
-        /*pop-up windows*/
-        Layout = "~/Views/Shared/_RootPopup.cshtml";
-    }
 
     if (!Model.IsPasswordProtected)
     {
@@ -35,14 +30,6 @@
 }
 @if (Model.IsPasswordProtected)
 {
-    // For popup topics, use a minimal layout that includes the Ajax and jQuery scripts
-    if (isPopup != null && isPopup == true)
-    {
-        Layout = "~/Views/Shared/_RootPopup.cshtml";
-    }
-    
-    
-    
     <script type="text/javascript">
         $(document).ready(function () {
             $('#button-password').click(function () {

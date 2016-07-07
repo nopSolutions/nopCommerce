@@ -376,7 +376,14 @@
                 <div class="accept-privacy-policy">
                     <input id="accept-privacy-policy" type="checkbox" name="accept-privacy-policy" />
                     <label for="accept-privacy-policy">@T("Account.Fields.AcceptPrivacyPolicy")</label>
-                    <span class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "privacyinfo" })', 450, 500, true)">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
+                    <span class="read" id="read-privacyinfo">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
+                    <script>
+                        $(document).ready(function() {
+                            $('#read-privacyinfo').on('click', function (e) {
+                                displayPopupContentFromUrl('@Url.RouteUrl("TopicPopup", new { SystemName = "privacyinfo" })', '@T("Account.Fields.AcceptPrivacyPolicy")');
+                            });
+                        });
+                    </script>
                 </div>
             }
             <div class="buttons">

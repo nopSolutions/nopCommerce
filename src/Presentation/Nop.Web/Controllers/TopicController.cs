@@ -170,7 +170,7 @@ namespace Nop.Web.Controllers
             });
 
             ViewBag.IsPopup = true;
-            return View(templateViewPath, cacheModel);
+            return PartialView(templateViewPath, cacheModel);
         }
 
         [ChildActionOnly]
