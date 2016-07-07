@@ -668,43 +668,65 @@ span.grid-report-item.red {
 }
 
 .onoffswitch {
-    position: relative; width: 140px;
-    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+    position: relative;
+    width: 130px;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select: none;
 }
 .onoffswitch-checkbox {
     display: none;
 }
 .onoffswitch-label {
-    display: block; overflow: hidden; cursor: pointer;
-    border: 2px solid #999999; border-radius: 20px;
+    display: block;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid #367fa9;
+    border-radius: 3px;
 }
 .onoffswitch-inner {
-    display: block; width: 200%; margin-left: -100%;
+    display: block; 
+    width: 200%; 
+    margin-left: -100%;
     transition: margin 0.3s ease-in 0s;
 }
 .onoffswitch-inner:before, .onoffswitch-inner:after {
-    display: block; float: left; width: 50%; height: 30px; padding: 0; line-height: 30px;
-    font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
-    box-sizing: border-box;
+    display: block;
+    float: left;
+    width: 50%;
+    height: 32px;
+    padding: 0;
+    line-height: 32px;
+    font-size: 14px;
+    color: white;
+    font-family: Trebuchet, Arial, sans-serif;
+    font-weight: bold;
 }
 .onoffswitch-inner:before {
     content: "Advanced";
     padding-left: 10px;
-    background-color: #0073B7; color: #FFFFFF;
+    background-color: #3c8dbc;
+    color: #FFFFFF;
 }
 .onoffswitch-inner:after {
     content: "Basic";
     padding-right: 10px;
-    background-color: #EEEEEE; color: #999999;
+    background-color: #efefef;
+    color: #3380ad;
     text-align: right;
 }
 .onoffswitch-switch {
-    display: block; width: 19px; margin: 5.5px;
+    display: block;
+    width: 20px;
+    margin: 6.5px;
     background: #FFFFFF;
-    position: absolute; top: 0; bottom: 0;
-    right: 106px;
-    border: 2px solid #999999; border-radius: 20px;
-    transition: all 0.3s ease-in 0s; 
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 95px;
+    border: 1px solid #367fa9;
+    border-radius: 15px;
+    transition: all 0.3s ease-in 0s;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
     margin-left: 0;
@@ -712,10 +734,6 @@ span.grid-report-item.red {
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
     right: 0px; 
 }
-
-
-
-
 
 /* THROBBER */
 .throbber-header {
