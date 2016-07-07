@@ -369,7 +369,7 @@ namespace Nop.Web.Controllers
 
                 var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
                     _workContext.WorkingLanguage.Id);
-                if (blogPosts.Count > 0)
+                if (blogPosts.Any())
                 {
                     var months = new SortedDictionary<DateTime, int>();
 
@@ -378,7 +378,7 @@ namespace Nop.Web.Controllers
                     while (DateTime.SpecifyKind(first, DateTimeKind.Utc) <= DateTime.UtcNow.AddMonths(1))
                     {
                         var list = blogPosts.GetPostsByDate(new DateTime(first.Year, first.Month, 1), new DateTime(first.Year, first.Month, 1).AddMonths(1).AddSeconds(-1));
-                        if (list.Count > 0)
+                        if (list.Any())
                         {
                             var date = new DateTime(first.Year, first.Month, 1);
                             months.Add(date, list.Count);
@@ -396,7 +396,7 @@ namespace Nop.Web.Controllers
                         if (current == 0)
                             current = date.Year;
 
-                        if (date.Year > current || model.Count == 0)
+                        if (date.Year > current || !model.Any())
                         {
                             var yearModel = new BlogPostYearModel
                             {

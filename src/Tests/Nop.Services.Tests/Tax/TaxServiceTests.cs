@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -63,7 +64,7 @@ namespace Nop.Services.Tests.Tax
         {
             var providers = _taxService.LoadAllTaxProviders();
             providers.ShouldNotBeNull();
-            (providers.Count > 0).ShouldBeTrue();
+            (providers.Any()).ShouldBeTrue();
         }
 
         [Test]

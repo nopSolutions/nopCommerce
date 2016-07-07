@@ -2,6 +2,19 @@
     Layout = "";
 }
 @Html.AntiForgeryToken()
+<div class="content-header clearfix">
+    <div class="pull-right">
+        <a href="@Url.Action("Methods", "Shipping", new { area = "Admin" })" class="btn bg-blue">
+            <i class="fa fa-truck"></i>
+            @T("Admin.Configuration.Shipping.Methods.Manage")
+        </a>
+        <a href="@Url.Action("Restrictions", "Shipping", new { area = "Admin" })" class="btn bg-blue">
+            <i class="fa fa-globe"></i>
+            @T("Admin.Configuration.Shipping.Restrictions.Manage")
+        </a>
+    </div>
+</div>
+
 <div class="panel-group">
     <div class="panel panel-default">
         <div class="panel-body">

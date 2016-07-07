@@ -8,7 +8,7 @@
     siteMap.LoadFrom("~/Administration/sitemap.config");
 
     var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl &&
-    !EngineContext.Current.Resolve<LocalizationSettings>().IgnoreRtlPropertyForAdminArea;
+        !EngineContext.Current.Resolve<LocalizationSettings>().IgnoreRtlPropertyForAdminArea;
 }
 
 @helper RenderMenuItem(Nop.Web.Framework.Menu.SiteMapNode item, bool supportRtl)

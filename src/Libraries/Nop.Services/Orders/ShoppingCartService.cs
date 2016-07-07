@@ -141,7 +141,7 @@ namespace Nop.Services.Orders
             _sciRepository.Delete(shoppingCartItem);
 
             //reset "HasShoppingCartItems" property used for performance optimization
-            customer.HasShoppingCartItems = customer.ShoppingCartItems.Count > 0;
+            customer.HasShoppingCartItems = customer.ShoppingCartItems.Any();
             _customerService.UpdateCustomer(customer);
 
             //validate checkout attributes
@@ -243,7 +243,7 @@ namespace Nop.Services.Orders
                                     shoppingCartType: shoppingCartType,
                                     storeId: storeId,
                                     automaticallyAddRequiredProductsIfEnabled: false);
-                                if (addToCartWarnings.Count > 0)
+                                if (addToCartWarnings.Any())
                                 {
                                     //a product wasn't atomatically added for some reasons
 
@@ -606,7 +606,7 @@ namespace Nop.Services.Orders
                 }
             }
 
-            if (warnings.Count > 0)
+            if (warnings.Any())
                 return warnings;
 
             //validate bundled products
@@ -1091,7 +1091,7 @@ namespace Nop.Services.Orders
                     customerEnteredPrice, rentalStartDate, rentalEndDate,
                     newQuantity, automaticallyAddRequiredProductsIfEnabled));
 
-                if (warnings.Count == 0)
+                if (!warnings.Any())
                 {
                     shoppingCartItem.AttributesXml = attributesXml;
                     shoppingCartItem.Quantity = newQuantity;
@@ -1109,7 +1109,7 @@ namespace Nop.Services.Orders
                     storeId, attributesXml, customerEnteredPrice,
                     rentalStartDate, rentalEndDate, 
                     quantity, automaticallyAddRequiredProductsIfEnabled));
-                if (warnings.Count == 0)
+                if (!warnings.Any())
                 {
                     //maximum items validation
                     switch (shoppingCartType)
@@ -1155,7 +1155,7 @@ namespace Nop.Services.Orders
 
 
                     //updated "HasShoppingCartItems" property used for performance optimization
-                    customer.HasShoppingCartItems = customer.ShoppingCartItems.Count > 0;
+                    customer.HasShoppingCartItems = customer.ShoppingCartItems.Any();
                     _customerService.UpdateCustomer(customer);
 
                     //event notification
@@ -1204,7 +1204,7 @@ namespace Nop.Services.Orders
                         shoppingCartItem.Product, shoppingCartItem.StoreId,
                         attributesXml, customerEnteredPrice, 
                         rentalStartDate, rentalEndDate, quantity, false));
-                    if (warnings.Count == 0)
+                    if (!warnings.Any())
                     {
                         //if everything is OK, then update a shopping cart item
                         shoppingCartItem.Quantity = quantity;

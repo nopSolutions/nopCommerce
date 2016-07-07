@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using FluentValidation;
 using FluentValidation.Results;
 using Nop.Core;
@@ -40,7 +41,7 @@ namespace Nop.Web.Validators.Customer
                 Custom(x =>
                 {
                     //does selected country have states?
-                    var hasStates = stateProvinceService.GetStateProvincesByCountryId(x.CountryId).Count > 0;
+                    var hasStates = stateProvinceService.GetStateProvincesByCountryId(x.CountryId).Any();
                     if (hasStates)
                     {
                         //if yes, then ensure that a state is selected

@@ -214,7 +214,7 @@ namespace Nop.Web.Controllers
             }
 
             var topics = _forumService.GetActiveTopics(0, 0, _forumSettings.HomePageActiveDiscussionsTopicCount);
-            if (topics.Count == 0)
+            if (!topics.Any())
                 return Content("");
 
             var model = new ActiveDiscussionsModel();
@@ -482,7 +482,7 @@ namespace Nop.Web.Controllers
                 var posts = _forumService.GetAllPosts(forumTopic.Id, 0, string.Empty,
                     page - 1, _forumSettings.PostsPageSize);
                 //if not posts loaded, redirect to the first page
-                if (posts.Count == 0 && page > 1)
+                if (!posts.Any() && page > 1)
                 {
                     return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName() });
                 }
@@ -1615,7 +1615,7 @@ namespace Nop.Web.Controllers
                         model.ForumTopics.Add(topicModel);
                     }
 
-                    model.SearchResultsVisible = (topics.Count > 0);
+                    model.SearchResultsVisible = (topics.Any());
                     model.NoResultsVisisble = !(model.SearchResultsVisible);
 
                     return View(model);

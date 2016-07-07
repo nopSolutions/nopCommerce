@@ -734,6 +734,27 @@ set @resources='
   <LocaleResource Name="Admin.ReturnRequests.Fields.ID.Hint">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Categories.Fields.Category">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Categories.Fields.IsFeaturedProduct">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Categories.Fields.DisplayOrder">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Categories.SaveBeforeEdit">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Categories.NoCategoriesAvailable">
+    <Value>No categories available. Create at least one category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.CategoryIds">
+    <Value>Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.CategoryIds.Hint">
+    <Value>Product category mappings.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Blog.AllowNotRegisteredUsersToLeaveComments">
     <Value>Allow guests to leave comments</Value>
   </LocaleResource>
@@ -745,6 +766,255 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.News.AllowNotRegisteredUsersToLeaveComments.Hint">
     <Value>Check to allow guests to leave comments.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.General">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.Performance">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviews">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.Search">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.CompareProducts">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.Sharing">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SortOptions">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DateTimeSettings">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationSettings">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationAutoRegisterEnabled">
+    <Value>External authentication. Auto register enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationAutoRegisterEnabled.Hint">
+    <Value>Check to enable auto registration when using external authentication (e.g. using Facebokk or Twitter).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LocalizationSettings">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PdfSettings">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SecuritySettings">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SEOSettings">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreInformationSettings">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.ReloadList.Progress">
+    <Value>Reloading plugin list...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultTitle">
+    <Value>Default page title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowVendorsToEditInfo">
+    <Value>Allow vendors to edit info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowVendorsToEditInfo.Hint">
+    <Value>Check to allow vendors to edit information about themselves (in public store). Please note that localizable properties (name, description) are not supported in case if you have multiple languages (only standard values can be edited in this case).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo">
+    <Value>Vendor info</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.VendorInfo">
+    <Value>Vendor info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Email">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Picture.Remove">
+    <Value>Remove picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Picture.ErrorMessage">
+    <Value>You can add only picture file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.NotifyStoreOwnerAboutVendorInformationChange">
+    <Value>Notify about vendor information changes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.NotifyStoreOwnerAboutVendorInformationChange.Hint">
+    <Value>Check to notify a store owner about vendor information changes.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Name.Required">
+    <Value>Vendor name is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Email.Required">
+    <Value>Email is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Picture.ErrorMessage">
+    <Value>You can add only picture file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Filtering.SpecificationFilter.Separator">
+    <Value>or </Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Manufacturers.Fields.Manufacturer">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Manufacturers.Fields.IsFeaturedProduct">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Manufacturers.Fields.DisplayOrder">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Manufacturers.SaveBeforeEdit">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Manufacturers.NoManufacturersAvailable">
+    <Value>No manufacturers available. Create at least one manufacturer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerIds">
+     <Value>Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerIds.Hint">
+     <Value>Product manufacturer mappings.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerRole">
+     <Value>Limited to customer role</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerRole.Hint">
+     <Value>Choose a customer role which subscribers will get this email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.List.Stores">
+     <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.List.Stores.Hint">
+     <Value>Search by a specific store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsCumulative">
+    <Value>Cumulative with other discounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsCumulative.Hint">
+    <Value>If checked, this discount can be used with other ones simultaneously. Please note that this feature works only for discounts with the same discount type. Right now discounts with distinct types are already cumulative.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShipToSameAddress">
+    <Value>Ship to the same address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShipToSameAddress.Hint">
+    <Value>Check to display "ship to the same address" option during checkout ("billing address" step). In this case case "shipping address" with appropriate options (e.g. pick up in store) will be skipped. Also note that all billing countries should support shipping ("Allow shipping" checkbox ticked).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.ShipToSameAddress">
+    <Value>Ship to the same address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.Url">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.Url.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.Port">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.Port.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.CustomerId">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.CustomerId.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.Api">
+    <Value>API key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.Api.Hint">
+    <Value>Specify Canada Post API key.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.CustomerNumber">
+    <Value>Customer number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.CustomerNumber.Hint">
+    <Value>Specify customer number.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.UseSandbox">
+    <Value>Use Sandbox</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.UseSandbox.Hint">
+    <Value>Check to enable Sandbox (testing environment).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.EmailAccount.Standard">
+    <Value>Standard</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Methods.Manage">
+    <Value>Manage shipping methods</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Manage">
+    <Value>Shipping method restrictions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Providers">
+    <Value>Shipping providers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Providers.Title">
+    <Value>Shipping rate computation methods (providers)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapEnabled">
+    <Value>Sitemap enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapEnabled.Hint">
+    <Value>Check to enable sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeCategories">
+    <Value>Sitemap includes categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeCategories.Hint">
+    <Value>Check if you want to include categories in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeManufacturers">
+    <Value>Sitemap includes manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeManufacturers.Hint">
+    <Value>Check if you want to include manufacturers in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeProducts">
+    <Value>Sitemap includes products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeProducts.Hint">
+    <Value>Check if you want to include products in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CustomHeadTags">
+    <Value><![CDATA[Custom <head> tag]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CustomHeadTags.Hint">
+    <Value><![CDATA[Enter a custom <head> tag(s) here. For example, some custom <meta> tag. Or leave empty if ignore this setting.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.Deactivate">
+    <Value>You can''t deactivate the last administrator. At least one administrator account should exists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.DeleteRole">
+    <Value>You can''t remove the Administrator role. At least one administrator account should exists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator">
+    <Value>You can''t delete the last administrator. At least one administrator account should exists.</Value>
   </LocaleResource>
 </Language>
 '
@@ -2859,6 +3129,8 @@ BEGIN
 	)
 	INSERT INTO #FilteredCustomerRoleIds (CustomerRoleId)
 	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@AllowedCustomerRoleIds, ',')
+	DECLARE @FilteredCustomerRoleIdsCount int	
+	SET @FilteredCustomerRoleIdsCount = (SELECT COUNT(1) FROM #FilteredCustomerRoleIds)
 	
 	--paging
 	DECLARE @PageLowerBound int
@@ -3065,7 +3337,7 @@ BEGIN
 	END
 	
 	--show hidden and ACL
-	IF @ShowHidden = 0
+	IF  @ShowHidden = 0 and @FilteredCustomerRoleIdsCount > 0
 	BEGIN
 		SET @sql = @sql + '
 		AND (p.SubjectToAcl = 0 OR EXISTS (
@@ -3232,7 +3504,6 @@ BEGIN
 	DROP TABLE #PageIndex
 END
 GO
- GO
 
  --update message templates
  UPDATE [MessageTemplate] SET [Body] = REPLACE([Body], 'ReturnRequest.ID', 'ReturnRequest.CustomNumber')
@@ -3250,10 +3521,95 @@ GO
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ReturnRequest]') and NAME='CustomNumber')
 BEGIN
 	ALTER TABLE [ReturnRequest]
-	ADD [CustomNumber] NVARCHAR(MAX) NOT NULL DEFAULT ''
+	ADD [CustomNumber] NVARCHAR(MAX) NULL
 END
 GO
 
- --update
- UPDATE [ReturnRequest] SET [CustomNumber] = CAST([Id] AS NVARCHAR(200)) WHERE [CustomNumber] = null OR [CustomNumber] = N''
+ UPDATE [ReturnRequest] SET [CustomNumber] = CAST([Id] AS NVARCHAR(200)) WHERE [CustomNumber] IS NULL OR [CustomNumber] = N''
+ GO
+
+ ALTER TABLE [ReturnRequest] ALTER COLUMN [CustomNumber] NVARCHAR(MAX) NOT NULL
+ GO
+
+ --new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'vendorsettings.allowvendorstoeditinfo')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'vendorsettings.allowvendorstoeditinfo', N'False', 0)
+ END
+ GO
+
+ --new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'vendorsettings.notifystoreowneraboutvendorinformationchange')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'vendorsettings.notifystoreowneraboutvendorinformationchange', N'True', 0)
+ END
+ GO
+
+ -- new message template
+ IF NOT EXISTS (SELECT 1 FROM [dbo].[MessageTemplate] WHERE [Name] = N'VendorInformationChange.StoreOwnerNotification')
+ BEGIN
+	INSERT [dbo].[MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [AttachedDownloadId], [EmailAccountId], [LimitedToStores], [DelayPeriodId]) 
+	VALUES (N'VendorInformationChange.StoreOwnerNotification', NULL, N'%Store.Name%. Vendor information change.', N'<p><a href="%Store.URL%">%Store.Name%</a> <br /><br />Vendor %Vendor.Name% (%Vendor.Email%) has just changed information about itself.</p>', 1, 0, 0, 0, 0)
+ END
+ GO
+
+  --new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.GeneratePdfInvoiceInCustomerLanguage')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'ordersettings.GeneratePdfInvoiceInCustomerLanguage', N'true', 0)
+ END
+ GO
+
+ --new column
+ IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Campaign]') and NAME='CustomerRoleId')
+ BEGIN
+ 	ALTER TABLE [Campaign]
+	ADD [CustomerRoleId] INT NULL
+ END
+ GO
+
+ UPDATE [Campaign]
+ SET [CustomerRoleId] = 0
+ WHERE [CustomerRoleId] IS NULL
+ GO
+
+ ALTER TABLE [Campaign] ALTER COLUMN [CustomerRoleId] INT NOT NULL
+ GO
+ GO
+
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Discount]') and NAME='IsCumulative')
+BEGIN
+	ALTER TABLE [Discount]
+	ADD [IsCumulative] bit NULL
+END
+GO
+
+UPDATE [Discount]
+SET [IsCumulative] = 0
+WHERE [IsCumulative] IS NULL
+GO
+
+ALTER TABLE [Discount] ALTER COLUMN [IsCumulative] bit NOT NULL
+GO
+ 
+--new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.shiptosameaddress')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'shippingsettings.shiptosameaddress', N'False', 0)
+ END
+ GO
+
+ --new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'seosettings.customheadtags')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'seosettings.customheadtags', N'', 0)
+ END
  GO

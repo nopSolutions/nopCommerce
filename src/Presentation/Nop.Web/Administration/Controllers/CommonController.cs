@@ -297,7 +297,7 @@ namespace Nop.Admin.Controllers
 
             //shipping rate coputation methods
             var srcMethods = _shippingService.LoadActiveShippingRateComputationMethods();
-            if (srcMethods.Count == 0)
+            if (!srcMethods.Any())
                 model.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Fail,
@@ -612,7 +612,7 @@ namespace Nop.Admin.Controllers
             return Redirect(returnUrl);
         }
 
-
+        [HttpPost]
         public ActionResult ClearCache(string returnUrl = "")
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
@@ -630,7 +630,7 @@ namespace Nop.Admin.Controllers
             return Redirect(returnUrl);
         }
 
-
+        [HttpPost]
         public ActionResult RestartApplication(string returnUrl = "")
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))

@@ -15,6 +15,7 @@ namespace Nop.Admin.Models.Messages
         public CampaignModel()
         {
             this.AvailableStores = new List<SelectListItem>();
+            this.AvailableCustomerRoles = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.Name")]
@@ -32,7 +33,11 @@ namespace Nop.Admin.Models.Messages
         [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.Store")]
         public int StoreId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
-        
+
+        [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.CustomerRole")]
+        public int CustomerRoleId { get; set; }
+        public IList<SelectListItem> AvailableCustomerRoles { get; set; }
+
         [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
 

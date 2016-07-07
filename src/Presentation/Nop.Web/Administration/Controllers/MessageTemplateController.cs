@@ -98,14 +98,13 @@ namespace Nop.Admin.Controllers
                                                            localized.Body,
                                                            localized.LanguageId);
 
-                _localizedEntityService.SaveLocalizedValue(mt,
-                                                           x => x.EmailAccountId,
-                                                           localized.EmailAccountId,
-                                                           localized.LanguageId);
+               _localizedEntityService.SaveLocalizedValue(mt,
+                                                            x => x.EmailAccountId,
+                                                            localized.EmailAccountId,
+                                                            localized.LanguageId);
             }
         }
-
-
+        
         [NonAction]
         protected virtual void PrepareStoresMappingModel(MessageTemplateModel model, MessageTemplate messageTemplate, bool excludeProperties)
         {
@@ -218,7 +217,7 @@ namespace Nop.Admin.Controllers
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
-                model.AvailableEmailAccounts.Add(ea.ToModel());
+                model.AvailableEmailAccounts.Add(new SelectListItem { Text = ea.DisplayName, Value = ea.Id.ToString() });
             //Store
             PrepareStoresMappingModel(model, messageTemplate, false);
             //locales
@@ -228,8 +227,20 @@ namespace Nop.Admin.Controllers
                 locale.Subject = messageTemplate.GetLocalized(x => x.Subject, languageId, false, false);
                 locale.Body = messageTemplate.GetLocalized(x => x.Body, languageId, false, false);
 
-                var emailAccountId = messageTemplate.GetLocalized(x => x.EmailAccountId, languageId, false, false);
-                locale.EmailAccountId = emailAccountId > 0 ? emailAccountId : _emailAccountSettings.DefaultEmailAccountId;
+                locale.EmailAccountId = messageTemplate.GetLocalized(x => x.EmailAccountId, languageId, false, false);
+                //available email accounts (we add "Standard" value for localizable field)
+                locale.AvailableEmailAccounts.Add(new SelectListItem
+                {
+                    Text = _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Fields.EmailAccount.Standard"),
+                    Value = "0"
+                });
+                foreach (var ea in _emailAccountService.GetAllEmailAccounts())
+                    locale.AvailableEmailAccounts.Add(new SelectListItem
+                    {
+                        Text = ea.DisplayName,
+                        Value = ea.Id.ToString(),
+                        Selected =  ea.Id == locale.EmailAccountId
+                    });
             });
 
             return View(model);
@@ -279,7 +290,23 @@ namespace Nop.Admin.Controllers
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
-                model.AvailableEmailAccounts.Add(ea.ToModel());
+                model.AvailableEmailAccounts.Add(new SelectListItem { Text = ea.DisplayName, Value = ea.Id.ToString() });
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                //available email accounts (we add "Standard" value for localizable field)
+                locale.AvailableEmailAccounts.Add(new SelectListItem
+                {
+                    Text = _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Fields.EmailAccount.Standard"),
+                    Value = "0"
+                });
+                foreach (var ea in _emailAccountService.GetAllEmailAccounts())
+                    locale.AvailableEmailAccounts.Add(new SelectListItem {
+                        Text = ea.DisplayName,
+                        Value = ea.Id.ToString(),
+                        Selected = ea.Id == locale.EmailAccountId
+                    });
+            });
             //Store
             PrepareStoresMappingModel(model, messageTemplate, true);
             return View(model);

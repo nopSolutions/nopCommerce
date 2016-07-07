@@ -152,11 +152,11 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
             if (!String.IsNullOrEmpty(paymentMethodSystemName))
                 query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
-            if (osIds != null && osIds.Count > 0)
+            if (osIds != null && osIds.Any())
                 query = query.Where(o => osIds.Contains(o.OrderStatusId));
-            if (psIds != null && psIds.Count > 0)
+            if (psIds != null && psIds.Any())
                 query = query.Where(o => psIds.Contains(o.PaymentStatusId));
-            if (ssIds != null && ssIds.Count > 0)
+            if (ssIds != null && ssIds.Any())
                 query = query.Where(o => ssIds.Contains(o.ShippingStatusId));
             if (startTimeUtc.HasValue)
                 query = query.Where(o => startTimeUtc.Value <= o.CreatedOnUtc);
@@ -483,11 +483,11 @@ namespace Nop.Services.Orders
             bool dontSearchPaymentMethods = String.IsNullOrEmpty(paymentMethodSystemName);
 
             var orders = _orderRepository.Table;
-            if (osIds != null && osIds.Count > 0)
+            if (osIds != null && osIds.Any())
                 orders = orders.Where(o => osIds.Contains(o.OrderStatusId));
-            if (psIds != null && psIds.Count > 0)
+            if (psIds != null && psIds.Any())
                 orders = orders.Where(o => psIds.Contains(o.PaymentStatusId));
-            if (ssIds != null && ssIds.Count > 0)
+            if (ssIds != null && ssIds.Any())
                 orders = orders.Where(o => ssIds.Contains(o.ShippingStatusId));
 
             var query = from orderItem in _orderItemRepository.Table

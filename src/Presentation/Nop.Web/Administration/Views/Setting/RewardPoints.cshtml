@@ -27,6 +27,7 @@
     <div class="content">
         <div class="form-horizontal">
             @Html.Action("StoreScopeConfiguration", "Setting")
+            @Html.Action("Mode", "Setting")
             @Html.ValidationSummary(false)
 
             <div class="panel-group">
@@ -57,7 +58,7 @@
                                 @Html.ValidationMessageFor(model => model.ExchangeRate)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.MinimumRewardPointsToUse_OverrideForStore, model => model.MinimumRewardPointsToUse, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.MinimumRewardPointsToUse)
@@ -76,16 +77,6 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.PointsForRegistration_OverrideForStore, model => model.PointsForRegistration, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.PointsForRegistration)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.PointsForRegistration)
-                                @Html.ValidationMessageFor(model => model.PointsForRegistration)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_OverrideForStore, model => model.PointsForPurchases_Amount, model => model.PointsForPurchases_Points, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.PointsForPurchases_Amount)
                             </div>
@@ -101,7 +92,17 @@
                                 @Html.ValidationMessageFor(model => model.PointsForPurchases_Points)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.PointsForRegistration_OverrideForStore, model => model.PointsForRegistration, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.PointsForRegistration)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.PointsForRegistration)
+                                @Html.ValidationMessageFor(model => model.PointsForRegistration)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_Awarded_OverrideForStore, model => model.PointsForPurchases_Awarded, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.PointsForPurchases_Awarded)
@@ -111,7 +112,7 @@
                                 @Html.ValidationMessageFor(model => model.PointsForPurchases_Awarded)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_Canceled_OverrideForStore, model => model.PointsForPurchases_Canceled, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.PointsForPurchases_Canceled)
@@ -121,7 +122,7 @@
                                 @Html.ValidationMessageFor(model => model.PointsForPurchases_Canceled)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.DisplayHowMuchWillBeEarned_OverrideForStore, model => model.DisplayHowMuchWillBeEarned, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.DisplayHowMuchWillBeEarned)
@@ -131,7 +132,7 @@
                                 @Html.ValidationMessageFor(model => model.DisplayHowMuchWillBeEarned)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.NopLabelFor(model => model.PointsAccumulatedForAllStores)
                             </div>
@@ -140,7 +141,7 @@
                                 @Html.ValidationMessageFor(model => model.PointsAccumulatedForAllStores)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.PageSize_OverrideForStore, model => model.PageSize, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.PageSize)

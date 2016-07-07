@@ -28,6 +28,14 @@ namespace Nop.Admin.Models.Settings
         public bool AllowSearchByVendor { get; set; }
         public bool AllowSearchByVendor_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.AllowVendorsToEditInfo")]
+        public bool AllowVendorsToEditInfo { get; set; }
+        public bool AllowVendorsToEditInfo_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.NotifyStoreOwnerAboutVendorInformationChange")]
+        public bool NotifyStoreOwnerAboutVendorInformationChange { get; set; }
+        public bool NotifyStoreOwnerAboutVendorInformationChange_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.MaximumProductNumber")]
         public int MaximumProductNumber { get; set; }
         public bool MaximumProductNumber_OverrideForStore { get; set; }

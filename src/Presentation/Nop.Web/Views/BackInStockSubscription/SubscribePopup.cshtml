@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_RootPopup.cshtml";
 
     //page class
-    Html.AddPageCssClassParts("html-back-in-stock-subscription-page");
+    Html.AppendPageCssClassParts("html-back-in-stock-subscription-page");
 }
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "back-in-stock-subscription-form" }))
 {

@@ -44,7 +44,7 @@ namespace Nop.Services.Common
             if (props == null)
                 return default(TPropType);
             props = props.Where(x => x.StoreId == storeId).ToList();
-            if (props.Count == 0)
+            if (!props.Any())
                 return default(TPropType);
 
             var prop = props.FirstOrDefault(ga =>

@@ -88,13 +88,22 @@
                             @Html.ValidationMessageFor(model => model.DontSendBeforeDate)
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.StoreId)
                         </div>
                         <div class="col-md-9">
                             @Html.NopDropDownListFor(model => model.StoreId, Model.AvailableStores)
                             @Html.ValidationMessageFor(model => model.StoreId)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.CustomerRoleId)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDropDownListFor(model => model.CustomerRoleId, Model.AvailableCustomerRoles)
+                            @Html.ValidationMessageFor(model => model.CustomerRoleId)
                         </div>
                     </div>
                     <div class="form-group">

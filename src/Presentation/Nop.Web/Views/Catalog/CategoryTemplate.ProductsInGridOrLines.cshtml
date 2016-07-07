@@ -8,7 +8,7 @@
     Html.AddMetaDescriptionParts(Model.MetaDescription);
     Html.AddMetaKeywordParts(Model.MetaKeywords);
     //page class
-    Html.AddPageCssClassParts("html-category-page");
+    Html.AppendPageCssClassParts("html-category-page");
 
     var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
     if (canonicalUrlsEnabled)

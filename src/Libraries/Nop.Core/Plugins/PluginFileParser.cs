@@ -135,7 +135,7 @@ namespace Nop.Core.Plugins
 
             //nopCommerce 2.00 didn't have 'SupportedVersions' parameter
             //so let's set it to "2.00"
-            if (descriptor.SupportedVersions.Count == 0)
+            if (!descriptor.SupportedVersions.Any())
                 descriptor.SupportedVersions.Add("2.00");
 
             return descriptor;
@@ -162,7 +162,7 @@ namespace Nop.Core.Plugins
             keyValues.Add(new KeyValuePair<string, string>("Author", plugin.Author));
             keyValues.Add(new KeyValuePair<string, string>("DisplayOrder", plugin.DisplayOrder.ToString()));
             keyValues.Add(new KeyValuePair<string, string>("FileName", plugin.PluginFileName));
-            if (plugin.LimitedToStores.Count > 0)
+            if (plugin.LimitedToStores.Any())
             {
                 var storeList = string.Join(",", plugin.LimitedToStores);
                 keyValues.Add(new KeyValuePair<string, string>("LimitedToStores", storeList));

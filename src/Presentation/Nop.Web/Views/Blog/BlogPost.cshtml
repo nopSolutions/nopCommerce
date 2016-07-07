@@ -9,7 +9,7 @@
     Html.AddMetaDescriptionParts(Model.MetaDescription);
     Html.AddMetaKeywordParts(Model.MetaKeywords);
     //page class
-    Html.AddPageCssClassParts("html-blogpost-page");
+    Html.AppendPageCssClassParts("html-blogpost-page");
 }
 @section left {
     @Html.Widget("left_side_column_blog_before")
