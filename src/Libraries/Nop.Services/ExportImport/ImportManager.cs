@@ -641,7 +641,7 @@ namespace Nop.Services.ExportImport
 
                     //set default product type id
                     if (isNew && properties.All(p => p.PropertyName != "ProductTypeId"))
-                        product.ProductTypeId = (int) ProductType.SimpleProduct;
+                        product.ProductType = ProductType.SimpleProduct;
 
                     product.UpdatedOnUtc = DateTime.UtcNow;
 
