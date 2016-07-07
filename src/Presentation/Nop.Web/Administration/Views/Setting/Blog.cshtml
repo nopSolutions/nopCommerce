@@ -42,16 +42,6 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.PostsPageSize_OverrideForStore, model => model.PostsPageSize, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.PostsPageSize)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.PostsPageSize)
-                                @Html.ValidationMessageFor(model => model.PostsPageSize)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, model => model.AllowNotRegisteredUsersToLeaveComments, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.AllowNotRegisteredUsersToLeaveComments)
                             </div>
@@ -68,6 +58,16 @@
                             <div class="col-md-9">
                                 @Html.NopEditorFor(model => model.NotifyAboutNewBlogComments)
                                 @Html.ValidationMessageFor(model => model.NotifyAboutNewBlogComments)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.PostsPageSize_OverrideForStore, model => model.PostsPageSize, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.PostsPageSize)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.PostsPageSize)
+                                @Html.ValidationMessageFor(model => model.PostsPageSize)
                             </div>
                         </div>
                         <div class="form-group">

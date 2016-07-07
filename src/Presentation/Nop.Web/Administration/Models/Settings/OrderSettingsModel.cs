@@ -78,7 +78,11 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestsEnabled")]
         public bool ReturnRequestsEnabled { get; set; }
         public bool ReturnRequestsEnabled_OverrideForStore { get; set; }
-        
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestNumberMask")]
+        public string ReturnRequestNumberMask { get; set; }
+        public bool ReturnRequestNumberMask_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.NumberOfDaysReturnRequestAvailable")]
         public int NumberOfDaysReturnRequestAvailable { get; set; }
         public bool NumberOfDaysReturnRequestAvailable_OverrideForStore { get; set; }

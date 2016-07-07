@@ -44,7 +44,7 @@
 
         $('#@(prefix)-box').on('click', 'button[data-widget="collapse"]', function () {
             var collapsed = !$('#@(prefix)-box').hasClass('collapsed-box');
-            saveDashboardPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
+            saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
             if (!collapsed) {
                 $('#@(prefix)-box button[data-chart-role="toggle-chart"]').removeAttr('disabled');
                 if (!osCurrentPeriod) {

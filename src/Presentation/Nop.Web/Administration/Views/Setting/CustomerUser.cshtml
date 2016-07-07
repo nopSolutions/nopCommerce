@@ -103,6 +103,33 @@
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.UserRegistrationType)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDropDownListFor(model => model.CustomerSettings.UserRegistrationType, ((UserRegistrationType)Model.CustomerSettings.UserRegistrationType).ToSelectList())
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.UserRegistrationType)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.NotifyNewCustomerRegistration)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.NotifyNewCustomerRegistration)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.NotifyNewCustomerRegistration)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.AllowViewingProfiles)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.AllowViewingProfiles)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.AllowViewingProfiles)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.UsernamesEnabled)
                     </div>
                     <div class="col-md-9">
@@ -126,15 +153,6 @@
                     <div class="col-md-9">
                         @Html.NopEditorFor(model => model.CustomerSettings.CheckUsernameAvailabilityEnabled)
                         @Html.ValidationMessageFor(model => model.CustomerSettings.CheckUsernameAvailabilityEnabled)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.UserRegistrationType)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopDropDownListFor(model => model.CustomerSettings.UserRegistrationType, ((UserRegistrationType)Model.CustomerSettings.UserRegistrationType).ToSelectList())
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.UserRegistrationType)
                     </div>
                 </div>
                 <div class="form-group">
@@ -175,29 +193,56 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.AllowViewingProfiles)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerSettings.AllowViewingProfiles)
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.AllowViewingProfiles)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.NotifyNewCustomerRegistration)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerSettings.NotifyNewCustomerRegistration)
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.NotifyNewCustomerRegistration)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.RequireRegistrationForDownloadableProducts)
                     </div>
                     <div class="col-md-9">
                         @Html.NopEditorFor(model => model.CustomerSettings.RequireRegistrationForDownloadableProducts)
                         @Html.ValidationMessageFor(model => model.CustomerSettings.RequireRegistrationForDownloadableProducts)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.CustomerNameFormat)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDropDownListFor(model => model.CustomerSettings.CustomerNameFormat, ((CustomerNameFormat)Model.CustomerSettings.CustomerNameFormat).ToSelectList())
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.CustomerNameFormat)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.PasswordMinLength)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.PasswordMinLength)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.PasswordMinLength)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.DefaultPasswordFormat)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDropDownListFor(model => model.CustomerSettings.DefaultPasswordFormat, ((PasswordFormat)Model.CustomerSettings.DefaultPasswordFormat).ToSelectList())
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.DefaultPasswordFormat)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.PasswordRecoveryLinkDaysValid)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.PasswordRecoveryLinkDaysValid)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.PasswordRecoveryLinkDaysValid)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.EnteringEmailTwice)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.EnteringEmailTwice)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.EnteringEmailTwice)
                     </div>
                 </div>
                 <div class="form-group">
@@ -216,42 +261,6 @@
                     <div class="col-md-9">
                         @Html.NopEditorFor(model => model.CustomerSettings.HideBackInStockSubscriptionsTab)
                         @Html.ValidationMessageFor(model => model.CustomerSettings.HideBackInStockSubscriptionsTab)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.CustomerNameFormat)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopDropDownListFor(model => model.CustomerSettings.CustomerNameFormat, ((CustomerNameFormat)Model.CustomerSettings.CustomerNameFormat).ToSelectList())
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.CustomerNameFormat)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.DefaultPasswordFormat)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopDropDownListFor(model => model.CustomerSettings.DefaultPasswordFormat, ((PasswordFormat)Model.CustomerSettings.DefaultPasswordFormat).ToSelectList())
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.DefaultPasswordFormat)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.PasswordMinLength)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerSettings.PasswordMinLength)
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.PasswordMinLength)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.PasswordRecoveryLinkDaysValid)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerSettings.PasswordRecoveryLinkDaysValid)
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.PasswordRecoveryLinkDaysValid)
                     </div>
                 </div>
                 <div class="form-group">
@@ -279,15 +288,6 @@
                     <div class="col-md-9">
                         @Html.NopEditorFor(model => model.CustomerSettings.StoreLastVisitedPage)
                         @Html.ValidationMessageFor(model => model.CustomerSettings.StoreLastVisitedPage)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.EnteringEmailTwice)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerSettings.EnteringEmailTwice)
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.EnteringEmailTwice)
                     </div>
                 </div>
             </div>
