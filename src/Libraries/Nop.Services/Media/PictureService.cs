@@ -471,9 +471,6 @@ namespace Nop.Services.Media
                 return url;
             }
 
-            string lastPart = GetFileExtensionFromMimeType(picture.MimeType);
-            string thumbFileName;
-            string thumbFilePath;
             if (picture.IsNew)
             {
                 DeletePictureThumbs(picture);
@@ -490,21 +487,22 @@ namespace Nop.Services.Media
             }
 
             var seoFileName = picture.SeoFilename; // = GetPictureSeName(picture.SeoFilename); //just for sure
-
+            
+            string lastPart = GetFileExtensionFromMimeType(picture.MimeType);
+            string thumbFileName;
             if (targetSize == 0)
             {
                 thumbFileName = !String.IsNullOrEmpty(seoFileName)
                     ? string.Format("{0}_{1}.{2}", picture.Id.ToString("0000000"), seoFileName, lastPart)
                     : string.Format("{0}.{1}", picture.Id.ToString("0000000"), lastPart);
-                thumbFilePath = GetThumbLocalPath(thumbFileName);
             }
             else
             {
                 thumbFileName = !String.IsNullOrEmpty(seoFileName)
                     ? string.Format("{0}_{1}_{2}.{3}", picture.Id.ToString("0000000"), seoFileName, targetSize, lastPart)
                     : string.Format("{0}_{1}.{2}", picture.Id.ToString("0000000"), targetSize, lastPart);
-                thumbFilePath = GetThumbLocalPath(thumbFileName);
             }
+            string thumbFilePath = GetThumbLocalPath(thumbFileName);
 
             //the named mutex helps to avoid creating the same files in different threads,
             //and does not decrease performance significantly, because the code is blocked only for the specific file.
@@ -559,7 +557,7 @@ namespace Nop.Services.Media
                         }
                         else
                         {
-                            //create a deep copy of pictureBinary
+                            //create a copy of pictureBinary
                             pictureBinaryResized = pictureBinary.ToArray();
                         }
 
