@@ -295,12 +295,9 @@ namespace Nop.Services.Catalog
         /// <returns>Categories</returns>
         public virtual IList<Category> GetAllCategoriesDisplayedOnHomePage(bool showHidden = false)
         {
-            var query = from c in _categoryRepository.Table
-                        orderby c.DisplayOrder
-                        where c.Published &&
-                        !c.Deleted && 
-                        c.ShowOnHomePage
-                        select c;
+            var query =
+                _categoryRepository.Table.Where(c => c.Published && !c.Deleted && c.ShowOnHomePage)
+                    .OrderBy(c => c.DisplayOrder);
 
             var categories = query.ToList();
             if (!showHidden)

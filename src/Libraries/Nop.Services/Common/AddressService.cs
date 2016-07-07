@@ -101,10 +101,7 @@ namespace Nop.Services.Common
             if (countryId == 0)
                 return 0;
 
-            var query = from a in _addressRepository.Table
-                        where a.CountryId == countryId
-                        select a;
-            return query.Count();
+            return _addressRepository.Table.Count(a => a.CountryId == countryId);
         }
 
         /// <summary>
@@ -117,10 +114,7 @@ namespace Nop.Services.Common
             if (stateProvinceId == 0)
                 return 0;
 
-            var query = from a in _addressRepository.Table
-                        where a.StateProvinceId == stateProvinceId
-                        select a;
-            return query.Count();
+            return _addressRepository.Table.Count(a => a.StateProvinceId == stateProvinceId);
         }
 
         /// <summary>

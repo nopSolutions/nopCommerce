@@ -62,11 +62,7 @@ namespace Nop.Services.Media
             if (downloadGuid == Guid.Empty)
                 return null;
 
-            var query = from o in _downloadRepository.Table
-                        where o.DownloadGuid == downloadGuid
-                        select o;
-            var order = query.FirstOrDefault();
-            return order;
+            return _downloadRepository.Table.FirstOrDefault(o => o.DownloadGuid == downloadGuid);
         }
 
         /// <summary>

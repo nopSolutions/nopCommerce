@@ -58,9 +58,7 @@ namespace Nop.Services.Catalog
         /// <returns>Manufacturer templates</returns>
         public virtual IList<ManufacturerTemplate> GetAllManufacturerTemplates()
         {
-            var query = from pt in _manufacturerTemplateRepository.Table
-                        orderby pt.DisplayOrder
-                        select pt;
+            var query = _manufacturerTemplateRepository.Table.OrderBy(pt => pt.DisplayOrder);
 
             var templates = query.ToList();
             return templates;

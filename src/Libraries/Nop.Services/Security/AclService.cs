@@ -115,10 +115,7 @@ namespace Nop.Services.Security
             int entityId = entity.Id;
             string entityName = typeof(T).Name;
 
-            var query = from ur in _aclRecordRepository.Table
-                        where ur.EntityId == entityId &&
-                        ur.EntityName == entityName
-                        select ur;
+            var query = _aclRecordRepository.Table.Where(ur => ur.EntityId == entityId && ur.EntityName == entityName);
             var aclRecords = query.ToList();
             return aclRecords;
         }
@@ -204,10 +201,9 @@ namespace Nop.Services.Security
             string key = string.Format(ACLRECORD_BY_ENTITYID_NAME_KEY, entityId, entityName);
             return _cacheManager.Get(key, () =>
             {
-                var query = from ur in _aclRecordRepository.Table
-                            where ur.EntityId == entityId &&
-                            ur.EntityName == entityName 
-                            select ur.CustomerRoleId;
+                var query =
+                    _aclRecordRepository.Table.Where(ur => ur.EntityId == entityId && ur.EntityName == entityName)
+                        .Select(ur => ur.CustomerRoleId);
                 return query.ToArray();
             });
         }

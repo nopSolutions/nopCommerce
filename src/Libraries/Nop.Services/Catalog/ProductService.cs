@@ -202,12 +202,10 @@ namespace Nop.Services.Catalog
         /// <returns>Products</returns>
         public virtual IList<Product> GetAllProductsDisplayedOnHomePage()
         {
-            var query = from p in _productRepository.Table
-                        orderby p.DisplayOrder, p.Name
-                        where p.Published &&
-                        !p.Deleted &&
-                        p.ShowOnHomePage
-                        select p;
+            var query =
+                _productRepository.Table.Where(p => p.Published && !p.Deleted && p.ShowOnHomePage)
+                    .OrderBy(p => p.DisplayOrder)
+                    .ThenBy(p => p.Name);
             var products = query.ToList();
             return products;
         }
@@ -236,9 +234,7 @@ namespace Nop.Services.Catalog
             if (productIds == null || productIds.Length == 0)
                 return new List<Product>();
 
-            var query = from p in _productRepository.Table
-                        where productIds.Contains(p.Id)
-                        select p;
+            var query = _productRepository.Table.Where(p => productIds.Contains(p.Id));
             var products = query.ToList();
             //sort by passed identifiers
             var sortedProducts = new List<Product>();
@@ -1865,10 +1861,8 @@ namespace Nop.Services.Catalog
         /// <returns>Product pictures</returns>
         public virtual IList<ProductPicture> GetProductPicturesByProductId(int productId)
         {
-            var query = from pp in _productPictureRepository.Table
-                        where pp.ProductId == productId
-                        orderby pp.DisplayOrder
-                        select pp;
+            var query =
+                _productPictureRepository.Table.Where(pp => pp.ProductId == productId).OrderBy(pp => pp.DisplayOrder);
             var productPictures = query.ToList();
             return productPictures;
         }
@@ -1995,9 +1989,7 @@ namespace Nop.Services.Catalog
             if (productReviewIds == null || productReviewIds.Length == 0)
                 return new List<ProductReview>();
 
-            var query = from pr in _productReviewRepository.Table
-                        where productReviewIds.Contains(pr.Id)
-                        select pr;
+            var query = _productReviewRepository.Table.Where(pr => productReviewIds.Contains(pr.Id));
             var productReviews = query.ToList();
             //sort by passed identifiers
             var sortedProductReviews = new List<ProductReview>();

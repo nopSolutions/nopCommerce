@@ -164,9 +164,7 @@ namespace Nop.Services.Catalog
             string key = string.Format(PRODUCTATTRIBUTES_ALL_KEY, pageIndex, pageSize);
             return _cacheManager.Get(key, () =>
             {
-                var query = from pa in _productAttributeRepository.Table
-                            orderby pa.Name
-                            select pa;
+                var query = _productAttributeRepository.Table.OrderBy(pa => pa.Name);
                 var productAttributes = new PagedList<ProductAttribute>(query, pageIndex, pageSize);
                 return productAttributes;
             });
@@ -264,10 +262,9 @@ namespace Nop.Services.Catalog
 
             return _cacheManager.Get(key, () =>
             {
-                var query = from pam in _productAttributeMappingRepository.Table
-                            orderby pam.DisplayOrder
-                            where pam.ProductId == productId
-                            select pam;
+                var query =
+                    _productAttributeMappingRepository.Table.Where(pam => pam.ProductId == productId)
+                        .OrderBy(pam => pam.DisplayOrder);
                 var productAttributeMappings = query.ToList();
                 return productAttributeMappings;
             });
@@ -364,10 +361,10 @@ namespace Nop.Services.Catalog
             string key = string.Format(PRODUCTATTRIBUTEVALUES_ALL_KEY, productAttributeMappingId);
             return _cacheManager.Get(key, () =>
             {
-                var query = from pav in _productAttributeValueRepository.Table
-                            orderby pav.DisplayOrder
-                            where pav.ProductAttributeMappingId == productAttributeMappingId
-                            select pav;
+                var query =
+                    _productAttributeValueRepository.Table.Where(
+                        pav => pav.ProductAttributeMappingId == productAttributeMappingId)
+                        .OrderBy(pav => pav.DisplayOrder);
                 var productAttributeValues = query.ToList();
                 return productAttributeValues;
             });
@@ -461,10 +458,9 @@ namespace Nop.Services.Catalog
         /// <returns>Product attribute mapping collection</returns>
         public virtual IList<PredefinedProductAttributeValue> GetPredefinedProductAttributeValues(int productAttributeId)
         {
-            var query = from ppav in _predefinedProductAttributeValueRepository.Table
-                        orderby ppav.DisplayOrder
-                        where ppav.ProductAttributeId == productAttributeId
-                        select ppav;
+            var query =
+                _predefinedProductAttributeValueRepository.Table.Where(
+                    ppav => ppav.ProductAttributeId == productAttributeId).OrderBy(ppav => ppav.DisplayOrder);
             var values = query.ToList();
             return values;
         }
@@ -563,10 +559,8 @@ namespace Nop.Services.Catalog
 
             return _cacheManager.Get(key, () =>
             {
-                var query = from c in _productAttributeCombinationRepository.Table
-                            orderby c.Id
-                            where c.ProductId == productId
-                            select c;
+                var query =
+                    _productAttributeCombinationRepository.Table.Where(c => c.ProductId == productId).OrderBy(c => c.Id);
                 var combinations = query.ToList();
                 return combinations;
             });
@@ -597,10 +591,7 @@ namespace Nop.Services.Catalog
 
             sku = sku.Trim();
 
-            var query = from pac in _productAttributeCombinationRepository.Table
-                        orderby pac.Id
-                        where pac.Sku == sku
-                        select pac;
+            var query = _productAttributeCombinationRepository.Table.Where(pac => pac.Sku == sku).OrderBy(pac => pac.Id);
             var combination = query.FirstOrDefault();
             return combination;
         }

@@ -200,24 +200,20 @@ namespace Nop.Services.Shipping
         {
             if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
             {
-                var query1 = from sm in _shippingMethodRepository.Table
-                             where
-                             sm.RestrictedCountries.Select(c => c.Id).Contains(filterByCountryId.Value)
-                             select sm.Id;
+                var query1 =
+                    _shippingMethodRepository.Table.Where(
+                        sm => sm.RestrictedCountries.Select(c => c.Id).Contains(filterByCountryId.Value))
+                        .Select(sm => sm.Id);
 
-                var query2 = from sm in _shippingMethodRepository.Table
-                             where !query1.Contains(sm.Id)
-                             orderby sm.DisplayOrder
-                             select sm;
+                var query2 =
+                    _shippingMethodRepository.Table.Where(sm => !query1.Contains(sm.Id)).OrderBy(sm => sm.DisplayOrder);
 
                 var shippingMethods = query2.ToList();
                 return shippingMethods;
             }
             else
             {
-                var query = from sm in _shippingMethodRepository.Table
-                            orderby sm.DisplayOrder
-                            select sm;
+                var query = _shippingMethodRepository.Table.OrderBy(sm => sm.DisplayOrder);
                 var shippingMethods = query.ToList();
                 return shippingMethods;
             }
@@ -291,9 +287,7 @@ namespace Nop.Services.Shipping
         /// <returns>Delivery dates</returns>
         public virtual IList<DeliveryDate> GetAllDeliveryDates()
         {
-            var query = from dd in _deliveryDateRepository.Table
-                        orderby dd.DisplayOrder
-                        select dd;
+            var query = _deliveryDateRepository.Table.OrderBy(dd => dd.DisplayOrder);
             var deliveryDates = query.ToList();
             return deliveryDates;
         }
@@ -370,9 +364,7 @@ namespace Nop.Services.Shipping
         /// <returns>Warehouses</returns>
         public virtual IList<Warehouse> GetAllWarehouses()
         {
-            var query = from wh in _warehouseRepository.Table
-                        orderby wh.Name
-                        select wh;
+            var query = _warehouseRepository.Table.OrderBy(wh => wh.Name);
             var warehouses = query.ToList();
             return warehouses;
         }

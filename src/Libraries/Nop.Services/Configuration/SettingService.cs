@@ -83,9 +83,7 @@ namespace Nop.Services.Configuration
             {
                 //we use no tracking here for performance optimization
                 //anyway records are loaded only for read-only operations
-                var query = from s in _settingRepository.TableNoTracking
-                            orderby s.Name, s.StoreId
-                            select s;
+                var query = _settingRepository.TableNoTracking.OrderBy(s => s.Name).ThenBy(s => s.StoreId);
                 var settings = query.ToList();
                 var dictionary = new Dictionary<string, IList<SettingForCaching>>();
                 foreach (var s in settings)
@@ -320,9 +318,7 @@ namespace Nop.Services.Configuration
         /// <returns>Settings</returns>
         public virtual IList<Setting> GetAllSettings()
         {
-            var query = from s in _settingRepository.Table
-                        orderby s.Name, s.StoreId
-                        select s;
+            var query = _settingRepository.Table.OrderBy(s => s.Name).ThenBy(s => s.StoreId);
             var settings = query.ToList();
             return settings;
         }

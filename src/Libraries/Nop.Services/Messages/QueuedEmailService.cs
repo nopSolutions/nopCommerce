@@ -126,9 +126,7 @@ namespace Nop.Services.Messages
             if (queuedEmailIds == null || queuedEmailIds.Length == 0)
                 return new List<QueuedEmail>();
 
-            var query = from qe in _queuedEmailRepository.Table
-                        where queuedEmailIds.Contains(qe.Id)
-                        select qe;
+            var query = _queuedEmailRepository.Table.Where(qe => queuedEmailIds.Contains(qe.Id));
             var queuedEmails = query.ToList();
             //sort by passed identifiers
             var sortedQueuedEmails = new List<QueuedEmail>();

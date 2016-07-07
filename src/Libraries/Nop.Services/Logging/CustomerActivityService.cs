@@ -168,9 +168,7 @@ namespace Nop.Services.Logging
         /// <returns>Activity log type items</returns>
         public virtual IList<ActivityLogType> GetAllActivityTypes()
         {
-            var query = from alt in _activityLogTypeRepository.Table
-                orderby alt.Name
-                select alt;
+            var query = _activityLogTypeRepository.Table.OrderBy(alt => alt.Name);
             var activityLogTypes = query.ToList();
             return activityLogTypes;
         }

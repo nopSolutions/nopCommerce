@@ -239,10 +239,9 @@ namespace Nop.Services.Blogs
         /// <returns>Comments</returns>
         public virtual IList<BlogComment> GetAllComments(int customerId)
         {
-            var query = from c in _blogCommentRepository.Table
-                        orderby c.CreatedOnUtc
-                        where (customerId == 0 || c.CustomerId == customerId)
-                        select c;
+            var query =
+                _blogCommentRepository.Table.Where(c => customerId == 0 || c.CustomerId == customerId)
+                    .OrderBy(c => c.CreatedOnUtc);
             var content = query.ToList();
             return content;
         }
@@ -270,9 +269,7 @@ namespace Nop.Services.Blogs
             if (commentIds == null || commentIds.Length == 0)
                 return new List<BlogComment>();
 
-            var query = from bc in _blogCommentRepository.Table
-                        where commentIds.Contains(bc.Id)
-                        select bc;
+            var query = _blogCommentRepository.Table.Where(bc => commentIds.Contains(bc.Id));
             var comments = query.ToList();
             //sort by passed identifiers
             var sortedComments = new List<BlogComment>();

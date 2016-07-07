@@ -145,9 +145,7 @@ namespace Nop.Services.Directory
             string key = MEASUREDIMENSIONS_ALL_KEY;
             return _cacheManager.Get(key, () =>
             {
-                var query = from md in _measureDimensionRepository.Table
-                            orderby md.DisplayOrder
-                            select md;
+                var query = _measureDimensionRepository.Table.OrderBy(md => md.DisplayOrder);
                 var measureDimensions = query.ToList();
                 return measureDimensions;
 
@@ -325,9 +323,7 @@ namespace Nop.Services.Directory
             string key = MEASUREWEIGHTS_ALL_KEY;
             return _cacheManager.Get(key, () =>
             {
-                var query = from mw in _measureWeightRepository.Table
-                            orderby mw.DisplayOrder
-                            select mw;
+                var query = _measureWeightRepository.Table.OrderBy(mw => mw.DisplayOrder);
                 var measureWeights = query.ToList();
                 return measureWeights;
             });

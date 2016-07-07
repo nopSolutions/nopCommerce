@@ -167,10 +167,9 @@ namespace Nop.Services.News
         /// <returns>Comments</returns>
         public virtual IList<NewsComment> GetAllComments(int customerId)
         {
-            var query = from c in _newsCommentRepository.Table
-                        orderby c.CreatedOnUtc
-                        where (customerId == 0 || c.CustomerId == customerId)
-                        select c;
+            var query =
+                _newsCommentRepository.Table.Where(c => customerId == 0 || c.CustomerId == customerId)
+                    .OrderBy(c => c.CreatedOnUtc);
             var content = query.ToList();
             return content;
         }
@@ -198,9 +197,7 @@ namespace Nop.Services.News
             if (commentIds == null || commentIds.Length == 0)
                 return new List<NewsComment>();
 
-            var query = from nc in _newsCommentRepository.Table
-                        where commentIds.Contains(nc.Id)
-                        select nc;
+            var query = _newsCommentRepository.Table.Where(nc => commentIds.Contains(nc.Id));
             var comments = query.ToList();
             //sort by passed identifiers
             var sortedComments = new List<NewsComment>();

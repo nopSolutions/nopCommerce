@@ -71,10 +71,9 @@ namespace Nop.Services.Common
             if (String.IsNullOrEmpty(keyword))
                 return null;
 
-            var query = from st in _searchTermRepository.Table
-                        where st.Keyword == keyword && st.StoreId == storeId
-                        orderby st.Id
-                        select st;
+            var query =
+                _searchTermRepository.Table.Where(st => st.Keyword == keyword && st.StoreId == storeId)
+                    .OrderBy(st => st.Id);
             var searchTerm = query.FirstOrDefault();
             return searchTerm;
         }

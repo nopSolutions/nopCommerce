@@ -105,19 +105,16 @@ namespace Nop.Services.Shipping
             query = query.Where(s => s.Order != null && !s.Order.Deleted);
             if (vendorId > 0)
             {
-                var queryVendorOrderItems = from orderItem in _orderItemRepository.Table
-                                             where orderItem.Product.VendorId == vendorId
-                                             select orderItem.Id;
+                var queryVendorOrderItems =
+                    _orderItemRepository.Table.Where(orderItem => orderItem.Product.VendorId == vendorId)
+                        .Select(orderItem => orderItem.Id);
 
-                query = from s in query
-                        where queryVendorOrderItems.Intersect(s.ShipmentItems.Select(si => si.OrderItemId)).Any()
-                        select s;
+                query =
+                    query.Where(s => queryVendorOrderItems.Intersect(s.ShipmentItems.Select(si => si.OrderItemId)).Any());
             }
             if (warehouseId > 0)
             {
-                query = from s in query
-                        where s.ShipmentItems.Any(si => si.WarehouseId == warehouseId)
-                        select s;
+                query = query.Where(s => s.ShipmentItems.Any(si => si.WarehouseId == warehouseId));
             }
             query = query.OrderByDescending(s => s.CreatedOnUtc);
 
@@ -135,9 +132,7 @@ namespace Nop.Services.Shipping
             if (shipmentIds == null || shipmentIds.Length == 0)
                 return new List<Shipment>();
 
-            var query = from o in _shipmentRepository.Table
-                        where shipmentIds.Contains(o.Id)
-                        select o;
+            var query = _shipmentRepository.Table.Where(o => shipmentIds.Contains(o.Id));
             var shipments = query.ToList();
             //sort by passed identifiers
             var sortedOrders = new List<Shipment>();
@@ -289,12 +284,10 @@ namespace Nop.Services.Shipping
             if (ignoreDelivered)
                 query = query.Where(si => !si.Shipment.DeliveryDateUtc.HasValue);
 
-            var queryProductOrderItems = from orderItem in _orderItemRepository.Table
-                                         where orderItem.ProductId == product.Id
-                                         select orderItem.Id;
-            query = from si in query
-                    where queryProductOrderItems.Any(orderItemId => orderItemId == si.OrderItemId)
-                    select si;
+            var queryProductOrderItems =
+                _orderItemRepository.Table.Where(orderItem => orderItem.ProductId == product.Id)
+                    .Select(orderItem => orderItem.Id);
+            query = query.Where(si => queryProductOrderItems.Any(orderItemId => orderItemId == si.OrderItemId));
 
             //some null validation
             var result = Convert.ToInt32(query.Sum(si => (int?)si.Quantity));

@@ -99,9 +99,7 @@ namespace Nop.Services.Seo
             string key = string.Format(URLRECORD_ALL_KEY);
             return _cacheManager.Get(key, () =>
             {
-                var query = from ur in _urlRecordRepository.Table
-                            select ur;
-                var urlRecords = query.ToList();
+                var urlRecords = _urlRecordRepository.Table.ToList();
                 var list = new List<UrlRecordForCaching>();
                 foreach (var ur in urlRecords)
                 {
@@ -226,11 +224,10 @@ namespace Nop.Services.Seo
             if (String.IsNullOrEmpty(slug))
                 return null;
 
-            var query = from ur in _urlRecordRepository.Table
-                        where ur.Slug == slug
-                        //first, try to find an active record
-                        orderby ur.IsActive descending, ur.Id
-                        select ur;
+            var query =
+                _urlRecordRepository.Table.Where(ur => ur.Slug.Equals(slug, StringComparison.InvariantCultureIgnoreCase))
+                    .OrderByDescending(ur => ur.IsActive)
+                    .ThenByDescending(ur => ur.Id);
             var urlRecord = query.FirstOrDefault();
             return urlRecord;
         }
@@ -251,11 +248,11 @@ namespace Nop.Services.Seo
             {
                 //load all records (we know they are cached)
                 var source = GetAllUrlRecordsCached();
-                var query = from ur in source
-                            where ur.Slug.Equals(slug, StringComparison.InvariantCultureIgnoreCase)
-                            //first, try to find an active record
-                            orderby ur.IsActive descending, ur.Id
-                            select ur;
+                //first, try to find an active record
+                var query =
+                    source.Where(ur => ur.Slug.Equals(slug, StringComparison.InvariantCultureIgnoreCase))
+                        .OrderByDescending(ur => ur.IsActive)
+                        .ThenByDescending(ur => ur.Id);
                 var urlRecordForCaching = query.FirstOrDefault();
                 return urlRecordForCaching;
             }
@@ -307,13 +304,11 @@ namespace Nop.Services.Seo
                 {
                     //load all records (we know they are cached)
                     var source = GetAllUrlRecordsCached();
-                    var query = from ur in source
-                                where ur.EntityId == entityId &&
-                                ur.EntityName == entityName &&
-                                ur.LanguageId == languageId &&
-                                ur.IsActive
-                                orderby ur.Id descending
-                                select ur.Slug;
+                    var query =
+                        source.Where(
+                            ur =>
+                                ur.EntityId == entityId && ur.EntityName == entityName && ur.LanguageId == languageId &&
+                                ur.IsActive).OrderByDescending(ur => ur.Id).Select(ur => ur.Slug);
                     var slug = query.FirstOrDefault();
                     //little hack here. nulls aren't cacheable so set it to ""
                     if (slug == null)
@@ -328,13 +323,11 @@ namespace Nop.Services.Seo
                 return _cacheManager.Get(key, () =>
                 {
                     var source = _urlRecordRepository.Table;
-                    var query = from ur in source
-                                where ur.EntityId == entityId &&
-                                ur.EntityName == entityName &&
-                                ur.LanguageId == languageId &&
-                                ur.IsActive
-                                orderby ur.Id descending
-                                select ur.Slug;
+                    var query =
+                        source.Where(
+                            ur =>
+                                ur.EntityId == entityId && ur.EntityName == entityName && ur.LanguageId == languageId &&
+                                ur.IsActive).OrderByDescending(ur => ur.Id).Select(ur => ur.Slug);
                     var slug = query.FirstOrDefault();
                     //little hack here. nulls aren't cacheable so set it to ""
                     if (slug == null)
@@ -359,12 +352,10 @@ namespace Nop.Services.Seo
             int entityId = entity.Id;
             string entityName = typeof(T).Name;
 
-            var query = from ur in _urlRecordRepository.Table
-                        where ur.EntityId == entityId &&
-                        ur.EntityName == entityName &&
-                        ur.LanguageId == languageId
-                        orderby ur.Id descending 
-                        select ur;
+            var query =
+                _urlRecordRepository.Table.Where(
+                    ur => ur.EntityId == entityId && ur.EntityName == entityName && ur.LanguageId == languageId)
+                    .OrderByDescending(ur => ur.Id);
             var allUrlRecords = query.ToList();
             var activeUrlRecord = allUrlRecords.FirstOrDefault(x => x.IsActive);
 

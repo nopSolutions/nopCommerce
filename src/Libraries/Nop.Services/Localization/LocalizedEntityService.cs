@@ -78,11 +78,9 @@ namespace Nop.Services.Localization
             if (entityId == 0 || string.IsNullOrEmpty(localeKeyGroup))
                 return new List<LocalizedProperty>();
 
-            var query = from lp in _localizedPropertyRepository.Table
-                        orderby lp.Id
-                        where lp.EntityId == entityId &&
-                              lp.LocaleKeyGroup == localeKeyGroup
-                        select lp;
+            var query =
+                _localizedPropertyRepository.Table.Where(
+                    lp => lp.EntityId == entityId && lp.LocaleKeyGroup == localeKeyGroup).OrderBy(lp => lp.Id);
             var props = query.ToList();
             return props;
         }
@@ -97,8 +95,7 @@ namespace Nop.Services.Localization
             string key = string.Format(LOCALIZEDPROPERTY_ALL_KEY);
             return _cacheManager.Get(key, () =>
             {
-                var query = from lp in _localizedPropertyRepository.Table
-                            select lp;
+                var query = _localizedPropertyRepository.Table;
                 var localizedProperties = query.ToList();
                 var list = new List<LocalizedPropertyForCaching>();
                 foreach (var lp in localizedProperties)
@@ -212,7 +209,7 @@ namespace Nop.Services.Localization
                     var localeValue = query.FirstOrDefault();
                     //little hack here. nulls aren't cacheable so set it to ""
                     if (localeValue == null)
-                        localeValue = "";
+                        localeValue = String.Empty;
                     return localeValue;
                 });
             }

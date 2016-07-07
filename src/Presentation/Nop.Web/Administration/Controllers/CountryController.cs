@@ -488,8 +488,7 @@ namespace Nop.Admin.Controllers
 
             var country = _countryService.GetCountryById(Convert.ToInt32(countryId));
             var states = country != null ? _stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true).ToList() : new List<StateProvince>();
-            var result = (from s in states
-                         select new { id = s.Id, name = s.Name }).ToList();
+            var result = states.Select(s => new {id = s.Id, name = s.Name}).ToList();
             if (addAsterisk.HasValue && addAsterisk.Value)
             {
                 //asterisk

@@ -134,10 +134,7 @@ namespace Nop.Services.Forums
             }
 
             //number of topics
-            var queryNumTopics = from ft in _forumTopicRepository.Table
-                                 where ft.ForumId == forumId
-                                 select ft.Id;
-            int numTopics = queryNumTopics.Count();
+            int numTopics = _forumTopicRepository.Table.Count(ft => ft.ForumId == forumId);
 
             //number of posts
             var queryNumPosts = from ft in _forumTopicRepository.Table
@@ -198,24 +195,21 @@ namespace Nop.Services.Forums
             }
 
             //number of posts
-            var queryNumPosts = from fp in _forumPostRepository.Table
-                                where fp.TopicId == forumTopicId
-                                select fp.Id;
-            int numPosts = queryNumPosts.Count();
+            int numPosts = _forumPostRepository.Table.Count(fp => fp.TopicId == forumTopicId);
 
             //last values
             int lastPostId = 0;
             int lastPostCustomerId = 0;
             DateTime? lastPostTime = null;
-            var queryLastValues = from fp in _forumPostRepository.Table
-                                  where fp.TopicId == forumTopicId
-                                  orderby fp.CreatedOnUtc descending
-                                  select new
-                                  {
-                                      LastPostId = fp.Id,
-                                      LastPostCustomerId = fp.CustomerId,
-                                      LastPostTime = fp.CreatedOnUtc
-                                  };
+            var queryLastValues =
+                _forumPostRepository.Table.Where(fp => fp.TopicId == forumTopicId)
+                    .OrderByDescending(fp => fp.CreatedOnUtc)
+                    .Select(fp => new
+                    {
+                        LastPostId = fp.Id,
+                        LastPostCustomerId = fp.CustomerId,
+                        LastPostTime = fp.CreatedOnUtc
+                    });
             var lastValues = queryLastValues.FirstOrDefault();
             if (lastValues != null)
             {
@@ -250,10 +244,7 @@ namespace Nop.Services.Forums
                 return;
             }
 
-            var query = from fp in _forumPostRepository.Table
-                        where fp.CustomerId == customerId
-                        select fp.Id;
-            int numPosts = query.Count();
+            int numPosts = _forumPostRepository.Table.Count(fp => fp.CustomerId == customerId);
 
             _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.ForumPostCount, numPosts);
         }
@@ -315,9 +306,7 @@ namespace Nop.Services.Forums
             string key = string.Format(FORUMGROUP_ALL_KEY);
             return _cacheManager.Get(key, () =>
             {
-                var query = from fg in _forumGroupRepository.Table
-                            orderby fg.DisplayOrder
-                            select fg;
+                var query = _forumGroupRepository.Table.OrderBy(fg => fg.DisplayOrder);
                 return query.ToList();
             });
         }
@@ -369,19 +358,15 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forum">Forum</param>
         public virtual void DeleteForum(Forum forum)
-        {            
+        {
             if (forum == null)
             {
                 throw new ArgumentNullException("forum");
             }
 
             //delete forum subscriptions (topics)
-            var queryTopicIds = from ft in _forumTopicRepository.Table
-                           where ft.ForumId == forum.Id
-                           select ft.Id;
-            var queryFs1 = from fs in _forumSubscriptionRepository.Table
-                           where queryTopicIds.Contains(fs.TopicId)
-                           select fs;
+            var queryTopicIds = _forumTopicRepository.Table.Where(ft => ft.ForumId == forum.Id).Select(ft => ft.Id);
+            var queryFs1 = _forumSubscriptionRepository.Table.Where(fs => queryTopicIds.Contains(fs.TopicId));
             foreach (var fs in queryFs1.ToList())
             {
                 _forumSubscriptionRepository.Delete(fs);
@@ -390,9 +375,7 @@ namespace Nop.Services.Forums
             }
 
             //delete forum subscriptions (forum)
-            var queryFs2 = from fs in _forumSubscriptionRepository.Table
-                           where fs.ForumId == forum.Id
-                           select fs;
+            var queryFs2 = _forumSubscriptionRepository.Table.Where(fs => fs.ForumId == forum.Id);
             foreach (var fs2 in queryFs2.ToList())
             {
                 _forumSubscriptionRepository.Delete(fs2);
@@ -433,10 +416,8 @@ namespace Nop.Services.Forums
             string key = string.Format(FORUM_ALLBYFORUMGROUPID_KEY, forumGroupId);
             return _cacheManager.Get(key, () =>
             {
-                var query = from f in _forumRepository.Table
-                            orderby f.DisplayOrder
-                            where f.ForumGroupId == forumGroupId
-                            select f;
+                var query =
+                    _forumRepository.Table.Where(f => f.ForumGroupId == forumGroupId).OrderBy(f => f.DisplayOrder);
                 var forums = query.ToList();
                 return forums;
             });
@@ -474,7 +455,7 @@ namespace Nop.Services.Forums
             }
 
             _forumRepository.Update(forum);
-            
+
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
@@ -487,11 +468,11 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
         public virtual void DeleteTopic(ForumTopic forumTopic)
-        {            
+        {
             if (forumTopic == null)
-            {                
+            {
                 throw new ArgumentNullException("forumTopic");
-            }                
+            }
 
             int customerId = forumTopic.CustomerId;
             int forumId = forumTopic.ForumId;
@@ -500,9 +481,7 @@ namespace Nop.Services.Forums
             _forumTopicRepository.Delete(forumTopic);
 
             //delete forum subscriptions
-            var queryFs = from ft in _forumSubscriptionRepository.Table
-                          where ft.TopicId == forumTopic.Id
-                          select ft;
+            var queryFs = _forumSubscriptionRepository.Table.Where(ft => ft.TopicId == forumTopic.Id);
             var forumSubscriptions = queryFs.ToList();
             foreach (var fs in forumSubscriptions)
             {
@@ -589,14 +568,15 @@ namespace Nop.Services.Forums
                          (
                             !searchKeywords ||
                             (searchTopicTitles && ft.Subject.Contains(keywords)) ||
-                            (searchPostText && fp.Text.Contains(keywords))) && 
+                            (searchPostText && fp.Text.Contains(keywords))) &&
                          (!limitDate.HasValue || limitDate.Value <= ft.LastPostTime)
                          select ft.Id;
 
-            var query2 = from ft in _forumTopicRepository.Table
-                         where query1.Contains(ft.Id)
-                         orderby ft.TopicTypeId descending, ft.LastPostTime descending, ft.Id descending
-                         select ft;
+            var query2 =
+                _forumTopicRepository.Table.Where(ft => query1.Contains(ft.Id))
+                    .OrderByDescending(ft => ft.TopicTypeId)
+                    .ThenByDescending(ft => ft.LastPostTime)
+                    .ThenByDescending(ft => ft.Id);
 
             var topics = new PagedList<ForumTopic>(query2, pageIndex, pageSize);
             return topics;
@@ -609,7 +589,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Topics</returns>
-        public virtual IPagedList<ForumTopic> GetActiveTopics(int forumId = 0, 
+        public virtual IPagedList<ForumTopic> GetActiveTopics(int forumId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query1 = from ft in _forumTopicRepository.Table
@@ -733,7 +713,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumPost">Forum post</param>
         public virtual void DeletePost(ForumPost forumPost)
-        {            
+        {
             if (forumPost == null)
             {
                 throw new ArgumentNullException("forumPost");
@@ -801,7 +781,7 @@ namespace Nop.Services.Forums
         /// <param name="pageSize">Page size</param>
         /// <returns>Posts</returns>
         public virtual IPagedList<ForumPost> GetAllPosts(int forumTopicId = 0,
-            int customerId = 0, string keywords = "", 
+            int customerId = 0, string keywords = "",
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             return GetAllPosts(forumTopicId, customerId, keywords, true,
@@ -819,7 +799,7 @@ namespace Nop.Services.Forums
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Posts</returns>
         public virtual IPagedList<ForumPost> GetAllPosts(int forumTopicId = 0, int customerId = 0,
-            string keywords = "", bool ascSort = false, 
+            string keywords = "", bool ascSort = false,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _forumPostRepository.Table;
@@ -882,7 +862,7 @@ namespace Nop.Services.Forums
                 var languageId = _workContext.WorkingLanguage.Id;
 
                 int friendlyTopicPageIndex = CalculateTopicPageIndex(forumPost.TopicId,
-                    _forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10, 
+                    _forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10,
                     forumPost.Id) + 1;
 
                 foreach (ForumSubscription subscription in subscriptions)
@@ -1022,7 +1002,7 @@ namespace Nop.Services.Forums
             //Email notification
             if (_forumSettings.NotifyAboutPrivateMessages)
             {
-                _workflowMessageService.SendPrivateMessageNotification(privateMessage, _workContext.WorkingLanguage.Id);                
+                _workflowMessageService.SendPrivateMessageNotification(privateMessage, _workContext.WorkingLanguage.Id);
             }
         }
 
@@ -1136,7 +1116,7 @@ namespace Nop.Services.Forums
             {
                 throw new ArgumentNullException("forumSubscription");
             }
-            
+
             _forumSubscriptionRepository.Update(forumSubscription);
 
             //event notification
@@ -1341,7 +1321,7 @@ namespace Nop.Services.Forums
 
             return false;
         }
-        
+
         /// <summary>
         /// Check whether customer is allowed to delete post
         /// </summary>
@@ -1399,7 +1379,7 @@ namespace Nop.Services.Forums
             if (IsForumModerator(customer))
             {
                 return true;
-            }            
+            }
 
             return false;
         }

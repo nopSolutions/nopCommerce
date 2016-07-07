@@ -374,9 +374,7 @@ namespace Nop.Services.Customers
             if (customerIds == null || customerIds.Length == 0)
                 return new List<Customer>();
 
-            var query = from c in _customerRepository.Table
-                        where customerIds.Contains(c.Id)
-                        select c;
+            var query = _customerRepository.Table.Where(c => customerIds.Contains(c.Id));
             var customers = query.ToList();
             //sort by passed identifiers
             var sortedCustomers = new List<Customer>();
@@ -399,10 +397,7 @@ namespace Nop.Services.Customers
             if (customerGuid == Guid.Empty)
                 return null;
 
-            var query = from c in _customerRepository.Table
-                        where c.CustomerGuid == customerGuid
-                        orderby c.Id
-                        select c;
+            var query = _customerRepository.Table.Where(c => c.CustomerGuid == customerGuid).OrderBy(c => c.Id);
             var customer = query.FirstOrDefault();
             return customer;
         }
@@ -417,10 +412,7 @@ namespace Nop.Services.Customers
             if (string.IsNullOrWhiteSpace(email))
                 return null;
 
-            var query = from c in _customerRepository.Table
-                        orderby c.Id
-                        where c.Email == email
-                        select c;
+            var query = _customerRepository.Table.Where(c => c.Email == email).OrderBy(c => c.Id);
             var customer = query.FirstOrDefault();
             return customer;
         }
@@ -435,10 +427,7 @@ namespace Nop.Services.Customers
             if (string.IsNullOrWhiteSpace(systemName))
                 return null;
 
-            var query = from c in _customerRepository.Table
-                        orderby c.Id
-                        where c.SystemName == systemName
-                        select c;
+            var query = _customerRepository.Table.Where(c => c.SystemName == systemName).OrderBy(c => c.Id);
             var customer = query.FirstOrDefault();
             return customer;
         }
@@ -453,10 +442,7 @@ namespace Nop.Services.Customers
             if (string.IsNullOrWhiteSpace(username))
                 return null;
 
-            var query = from c in _customerRepository.Table
-                        orderby c.Id
-                        where c.Username == username
-                        select c;
+            var query = _customerRepository.Table.Where(c => c.Username == username).OrderBy(c => c.Id);
             var customer = query.FirstOrDefault();
             return customer;
         }
@@ -774,10 +760,7 @@ namespace Nop.Services.Customers
             string key = string.Format(CUSTOMERROLES_BY_SYSTEMNAME_KEY, systemName);
             return _cacheManager.Get(key, () =>
             {
-                var query = from cr in _customerRoleRepository.Table
-                            orderby cr.Id
-                            where cr.SystemName == systemName
-                            select cr;
+                var query = _customerRoleRepository.Table.Where(cr => cr.SystemName == systemName).OrderBy(cr => cr.Id);
                 var customerRole = query.FirstOrDefault();
                 return customerRole;
             });
@@ -793,10 +776,7 @@ namespace Nop.Services.Customers
             string key = string.Format(CUSTOMERROLES_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {
-                var query = from cr in _customerRoleRepository.Table
-                            orderby cr.Name
-                            where (showHidden || cr.Active)
-                            select cr;
+                var query = _customerRoleRepository.Table.Where(cr => showHidden || cr.Active).OrderBy(cr => cr.Name);
                 var customerRoles = query.ToList();
                 return customerRoles;
             });

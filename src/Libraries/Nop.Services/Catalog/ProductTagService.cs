@@ -210,12 +210,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product tag</returns>
         public virtual ProductTag GetProductTagByName(string name)
         {
-            var query = from pt in _productTagRepository.Table
-                        where pt.Name == name
-                        select pt;
-
-            var productTag = query.FirstOrDefault();
-            return productTag;
+            return _productTagRepository.Table.FirstOrDefault(pt => pt.Name == name);
         }
 
         /// <summary>
