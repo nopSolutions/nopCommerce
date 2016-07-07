@@ -51,13 +51,24 @@
                 {
                     if (Model.TermsOfServiceOnOrderConfirmPage)
                     {
-                    <div id="terms-of-service-warning-box" title="@T("Checkout.TermsOfService")" style="display:none;">
-                        <p>@T("Checkout.TermsOfService.PleaseAccept")</p>
-                    </div>
-                    <div class="terms-of-service">
-                        <input id="termsofservice" type="checkbox" name="termsofservice" />
-                        <span>@T("Checkout.TermsOfService.IAccept")<a class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "conditionsofuse" })', 450, 500, true)">@T("Checkout.TermsOfService.Read")</a></span>
-                    </div>
+                        <div id="terms-of-service-warning-box" title="@T("Checkout.TermsOfService")" style="display: none;">
+                            <p>@T("Checkout.TermsOfService.PleaseAccept")</p>
+                        </div>
+                        <div class="terms-of-service">
+                            <input id="termsofservice" type="checkbox" name="termsofservice"/>
+                            <span>
+                                @T("Checkout.TermsOfService.IAccept")
+                                <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
+                            </span>
+                            <script>
+                                $(document).ready(function() {
+                                    $('#read-terms').on('click', function(e) {
+                                        e.preventDefault();
+                                        displayPopupContentFromUrl('@Url.RouteUrl("TopicPopup", new {SystemName = "conditionsofuse"})', '@T("Checkout.TermsOfService")');
+                                    });
+                                });
+                            </script>
+                        </div>
                     }
                     <div class="buttons">
                         <input type="submit" name="nextstep" value="@T("Checkout.ConfirmButton")" class="button-1 confirm-order-next-step-button" />
