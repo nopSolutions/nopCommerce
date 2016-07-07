@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Web.Routing;
 using Nop.Core;
@@ -332,7 +333,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
             var errorString = errorSummary.ToString();
             if (!string.IsNullOrEmpty(errorString))
                 _logger.Error(errorString);
-            if (result.ShippingOptions.Count == 0)
+            if (!result.ShippingOptions.Any())
                 result.AddError(errorString);
 
             return result;

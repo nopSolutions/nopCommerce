@@ -63,7 +63,7 @@ namespace Nop.Services.ExportImport
         protected virtual void WriteCategories(XmlWriter xmlWriter, int parentCategoryId)
         {
             var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId, true);
-            if (categories != null && categories.Count > 0)
+            if (categories != null && categories.Any())
             {
                 foreach (var category in categories)
                 {
@@ -835,7 +835,7 @@ namespace Nop.Services.ExportImport
 
                 //products
                 var orderItems = order.OrderItems;
-                if (orderItems.Count > 0)
+                if (orderItems.Any())
                 {
                     xmlWriter.WriteStartElement("OrderItems");
                     foreach (var orderItem in orderItems)
@@ -871,7 +871,7 @@ namespace Nop.Services.ExportImport
 
                 //shipments
                 var shipments = order.Shipments.OrderBy(x => x.CreatedOnUtc).ToList();
-                if (shipments.Count > 0)
+                if (shipments.Any())
                 {
                     xmlWriter.WriteStartElement("Shipments");
                     foreach (var shipment in shipments)

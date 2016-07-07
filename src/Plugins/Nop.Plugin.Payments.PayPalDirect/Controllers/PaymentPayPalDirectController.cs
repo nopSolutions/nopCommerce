@@ -317,7 +317,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                                         case PaymentStatus.Paid:
                                             {
                                                 var recurringPaymentHistory = rp.RecurringPaymentHistory;
-                                                if (recurringPaymentHistory.Count == 0)
+                                                if (!recurringPaymentHistory.Any())
                                                 {
                                                     //first payment
                                                     var rph = new RecurringPaymentHistory

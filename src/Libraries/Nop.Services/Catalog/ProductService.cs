@@ -323,7 +323,7 @@ namespace Nop.Services.Catalog
             query = query.Where(p => !p.Deleted && p.Published && p.VisibleIndividually);
 
             //category filtering
-            if (categoryIds != null && categoryIds.Count > 0)
+            if (categoryIds != null && categoryIds.Any())
             {
                 query = from p in query
                         from pc in p.ProductCategories.Where(pc => categoryIds.Contains(pc.CategoryId))
@@ -882,7 +882,7 @@ namespace Nop.Services.Catalog
                 }
 
                 //category filtering
-                if (categoryIds != null && categoryIds.Count > 0)
+                if (categoryIds != null && categoryIds.Any())
                 {
                     query = from p in query
                             from pc in p.ProductCategories.Where(pc => categoryIds.Contains(pc.CategoryId))
@@ -952,7 +952,7 @@ namespace Nop.Services.Catalog
                 }
 
                 //search by specs
-                if (filteredSpecs != null && filteredSpecs.Count > 0)
+                if (filteredSpecs != null && filteredSpecs.Any())
                 {
                     var filteredAttributes = _specificationAttributeOptionRepository.Table
                         .Where(sao => filteredSpecs.Contains(sao.Id)).Select(sao => sao.SpecificationAttributeId).Distinct();
@@ -977,7 +977,7 @@ namespace Nop.Services.Catalog
                         select pGroup.FirstOrDefault();
 
                 //sort products
-                if (orderBy == ProductSortingEnum.Position && categoryIds != null && categoryIds.Count > 0)
+                if (orderBy == ProductSortingEnum.Position && categoryIds != null && categoryIds.Any())
                 {
                     //category position
                     var firstCategoryId = categoryIds[0];
@@ -1233,7 +1233,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            product.HasTierPrices = product.TierPrices.Count > 0;
+            product.HasTierPrices = product.TierPrices.Any();
             UpdateProduct(product);
         }
 
@@ -1246,7 +1246,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            product.HasDiscountsApplied = product.AppliedDiscounts.Count > 0;
+            product.HasDiscountsApplied = product.AppliedDiscounts.Any();
             UpdateProduct(product);
         }
 
@@ -1736,7 +1736,7 @@ namespace Nop.Services.Catalog
             if (numberOfProducts == 0)
                 return result;
 
-            if (cart == null || cart.Count == 0)
+            if (cart == null || !cart.Any())
                 return result;
 
             var cartProductIds = new List<int>();

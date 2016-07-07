@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -94,7 +95,7 @@ namespace Nop.Services.Tests.Shipping
         {
             var srcm = _shippingService.LoadAllShippingRateComputationMethods();
             srcm.ShouldNotBeNull();
-            (srcm.Count > 0).ShouldBeTrue();
+            (srcm.Any()).ShouldBeTrue();
         }
 
         [Test]
@@ -109,7 +110,7 @@ namespace Nop.Services.Tests.Shipping
         {
             var srcm = _shippingService.LoadActiveShippingRateComputationMethods();
             srcm.ShouldNotBeNull();
-            (srcm.Count > 0).ShouldBeTrue();
+            (srcm.Any()).ShouldBeTrue();
         }
         
         [Test]

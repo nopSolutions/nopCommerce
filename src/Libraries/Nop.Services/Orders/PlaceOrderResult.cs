@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Services.Orders
@@ -21,7 +22,7 @@ namespace Nop.Services.Orders
         /// </summary>
         public bool Success
         {
-            get { return (this.Errors.Count == 0); }
+            get { return (!this.Errors.Any()); }
         }
 
         /// <summary>

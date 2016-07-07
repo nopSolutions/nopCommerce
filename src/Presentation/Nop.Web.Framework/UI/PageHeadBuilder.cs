@@ -230,7 +230,7 @@ namespace Nop.Web.Framework.UI
             if (!_scriptParts.ContainsKey(location) || _scriptParts[location] == null)
                 return "";
 
-            if (_scriptParts.Count == 0)
+            if (!_scriptParts.Any())
                 return "";
             
             if (!bundleFiles.HasValue)
@@ -328,7 +328,7 @@ namespace Nop.Web.Framework.UI
 
             //use only distinct rows
             var distinctParts = _cssParts[location].Distinct().ToList();
-            if (distinctParts.Count == 0)
+            if (!distinctParts.Any())
                 return "";
             if (!bundleFiles.HasValue)
             {
@@ -431,7 +431,7 @@ namespace Nop.Web.Framework.UI
         {
             //use only distinct rows
             var distinctParts = _headCustomParts.Distinct().ToList();
-            if (distinctParts.Count == 0)
+            if (!distinctParts.Any())
                 return "";
 
             var result = new StringBuilder();

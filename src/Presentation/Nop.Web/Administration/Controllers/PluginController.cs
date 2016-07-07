@@ -106,7 +106,7 @@ namespace Nop.Admin.Controllers
                     .Select(s => s.ToModel())
                     .ToList();
                 pluginModel.SelectedStoreIds = pluginDescriptor.LimitedToStores.ToArray();
-                pluginModel.LimitedToStores = pluginDescriptor.LimitedToStores.Count > 0;
+                pluginModel.LimitedToStores = pluginDescriptor.LimitedToStores.Any();
             }
 
 

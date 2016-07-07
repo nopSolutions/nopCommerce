@@ -271,7 +271,7 @@ namespace Nop.Web.Extensions
                                             }
                                             //When there is just one tier (with  qty 1), 
                                             //there are no actual savings in the list.
-                                            bool displayFromMessage = tierPrices.Count > 0 &&
+                                            bool displayFromMessage = tierPrices.Any() &&
                                                 !(tierPrices.Count == 1 && tierPrices[0].Quantity <= 1);
                                             if (displayFromMessage)
                                             {

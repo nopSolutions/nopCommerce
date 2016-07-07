@@ -324,7 +324,7 @@ namespace Nop.Web.Controllers
                         ProductSeName = product.GetSeName()
                     };
                     var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
-                    if (productCategories.Count > 0)
+                    if (productCategories.Any())
                     {
                         var category = productCategories[0].Category;
                         if (category != null)
@@ -614,7 +614,7 @@ namespace Nop.Web.Controllers
                 //no value in the cache yet
                 //let's load attributes and cache the result (true/false)
                 productAttributeMapping = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
-                hasProductAttributesCache = productAttributeMapping.Count > 0;
+                hasProductAttributesCache = productAttributeMapping.Any();
                 _cacheManager.Set(cacheKey, hasProductAttributesCache, 60);
             }
             if (hasProductAttributesCache.Value && productAttributeMapping == null)
@@ -745,7 +745,7 @@ namespace Nop.Web.Controllers
                                 if (!String.IsNullOrEmpty(updatecartitem.AttributesXml))
                                 {
                                     var enteredText = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id);
-                                    if (enteredText.Count > 0)
+                                    if (enteredText.Any())
                                         attributeModel.DefaultValue = enteredText[0];
                                 }
                             }
@@ -754,7 +754,7 @@ namespace Nop.Web.Controllers
                             {
                                 //keep in mind my that the code below works only in the current culture
                                 var selectedDateStr = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id);
-                                if (selectedDateStr.Count > 0)
+                                if (selectedDateStr.Any())
                                 {
                                     DateTime selectedDate;
                                     if (DateTime.TryParseExact(selectedDateStr[0], "D", CultureInfo.CurrentCulture,
@@ -1027,7 +1027,7 @@ namespace Nop.Web.Controllers
             //availability dates
             products = products.Where(p => p.IsAvailable()).ToList();
 
-            if (products.Count == 0)
+            if (!products.Any())
                 return Content("");
 
             var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
@@ -1054,7 +1054,7 @@ namespace Nop.Web.Controllers
             //availability dates
             products = products.Where(p => p.IsAvailable()).ToList();
 
-            if (products.Count == 0)
+            if (!products.Any())
                 return Content("");
 
             //prepare model
@@ -1077,7 +1077,7 @@ namespace Nop.Web.Controllers
             //availability dates
             products = products.Where(p => p.IsAvailable()).ToList();
 
-            if (products.Count == 0)
+            if (!products.Any())
                 return Content("");
 
 
@@ -1124,7 +1124,7 @@ namespace Nop.Web.Controllers
             //availability dates
             products = products.Where(p => p.IsAvailable()).ToList();
 
-            if (products.Count == 0)
+            if (!products.Any())
                 return Content("");
 
             //prepare model
@@ -1225,7 +1225,7 @@ namespace Nop.Web.Controllers
             //availability dates
             products = products.Where(p => p.IsAvailable()).ToList();
 
-            if (products.Count == 0)
+            if (!products.Any())
                 return Content("");
 
             //prepare model
@@ -1242,7 +1242,7 @@ namespace Nop.Web.Controllers
             //availability dates
             products = products.Where(p => p.IsAvailable()).ToList();
 
-            if (products.Count == 0)
+            if (!products.Any())
                 return Content("");
 
             var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();

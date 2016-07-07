@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Html;
@@ -141,7 +142,7 @@ namespace Nop.Services.Forums
                 throw new ArgumentNullException("forumTopic");
 
             var forumPosts = forumService.GetAllPosts(forumTopic.Id, 0, string.Empty, 0, 1);
-            if (forumPosts.Count > 0)
+            if (forumPosts.Any())
                 return forumPosts[0];
 
             return null;

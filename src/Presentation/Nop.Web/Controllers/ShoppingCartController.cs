@@ -240,7 +240,7 @@ namespace Nop.Web.Controllers
             
             model.OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled;
 
-            if (cart.Count == 0)
+            if (!cart.Any())
                 return;
             
             #region Simple properties
@@ -365,7 +365,7 @@ namespace Nop.Web.Controllers
                             if (!String.IsNullOrEmpty(selectedCheckoutAttributes))
                             {
                                 var enteredText = _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id);
-                                if (enteredText.Count > 0)
+                                if (enteredText.Any())
                                     attributeModel.DefaultValue = enteredText[0];
                             }
                         }
@@ -374,7 +374,7 @@ namespace Nop.Web.Controllers
                         {
                             //keep in mind my that the code below works only in the current culture
                             var selectedDateStr = _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id);
-                            if (selectedDateStr.Count > 0)
+                            if (selectedDateStr.Any())
                             {
                                 DateTime selectedDate;
                                 if (DateTime.TryParseExact(selectedDateStr[0], "D", CultureInfo.CurrentCulture,
@@ -415,7 +415,7 @@ namespace Nop.Web.Controllers
 
             if (prepareEstimateShippingIfEnabled)
             {
-                model.EstimateShipping.Enabled = cart.Count > 0 && cart.RequiresShipping() && _shippingSettings.EstimateShippingEnabled;
+                model.EstimateShipping.Enabled = cart.Any() && cart.RequiresShipping() && _shippingSettings.EstimateShippingEnabled;
                 if (model.EstimateShipping.Enabled)
                 {
                     //countries
@@ -431,7 +431,7 @@ namespace Nop.Web.Controllers
                     //states
                     int? defaultEstimateStateId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null) ? _workContext.CurrentCustomer.ShippingAddress.StateProvinceId : model.EstimateShipping.StateProvinceId;
                     var states = defaultEstimateCountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(defaultEstimateCountryId.Value, _workContext.WorkingLanguage.Id).ToList() : new List<StateProvince>();
-                    if (states.Count > 0)
+                    if (states.Any())
                         foreach (var s in states)
                             model.EstimateShipping.AvailableStates.Add(new SelectListItem
                             {
@@ -664,7 +664,7 @@ namespace Nop.Web.Controllers
             model.DisplayAddToCart = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart);
             model.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoWishlist;
 
-            if (cart.Count == 0)
+            if (!cart.Any())
                 return;
 
             #region Simple properties
@@ -821,7 +821,7 @@ namespace Nop.Web.Controllers
                     .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
                 model.TotalProducts = cart.GetTotalProducts();
-                if (cart.Count > 0)
+                if (cart.Any())
                 {
                     //subtotal
                     decimal orderSubTotalDiscountAmountBase;
@@ -847,7 +847,7 @@ namespace Nop.Web.Controllers
                         () =>
                         {
                             var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !requiresShipping);
-                            return checkoutAttributes.Count > 0;
+                            return checkoutAttributes.Any();
                         });
 
                     bool minOrderSubtotalAmountOk = _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
@@ -910,7 +910,7 @@ namespace Nop.Web.Controllers
             var model = new OrderTotalsModel();
             model.IsEditable = isEditable;
 
-            if (cart.Count > 0)
+            if (cart.Any())
             {
                 //subtotal
                 decimal orderSubTotalDiscountAmountBase;
@@ -983,7 +983,7 @@ namespace Nop.Web.Controllers
                     }
                     else
                     {
-                        displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count > 0;
+                        displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
                         displayTax = !displayTaxRates;
 
                         model.Tax = _priceFormatter.FormatPrice(shoppingCartTax, true, false);
@@ -1025,7 +1025,7 @@ namespace Nop.Web.Controllers
                 }
 
                 //gift cards
-                if (appliedGiftCards != null && appliedGiftCards.Count > 0)
+                if (appliedGiftCards != null && appliedGiftCards.Any())
                 {
                     foreach (var appliedGiftCard in appliedGiftCards)
                     {
@@ -1453,7 +1453,7 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            if (product.ProductAttributeMappings.Count > 0)
+            if (product.ProductAttributeMappings.Any())
             {
                 //product has some attributes. let a customer see them
                 return Json(new
@@ -1475,7 +1475,7 @@ namespace Nop.Web.Controllers
                 .GetShoppingCartItemWarnings(_workContext.CurrentCustomer, cartType,
                 product, _storeContext.CurrentStore.Id, string.Empty, 
                 decimal.Zero, null, null, quantityToValidate, false, true, false, false, false);
-            if (addToCartWarnings.Count > 0)
+            if (addToCartWarnings.Any())
             {
                 //cannot be added to the cart
                 //let's display standard warnings
@@ -1492,7 +1492,7 @@ namespace Nop.Web.Controllers
                 shoppingCartType: cartType,
                 storeId: _storeContext.CurrentStore.Id,
                 quantity: quantity);
-            if (addToCartWarnings.Count > 0)
+            if (addToCartWarnings.Any())
             {
                 //cannot be added to the cart
                 //but we do not display attribute and gift card warnings here. let's do it on the product details page
@@ -1709,7 +1709,7 @@ namespace Nop.Web.Controllers
                 addToCartWarnings.AddRange(_shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
                     updatecartitem.Id, attributes, customerEnteredPriceConverted,
                     rentalStartDate, rentalEndDate, quantity, true));
-                if (otherCartItemWithSameParameters != null && addToCartWarnings.Count == 0)
+                if (otherCartItemWithSameParameters != null && !addToCartWarnings.Any())
                 {
                     //delete the same shopping cart item (the other one)
                     _shoppingCartService.DeleteShoppingCartItem(otherCartItemWithSameParameters);
@@ -1718,7 +1718,7 @@ namespace Nop.Web.Controllers
 
             #region Return result
 
-            if (addToCartWarnings.Count > 0)
+            if (addToCartWarnings.Any())
             {
                 //cannot be added to the cart/wishlist
                 //let's display warnings
@@ -2250,7 +2250,7 @@ namespace Nop.Web.Controllers
             //validate attributes
             var checkoutAttributes = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
             var checkoutAttributeWarnings = _shoppingCartService.GetShoppingCartWarnings(cart, checkoutAttributes, true);
-            if (checkoutAttributeWarnings.Count > 0)
+            if (checkoutAttributeWarnings.Any())
             {
                 //something wrong, redisplay the page with warnings
                 var model = new ShoppingCartModel();
@@ -2429,7 +2429,7 @@ namespace Nop.Web.Controllers
                 }
                 else
                 {
-                    if (getShippingOptionResponse.ShippingOptions.Count > 0)
+                    if (getShippingOptionResponse.ShippingOptions.Any())
                     {
                         foreach (var shippingOption in getShippingOptionResponse.ShippingOptions)
                         {
@@ -2674,11 +2674,11 @@ namespace Nop.Web.Controllers
                         _storeContext.CurrentStore.Id,
                         sci.AttributesXml, sci.CustomerEnteredPrice,
                         sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, true);
-                    if (warnings.Count == 0)
+                    if (!warnings.Any())
                         numberOfAddedItems++;
                     if (_shoppingCartSettings.MoveItemsFromWishlistToCart && //settings enabled
                         !customerGuid.HasValue && //own wishlist
-                        warnings.Count == 0) //no warnings ( already in the cart)
+                        !warnings.Any()) //no warnings ( already in the cart)
                     {
                         //let's remove the item from wishlist
                         _shoppingCartService.DeleteShoppingCartItem(sci);
@@ -2691,7 +2691,7 @@ namespace Nop.Web.Controllers
             {
                 //redirect to the shopping cart page
 
-                if (allWarnings.Count > 0)
+                if (allWarnings.Any())
                 {
                     ErrorNotification(_localizationService.GetResource("Wishlist.AddToCart.Error"), true);
                 }
@@ -2702,7 +2702,7 @@ namespace Nop.Web.Controllers
             {
                 //no items added. redisplay the wishlist page
 
-                if (allWarnings.Count > 0)
+                if (allWarnings.Any())
                 {
                     ErrorNotification(_localizationService.GetResource("Wishlist.AddToCart.Error"), false);
                 }
@@ -2728,7 +2728,7 @@ namespace Nop.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
-            if (cart.Count == 0)
+            if (!cart.Any())
                 return RedirectToRoute("HomePage");
 
             var model = new WishlistEmailAFriendModel
@@ -2752,7 +2752,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            if (cart.Count == 0)
+            if (!cart.Any())
                 return RedirectToRoute("HomePage");
 
             //validate CAPTCHA
