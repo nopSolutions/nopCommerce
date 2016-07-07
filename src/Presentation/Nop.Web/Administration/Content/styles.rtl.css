@@ -313,9 +313,24 @@ td.k-state-focused.k-state-selected {
 }
 .k-grid-header .k-header {
     white-space: normal;
+    background-image: none;
+    background-color: #fff;
+    border: 1px solid #f4f4f4;
+    font-weight: bold;
 }
 .k-grid.k-widget {
     overflow-x: auto;
+    border: 1px solid #f4f4f4;
+}
+.k-grid.k-widget td {
+    border: 1px solid #f4f4f4;
+}
+.k-grid.k-widget .k-alt {
+    background-color: #f9f9f9;
+}
+.k-grid.k-widget .k-pager-wrap {
+    border: 1px solid #f4f4f4;
+    background-color: #ffffff;
 }
 .k-window-titlebar {
     height: 2em;
