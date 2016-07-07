@@ -26,8 +26,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         /// <returns>Exchange rates</returns>
         public IList<Core.Domain.Directory.ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
         {
-            if (String.IsNullOrEmpty(exchangeRateCurrencyCode) ||
-                exchangeRateCurrencyCode.ToLower() != "eur")
+            if (String.IsNullOrEmpty(exchangeRateCurrencyCode))
                 throw new NopException(_localizationService.GetResource("Plugins.ExchangeRate.EcbExchange.SetCurrencyToEURO"));
 
             var exchangeRates = new List<Nop.Core.Domain.Directory.ExchangeRate>();
@@ -57,6 +56,13 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
                     }
                     );
                 }
+            }
+            if(exchangeRateCurrencyCode.ToLower() != "eur")
+            {
+                var rate = exchangeRates.Find(r => r.CurrencyCode.Equals(exchangeRateCurrencyCode, StringComparison.OrdinalIgnoreCase));
+                if(rate==default(Core.Domain.Directory.ExchangeRate))
+                    throw new NopException(_localizationService.GetResource("Plugins.ExchangeRate.EcbExchange.SetCurrencyToEURO"));
+                exchangeRates.ForEach(r => r.Rate = r.Rate / rate.Rate);
             }
             return exchangeRates;
         }

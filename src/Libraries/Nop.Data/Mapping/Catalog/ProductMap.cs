@@ -29,6 +29,9 @@ namespace Nop.Data.Mapping.Catalog
             this.Property(p => p.AllowedQuantities).HasMaxLength(1000);
             this.Property(p => p.BasepriceAmount).HasPrecision(18, 4);
             this.Property(p => p.BasepriceBaseAmount).HasPrecision(18, 4);
+            this.Property(p => p.IsPaidService).IsRequired();
+            this.Property(p => p.PaidServiceExpirationDays).IsOptional();
+            this.Property(p => p.PaidFields).HasMaxLength(100).IsOptional();
 
             this.Ignore(p => p.ProductType);
             this.Ignore(p => p.BackorderMode);

@@ -373,6 +373,13 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.UpdatedOn")]
         public DateTime? UpdatedOn { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsPaidService")]
+        public bool IsPaidService { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.PaidServiceExpirationDays")]
+        [UIHint("Int32Nullable")]
+        public int? PaidServiceExpirationDays { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.PaidFields")]
+        public string PaidFields { get; set; }
 
         public string PrimaryStoreCurrencyCode { get; set; }
         public string BaseDimensionIn { get; set; }

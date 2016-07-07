@@ -226,7 +226,10 @@ namespace Nop.Services.Catalog
                 Published = isPublished,
                 Deleted = product.Deleted,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                IsPaidService = product.IsPaidService,
+                PaidServiceExpirationDays = product.PaidServiceExpirationDays,
+                PaidFields = product.PaidFields
             };
 
             //validate search engine name
