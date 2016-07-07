@@ -5,10 +5,19 @@ namespace Nop.Plugin.Shipping.CanadaPost
 {
     public class CanadaPostSettings : ISettings
     {
-        public string Url { get; set; }
+        /// <summary>
+        /// Gets or sets customer number
+        /// </summary>
+        public string CustomerNumber { get; set; }
 
-        public int Port { get; set; }
+        /// <summary>
+        /// Gets or sets the API key
+        /// </summary>
+        public string ApiKey { get; set; }
 
-        public string CustomerId { get; set; }
+        /// <summary>
+        /// Gets or sets value indicating whether to use sandbox (testing environment)
+        /// </summary>
+        public bool UseSandbox { get; set; }
     }
 }

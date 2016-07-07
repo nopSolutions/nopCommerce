@@ -280,7 +280,6 @@ namespace Nop.Web.Models.Catalog
             public ProductAttributeValueModel()
             {
                 ImageSquaresPictureModel = new PictureModel();
-                PictureModel = new PictureModel();
             }
 
             public string Name { get; set; }
@@ -296,8 +295,8 @@ namespace Nop.Web.Models.Catalog
 
             public bool IsPreSelected { get; set; }
 
-            //picture model is used when we want to override a default product picture when some attribute is selected
-            public PictureModel PictureModel { get; set; }
+            //product picture ID (associated to this value)
+            public int PictureId { get; set; }
         }
 
 		#endregion

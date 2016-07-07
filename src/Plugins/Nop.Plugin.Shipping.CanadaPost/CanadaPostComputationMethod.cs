@@ -1,20 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
+using System.Text;
 using System.Web.Routing;
-using System.Xml;
-using System.Xml.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
-using Nop.Plugin.Shipping.CanadaPost.Domain;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
 
@@ -27,243 +21,113 @@ namespace Nop.Plugin.Shipping.CanadaPost
     {
         #region Fields
 
-        private readonly IMeasureService _measureService;
-        private readonly IShippingService _shippingService;
-        private readonly ISettingService _settingService;
         private readonly CanadaPostSettings _canadaPostSettings;
-        private readonly IWorkContext _workContext;
+        private readonly ICurrencyService _currencyService;
+        private readonly ILogger _logger;
+        private readonly IMeasureService _measureService;
+        private readonly ISettingService _settingService;
+        private readonly IShippingService _shippingService;
 
         #endregion
 
         #region Ctor
-        public CanadaPostComputationMethod(IMeasureService measureService,
-            IShippingService shippingService, ISettingService settingService,
-            CanadaPostSettings canadaPostSettings, IWorkContext workContext)
+
+        public CanadaPostComputationMethod(CanadaPostSettings canadaPostSettings,
+            ICurrencyService currencyService,
+            ILogger logger,
+            IMeasureService measureService,
+            ISettingService settingService,
+            IShippingService shippingService)
         {
-            this._measureService = measureService;
-            this._shippingService = shippingService;
-            this._settingService = settingService;
             this._canadaPostSettings = canadaPostSettings;
-            this._workContext = workContext;
+            this._currencyService = currencyService;
+            this._logger = logger;
+            this._measureService = measureService;
+            this._settingService = settingService;
+            this._shippingService = shippingService;
         }
+
         #endregion
-        
+
+        #region Properties
+
+        /// <summary>
+        /// Gets a shipping rate computation method type
+        /// </summary>
+        public ShippingRateComputationMethodType ShippingRateComputationMethodType
+        {
+            get
+            {
+                return ShippingRateComputationMethodType.Realtime;
+            }
+        }
+
+        /// <summary>
+        /// Gets a shipment tracker
+        /// </summary>
+        public IShipmentTracker ShipmentTracker
+        {
+            get
+            {
+                return new CanadaPostShipmentTracker(_canadaPostSettings, _logger);
+            }
+        }
+
+        #endregion
+
         #region Utilities
 
         /// <summary>
-        /// Sends the message to CanadaPost.
+        /// Calculate parcel weight in kgs
         /// </summary>
-        /// <param name="eParcelMessage">The e parcel message.</param>
-        /// <returns></returns>
-        private string SendMessage(string eParcelMessage)
+        /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
+        /// <param name="weight">Weight</param>
+        private void GetWeight(GetShippingOptionRequest getShippingOptionRequest, out decimal weight)
         {
-            using (var socCanadaPost = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
-            {
-                socCanadaPost.ReceiveTimeout = 12000;
-                var remoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(_canadaPostSettings.Url)[0], _canadaPostSettings.Port);
-
-                socCanadaPost.Connect(remoteEndPoint);
-                byte[] data = System.Text.Encoding.ASCII.GetBytes(eParcelMessage);
-                socCanadaPost.Send(data);
-
-                string resp = String.Empty;
-                var buffer = new byte[8192];
-
-                while (!resp.Contains("<!--END_OF_EPARCEL-->"))
-                {
-                    int iRx;
-                    try
-                    {
-                        iRx = socCanadaPost.Receive(buffer, 0, 8192, SocketFlags.None);
-                    }
-                    catch (SocketException e)
-                    {
-                        if (e.SocketErrorCode == SocketError.TimedOut)
-                            break;
-                        
-                        throw e;
-                    }
-                    if (iRx > 0)
-                    {
-                        resp += new string((System.Text.Encoding.UTF8.GetChars(buffer, 0, iRx)));
-                    }
-                }
-                return resp;
-            }
-        }
-
-        /// <summary>
-        /// Handles the result.
-        /// </summary>
-        /// <param name="canadaPostResponse">The response from Canada Post.</param>
-        /// /// <param name="language">The language.</param>
-        /// <returns></returns>
-        private RequestResult HandleResult(string canadaPostResponse, CanadaPostLanguageEnum language)
-        {
-            var result = new RequestResult();
-            if (String.IsNullOrEmpty(canadaPostResponse))
-            {
-                result.IsError = true;
-                result.StatusCode = 0;
-                result.StatusMessage = "Unable to connect to Canada Post.";
-                return result;
-            }
-            var doc = new XmlDocument();
-            doc.LoadXml(canadaPostResponse);
-
-            XElement resultRates = XElement.Load(new StringReader(canadaPostResponse));
-            IEnumerable<XElement> query;
-            // if we have any errors
-            if (doc.GetElementsByTagName("error").Count > 0)
-            {
-                // query using LINQ the "error" node in the XML
-                query = from errors in resultRates.Elements("error")
-                        select errors;
-                XElement error = query.FirstOrDefault();
-                if (error != null)
-                {
-                    // set the status code information of the request
-                    result.StatusCode = Convert.ToInt32(error.Element("statusCode").Value);
-                    result.StatusMessage = error.Element("statusMessage").Value;
-                    result.IsError = true;
-                }
-            }
-            else
-            {
-                // query using LINQ the "ratesAndServicesResponse" node in the XML because it contains 
-                // the actual status code information
-                query = from response in resultRates.Elements("ratesAndServicesResponse")
-                        select response;
-                XElement info = query.FirstOrDefault();
-                // if we have informations
-                if (info != null)
-                {
-                    // set the status code information of the request
-                    result.StatusCode = Convert.ToInt32(info.Element("statusCode").Value);
-                    result.StatusMessage = info.Element("statusMessage").Value;
-                    // query using LINQ all the returned "product" nodes in the XML
-                    query = from prod in resultRates.Elements("ratesAndServicesResponse").Elements("product")
-                            select prod;
-                    foreach (XElement product in query)
-                    {
-                        // set the information related to this available rate
-                        var rate = new DeliveryRate();
-                        rate.Sequence = Convert.ToInt32(product.Attribute("sequence").Value);
-                        rate.Name = product.Element("name").Value;
-                        rate.Amount = Convert.ToDecimal(product.Element("rate").Value, new CultureInfo("en-US", false).NumberFormat);
-                        DateTime shipDate;
-                        if (DateTime.TryParse(product.Element("shippingDate").Value, out shipDate))
-                        {
-                            rate.ShippingDate = shipDate;
-                        }
-
-                        DateTime delivDate;
-                        if (DateTime.TryParse(product.Element("deliveryDate").Value, out delivDate))
-                        {
-                            CultureInfo culture;
-                            if (language == CanadaPostLanguageEnum.French)
-                            {
-                                culture = new CultureInfo("fr-ca");
-                                rate.DeliveryDate = delivDate.ToString("d MMMM yyyy", culture);
-                            }
-                            else
-                            {
-                                culture = new CultureInfo("en-us");
-                                rate.DeliveryDate = delivDate.ToString("MMMM d, yyyy", culture);
-                            }
-                        }
-                        else
-                        {
-                            //rate.DeliveryDate = product.Element("deliveryDate").Value;
-                            rate.DeliveryDate = string.Empty;
-                        }
-                        result.AvailableRates.Add(rate);
-                    }
-                    query = from packing in resultRates.Elements("ratesAndServicesResponse").Elements("packing").Elements("box")
-                            select packing;
-                    foreach (XElement packing in query)
-                    {
-                        var box = new BoxDetail();
-                        box.Name = packing.Element("name").Value;
-                        box.Weight = Convert.ToDouble(packing.Element("weight").Value, new CultureInfo("en-US", false).NumberFormat);
-                        box.ExpediterWeight = Convert.ToDouble(packing.Element("expediterWeight").Value, new CultureInfo("en-US", false).NumberFormat);
-                        box.Length = Convert.ToDouble(packing.Element("length").Value, new CultureInfo("en-US", false).NumberFormat);
-                        box.Width = Convert.ToDouble(packing.Element("width").Value, new CultureInfo("en-US", false).NumberFormat);
-                        box.Height = Convert.ToDouble(packing.Element("height").Value, new CultureInfo("en-US", false).NumberFormat);
-                        box.Quantity = Convert.ToInt32(packing.Element("packedItem").Element("quantity").Value);
-                        // add the box to the result
-                        result.Boxes.Add(box);
-                    }
-                }
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Gets the shipping options.
-        /// </summary>
-        /// <param name="profile">The profile.</param>
-        /// <param name="destination">The destination.</param>
-        /// <param name="items">The items.</param>
-        /// <param name="language">The language.</param>
-        /// <returns></returns>
-        private RequestResult GetShippingOptionsInternal(Profile profile, Destination destination, List<Item> items, CanadaPostLanguageEnum language)
-        {
-            var parcel = new eParcelBuilder(profile, destination, items, language);
-            string result = SendMessage(parcel.GetMessage(true));
-            return HandleResult(result, language);
-        }
-
-        private List<Item> CreateItems(GetShippingOptionRequest getShippingOptionRequest)
-        {
-            var result = new List<Item>();
-
             var usedMeasureWeight = _measureService.GetMeasureWeightBySystemKeyword("kg");
             if (usedMeasureWeight == null)
                 throw new NopException("CanadaPost shipping service. Could not load \"kg\" measure weight");
 
+            weight = _shippingService.GetTotalWeight(getShippingOptionRequest);
+            weight = _measureService.ConvertFromPrimaryMeasureWeight(weight, usedMeasureWeight);
+        }
+
+        /// <summary>
+        /// Calculate parcel length, width, height in centimeters
+        /// </summary>
+        /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
+        /// <param name="length">Length</param>
+        /// <param name="width">Width</param>
+        /// <param name="height">height</param>
+        private void GetDimensions(GetShippingOptionRequest getShippingOptionRequest, out decimal length, out decimal width, out decimal height)
+        {
             var usedMeasureDimension = _measureService.GetMeasureDimensionBySystemKeyword("meters");
             if (usedMeasureDimension == null)
                 throw new NopException("CanadaPost shipping service. Could not load \"meter(s)\" measure dimension");
 
-            foreach (var packageItem in getShippingOptionRequest.Items)
-            {
-                var sci = packageItem.ShoppingCartItem;
-                var qty = packageItem.GetQuantity();
+            _shippingService.GetDimensions(getShippingOptionRequest.Items, out width, out length, out height);
 
-                var item = new Item();
-                item.Quantity = qty;
-                //Canada Post uses kg(s)
-
-                decimal unitWeight = _shippingService.GetShoppingCartItemWeight(sci);
-                item.Weight = _measureService.ConvertFromPrimaryMeasureWeight(unitWeight, usedMeasureWeight);
-                item.Weight = Math.Round(item.Weight, 2);
-                if (item.Weight == decimal.Zero)
-                    item.Weight = 0.01M;
-
-                //get dimensions for qty 1
-                decimal lengthTmp, widthTmp, heightTmp;
-                _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>
-                                               {
-                                                   new GetShippingOptionRequest.PackageItem(sci, 1)
-                                               }, out widthTmp, out lengthTmp, out heightTmp);
-
-                //Canada Post uses centimeters                
-                item.Length = Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension) * 100));
-                if (item.Length == decimal.Zero)
-                    item.Length = 1;
-                item.Width = Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension) * 100));
-                if (item.Width == decimal.Zero)
-                    item.Width = 1;
-                item.Height = Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension) * 100));
-                if (item.Height == decimal.Zero)
-                    item.Height = 1;
-                result.Add(item);
-            }
-
-            return result;
+            //In the Canada Post API length is longest dimension, width is second longest dimension, height is shortest dimension
+            var dimensions = new List<decimal> { length, width, height };
+            dimensions.Sort();
+            length = Math.Round(_measureService.ConvertFromPrimaryMeasureDimension(dimensions[2], usedMeasureDimension) * 100, 1);
+            width = Math.Round(_measureService.ConvertFromPrimaryMeasureDimension(dimensions[1], usedMeasureDimension) * 100, 1);
+            height = Math.Round(_measureService.ConvertFromPrimaryMeasureDimension(dimensions[0], usedMeasureDimension) * 100, 1);
         }
 
+        /// <summary>
+        /// Get shipping price in the primary store currency
+        /// </summary>
+        /// <param name="price">Price in CAD currency</param>
+        /// <returns>Price amount</returns>
+        private decimal PriceToPrimaryStoreCurrency(decimal price)
+        {
+            var cad = _currencyService.GetCurrencyByCode("CAD");
+            if (cad == null)
+                throw new Exception("CAD currency cannot be loaded");
+
+            return _currencyService.ConvertToPrimaryStoreCurrency(price, cad);
+        }
         #endregion
 
         #region Methods
@@ -278,76 +142,200 @@ namespace Nop.Plugin.Shipping.CanadaPost
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException("getShippingOptionRequest");
 
-            var response = new GetShippingOptionResponse();
-
             if (getShippingOptionRequest.Items == null)
-            {
-                response.AddError("No shipment items");
-                return response;
-            }
+                return new GetShippingOptionResponse { Errors = new List<string> { "No shipment items" } };
+
             if (getShippingOptionRequest.ShippingAddress == null)
-            {
-                response.AddError("Shipping address is not set");
-                return response;
-            }
+                return new GetShippingOptionResponse { Errors = new List<string> { "Shipping address is not set" } };
+
             if (getShippingOptionRequest.ShippingAddress.Country == null)
+                return new GetShippingOptionResponse { Errors = new List<string> { "Shipping country is not set" } };
+
+            if (string.IsNullOrEmpty(getShippingOptionRequest.ZipPostalCodeFrom))
+                return new GetShippingOptionResponse { Errors = new List<string> { "Origin postal code is not set" } };
+
+            //get available services
+            string errors;
+            var availableServices = CanadaPostHelper.GetServices(getShippingOptionRequest.ShippingAddress.Country.TwoLetterIsoCode,
+                _canadaPostSettings.ApiKey, _canadaPostSettings.UseSandbox, out errors);
+            if (availableServices == null)
+                return new GetShippingOptionResponse { Errors = new List<string> { errors } };
+
+            //create object for the get rates requests
+            var result = new GetShippingOptionResponse();
+            object destinationCountry;
+            switch (getShippingOptionRequest.ShippingAddress.Country.TwoLetterIsoCode.ToLowerInvariant())
             {
-                response.AddError("Shipping country is not set");
-                return response;
+                case "us":
+                    destinationCountry = new mailingscenarioDestinationUnitedstates
+                    {
+                        zipcode = getShippingOptionRequest.ShippingAddress.ZipPostalCode
+                    };
+                    break;
+                case "ca":
+                    destinationCountry = new mailingscenarioDestinationDomestic
+                    {
+                        postalcode = getShippingOptionRequest.ShippingAddress.ZipPostalCode
+                    };
+                    break;
+                default:
+                    destinationCountry = new mailingscenarioDestinationInternational
+                    {
+                        countrycode = getShippingOptionRequest.ShippingAddress.Country.TwoLetterIsoCode
+                    };
+                    break;
             }
-            if (getShippingOptionRequest.ShippingAddress.StateProvince == null)
+
+            var mailingScenario = new mailingscenario
             {
-                response.AddError("Shipping state is not set");
-                return response;
-            }
-
-            try
-            {
-                var profile = new Profile();
-                profile.MerchantId = _canadaPostSettings.CustomerId;
-
-                var destination = new Destination();
-                destination.City = getShippingOptionRequest.ShippingAddress.City;
-                destination.StateOrProvince = getShippingOptionRequest.ShippingAddress.StateProvince.Abbreviation;
-                destination.Country = getShippingOptionRequest.ShippingAddress.Country.TwoLetterIsoCode;
-                destination.PostalCode = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
-
-                var items = CreateItems(getShippingOptionRequest);
-
-                var lang = CanadaPostLanguageEnum.English;
-                if (_workContext.WorkingLanguage.LanguageCulture.StartsWith("fr", StringComparison.InvariantCultureIgnoreCase))
-                    lang = CanadaPostLanguageEnum.French;
-
-                var requestResult = GetShippingOptionsInternal(profile, destination, items, lang);
-                if (requestResult.IsError)
+                customernumber = _canadaPostSettings.CustomerNumber,
+                originpostalcode = getShippingOptionRequest.ZipPostalCodeFrom,
+                destination = new mailingscenarioDestination
                 {
-                    response.AddError(requestResult.StatusMessage);
+                    Item = destinationCountry
+                }
+            };
+
+            //get original parcel characteristics
+            decimal originalLength;
+            decimal originalWidth;
+            decimal originalHeight;
+            decimal originalWeight;
+            GetWeight(getShippingOptionRequest, out originalWeight);
+            GetDimensions(getShippingOptionRequest, out originalLength, out originalWidth, out originalHeight);
+
+            //get rate for all available services
+            var errorSummary = new StringBuilder();
+            foreach (var service in availableServices.service)
+            {
+                var currentService = CanadaPostHelper.GetServiceDetails(_canadaPostSettings.ApiKey, service.link.href, service.link.mediatype, out errors);
+                if (currentService != null)
+                {
+                    #region parcels count calculation
+
+                    var totalParcels = 1;
+
+                    //parcels count by weight
+                    var maxWeight = currentService.restrictions != null
+                        && currentService.restrictions.weightrestriction != null
+                        && currentService.restrictions.weightrestriction.maxSpecified
+                        ? currentService.restrictions.weightrestriction.max : int.MaxValue;
+                    if (originalWeight * 1000 > maxWeight)
+                    {
+                        var parcelsOnWeight = Convert.ToInt32(Math.Ceiling(originalWeight * 1000 / maxWeight));
+                        if (parcelsOnWeight > totalParcels)
+                            totalParcels = parcelsOnWeight;
+                    }
+
+                    //parcels count by length
+                    var maxLength = currentService.restrictions != null
+                        && currentService.restrictions.dimensionalrestrictions != null
+                        && currentService.restrictions.dimensionalrestrictions.length != null
+                        && currentService.restrictions.dimensionalrestrictions.length.maxSpecified
+                        ? currentService.restrictions.dimensionalrestrictions.length.max : int.MaxValue;
+                    if (originalLength > maxLength)
+                    {
+                        var parcelsOnLength = Convert.ToInt32(Math.Ceiling(originalLength / maxLength));
+                        if (parcelsOnLength > totalParcels)
+                            totalParcels = parcelsOnLength;
+                    }
+
+                    //parcels count by width
+                    var maxWidth = currentService.restrictions != null
+                        && currentService.restrictions.dimensionalrestrictions != null
+                        && currentService.restrictions.dimensionalrestrictions.width != null
+                        && currentService.restrictions.dimensionalrestrictions.width.maxSpecified
+                        ? currentService.restrictions.dimensionalrestrictions.width.max : int.MaxValue;
+                    if (originalWidth > maxWidth)
+                    {
+                        var parcelsOnWidth = Convert.ToInt32(Math.Ceiling(originalWidth / maxWidth));
+                        if (parcelsOnWidth > totalParcels)
+                            totalParcels = parcelsOnWidth;
+                    }
+
+                    //parcels count by height
+                    var maxHeight = currentService.restrictions != null
+                        && currentService.restrictions.dimensionalrestrictions != null
+                        && currentService.restrictions.dimensionalrestrictions.height != null
+                        && currentService.restrictions.dimensionalrestrictions.height.maxSpecified
+                        ? currentService.restrictions.dimensionalrestrictions.height.max : int.MaxValue;
+                    if (originalHeight > maxHeight)
+                    {
+                        var parcelsOnHeight = Convert.ToInt32(Math.Ceiling(originalHeight / maxHeight));
+                        if (parcelsOnHeight > totalParcels)
+                            totalParcels = parcelsOnHeight;
+                    }
+
+                    //parcel count by girth
+                    var lengthPlusGirthMax = currentService.restrictions != null
+                        && currentService.restrictions.dimensionalrestrictions != null
+                        && currentService.restrictions.dimensionalrestrictions.lengthplusgirthmaxSpecified
+                        ? currentService.restrictions.dimensionalrestrictions.lengthplusgirthmax : int.MaxValue;
+                    var lengthPlusGirth = 2 * (originalWidth + originalHeight) + originalLength;
+                    if (lengthPlusGirth > lengthPlusGirthMax)
+                    {
+                        var parcelsOnHeight = Convert.ToInt32(Math.Ceiling(lengthPlusGirth / lengthPlusGirthMax));
+                        if (parcelsOnHeight > totalParcels)
+                            totalParcels = parcelsOnHeight;
+                    }
+
+                    //parcel count by sum of length, width and height
+                    var lengthWidthHeightMax = currentService.restrictions != null
+                        && currentService.restrictions.dimensionalrestrictions != null
+                        && currentService.restrictions.dimensionalrestrictions.lengthheightwidthsummaxSpecified
+                        ? currentService.restrictions.dimensionalrestrictions.lengthheightwidthsummax : int.MaxValue;
+                    var lengthWidthHeight = originalLength + originalWidth + originalHeight;
+                    if (lengthWidthHeight > lengthWidthHeightMax)
+                    {
+                        var parcelsOnHeight = Convert.ToInt32(Math.Ceiling(lengthWidthHeight / lengthWidthHeightMax));
+                        if (parcelsOnHeight > totalParcels)
+                            totalParcels = parcelsOnHeight;
+                    }
+
+                    #endregion
+
+                    //set parcel characteristics
+                    mailingScenario.services = new[] { currentService.servicecode };
+                    mailingScenario.parcelcharacteristics = new mailingscenarioParcelcharacteristics
+                    {
+                        weight = Math.Round(originalWeight / totalParcels, 3),
+                        dimensions = new mailingscenarioParcelcharacteristicsDimensions
+                        {
+                            length = Math.Round(originalLength / totalParcels, 1),
+                            width = Math.Round(originalWidth / totalParcels, 1),
+                            height = Math.Round(originalHeight / totalParcels, 1)
+                        }
+                    };
+
+                    //get rate
+                    var priceQuotes = CanadaPostHelper.GetShippingRates(mailingScenario, _canadaPostSettings.ApiKey, _canadaPostSettings.UseSandbox, out errors);
+                    if (priceQuotes != null)
+                        foreach (var option in priceQuotes.pricequote)
+                        {
+                            result.ShippingOptions.Add(new ShippingOption
+                            {
+                                Name = option.servicename,
+                                Rate = PriceToPrimaryStoreCurrency(option.pricedetails.due * totalParcels),
+                                Description = string.Format("Delivery {0}into {1} parcels", 
+                                    option.servicestandard != null && !string.IsNullOrEmpty(option.servicestandard.expectedtransittime) 
+                                    ? string.Format("in {0} days ", option.servicestandard.expectedtransittime) : string.Empty, totalParcels),
+                            });
+                        }
+                    else
+                        errorSummary.AppendLine(errors);
                 }
                 else
-                {
-                    foreach (var dr in requestResult.AvailableRates)
-                    {
-                        var so = new ShippingOption();
-                        so.Name = dr.Name;
-                        if (!string.IsNullOrEmpty(dr.DeliveryDate))
-                            so.Name += string.Format(" - {0}", dr.DeliveryDate);
-                        so.Rate = dr.Amount;
-                        response.ShippingOptions.Add(so);
-                    }
-                }
-
-                foreach (var shippingOption in response.ShippingOptions)
-                {
-                    if (!shippingOption.Name.StartsWith("canada post", StringComparison.InvariantCultureIgnoreCase))
-                        shippingOption.Name = string.Format("Canada Post {0}", shippingOption.Name);
-                }
-            }
-            catch (Exception e)
-            {
-                response.AddError(e.Message);
+                    errorSummary.AppendLine(errors);
             }
 
-            return response;
+            //write errors
+            var errorString = errorSummary.ToString();
+            if (!string.IsNullOrEmpty(errorString))
+                _logger.Error(errorString);
+            if (result.ShippingOptions.Count == 0)
+                result.AddError(errorString);
+
+            return result;
 
         }
 
@@ -382,21 +370,18 @@ namespace Nop.Plugin.Shipping.CanadaPost
             //settings
             var settings = new CanadaPostSettings
             {
-                Url = "sellonline.canadapost.ca",
-                Port = 30000,
-                //use "CPC_DEMO_XML" merchant ID for testing
-                CustomerId = "CPC_DEMO_XML" 
+                 UseSandbox = true
             };
             _settingService.SaveSetting(settings);
 
             //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.Url", "Canada Post URL");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.Url.Hint", "Specify Canada Post URL.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.Port", "Canada Post Port");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.Port.Hint", "Specify Canada Post port.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.CustomerId", "Canada Post Customer ID");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.CustomerId.Hint", "Specify Canada Post customer identifier.");
-            
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.Api", "API key");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.Api.Hint", "Specify Canada Post API key.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.CustomerNumber", "Customer number");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.CustomerNumber.Hint", "Specify customer number.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.UseSandbox", "Use Sandbox");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.UseSandbox.Hint", "Check to enable Sandbox (testing environment).");
+
             base.Install();
         }
         
@@ -409,40 +394,14 @@ namespace Nop.Plugin.Shipping.CanadaPost
             _settingService.DeleteSetting<CanadaPostSettings>();
 
             //locales
-            this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.Url");
-            this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.Url.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.Port");
-            this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.Port.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.CustomerId");
-            this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.CustomerId.Hint");
-            
+            this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.Api");
+            this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.Api.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.CustomerNumber");
+            this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.CustomerNumber.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.UseSandbox");
+            this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.UseSandbox.Hint");
+
             base.Uninstall();
-        }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets a shipping rate computation method type
-        /// </summary>
-        public ShippingRateComputationMethodType ShippingRateComputationMethodType
-        {
-            get
-            {
-                return ShippingRateComputationMethodType.Realtime;
-            }
-        }
-        
-        /// <summary>
-        /// Gets a shipment tracker
-        /// </summary>
-        public IShipmentTracker ShipmentTracker
-        {
-            get
-            {
-                return new CanadaPostShipmentTracker();
-            }
         }
 
         #endregion

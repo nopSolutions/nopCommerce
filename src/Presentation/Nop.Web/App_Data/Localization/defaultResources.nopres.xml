@@ -5643,6 +5643,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ConvertNonWesternChars.Hint">
     <Value>Check to take out the accent marks in the letters of SEO names while keeping the letter.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CustomHeadTags">
+    <Value><![CDATA[Custom <head> tag]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CustomHeadTags.Hint">
+    <Value><![CDATA[Enter a custom <head> tag(s) here. For example, some custom <meta> tag. Or leave empty if ignore this setting.]]></Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultMetaDescription">
     <Value>Default meta description</Value>
   </LocaleResource>
@@ -5867,6 +5873,30 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Hint">
     <Value>When enabled, your URLs will be http://www.yourStore.com/en/ or http://www.yourStore.com/ru/ (SEO friendly).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapEnabled">
+    <Value>Sitemap enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapEnabled.Hint">
+    <Value>Check to enable sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeCategories">
+    <Value>Sitemap includes categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeCategories.Hint">
+    <Value>Check if you want to include categories in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeManufacturers">
+    <Value>Sitemap includes manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeManufacturers.Hint">
+    <Value>Check if you want to include manufacturers in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeProducts">
+    <Value>Sitemap includes products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeProducts.Hint">
+    <Value>Check if you want to include products in sitemap.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreClosed">
     <Value>Store closed</Value>
@@ -6450,6 +6480,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.PickUpInStoreFee.Hint">
     <Value>Specify "Pick Up in Store" fee.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShipToSameAddress">
+    <Value>Ship to the same address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShipToSameAddress.Hint">
+    <Value>Check to display "ship to the same address" option during checkout ("billing address" step). In this case case "shipping address" with appropriate options (e.g. pick up in store) will be skipped. Also note that all billing countries should support shipping ("Allow shipping" checkbox ticked).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingOriginAddress">
     <Value>Shipping Origin</Value>
   </LocaleResource>
@@ -6846,11 +6882,14 @@
   <LocaleResource Name="Admin.Configuration.Shipping.Methods.Fields.Name.Required">
     <Value>Please provide a name.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Methods.Manage">
+    <Value>Manage shipping methods</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Methods.Updated">
     <Value>The shipping method has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Providers">
-    <Value>Shipping rate computation methods</Value>
+    <Value>Shipping providers</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Providers.BackToList">
     <Value>back to shipping rate computation method list</Value>
@@ -6873,6 +6912,9 @@
   <LocaleResource Name="Admin.Configuration.Shipping.Providers.Fields.SystemName">
     <Value>System name</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Providers.Title">
+    <Value>Shipping rate computation methods (providers)</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Restrictions">
     <Value>Shipping method restrictions</Value>
   </LocaleResource>
@@ -6881,6 +6923,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Description">
     <Value>Please mark the checkbox(es) for the country or countries in which you want the shipping method(s) not available</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Manage">
+    <Value>Shipping method restrictions</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Updated">
     <Value>The settings have been updated successfully.</Value>
@@ -7385,6 +7430,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.EmailAccount">
     <Value>Email account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.EmailAccount.Standard">
+    <Value>Standard</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.EmailAccount.Hint">
     <Value>The email account that will be used to send this message template.</Value>
@@ -8183,6 +8231,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Addresses.Updated">
     <Value>The address has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.Deactivate">
+    <Value>You can't deactivate the last administrator. At least one administrator account should exists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.DeleteRole">
+    <Value>You can't remove the Administrator role. At least one administrator account should exists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator">
+    <Value>You can't delete the last administrator. At least one administrator account should exists.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.AdminCouldNotbeVendor">
     <Value>A customer with a vendor associated could not be in "Administrators" role.</Value>
@@ -11885,6 +11942,9 @@
   </LocaleResource>
   <LocaleResource Name="Checkout.ShippingOptionCouldNotBeLoaded">
     <Value>Shipping options could not be loaded</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.ShipToSameAddress">
+    <Value>Ship to the same address</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.ShipToThisAddress">
     <Value>Ship to this address</Value>

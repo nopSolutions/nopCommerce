@@ -917,6 +917,105 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsCumulative.Hint">
     <Value>If checked, this discount can be used with other ones simultaneously. Please note that this feature works only for discounts with the same discount type. Right now discounts with distinct types are already cumulative.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShipToSameAddress">
+    <Value>Ship to the same address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShipToSameAddress.Hint">
+    <Value>Check to display "ship to the same address" option during checkout ("billing address" step). In this case case "shipping address" with appropriate options (e.g. pick up in store) will be skipped. Also note that all billing countries should support shipping ("Allow shipping" checkbox ticked).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.ShipToSameAddress">
+    <Value>Ship to the same address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.Url">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.Url.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.Port">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.Port.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.CustomerId">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.CustomerId.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.Api">
+    <Value>API key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.Api.Hint">
+    <Value>Specify Canada Post API key.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.CustomerNumber">
+    <Value>Customer number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.CustomerNumber.Hint">
+    <Value>Specify customer number.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.UseSandbox">
+    <Value>Use Sandbox</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.UseSandbox.Hint">
+    <Value>Check to enable Sandbox (testing environment).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.EmailAccount.Standard">
+    <Value>Standard</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Methods.Manage">
+    <Value>Manage shipping methods</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Manage">
+    <Value>Shipping method restrictions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Providers">
+    <Value>Shipping providers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Providers.Title">
+    <Value>Shipping rate computation methods (providers)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapEnabled">
+    <Value>Sitemap enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapEnabled.Hint">
+    <Value>Check to enable sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeCategories">
+    <Value>Sitemap includes categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeCategories.Hint">
+    <Value>Check if you want to include categories in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeManufacturers">
+    <Value>Sitemap includes manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeManufacturers.Hint">
+    <Value>Check if you want to include manufacturers in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeProducts">
+    <Value>Sitemap includes products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeProducts.Hint">
+    <Value>Check if you want to include products in sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CustomHeadTags">
+    <Value><![CDATA[Custom <head> tag]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CustomHeadTags.Hint">
+    <Value><![CDATA[Enter a custom <head> tag(s) here. For example, some custom <meta> tag. Or leave empty if ignore this setting.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.Deactivate">
+    <Value>You can''t deactivate the last administrator. At least one administrator account should exists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.DeleteRole">
+    <Value>You can''t remove the Administrator role. At least one administrator account should exists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator">
+    <Value>You can''t delete the last administrator. At least one administrator account should exists.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3498,3 +3597,19 @@ GO
 
 ALTER TABLE [Discount] ALTER COLUMN [IsCumulative] bit NOT NULL
 GO
+ 
+--new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.shiptosameaddress')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'shippingsettings.shiptosameaddress', N'False', 0)
+ END
+ GO
+
+ --new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'seosettings.customheadtags')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'seosettings.customheadtags', N'', 0)
+ END
+ GO

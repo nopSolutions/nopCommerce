@@ -94,6 +94,16 @@
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ShipToSameAddress_OverrideForStore, model => model.ShipToSameAddress, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ShipToSameAddress)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.ShipToSameAddress)
+                                @Html.ValidationMessageFor(model => model.ShipToSameAddress)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.UseWarehouseLocation_OverrideForStore, model => model.UseWarehouseLocation, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.UseWarehouseLocation)
                             </div>

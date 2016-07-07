@@ -68,5 +68,9 @@ namespace Nop.Core.Domain.Seo
         /// Slugs (sename) reserved for some other needs
         /// </summary>
         public List<string> ReservedUrlRecordSlugs { get; set; }
+        /// <summary>
+        /// Custom tags in the <![CDATA[<head></head>]]> section
+        /// </summary>
+        public string CustomHeadTags { get; set; }
     }
 }

@@ -5743,6 +5743,7 @@ namespace Nop.Services.Installation
                         "eucookielawaccept",
                         "page-not-found"
                     },
+                CustomHeadTags = "",
             });
 
             settingService.SaveSetting(new AdminAreaSettings
@@ -6041,6 +6042,7 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new ShippingSettings
             {
                 ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedRate" },
+                ShipToSameAddress = false,
                 AllowPickUpInStore = true,
                 PickUpInStoreFee = decimal.Zero,
                 UseWarehouseLocation = false,

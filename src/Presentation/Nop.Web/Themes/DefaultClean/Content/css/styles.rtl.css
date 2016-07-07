@@ -3494,6 +3494,16 @@ label, label + * {
     padding: 30px 15px;
 }
 
+.checkout-page .ship-to-same-address {
+	padding: 30px 0;
+	text-align: center;
+}
+.checkout-page .ship-to-same-address .selector {
+	margin: 0 0 5px;
+	font-weight: bold;
+	color: #444;
+}
+
 .checkout-page .pickup-in-store {
 	padding: 30px 0;
 	text-align: center;
@@ -3710,6 +3720,10 @@ label, label + * {
 	display: block;
 	margin: 10px 0 0;
     background: none;
+}
+.opc .section.ship-to-same-address {
+	margin: 0 0 30px;
+	padding: 0;
 }
 .opc .section.pickup-in-store {
 	margin: 0 0 30px;

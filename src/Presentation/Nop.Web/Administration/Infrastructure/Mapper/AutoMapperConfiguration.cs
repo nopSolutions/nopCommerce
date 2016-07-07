@@ -185,6 +185,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowedTokens, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
+                    .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
                     .ForMember(dest => dest.TestEmail, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<CampaignModel, Campaign>()
@@ -725,6 +726,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.ShippingOriginAddress, mo => mo.Ignore())
                     .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowPickUpInStore_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.ShipToSameAddress_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.PickUpInStoreFee_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.UseWarehouseLocation_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.NotifyCustomerAboutShippingFromMultipleLocations_OverrideForStore,

@@ -1,7 +1,7 @@
 ﻿Group: Shipping rate computation
 FriendlyName: Shipping by weight
 SystemName: Shipping.ByWeight
-Version: 1.44
+Version: 1.45
 SupportedVersions: 3.80
 Author: nopCommerce team
 DisplayOrder: 1
