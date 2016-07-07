@@ -672,6 +672,9 @@
   <LocaleResource Name="ActivityLog.AddNewWidget">
     <Value>Added a new widget (ID = {0})</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteActivityLog">
+    <Value>Deleted activity log</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteCategory">
     <Value>Deleted a category ('{0}')</Value>
   </LocaleResource>
@@ -716,6 +719,9 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteWidget">
     <Value>Deleted a widget (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditActivityLogTypes">
+    <Value>Edited activity log types</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditCategory">
     <Value>Edited a category ('{0}')</Value>
