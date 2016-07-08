@@ -5,8 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
+using Nop.Admin.Helpers;
 using Nop.Admin.Models.Orders;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -85,6 +87,7 @@ namespace Nop.Admin.Controllers
 	    private readonly IAffiliateService _affiliateService;
 	    private readonly IPictureService _pictureService;
         private readonly ICustomerActivityService _customerActivityService;
+	    private readonly ICacheManager _cacheManager;
 
         private readonly OrderSettings _orderSettings;
         private readonly CurrencySettings _currencySettings;
@@ -138,6 +141,7 @@ namespace Nop.Admin.Controllers
             IAffiliateService affiliateService,
             IPictureService pictureService,
             ICustomerActivityService customerActivityService,
+            ICacheManager cacheManager,
             OrderSettings orderSettings,
             CurrencySettings currencySettings, 
             TaxSettings taxSettings,
@@ -186,6 +190,7 @@ namespace Nop.Admin.Controllers
             this._affiliateService = affiliateService;
             this._pictureService = pictureService;
             this._customerActivityService = customerActivityService;
+            this._cacheManager = cacheManager;
             this._orderSettings = orderSettings;
             this._currencySettings = currencySettings;
             this._taxSettings = taxSettings;
@@ -2480,9 +2485,9 @@ namespace Nop.Admin.Controllers
             model.OrderId = orderId;
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
+            var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(c);
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -3865,9 +3870,9 @@ namespace Nop.Admin.Controllers
 
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
+            var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(c);
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
