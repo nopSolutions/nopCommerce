@@ -27,8 +27,8 @@
                 @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Catalog.Products.Info"), true)
                 @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"), customCssClass:  Model.ProductEditorSettingsModel.SEO ? "" : "advanced-setting")
                 @Html.RenderBootstrapTabHeader("tab-pictures", @T("Admin.Catalog.Products.Pictures"))
-                @Html.RenderBootstrapTabHeader("tab-specification-attributes", @T("Admin.Catalog.Products.SpecificationAttributes"))
                 @Html.RenderBootstrapTabHeader("tab-product-attributes", @T("Admin.Catalog.Products.ProductAttributes"))
+                @Html.RenderBootstrapTabHeader("tab-specification-attributes", @T("Admin.Catalog.Products.SpecificationAttributes"))
                 @if (Model.Id > 0)
                 {
                     @Html.RenderBootstrapTabHeader("tab-purchased-with-orders", @T("Admin.Catalog.Products.PurchasedWithOrders"), customCssClass: Model.ProductEditorSettingsModel.PurchasedWithOrders ? "" : "advanced-setting")
@@ -77,14 +77,14 @@
     @Html.Partial("_CreateOrUpdate.Pictures", Model)
 }
 
-@helper TabSpecificationAttributes()
-{
-    @Html.Partial("_CreateOrUpdate.SpecificationAttributes", Model)
-}
-
 @helper TabProductAttributes()
 {
     @Html.Partial("_CreateOrUpdate.ProductAttributes", Model)
+}
+
+@helper TabSpecificationAttributes()
+{
+    @Html.Partial("_CreateOrUpdate.SpecificationAttributes", Model)
 }
 
 @helper TabPurchasedWithOrders()
