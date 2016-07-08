@@ -361,10 +361,15 @@ td.k-state-focused.k-state-selected {
 .navbar-custom-menu > .navbar-nav > li {
     height: 50px;
 }
-
 .maintenance-menu.dropdown-menu button {
     border: none;
     padding: 3px 20px;
+}
+.maintenance-menu.dropdown-menu li:hover {
+    background: rgba(0,0,0,0.1);
+}
+.maintenance-menu.dropdown-menu li:hover button{
+    background-color: transparent !important;
 }
 
 /* NAV TABS */
