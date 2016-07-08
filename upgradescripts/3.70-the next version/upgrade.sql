@@ -1210,7 +1210,7 @@ set @resources='
     <Value>This comment is for internal use only, not visible for customers.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTags.Hint">
-    <Value>Product tags are the keywords for product identification.</Value>
+    <Value>Product tags are the keywords for product identification. The more products associated with a particular tag, the larger it will show on the tag cloud.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNew.Hint">
     <Value>Check to mark  the product as new. Use this option for promoting new products.</Value>
@@ -1219,7 +1219,7 @@ set @resources='
     <Value>Check if it is a gift card. After adding gift card products to the shopping cart and completing the purchases, you can then search and view the list of all the purchased gift cards by selecting Gift Cards from the Sales menu.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.GiftCardType.Hint">
-    <Value>There are two gift card types: virtual and physical.</Value>
+    <Value>There are two gift card types: virtual and physical. WARNING: not recommended to change the gift card type from one to another in a "live" store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.IsDownload.Hint">
     <Value>Check if the product is downloadable. When customers purchase a downloadable product, they can download it direct from your store. The link will be visible after checkout.</Value>
@@ -1264,10 +1264,10 @@ set @resources='
     <Value>Tier pricing is a promotional tool that allows a store owner to price items differently for higher quantities.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManageInventoryMethod.Hint">
-    <Value>Select inventory metod. There are three methods: Don’t track inventory, Track inventory and Track inventory by attributes. You should use Track inventory by attributes when the product has different combination of these attributes and then manage inventory for this combinations.</Value>
+    <Value>Select inventory method. There are three methods: Don’t track inventory, Track inventory and Track inventory by attributes. You should use Track inventory by attributes when the product has different combinations of these attributes and then manage inventory for this combinations.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Warehouse.Hint">
-    <Value>Choose the warehouse wich will be used when canculating shipping rates. You can manage warehouses by selecting  Configuration > Shipping > Warehouses.</Value>
+    <Value>Choose the warehouse which will be used when calculating shipping rates. You can manage warehouses by selecting  Configuration > Shipping > Warehouses.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.IsShipEnabled.Hint">
     <Value>Check if the product can be shipped. You can manage shipping settings by selecting Configuration > Shipping.</Value>
@@ -1282,10 +1282,10 @@ set @resources='
     <Value>The product  width. You can manage width measurement by selecting Configuration > Measures.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShipSeparately.Hint">
-    <Value>Check if the product should be shipped separately from other products (in single box). Notice that if an order includes several items of this pdoduct, all of them will be shipped separately.</Value>
+    <Value>Check if the product should be shipped separately from other products (in single box). Notice that if the order includes several items of this product, all of them will be shipped separately.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCategoryIds.Hint">
-    <Value>Choose product categories. You can manage product catagories by selecting Catalog > Categories.</Value>
+    <Value>Choose product categories. You can manage product categories by selecting Catalog > Categories.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedManufacturerIds.Hint">
      <Value>Choose the manufacturer. You can manage manufacturers by selecting Catalog > Manufacturers.</Value>
@@ -1314,7 +1314,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Tip">
     <Value>Specification attributes are product features i.e, screen size, number of USB-ports, visible on product details page. Specification attributes can be used for filtering products on the category details page.  Unlike product attributes, specification attributes are used for information purposes only.</Value>
   </LocaleResource>
-
+  <LocaleResource Name="Admin.Catalog.Products.Fields.DeliveryDate.Hint">
+    <Value>Choose a delivery date which will be displayed in the public store. You can manage delivery dates by selecting Configuration > Shipping > Delivery dates.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Height.Hint">
+    <Value>The product  height. You can manage height measurement by selecting Configuration > Measures.</Value>
+  </LocaleResource>
 </Language>
 '
 

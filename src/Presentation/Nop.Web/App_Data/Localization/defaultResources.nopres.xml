@@ -2389,7 +2389,7 @@
     <Value>Delivery date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DeliveryDate.Hint">
-    <Value>Choose a delivery date wich will be displayed in the public store. You can manage delivery dates by selecting Configuration > Shipping > Delivery dates.</Value>
+    <Value>Choose a delivery date which will be displayed in the public store. You can manage delivery dates by selecting Configuration > Shipping > Delivery dates.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DeliveryDate.None">
     <Value>None</Value>
@@ -2449,7 +2449,7 @@
     <Value>Gift card type</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.GiftCardType.Hint">
-    <Value>There are two gift card types: virtual and physical.</Value>
+    <Value>There are two gift card types: virtual and physical. WARNING: not recommended to change the gift card type from one to another in a "live" store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.GTIN">
     <Value>GTIN (global trade item number)</Value>
@@ -2551,7 +2551,7 @@
     <Value>Inventory method</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManageInventoryMethod.Hint">
-    <Value>Select inventory metod. There are three methods: Don’t track inventory, Track inventory and Track inventory by attributes. You should use Track inventory by attributes when the product has different combination of these attributes and then manage inventory for this combinations.</Value>
+    <Value>Select inventory method. There are three methods: Don’t track inventory, Track inventory and Track inventory by attributes. You should use Track inventory by attributes when the product has different combinations of these attributes and then manage inventory for this combinations.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerIds">
     <Value>Manufacturers</Value>
@@ -2695,7 +2695,7 @@
     <Value>Product tags</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTags.Hint">
-    <Value>Product tags are the keywords for product identification.</Value>
+    <Value>Product tags are the keywords for product identification. The more products associated with a particular tag, the larger it will show on the tag cloud.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTemplate">
     <Value>Product template</Value>
@@ -2719,7 +2719,7 @@
     <Value>Cycle length</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RecurringCycleLength.Hint">
-    <Value>Specify the cycle length. It is a time period recurring order can be repated.</Value>
+    <Value>Specify the cycle length. It is a time period recurring order can be repeated.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RecurringCyclePeriod">
     <Value>Cycle period</Value>
@@ -2779,7 +2779,7 @@
     <Value>Categories</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCategoryIds.Hint">
-    <Value>Choose product categories. You can manage product catagories by selecting Catalog > Categories.</Value>
+    <Value>Choose product categories. You can manage product categories by selecting Catalog > Categories.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCustomerRoleIds">
      <Value>Customer roles</Value>
@@ -2809,7 +2809,7 @@
     <Value>Ship separately</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShipSeparately.Hint">
-    <Value>Check if the product should be shipped separately from other products (in single box). Notice that if an order includes several items of this pdoduct, all of them will be shipped separately.</Value>
+    <Value>Check if the product should be shipped separately from other products (in single box). Notice that if the order includes several items of this product, all of them will be shipped separately.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShortDescription">
     <Value>Short description</Value>
@@ -2902,7 +2902,7 @@
     <Value>Warehouse</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Warehouse.Hint">
-    <Value>Choose the warehouse wich will be used when canculating shipping rates. You can manage warehouses by selecting  Configuration > Shipping > Warehouses.</Value>
+    <Value>Choose the warehouse which will be used when calculating shipping rates. You can manage warehouses by selecting  Configuration > Shipping > Warehouses.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Warehouse.None">
     <Value>None</Value>
@@ -3367,7 +3367,7 @@
     <Value>You need to save the product before you can add related products for this product page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.RelatedProducts.Tip">
-    <Value>The Related Products option provides the opportunity to advertise products that are not part of the selected category, to your visitors. These products are displayed on thу product details pages.</Value>
+    <Value>The Related Products option provides the opportunity to advertise products that are not part of the selected category, to your visitors. These products are displayed on the product details pages.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.RequireOtherProducts">
      <Value>Require other products</Value>
