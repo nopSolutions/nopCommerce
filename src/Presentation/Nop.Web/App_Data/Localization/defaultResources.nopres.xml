@@ -1624,7 +1624,7 @@
     <Value>Specify color</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.EnableColorSquaresRgb.Hint">
-    <Value>Check to choose color to be used instead of an option text name (it''ll be displayed as "color square").</Value>
+    <Value>Check to choose color to be used instead of an option text name (it'll be displayed as "color square").</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name">
     <Value>Name</Value>
@@ -2882,6 +2882,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.StockQuantity.Hint">
     <Value>The current stock quantity of this product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.StockQuantity.ChangedWarning">
+    <Value>Quantity has been changed while you were editing the product. Changes haven't been saved. Please ensure that everything is correct and click "Save" button one more time.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SubjectToAcl">
     <Value>Subject to ACL</Value>
@@ -4981,16 +4984,16 @@
     <Value>Check to display reviews written in the current store only (on a product details page).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsTabOnAccountPage">
-    <Value>Show product reviews tab on ''My account'' page</Value>
+    <Value>Show product reviews tab on 'My account' page</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsTabOnAccountPage.Hint">
-    <Value>Check to show product reviews tab on '' My account'' page.</Value>
+    <Value>Check to show product reviews tab on 'My account' page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsPageSizeOnAccountPage">
     <Value>Product reviews page size</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsPageSizeOnAccountPage.Hint">
-    <Value>Set the page size for product reviews e.g. ''10'' reviews per page.</Value>
+    <Value>Set the page size for product reviews e.g. '10' reviews per page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowShareButton">
     <Value>Show a share button</Value>
