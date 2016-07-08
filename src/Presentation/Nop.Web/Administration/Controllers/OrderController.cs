@@ -4166,7 +4166,7 @@ namespace Nop.Admin.Controllers
 	    }
 
         [AcceptVerbs(HttpVerbs.Get)]
-	    public ActionResult LoadOrderStatistics(string period)
+        public ActionResult LoadOrderStatistics(string period)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
@@ -4184,39 +4184,38 @@ namespace Nop.Admin.Controllers
             {
                 case "year":
                     //year statistics
-
                     var yearAgoRoundedDt = nowDt.AddYears(-1).AddMonths(1);
                     var searchYearDateUser = new DateTime(yearAgoRoundedDt.Year, yearAgoRoundedDt.Month, 1);
                     if (!timeZone.IsInvalidTime(searchYearDateUser))
                     {
                         DateTime searchYearDateUtc = _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone);
 
-                        do
+                        for (int i = 0; i <= 12; i++)
                         {
-                            result.Add(new {
+                            result.Add(new
+                            {
                                 date = searchYearDateUser.Date.ToString("Y"),
                                 value = _orderService.SearchOrders(
                                     createdFromUtc: searchYearDateUtc,
                                     createdToUtc: searchYearDateUtc.AddMonths(1),
                                     pageIndex: 0,
                                     pageSize: 1).TotalCount.ToString()
-                                });
+                            });
 
                             searchYearDateUtc = searchYearDateUtc.AddMonths(1);
                             searchYearDateUser = searchYearDateUser.AddMonths(1);
-
-                        } while (!(searchYearDateUser.Year == nowDt.Year && searchYearDateUser.Month > nowDt.Month));
+                        }
                     }
                     break;
 
                 case "month":
                     //month statistics
-                    var searchMonthDateUser = new DateTime(nowDt.Year, nowDt.AddMonths(-1).Month, nowDt.AddMonths(-1).Day);
+                    var searchMonthDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-30).Month, nowDt.AddDays(-30).Day);
                     if (!timeZone.IsInvalidTime(searchMonthDateUser))
                     {
                         DateTime searchMonthDateUtc = _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone);
 
-                        do
+                        for (int i = 0; i <= 30; i++)
                         {
                             result.Add(new
                             {
@@ -4230,8 +4229,7 @@ namespace Nop.Admin.Controllers
 
                             searchMonthDateUtc = searchMonthDateUtc.AddDays(1);
                             searchMonthDateUser = searchMonthDateUser.AddDays(1);
-
-                        } while (!(searchMonthDateUser.Month == nowDt.Month && searchMonthDateUser.Day > nowDt.Day));
+                        }
                     }
                     break;
 
@@ -4243,7 +4241,7 @@ namespace Nop.Admin.Controllers
                     {
                         DateTime searchWeekDateUtc = _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone);
 
-                        do
+                        for (int i = 0; i <= 7; i++)
                         {
                             result.Add(new
                             {
@@ -4257,8 +4255,7 @@ namespace Nop.Admin.Controllers
 
                             searchWeekDateUtc = searchWeekDateUtc.AddDays(1);
                             searchWeekDateUser = searchWeekDateUser.AddDays(1);
-
-                        } while (!(searchWeekDateUser.Month == nowDt.Month && searchWeekDateUser.Day > nowDt.Day));
+                        }
                     }
                     break;
             }
