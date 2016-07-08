@@ -3,6 +3,9 @@
 @using Nop.Core.Domain.Catalog
 
 <div class="panel-group">
+    <p>
+        @T("Admin.Catalog.Products.ProductAttributes.Tip")
+    </p>
     @if (Model.Id > 0)
     {
         if (Model.AvailableProductAttributes.Count > 0)

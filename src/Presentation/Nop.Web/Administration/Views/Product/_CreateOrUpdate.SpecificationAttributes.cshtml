@@ -2,6 +2,9 @@
 @model ProductModel
 
 <div class="panel-group">
+    <p>
+        @T("Admin.Catalog.Products.SpecificationAttributes.Tip")
+    </p>
     @if (Model.Id > 0)
     {
         /*hide "add spec" table if no attributes are defined*/
@@ -333,4 +336,3 @@
         </div>
     }
 </div>
-
