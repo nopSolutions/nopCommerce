@@ -1022,6 +1022,9 @@ set @resources='
   <LocaleResource Name="ActivityLog.DeleteActivityLog">
     <Value>Deleted activity log</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.StockQuantity.ChangedWarning">
+    <Value>Quantity has been changed while you were editing the product. Changes haven''t been saved. Please ensure that everything is correct and click "Save" button one more time.</Value>
+  </LocaleResource>
 </Language>
 '
 
