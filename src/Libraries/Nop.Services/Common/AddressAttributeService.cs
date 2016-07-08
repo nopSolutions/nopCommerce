@@ -110,10 +110,7 @@ namespace Nop.Services.Common
             string key = ADDRESSATTRIBUTES_ALL_KEY;
             return _cacheManager.Get(key, () =>
             {
-                var query = from aa in _addressAttributeRepository.Table
-                            orderby aa.DisplayOrder
-                            select aa;
-                return query.ToList();
+                return _addressAttributeRepository.Table.OrderBy(aa => aa.DisplayOrder).ToList();
             });
         }
 
@@ -195,10 +192,9 @@ namespace Nop.Services.Common
             string key = string.Format(ADDRESSATTRIBUTEVALUES_ALL_KEY, addressAttributeId);
             return _cacheManager.Get(key, () =>
             {
-                var query = from aav in _addressAttributeValueRepository.Table
-                            orderby aav.DisplayOrder
-                            where aav.AddressAttributeId == addressAttributeId
-                            select aav;
+                var query =
+                    _addressAttributeValueRepository.Table.Where(aav => aav.AddressAttributeId == addressAttributeId)
+                        .OrderBy(aav => aav.DisplayOrder);
                 var addressAttributeValues = query.ToList();
                 return addressAttributeValues;
             });

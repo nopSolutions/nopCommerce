@@ -170,9 +170,7 @@ namespace Nop.Services.Orders
         /// <returns>Number of deleted items</returns>
         public virtual int DeleteExpiredShoppingCartItems(DateTime olderThanUtc)
         {
-            var query = from sci in _sciRepository.Table
-                           where sci.UpdatedOnUtc < olderThanUtc
-                           select sci;
+            var query = _sciRepository.Table.Where(sci => sci.UpdatedOnUtc < olderThanUtc);
 
             var cartItems = query.ToList();
             foreach (var cartItem in cartItems)

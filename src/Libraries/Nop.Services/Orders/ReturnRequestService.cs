@@ -130,10 +130,7 @@ namespace Nop.Services.Orders
         /// <returns>Return request actions</returns>
         public virtual IList<ReturnRequestAction> GetAllReturnRequestActions()
         {
-            var query = from rra in _returnRequestActionRepository.Table
-                orderby rra.DisplayOrder, rra.Id
-                select rra;
-            return query.ToList();
+            return _returnRequestActionRepository.Table.OrderBy(rra => rra.DisplayOrder).ThenBy(rra => rra.Id).ToList();
         }
 
         /// <summary>
@@ -203,10 +200,7 @@ namespace Nop.Services.Orders
         /// <returns>Return request reaspns</returns>
         public virtual IList<ReturnRequestReason> GetAllReturnRequestReasons()
         {
-            var query = from rra in _returnRequestReasonRepository.Table
-                orderby rra.DisplayOrder, rra.Id
-                select rra;
-            return query.ToList();
+            return _returnRequestReasonRepository.Table.OrderBy(rra => rra.DisplayOrder).ThenBy(rra => rra.Id).ToList();
         }
 
         /// <summary>

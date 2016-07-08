@@ -58,9 +58,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product templates</returns>
         public virtual IList<ProductTemplate> GetAllProductTemplates()
         {
-            var query = from pt in _productTemplateRepository.Table
-                        orderby pt.DisplayOrder
-                        select pt;
+            var query = _productTemplateRepository.Table.OrderBy(pt => pt.DisplayOrder);
 
             var templates = query.ToList();
             return templates;

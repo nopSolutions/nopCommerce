@@ -115,12 +115,10 @@ namespace Nop.Services.Catalog
         /// <returns>Subscriptions</returns>
         public virtual BackInStockSubscription FindSubscription(int customerId, int productId, int storeId)
         {
-            var query = from biss in _backInStockSubscriptionRepository.Table
-                        orderby biss.CreatedOnUtc descending
-                        where biss.CustomerId == customerId &&
-                              biss.ProductId == productId &&
-                              biss.StoreId == storeId
-                        select biss;
+            var query =
+                _backInStockSubscriptionRepository.Table.Where(
+                    biss => biss.CustomerId == customerId && biss.ProductId == productId && biss.StoreId == storeId)
+                    .OrderByDescending(biss => biss.CreatedOnUtc);
 
             var subscription = query.FirstOrDefault();
             return subscription;

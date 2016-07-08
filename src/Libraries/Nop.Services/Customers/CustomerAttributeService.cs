@@ -110,9 +110,7 @@ namespace Nop.Services.Customers
             string key = CUSTOMERATTRIBUTES_ALL_KEY;
             return _cacheManager.Get(key, () =>
             {
-                var query = from ca in _customerAttributeRepository.Table
-                            orderby ca.DisplayOrder
-                            select ca;
+                var query = _customerAttributeRepository.Table.OrderBy(ca => ca.DisplayOrder);
                 return query.ToList();
             });
         }
@@ -195,10 +193,9 @@ namespace Nop.Services.Customers
             string key = string.Format(CUSTOMERATTRIBUTEVALUES_ALL_KEY, customerAttributeId);
             return _cacheManager.Get(key, () =>
             {
-                var query = from cav in _customerAttributeValueRepository.Table
-                            orderby cav.DisplayOrder
-                            where cav.CustomerAttributeId == customerAttributeId
-                            select cav;
+                var query =
+                    _customerAttributeValueRepository.Table.Where(cav => cav.CustomerAttributeId == customerAttributeId)
+                        .OrderBy(cav => cav.DisplayOrder);
                 var customerAttributeValues = query.ToList();
                 return customerAttributeValues;
             });

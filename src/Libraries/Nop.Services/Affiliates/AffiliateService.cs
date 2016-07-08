@@ -65,10 +65,7 @@ namespace Nop.Services.Affiliates
             if (String.IsNullOrWhiteSpace(friendlyUrlName))
                 return null;
 
-            var query = from a in _affiliateRepository.Table
-                        orderby a.Id
-                        where a.FriendlyUrlName == friendlyUrlName
-                        select a;
+            var query = _affiliateRepository.Table.Where(a => a.FriendlyUrlName == friendlyUrlName).OrderBy(a => a.Id);
             var affiliate = query.FirstOrDefault();
             return affiliate;
         }

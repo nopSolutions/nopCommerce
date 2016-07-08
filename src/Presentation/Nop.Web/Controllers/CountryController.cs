@@ -55,10 +55,7 @@ namespace Nop.Web.Controllers
             {
                 var country = _countryService.GetCountryById(Convert.ToInt32(countryId));
                 var states = _stateProvinceService.GetStateProvincesByCountryId(country != null ? country.Id : 0, _workContext.WorkingLanguage.Id).ToList();
-                var result = (from s in states
-                              select new { id = s.Id, name = s.GetLocalized(x => x.Name) })
-                              .ToList();
-
+                var result = states.Select(s => new {id = s.Id, name = s.GetLocalized(x => x.Name)}).ToList();
 
                 if (country == null)
                 {

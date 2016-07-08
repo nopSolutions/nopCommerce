@@ -128,9 +128,7 @@ namespace Nop.Services.Messages
         /// <returns>Email accounts list</returns>
         public virtual IList<EmailAccount> GetAllEmailAccounts()
         {
-            var query = from ea in _emailAccountRepository.Table
-                        orderby ea.Id
-                        select ea;
+            var query = _emailAccountRepository.Table.OrderBy(ea => ea.Id);
             var emailAccounts = query.ToList();
             return emailAccounts;
         }

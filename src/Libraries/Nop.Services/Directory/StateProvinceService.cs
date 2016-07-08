@@ -97,11 +97,7 @@ namespace Nop.Services.Directory
         /// <returns>State/province</returns>
         public virtual StateProvince GetStateProvinceByAbbreviation(string abbreviation)
         {
-            var query = from sp in _stateProvinceRepository.Table
-                        where sp.Abbreviation == abbreviation
-                        select sp;
-            var stateProvince = query.FirstOrDefault();
-            return stateProvince;
+            return _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Abbreviation == abbreviation);
         }
         
         /// <summary>
@@ -116,11 +112,10 @@ namespace Nop.Services.Directory
             string key = string.Format(STATEPROVINCES_ALL_KEY, countryId, languageId, showHidden);
             return _cacheManager.Get(key, () =>
             {
-                var query = from sp in _stateProvinceRepository.Table
-                            orderby sp.DisplayOrder, sp.Name
-                            where sp.CountryId == countryId &&
-                            (showHidden || sp.Published)
-                            select sp;
+                var query =
+                    _stateProvinceRepository.Table.Where(sp => sp.CountryId == countryId && (showHidden || sp.Published))
+                        .OrderBy(sp => sp.DisplayOrder)
+                        .ThenBy(sp => sp.Name);
                 var stateProvinces = query.ToList();
 
                 if (languageId > 0)
@@ -142,10 +137,11 @@ namespace Nop.Services.Directory
         /// <returns>States</returns>
         public virtual IList<StateProvince> GetStateProvinces(bool showHidden = false)
         {
-            var query = from sp in _stateProvinceRepository.Table
-                        orderby sp.CountryId, sp.DisplayOrder, sp.Name
-                where showHidden || sp.Published
-                select sp;
+            var query =
+                _stateProvinceRepository.Table.Where(sp => showHidden || sp.Published)
+                    .OrderBy(sp => sp.CountryId)
+                    .ThenBy(sp => sp.DisplayOrder)
+                    .ThenBy(sp => sp.Name);
             var stateProvinces = query.ToList();
             return stateProvinces;
         }

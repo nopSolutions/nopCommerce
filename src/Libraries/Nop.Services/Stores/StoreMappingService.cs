@@ -114,10 +114,7 @@ namespace Nop.Services.Stores
             int entityId = entity.Id;
             string entityName = typeof(T).Name;
 
-            var query = from sm in _storeMappingRepository.Table
-                        where sm.EntityId == entityId &&
-                        sm.EntityName == entityName
-                        select sm;
+            var query = _storeMappingRepository.Table.Where(sm => sm.EntityId == entityId && sm.EntityName == entityName);
             var storeMappings = query.ToList();
             return storeMappings;
         }
@@ -203,11 +200,10 @@ namespace Nop.Services.Stores
             string key = string.Format(STOREMAPPING_BY_ENTITYID_NAME_KEY, entityId, entityName);
             return _cacheManager.Get(key, () =>
             {
-                var query = from sm in _storeMappingRepository.Table
-                            where sm.EntityId == entityId &&
-                            sm.EntityName == entityName
-                            select sm.StoreId;
-                return query.ToArray();
+                return
+                    _storeMappingRepository.Table.Where(sm => sm.EntityId == entityId && sm.EntityName == entityName)
+                        .Select(sm => sm.StoreId)
+                        .ToArray();
             });
         }
 

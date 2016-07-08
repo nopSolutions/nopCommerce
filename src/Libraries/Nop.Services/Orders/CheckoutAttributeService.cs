@@ -123,9 +123,7 @@ namespace Nop.Services.Orders
             string key = string.Format(CHECKOUTATTRIBUTES_ALL_KEY, storeId, excludeShippableAttributes);
             return _cacheManager.Get(key, () =>
             {
-                var query = from ca in _checkoutAttributeRepository.Table
-                            orderby ca.DisplayOrder
-                            select ca;
+                var query = _checkoutAttributeRepository.Table.OrderBy(ca => ca.DisplayOrder);
                 var checkoutAttributes = query.ToList();
                 if (storeId > 0)
                 {
@@ -223,10 +221,9 @@ namespace Nop.Services.Orders
             string key = string.Format(CHECKOUTATTRIBUTEVALUES_ALL_KEY, checkoutAttributeId);
             return _cacheManager.Get(key, () =>
             {
-                var query = from cav in _checkoutAttributeValueRepository.Table
-                            orderby cav.DisplayOrder
-                            where cav.CheckoutAttributeId == checkoutAttributeId
-                            select cav;
+                var query =
+                    _checkoutAttributeValueRepository.Table.Where(cav => cav.CheckoutAttributeId == checkoutAttributeId)
+                        .OrderBy(cav => cav.DisplayOrder);
                 var checkoutAttributeValues = query.ToList();
                 return checkoutAttributeValues;
             });

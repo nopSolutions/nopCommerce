@@ -1475,14 +1475,12 @@ namespace Nop.Web.Controllers
                 pageSize: productNumber);
 
             var models =  PrepareProductOverviewModels(products, false, _catalogSettings.ShowProductImagesInSearchAutoComplete, _mediaSettings.AutoCompleteSearchThumbPictureSize).ToList();
-            var result = (from p in models
-                          select new
-                          {
-                              label = p.Name,
-                              producturl = Url.RouteUrl("Product", new { SeName = p.SeName }),
-                              productpictureurl = p.DefaultPictureModel.ImageUrl
-                          })
-                          .ToList();
+            var result = models.Select(p => new
+            {
+                label = p.Name,
+                producturl = Url.RouteUrl("Product", new { SeName = p.SeName }),
+                productpictureurl = p.DefaultPictureModel.ImageUrl
+            }).ToList();
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 

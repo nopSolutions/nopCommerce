@@ -192,9 +192,7 @@ namespace Nop.Services.Logging
             if (logIds == null || logIds.Length == 0)
                 return new List<Log>();
 
-            var query = from l in _logRepository.Table
-                        where logIds.Contains(l.Id)
-                        select l;
+            var query = _logRepository.Table.Where(l => logIds.Contains(l.Id));
             var logItems = query.ToList();
             //sort by passed identifiers
             var sortedLogItems = new List<Log>();

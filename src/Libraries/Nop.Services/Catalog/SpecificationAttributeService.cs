@@ -91,9 +91,7 @@ namespace Nop.Services.Catalog
         /// <returns>Specification attributes</returns>
         public virtual IPagedList<SpecificationAttribute> GetSpecificationAttributes(int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = from sa in _specificationAttributeRepository.Table
-                        orderby sa.DisplayOrder, sa.Id
-                        select sa;
+            var query = _specificationAttributeRepository.Table.OrderBy(sa => sa.DisplayOrder);
             var specificationAttributes = new PagedList<SpecificationAttribute>(query, pageIndex, pageSize);
             return specificationAttributes;
         }
@@ -177,9 +175,9 @@ namespace Nop.Services.Catalog
             if (specificationAttributeOptionIds == null || specificationAttributeOptionIds.Length == 0)
                 return new List<SpecificationAttributeOption>();
 
-            var query = from sao in _specificationAttributeOptionRepository.Table
-                        where specificationAttributeOptionIds.Contains(sao.Id)
-                        select sao;
+            var query =
+                _specificationAttributeOptionRepository.Table.Where(
+                    sao => specificationAttributeOptionIds.Contains(sao.Id));
             var specificationAttributeOptions = query.ToList();
             //sort by passed identifiers
             var sortedSpecificationAttributeOptions = new List<SpecificationAttributeOption>();
@@ -199,10 +197,9 @@ namespace Nop.Services.Catalog
         /// <returns>Specification attribute option</returns>
         public virtual IList<SpecificationAttributeOption> GetSpecificationAttributeOptionsBySpecificationAttribute(int specificationAttributeId)
         {
-            var query = from sao in _specificationAttributeOptionRepository.Table
-                        orderby sao.DisplayOrder
-                        where sao.SpecificationAttributeId == specificationAttributeId
-                        select sao;
+            var query =
+                _specificationAttributeOptionRepository.Table.Where(
+                    sao => sao.SpecificationAttributeId == specificationAttributeId).OrderBy(sao => sao.DisplayOrder);
             var specificationAttributeOptions = query.ToList();
             return specificationAttributeOptions;
         }

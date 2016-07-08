@@ -187,9 +187,7 @@ namespace Nop.Services.Directory
             if (countryIds == null || countryIds.Length == 0)
                 return new List<Country>();
 
-            var query = from c in _countryRepository.Table
-                        where countryIds.Contains(c.Id)
-                        select c;
+            var query = _countryRepository.Table.Where(c => countryIds.Contains(c.Id));
             var countries = query.ToList();
             //sort by passed identifiers
             var sortedCountries = new List<Country>();
@@ -212,9 +210,7 @@ namespace Nop.Services.Directory
             if (String.IsNullOrEmpty(twoLetterIsoCode))
                 return null;
 
-            var query = from c in _countryRepository.Table
-                        where c.TwoLetterIsoCode == twoLetterIsoCode
-                        select c;
+            var query = _countryRepository.Table.Where(c => c.TwoLetterIsoCode == twoLetterIsoCode);
             var country = query.FirstOrDefault();
             return country;
         }
@@ -229,11 +225,7 @@ namespace Nop.Services.Directory
             if (String.IsNullOrEmpty(threeLetterIsoCode))
                 return null;
 
-            var query = from c in _countryRepository.Table
-                        where c.ThreeLetterIsoCode == threeLetterIsoCode
-                        select c;
-            var country = query.FirstOrDefault();
-            return country;
+            return _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == threeLetterIsoCode);
         }
 
         /// <summary>

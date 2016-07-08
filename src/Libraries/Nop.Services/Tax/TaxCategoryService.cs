@@ -88,9 +88,7 @@ namespace Nop.Services.Tax
             string key = string.Format(TAXCATEGORIES_ALL_KEY);
             return _cacheManager.Get(key, () =>
             {
-                var query = from tc in _taxCategoryRepository.Table
-                            orderby tc.DisplayOrder
-                            select tc;
+                var query = _taxCategoryRepository.Table.OrderBy(tc => tc.DisplayOrder);
                 var taxCategories = query.ToList();
                 return taxCategories;
             });

@@ -170,10 +170,7 @@ namespace Nop.Services.Localization
         /// <returns>Locale string resources</returns>
         public virtual IList<LocaleStringResource> GetAllResources(int languageId)
         {
-            var query = from l in _lsrRepository.Table
-                        orderby l.ResourceName
-                        where l.LanguageId == languageId
-                        select l;
+            var query = _lsrRepository.Table.Where(l => l.LanguageId == languageId).OrderBy(l => l.ResourceName);
             var locales = query.ToList();
             return locales;
         }
@@ -226,10 +223,8 @@ namespace Nop.Services.Localization
             {
                 //we use no tracking here for performance optimization
                 //anyway records are loaded only for read-only operations
-                var query = from l in _lsrRepository.TableNoTracking
-                            orderby l.ResourceName
-                            where l.LanguageId == languageId
-                            select l;
+                var query =
+                    _lsrRepository.TableNoTracking.Where(l => l.LanguageId == languageId).OrderBy(l => l.ResourceName);
                 var locales = query.ToList();
                 //format: <name, <id, value>>
                 var dictionary = new Dictionary<string, KeyValuePair<int, string>>();

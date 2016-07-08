@@ -62,11 +62,8 @@ namespace Nop.Services.Polls
             if (String.IsNullOrWhiteSpace(systemKeyword))
                 return null;
 
-            var query = from p in _pollRepository.Table
-                        where p.SystemKeyword == systemKeyword && p.LanguageId == languageId
-                        select p;
-            var poll = query.FirstOrDefault();
-            return poll;
+            return
+                _pollRepository.Table.FirstOrDefault(p => p.SystemKeyword == systemKeyword && p.LanguageId == languageId);
         }
         
         /// <summary>

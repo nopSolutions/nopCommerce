@@ -187,9 +187,7 @@ namespace Nop.Services.Catalog
 
                 alreadyProcessedCategoryIds.Add(category.Id);
 
-                category = (from c in allCategories
-                            where c.Id == category.ParentCategoryId
-                            select c).FirstOrDefault();
+                category = allCategories.FirstOrDefault(c => c.Id == category.ParentCategoryId);
             }
             result.Reverse();
             return result;

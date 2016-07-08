@@ -135,10 +135,7 @@ namespace Nop.Services.Security
             if (String.IsNullOrWhiteSpace(systemName))
                 return null;
 
-            var query = from pr in _permissionRecordRepository.Table
-                        where  pr.SystemName == systemName
-                        orderby pr.Id
-                        select pr;
+            var query = _permissionRecordRepository.Table.Where(pr => pr.SystemName == systemName).OrderBy(pr => pr.Id);
 
             var permissionRecord = query.FirstOrDefault();
             return permissionRecord;
@@ -150,9 +147,7 @@ namespace Nop.Services.Security
         /// <returns>Permissions</returns>
         public virtual IList<PermissionRecord> GetAllPermissionRecords()
         {
-            var query = from pr in _permissionRecordRepository.Table
-                        orderby pr.Name
-                        select pr;
+            var query = _permissionRecordRepository.Table.OrderBy(pr => pr.Name);
             var permissions = query.ToList();
             return permissions;
         }
@@ -225,12 +220,10 @@ namespace Nop.Services.Security
                         }
 
 
-                        var defaultMappingProvided = (from p in defaultPermission.PermissionRecords
-                                                      where p.SystemName == permission1.SystemName
-                                                      select p).Any();
-                        var mappingExists = (from p in customerRole.PermissionRecords
-                                             where p.SystemName == permission1.SystemName
-                                             select p).Any();
+                        var defaultMappingProvided =
+                            defaultPermission.PermissionRecords.Any(p => p.SystemName == permission1.SystemName);
+                        var mappingExists =
+                            customerRole.PermissionRecords.Any(p => p.SystemName == permission1.SystemName);
                         if (defaultMappingProvided && !mappingExists)
                         {
                             permission1.CustomerRoles.Add(customerRole);

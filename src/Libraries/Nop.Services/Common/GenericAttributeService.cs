@@ -159,10 +159,8 @@ namespace Nop.Services.Common
             string key = string.Format(GENERICATTRIBUTE_KEY, entityId, keyGroup);
             return _cacheManager.Get(key, () =>
             {
-                var query = from ga in _genericAttributeRepository.Table
-                            where ga.EntityId == entityId &&
-                            ga.KeyGroup == keyGroup
-                            select ga;
+                var query =
+                    _genericAttributeRepository.Table.Where(ga => ga.EntityId == entityId && ga.KeyGroup == keyGroup);
                 var attributes = query.ToList();
                 return attributes;
             });
