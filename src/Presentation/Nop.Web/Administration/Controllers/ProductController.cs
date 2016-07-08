@@ -2910,6 +2910,7 @@ namespace Nop.Admin.Controllers
                         product.OldPrice = pModel.OldPrice;
                         product.StockQuantity = pModel.StockQuantity;
                         product.Published = pModel.Published;
+                        product.UpdatedOnUtc = DateTime.UtcNow;
                         _productService.UpdateProduct(product);
 
                         //back in stock notifications
