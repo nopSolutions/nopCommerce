@@ -900,7 +900,7 @@ set @resources='
      <Value>Shipping</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Security">
-     <Value>Security</Value>
+     <Value>Customer roles</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Inventory">
      <Value>Inventory</Value>
@@ -1083,7 +1083,7 @@ set @resources='
      <Value>Mappings</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Security">
-     <Value>Security</Value>
+     <Value>Customer roles</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.RequireOtherProducts">
      <Value>Require other products</Value>
@@ -1193,6 +1193,128 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.RequireOtherProducts">
     <Value>Require other products</Value>
   </LocaleResource>
+
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ProductType.Hint">
+   <Value>Product type can be simple or grouped. In most cases your product will have the Simple product type. You need to use Grouped product type when a new product consists of one or more existing products that will be displayed on one single product details page.</Value>
+  </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.Products.Fields.VisibleIndividually.Hint">
+    <Value>Check it if you want the product to be on catalog or search results. You can uncheck this box to hide associated products from catalog and make them accessible only from grouped product details page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ShortDescription.Hint">
+    <Value>Short description is the text that is displayed in product list i.e. сategory / manufacturer pages.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.FullDescription.Hint">
+    <Value>Full description is the text that is displayed in product page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AdminComment.Hint">
+    <Value>This comment is for internal use only, not visible for customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTags.Hint">
+    <Value>Product tags are the keywords for product identification.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNew.Hint">
+    <Value>Check to mark  the product as new. Use this option for promoting new products.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.IsGiftCard.Hint">
+    <Value>Check if it is a gift card. After adding gift card products to the shopping cart and completing the purchases, you can then search and view the list of all the purchased gift cards by selecting Gift Cards from the Sales menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.GiftCardType.Hint">
+    <Value>There are two gift card types: virtual and physical.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.IsDownload.Hint">
+    <Value>Check if the product is downloadable. When customers purchase a downloadable product, they can download it direct from your store. The link will be visible after checkout.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Download.Hint">
+    <Value>You can download file using URL or uploading from the computer. If you want to download file using URL check the box Use download URL.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.HasUserAgreement.Hint">
+    <Value>Select this checkbox if the customer has a user agreement (a customer must agree with this user agreement when trying to download the product).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.HasSampleDownload.Hint">
+    <Value>You can download file using URL or uploading from the computer. If you want to download file using URL check the box Use download URL.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.IsRecurring.Hint">
+    <Value>Check if it is a recurring product. For any product, you can define a recurring cycle to enable the system to automatically create orders that repeat when a customer purchases such products.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.RecurringCycleLength.Hint">
+    <Value>Specify the cycle length. It is a time period recurring order can be repated.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.RecurringCyclePeriod.Hint">
+    <Value>Specify th cycle period. It defines units time period can be measured in.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.RecurringTotalCycles.Hint">
+    <Value>Total cycles are number of times customer will receive the recurring product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Price.Hint">
+    <Value>The price of the product. You can manage currency by selecting Configuration > Location > Currencies.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ProductCost.Hint">
+    <Value>Product cost is a prime product cost. This field is only for internal use, not visible for customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SpecialPrice.Hint">
+    <Value>Set a special price of the product. The new price will be valid between the start and end dates.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedDiscountIds.Hint">
+     <Value>Select discouts. You can manage discounts by selecting Discounts from the Promotions menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.TaxCategory.Hint">
+    <Value>The tax classification for the product. You can manage tax categories by selecting Configuration > Tax > Tax Categories.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.TierPrices.Tip">
+    <Value>Tier pricing is a promotional tool that allows a store owner to price items differently for higher quantities.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ManageInventoryMethod.Hint">
+    <Value>Select inventory metod. There are three methods: Don’t track inventory, Track inventory and Track inventory by attributes. You should use Track inventory by attributes when the product has different combination of these attributes and then manage inventory for this combinations.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Warehouse.Hint">
+    <Value>Choose the warehouse wich will be used when canculating shipping rates. You can manage warehouses by selecting  Configuration > Shipping > Warehouses.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.IsShipEnabled.Hint">
+    <Value>Check if the product can be shipped. You can manage shipping settings by selecting Configuration > Shipping.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Weight.Hint">
+    <Value>The product  weight. You can manage weight measurement by selecting Configuration > Measures.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Length.Hint">
+    <Value>The product length. You can manage length measurement by selecting Configuration > Measures.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Width.Hint">
+    <Value>The product  width. You can manage width measurement by selecting Configuration > Measures.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ShipSeparately.Hint">
+    <Value>Check if the product should be shipped separately from other products (in single box). Notice that if an order includes several items of this pdoduct, all of them will be shipped separately.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCategoryIds.Hint">
+    <Value>Choose product categories. You can manage product catagories by selecting Catalog > Categories.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedManufacturerIds.Hint">
+     <Value>Choose the manufacturer. You can manage manufacturers by selecting Catalog > Manufacturers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedStoreIds.Hint">
+     <Value>Choose the store. You can manage stores by selecting Configuration > Stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Vendor.Hint">
+    <Value>Choose the vendor. You can manage vendors by selecting Customers > Vendors.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCustomerRoleIds.Hint">
+     <Value>Choose the customer role. You can manage customer roles by selecting Customers > Customer roles.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.RequireOtherProducts.Hint">
+    <Value>Check if the product requires adding other products to the cart.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.RelatedProducts.Tip">
+    <Value>The Related Products option provides the opportunity to advertise products that are not part of the selected category, to your visitors. These products are displayed on thу product details pages.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.CrossSells.Tip">
+    <Value>The Cross-sell products option provides the opportunity to buy additional products that generally go with the selected product. They are displayed at the bottom of the checkout page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Tip">
+    <Value>Product attributes are quantifiable or descriptive aspects of a product i.e. color and size. Also there can be some combinations of attributes. Please notice that if you add product attributes and want them to be counted when shipping, you should go to Product info page and choose Shipping > Inventory method > Tracking inventory by product attributes.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Tip">
+    <Value>Specification attributes are product features i.e, screen size, number of USB-ports, visible on product details page. Specification attributes can be used for filtering products on the category details page.  Unlike product attributes, specification attributes are used for information purposes only.</Value>
+  </LocaleResource>
+
 </Language>
 '
 
