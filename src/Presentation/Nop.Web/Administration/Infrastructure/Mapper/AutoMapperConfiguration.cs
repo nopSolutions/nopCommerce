@@ -585,6 +585,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.AddDiscountRequirement, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableDiscountRequirementRules, mo => mo.Ignore())
                     .ForMember(dest => dest.DiscountRequirementMetaInfos, mo => mo.Ignore())
+                    .ForMember(dest => dest.AppliedToStores, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<DiscountModel, Discount>()
                     .ForMember(dest => dest.DiscountType, mo => mo.Ignore())
@@ -592,7 +593,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.DiscountRequirements, mo => mo.Ignore())
                     .ForMember(dest => dest.AppliedToCategories, mo => mo.Ignore())
                     .ForMember(dest => dest.AppliedToManufacturers, mo => mo.Ignore())
-                    .ForMember(dest => dest.AppliedToProducts, mo => mo.Ignore());
+                    .ForMember(dest => dest.AppliedToProducts, mo => mo.Ignore())
+                    .ForMember(dest => dest.AppliedToStores, mo => mo.Ignore());
                 //gift cards
                 cfg.CreateMap<GiftCard, GiftCardModel>()
                     .ForMember(dest => dest.PurchasedWithOrderId, mo => mo.Ignore())

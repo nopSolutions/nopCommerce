@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.Discounts
 {
@@ -13,6 +14,7 @@ namespace Nop.Core.Domain.Discounts
         private ICollection<Category> _appliedToCategories;
         private ICollection<Manufacturer> _appliedToManufacturers;
         private ICollection<Product> _appliedToProducts;
+        private ICollection<Store> _appliedToStores;
 
         /// <summary>
         /// Gets or sets the name
@@ -152,6 +154,15 @@ namespace Nop.Core.Domain.Discounts
         {
             get { return _appliedToProducts ?? (_appliedToProducts = new List<Product>()); }
             protected set { _appliedToProducts = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the stores
+        /// </summary>
+        public virtual ICollection<Store> AppliedToStores
+        {
+            get { return _appliedToStores ?? (_appliedToStores = new List<Store>()); }
+            protected set { _appliedToStores = value; }
         }
     }
 }

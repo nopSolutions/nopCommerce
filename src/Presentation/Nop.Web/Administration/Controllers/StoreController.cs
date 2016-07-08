@@ -10,6 +10,8 @@ using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Core.Domain.Discounts;
+using Nop.Services.Discounts;
 
 namespace Nop.Admin.Controllers
 {
@@ -23,6 +25,7 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IPermissionService _permissionService;
+        private readonly IDiscountService _discountService;
 
         #endregion
 
@@ -33,7 +36,8 @@ namespace Nop.Admin.Controllers
             ILanguageService languageService,
             ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            IDiscountService discountService)
         {
             this._storeService = storeService;
             this._settingService = settingService;
@@ -41,6 +45,7 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
             this._localizedEntityService = localizedEntityService;
             this._permissionService = permissionService;
+            this._discountService = discountService;
         }
 
         #endregion
@@ -78,6 +83,27 @@ namespace Nop.Admin.Controllers
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
+            }
+        }
+
+        [NonAction]
+        protected virtual void PrepareDiscountModel(StoreModel model, Store store, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            model.AvailableDiscounts = _discountService
+                .GetAllDiscounts(DiscountType.AssignedToStores, null, null, true)
+                .Select(d => new StoreDiscountModel
+                {
+                    Id = d.Id,
+                    Name = d.Name,
+                })
+                .ToList();
+
+            if (!excludeProperties && store != null)
+            {
+                model.SelectedDiscountIds = store.AppliedDiscounts.Select(d => d.Id).ToArray();
             }
         }
 
@@ -122,6 +148,8 @@ namespace Nop.Admin.Controllers
             PrepareLanguagesModel(model);
             //locales
             AddLocales(_languageService, model.Locales);
+            //discounts
+            PrepareDiscountModel(model, null, true);
             return View(model);
         }
 
@@ -140,6 +168,16 @@ namespace Nop.Admin.Controllers
                 _storeService.InsertStore(store);
                 //locales
                 UpdateAttributeLocales(store, model);
+                //discounts
+                var discounts = _discountService.GetAllDiscounts(DiscountType.AssignedToStores, null, null, true);
+                foreach (var discount in discounts)
+                {
+                    if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
+                        store.AppliedDiscounts.Add(discount);
+                }
+                _storeService.UpdateStore(store);
+                //update "HasDiscountsApplied" property
+                _storeService.UpdateHasDiscountsApplied(store);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Stores.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = store.Id }) : RedirectToAction("List");
@@ -149,6 +187,8 @@ namespace Nop.Admin.Controllers
 
             //languages
             PrepareLanguagesModel(model);
+            //discounts
+            PrepareDiscountModel(model, null, true);
             return View(model);
         }
 
@@ -170,6 +210,8 @@ namespace Nop.Admin.Controllers
             {
                 locale.Name = store.GetLocalized(x => x.Name, languageId, false, false);
             });
+            //discounts
+            PrepareDiscountModel(model, store, false);
             return View(model);
         }
 
@@ -194,6 +236,26 @@ namespace Nop.Admin.Controllers
                 _storeService.UpdateStore(store);
                 //locales
                 UpdateAttributeLocales(store, model);
+                //discounts
+                var discounts = _discountService.GetAllDiscounts(DiscountType.AssignedToStores, null, null, true);
+                foreach (var discount in discounts)
+                {
+                    if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
+                    {
+                        //new discount
+                        if (store.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
+                            store.AppliedDiscounts.Add(discount);
+                    }
+                    else
+                    {
+                        //remove discount
+                        if (store.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
+                            store.AppliedDiscounts.Remove(discount);
+                    }
+                }
+                _storeService.UpdateStore(store);
+                //update "HasDiscountsApplied" property
+                _storeService.UpdateHasDiscountsApplied(store);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Stores.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = store.Id }) : RedirectToAction("List");
@@ -203,6 +265,8 @@ namespace Nop.Admin.Controllers
 
             //languages
             PrepareLanguagesModel(model);
+            //discounts
+            PrepareDiscountModel(model, store, false);
             return View(model);
         }
 
