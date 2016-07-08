@@ -1237,7 +1237,7 @@ set @resources='
     <Value>Check if it is a recurring product. For any product, you can define a recurring cycle to enable the system to automatically create orders that repeat when a customer purchases such products.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RecurringCycleLength.Hint">
-    <Value>Specify the cycle length. It is a time period recurring order can be repated.</Value>
+    <Value>Specify the cycle length. It is a time period recurring order can be repeated.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RecurringCyclePeriod.Hint">
     <Value>Specify th cycle period. It defines units time period can be measured in.</Value>
@@ -1260,7 +1260,7 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.TaxCategory.Hint">
     <Value>The tax classification for the product. You can manage tax categories by selecting Configuration > Tax > Tax Categories.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.TierPrices.Tip">
+  <LocaleResource Name="Admin.Catalog.Products.TierPrices.Hint">
     <Value>Tier pricing is a promotional tool that allows a store owner to price items differently for higher quantities.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManageInventoryMethod.Hint">
@@ -1302,16 +1302,16 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.RequireOtherProducts.Hint">
     <Value>Check if the product requires adding other products to the cart.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.RelatedProducts.Tip">
-    <Value>The Related Products option provides the opportunity to advertise products that are not part of the selected category, to your visitors. These products are displayed on thу product details pages.</Value>
+  <LocaleResource Name="Admin.Catalog.Products.RelatedProducts.Hint">
+    <Value>The Related Products option provides the opportunity to advertise products that are not part of the selected category, to your visitors. These products are displayed on the product details pages.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.CrossSells.Tip">
+  <LocaleResource Name="Admin.Catalog.Products.CrossSells.Hint">
     <Value>The Cross-sell products option provides the opportunity to buy additional products that generally go with the selected product. They are displayed at the bottom of the checkout page.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Tip">
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Hint">
     <Value>Product attributes are quantifiable or descriptive aspects of a product i.e. color and size. Also there can be some combinations of attributes. Please notice that if you add product attributes and want them to be counted when shipping, you should go to Product info page and choose Shipping > Inventory method > Tracking inventory by product attributes.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Tip">
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Hint">
     <Value>Specification attributes are product features i.e, screen size, number of USB-ports, visible on product details page. Specification attributes can be used for filtering products on the category details page.  Unlike product attributes, specification attributes are used for information purposes only.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DeliveryDate.Hint">
