@@ -357,13 +357,6 @@ td.k-state-focused.k-state-selected {
 }
 
 /* NAV BAR */
-.navbar-nav span.public-store {
-    padding: 15px;
-    display: block;
-}
-.navbar-nav span.public-store a {
-    color: #fff;
-}
 .navbar-custom-menu > .navbar-nav > li {
     height: 50px;
 }

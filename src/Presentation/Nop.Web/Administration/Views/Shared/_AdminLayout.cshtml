@@ -163,11 +163,9 @@
                                     @Html.Widget("admin_header_middle", area: "Admin")
                                 </li>
                                 <li>
-                                    <span class="public-store">
                                     <a href="@Url.Action("Index", "Home", new {area = ""})">
                                         @T("Admin.Header.PublicStore")
                                     </a>
-                                </span>
                                 </li>
                                 @if (canManageMaintenance)
                                 {
