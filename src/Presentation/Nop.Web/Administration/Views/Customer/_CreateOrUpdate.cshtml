@@ -255,17 +255,23 @@
                             @Html.NopLabelFor(model => model.Gender)
                         </div>
                         <div class="col-md-9">
-                            <div class="radio">
-                                <label>
-                                    @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new {id = "Gender_Male"})
-                                    @T("Admin.Customers.Customers.Fields.Gender.Male")
-                                </label>
-                            </div>
-                            <div class="radio">
-                                <label>
-                                    @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "Gender_Female" })
-                                    @T("Admin.Customers.Customers.Fields.Gender.Female")
-                                </label>
+                            <div class="raw">
+                                <div class="col-md-1">
+                                    <div class="radio">
+                                        <label>
+                                            @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "Gender_Male" })
+                                            @T("Admin.Customers.Customers.Fields.Gender.Male")
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-11">
+                                    <div class="radio">
+                                        <label>
+                                            @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "Gender_Female" })
+                                            @T("Admin.Customers.Customers.Fields.Gender.Female")
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
