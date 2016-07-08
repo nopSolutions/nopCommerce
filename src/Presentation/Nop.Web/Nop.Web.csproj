@@ -991,7 +991,6 @@
     <Content Include="Views\Vendor\Info.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="obj\" />
     <Folder Include="Plugins\bin\" />
   </ItemGroup>
   <ItemGroup>
