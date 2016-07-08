@@ -6,22 +6,22 @@
 }
 
 <div class="panel-group">
+    <p>
+        @T("Admin.Catalog.Products.PurchasedWithOrders.Hint")
+    </p>
+
     <div class="panel panel-default">
         <div class="panel-body">
-            <p>
-                @T("Admin.Catalog.Products.PurchasedWithOrders.Hint")
-            </p>
-
             <div id="purchased-with-orders-grid"></div>
 
             <script>
-                $(document).ready(function () {
+                $(document).ready(function() {
                     $("#purchased-with-orders-grid").kendoGrid({
                         dataSource: {
                             type: "json",
                             transport: {
                                 read: {
-                                    url: "@Html.Raw(Url.Action("PurchasedWithOrders", "Product", new { productId = Model.Id }))",
+                                    url: "@Html.Raw(Url.Action("PurchasedWithOrders", "Product", new {productId = Model.Id}))",
                                     type: "POST",
                                     dataType: "json",
                                     data: addAntiForgeryToken
@@ -51,15 +51,16 @@
                             mode: "inline"
                         },
                         scrollable: false,
-                        columns: [{
-                            field: "Id",
-                            title: "@T("Admin.Orders.Fields.ID")",
-                            width: 50
-                        }, {
-                            field: "CustomerEmail",
-                            title: "@T("Admin.Orders.Fields.CustomerEmail")",
-                            width: 200
-                        },
+                        columns: [
+                            {
+                                field: "Id",
+                                title: "@T("Admin.Orders.Fields.ID")",
+                                width: 50
+                            }, {
+                                field: "CustomerEmail",
+                                title: "@T("Admin.Orders.Fields.CustomerEmail")",
+                                width: 200
+                            },
                             @if (!Model.IsLoggedInAsVendor)
                             {
                                 <text>{
@@ -75,21 +76,22 @@
                                 title: "@T("Admin.Orders.Fields.ShippingStatus")",
                                 width: 100
                             },</text>
-                }
+                            }
 
-                        {
-                            field: "CreatedOn",
-                            title: "@T("Admin.Orders.Fields.CreatedOn")",
-                            width: 200,
-                            type: "date",
-                            format: "{0:G}"
-                        },
-                        {
-                            field: "Id",
-                            title: "@T("Admin.Common.View")",
-                            width: 200,
-                            template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=Id#">@T("Admin.Common.View")</a>'
-                        }]
+                            {
+                                field: "CreatedOn",
+                                title: "@T("Admin.Orders.Fields.CreatedOn")",
+                                width: 200,
+                                type: "date",
+                                format: "{0:G}"
+                            },
+                            {
+                                field: "Id",
+                                title: "@T("Admin.Common.View")",
+                                width: 200,
+                                template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                            }
+                        ]
                     });
                 });
             </script>
