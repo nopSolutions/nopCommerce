@@ -731,6 +731,9 @@ namespace Nop.Admin.Controllers
                 model.SelectedDiscountIds = product.AppliedDiscounts.Select(d => d.Id).ToArray();
             }
 
+            //last stock quantity
+            model.LastStockQuantity = product.StockQuantity;
+
             //default values
             if (setPredefinedValues)
             {
@@ -1151,6 +1154,15 @@ namespace Nop.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List");
+
+            //check if the product quantity has been changed while we were editing the product
+            //and if it has been changed then we show error notification
+            //and redirect on the editing page without data saving
+            if (product.StockQuantity != model.LastStockQuantity)
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Catalog.Products.Fields.StockQuantity.ChangedWarning"));
+                return RedirectToAction("Edit", new { id = product.Id });
+            }
 
             if (ModelState.IsValid)
             {

@@ -1275,6 +1275,7 @@
                 </div>
                 <div class="col-md-9">
                     @Html.NopEditorFor(model => model.StockQuantity)
+                    @Html.HiddenFor(model => model.LastStockQuantity)
                     @Html.ValidationMessageFor(model => model.StockQuantity)
                 </div>
             </div>
