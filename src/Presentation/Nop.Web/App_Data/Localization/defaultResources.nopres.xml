@@ -11521,13 +11521,13 @@
     <Value>Performance. You use only one store. Recommended to ignore store limitations (catalog settings)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreStoreLimitations.Notification">
-    <Value>In order to use this functionality you have to disable the following setting: Configuration &gt; Catalog settings &gt; Perfomance &gt; Ignore "limit per store" rules (sitewide).</Value>
+    <Value>In order to use this functionality you have to disable the following setting: Configuration &gt; Catalog settings &gt; Ignore "limit per store" rules (sitewide).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreAcl">
     <Value>Performance. Recommended to ignore ACL rules if you don't use them (catalog settings)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreAcl.Notification">
-    <Value>In order to use this functionality you have to disable the following setting: Configuration &gt; Catalog settings &gt; Perfomance &gt; Ignore ACL rules (sitewide).</Value>
+    <Value>In order to use this functionality you have to disable the following setting: Configuration &gt; Catalog settings &gt; Ignore ACL rules (sitewide).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.PrimaryCurrency.NotSet">
     <Value>Primary store currency is not set</Value>

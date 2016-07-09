@@ -1016,6 +1016,12 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator">
     <Value>You can''t delete the last administrator. At least one administrator account should exists.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreStoreLimitations.Notification">
+    <Value>In order to use this functionality you have to disable the following setting: Configuration > Catalog settings > Ignore "limit per store" rules (sitewide).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreAcl.Notification">
+    <Value>In order to use this functionality you have to disable the following setting: Configuration > Catalog settings > Ignore ACL rules (sitewide).</Value>
+  </LocaleResource>
 </Language>
 '
 
