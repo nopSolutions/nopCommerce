@@ -293,6 +293,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.AvailableWarehouses, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableBasepriceUnits, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableBasepriceBaseUnits, mo => mo.Ignore())
+                    .ForMember(dest => dest.LastStockQuantity, mo => mo.Ignore())
+                    .ForMember(dest => dest.ProductEditorSettingsModel, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<ProductModel, Product>()
                     .ForMember(dest => dest.ProductTags, mo => mo.Ignore())
@@ -323,7 +325,9 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.ProductAttributeMappings, mo => mo.Ignore())
                     .ForMember(dest => dest.ProductAttributeCombinations, mo => mo.Ignore())
                     .ForMember(dest => dest.TierPrices, mo => mo.Ignore())
-                    .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore());
+                    .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore())
+                    .ForMember(dest => dest.SubjectToAcl, mo => mo.Ignore())
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
                 //logs
                 cfg.CreateMap<Log, LogModel>()
                     .ForMember(dest => dest.CustomerEmail, mo => mo.Ignore())
