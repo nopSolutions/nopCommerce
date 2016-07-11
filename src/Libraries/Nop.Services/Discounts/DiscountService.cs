@@ -396,7 +396,7 @@ namespace Nop.Services.Discounts
 
             //discount requirements
             //UNDONE we should inject static cache manager into constructor. we we already have "per request" cache manager injected. better way to do it?
-            //we cache meta info of rdiscount requirements. this way we should not load them for each HTTP request
+            //we cache meta info of discount requirements. this way we should not load them for each HTTP request
             var staticCacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
             string key = string.Format(DiscountRequirementEventConsumer.DISCOUNT_REQUIREMENT_MODEL_KEY, discount.Id);
             //var requirements = discount.DiscountRequirements;
