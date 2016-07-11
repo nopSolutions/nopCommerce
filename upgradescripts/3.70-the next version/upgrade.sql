@@ -1028,6 +1028,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Plugins.AdditionalInfo">
     <Value>Additional info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreStoreLimitations.Notification">
+    <Value>In order to use this functionality you have to disable the following setting: Configuration > Catalog settings > Ignore "limit per store" rules (sitewide).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreAcl.Notification">
+    <Value>In order to use this functionality you have to disable the following setting: Configuration > Catalog settings > Ignore ACL rules (sitewide).</Value>
+  </LocaleResource>
 </Language>
 '
 
