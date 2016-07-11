@@ -25,8 +25,7 @@
     Html.AppendCssFileParts(string.Format("~/Administration/Content/kendo/{0}/kendo.default.min.css", kendoVersion));
     Html.AppendCssFileParts(string.Format("~/Administration/Content/kendo/{0}/kendo.common.min.css", kendoVersion));
     Html.AppendCssFileParts("~/Administration/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
-    //do not bundle font-awesome css. For some reasons, it's not properly processed when bundled 
-    Html.AppendCssFileParts("~/Administration/Content/fontAwesome/css/font-awesome-4.6.3.min.css", true);
+    Html.AppendCssFileParts("~/Administration/Content/fontAwesome/css/font-awesome-4.6.3.min.css");
     <!-- AdminLTE Skins (choose a skin from the css/skins) -->
     Html.AppendCssFileParts("~/Administration/Content/adminLTE/skins/_all-skins.min.css");
 
@@ -59,8 +58,8 @@
     <title>@adminPageTitle</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     @Html.NopHeadCustom()
-    @Html.NopCssFiles(this.Url, ResourceLocation.Head)
-    @Html.NopScripts(this.Url, ResourceLocation.Head)
+    @Html.NopCssFiles(this.Url, ResourceLocation.Head, false)
+    @Html.NopScripts(this.Url, ResourceLocation.Head, false)
 </head>
 <body class="hold-transition skin-blue sidebar-collapse">
     <div class="wrapper">
