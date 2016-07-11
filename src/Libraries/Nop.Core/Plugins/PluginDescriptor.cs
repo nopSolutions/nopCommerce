@@ -74,6 +74,11 @@ namespace Nop.Core.Plugins
         public virtual string Author { get; set; }
 
         /// <summary>
+        /// Gets or sets the description
+        /// </summary>
+        public virtual string Description { get; set; }
+
+        /// <summary>
         /// Gets or sets the display order
         /// </summary>
         public virtual int DisplayOrder { get; set; }

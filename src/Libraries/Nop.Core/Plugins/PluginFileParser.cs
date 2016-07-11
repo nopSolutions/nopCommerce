@@ -128,6 +128,9 @@ namespace Nop.Core.Plugins
                             }
                         }
                         break;
+                    case "Description":
+                            descriptor.Description = value;
+                        break;
                     default:
                         break;
                 }
@@ -162,6 +165,8 @@ namespace Nop.Core.Plugins
             keyValues.Add(new KeyValuePair<string, string>("Author", plugin.Author));
             keyValues.Add(new KeyValuePair<string, string>("DisplayOrder", plugin.DisplayOrder.ToString()));
             keyValues.Add(new KeyValuePair<string, string>("FileName", plugin.PluginFileName));
+            keyValues.Add(new KeyValuePair<string, string>("Description", plugin.Description));            
+
             if (plugin.LimitedToStores.Any())
             {
                 var storeList = string.Join(",", plugin.LimitedToStores);
