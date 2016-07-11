@@ -792,9 +792,11 @@ namespace Nop.Admin.Controllers
             foreach (var mw in measureWeights)
                 model.AvailableBasepriceBaseUnits.Add(new SelectListItem { Text = mw.Name, Value = mw.Id.ToString(), Selected = product != null && !setPredefinedValues && mw.Id == product.BasepriceBaseUnitId });
 
-
             //last stock quantity
-            model.LastStockQuantity = product.StockQuantity;
+            if (product != null)
+            {
+                model.LastStockQuantity = product.StockQuantity;
+            }
 
             //default values
             if (setPredefinedValues)
