@@ -5354,7 +5354,7 @@ pre {
 
 .topic-post .post-body {
     float: right;
-    max-width: 90.5%;
+    width: 90.5%;
     text-align: right;
 }
 

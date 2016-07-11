@@ -5300,7 +5300,7 @@ pre {
 
 .topic-post .post-body {
     float: left;
-    max-width: 90.5%;
+    width: 90.5%;
     text-align: left;
 }
 
