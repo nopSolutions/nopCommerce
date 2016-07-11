@@ -188,8 +188,8 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.CrossSellsProducts")]
         public bool CrossSellsProducts { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.SEO")]
-        public bool SEO { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.Seo")]
+        public bool Seo { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.PurchasedWithOrders")]
         public bool PurchasedWithOrders { get; set; }

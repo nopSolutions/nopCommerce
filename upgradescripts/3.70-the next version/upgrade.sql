@@ -1184,7 +1184,7 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Tabs">
     <Value>Tabs</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.SEO">
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Seo">
     <Value>SEO</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.PurchasedWithOrders">
@@ -1193,7 +1193,6 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.RequireOtherProducts">
     <Value>Require other products</Value>
   </LocaleResource>
-
   <LocaleResource Name="Admin.Catalog.Products.Fields.ProductType.Hint">
    <Value>Product type can be simple or grouped. In most cases your product will have the Simple product type. You need to use Grouped product type when a new product consists of one or more existing products that will be displayed on one single product details page.</Value>
   </LocaleResource>
@@ -1309,7 +1308,7 @@ set @resources='
     <Value>The Cross-sell products option provides the opportunity to buy additional products that generally go with the selected product. They are displayed at the bottom of the checkout page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Hint">
-    <Value>Product attributes are quantifiable or descriptive aspects of a product i.e. color and size. Also there can be some combinations of attributes. Please notice that if you add product attributes and want them to be counted when shipping, you should go to Product info page and choose Shipping > Inventory method > Tracking inventory by product attributes.</Value>
+    <Value>Product attributes are quantifiable or descriptive aspects of a product (such as, color). For example, if you were to create an attribute for color, with the values of blue, green, yellow, and so on, you may want to apply this attribute to shirts, which you sell in various colors (you can adjust a price or weight for any of existing attribute values). You can add attribute for your product using existing list of attributes, or if you need to create a new one go to Catalog > Attributes > Product attributes. Please notice that if you want to manage inventory by product attributes (e.g. 5 green shirts and 3 blue ones), then ensure that Inventory method is set to Track inventory by product attributes.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Hint">
     <Value>Specification attributes are product features i.e, screen size, number of USB-ports, visible on product details page. Specification attributes can be used for filtering products on the category details page.  Unlike product attributes, specification attributes are used for information purposes only.</Value>
@@ -1319,6 +1318,24 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Height.Hint">
     <Value>The product  height. You can manage height measurement by selecting Configuration > Measures.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SubjectToAcl">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SubjectToAcl.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Description2">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Description">
+    <Value>Also note that some attribute control types that support custom user input (e.g. file upload, textboxes, date picker) are useless with attribute combinations</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.LimitedToStores">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.LimitedToStores.Hint">
+    <Value></Value>
   </LocaleResource>
 </Language>
 '

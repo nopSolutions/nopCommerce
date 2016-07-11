@@ -391,16 +391,12 @@ namespace Nop.Admin.Models.Catalog
 
 
         //ACL (customer roles)
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SubjectToAcl")]
-        public bool SubjectToAcl { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.SelectedCustomerRoleIds")]
         [UIHint("MultiSelect")]
         public IList<int> SelectedCustomerRoleIds { get; set; }
         public IList<SelectListItem> AvailableCustomerRoles { get; set; }
 
         //store mapping
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.LimitedToStores")]
-        public bool LimitedToStores { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.SelectedStoreIds")]
         [UIHint("MultiSelect")]
         public IList<int> SelectedStoreIds { get; set; }

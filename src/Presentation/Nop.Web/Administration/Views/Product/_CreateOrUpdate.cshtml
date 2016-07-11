@@ -25,7 +25,7 @@
         <div id="product-edit" class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Catalog.Products.Info"), true)
-                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"), customCssClass:  Model.ProductEditorSettingsModel.SEO ? "" : "advanced-setting")
+                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"), customCssClass:  Model.ProductEditorSettingsModel.Seo ? "" : "advanced-setting")
                 @Html.RenderBootstrapTabHeader("tab-pictures", @T("Admin.Catalog.Products.Pictures"))
                 @Html.RenderBootstrapTabHeader("tab-product-attributes", @T("Admin.Catalog.Products.ProductAttributes"))
                 @Html.RenderBootstrapTabHeader("tab-specification-attributes", @T("Admin.Catalog.Products.SpecificationAttributes"))

@@ -313,7 +313,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets a value indicating whether 'SEO' tab is shown
         /// </summary>
-        public bool SEO { get; set; }
+        public bool Seo { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Purchased with orders' tab is shown
