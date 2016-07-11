@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
+using Nop.Admin.Helpers;
 using Nop.Admin.Models.Discounts;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
@@ -45,6 +47,7 @@ namespace Nop.Admin.Controllers
         private readonly IVendorService _vendorService;
         private readonly IOrderService _orderService;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly ICacheManager _cacheManager;
 
         #endregion
 
@@ -65,7 +68,8 @@ namespace Nop.Admin.Controllers
             IStoreService storeService,
             IVendorService vendorService,
             IOrderService orderService,
-            IPriceFormatter priceFormatter)
+            IPriceFormatter priceFormatter, 
+            ICacheManager cacheManager)
         {
             this._discountService = discountService;
             this._localizationService = localizationService;
@@ -83,6 +87,7 @@ namespace Nop.Admin.Controllers
             this._vendorService = vendorService;
             this._orderService = orderService;
             this._priceFormatter = priceFormatter;
+            this._cacheManager = cacheManager;
         }
 
         #endregion
@@ -465,9 +470,9 @@ namespace Nop.Admin.Controllers
             var model = new DiscountModel.AddProductToDiscountModel();
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
+            var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(c);
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
