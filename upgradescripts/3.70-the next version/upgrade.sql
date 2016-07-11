@@ -894,7 +894,7 @@ set @resources='
      <Value>Product manufacturer mappings.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ACL">
-     <Value>Access control list</Value>
+     <Value>Customer roles</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AdditionalShippingCharge">
      <Value>Additional shipping charge</Value>
@@ -942,7 +942,7 @@ set @resources='
      <Value>Shipping</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Security">
-     <Value>Customer roles</Value>
+     <Value>Access control list</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Inventory">
      <Value>Inventory</Value>
@@ -1125,7 +1125,7 @@ set @resources='
      <Value>Mappings</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Security">
-     <Value>Customer roles</Value>
+     <Value>Access control list</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.RequireOtherProducts">
      <Value>Require other products</Value>
@@ -1166,14 +1166,11 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedStoreIds">
      <Value>Stores</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedStoreIds.Hint">
-     <Value>Select stores.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCustomerRoleIds">
      <Value>Customer roles</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCustomerRoleIds.Hint">
-     <Value>Select customer roles.</Value>
+    <Value>Customer roles is nopCommerce option, enables you to place your customers in groups, i.e. administrators, vendors, guests, for granting them different statuses (allow to view and edit different pages). You can manage customer roles by selecting Customers > Customer roles.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Acl">
      <Value></Value>
@@ -1326,19 +1323,16 @@ set @resources='
     <Value>Check if the product should be shipped separately from other products (in single box). Notice that if the order includes several items of this product, all of them will be shipped separately.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCategoryIds.Hint">
-    <Value>Choose product categories. You can manage product categories by selecting Catalog > Categories.</Value>
+    <Value>Choose categories. You can manage product categories by selecting Catalog > Categories.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedManufacturerIds.Hint">
      <Value>Choose the manufacturer. You can manage manufacturers by selecting Catalog > Manufacturers.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedStoreIds.Hint">
-     <Value>Choose the store. You can manage stores by selecting Configuration > Stores.</Value>
+     <Value>Stores is an option to limit a product to a certain store. If you use different stores, choose one or several from the list. You can manage stores by selecting Configuration > Stores.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Vendor.Hint">
     <Value>Choose the vendor. You can manage vendors by selecting Customers > Vendors.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCustomerRoleIds.Hint">
-     <Value>Choose the customer role. You can manage customer roles by selecting Customers > Customer roles.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RequireOtherProducts.Hint">
     <Value>Check if the product requires adding other products to the cart.</Value>
