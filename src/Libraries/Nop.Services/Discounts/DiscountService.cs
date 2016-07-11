@@ -153,7 +153,7 @@ namespace Nop.Services.Discounts
         public virtual IList<Discount> GetAllDiscounts(DiscountType? discountType,
             string couponCode = "", string discountName = "", bool showHidden = false)
         {
-            //we load all discounts, and filter them by passed "discountType" parameter later
+            //we load all discounts, and filter them using "discountType" parameter later (in memory)
             //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
             //that's why let's access the database only once
             string key = string.Format(DISCOUNTS_ALL_KEY, showHidden, couponCode, discountName);
