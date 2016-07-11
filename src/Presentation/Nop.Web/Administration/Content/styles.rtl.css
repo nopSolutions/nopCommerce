@@ -311,6 +311,9 @@ td.k-state-focused.k-state-selected {
 .k-grid tbody td > .k-grid-delete {
     margin-top: 0;
 }
+.k-grid table tr:hover > td {
+    background: #e3e3e3 !important;
+}
 .k-grid-header .k-header {
     white-space: normal;
 }
