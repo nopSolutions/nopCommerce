@@ -1514,6 +1514,12 @@ set @resources='
   <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreAcl.Notification">
     <Value>In order to use this functionality you have to disable the following setting: Configuration > Catalog settings > Ignore ACL rules (sitewide).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.ImportFromExcel.ManyRecordsWarning">
+    <Value>Import requires a lot of memory resources. That''s why it''s not recommended to import more than 500 - 1,000 records at once. If you have more records, it''s better to split them to multiple Excel files and import separately.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Description">
+    <Value>Note that some attribute control types that support custom user input (e.g. file upload, textboxes, date picker) are useless with attribute combinations</Value>
+  </LocaleResource>
 </Language>
 '
 
