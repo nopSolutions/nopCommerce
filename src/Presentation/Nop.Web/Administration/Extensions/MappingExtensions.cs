@@ -1003,6 +1003,16 @@ namespace Nop.Admin.Extensions
         {
             return model.MapTo(destination);
         }
+
+        //product editor settings
+        public static ProductEditorSettingsModel ToModel(this ProductEditorSettings entity)
+        {
+            return entity.MapTo<ProductEditorSettings, ProductEditorSettingsModel>();
+        }
+        public static ProductEditorSettings ToEntity(this ProductEditorSettingsModel model, ProductEditorSettings destination)
+        {
+            return model.MapTo(destination);
+        }
         #endregion
 
         #region Plugins

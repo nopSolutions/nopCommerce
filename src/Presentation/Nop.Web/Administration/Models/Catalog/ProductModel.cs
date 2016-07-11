@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
-using Nop.Admin.Models.Customers;
-using Nop.Admin.Models.Discounts;
-using Nop.Admin.Models.Stores;
+using Nop.Admin.Models.Settings;
 using Nop.Admin.Validators.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
@@ -21,21 +19,35 @@ namespace Nop.Admin.Models.Catalog
             Locales = new List<ProductLocalizedModel>();
             ProductPictureModels = new List<ProductPictureModel>();
             CopyProductModel = new CopyProductModel();
-            AvailableBasepriceUnits = new List<SelectListItem>();
-            AvailableBasepriceBaseUnits = new List<SelectListItem>();
-            AvailableProductTemplates = new List<SelectListItem>();
-            AvailableVendors = new List<SelectListItem>();
-            AvailableTaxCategories = new List<SelectListItem>();
-            AvailableDeliveryDates = new List<SelectListItem>();
-            AvailableWarehouses = new List<SelectListItem>();
-            CategoryIds = new List<int>();
-            AvailableCategories = new List<SelectListItem>();
-            ManufacturerIds = new List<int>();
-            AvailableManufacturers = new List<SelectListItem>();
-            AvailableProductAttributes = new List<SelectListItem>();
             AddPictureModel = new ProductPictureModel();
             AddSpecificationAttributeModel = new AddProductSpecificationAttributeModel();
             ProductWarehouseInventoryModels = new List<ProductWarehouseInventoryModel>();
+            ProductEditorSettingsModel = new ProductEditorSettingsModel();
+
+            AvailableBasepriceUnits = new List<SelectListItem>();
+            AvailableBasepriceBaseUnits = new List<SelectListItem>();
+            AvailableProductTemplates = new List<SelectListItem>();
+            AvailableTaxCategories = new List<SelectListItem>();
+            AvailableDeliveryDates = new List<SelectListItem>();
+            AvailableWarehouses = new List<SelectListItem>();
+            AvailableProductAttributes = new List<SelectListItem>();
+
+            AvailableVendors = new List<SelectListItem>();
+
+            SelectedStoreIds = new List<int>();
+            AvailableStores = new List<SelectListItem>();
+
+            SelectedManufacturerIds = new List<int>();
+            AvailableManufacturers = new List<SelectListItem>();
+
+            SelectedCategoryIds = new List<int>();
+            AvailableCategories = new List<SelectListItem>();
+
+            SelectedCustomerRoleIds = new List<int>();
+            AvailableCustomerRoles = new List<SelectListItem>();
+
+            SelectedDiscountIds = new List<int>();
+            AvailableDiscounts = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ID")]
@@ -78,10 +90,6 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AdminComment")]
         [AllowHtml]
         public string AdminComment { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Vendor")]
-        public int VendorId { get; set; }
-        public IList<SelectListItem> AvailableVendors { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ShowOnHomePage")]
         public bool ShowOnHomePage { get; set; }
@@ -382,57 +390,54 @@ namespace Nop.Admin.Models.Catalog
         public IList<ProductLocalizedModel> Locales { get; set; }
 
 
+
         //ACL (customer roles)
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SubjectToAcl")]
-        public bool SubjectToAcl { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AclCustomerRoles")]
-        public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
-        public int[] SelectedCustomerRoleIds { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SelectedCustomerRoleIds")]
+        [UIHint("MultiSelect")]
+        public IList<int> SelectedCustomerRoleIds { get; set; }
+        public IList<SelectListItem> AvailableCustomerRoles { get; set; }
 
-        //Store mapping
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.LimitedToStores")]
-        public bool LimitedToStores { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AvailableStores")]
-        public List<StoreModel> AvailableStores { get; set; }
-        public int[] SelectedStoreIds { get; set; }
+        //store mapping
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SelectedStoreIds")]
+        [UIHint("MultiSelect")]
+        public IList<int> SelectedStoreIds { get; set; }
+        public IList<SelectListItem> AvailableStores { get; set; }
 
+        //categories
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SelectedCategoryIds")]
+        [UIHint("MultiSelect")]
+        public IList<int> SelectedCategoryIds { get; set; }
+        public IList<SelectListItem> AvailableCategories { get; set; }
+
+        //manufacturers
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SelectedManufacturerIds")]
+        [UIHint("MultiSelect")]
+        public IList<int> SelectedManufacturerIds { get; set; }
+        public IList<SelectListItem> AvailableManufacturers { get; set; }
+
+        //vendors
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Vendor")]
+        public int VendorId { get; set; }
+        public IList<SelectListItem> AvailableVendors { get; set; }
+
+        //discounts
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SelectedDiscountIds")]
+        [UIHint("MultiSelect")]
+        public IList<int> SelectedDiscountIds { get; set; }
+        public IList<SelectListItem> AvailableDiscounts { get; set; }
 
         //vendor
         public bool IsLoggedInAsVendor { get; set; }
 
-
-
-        //categories
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.CategoryIds")]
-        [UIHint("MultiSelect")]
-        public IList<int> CategoryIds { get; set; }
-        public IList<SelectListItem> AvailableCategories { get; set; }
-
-        //manufacturers
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ManufacturerIds")]
-        [UIHint("MultiSelect")]
-        public IList<int> ManufacturerIds { get; set; }
-        public IList<SelectListItem> AvailableManufacturers { get; set; }
-
         //product attributes
         public IList<SelectListItem> AvailableProductAttributes { get; set; }
         
-
-
         //pictures
         public ProductPictureModel AddPictureModel { get; set; }
         public IList<ProductPictureModel> ProductPictureModels { get; set; }
 
-        //discounts
-        public List<DiscountModel> AvailableDiscounts { get; set; }
-        public int[] SelectedDiscountIds { get; set; }
-
-
-
-
         //add specification attribute model
         public AddProductSpecificationAttributeModel AddSpecificationAttributeModel { get; set; }
-
 
         //multiple warehouses
         [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory")]
@@ -440,7 +445,10 @@ namespace Nop.Admin.Models.Catalog
 
         //copy product
         public CopyProductModel CopyProductModel { get; set; }
-        
+
+        //editor settings
+        public ProductEditorSettingsModel ProductEditorSettingsModel { get; set; }
+
         #region Nested classes
 
         public partial class AddRequiredProductModel : BaseNopModel

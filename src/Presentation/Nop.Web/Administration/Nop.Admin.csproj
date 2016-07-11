@@ -251,6 +251,7 @@
     <Compile Include="Models\Plugins\OfficialFeedListModel.cs" />
     <Compile Include="Models\Plugins\PluginListModel.cs" />
     <Compile Include="Models\Settings\AllSettingsListModel.cs" />
+    <Compile Include="Models\Settings\ProductEditorSettingsModel.cs" />
     <Compile Include="Models\Settings\ModeModel.cs" />
     <Compile Include="Models\Settings\ReturnRequestActionModel.cs" />
     <Compile Include="Models\Settings\ReturnRequestReasonModel.cs" />
@@ -1575,7 +1576,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Product\Create.cshtml" />
@@ -2131,6 +2134,8 @@
     <Content Include="Content\Roxy_Fileman\lang\pl.json" />
     <Content Include="Content\Roxy_Fileman\lang\pt.json" />
     <Content Include="Views\Measure\List.cshtml" />
+    <Content Include="Views\Product\_ProductEditorSettingsModal.cshtml" />
+    <Content Include="Views\Product\_CreateOrUpdate.PurchasedWithOrders.cshtml" />
     <None Include="Views\Product\_ProductAttributes.cshtml" />
     <Content Include="Views\Setting\_ReturnRequestReasons.cshtml" />
     <Content Include="Views\Setting\ReturnRequestReasonEdit.cshtml" />
@@ -2321,36 +2326,16 @@
     <Content Include="Views\Product\_CreateOrUpdate.Info.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Product\_CreateOrUpdate.Stores.cshtml" />
     <Content Include="Views\Product\_CreateOrUpdate.SpecificationAttributes.cshtml" />
-    <Content Include="Views\Product\_CreateOrUpdate.Acl.cshtml" />
     <Content Include="Views\Product\_CreateOrUpdate.ProductAttributes.cshtml" />
-    <Content Include="Views\Product\_CreateOrUpdate.TierPrices.cshtml" />
-    <Content Include="Views\Product\_CreateOrUpdate.Discounts.cshtml" />
-    <Content Include="Views\Product\_CreateOrUpdate.AssociatedProducts.cshtml" />
     <Content Include="Views\Product\AssociatedProductAddPopup.cshtml" />
     <Content Include="Views\Product\_CreateOrUpdate.SEO.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Product\_CreateOrUpdate.Categories.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Product\_CreateOrUpdate.Manufacturers.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Product\_CreateOrUpdate.RelatedProducts.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Product\_CreateOrUpdate.CrossSells.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Product\_CreateOrUpdate.Pictures.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Product\AssociateProductToAttributeValuePopup.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Product\_CreateOrUpdate.PurchasedWithOrders.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shipping\CreateDeliveryDate.cshtml" />

@@ -286,8 +286,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.BaseWeightIn, mo => mo.Ignore())
                     .ForMember(dest => dest.Locales, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableDiscounts, mo => mo.Ignore())
-                    .ForMember(dest => dest.CategoryIds, mo => mo.Ignore())
-                    .ForMember(dest => dest.ManufacturerIds, mo => mo.Ignore())
+                    .ForMember(dest => dest.SelectedCategoryIds, mo => mo.Ignore())
+                    .ForMember(dest => dest.SelectedManufacturerIds, mo => mo.Ignore())
                     .ForMember(dest => dest.SelectedDiscountIds, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableDeliveryDates, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableWarehouses, mo => mo.Ignore())
@@ -917,6 +917,9 @@ namespace Nop.Admin.Infrastructure.Mapper
                 cfg.CreateMap<AddressSettings, CustomerUserSettingsModel.AddressSettingsModel>()
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<CustomerUserSettingsModel.AddressSettingsModel, AddressSettings>();
+                cfg.CreateMap<ProductEditorSettings, ProductEditorSettingsModel>()
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                cfg.CreateMap<ProductEditorSettingsModel, ProductEditorSettings>();
 
                 //return request reasons
                 cfg.CreateMap<ReturnRequestReason, ReturnRequestReasonModel>()

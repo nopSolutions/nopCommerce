@@ -1279,25 +1279,25 @@
     <Value>back to checkout attribute list</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition">
-     <Value>Condition</Value>
+    <Value>Condition</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.Attributes">
-     <Value>Attribute</Value>
+    <Value>Attribute</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.Attributes.Hint">
-     <Value>Choose an attribute.</Value>
+    <Value>Choose an attribute.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.EnableCondition">
-     <Value>Enable condition</Value>
+    <Value>Enable condition</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.EnableCondition.Hint">
-     <Value>Check to specify a condition (depending on other attribute) when this attribute should be enabled (visible).</Value>
+    <Value>Check to specify a condition (depending on other attribute) when this attribute should be enabled (visible).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.NoAttributeExists">
-     <Value>No attribute exists that could be used as condition.</Value>
+    <Value>No attribute exists that could be used as condition.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.SaveBeforeEdit">
-     <Value>You need to save the checkout attribute before you can edit conditional attributes.</Value>
+    <Value>You need to save the checkout attribute before you can edit conditional attributes.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Deleted">
     <Value>The attribute has been deleted successfully.</Value>
@@ -2211,9 +2211,6 @@
   <LocaleResource Name="Admin.Catalog.Products">
     <Value>Products</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Acl">
-    <Value>Access control list</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Added">
     <Value>The new product has been added successfully.</Value>
   </LocaleResource>
@@ -2244,17 +2241,11 @@
   <LocaleResource Name="Admin.Catalog.Products.BackToList">
     <Value>back to product list</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Categories">
-    <Value>Category mappings</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.CategoryIds">
-    <Value>Categories</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.CategoryIds.Hint">
-    <Value>Product category mappings.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Categories.NoCategoriesAvailable">
-    <Value>No categories available. Create at least one category.</Value>
+    <Value>No categories available.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.CommonInfo">
+    <Value>General information</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Copy">
     <Value>Copy product</Value>
@@ -2289,26 +2280,23 @@
   <LocaleResource Name="Admin.Catalog.Products.CrossSells.SaveBeforeEdit">
     <Value>You need to save the product before you can add cross-sell products for this product page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.CrossSells.Hint">
+    <Value>The Cross-sell products option provides the opportunity to buy additional products that generally go with the selected product. They are displayed at the bottom of the checkout page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Deleted">
     <Value>The product has been deleted successfully.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Discounts">
-    <Value>Discounts</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Discounts.NoDiscounts">
     <Value>No discounts available. Create at least one discount before mapping.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.DownloadableProduct">
+    <Value>Downloadable product</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.EditProductDetails">
     <Value>Edit product details</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ExceededMaximumNumber">
     <Value>The maximum allowed number of products has been exceeded ({0})</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.AclCustomerRoles">
-    <Value>Customer roles</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.AclCustomerRoles.Hint">
-    <Value>Select customer roles for which the product will be shown.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.AdditionalShippingCharge">
     <Value>Additional shipping charge</Value>
@@ -2320,7 +2308,7 @@
     <Value>Admin comment</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.AdminComment.Hint">
-    <Value>Admin comment. For internal use.</Value>
+    <Value>This comment is for internal use only, not visible for customers.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.AllowAddingOnlyExistingAttributeCombinations">
     <Value>Allow only existing attribute combinations</Value>
@@ -2375,12 +2363,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableStartDateTime.Hint">
     <Value>The start of the product's availability in Coordinated Universal Time (UTC).</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableStores">
-    <Value>Stores</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableStores.Hint">
-    <Value>Select stores for which the product will be shown.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.BackorderMode">
     <Value>Backorders</Value>
@@ -2440,7 +2422,7 @@
     <Value>Delivery date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DeliveryDate.Hint">
-    <Value>Choose a delivery date which will be displayed in the public store.</Value>
+    <Value>Choose a delivery date which will be displayed in the public store. You can manage delivery dates by selecting Configuration > Shipping > Delivery dates.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DeliveryDate.None">
     <Value>None</Value>
@@ -2464,7 +2446,7 @@
     <Value>Display order of the product. 1 represents the top of the list.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayStockAvailability">
-    <Value>Display stock availability</Value>
+    <Value>Display availability</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayStockAvailability.Hint">
     <Value>Check to display stock availability. When enabled, customers will see stock availability.</Value>
@@ -2475,11 +2457,8 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayStockQuantity.Hint">
     <Value>Check to display stock quantity. When enabled, customers will see stock quantity.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.Download">
-    <Value>Download file</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Download.Hint">
-    <Value>The download file.</Value>
+    <Value>You can download file using URL or uploading from the computer. If you want to download file using URL check the box Use download URL.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DownloadActivationType">
     <Value>Download activation type</Value>
@@ -2497,13 +2476,13 @@
     <Value>Full description</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.FullDescription.Hint">
-    <Value>The full description of the product.</Value>
+    <Value>Full description is the text that is displayed in product page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.GiftCardType">
     <Value>Gift card type</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.GiftCardType.Hint">
-    <Value>Select gift card type. WARNING: not recommended to change in production environment.</Value>
+    <Value>There are two gift card types: virtual and physical. WARNING: not recommended to change the gift card type from one to another in a "live" store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.GTIN">
     <Value>GTIN (global trade item number)</Value>
@@ -2515,19 +2494,19 @@
     <Value>Has sample download file</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.HasSampleDownload.Hint">
-    <Value>Check if this product has a sample download file that can be downloaded before checkout.</Value>
+    <Value>You can download file using URL or uploading from the computer. If you want to download file using URL check the box Use download URL.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.HasUserAgreement">
     <Value>Has user agreement</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.HasUserAgreement.Hint">
-    <Value>Check if the product has a user agreement.</Value>
+    <Value>Select this checkbox if the customer has a user agreement (a customer must agree with this user agreement when trying to download the product).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Height">
     <Value>Height</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Height.Hint">
-    <Value>The height of the product.</Value>
+    <Value>The product  height. You can manage height measurement by selecting Configuration > Measures.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ID">
     <Value>ID</Value>
@@ -2539,7 +2518,7 @@
     <Value>Downloadable product</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.IsDownload.Hint">
-    <Value>Check if this product is a downloadable product. When a customer purchases a download product, they can download the item direct from your store by viewing their completed order.</Value>
+    <Value>Check if the product is downloadable. When customers purchase a downloadable product, they can download it direct from your store. The link will be visible after checkout.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.IsFreeShipping">
     <Value>Free shipping</Value>
@@ -2551,13 +2530,13 @@
     <Value>Is gift card</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.IsGiftCard.Hint">
-    <Value>Check if it is a gift card.</Value>
+    <Value>Check if it is a gift card. After adding gift card products to the shopping cart and completing the purchases, you can then search and view the list of all the purchased gift cards by selecting Gift Cards from the Sales menu.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.IsRecurring">
     <Value>Recurring product</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.IsRecurring.Hint">
-    <Value>Check if this product is a recurring product.</Value>
+    <Value>Check if it is a recurring product. For any product, you can define a recurring cycle to enable the system to automatically create orders that repeat when a customer purchases such products.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.IsRental">
     <Value>Is rental</Value>
@@ -2569,7 +2548,7 @@
     <Value>Shipping enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.IsShipEnabled.Hint">
-    <Value>Determines whether the product can be shipped.</Value>
+    <Value>Check if the product can be shipped. You can manage shipping settings by selecting Configuration > Shipping.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.IsTaxExempt">
     <Value>Tax exempt</Value>
@@ -2587,13 +2566,7 @@
     <Value>Length</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Length.Hint">
-    <Value>The length of the product.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.LimitedToStores">
-    <Value>Limited to stores</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.LimitedToStores.Hint">
-    <Value>Determines whether the product is available only at certain stores.</Value>
+    <Value>The product length. You can manage length measurement by selecting Configuration > Measures.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.LowStockActivity">
     <Value>Low stock activity</Value>
@@ -2602,19 +2575,13 @@
     <Value>Action to be taken when your current stock quantity falls below (reaches) the 'Minimum stock quantity'.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManageInventoryMethod">
-    <Value>Manage inventory method</Value>
+    <Value>Inventory method</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManageInventoryMethod.Hint">
-    <Value>Select manage inventory method. When enabled, stock quantities are automatically adjusted when a customer makes a purchase. You can also set low stock activity actions and receive notifications.</Value>
+    <Value>Select inventory method. There are three methods: Don’t track inventory, Track inventory and Track inventory by attributes. You should use Track inventory by attributes when the product has different combinations of these attributes and then manage inventory for this combinations.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerIds">
     <Value>Manufacturers</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerIds.Hint">
-    <Value>Product manufacturer mappings.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerPartNumber">
-    <Value>Manufacturer part number</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerPartNumber.Hint">
     <Value>The manufacturer's part number for this product.</Value>
@@ -2623,7 +2590,7 @@
     <Value>Mark as new</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNew.Hint">
-    <Value>Check to mark this product as New.</Value>
+    <Value>Check to mark  the product as new. Use this option for promoting new products.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNewStartDateTimeUtc">
     <Value>Mark as new. Start date</Value>
@@ -2674,13 +2641,13 @@
     <Value>Enter a minimum amount.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.MinStockQuantity">
-    <Value>Minimum stock quantity</Value>
+    <Value>Minimum stock qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.MinStockQuantity.Hint">
     <Value>If you have enabled 'Manage Stock' you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.UseMultipleWarehouses">
-    <Value>Use multiple warehouses</Value>
+    <Value>Multiple warehouses</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.UseMultipleWarehouses.Hint">
     <Value>Check if you want to support shipping and inventory management from multiple warehouses.</Value>
@@ -2695,7 +2662,7 @@
     <Value>Please provide a name.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.NotifyAdminForQuantityBelow">
-    <Value>Notify admin for quantity below</Value>
+    <Value>Notify for qty below</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.NotifyAdminForQuantityBelow.Hint">
     <Value>When the current stock quantity falls below (reaches) this quantity, a store owner will receive a notification.</Value>
@@ -2713,13 +2680,13 @@
     <Value>The old price of the product. If you set an old price, this will display alongside the current price on the product page to show the difference in price.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.OrderMaximumQuantity">
-    <Value>Maximum cart quantity</Value>
+    <Value>Maximum cart qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.OrderMaximumQuantity.Hint">
     <Value>Set the maximum quantity allowed in a customer's shopping cart e.g. set to 5 to only allow customers to purchase 5 of this product.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.OrderMinimumQuantity">
-    <Value>Minimum cart quantity</Value>
+    <Value>Minimum cart qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.OrderMinimumQuantity.Hint">
     <Value>Set the minimum quantity allowed in a customer's shopping cart e.g. set to 3 to only allow customers to purchase 3 or more of this product.</Value>
@@ -2743,19 +2710,19 @@
     <Value>Price</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Price.Hint">
-    <Value>The price of the product.</Value>
+    <Value>The price of the product. You can manage currency by selecting Configuration > Location > Currencies.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ProductCost">
     <Value>Product cost</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ProductCost.Hint">
-    <Value>The product cost is the cost of all the different components which make up the product. This may either be the purchase price if the components are bought from outside suppliers, or the combined cost of materials and manufacturing processes if the component is made in-house.</Value>
+    <Value>Product cost is a prime product cost. This field is only for internal use, not visible for customers.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTags">
     <Value>Product tags</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTags.Hint">
-    <Value>Product tags are keywords that this product can also be identified by. Enter a comma separated list of the tags to be associated with this product. The more products associated with a particular tag, the larger it will show on the tag cloud.</Value>
+    <Value>Product tags are the keywords for product identification. The more products associated with a particular tag, the larger it will show on the tag cloud.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTemplate">
     <Value>Product template</Value>
@@ -2767,7 +2734,7 @@
     <Value>Product type</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ProductType.Hint">
-    <Value>Choose your product type.</Value>
+    <Value>Product type can be simple or grouped. In most cases your product will have the Simple product type. You need to use Grouped product type when a new product consists of one or more existing products that will be displayed on one single product details page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Published">
     <Value>Published</Value>
@@ -2779,19 +2746,19 @@
     <Value>Cycle length</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RecurringCycleLength.Hint">
-    <Value>Enter cycle length.</Value>
+    <Value>Specify the cycle length. It is a time period recurring order can be repeated.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RecurringCyclePeriod">
     <Value>Cycle period</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RecurringCyclePeriod.Hint">
-    <Value>Select cycle period.</Value>
+    <Value>Specify th cycle period. It defines units time period can be measured in.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RecurringTotalCycles">
     <Value>Total cycles</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RecurringTotalCycles.Hint">
-    <Value>Enter total cycles.</Value>
+    <Value>Total cycles are number of times customer will receive the recurring product.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RentalPriceLength">
     <Value>Rental period length</Value>
@@ -2818,10 +2785,10 @@
     <Value>Specify comma separated list of required product IDs. NOTE: Ensure that there are no circular references (for example, A requires B, and B requires A).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RequireOtherProducts">
-    <Value>Require other products added to the cart</Value>
+    <Value>Require other products</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RequireOtherProducts.Hint">
-    <Value>Check if this product requires that other products are added to the cart.</Value>
+    <Value>Check if the product requires adding other products to the cart.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SampleDownload">
     <Value>Sample download file</Value>
@@ -2835,17 +2802,47 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.SeName.Hint">
     <Value>Set a search engine friendly page name e.g. 'the-best-product' to make your page URL 'http://www.yourStore.com/the-best-product'. Leave empty to generate it automatically based on the name of the product.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCategoryIds">
+    <Value>Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCategoryIds.Hint">
+    <Value>Choose product categories. You can manage product categories by selecting Catalog > Categories.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCustomerRoleIds">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCustomerRoleIds.Hint">
+    <Value>Choose the customer role. You can manage customer roles by selecting Customers > Customer roles.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedDiscountIds">
+    <Value>Discounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedDiscountIds.Hint">
+    <Value>Select discouts. You can manage discounts by selecting Discounts from the Promotions menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedManufacturerIds">
+    <Value>Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedManufacturerIds.Hint">
+    <Value>Choose the manufacturer. You can manage manufacturers by selecting Catalog > Manufacturers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedStoreIds">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedStoreIds.Hint">
+    <Value>Choose the store. You can manage stores by selecting Configuration > Stores.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShipSeparately">
     <Value>Ship separately</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShipSeparately.Hint">
-    <Value>Check to mark a product as being able to be shipped by itself in a single box (separate shipment). This way shipping rates are calculated separately for this product regardless of what other products are also in the cart. Please note that if you have several quantities of this product in the cart, then all of them will be packed and shipped in a single box.</Value>
+    <Value>Check if the product should be shipped separately from other products (in single box). Notice that if the order includes several items of this product, all of them will be shipped separately.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShortDescription">
     <Value>Short description</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShortDescription.Hint">
-    <Value>The short description of the product. This is the text that displays in product lists i.e. category / manufacturer pages.</Value>
+    <Value>Short description is the text that is displayed in product list i.e. сategory / manufacturer pages.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShowOnHomePage">
     <Value>Show on home page</Value>
@@ -2863,7 +2860,7 @@
     <Value>Special price</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SpecialPrice.Hint">
-    <Value>Set a special price for the product. New price will be valid between start and end dates. Leave empty to ignore field.</Value>
+    <Value>Set a special price of the product. The new price will be valid between the start and end dates.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SpecialPriceEndDateTimeUtc">
     <Value>Special price end date</Value>
@@ -2886,17 +2883,11 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.StockQuantity.ChangedWarning">
     <Value>Quantity has been changed while you were editing the product. Changes haven't been saved. Please ensure that everything is correct and click "Save" button one more time.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.SubjectToAcl">
-    <Value>Subject to ACL</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.SubjectToAcl.Hint">
-    <Value>Determines whether the product is subject to ACL (access control list).</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.TaxCategory">
     <Value>Tax category</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.TaxCategory.Hint">
-    <Value>The tax classification for this product. You can manage product tax classifications from Configuration : Tax : Tax Classes.</Value>
+    <Value>The tax classification for the product. You can manage tax categories by selecting Configuration > Tax > Tax Categories.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.UnlimitedDownloads">
     <Value>Unlimited downloads</Value>
@@ -2920,7 +2911,7 @@
     <Value>Vendor</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Vendor.Hint">
-    <Value>Choose a vendor of this product. This can be useful if you're using multi-vendor functionality.</Value>
+    <Value>Choose the vendor. You can manage vendors by selecting Customers > Vendors.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Vendor.None">
     <Value>No vendor</Value>
@@ -2929,13 +2920,13 @@
     <Value>Visible individually</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.VisibleIndividually.Hint">
-    <Value>Check it if you want this product to be visible in catalog or search results. You can use this field (just uncheck) to hide associated products from catalog and make them accessible only from a parent "grouped" product details page.</Value>
+    <Value>Check it if you want the product to be on catalog or search results. You can uncheck this box to hide associated products from catalog and make them accessible only from grouped product details page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Warehouse">
     <Value>Warehouse</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Warehouse.Hint">
-    <Value>Choose a warehouse which will be used when calculating shipping rates.</Value>
+    <Value>Choose the warehouse which will be used when calculating shipping rates. You can manage warehouses by selecting  Configuration > Shipping > Warehouses.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Warehouse.None">
     <Value>None</Value>
@@ -2944,19 +2935,25 @@
     <Value>Weight</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Weight.Hint">
-    <Value>The weight of the product. Can be used in shipping calculations.</Value>
+    <Value>The product  weight. You can manage weight measurement by selecting Configuration > Measures.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Width">
     <Value>Width</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Width.Hint">
-    <Value>The width of the product.</Value>
+    <Value>The product  width. You can manage width measurement by selecting Configuration > Measures.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.GiftCard">
+    <Value>Gift card</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Imported">
     <Value>Products have been imported successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Info">
     <Value>Product Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Inventory">
+    <Value>Inventory</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.List.DownloadPDF">
     <Value>Download catalog as PDF</Value>
@@ -3033,11 +3030,11 @@
   <LocaleResource Name="Admin.Catalog.Products.List.SearchWarehouse.Hint">
     <Value>Search by a specific warehouse.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Manufacturers">
-    <Value>Manufacturer mappings</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Manufacturers.NoManufacturersAvailable">
-    <Value>No manufacturers available. Create at least one manufacturer.</Value>
+    <Value>No manufacturers available.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Mappings">
+    <Value>Mappings</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Pictures">
     <Value>Pictures</Value>
@@ -3075,6 +3072,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Pictures.SaveBeforeEdit">
     <Value>You need to save the product before you can upload pictures for this product page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Prices">
+    <Value>Prices</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes">
     <Value>Product attributes</Value>
   </LocaleResource>
@@ -3088,9 +3088,6 @@
     <Value>Select new combination and enter details below</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Description">
-    <Value>Attribute combinations are useful when your 'Manage inventory method' is set to 'Track inventory by product attributes'</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Description2">
     <Value>Also note that some attribute control types that support custom user input (e.g. file upload, textboxes, date picker) are useless with attribute combinations</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders">
@@ -3182,6 +3179,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt">
     <Value>Text prompt</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Hint">
+    <Value>
+      Product attributes are quantifiable or descriptive aspects of a product (such as, color). For example, if you were to create an attribute for color, with the values of blue, green, yellow, and so on, you may want to apply this attribute to shirts, which you sell in various colors (you can adjust a price or weight for any of existing attribute values).
+      You can add attribute for your product using existing list of attributes, or if you need to create a new one go to Catalog > Attributes > Product attributes. Please notice that if you want to manage inventory by product attributes (e.g. 5 green shirts and 3 blue ones), then ensure that Inventory method is set to Track inventory by product attributes.
+    </Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules">
     <Value>Validation rules</Value>
@@ -3349,7 +3352,7 @@
     <Value>Reserved qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Fields.StockQuantity">
-    <Value>Stock quantity</Value>
+    <Value>Stock qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse">
     <Value>Warehouse</Value>
@@ -3369,6 +3372,9 @@
   <LocaleResource Name="Admin.Catalog.Products.PurchasedWithOrders.Hint">
     <Value>Here you can see a list of orders in which this product was purchased.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.RecurringProduct">
+    <Value>Recurring product</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.RelatedProducts">
     <Value>Related products</Value>
   </LocaleResource>
@@ -3383,6 +3389,21 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.RelatedProducts.SaveBeforeEdit">
     <Value>You need to save the product before you can add related products for this product page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.RelatedProducts.Hint">
+    <Value>The Related Products option provides the opportunity to advertise products that are not part of the selected category, to your visitors. These products are displayed on the product details pages.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.RequireOtherProducts">
+    <Value>Require other products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Rental">
+    <Value>Rental</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Security">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Shipping">
+    <Value>Shipping</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes">
     <Value>Specification attributes</Value>
@@ -3444,8 +3465,11 @@
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.SaveBeforeEdit">
     <Value>You need to save the product before you can add product specification attributes for this product page.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Stores">
-    <Value>Stores</Value>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Hint">
+    <Value>Specification attributes are product features i.e, screen size, number of USB-ports, visible on product details page. Specification attributes can be used for filtering products on the category details page.  Unlike product attributes, specification attributes are used for information purposes only.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Stores.NoStoresAvailable">
+    <Value>No stores available.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.TierPrices">
     <Value>Tier prices</Value>
@@ -3470,6 +3494,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.TierPrices.SaveBeforeEdit">
     <Value>You need to save the product before you can add tier prices for this product page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.TierPrices.Hint">
+    <Value>Tier pricing is a promotional tool that allows a store owner to price items differently for higher quantities.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Updated">
     <Value>The product has been updated successfully.</Value>
@@ -5996,7 +6023,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.ImportProductImagesUsingHash.Hint">
     <Value>Check to use fast HASHBYTES (hash sum) database function to compare pictures when importing products. Please note that this functionality is not supported by some database.</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.ManufacturerThumbPictureSize">
     <Value>Manufacturer thumbnail image size</Value>
   </LocaleResource>
@@ -6341,6 +6368,234 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.TermsOfServiceOnShoppingCartPage.Hint">
     <Value>Require customers to accept or decline terms of service before processing the order (on the shopping cart page).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ACL">
+    <Value>Access control list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AdditionalShippingCharge">
+    <Value>Additional shipping charge</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AdminComment">
+    <Value>Admin comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AllowBackInStockSubscriptions">
+    <Value>Allow back in stock subscriptions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AllowCustomerReviews">
+    <Value>Allow customer reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AllowedQuantities">
+    <Value>Allowed quantities</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AllowAddingOnlyExistingAttributeCombinations">
+    <Value>Allow only existing attribute combinations</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AvailableEndDate">
+    <Value>Available end date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AvailableForPreOrder">
+    <Value>Available for pre-order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AvailableStartDate">
+    <Value>Available start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Backorders">
+    <Value>Backorders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.CommonInfo">
+    <Value>General information</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.AdvancedProductTypes">
+    <Value>Advanced product types</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Price">
+    <Value>Price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Tabs">
+    <Value>Tabs</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Tax">
+    <Value>Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Shipping">
+    <Value>Shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Security">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Inventory">
+    <Value>Inventory</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Mappings">
+    <Value>Mappings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.LinkedProducts">
+    <Value>Linked products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Button">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.CallForPrice">
+    <Value>Call for price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.CrossSellsProducts">
+    <Value>Cross-sells products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.CustomerEntersPrice">
+    <Value>Customer enters price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DeliveryDate">
+    <Value>Delivery date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisableBuyButton">
+    <Value>Disable buy button</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisableWishlistButton">
+    <Value>Disable wishlist button</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Discounts">
+    <Value>Discounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayStockAvailability">
+    <Value>Display availability</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayStockQuantity">
+    <Value>Display stock qty</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DownloadableProduct">
+    <Value>Downloadable product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.FreeShipping">
+    <Value>Free shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.GTIN">
+    <Value>GTIN (global trade item number)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Id">
+    <Value>ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.IsGiftCard">
+    <Value>Is gift card</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.IsRental">
+    <Value>Is rental</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.LowStockActivity">
+    <Value>Low stock activity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ManufacturerPartNumber">
+    <Value>Manufacturer part number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MarkAsNew">
+    <Value>Mark as new</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MarkAsNewEndDate">
+    <Value>Mark as new. End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MarkAsNewStartDate">
+    <Value>Mark as new. Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MaximumCartQuantity">
+    <Value>Maximum cart qty</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MinimumCartQuantity">
+    <Value>Minimum cart qty</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MinimumStockQuantity">
+    <Value>Minimum stock qty</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ModalDescription">
+    <Value>Check fields you want to see on the product edit page in the "basic" mode.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ModalTitle">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.NotifyAdminForQuantityBelow">
+    <Value>Notify for qty below</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.NotReturnable">
+    <Value>Not returnable</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.OldPrice">
+    <Value>Old price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.PAngV">
+    <Value>PAngV (base price) enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ProductCost">
+    <Value>Product cost</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ProductTags">
+    <Value>Product tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ProductTemplate">
+    <Value>Product template</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ProductType">
+    <Value>Product type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.PurchasedWithOrders">
+    <Value>Purchased with orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.RecurringProduct">
+    <Value>Recurring product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.RelatedProducts">
+    <Value>Related products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.RequireOtherProductsAddedToTheCart">
+    <Value>Require other products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Seo">
+    <Value>SEO</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ShipSeparately">
+    <Value>Ship separately</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ShowOnHomePage">
+    <Value>Show on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.SpecialPrice">
+    <Value>Special price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.SpecialPriceEndDate">
+    <Value>Special price end date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.SpecialPriceStartDate">
+    <Value>Special price start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Stores">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.TelecommunicationsBroadcastingElectronicServices">
+    <Value>Telecommunications, broadcasting and electronic services</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.TierPrices">
+    <Value>Tier prices</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.VisibleIndividually">
+    <Value>Visible individually</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.UpdatedOn">
+    <Value>Updated on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.UseMultipleWarehouses">
+    <Value>Multiple warehouses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Warehouse">
+    <Value>Warehouses</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints">
     <Value>Reward points</Value>
@@ -8214,7 +8469,7 @@
   <LocaleResource Name="Admin.Customers.Customers.ActivityLog.IpAddress">
     <Value>IP address</Value>
   </LocaleResource>
-    <LocaleResource Name="Admin.Customers.Customers.ActivityLog.IpAddress.Hint">
+  <LocaleResource Name="Admin.Customers.Customers.ActivityLog.IpAddress.Hint">
     <Value>The IP address for the search.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Added">
@@ -8620,11 +8875,11 @@
     <Value>Search by zip code.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.List.SearchIpAddress">
-     <Value>IP address</Value>
-   </LocaleResource>
-   <LocaleResource Name="Admin.Customers.Customers.List.SearchIpAddress.Hint">
-     <Value>Search by IP address.</Value>
-   </LocaleResource>
+    <Value>IP address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchIpAddress.Hint">
+    <Value>Search by IP address.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Orders">
     <Value>Orders</Value>
   </LocaleResource>
@@ -10144,10 +10399,10 @@
     <Value>The email address to which you want to send your test email.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.List.Stores">
-     <Value>Store</Value>
+    <Value>Store</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.List.Stores.Hint">
-     <Value>Search by a specific store.</Value>
+    <Value>Search by a specific store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.MassEmailSentToCustomers">
     <Value>{0} emails have been successfully queued.</Value>

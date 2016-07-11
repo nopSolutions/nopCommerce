@@ -3,6 +3,9 @@
 @using Nop.Core.Domain.Catalog
 
 <div class="panel-group">
+    <p>
+        @T("Admin.Catalog.Products.ProductAttributes.Hint")
+    </p>
     @if (Model.Id > 0)
     {
         if (Model.AvailableProductAttributes.Count > 0)
@@ -284,9 +287,6 @@
 {
     <div class="panel panel-default">
         <div class="panel-body">
-            <p>
-                <strong>@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Description")</strong>
-            </p>
             <p>
                 @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Description2")
             </p>
