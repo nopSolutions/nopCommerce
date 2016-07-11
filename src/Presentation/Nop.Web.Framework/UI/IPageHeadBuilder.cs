@@ -23,8 +23,8 @@ namespace Nop.Web.Framework.UI
         void AppendScriptParts(ResourceLocation location, string part, bool excludeFromBundle, bool isAsync);
         string GenerateScripts(UrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null);
 
-        void AddCssFileParts(ResourceLocation location, string part);
-        void AppendCssFileParts(ResourceLocation location, string part);
+        void AddCssFileParts(ResourceLocation location, string part, bool excludeFromBundle = false);
+        void AppendCssFileParts(ResourceLocation location, string part, bool excludeFromBundle = false);
         string GenerateCssFiles(UrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null);
         
         void AddCanonicalUrlParts(string part);
