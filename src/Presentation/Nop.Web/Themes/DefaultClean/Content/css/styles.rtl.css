@@ -354,6 +354,23 @@ label, label + * {
     white-space: nowrap;
 	font-weight: normal;
 }
+.forum-table th.replies,
+.forum-table th.views,
+.forum-table th.votes,
+.forum-table th.latest-post,
+.forum-table th.topics,
+.forum-table th.posts,
+.forum-table td.replies,
+.forum-table td.views,
+.forum-table td.votes,
+.forum-table td.latest-post,
+.forum-table td.topics,
+.forum-table td.posts{
+    display: none;
+}
+.forum-table td.image {
+    min-width: 0;
+}
 .cart td,
 .data-table td,
 .forum-table td {
@@ -367,6 +384,7 @@ label, label + * {
 }
 .forum-table td {
 	min-width: 90px;
+    padding: 10px;
 }
 .cart a,
 .data-table a,
@@ -383,10 +401,12 @@ label, label + * {
 .data-table .product,
 .data-table .message,
 .data-table .info,
-.data-table .name,
+.data-table .name {
+    min-width: 225px;
+	text-align: right;
+}
 .forum-table .forum-details,
 .forum-table .topic-details {
-	min-width: 225px;
 	text-align: right;
 }
 .cart .product a,
@@ -5338,6 +5358,28 @@ pre {
     text-align: right;
 }
 
+.forum-group .forum-table th.latest-post,
+.forum-group .forum-table th.topics,
+.forum-group .forum-table th.posts,
+.forum-group .forum-table td.latest-post,
+.forum-group .forum-table td.topics,
+.forum-group .forum-table td.posts {
+    display: table-cell;
+}
+
+.topic-group .forum-table th.latest-post,
+.topic-group .forum-table td.latest-post {
+    display: table-cell;
+}
+
+.forum-table td.image {
+    max-width: 40px;
+}
+
+.forum-table td.image div {
+    max-width: 100%;
+    background-size: contain;
+}
 }
 
 
@@ -5896,6 +5938,24 @@ pre {
 
 .topic-post .post-vote {
     padding: 20px 0;
+}
+
+.forum-table th.replies,
+.forum-table th.views,
+.forum-table th.votes,
+.forum-table td.replies,
+.forum-table td.views,
+.forum-table td.votes {
+    display: table-cell;
+}
+
+.forum-table td.image {
+    max-width: none;
+}
+
+.forum-table td.image div {
+    max-width: none;
+    background-size: initial;
 }
 
 .ui-tabs-nav {
@@ -6654,6 +6714,15 @@ pre {
 .topic-actions .pager.upper {
 	display: block;
 	max-width: 400px;
+}
+
+.forum-table td {
+    padding: 20px;
+}
+.forum-edit-page textarea,
+.private-message-send-page textarea {
+	width: 600px;
+	height: 250px;
 }
 
 .forum-edit-page textarea,
