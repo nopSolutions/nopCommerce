@@ -494,7 +494,6 @@ namespace Nop.Services.Orders
         /// Prepare details to place order based on the recurring payment.
         /// </summary>
         /// <param name="processPaymentRequest">Process payment request</param>
-        /// <param name="details">Current details</param>
         /// <returns>Details</returns>
         protected virtual PlaceOrderContainter PrepareRecurringOrderDetails(ProcessPaymentRequest processPaymentRequest)
         {
