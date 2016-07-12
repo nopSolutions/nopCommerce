@@ -659,6 +659,24 @@ span.grid-report-item.red {
     color: #fff;
 }
 
+/*SETTINGS*/
+.theme-selection-block .checkbox{
+    float: right;
+}
+.theme-selection-block .checkbox label{
+    padding-right: 0; 
+    padding-left: 20px;
+}
+.theme-selection-block .checkbox label img{
+    width: 175px;
+}
+.theme-selection-block .checkbox label span{
+    display: block;
+}
+.theme-selection-block .checkbox label span input{
+    margin: 0 0 8px 5px;
+}
+
 /*advanced settings*/
 .basic-settings-mode .advanced-setting {
     display: none !important;

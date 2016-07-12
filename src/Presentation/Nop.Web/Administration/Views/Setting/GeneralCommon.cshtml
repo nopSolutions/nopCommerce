@@ -54,17 +54,17 @@
                                 @Html.NopLabelFor(model => model.StoreInformationSettings.DefaultStoreTheme)
                             </div>
                             <div class="col-md-9">
-                                <div id="theme-selection-block" class="clearfix">
+                                <div id="theme-selection-block" class="theme-selection-block clearfix">
                                     @foreach (var theme in Model.StoreInformationSettings.AvailableStoreThemes)
                                     {
-                                        <div class="checkbox" style="float: left;">
-                                            <label style="padding-left: 0; padding-right: 20px;">
-                                                <span style="display: block">
-                                                    <input type="radio" style="margin: 0 5px 8px 0;" name="@Html.FieldNameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.ThemeName"
+                                        <div class="checkbox">
+                                            <label>
+                                                <span>
+                                                    <input type="radio" name="@Html.FieldNameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.ThemeName"
                                                            @if (theme.ThemeName == Model.StoreInformationSettings.DefaultStoreTheme) { <text> checked="checked" </text>  }>
                                                     @theme.ThemeTitle
                                                 </span>
-                                                <img src="@Url.Content(theme.PreviewImageUrl)" alt="@theme.PreviewText" title="@theme.PreviewText" width="175">
+                                                <img src="@Url.Content(theme.PreviewImageUrl)" alt="@theme.PreviewText" title="@theme.PreviewText">
                                             </label>
                                         </div>
                                     }
