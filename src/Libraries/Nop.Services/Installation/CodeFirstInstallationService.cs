@@ -4786,9 +4786,10 @@ namespace Nop.Services.Installation
                 BillingAddress = (Address)fourthCustomer.BillingAddress.Clone(),
                 ShippingAddress = (Address)fourthCustomer.ShippingAddress.Clone(),
                 ShippingStatus = ShippingStatus.Shipped,
-                ShippingMethod = "In-Store Pickup",
-                PickUpInStore = false,
-                ShippingRateComputationMethodSystemName = "Shipping.FixedRate",
+                ShippingMethod = "Pickup in store",
+                PickUpInStore = true,
+                PickupAddress = (Address)fourthCustomer.ShippingAddress.Clone(),
+                ShippingRateComputationMethodSystemName = "Pickup.PickupInStore",
                 CustomValuesXml = string.Empty,
                 VatNumber = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow
@@ -6042,6 +6043,7 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new ShippingSettings
             {
                 ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedRate" },
+                ActivePickupPointProviderSystemNames = new List<string> { "Pickup.PickupInStore" },
                 ShipToSameAddress = false,
                 AllowPickUpInStore = true,
                 DisplayPickupPointsOnMap = false,
