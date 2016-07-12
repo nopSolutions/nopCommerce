@@ -432,16 +432,25 @@
                                 </div>
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
-                                        @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Security")
+                                        @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Mappings")
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
                                             <div class="col-md-10">
-                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.ACL)
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Vendor)
                                             </div>
                                             <div class="col-md-2">
-                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.ACL)
-                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.ACL)
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Vendor)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Vendor)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Stores)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Stores)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Stores)
                                             </div>
                                         </div>
                                     </div>
@@ -581,30 +590,20 @@
                                                 @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.NotReturnable)
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
-                                        @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Mappings")
+                                        @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Security")
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
                                             <div class="col-md-10">
-                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Vendor)
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.ACL)
                                             </div>
                                             <div class="col-md-2">
-                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Vendor)
-                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Vendor)
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-md-10">
-                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Stores)
-                                            </div>
-                                            <div class="col-md-2">
-                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Stores)
-                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Stores)
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.ACL)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.ACL)
                                             </div>
                                         </div>
                                     </div>
