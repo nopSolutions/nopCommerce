@@ -36,14 +36,16 @@
                                 @Html.NopLabelFor(model => model.PicturesStoredIntoDatabase)
                             </div>
                             <div class="col-md-1">
-                                @if (Model.PicturesStoredIntoDatabase)
-                                {
-                                    @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Database")
-                                }
-                                else
-                                {
-                                    @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.FileSystem")
-                                }
+                                <div class="form-text-row">
+                                    @if (Model.PicturesStoredIntoDatabase)
+                                    {
+                                        @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Database")
+                                    }
+                                    else
+                                    {
+                                        @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.FileSystem")
+                                    }
+                                </div>
                             </div>
                             <div class="col-md-8">
                                 <button type="submit" name="change-picture-storage" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
