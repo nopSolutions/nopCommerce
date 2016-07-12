@@ -53,14 +53,18 @@
                             <table class="table table-hover table-bordered">
                                 <tbody>
                                 <tr>
-                                    <th scope="col">
+                                    <th scope="col" style="padding-top: 14px;">
                                         <strong>@T("Admin.Configuration.ACL.Permission")</strong>
                                     </th>
                                     @foreach (var cr in Model.AvailableCustomerRoles)
                                     {
                                         <th scope="col">
-                                            <strong>@cr.Name</strong>
-                                            <input type="checkbox" id="selectall-@(cr.Id)"/>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" id="selectall-@(cr.Id)" />
+                                                    <strong>@cr.Name</strong>
+                                                </label>
+                                            </div>
                                         </th>
                                     }
                                 </tr>
