@@ -3631,6 +3631,13 @@
             <param name="source">The source blob.</param>
             <returns>A URI addressing the source blob, using SAS if appropriate.</returns>
         </member>
+        <member name="M:Microsoft.WindowsAzure.Storage.Blob.CloudBlob.ParseServerRequestEncrypted(System.Net.HttpWebResponse)">
+            <summary>
+            Parses the server request encrypted response header.
+            </summary>
+            <param name="response">Response to be parsed.</param>
+            <returns><c>true</c> if write content was encrypted by service or <c>false</c> if not.</returns>
+        </member>
         <member name="F:Microsoft.WindowsAzure.Storage.Blob.CloudBlob.streamMinimumReadSizeInBytes">
             <summary>
             Default is 4 MB.
@@ -12682,6 +12689,13 @@
             <param name="copyCompletionTimeString">The copy completion time, as a string, or <c>null</c>.</param>
             <param name="copyStatusDescription">The copy status description, if any.</param>
             <returns>A <see cref="T:Microsoft.WindowsAzure.Storage.Blob.CopyState"/> object populated from the given strings.</returns>
+        </member>
+        <member name="M:Microsoft.WindowsAzure.Storage.Blob.Protocol.BlobHttpResponseParsers.GetServerEncrypted(System.String)">
+            <summary>
+            Determines if a blob is listed as server-side encypted.
+            </summary>
+            <param name="encryptionHeader">String giving the status of server encryption.</param>
+            <returns><c>true</c> if blob encrypted or <c>false</c> if not.</returns>
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Blob.Protocol.BlobHttpWebRequestFactory">
             <summary>
@@ -26642,6 +26656,11 @@
             </summary>
             <value>A <see cref="T:Microsoft.WindowsAzure.Storage.StorageExtendedErrorInformation"/> object.</value>
         </member>
+        <member name="P:Microsoft.WindowsAzure.Storage.RequestResult.IsRequestServerEncrypted">
+            <summary>
+            Gets whether or not the data for a write operation is encrypted server-side.
+            </summary>
+        </member>
         <member name="P:Microsoft.WindowsAzure.Storage.RequestResult.Exception">
             <summary>
             Gets or sets the exception.
@@ -29309,6 +29328,11 @@
             </summary>
             <value>An integer containing the number of committed blocks.</value>
         </member>
+        <member name="P:Microsoft.WindowsAzure.Storage.Blob.BlobProperties.IsServerEncrypted">
+            <summary>
+            Gets the blob's server-side encryption state.
+            </summary>
+        </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Blob.BlobRequestOptions">
             <summary>
             Represents a set of timeout and retry policy options that may be specified for a request against the Blob service.
@@ -29428,7 +29452,7 @@
             Gets or sets a value to indicate that an MD5 hash will be calculated and stored when uploading a blob.
             </summary>
             <value>Use <c>true</c> to calculate and store an MD5 hash when uploading a blob; otherwise, <c>false</c>.</value>
-            <remarks>This property is not supported for <see cref="T:Microsoft.WindowsAzure.Storage.Blob.CloudAppendBlob"/>.</remarks>
+            <remarks>This property is not supported for the <see cref="T:Microsoft.WindowsAzure.Storage.Blob.CloudAppendBlob"/> Append* APIs.</remarks>
         </member>
         <member name="P:Microsoft.WindowsAzure.Storage.Blob.BlobRequestOptions.DisableContentMD5Validation">
             <summary>
@@ -34541,6 +34565,11 @@
             XML element for the last modified date.
             </summary>
         </member>
+        <member name="F:Microsoft.WindowsAzure.Storage.Shared.Protocol.Constants.ServerEncryptionElement">
+            <summary>
+            XML element for the server encryption status.
+            </summary>
+        </member>
         <member name="F:Microsoft.WindowsAzure.Storage.Shared.Protocol.Constants.UrlElement">
             <summary>
             XML element for the Url.
@@ -35024,6 +35053,16 @@
         <member name="F:Microsoft.WindowsAzure.Storage.Shared.Protocol.Constants.HeaderConstants.EtagHeader">
             <summary>
             Header that specifies the ETag value for the resource.
+            </summary>
+        </member>
+        <member name="F:Microsoft.WindowsAzure.Storage.Shared.Protocol.Constants.HeaderConstants.ServerEncrypted">
+            <summary>
+            Header that specifies if a resourse is fully encrypted server-side.
+            </summary>
+        </member>
+        <member name="F:Microsoft.WindowsAzure.Storage.Shared.Protocol.Constants.HeaderConstants.ServerRequestEncrypted">
+            <summary>
+            Header that acknowledges the data used for write operation is encrypted server-side.
             </summary>
         </member>
         <member name="F:Microsoft.WindowsAzure.Storage.Shared.Protocol.Constants.HeaderConstants.RangeHeader">
