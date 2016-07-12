@@ -1164,13 +1164,13 @@ set @resources='
      <Value></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedStoreIds">
-     <Value>Stores</Value>
+    <Value>Limited to stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCustomerRoleIds">
      <Value>Customer roles</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCustomerRoleIds.Hint">
-    <Value>Customer roles is nopCommerce option, enables you to place your customers in groups, i.e. administrators, vendors, guests, for granting them different statuses (allow to view and edit different pages). You can manage customer roles by selecting Customers > Customer roles.</Value>
+    <Value>Choose one or several customer roles  i.e. administrators, vendors, guests, who will be able to see this product in catalog. if you don’t need this option just leave this field empty. You can manage customer roles by selecting Customers > Customer roles.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Acl">
      <Value></Value>
@@ -1329,7 +1329,7 @@ set @resources='
      <Value>Choose the manufacturer. You can manage manufacturers by selecting Catalog > Manufacturers.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedStoreIds.Hint">
-     <Value>Stores is an option to limit a product to a certain store. If you use different stores, choose one or several from the list. You can manage stores by selecting Configuration > Stores.</Value>
+     <Value>Option to limit a product to a certain store. If you use different stores, choose one or several from the list. You can manage stores by selecting Configuration > Stores. if you don’t need this option just leave this field empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Vendor.Hint">
     <Value>Choose the vendor. You can manage vendors by selecting Customers > Vendors.</Value>
