@@ -719,17 +719,16 @@
                         @Html.NopLabelFor(model => model.CustomValues)
                     </div>
                     <div class="col-md-9">
-                        <table>
+                        <div class="form-text-row">
                             @foreach (var item in Model.CustomValues)
                             {
-                                <tr>
-                                    <td>
-                                        @item.Key:
-                                    </td>
-                                    <td>@(item.Value != null ? item.Value.ToString() : "")</td>
-                                </tr>
+                                <ul class="common-list">
+                                    <li>
+                                        @item.Key: @(item.Value != null ? item.Value.ToString() : "")
+                                    </li>
+                                </ul>
                             }
-                        </table>
+                        </div>
                     </div>
                 </div>
             }
