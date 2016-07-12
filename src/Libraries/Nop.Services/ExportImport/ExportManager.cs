@@ -13,6 +13,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Configuration;
 using Nop.Services.ExportImport.Help;
 using Nop.Services.Media;
 using Nop.Services.Messages;
@@ -36,6 +37,8 @@ namespace Nop.Services.ExportImport
         private readonly IPictureService _pictureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IStoreService _storeService;
+        private readonly IWorkContext _workContext;
+        private readonly ISettingService _settingService;
 
         #endregion
 
@@ -46,7 +49,9 @@ namespace Nop.Services.ExportImport
             IProductAttributeService productAttributeService,
             IPictureService pictureService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
-            IStoreService storeService)
+            IStoreService storeService,
+            IWorkContext workContext,
+            ISettingService settingService)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -54,6 +59,8 @@ namespace Nop.Services.ExportImport
             this._pictureService = pictureService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._storeService = storeService;
+            this._workContext = workContext;
+            this._settingService = settingService;
         }
 
         #endregion
@@ -89,7 +96,6 @@ namespace Nop.Services.ExportImport
                     xmlWriter.WriteElementString("DisplayOrder", null, category.DisplayOrder.ToString());
                     xmlWriter.WriteElementString("CreatedOnUtc", null, category.CreatedOnUtc.ToString());
                     xmlWriter.WriteElementString("UpdatedOnUtc", null, category.UpdatedOnUtc.ToString());
-
 
                     xmlWriter.WriteStartElement("Products");
                     var productCategories = _categoryService.GetProductCategoriesByCategoryId(category.Id, showHidden: true);
@@ -260,7 +266,6 @@ namespace Nop.Services.ExportImport
                 }
                 xmlWriter.WriteEndElement();
 
-
                 xmlWriter.WriteEndElement();
             }
 
@@ -316,7 +321,7 @@ namespace Nop.Services.ExportImport
                     //xlPackage.DebugMode = true; 
 
                     // get handle to the existing worksheet
-                    var worksheet = xlPackage.Workbook.Worksheets.Add(typeof (T).Name);
+                    var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(T).Name);
                     //create Headers and format them 
 
                     var manager = new PropertyManager<T>(properties);
@@ -423,7 +428,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("Gtin", null, product.Gtin);
                 xmlWriter.WriteElementString("IsGiftCard", null, product.IsGiftCard.ToString());
                 xmlWriter.WriteElementString("GiftCardType", null, product.GiftCardType.ToString());
-                xmlWriter.WriteElementString("OverriddenGiftCardAmount", null, product.OverriddenGiftCardAmount.HasValue ? product.OverriddenGiftCardAmount.ToString() : "");
+                xmlWriter.WriteElementString("OverriddenGiftCardAmount", null, product.OverriddenGiftCardAmount.HasValue ? product.OverriddenGiftCardAmount.ToString() : String.Empty);
                 xmlWriter.WriteElementString("RequireOtherProducts", null, product.RequireOtherProducts.ToString());
                 xmlWriter.WriteElementString("RequiredProductIds", null, product.RequiredProductIds);
                 xmlWriter.WriteElementString("AutomaticallyAddRequiredProducts", null, product.AutomaticallyAddRequiredProducts.ToString());
@@ -434,7 +439,7 @@ namespace Nop.Services.ExportImport
                 if (product.DownloadExpirationDays.HasValue)
                     xmlWriter.WriteElementString("DownloadExpirationDays", null, product.DownloadExpirationDays.ToString());
                 else
-                    xmlWriter.WriteElementString("DownloadExpirationDays", null, string.Empty);
+                    xmlWriter.WriteElementString("DownloadExpirationDays", null, String.Empty);
                 xmlWriter.WriteElementString("DownloadActivationType", null, product.DownloadActivationType.ToString());
                 xmlWriter.WriteElementString("HasSampleDownload", null, product.HasSampleDownload.ToString());
                 xmlWriter.WriteElementString("SampleDownloadId", null, product.SampleDownloadId.ToString());
@@ -473,14 +478,14 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("DisableBuyButton", null, product.DisableBuyButton.ToString());
                 xmlWriter.WriteElementString("DisableWishlistButton", null, product.DisableWishlistButton.ToString());
                 xmlWriter.WriteElementString("AvailableForPreOrder", null, product.AvailableForPreOrder.ToString());
-                xmlWriter.WriteElementString("PreOrderAvailabilityStartDateTimeUtc", null, product.PreOrderAvailabilityStartDateTimeUtc.HasValue ? product.PreOrderAvailabilityStartDateTimeUtc.ToString() : "");
+                xmlWriter.WriteElementString("PreOrderAvailabilityStartDateTimeUtc", null, product.PreOrderAvailabilityStartDateTimeUtc.HasValue ? product.PreOrderAvailabilityStartDateTimeUtc.ToString() : String.Empty);
                 xmlWriter.WriteElementString("CallForPrice", null, product.CallForPrice.ToString());
                 xmlWriter.WriteElementString("Price", null, product.Price.ToString());
                 xmlWriter.WriteElementString("OldPrice", null, product.OldPrice.ToString());
                 xmlWriter.WriteElementString("ProductCost", null, product.ProductCost.ToString());
-                xmlWriter.WriteElementString("SpecialPrice", null, product.SpecialPrice.HasValue ? product.SpecialPrice.ToString() : "");
-                xmlWriter.WriteElementString("SpecialPriceStartDateTimeUtc", null, product.SpecialPriceStartDateTimeUtc.HasValue ? product.SpecialPriceStartDateTimeUtc.ToString() : "");
-                xmlWriter.WriteElementString("SpecialPriceEndDateTimeUtc", null, product.SpecialPriceEndDateTimeUtc.HasValue ? product.SpecialPriceEndDateTimeUtc.ToString() : "");
+                xmlWriter.WriteElementString("SpecialPrice", null, product.SpecialPrice.HasValue ? product.SpecialPrice.ToString() : String.Empty);
+                xmlWriter.WriteElementString("SpecialPriceStartDateTimeUtc", null, product.SpecialPriceStartDateTimeUtc.HasValue ? product.SpecialPriceStartDateTimeUtc.ToString() : String.Empty);
+                xmlWriter.WriteElementString("SpecialPriceEndDateTimeUtc", null, product.SpecialPriceEndDateTimeUtc.HasValue ? product.SpecialPriceEndDateTimeUtc.ToString() : String.Empty);
                 xmlWriter.WriteElementString("CustomerEntersPrice", null, product.CustomerEntersPrice.ToString());
                 xmlWriter.WriteElementString("MinimumCustomerEnteredPrice", null, product.MinimumCustomerEnteredPrice.ToString());
                 xmlWriter.WriteElementString("MaximumCustomerEnteredPrice", null, product.MaximumCustomerEnteredPrice.ToString());
@@ -490,8 +495,8 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("BasepriceBaseAmount", null, product.BasepriceBaseAmount.ToString());
                 xmlWriter.WriteElementString("BasepriceBaseUnitId", null, product.BasepriceBaseUnitId.ToString());
                 xmlWriter.WriteElementString("MarkAsNew", null, product.MarkAsNew.ToString());
-                xmlWriter.WriteElementString("MarkAsNewStartDateTimeUtc", null, product.MarkAsNewStartDateTimeUtc.HasValue ? product.MarkAsNewStartDateTimeUtc.ToString() : "");
-                xmlWriter.WriteElementString("MarkAsNewEndDateTimeUtc", null, product.MarkAsNewEndDateTimeUtc.HasValue ? product.MarkAsNewEndDateTimeUtc.ToString() : "");
+                xmlWriter.WriteElementString("MarkAsNewStartDateTimeUtc", null, product.MarkAsNewStartDateTimeUtc.HasValue ? product.MarkAsNewStartDateTimeUtc.ToString() : String.Empty);
+                xmlWriter.WriteElementString("MarkAsNewEndDateTimeUtc", null, product.MarkAsNewEndDateTimeUtc.HasValue ? product.MarkAsNewEndDateTimeUtc.ToString() : String.Empty);
                 xmlWriter.WriteElementString("Weight", null, product.Weight.ToString());
                 xmlWriter.WriteElementString("Length", null, product.Length.ToString());
                 xmlWriter.WriteElementString("Width", null, product.Width.ToString());
@@ -510,7 +515,6 @@ namespace Nop.Services.ExportImport
                     xmlWriter.WriteEndElement();
                 }
                 xmlWriter.WriteEndElement();
-
 
                 xmlWriter.WriteStartElement("TierPrices");
                 var tierPrices = product.TierPrices;
@@ -562,7 +566,6 @@ namespace Nop.Services.ExportImport
                     //conditions
                     xmlWriter.WriteElementString("ConditionAttributeXml", null, productAttributeMapping.ConditionAttributeXml);
 
-
                     xmlWriter.WriteStartElement("ProductAttributeValues");
                     var productAttributeValues = productAttributeMapping.ProductAttributeValues;
                     foreach (var productAttributeValue in productAttributeValues)
@@ -584,7 +587,6 @@ namespace Nop.Services.ExportImport
                         xmlWriter.WriteEndElement();
                     }
                     xmlWriter.WriteEndElement();
-
 
                     xmlWriter.WriteEndElement();
                 }
@@ -666,101 +668,114 @@ namespace Nop.Services.ExportImport
         {
             var properties = new[]
             {
-                new PropertyByName<Product>("ProductTypeId", p => p.ProductTypeId),
-                new PropertyByName<Product>("ParentGroupedProductId", p => p.ParentGroupedProductId),
+                new PropertyByName<Product>("ProductTypeId", p => p.ProductTypeId, "ProductType"),
+                new PropertyByName<Product>("ParentGroupedProductId", p => p.ParentGroupedProductId, "ProductType"),
                 new PropertyByName<Product>("VisibleIndividually", p => p.VisibleIndividually),
-                new PropertyByName<Product>("Name", p => p.Name),
-                new PropertyByName<Product>("ShortDescription", p => p.ShortDescription),
-                new PropertyByName<Product>("FullDescription", p => p.FullDescription),
-                new PropertyByName<Product>("VendorId", p => p.VendorId.ToString()),
-                new PropertyByName<Product>("ProductTemplateId", p => p.ProductTemplateId),
+                new PropertyByName<Product>("Name", p => p.Name, alwaysExport: true),
+                new PropertyByName<Product>("ShortDescription", p => p.ShortDescription, alwaysExport: true),
+                new PropertyByName<Product>("FullDescription", p => p.FullDescription, alwaysExport: true),
+                new PropertyByName<Product>("VendorId", p => p.VendorId.ToString(), "Vendor"),
+                new PropertyByName<Product>("ProductTemplateId", p => p.ProductTemplateId, "ProductTemplate"),
                 new PropertyByName<Product>("ShowOnHomePage", p => p.ShowOnHomePage),
-                new PropertyByName<Product>("MetaKeywords", p => p.MetaKeywords),
-                new PropertyByName<Product>("MetaDescription", p => p.MetaDescription),
-                new PropertyByName<Product>("MetaTitle", p => p.MetaTitle),
-                new PropertyByName<Product>("SeName", p => p.GetSeName(0)),
+                new PropertyByName<Product>("MetaKeywords", p => p.MetaKeywords, "Seo"),
+                new PropertyByName<Product>("MetaDescription", p => p.MetaDescription, "Seo"),
+                new PropertyByName<Product>("MetaTitle", p => p.MetaTitle, "Seo"),
+                new PropertyByName<Product>("SeName", p => p.GetSeName(0), "Seo"),
                 new PropertyByName<Product>("AllowCustomerReviews", p => p.AllowCustomerReviews),
                 new PropertyByName<Product>("Published", p => p.Published),
-                new PropertyByName<Product>("SKU", p => p.Sku),
+                new PropertyByName<Product>("SKU", p => p.Sku, alwaysExport: true),
                 new PropertyByName<Product>("ManufacturerPartNumber", p => p.ManufacturerPartNumber),
-                new PropertyByName<Product>("Gtin", p => p.Gtin),
+                new PropertyByName<Product>("Gtin", p => p.Gtin, "GTIN"),
                 new PropertyByName<Product>("IsGiftCard", p => p.IsGiftCard),
-                new PropertyByName<Product>("GiftCardTypeId", p => p.GiftCardTypeId),
-                new PropertyByName<Product>("OverriddenGiftCardAmount", p => p.OverriddenGiftCardAmount),
-                new PropertyByName<Product>("RequireOtherProducts", p => p.RequireOtherProducts),
-                new PropertyByName<Product>("RequiredProductIds", p => p.RequiredProductIds),
-                new PropertyByName<Product>("AutomaticallyAddRequiredProducts", p => p.AutomaticallyAddRequiredProducts),
-                new PropertyByName<Product>("IsDownload", p => p.IsDownload),
-                new PropertyByName<Product>("DownloadId", p => p.DownloadId),
-                new PropertyByName<Product>("UnlimitedDownloads", p => p.UnlimitedDownloads),
-                new PropertyByName<Product>("MaxNumberOfDownloads", p => p.MaxNumberOfDownloads),
-                new PropertyByName<Product>("DownloadActivationTypeId", p => p.DownloadActivationTypeId),
-                new PropertyByName<Product>("HasSampleDownload", p => p.HasSampleDownload),
-                new PropertyByName<Product>("SampleDownloadId", p => p.SampleDownloadId),
-                new PropertyByName<Product>("HasUserAgreement", p => p.HasUserAgreement),
-                new PropertyByName<Product>("UserAgreementText", p => p.UserAgreementText),
-                new PropertyByName<Product>("IsRecurring", p => p.IsRecurring),
-                new PropertyByName<Product>("RecurringCycleLength", p => p.RecurringCycleLength),
-                new PropertyByName<Product>("RecurringCyclePeriodId", p => p.RecurringCyclePeriodId),
-                new PropertyByName<Product>("RecurringTotalCycles", p => p.RecurringTotalCycles),
+                new PropertyByName<Product>("GiftCardTypeId", p => p.GiftCardTypeId, "IsGiftCard"),
+                new PropertyByName<Product>("OverriddenGiftCardAmount", p => p.OverriddenGiftCardAmount, "IsGiftCard"),
+                new PropertyByName<Product>("RequireOtherProducts", p => p.RequireOtherProducts, "RequireOtherProductsAddedToTheCart"),
+                new PropertyByName<Product>("RequiredProductIds", p => p.RequiredProductIds, "RequireOtherProductsAddedToTheCart"),
+                new PropertyByName<Product>("AutomaticallyAddRequiredProducts", p => p.AutomaticallyAddRequiredProducts, "RequireOtherProductsAddedToTheCart"),
+                new PropertyByName<Product>("IsDownload", p => p.IsDownload, "DownloadableProduct"),
+                new PropertyByName<Product>("DownloadId", p => p.DownloadId, "DownloadableProduct"),
+                new PropertyByName<Product>("UnlimitedDownloads", p => p.UnlimitedDownloads, "DownloadableProduct"),
+                new PropertyByName<Product>("MaxNumberOfDownloads", p => p.MaxNumberOfDownloads, "DownloadableProduct"),
+                new PropertyByName<Product>("DownloadActivationTypeId", p => p.DownloadActivationTypeId, "DownloadableProduct"),
+                new PropertyByName<Product>("HasSampleDownload", p => p.HasSampleDownload, "DownloadableProduct"),
+                new PropertyByName<Product>("SampleDownloadId", p => p.SampleDownloadId, "DownloadableProduct"),
+                new PropertyByName<Product>("HasUserAgreement", p => p.HasUserAgreement, "DownloadableProduct"),
+                new PropertyByName<Product>("UserAgreementText", p => p.UserAgreementText, "DownloadableProduct"),
+                new PropertyByName<Product>("IsRecurring", p => p.IsRecurring, "RecurringProduct"),
+                new PropertyByName<Product>("RecurringCycleLength", p => p.RecurringCycleLength, "RecurringProduct"),
+                new PropertyByName<Product>("RecurringCyclePeriodId", p => p.RecurringCyclePeriodId, "RecurringProduct"),
+                new PropertyByName<Product>("RecurringTotalCycles", p => p.RecurringTotalCycles, "RecurringProduct"),
                 new PropertyByName<Product>("IsRental", p => p.IsRental),
-                new PropertyByName<Product>("RentalPriceLength", p => p.RentalPriceLength),
-                new PropertyByName<Product>("RentalPricePeriodId", p => p.RentalPricePeriodId),
-                new PropertyByName<Product>("IsShipEnabled", p => p.IsShipEnabled),
-                new PropertyByName<Product>("IsFreeShipping", p => p.IsFreeShipping),
+                new PropertyByName<Product>("RentalPriceLength", p => p.RentalPriceLength, "IsRental"),
+                new PropertyByName<Product>("RentalPricePeriodId", p => p.RentalPricePeriodId, "IsRental"),
+                new PropertyByName<Product>("IsShipEnabled", p => p.IsShipEnabled, alwaysExport: true),
+                new PropertyByName<Product>("IsFreeShipping", p => p.IsFreeShipping, "FreeShipping"),
                 new PropertyByName<Product>("ShipSeparately", p => p.ShipSeparately),
                 new PropertyByName<Product>("AdditionalShippingCharge", p => p.AdditionalShippingCharge),
-                new PropertyByName<Product>("DeliveryDateId", p => p.DeliveryDateId),
-                new PropertyByName<Product>("IsTaxExempt", p => p.IsTaxExempt),
-                new PropertyByName<Product>("TaxCategoryId", p => p.TaxCategoryId),
-                new PropertyByName<Product>("IsTelecommunicationsOrBroadcastingOrElectronicServices", p => p.IsTelecommunicationsOrBroadcastingOrElectronicServices),
-                new PropertyByName<Product>("ManageInventoryMethodId", p => p.ManageInventoryMethodId),
+                new PropertyByName<Product>("DeliveryDateId", p => p.DeliveryDateId, "DeliveryDate"),
+                new PropertyByName<Product>("IsTaxExempt", p => p.IsTaxExempt, alwaysExport: true),
+                new PropertyByName<Product>("TaxCategoryId", p => p.TaxCategoryId, alwaysExport: true),
+                new PropertyByName<Product>("IsTelecommunicationsOrBroadcastingOrElectronicServices", p => p.IsTelecommunicationsOrBroadcastingOrElectronicServices, "TelecommunicationsBroadcastingElectronicServices"),
+                new PropertyByName<Product>("ManageInventoryMethodId", p => p.ManageInventoryMethodId, alwaysExport: true),
                 new PropertyByName<Product>("UseMultipleWarehouses", p => p.UseMultipleWarehouses),
-                new PropertyByName<Product>("WarehouseId", p => p.WarehouseId),
-                new PropertyByName<Product>("StockQuantity", p => p.StockQuantity),
+                new PropertyByName<Product>("WarehouseId", p => p.WarehouseId, "Warehouse"),
+                new PropertyByName<Product>("StockQuantity", p => p.StockQuantity, alwaysExport: true),
                 new PropertyByName<Product>("DisplayStockAvailability", p => p.DisplayStockAvailability),
                 new PropertyByName<Product>("DisplayStockQuantity", p => p.DisplayStockQuantity),
-                new PropertyByName<Product>("MinStockQuantity", p => p.MinStockQuantity),
-                new PropertyByName<Product>("LowStockActivityId", p => p.LowStockActivityId),
+                new PropertyByName<Product>("MinStockQuantity", p => p.MinStockQuantity, "MinimumStockQuantity"),
+                new PropertyByName<Product>("LowStockActivityId", p => p.LowStockActivityId, "LowStockActivity"),
                 new PropertyByName<Product>("NotifyAdminForQuantityBelow", p => p.NotifyAdminForQuantityBelow),
-                new PropertyByName<Product>("BackorderModeId", p => p.BackorderModeId),
+                new PropertyByName<Product>("BackorderModeId", p => p.BackorderModeId, "Backorders"),
                 new PropertyByName<Product>("AllowBackInStockSubscriptions", p => p.AllowBackInStockSubscriptions),
-                new PropertyByName<Product>("OrderMinimumQuantity", p => p.OrderMinimumQuantity),
-                new PropertyByName<Product>("OrderMaximumQuantity", p => p.OrderMaximumQuantity),
+                new PropertyByName<Product>("OrderMinimumQuantity", p => p.OrderMinimumQuantity, "MinimumCartQuantity"),
+                new PropertyByName<Product>("OrderMaximumQuantity", p => p.OrderMaximumQuantity, "MaximumCartQuantity"),
                 new PropertyByName<Product>("AllowedQuantities", p => p.AllowedQuantities),
                 new PropertyByName<Product>("AllowAddingOnlyExistingAttributeCombinations", p => p.AllowAddingOnlyExistingAttributeCombinations),
                 new PropertyByName<Product>("DisableBuyButton", p => p.DisableBuyButton),
                 new PropertyByName<Product>("DisableWishlistButton", p => p.DisableWishlistButton),
                 new PropertyByName<Product>("AvailableForPreOrder", p => p.AvailableForPreOrder),
-                new PropertyByName<Product>("PreOrderAvailabilityStartDateTimeUtc", p => p.PreOrderAvailabilityStartDateTimeUtc),
+                new PropertyByName<Product>("PreOrderAvailabilityStartDateTimeUtc", p => p.PreOrderAvailabilityStartDateTimeUtc, "AvailableForPreOrder"),
                 new PropertyByName<Product>("CallForPrice", p => p.CallForPrice),
-                new PropertyByName<Product>("Price", p => p.Price),
+                new PropertyByName<Product>("Price", p => p.Price, alwaysExport: true),
                 new PropertyByName<Product>("OldPrice", p => p.OldPrice),
                 new PropertyByName<Product>("ProductCost", p => p.ProductCost),
                 new PropertyByName<Product>("SpecialPrice", p => p.SpecialPrice),
-                new PropertyByName<Product>("SpecialPriceStartDateTimeUtc", p => p.SpecialPriceStartDateTimeUtc),
-                new PropertyByName<Product>("SpecialPriceEndDateTimeUtc", p => p.SpecialPriceEndDateTimeUtc),
+                new PropertyByName<Product>("SpecialPriceStartDateTimeUtc", p => p.SpecialPriceStartDateTimeUtc, "SpecialPriceStartDate"),
+                new PropertyByName<Product>("SpecialPriceEndDateTimeUtc", p => p.SpecialPriceEndDateTimeUtc, "SpecialPriceEndDate"),
                 new PropertyByName<Product>("CustomerEntersPrice", p => p.CustomerEntersPrice),
-                new PropertyByName<Product>("MinimumCustomerEnteredPrice", p => p.MinimumCustomerEnteredPrice),
-                new PropertyByName<Product>("MaximumCustomerEnteredPrice", p => p.MaximumCustomerEnteredPrice),
-                new PropertyByName<Product>("BasepriceEnabled", p => p.BasepriceEnabled),
-                new PropertyByName<Product>("BasepriceAmount", p => p.BasepriceAmount),
-                new PropertyByName<Product>("BasepriceUnitId", p => p.BasepriceUnitId),
-                new PropertyByName<Product>("BasepriceBaseAmount", p => p.BasepriceBaseAmount),
-                new PropertyByName<Product>("BasepriceBaseUnitId", p => p.BasepriceBaseUnitId),
+                new PropertyByName<Product>("MinimumCustomerEnteredPrice", p => p.MinimumCustomerEnteredPrice, "CustomerEntersPrice"),
+                new PropertyByName<Product>("MaximumCustomerEnteredPrice", p => p.MaximumCustomerEnteredPrice, "CustomerEntersPrice"),
+                new PropertyByName<Product>("BasepriceEnabled", p => p.BasepriceEnabled, "PAngV"),
+                new PropertyByName<Product>("BasepriceAmount", p => p.BasepriceAmount, "PAngV"),
+                new PropertyByName<Product>("BasepriceUnitId", p => p.BasepriceUnitId, "PAngV"),
+                new PropertyByName<Product>("BasepriceBaseAmount", p => p.BasepriceBaseAmount, "PAngV"),
+                new PropertyByName<Product>("BasepriceBaseUnitId", p => p.BasepriceBaseUnitId, "PAngV"),
                 new PropertyByName<Product>("MarkAsNew", p => p.MarkAsNew),
-                new PropertyByName<Product>("MarkAsNewStartDateTimeUtc", p => p.MarkAsNewStartDateTimeUtc),
-                new PropertyByName<Product>("MarkAsNewEndDateTimeUtc", p => p.MarkAsNewEndDateTimeUtc),
-                new PropertyByName<Product>("Weight", p => p.Weight),
-                new PropertyByName<Product>("Length", p => p.Length),
-                new PropertyByName<Product>("Width", p => p.Width),
-                new PropertyByName<Product>("Height", p => p.Height),
-                new PropertyByName<Product>("CategoryIds", GetCategoryIds),
-                new PropertyByName<Product>("ManufacturerIds", GetManufacturerIds),
-                new PropertyByName<Product>("Picture1", p => GetPictures(p)[0]),
-                new PropertyByName<Product>("Picture2", p => GetPictures(p)[1]),
-                new PropertyByName<Product>("Picture3", p => GetPictures(p)[2])
+                new PropertyByName<Product>("MarkAsNewStartDateTimeUtc", p => p.MarkAsNewStartDateTimeUtc, "MarkAsNewStartDate"),
+                new PropertyByName<Product>("MarkAsNewEndDateTimeUtc", p => p.MarkAsNewEndDateTimeUtc, "MarkAsNewEndDate"),
+                new PropertyByName<Product>("Weight", p => p.Weight, alwaysExport: true),
+                new PropertyByName<Product>("Length", p => p.Length, alwaysExport: true),
+                new PropertyByName<Product>("Width", p => p.Width, alwaysExport: true),
+                new PropertyByName<Product>("Height", p => p.Height, alwaysExport: true),
+                new PropertyByName<Product>("CategoryIds", GetCategoryIds, alwaysExport: true),
+                new PropertyByName<Product>("ManufacturerIds", GetManufacturerIds, alwaysExport: true),
+                new PropertyByName<Product>("Picture1", p => GetPictures(p)[0], alwaysExport: true),
+                new PropertyByName<Product>("Picture2", p => GetPictures(p)[1], alwaysExport: true),
+                new PropertyByName<Product>("Picture3", p => GetPictures(p)[2], alwaysExport: true)
             };
+
+            var productAdvancedMode = _workContext.CurrentCustomer.GetAttribute<bool>("product-advanced-mode");
+
+            if (!productAdvancedMode)
+            {
+                var productEditorSettings = _settingService.LoadSetting<ProductEditorSettings>();
+
+                var names = typeof(ProductEditorSettings).GetProperties()
+                    .Where(p => p.PropertyType == typeof(bool))
+                    .Where(p => Convert.ToBoolean(p.GetValue(productEditorSettings)))
+                    .Select(p => p.Name).ToList();
+                properties = properties.Where(p => p.AlwaysExport || p.ContainsIn(names)).ToArray();
+            }
 
             return ExportToXlsx(properties, products);
         }
@@ -778,7 +793,6 @@ namespace Nop.Services.ExportImport
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Orders");
             xmlWriter.WriteAttributeString("Version", NopVersion.CurrentVersion);
-
 
             foreach (var order in orders)
             {
@@ -860,9 +874,9 @@ namespace Nop.Services.ExportImport
                         xmlWriter.WriteElementString("DownloadCount", null, orderItem.DownloadCount.ToString());
                         xmlWriter.WriteElementString("IsDownloadActivated", null, orderItem.IsDownloadActivated.ToString());
                         xmlWriter.WriteElementString("LicenseDownloadId", null, orderItem.LicenseDownloadId.ToString());
-                        var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                        var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : String.Empty;
                         xmlWriter.WriteElementString("RentalStartDateUtc", null, rentalStartDate);
-                        var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                        var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : String.Empty;
                         xmlWriter.WriteElementString("RentalEndDateUtc", null, rentalEndDate);
                         xmlWriter.WriteEndElement();
                     }
@@ -879,12 +893,12 @@ namespace Nop.Services.ExportImport
                         xmlWriter.WriteStartElement("Shipment");
                         xmlWriter.WriteElementString("ShipmentId", null, shipment.Id.ToString());
                         xmlWriter.WriteElementString("TrackingNumber", null, shipment.TrackingNumber);
-                        xmlWriter.WriteElementString("TotalWeight", null, shipment.TotalWeight.HasValue ? shipment.TotalWeight.Value.ToString() : "");
+                        xmlWriter.WriteElementString("TotalWeight", null, shipment.TotalWeight.HasValue ? shipment.TotalWeight.Value.ToString() : String.Empty);
 
                         xmlWriter.WriteElementString("ShippedDateUtc", null, shipment.ShippedDateUtc.HasValue ? 
-                            shipment.ShippedDateUtc.ToString() : "");
+                            shipment.ShippedDateUtc.ToString() : String.Empty);
                         xmlWriter.WriteElementString("DeliveryDateUtc", null, shipment.DeliveryDateUtc.HasValue ? 
-                            shipment.DeliveryDateUtc.Value.ToString() : "");
+                            shipment.DeliveryDateUtc.Value.ToString() : String.Empty);
                         xmlWriter.WriteElementString("CreatedOnUtc", null, shipment.CreatedOnUtc.ToString());
                         xmlWriter.WriteEndElement();
                     }
@@ -909,60 +923,60 @@ namespace Nop.Services.ExportImport
             //property array
             var properties = new[]
             {
-                    new PropertyByName<Order>("OrderId", p=>p.Id),
-                    new PropertyByName<Order>("StoreId", p=>p.StoreId),
-                    new PropertyByName<Order>("OrderGuid",p=>p.OrderGuid),
-                    new PropertyByName<Order>("CustomerId",p=>p.CustomerId),
-                    new PropertyByName<Order>("OrderStatusId", p=>p.OrderStatusId),
-                    new PropertyByName<Order>("PaymentStatusId", p=>p.PaymentStatusId),
-                    new PropertyByName<Order>("ShippingStatusId", p=>p.ShippingStatusId),
-                    new PropertyByName<Order>("OrderSubtotalInclTax", p=>p.OrderSubtotalInclTax),
-                    new PropertyByName<Order>("OrderSubtotalExclTax", p=>p.OrderSubtotalExclTax),
-                    new PropertyByName<Order>("OrderSubTotalDiscountInclTax", p=>p.OrderSubTotalDiscountInclTax),
-                    new PropertyByName<Order>("OrderSubTotalDiscountExclTax", p=>p.OrderSubTotalDiscountExclTax),
-                    new PropertyByName<Order>("OrderShippingInclTax", p=>p.OrderShippingInclTax),
-                    new PropertyByName<Order>("OrderShippingExclTax", p=>p.OrderShippingExclTax),
-                    new PropertyByName<Order>("PaymentMethodAdditionalFeeInclTax", p=>p.PaymentMethodAdditionalFeeInclTax),
-                    new PropertyByName<Order>("PaymentMethodAdditionalFeeExclTax", p=>p.PaymentMethodAdditionalFeeExclTax),
-                    new PropertyByName<Order>("TaxRates", p=>p.TaxRates),
-                    new PropertyByName<Order>("OrderTax", p=>p.OrderTax),
-                    new PropertyByName<Order>("OrderTotal", p=>p.OrderTotal),
-                    new PropertyByName<Order>("RefundedAmount", p=>p.RefundedAmount),
-                    new PropertyByName<Order>("OrderDiscount", p=>p.OrderDiscount),
-                    new PropertyByName<Order>("CurrencyRate", p=>p.CurrencyRate),
-                    new PropertyByName<Order>("CustomerCurrencyCode", p=>p.CustomerCurrencyCode),
-                    new PropertyByName<Order>("AffiliateId", p=>p.AffiliateId),
-                    new PropertyByName<Order>("PaymentMethodSystemName", p=>p.PaymentMethodSystemName),
-                    new PropertyByName<Order>("ShippingPickUpInStore", p=>p.PickUpInStore),
-                    new PropertyByName<Order>("ShippingMethod", p=>p.ShippingMethod),
-                    new PropertyByName<Order>("ShippingRateComputationMethodSystemName", p=>p.ShippingRateComputationMethodSystemName),
-                    new PropertyByName<Order>("CustomValuesXml", p=>p.CustomValuesXml),
-                    new PropertyByName<Order>("VatNumber", p=>p.VatNumber),
-                    new PropertyByName<Order>("CreatedOnUtc", p=>p.CreatedOnUtc.ToOADate()),
-                    new PropertyByName<Order>("BillingFirstName", p=>p.BillingAddress.Return(billingAddress=>billingAddress.FirstName, "")),
-                    new PropertyByName<Order>("BillingLastName", p=>p.BillingAddress.Return(billingAddress=>billingAddress.LastName, "")),
-                    new PropertyByName<Order>("BillingEmail", p=>p.BillingAddress.Return(billingAddress=>billingAddress.Email, "")),
-                    new PropertyByName<Order>("BillingCompany", p=>p.BillingAddress.Return(billingAddress=>billingAddress.Company, "")),
-                    new PropertyByName<Order>("BillingCountry",p=>p.BillingAddress.Return(billingAddress=>billingAddress.Country, null).Return(country=>country.Name,"")),
-                    new PropertyByName<Order>("BillingStateProvince",p=>p.BillingAddress.Return(billingAddress=>billingAddress.StateProvince, null).Return(stateProvince=>stateProvince.Name,"")),
-                    new PropertyByName<Order>("BillingCity", p=>p.BillingAddress.Return(billingAddress=>billingAddress.City,"")),
-                    new PropertyByName<Order>("BillingAddress1",p=>p.BillingAddress.Return(billingAddress=>billingAddress.Address1,"")),
-                    new PropertyByName<Order>("BillingAddress2", p=>p.BillingAddress.Return(billingAddress=>billingAddress.Address2,"")),
-                    new PropertyByName<Order>("BillingZipPostalCode", p=>p.BillingAddress.Return(billingAddress=>billingAddress.ZipPostalCode,"")),
-                    new PropertyByName<Order>("BillingPhoneNumber", p=>p.BillingAddress.Return(billingAddress=>billingAddress.PhoneNumber,"")),
-                    new PropertyByName<Order>("BillingFaxNumber", p=>p.BillingAddress.Return(billingAddress=>billingAddress.FaxNumber,"")),
-                    new PropertyByName<Order>("ShippingFirstName", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.FirstName,"")),
-                    new PropertyByName<Order>("ShippingLastName", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.LastName, "")),
-                    new PropertyByName<Order>("ShippingEmail", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.Email, "")),
-                    new PropertyByName<Order>("ShippingCompany", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.Company, "")),
-                    new PropertyByName<Order>("ShippingCountry", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.Country, null).Return(country=>country.Name,"")),
-                    new PropertyByName<Order>("ShippingStateProvince", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.StateProvince, null).Return(stateProvince=>stateProvince.Name,"")),
-                    new PropertyByName<Order>("ShippingCity", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.City, "")),
-                    new PropertyByName<Order>("ShippingAddress1", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.Address1, "")),
-                    new PropertyByName<Order>("ShippingAddress2", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.Address2, "")),
-                    new PropertyByName<Order>("ShippingZipPostalCode", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.ZipPostalCode, "")),
-                    new PropertyByName<Order>("ShippingPhoneNumber",p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.PhoneNumber, "")),
-                    new PropertyByName<Order>("ShippingFaxNumber", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.FaxNumber, ""))
+                    new PropertyByName<Order>("OrderId", p => p.Id),
+                    new PropertyByName<Order>("StoreId", p => p.StoreId),
+                    new PropertyByName<Order>("OrderGuid", p => p.OrderGuid),
+                    new PropertyByName<Order>("CustomerId", p => p.CustomerId),
+                    new PropertyByName<Order>("OrderStatusId", p => p.OrderStatusId),
+                    new PropertyByName<Order>("PaymentStatusId", p => p.PaymentStatusId),
+                    new PropertyByName<Order>("ShippingStatusId", p => p.ShippingStatusId),
+                    new PropertyByName<Order>("OrderSubtotalInclTax", p => p.OrderSubtotalInclTax),
+                    new PropertyByName<Order>("OrderSubtotalExclTax", p => p.OrderSubtotalExclTax),
+                    new PropertyByName<Order>("OrderSubTotalDiscountInclTax", p => p.OrderSubTotalDiscountInclTax),
+                    new PropertyByName<Order>("OrderSubTotalDiscountExclTax", p => p.OrderSubTotalDiscountExclTax),
+                    new PropertyByName<Order>("OrderShippingInclTax", p => p.OrderShippingInclTax),
+                    new PropertyByName<Order>("OrderShippingExclTax", p => p.OrderShippingExclTax),
+                    new PropertyByName<Order>("PaymentMethodAdditionalFeeInclTax", p => p.PaymentMethodAdditionalFeeInclTax),
+                    new PropertyByName<Order>("PaymentMethodAdditionalFeeExclTax", p => p.PaymentMethodAdditionalFeeExclTax),
+                    new PropertyByName<Order>("TaxRates", p => p.TaxRates),
+                    new PropertyByName<Order>("OrderTax", p => p.OrderTax),
+                    new PropertyByName<Order>("OrderTotal", p => p.OrderTotal),
+                    new PropertyByName<Order>("RefundedAmount", p => p.RefundedAmount),
+                    new PropertyByName<Order>("OrderDiscount", p => p.OrderDiscount),
+                    new PropertyByName<Order>("CurrencyRate", p => p.CurrencyRate),
+                    new PropertyByName<Order>("CustomerCurrencyCode", p => p.CustomerCurrencyCode),
+                    new PropertyByName<Order>("AffiliateId", p => p.AffiliateId),
+                    new PropertyByName<Order>("PaymentMethodSystemName", p => p.PaymentMethodSystemName),
+                    new PropertyByName<Order>("ShippingPickUpInStore", p => p.PickUpInStore),
+                    new PropertyByName<Order>("ShippingMethod", p => p.ShippingMethod),
+                    new PropertyByName<Order>("ShippingRateComputationMethodSystemName", p => p.ShippingRateComputationMethodSystemName),
+                    new PropertyByName<Order>("CustomValuesXml", p => p.CustomValuesXml),
+                    new PropertyByName<Order>("VatNumber", p => p.VatNumber),
+                    new PropertyByName<Order>("CreatedOnUtc", p => p.CreatedOnUtc.ToOADate()),
+                    new PropertyByName<Order>("BillingFirstName", p => p.BillingAddress.Return(billingAddress => billingAddress.FirstName, String.Empty)),
+                    new PropertyByName<Order>("BillingLastName", p => p.BillingAddress.Return(billingAddress => billingAddress.LastName, String.Empty)),
+                    new PropertyByName<Order>("BillingEmail", p => p.BillingAddress.Return(billingAddress => billingAddress.Email, String.Empty)),
+                    new PropertyByName<Order>("BillingCompany", p => p.BillingAddress.Return(billingAddress => billingAddress.Company, String.Empty)),
+                    new PropertyByName<Order>("BillingCountry", p => p.BillingAddress.Return(billingAddress => billingAddress.Country, null).Return(country => country.Name, String.Empty)),
+                    new PropertyByName<Order>("BillingStateProvince", p => p.BillingAddress.Return(billingAddress => billingAddress.StateProvince, null).Return(stateProvince => stateProvince.Name, String.Empty)),
+                    new PropertyByName<Order>("BillingCity", p => p.BillingAddress.Return(billingAddress => billingAddress.City, String.Empty)),
+                    new PropertyByName<Order>("BillingAddress1", p => p.BillingAddress.Return(billingAddress => billingAddress.Address1, String.Empty)),
+                    new PropertyByName<Order>("BillingAddress2", p => p.BillingAddress.Return(billingAddress => billingAddress.Address2, String.Empty)),
+                    new PropertyByName<Order>("BillingZipPostalCode", p => p.BillingAddress.Return(billingAddress => billingAddress.ZipPostalCode, String.Empty)),
+                    new PropertyByName<Order>("BillingPhoneNumber", p => p.BillingAddress.Return(billingAddress => billingAddress.PhoneNumber, String.Empty)),
+                    new PropertyByName<Order>("BillingFaxNumber", p => p.BillingAddress.Return(billingAddress => billingAddress.FaxNumber, String.Empty)),
+                    new PropertyByName<Order>("ShippingFirstName", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.FirstName, String.Empty)),
+                    new PropertyByName<Order>("ShippingLastName", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.LastName, String.Empty)),
+                    new PropertyByName<Order>("ShippingEmail", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.Email, String.Empty)),
+                    new PropertyByName<Order>("ShippingCompany", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.Company, String.Empty)),
+                    new PropertyByName<Order>("ShippingCountry", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.Country, null).Return(country => country.Name, String.Empty)),
+                    new PropertyByName<Order>("ShippingStateProvince", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.StateProvince, null).Return(stateProvince => stateProvince.Name, String.Empty)),
+                    new PropertyByName<Order>("ShippingCity", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.City, String.Empty)),
+                    new PropertyByName<Order>("ShippingAddress1", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.Address1, String.Empty)),
+                    new PropertyByName<Order>("ShippingAddress2", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.Address2, String.Empty)),
+                    new PropertyByName<Order>("ShippingZipPostalCode", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.ZipPostalCode, String.Empty)),
+                    new PropertyByName<Order>("ShippingPhoneNumber", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.PhoneNumber, String.Empty)),
+                    new PropertyByName<Order>("ShippingFaxNumber", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.FaxNumber, String.Empty))
             };
 
             return ExportToXlsx(properties, orders);
@@ -975,7 +989,6 @@ namespace Nop.Services.ExportImport
         /// <param name="customers">Customers</param>
         public virtual byte[] ExportCustomersToXlsx(IList<Customer> customers)
         {
-
             //property array
             var properties = new[]
             {
@@ -1046,7 +1059,6 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("AffiliateId", null, customer.AffiliateId.ToString());
                 xmlWriter.WriteElementString("VendorId", null, customer.VendorId.ToString());
                 xmlWriter.WriteElementString("Active", null, customer.Active.ToString());
-
 
                 xmlWriter.WriteElementString("IsGuest", null, customer.IsGuest().ToString());
                 xmlWriter.WriteElementString("IsRegistered", null, customer.IsRegistered().ToString());
