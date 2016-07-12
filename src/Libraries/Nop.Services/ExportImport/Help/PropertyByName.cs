@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Nop.Services.ExportImport.Help
 {
@@ -10,22 +8,18 @@ namespace Nop.Services.ExportImport.Help
     /// <typeparam name="T">Object type</typeparam>
     public class PropertyByName<T>
     {
-        private readonly string _settingsName;
-
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="propertyName">Property name</param>
         /// <param name="func">Feature property access</param>
-        /// <param name="settingsName">Property name on ProductEditorSettings. It is necessary to set if they different</param>
-        /// <param name="alwaysExport">Specifies whether to always export the property</param>
-        public PropertyByName(string propertyName, Func<T, object> func = null, string settingsName="", bool alwaysExport=false)
+        /// <param name="ignore">Specifies whether the property should be exported</param>
+        public PropertyByName(string propertyName, Func<T, object> func = null, bool ignore=false)
         {
             this.PropertyName = propertyName;
             this.GetProperty = func;
             this.PropertyOrderPosition = 1;
-            this._settingsName = settingsName;
-            this.AlwaysExport = alwaysExport;
+            this.Ignore = ignore;
         }
 
         /// <summary>
@@ -140,18 +134,8 @@ namespace Nop.Services.ExportImport.Help
         }
 
         /// <summary>
-        /// Checks entry properties in the specified property list
+        /// Specifies whether the property should be exported
         /// </summary>
-        /// <param name="properties">Property list</param>
-        /// <returns></returns>
-        public bool ContainsIn(IList<string> properties)
-        {
-            return properties.Any(p => p == PropertyName || p == _settingsName);
-        }
-
-        /// <summary>
-        /// Specifies whether to always export the property
-        /// </summary>
-        public bool AlwaysExport { get; set; }
+        public bool Ignore { get; set; }
     }
 }
