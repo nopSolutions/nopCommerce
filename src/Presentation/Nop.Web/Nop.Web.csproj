@@ -337,6 +337,7 @@
     <Compile Include="Models\Common\ContactVendorModel.cs" />
     <Compile Include="Models\Common\FooterModel.cs" />
     <Compile Include="Models\Common\FaviconModel.cs" />
+    <Compile Include="Models\Common\LogoModel.cs" />
     <Compile Include="Models\Common\PagerModel.cs" />
     <Compile Include="Models\Common\SocialModel.cs" />
     <Compile Include="Models\Common\StoreThemeModel.cs" />
@@ -989,6 +990,7 @@
     <Content Include="Views\ShoppingCart\_EstimateShippingResult.cshtml" />
     <Content Include="Views\Product\CustomerProductReviews.cshtml" />
     <Content Include="Views\Vendor\Info.cshtml" />
+    <Content Include="Views\Common\Logo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

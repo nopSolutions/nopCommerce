@@ -85,6 +85,16 @@
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.LogoPictureId_OverrideForStore, "logo-block", Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.StoreInformationSettings.LogoPictureId)
+                            </div>
+                            <div class="col-md-9" id="logo-block">
+                                @Html.NopEditorFor(model => model.StoreInformationSettings.LogoPictureId)
+                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.LogoPictureId)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore, model => model.StoreInformationSettings.DisplayEuCookieLawWarning, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning)
                             </div>
