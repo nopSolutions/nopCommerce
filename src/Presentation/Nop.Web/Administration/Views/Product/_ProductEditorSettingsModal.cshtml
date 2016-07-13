@@ -38,20 +38,20 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Published)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Published)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Published)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
                                                 @Html.NopLabelFor(model => model.ProductEditorSettingsModel.ProductType)
                                             </div>
                                             <div class="col-md-2">
                                                 @Html.NopEditorFor(model => model.ProductEditorSettingsModel.ProductType)
                                                 @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.ProductType)
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-md-10">
-                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.VisibleIndividually)
-                                            </div>
-                                            <div class="col-md-2">
-                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.VisibleIndividually)
-                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.VisibleIndividually)
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -65,11 +65,38 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-10">
-                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.AdminComment)
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.VisibleIndividually)
                                             </div>
                                             <div class="col-md-2">
-                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.AdminComment)
-                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.AdminComment)
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.VisibleIndividually)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.VisibleIndividually)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.ProductTags)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.ProductTags)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.ProductTags)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.GTIN)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.GTIN)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.GTIN)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.ManufacturerPartNumber)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.ManufacturerPartNumber)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.ManufacturerPartNumber)
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -97,33 +124,6 @@
                                             <div class="col-md-2">
                                                 @Html.NopEditorFor(model => model.ProductEditorSettingsModel.AllowCustomerReviews)
                                                 @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.AllowCustomerReviews)
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-md-10">
-                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.ProductTags)
-                                            </div>
-                                            <div class="col-md-2">
-                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.ProductTags)
-                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.ProductTags)
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-md-10">
-                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.ManufacturerPartNumber)
-                                            </div>
-                                            <div class="col-md-2">
-                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.ManufacturerPartNumber)
-                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.ManufacturerPartNumber)
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-md-10">
-                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.GTIN)
-                                            </div>
-                                            <div class="col-md-2">
-                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.GTIN)
-                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.GTIN)
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -173,11 +173,11 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-10">
-                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Published)
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.AdminComment)
                                             </div>
                                             <div class="col-md-2">
-                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Published)
-                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Published)
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.AdminComment)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.AdminComment)
                                             </div>
                                         </div>
                                         <div class="form-group">
