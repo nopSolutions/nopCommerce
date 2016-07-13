@@ -35,12 +35,12 @@
                                 {
                                     var alt = Model[i];
                                     <text>
-                                {
-                                    Id: @(alt.Id),
-                                    Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(alt.Name)))",
-                                    Enabled: @(alt.Enabled.ToString().ToLowerInvariant())
-                                }
-                                </text>
+                                        {
+                                            Id: @(alt.Id),
+                                            Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(alt.Name)))",
+                                            Enabled: @(alt.Enabled.ToString().ToLowerInvariant())
+                                        }
+                                    </text>
                                     if (i != Model.Count - 1)
                                     {
                                         <text>,</text>
@@ -81,7 +81,7 @@
                                             width: 100
                                         }, {
                                             field: "Enabled",
-                                            headerTemplate: "@T("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Enabled")&nbsp<input id='mastercheckbox' type='checkbox' />",
+                                            headerTemplate: "<div class='checkbox'><label><input id='mastercheckbox' type='checkbox'/>@T("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Enabled")</label></div>",
                                             headerAttributes: { style: "text-align:center" },
                                             attributes: { style: "text-align:center" },
                                             template: "<input name='checkbox_activity_types' value='#=Id#' type='checkbox' class='checkboxGroups' # if(Enabled) {# checked='checked' #}  # />",

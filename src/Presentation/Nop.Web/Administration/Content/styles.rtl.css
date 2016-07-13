@@ -323,6 +323,10 @@ td.k-state-focused.k-state-selected {
 .k-grid.k-widget {
     overflow-x: auto;
 }
+.k-grid.k-widget .checkbox, .table th .checkbox {
+    min-height: 0;
+    padding-top: 0;
+}
 .k-window-titlebar {
     height: 2em;
 }
