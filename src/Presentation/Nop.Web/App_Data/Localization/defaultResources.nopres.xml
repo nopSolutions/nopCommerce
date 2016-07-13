@@ -8568,12 +8568,6 @@
   <LocaleResource Name="Admin.Customers.Customers.CurrentWishlist">
     <Value>Current wishlist</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Customers.CustomerRoles">
-    <Value>Customer Roles</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Customers.CustomerRoles.NoRoles">
-    <Value>No customer roles available. Create at least one customer role before mapping.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Deleted">
     <Value>The customer has been deleted successfully.</Value>
   </LocaleResource>
@@ -8633,6 +8627,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.CustomerRoles">
     <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.CustomerRoles.Hint">
+    <Value>Choose customer roles of this user</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.CustomerRoles.NoRoles">
+    <Value>No customer roles available. Create at least one customer role before mapping.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.DateOfBirth">
     <Value>Date of birth</Value>

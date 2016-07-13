@@ -516,7 +516,7 @@ namespace Nop.Admin.Controllers
                     model.LastIpAddress = customer.LastIpAddress;
                     model.LastVisitedPage = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
 
-                    model.SelectedCustomerRoleIds = customer.CustomerRoles.Select(cr => cr.Id).ToArray();
+                    model.SelectedCustomerRoleIds = customer.CustomerRoles.Select(cr => cr.Id).ToList();
 
                     //newsletter subscriptions
                     if (!String.IsNullOrEmpty(customer.Email))
@@ -626,16 +626,21 @@ namespace Nop.Admin.Controllers
                 .ToList();
 
             //customer roles
-            model.AvailableCustomerRoles = _customerService
-                .GetAllCustomerRoles(true)
-                .Select(cr => cr.ToModel())
-                .ToList();
-
-            // Precheck Registered Role as a default role while creating a new customer through admin
-            if(model.SelectedCustomerRoleIds==null && customer==null && model.AvailableCustomerRoles.Count>0)
+            var allRoles = _customerService.GetAllCustomerRoles(true);
+            var adminRole = allRoles.FirstOrDefault(c => c.SystemName == SystemCustomerRoleNames.Registered);
+            //precheck Registered Role as a default role while creating a new customer through admin
+            if (customer == null && adminRole != null)
             {
-                model.SelectedCustomerRoleIds = new[] {model.AvailableCustomerRoles
-                    .FirstOrDefault(c=>c.SystemName==SystemCustomerRoleNames.Registered).Id };
+                model.SelectedCustomerRoleIds.Add(adminRole.Id);
+            }
+            foreach (var role in allRoles)
+            {
+                model.AvailableCustomerRoles.Add(new SelectListItem
+                {
+                    Text = role.Name,
+                    Value = role.Id.ToString(),
+                    Selected = model.SelectedCustomerRoleIds.Contains(role.Id)
+                });
             }
 
             //reward points history
@@ -852,7 +857,7 @@ namespace Nop.Admin.Controllers
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
             var newCustomerRoles = new List<CustomerRole>();
             foreach (var customerRole in allCustomerRoles)
-                if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                     newCustomerRoles.Add(customerRole);
             var customerRolesError = ValidateCustomerRoles(newCustomerRoles);
             if (!String.IsNullOrEmpty(customerRolesError))
@@ -1050,7 +1055,7 @@ namespace Nop.Admin.Controllers
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
             var newCustomerRoles = new List<CustomerRole>();
             foreach (var customerRole in allCustomerRoles)
-                if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                     newCustomerRoles.Add(customerRole);
             var customerRolesError = ValidateCustomerRoles(newCustomerRoles);
             if (!String.IsNullOrEmpty(customerRolesError))
@@ -1206,8 +1211,7 @@ namespace Nop.Admin.Controllers
                             !_workContext.CurrentCustomer.IsAdmin())
                             continue;
 
-                        if (model.SelectedCustomerRoleIds != null &&
-                            model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                        if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                         {
                             //new role
                             if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) == 0)
