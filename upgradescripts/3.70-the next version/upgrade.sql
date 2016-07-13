@@ -1514,6 +1514,18 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Description">
     <Value>Note that some attribute control types that support custom user input (e.g. file upload, textboxes, date picker) are useless with attribute combinations</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Logo">
+    <Value>Logo</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Logo.Hint">
+    <Value>Upload your store logo. If not uploaded, then the default one will be used.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.OnlyAdminCanChangePassword">
+    <Value>You''re not allowed to change passwords of administrators. Only administrators can do it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.OnlyAdminCanDeleteAdmin">
+    <Value>You''re not allowed to delete administrators. Only administrators can do it.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -4128,3 +4140,13 @@ BEGIN
 	VALUES (N'DeleteActivityLog', N'Delete activity log', N'true')
 END
 GO
+
+
+
+--new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings.logopictureid')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'storeinformationsettings.logopictureid', N'0', 0)
+ END
+ GO
