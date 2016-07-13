@@ -25,10 +25,13 @@
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
+                <p>
+                    @T("Admin.Catalog.Attributes.ProductAttributes.Description")
+                </p>
                 <div id="productattributes-grid"></div>
 
                 <script>
-                    $(document).ready(function () {
+                    $(document).ready(function() {
                         $("#productattributes-grid").kendoGrid({
                             dataSource: {
                                 type: "json",
@@ -64,7 +67,8 @@
                                 mode: "inline"
                             },
                             scrollable: false,
-                            columns: [{
+                            columns: [
+                            {
                                 field: "Name",
                                 title: "@T("Admin.Catalog.Attributes.ProductAttributes.Fields.Name")",
                                 width: 400
@@ -73,7 +77,8 @@
                                 title: "@T("Admin.Common.Edit")",
                                 width: 100,
                                 template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-                            }]
+                                }
+                            ]
                         });
                     });
                 </script>
