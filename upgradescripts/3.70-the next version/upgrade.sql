@@ -1520,6 +1520,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Logo.Hint">
     <Value>Upload your store logo. If not uploaded, then the default one will be used.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.OnlyAdminCanChangePassword">
+    <Value>You''re not allowed to change passwords of administrators. Only administrators can do it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.OnlyAdminCanDeleteAdmin">
+    <Value>You''re not allowed to delete administrators. Only administrators can do it.</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -1289,6 +1289,13 @@ namespace Nop.Admin.Controllers
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
+            //ensure that the current customer cannot change passwords of "Administrators" if he's not an admin himself
+            if (customer.IsAdmin() && !_workContext.CurrentCustomer.IsAdmin())
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.OnlyAdminCanChangePassword"));
+                return RedirectToAction("Edit", new { id = customer.Id });
+            }
+
             if (ModelState.IsValid)
             {
                 var changePassRequest = new ChangePasswordRequest(model.Email,
@@ -1380,6 +1387,14 @@ namespace Nop.Admin.Controllers
                     return RedirectToAction("Edit", new { id = customer.Id });
                 }
 
+                //ensure that the current customer cannot delete "Administrators" if he's not an admin himself
+                if (customer.IsAdmin() && !_workContext.CurrentCustomer.IsAdmin())
+                {
+                    ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.OnlyAdminCanDeleteAdmin"));
+                    return RedirectToAction("Edit", new { id = customer.Id });
+                }
+
+                //delete
                 _customerService.DeleteCustomer(customer);
 
                 //remove newsletter subscription (if exists)
