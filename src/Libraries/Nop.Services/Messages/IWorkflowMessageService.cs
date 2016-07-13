@@ -302,6 +302,14 @@ namespace Nop.Services.Messages
         int SendNewVendorAccountApplyStoreOwnerNotification(Customer customer, Vendor vendor, int languageId);
 
         /// <summary>
+        /// Sends 'Vendor information change' message to a store owner
+        /// </summary>
+        /// <param name="vendor">Vendor</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendVendorInformationChangeNotification(Vendor vendor, int languageId);
+
+        /// <summary>
         /// Sends a product review notification message to a store owner
         /// </summary>
         /// <param name="productReview">Product review</param>
@@ -336,7 +344,7 @@ namespace Nop.Services.Messages
         int SendQuantityBelowStoreOwnerNotification(ProductAttributeCombination combination, int languageId);
 
         /// <summary>
-        /// Sends a "new VAT sumitted" notification to a store owner
+        /// Sends a "new VAT submitted" notification to a store owner
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="vatName">Received VAT name</param>

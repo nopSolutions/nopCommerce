@@ -30,6 +30,7 @@ namespace Nop.Data.Tests.Messages
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 SentTries = 5,
                 SentOnUtc = new DateTime(2010, 02, 02),
+                DontSendBeforeDateUtc = new DateTime(2016, 2 , 23),
                 EmailAccount = new EmailAccount
                 {
                     Email = "admin@yourstore.com",
@@ -65,7 +66,7 @@ namespace Nop.Data.Tests.Messages
             fromDb.SentTries.ShouldEqual(5);
             fromDb.SentOnUtc.ShouldNotBeNull();
             fromDb.SentOnUtc.Value.ShouldEqual(new DateTime(2010, 02, 02));
-
+            fromDb.DontSendBeforeDateUtc.ShouldEqual(new DateTime(2016, 2, 23));
             fromDb.EmailAccount.ShouldNotBeNull();
             fromDb.EmailAccount.DisplayName.ShouldEqual("Administrator");
         }

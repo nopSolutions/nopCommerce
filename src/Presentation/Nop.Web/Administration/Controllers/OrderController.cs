@@ -5,13 +5,14 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
+using Nop.Admin.Helpers;
 using Nop.Admin.Models.Orders;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -86,7 +87,9 @@ namespace Nop.Admin.Controllers
 	    private readonly IAffiliateService _affiliateService;
 	    private readonly IPictureService _pictureService;
         private readonly ICustomerActivityService _customerActivityService;
+	    private readonly ICacheManager _cacheManager;
 
+        private readonly OrderSettings _orderSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly TaxSettings _taxSettings;
         private readonly MeasureSettings _measureSettings;
@@ -138,6 +141,8 @@ namespace Nop.Admin.Controllers
             IAffiliateService affiliateService,
             IPictureService pictureService,
             ICustomerActivityService customerActivityService,
+            ICacheManager cacheManager,
+            OrderSettings orderSettings,
             CurrencySettings currencySettings, 
             TaxSettings taxSettings,
             MeasureSettings measureSettings,
@@ -185,6 +190,8 @@ namespace Nop.Admin.Controllers
             this._affiliateService = affiliateService;
             this._pictureService = pictureService;
             this._customerActivityService = customerActivityService;
+            this._cacheManager = cacheManager;
+            this._orderSettings = orderSettings;
             this._currencySettings = currencySettings;
             this._taxSettings = taxSettings;
             this._measureSettings = measureSettings;
@@ -266,6 +273,156 @@ namespace Nop.Admin.Controllers
             return hasVendorProducts;
         }
 
+	    /// <summary>
+	    /// Parse product attributes on the add product to order details page
+	    /// </summary>
+	    /// <param name="product">Product</param>
+	    /// <param name="form">Form</param>
+	    /// <returns>Parsed attributes</returns>
+	    [NonAction]
+        protected virtual string ParseProductAttributes(Product product, FormCollection form)
+        {
+            var attributesXml = string.Empty;
+
+            #region Product attributes
+
+            var productAttributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            foreach (var attribute in productAttributes)
+            {
+                var controlId = string.Format("product_attribute_{0}", attribute.Id);
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.ImageSquares:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                int selectedAttributeId = int.Parse(ctrlAttributes);
+                                if (selectedAttributeId > 0)
+                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                        attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Checkboxes:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                foreach (var item in ctrlAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    int selectedAttributeId = int.Parse(item);
+                                    if (selectedAttributeId > 0)
+                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                            attribute, selectedAttributeId.ToString());
+                                }
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            //load read-only (already server-side selected) values
+                            var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
+                            foreach (var selectedAttributeId in attributeValues
+                                .Where(v => v.IsPreSelected)
+                                .Select(v => v.Id)
+                                .ToList())
+                            {
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                    attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                string enteredText = ctrlAttributes.Trim();
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                    attribute, enteredText);
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Datepicker:
+                        {
+                            var day = form[controlId + "_day"];
+                            var month = form[controlId + "_month"];
+                            var year = form[controlId + "_year"];
+                            DateTime? selectedDate = null;
+                            try
+                            {
+                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(day));
+                            }
+                            catch { }
+                            if (selectedDate.HasValue)
+                            {
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                    attribute, selectedDate.Value.ToString("D"));
+                            }
+                        }
+                        break;
+                    case AttributeControlType.FileUpload:
+                        {
+                            Guid downloadGuid;
+                            Guid.TryParse(form[controlId], out downloadGuid);
+                            var download = _downloadService.GetDownloadByGuid(downloadGuid);
+                            if (download != null)
+                            {
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                        attribute, download.DownloadGuid.ToString());
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            //validate conditional attributes (if specified)
+            foreach (var attribute in productAttributes)
+            {
+                var conditionMet = _productAttributeParser.IsConditionMet(attribute, attributesXml);
+                if (conditionMet.HasValue && !conditionMet.Value)
+                {
+                    attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
+                }
+            }
+
+            #endregion
+
+            return attributesXml;
+        }
+
+        /// <summary>
+        /// Parse rental dates on the add product to order details page
+        /// </summary>
+        /// <param name="form">Form</param>
+        /// <param name="startDate">Start date</param>
+        /// <param name="endDate">End date</param>
+        [NonAction]
+        protected virtual void ParseRentalDates(FormCollection form,
+            out DateTime? startDate, out DateTime? endDate)
+        {
+            startDate = null;
+            endDate = null;
+
+            var ctrlStartDate = form["rental_start_date"];
+            var ctrlEndDate = form["rental_end_date"];
+            try
+            {
+                const string datePickerFormat = "MM/dd/yyyy";
+                startDate = DateTime.ParseExact(ctrlStartDate, datePickerFormat, CultureInfo.InvariantCulture);
+                endDate = DateTime.ParseExact(ctrlEndDate, datePickerFormat, CultureInfo.InvariantCulture);
+            }
+            catch
+            {
+            }
+        }
+
         [NonAction]
         protected virtual void PrepareOrderDetailsModel(OrderModel model, Order order)
         {
@@ -342,7 +499,7 @@ namespace Nop.Admin.Controllers
             //tax
             model.Tax = _priceFormatter.FormatPrice(order.OrderTax, true, false);
             SortedDictionary<decimal, decimal> taxRates = order.TaxRatesDictionary;
-            bool displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count > 0;
+            bool displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
             bool displayTax = !displayTaxRates;
             foreach (var tr in order.TaxRatesDictionary)
             {
@@ -613,8 +770,14 @@ namespace Nop.Admin.Controllers
                 }
 
                 //return requests
-                orderItemModel.ReturnRequestIds = _returnRequestService.SearchReturnRequests(orderItemId: orderItem.Id)
-                    .Select(rr => rr.Id).ToList();
+                orderItemModel.ReturnRequests = _returnRequestService
+                    .SearchReturnRequests(orderItemId: orderItem.Id)
+                    .Select(item => new OrderModel.OrderItemModel.ReturnRequestBriefModel
+                    {
+                        CustomNumber = item.CustomNumber,
+                        Id = item.Id
+                    }).ToList();
+
                 //gift cards
                 orderItemModel.PurchasedGiftCardIds = _giftCardService.GetGiftCardsByPurchasedWithOrderItemId(orderItem.Id)
                     .Select(gc => gc.Id).ToList();
@@ -666,8 +829,15 @@ namespace Nop.Admin.Controllers
                     Name = attribute.ProductAttribute.Name,
                     TextPrompt = attribute.TextPrompt,
                     IsRequired = attribute.IsRequired,
-                    AttributeControlType = attribute.AttributeControlType
+                    AttributeControlType = attribute.AttributeControlType,
+                    HasCondition = !String.IsNullOrEmpty(attribute.ConditionAttributeXml)
                 };
+                if (!String.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
+                {
+                    attributeModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
+                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                        .ToList();
+                }
 
                 if (attribute.ShouldHaveValues())
                 {
@@ -687,6 +857,7 @@ namespace Nop.Admin.Controllers
 
                 model.ProductAttributes.Add(attributeModel);
             }
+            model.HasCondition = model.ProductAttributes.Any(a => a.HasCondition);
             //gift card
             model.GiftCard.IsGiftCard = product.IsGiftCard;
             if (model.GiftCard.IsGiftCard)
@@ -814,8 +985,10 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public ActionResult List(int? orderStatusId = null,
-            int? paymentStatusId = null, int? shippingStatusId = null)
+        public ActionResult List(
+            [ModelBinder(typeof(CommaSeparatedModelBinder))] List<string> orderStatusIds = null,
+            [ModelBinder(typeof(CommaSeparatedModelBinder))] List<string> paymentStatusIds = null,
+            [ModelBinder(typeof(CommaSeparatedModelBinder))] List<string> shippingStatusIds = null)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -823,35 +996,34 @@ namespace Nop.Admin.Controllers
             //order statuses
             var model = new OrderListModel();
             model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
-            model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            if (orderStatusId.HasValue)
+            model.AvailableOrderStatuses.Insert(0, new SelectListItem
+            { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0", Selected = true });
+            if (orderStatusIds != null && orderStatusIds.Any())
             {
-                //pre-select value?
-                var item = model.AvailableOrderStatuses.FirstOrDefault(x => x.Value == orderStatusId.Value.ToString());
-                if (item != null)
+                foreach (var item in model.AvailableOrderStatuses.Where(os => orderStatusIds.Contains(os.Value)))
                     item.Selected = true;
+                model.AvailableOrderStatuses.First().Selected = false;
             }
-
             //payment statuses
             model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
-            model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            if (paymentStatusId.HasValue)
+            model.AvailablePaymentStatuses.Insert(0, new SelectListItem
+            { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0", Selected = true });
+            if (paymentStatusIds != null && paymentStatusIds.Any())
             {
-                //pre-select value?
-                var item = model.AvailablePaymentStatuses.FirstOrDefault(x => x.Value == paymentStatusId.Value.ToString());
-                if (item != null)
+                foreach (var item in model.AvailablePaymentStatuses.Where(ps => paymentStatusIds.Contains(ps.Value)))
                     item.Selected = true;
+                model.AvailablePaymentStatuses.First().Selected = false;
             }
 
             //shipping statuses
             model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
-            model.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            if (shippingStatusId.HasValue)
+            model.AvailableShippingStatuses.Insert(0, new SelectListItem
+            { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0", Selected = true });
+            if (shippingStatusIds != null && shippingStatusIds.Any())
             {
-                //pre-select value?
-                var item = model.AvailableShippingStatuses.FirstOrDefault(x => x.Value == shippingStatusId.Value.ToString());
-                if (item != null)
+                foreach (var item in model.AvailableShippingStatuses.Where(ss => shippingStatusIds.Contains(ss.Value)))
                     item.Selected = true;
+                model.AvailableShippingStatuses.First().Selected = false;
             }
 
             //stores
@@ -885,9 +1057,9 @@ namespace Nop.Admin.Controllers
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             return View(model);
-		}
+        }
 
-		[HttpPost]
+        [HttpPost]
 		public ActionResult OrderList(DataSourceRequest command, OrderListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
@@ -905,9 +1077,9 @@ namespace Nop.Admin.Controllers
             DateTime? endDateValue = (model.EndDate == null) ? null 
                             :(DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
-            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
-            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+            var orderStatusIds = !model.OrderStatusIds.Contains(0) ? model.OrderStatusIds : null;
+            var paymentStatusIds = !model.PaymentStatusIds.Contains(0) ? model.PaymentStatusIds : null;
+            var shippingStatusIds = !model.ShippingStatusIds.Contains(0) ? model.ShippingStatusIds : null;
 
 		    var filterByProductId = 0;
 		    var product = _productService.GetProductById(model.ProductId);
@@ -922,14 +1094,13 @@ namespace Nop.Admin.Controllers
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 createdFromUtc: startDateValue, 
                 createdToUtc: endDateValue,
-                os: orderStatus, 
-                ps: paymentStatus, 
-                ss: shippingStatus, 
+                osIds: orderStatusIds,
+                psIds: paymentStatusIds,
+                ssIds: shippingStatusIds,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
                 orderNotes: model.OrderNotes,
-                orderGuid: model.OrderGuid,
                 pageIndex: command.Page - 1, 
                 pageSize: command.PageSize);
             var gridModel = new DataSourceResult
@@ -943,8 +1114,11 @@ namespace Nop.Admin.Controllers
                         StoreName = store != null ? store.Name : "Unknown",
                         OrderTotal = _priceFormatter.FormatPrice(x.OrderTotal, true, false),
                         OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                        OrderStatusId = x.OrderStatusId,
                         PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
+                        PaymentStatusId = x.PaymentStatusId,
                         ShippingStatus = x.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
+                        ShippingStatusId = x.ShippingStatusId,
                         CustomerEmail = x.BillingAddress.Email,
                         CustomerFullName = string.Format("{0} {1}", x.BillingAddress.FirstName, x.BillingAddress.LastName),
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
@@ -960,22 +1134,23 @@ namespace Nop.Admin.Controllers
                 vendorId: model.VendorId,
                 orderId: 0,
                 paymentMethodSystemName: model.PaymentMethodSystemName,
-                os: orderStatus,
-                ps: paymentStatus,
-                ss: shippingStatus,
+                osIds: orderStatusIds,
+                psIds: paymentStatusIds,
+                ssIds: shippingStatusIds,
                 startTimeUtc: startDateValue,
                 endTimeUtc: endDateValue,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
                 orderNotes: model.OrderNotes);
+
             var profit = _orderReportService.ProfitReport(
                 storeId: model.StoreId,
                 vendorId: model.VendorId,
                 paymentMethodSystemName: model.PaymentMethodSystemName,
-                os: orderStatus,
-                ps: paymentStatus, 
-                ss: shippingStatus, 
+                osIds: orderStatusIds,
+                psIds: paymentStatusIds,
+                ssIds: shippingStatusIds,
                 startTimeUtc: startDateValue, 
                 endTimeUtc: endDateValue,
                 billingEmail: model.BillingEmail,
@@ -1062,9 +1237,9 @@ namespace Nop.Admin.Controllers
             DateTime? endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
-            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
-            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+            var orderStatusIds = !model.OrderStatusIds.Contains(0) ? model.OrderStatusIds : null;
+            var paymentStatusIds = !model.PaymentStatusIds.Contains(0) ? model.PaymentStatusIds : null;
+            var shippingStatusIds = !model.ShippingStatusIds.Contains(0) ? model.ShippingStatusIds : null;
 
             var filterByProductId = 0;
             var product = _productService.GetProductById(model.ProductId);
@@ -1079,14 +1254,13 @@ namespace Nop.Admin.Controllers
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
-                os: orderStatus,
-                ps: paymentStatus,
-                ss: shippingStatus,
+                osIds: orderStatusIds,
+                psIds: paymentStatusIds,
+                ssIds: shippingStatusIds,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
-                orderNotes: model.OrderNotes,
-                orderGuid: model.OrderGuid);
+                orderNotes: model.OrderNotes);
 
             try
             {
@@ -1141,9 +1315,9 @@ namespace Nop.Admin.Controllers
             DateTime? endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
-            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
-            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+            var orderStatusIds = !model.OrderStatusIds.Contains(0) ? model.OrderStatusIds : null;
+            var paymentStatusIds = !model.PaymentStatusIds.Contains(0) ? model.PaymentStatusIds : null;
+            var shippingStatusIds = !model.ShippingStatusIds.Contains(0) ? model.ShippingStatusIds : null;
 
             var filterByProductId = 0;
             var product = _productService.GetProductById(model.ProductId);
@@ -1158,24 +1332,18 @@ namespace Nop.Admin.Controllers
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
-                os: orderStatus,
-                ps: paymentStatus,
-                ss: shippingStatus,
+                osIds: orderStatusIds,
+                psIds: paymentStatusIds,
+                ssIds: shippingStatusIds,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
-                orderNotes: model.OrderNotes,
-                orderGuid: model.OrderGuid);
+                orderNotes: model.OrderNotes);
 
             try
             {
-                byte[] bytes;
-                using (var stream = new MemoryStream())
-                {
-                    _exportManager.ExportOrdersToXlsx(stream, orders);
-                    bytes = stream.ToArray();
-                }
-                return File(bytes, "text/xls", "orders.xlsx");
+                byte[] bytes = _exportManager.ExportOrdersToXlsx(orders);
+                return File(bytes, MimeTypes.TextXlsx, "orders.xlsx");
             }
             catch (Exception exc)
             {
@@ -1204,13 +1372,16 @@ namespace Nop.Admin.Controllers
                 orders.AddRange(_orderService.GetOrdersByIds(ids));
             }
 
-            byte[] bytes;
-            using (var stream = new MemoryStream())
+            try
             {
-                _exportManager.ExportOrdersToXlsx(stream, orders);
-                bytes = stream.ToArray();
+                byte[] bytes = _exportManager.ExportOrdersToXlsx(orders);
+                return File(bytes, MimeTypes.TextXlsx, "orders.xlsx");
             }
-            return File(bytes, "text/xls", "orders.xlsx");
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
         }
 
         #endregion
@@ -1518,7 +1689,7 @@ namespace Nop.Admin.Controllers
 
                 LogEditOrder(order.Id);
 
-                if (errors.Count == 0)
+                if (!errors.Any())
                 {
                     //success
                     ViewBag.RefreshPage = true;
@@ -1651,10 +1822,10 @@ namespace Nop.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id);
+                _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
-            return File(bytes, "application/pdf", string.Format("order_{0}.pdf", order.Id));
+            return File(bytes, MimeTypes.ApplicationPdf, string.Format("order_{0}.pdf", order.Id));
         }
 
         [HttpPost, ActionName("List")]
@@ -1676,9 +1847,9 @@ namespace Nop.Admin.Controllers
             DateTime? endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
-            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
-            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+            var orderStatusIds = !model.OrderStatusIds.Contains(0) ? model.OrderStatusIds : null;
+            var paymentStatusIds = !model.PaymentStatusIds.Contains(0) ? model.PaymentStatusIds : null;
+            var shippingStatusIds = !model.ShippingStatusIds.Contains(0) ? model.ShippingStatusIds : null;
 
             var filterByProductId = 0;
             var product = _productService.GetProductById(model.ProductId);
@@ -1693,22 +1864,21 @@ namespace Nop.Admin.Controllers
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
-                os: orderStatus,
-                ps: paymentStatus,
-                ss: shippingStatus,
+                osIds: orderStatusIds,
+                psIds: paymentStatusIds,
+                ssIds: shippingStatusIds,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
-                orderNotes: model.OrderNotes,
-                orderGuid: model.OrderGuid);
+                orderNotes: model.OrderNotes);
 
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id);
+                _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
-            return File(bytes, "application/pdf", "orders.pdf");
+            return File(bytes, MimeTypes.ApplicationPdf, "orders.pdf");
         }
 
         [HttpPost]
@@ -1734,7 +1904,7 @@ namespace Nop.Admin.Controllers
             }
 
             //ensure that we at least one order selected
-            if (orders.Count == 0)
+            if (!orders.Any())
             {
                 ErrorNotification(_localizationService.GetResource("Admin.Orders.PdfInvoice.NoOrders"));
                 return RedirectToAction("List");
@@ -1743,10 +1913,48 @@ namespace Nop.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id);
+                _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
-            return File(bytes, "application/pdf", "orders.pdf");
+            return File(bytes, MimeTypes.ApplicationPdf, "orders.pdf");
+        }
+
+        //currently we use this method on the add product to order details pages
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult ProductDetails_AttributeChange(int productId, bool validateAttributeConditions,
+	        FormCollection form)
+	    {
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                return new NullJsonResult();
+
+            var attributeXml = ParseProductAttributes(product, form);
+
+            //conditional attributes
+            var enabledAttributeMappingIds = new List<int>();
+            var disabledAttributeMappingIds = new List<int>();
+            if (validateAttributeConditions)
+            {
+                var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+                foreach (var attribute in attributes)
+                {
+                    var conditionMet = _productAttributeParser.IsConditionMet(attribute, attributeXml);
+                    if (conditionMet.HasValue)
+                    {
+                        if (conditionMet.Value)
+                            enabledAttributeMappingIds.Add(attribute.Id);
+                        else
+                            disabledAttributeMappingIds.Add(attribute.Id);
+                    }
+                }
+            }
+
+            return Json(new
+            {
+                enabledattributemappingids = enabledAttributeMappingIds.ToArray(),
+                disabledattributemappingids = disabledAttributeMappingIds.ToArray()
+            });
         }
 
         [HttpPost, ActionName("Edit")]
@@ -1874,7 +2082,7 @@ namespace Nop.Admin.Controllers
             PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            SaveSelectedTabName(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1964,7 +2172,7 @@ namespace Nop.Admin.Controllers
             PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            SaveSelectedTabName(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1996,7 +2204,7 @@ namespace Nop.Admin.Controllers
             if (orderItem == null)
                 throw new ArgumentException("No order item found with the specified id");
 
-            if (_giftCardService.GetGiftCardsByPurchasedWithOrderItemId(orderItem.Id).Count > 0)
+            if (_giftCardService.GetGiftCardsByPurchasedWithOrderItemId(orderItem.Id).Any())
             {
                 //we cannot delete an order item with associated gift cards
                 //a store owner should delete them first
@@ -2007,7 +2215,7 @@ namespace Nop.Admin.Controllers
                 ErrorNotification("This order item has an associated gift card record. Please delete it first.", false);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                SaveSelectedTabName(persistForTheNextRequest: false);
 
                 return View(model);
 
@@ -2034,7 +2242,7 @@ namespace Nop.Admin.Controllers
                 PrepareOrderDetailsModel(model, order);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                SaveSelectedTabName(persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -2075,7 +2283,7 @@ namespace Nop.Admin.Controllers
             PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            SaveSelectedTabName(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -2115,7 +2323,7 @@ namespace Nop.Admin.Controllers
             PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            SaveSelectedTabName(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -2233,9 +2441,9 @@ namespace Nop.Admin.Controllers
             model.OrderId = orderId;
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
+            var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(c);
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -2322,146 +2530,11 @@ namespace Nop.Admin.Controllers
             decimal priceExclTax;
             decimal.TryParse(form["SubTotalExclTax"], out priceExclTax);
 
-            //attributes
             //warnings
             var warnings = new List<string>();
-            string attributesXml = "";
 
-            #region Product attributes
-
-            var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
-            foreach (var attribute in attributes)
-            {
-                string controlId = string.Format("product_attribute_{0}", attribute.Id);
-                switch (attribute.AttributeControlType)
-                {
-                    case AttributeControlType.DropdownList:
-                    case AttributeControlType.RadioList:
-                    case AttributeControlType.ColorSquares:
-                    case AttributeControlType.ImageSquares:
-                        {
-                            var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
-                            {
-                                int selectedAttributeId = int.Parse(ctrlAttributes);
-                                if (selectedAttributeId > 0)
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, selectedAttributeId.ToString());
-                            }
-                        }
-                        break;
-                    case AttributeControlType.Checkboxes:
-                        {
-                            var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
-                            {
-                                foreach (var item in ctrlAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                                {
-                                    int selectedAttributeId = int.Parse(item);
-                                    if (selectedAttributeId > 0)
-                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
-                                }
-                            }
-                        }
-                        break;
-                    case AttributeControlType.ReadonlyCheckboxes:
-                        {
-                            //load read-only (already server-side selected) values
-                            var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
-                            foreach (var selectedAttributeId in attributeValues
-                                .Where(v => v.IsPreSelected)
-                                .Select(v => v.Id)
-                                .ToList())
-                            {
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, selectedAttributeId.ToString());
-                            }
-                        }
-                        break;
-                    case AttributeControlType.TextBox:
-                    case AttributeControlType.MultilineTextbox:
-                        {
-                            var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
-                            {
-                                string enteredText = ctrlAttributes.Trim();
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, enteredText);
-                            }
-                        }
-                        break;
-                    case AttributeControlType.Datepicker:
-                        {
-                            var day = form[controlId + "_day"];
-                            var month = form[controlId + "_month"];
-                            var year = form[controlId + "_year"];
-                            DateTime? selectedDate = null;
-                            try
-                            {
-                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(day));
-                            }
-                            catch { }
-                            if (selectedDate.HasValue)
-                            {
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, selectedDate.Value.ToString("D"));
-                            }
-                        }
-                        break;
-                    case AttributeControlType.FileUpload:
-                        {
-                            var httpPostedFile = this.Request.Files[controlId];
-                            if ((httpPostedFile != null) && (!String.IsNullOrEmpty(httpPostedFile.FileName)))
-                            {
-                                var fileSizeOk = true;
-                                if (attribute.ValidationFileMaximumSize.HasValue)
-                                {
-                                    //compare in bytes
-                                    var maxFileSizeBytes = attribute.ValidationFileMaximumSize.Value * 1024;
-                                    if (httpPostedFile.ContentLength > maxFileSizeBytes)
-                                    {
-                                        warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), attribute.ValidationFileMaximumSize.Value));
-                                        fileSizeOk = false;
-                                    }
-                                }
-                                if (fileSizeOk)
-                                {
-                                    //save an uploaded file
-                                    var download = new Download
-                                    {
-                                        DownloadGuid = Guid.NewGuid(),
-                                        UseDownloadUrl = false,
-                                        DownloadUrl = "",
-                                        DownloadBinary = httpPostedFile.GetDownloadBits(),
-                                        ContentType = httpPostedFile.ContentType,
-                                        Filename = Path.GetFileNameWithoutExtension(httpPostedFile.FileName),
-                                        Extension = Path.GetExtension(httpPostedFile.FileName),
-                                        IsNew = true
-                                    };
-                                    _downloadService.InsertDownload(download);
-                                    //save attribute
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, download.DownloadGuid.ToString());
-                                }
-                            }
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-            //validate conditional attributes (if specified)
-            foreach (var attribute in attributes)
-            {
-                var conditionMet = _productAttributeParser.IsConditionMet(attribute, attributesXml);
-                if (conditionMet.HasValue && !conditionMet.Value)
-                {
-                    attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
-                }
-            }
-
-            #endregion
+            //attributes
+            var attributesXml = ParseProductAttributes(product, form);
 
             #region Gift cards
 
@@ -2513,18 +2586,7 @@ namespace Nop.Admin.Controllers
             DateTime? rentalEndDate = null;
             if (product.IsRental)
             {
-                var ctrlStartDate = form["rental_start_date"];
-                var ctrlEndDate = form["rental_end_date"];
-                try
-                {
-                    //currenly we support only this format (as in the \Views\Order\_ProductAddRentalInfo.cshtml file)
-                    const string datePickerFormat = "MM/dd/yyyy";
-                    rentalStartDate = DateTime.ParseExact(ctrlStartDate, datePickerFormat, CultureInfo.InvariantCulture);
-                    rentalEndDate = DateTime.ParseExact(ctrlEndDate, datePickerFormat, CultureInfo.InvariantCulture);
-                }
-                catch
-                {
-                }
+                ParseRentalDates(form, out rentalStartDate, out rentalEndDate);
             }
 
             #endregion
@@ -2533,12 +2595,12 @@ namespace Nop.Admin.Controllers
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(order.Customer, ShoppingCartType.ShoppingCart, product, quantity, attributesXml));
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemGiftCardWarnings(ShoppingCartType.ShoppingCart, product, attributesXml));
             warnings.AddRange(_shoppingCartService.GetRentalProductWarnings(product, rentalStartDate, rentalEndDate));
-            if (warnings.Count == 0)
+            if (!warnings.Any())
             {
                 //no errors
 
                 //attributes
-                string attributeDescription = _productAttributeFormatter.FormatAttributes(product, attributesXml, order.Customer);
+                var attributeDescription = _productAttributeFormatter.FormatAttributes(product, attributesXml, order.Customer);
 
                 //save item
                 var orderItem = new OrderItem
@@ -2668,7 +2730,7 @@ namespace Nop.Admin.Controllers
                 model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
             //states
             var states = address.Country != null ? _stateProvinceService.GetStateProvincesByCountryId(address.Country.Id, showHidden: true).ToList() : new List<StateProvince>();
-            if (states.Count > 0)
+            if (states.Any())
             {
                 foreach (var s in states)
                     model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
@@ -2759,7 +2821,7 @@ namespace Nop.Admin.Controllers
                 model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
             //states
             var states = address.Country != null ? _stateProvinceService.GetStateProvincesByCountryId(address.Country.Id, showHidden: true).ToList() : new List<StateProvince>();
-            if (states.Count > 0)
+            if (states.Any())
             {
                 foreach (var s in states)
                     model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
@@ -3130,7 +3192,7 @@ namespace Nop.Admin.Controllers
             }
 
             //if we have at least one item in the shipment, then save it
-            if (shipment != null && shipment.ShipmentItems.Count > 0)
+            if (shipment != null && shipment.ShipmentItems.Any())
             {
                 shipment.TotalWeight = totalWeight;
                 _shipmentService.InsertShipment(shipment);
@@ -3408,10 +3470,10 @@ namespace Nop.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage.Id);
+                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
-            return File(bytes, "application/pdf", string.Format("packagingslip_{0}.pdf", shipment.Id));
+            return File(bytes, MimeTypes.ApplicationPdf, string.Format("packagingslip_{0}.pdf", shipment.Id));
         }
 
         [HttpPost, ActionName("ShipmentList")]
@@ -3444,7 +3506,7 @@ namespace Nop.Admin.Controllers
                 createdToUtc: endDateValue);
 
             //ensure that we at least one shipment selected
-            if (shipments.Count == 0)
+            if (!shipments.Any())
             {
                 ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.NoShipmentsSelected"));
                 return RedirectToAction("ShipmentList");
@@ -3453,10 +3515,10 @@ namespace Nop.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage.Id);
+                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
-            return File(bytes, "application/pdf", "packagingslips.pdf");
+            return File(bytes, MimeTypes.ApplicationPdf, "packagingslips.pdf");
         }
 
         [HttpPost]
@@ -3481,7 +3543,7 @@ namespace Nop.Admin.Controllers
             }
 
             //ensure that we at least one shipment selected
-            if (shipments.Count == 0)
+            if (!shipments.Any())
             {
                 ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.NoShipmentsSelected"));
                 return RedirectToAction("ShipmentList");
@@ -3490,10 +3552,10 @@ namespace Nop.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage.Id);
+                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
-            return File(bytes, "application/pdf", "packagingslips.pdf");
+            return File(bytes, MimeTypes.ApplicationPdf, "packagingslips.pdf");
         }
 
         [HttpPost]
@@ -3723,7 +3785,7 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
-
+            
             return PartialView();
         }
         [HttpPost]
@@ -3764,9 +3826,9 @@ namespace Nop.Admin.Controllers
 
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
+            var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(c);
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -3901,10 +3963,9 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
-            //a vendor does have access to this report
+            //a vendor doesn't have access to this report
             if (_workContext.CurrentVendor != null)
                 return Content("");
-
 
             var report = new List<OrderAverageReportLineSummary>();
             report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Pending));
@@ -3938,43 +3999,52 @@ namespace Nop.Admin.Controllers
 
             return PartialView();
         }
+
         [HttpPost]
         public ActionResult OrderIncompleteReportList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
-            
-            //a vendor does have access to this report
+
+            //a vendor doesn't have access to this report
             if (_workContext.CurrentVendor != null)
                 return Content("");
 
             var model = new List<OrderIncompleteReportLineModel>();
             //not paid
-            var psPending = _orderReportService.GetOrderAverageReportLine(ps: PaymentStatus.Pending, ignoreCancelledOrders: true);
+            var orderStatuses = Enum.GetValues(typeof(OrderStatus)).Cast<int>().Where(os => os != (int)OrderStatus.Cancelled).ToList();
+            var paymentStatuses = new List<int>() { (int)PaymentStatus.Pending };
+            var psPending = _orderReportService.GetOrderAverageReportLine(psIds: paymentStatuses, osIds: orderStatuses);
             model.Add(new OrderIncompleteReportLineModel
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalUnpaidOrders"),
                 Count = psPending.CountOrders,
                 Total = _priceFormatter.FormatPrice(psPending.SumOrders, true, false),
-                ViewLink = Url.Action("List", "Order", new { paymentStatusId = ((int)PaymentStatus.Pending).ToString() })
+                ViewLink = Url.Action("List", "Order", new {
+                    orderStatusIds = string.Join(",", orderStatuses),
+                    paymentStatusIds = string.Join(",", paymentStatuses) })
             });
             //not shipped
-            var ssPending = _orderReportService.GetOrderAverageReportLine(ss: ShippingStatus.NotYetShipped, ignoreCancelledOrders: true);
+            var shippingStatuses = new List<int>() { (int)ShippingStatus.NotYetShipped };
+            var ssPending = _orderReportService.GetOrderAverageReportLine(osIds: orderStatuses, ssIds: shippingStatuses);
             model.Add(new OrderIncompleteReportLineModel
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalNotShippedOrders"),
                 Count = ssPending.CountOrders,
                 Total = _priceFormatter.FormatPrice(ssPending.SumOrders, true, false),
-                ViewLink = Url.Action("List", "Order", new { shippingStatusId = ((int)ShippingStatus.NotYetShipped).ToString() })
+                ViewLink = Url.Action("List", "Order", new {
+                    orderStatusIds = string.Join(",", orderStatuses),
+                    shippingStatusIds = string.Join(",", shippingStatuses) })
             });
             //pending
-            var osPending = _orderReportService.GetOrderAverageReportLine(os: OrderStatus.Pending, ignoreCancelledOrders: true);
+            orderStatuses = new List<int>() { (int)OrderStatus.Pending };
+            var osPending = _orderReportService.GetOrderAverageReportLine(osIds: orderStatuses);
             model.Add(new OrderIncompleteReportLineModel
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalIncompleteOrders"),
                 Count = osPending.CountOrders,
                 Total = _priceFormatter.FormatPrice(osPending.SumOrders, true, false),
-                ViewLink = Url.Action("List", "Order", new { orderStatusId = ((int)OrderStatus.Pending).ToString() })
+                ViewLink = Url.Action("List", "Order", new { orderStatusIds = string.Join(",", orderStatuses) })
             });
 
             var gridModel = new DataSourceResult
@@ -3985,9 +4055,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-
-
-
+        
         public ActionResult CountryReport()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
@@ -4005,6 +4073,7 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public ActionResult CountryReportList(DataSourceRequest command, CountryReportModel model)
         {
@@ -4044,6 +4113,125 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
+        [ChildActionOnly]
+	    public ActionResult OrderStatistics()
+	    {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            //a vendor doesn't have access to this report
+            if (_workContext.CurrentVendor != null)
+                return Content("");
+
+            return PartialView();
+	    }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult LoadOrderStatistics(string period)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            //a vendor doesn't have access to this report
+            if (_workContext.CurrentVendor != null)
+                return Content("");
+
+            var result = new List<object>();
+
+            var nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
+            var timeZone = _dateTimeHelper.CurrentTimeZone;
+
+            switch (period)
+            {
+                case "year":
+                    //year statistics
+                    var yearAgoRoundedDt = nowDt.AddYears(-1).AddMonths(1);
+                    var searchYearDateUser = new DateTime(yearAgoRoundedDt.Year, yearAgoRoundedDt.Month, 1);
+                    if (!timeZone.IsInvalidTime(searchYearDateUser))
+                    {
+                        DateTime searchYearDateUtc = _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone);
+
+                        for (int i = 0; i <= 12; i++)
+                        {
+                            result.Add(new
+                            {
+                                date = searchYearDateUser.Date.ToString("Y"),
+                                value = _orderService.SearchOrders(
+                                    createdFromUtc: searchYearDateUtc,
+                                    createdToUtc: searchYearDateUtc.AddMonths(1),
+                                    pageIndex: 0,
+                                    pageSize: 1).TotalCount.ToString()
+                            });
+
+                            searchYearDateUtc = searchYearDateUtc.AddMonths(1);
+                            searchYearDateUser = searchYearDateUser.AddMonths(1);
+                        }
+                    }
+                    break;
+
+                case "month":
+                    //month statistics
+                    var searchMonthDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-30).Month, nowDt.AddDays(-30).Day);
+                    if (!timeZone.IsInvalidTime(searchMonthDateUser))
+                    {
+                        DateTime searchMonthDateUtc = _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone);
+
+                        for (int i = 0; i <= 30; i++)
+                        {
+                            result.Add(new
+                            {
+                                date = searchMonthDateUser.Date.ToString("M"),
+                                value = _orderService.SearchOrders(
+                                    createdFromUtc: searchMonthDateUtc,
+                                    createdToUtc: searchMonthDateUtc.AddDays(1),
+                                    pageIndex: 0,
+                                    pageSize: 1).TotalCount.ToString()
+                            });
+
+                            searchMonthDateUtc = searchMonthDateUtc.AddDays(1);
+                            searchMonthDateUser = searchMonthDateUser.AddDays(1);
+                        }
+                    }
+                    break;
+
+                case "week":
+                default:
+                    //week statistics
+                    var searchWeekDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-7).Month, nowDt.AddDays(-7).Day);
+                    if (!timeZone.IsInvalidTime(searchWeekDateUser))
+                    {
+                        DateTime searchWeekDateUtc = _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone);
+
+                        for (int i = 0; i <= 7; i++)
+                        {
+                            result.Add(new
+                            {
+                                date = searchWeekDateUser.Date.ToString("d dddd"),
+                                value = _orderService.SearchOrders(
+                                    createdFromUtc: searchWeekDateUtc,
+                                    createdToUtc: searchWeekDateUtc.AddDays(1),
+                                    pageIndex: 0,
+                                    pageSize: 1).TotalCount.ToString()
+                            });
+
+                            searchWeekDateUtc = searchWeekDateUtc.AddDays(1);
+                            searchWeekDateUser = searchWeekDateUser.AddDays(1);
+                        }
+                    }
+                    break;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [ChildActionOnly]
+        public ActionResult LatestOrders()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            return PartialView();
+        }
 
         #endregion
 

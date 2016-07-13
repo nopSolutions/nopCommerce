@@ -5,7 +5,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Polls
 {
-    public class PollValidator : BaseNopValidator<PollModel>
+    public partial class PollValidator : BaseNopValidator<PollModel>
     {
         public PollValidator(ILocalizationService localizationService)
         {

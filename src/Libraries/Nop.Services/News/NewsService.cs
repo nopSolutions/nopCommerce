@@ -73,6 +73,17 @@ namespace Nop.Services.News
         }
 
         /// <summary>
+        /// Gets news
+        /// </summary>
+        /// <param name="newsIds">The news identifiers</param>
+        /// <returns>News</returns>
+        public virtual IList<NewsItem> GetNewsByIds(int[] newsIds)
+        {
+            var query = _newsItemRepository.Table;
+            return query.Where(p => newsIds.Contains(p.Id)).ToList();
+        }
+
+        /// <summary>
         /// Gets all news
         /// </summary>
         /// <param name="languageId">Language identifier; 0 if you want to get all records</param>
@@ -156,12 +167,12 @@ namespace Nop.Services.News
         /// <returns>Comments</returns>
         public virtual IList<NewsComment> GetAllComments(int customerId)
         {
-            var query = from c in _newsCommentRepository.Table
-                        orderby c.CreatedOnUtc
-                        where (customerId == 0 || c.CustomerId == customerId)
-                        select c;
-            var content = query.ToList();
-            return content;
+            var query = _newsCommentRepository.Table;
+            if (customerId > 0)
+                query = query.Where(nc => nc.CustomerId == customerId);
+            query = query.OrderBy(nc => nc.CreatedOnUtc);
+            var comments = query.ToList();
+            return comments;
         }
 
         /// <summary>
@@ -214,6 +225,17 @@ namespace Nop.Services.News
             _newsCommentRepository.Delete(newsComment);
         }
 
+        /// <summary>
+        /// Deletes a news comments
+        /// </summary>
+        /// <param name="newsComments">News comments</param>
+        public virtual void DeleteNewsComments(IList<NewsComment> newsComments)
+        {
+            if (newsComments == null)
+                throw new ArgumentNullException("newsComments");
+
+            _newsCommentRepository.Delete(newsComments);
+        }
         #endregion
     }
 }

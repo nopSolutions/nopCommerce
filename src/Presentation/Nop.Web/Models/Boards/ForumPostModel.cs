@@ -12,7 +12,7 @@ namespace Nop.Web.Models.Boards
 
         public bool IsCurrentCustomerAllowedToEditPost { get; set; }
         public bool IsCurrentCustomerAllowedToDeletePost { get; set; }
-        
+
         public int CustomerId { get; set; }
         public bool AllowViewingProfiles { get; set; }
         public string CustomerAvatarUrl { get; set; }
@@ -37,5 +37,8 @@ namespace Nop.Web.Models.Boards
 
         public int CurrentTopicPage { get; set; }
 
+        public bool AllowPostVoting { get; set; }
+        public int VoteCount { get; set; }
+        public bool? VoteIsUp { get; set; }
     }
 }

@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
+using Nop.Admin.Helpers;
 using Nop.Admin.Models.Catalog;
+using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
@@ -47,9 +51,12 @@ namespace Nop.Admin.Controllers
         private readonly IAclService _aclService; 
         private readonly IPermissionService _permissionService;
         private readonly CatalogSettings _catalogSettings;
+        private readonly IWorkContext _workContext;
+        private readonly IImportManager _importManager;
+        private readonly ICacheManager _cacheManager;
 
         #endregion
-        
+
         #region Constructors
 
         public ManufacturerController(ICategoryService categoryService, 
@@ -70,7 +77,10 @@ namespace Nop.Admin.Controllers
             IVendorService vendorService,
             IAclService aclService,
             IPermissionService permissionService,
-            CatalogSettings catalogSettings)
+            CatalogSettings catalogSettings,
+            IWorkContext workContext,
+            IImportManager importManager, 
+            ICacheManager cacheManager)
         {
             this._categoryService = categoryService;
             this._manufacturerTemplateService = manufacturerTemplateService;
@@ -91,6 +101,9 @@ namespace Nop.Admin.Controllers
             this._aclService = aclService;
             this._permissionService = permissionService;
             this._catalogSettings = catalogSettings;
+            this._workContext = workContext;
+            this._importManager = importManager;
+            this._cacheManager = cacheManager;
         }
 
         #endregion
@@ -274,6 +287,9 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new ManufacturerListModel();
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
             return View(model);
         }
 
@@ -284,7 +300,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var manufacturers = _manufacturerService.GetAllManufacturers(model.SearchManufacturerName,
-                command.Page - 1, command.PageSize, true);
+                model.SearchStoreId, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
                 Data = manufacturers.Select(x => x.ToModel()),
@@ -359,7 +375,15 @@ namespace Nop.Admin.Controllers
                 _customerActivityService.InsertActivity("AddNewManufacturer", _localizationService.GetResource("ActivityLog.AddNewManufacturer"), manufacturer.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = manufacturer.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = manufacturer.Id });
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
@@ -470,7 +494,7 @@ namespace Nop.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    SaveSelectedTabName();
 
                     return RedirectToAction("Edit",  new {id = manufacturer.Id});
                 }
@@ -525,6 +549,56 @@ namespace Nop.Admin.Controllers
                 var manufacturers = _manufacturerService.GetAllManufacturers(showHidden: true);
                 var xml = _exportManager.ExportManufacturersToXml(manufacturers);
                 return new XmlDownloadResult(xml, "manufacturers.xml");
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
+        }
+
+        public ActionResult ExportXlsx()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+                return AccessDeniedView();
+
+            try
+            {
+                var bytes = _exportManager.ExportManufacturersToXlsx(_manufacturerService.GetAllManufacturers(showHidden: true).Where(p=>!p.Deleted));
+                 
+                return File(bytes, MimeTypes.TextXlsx, "manufacturers.xlsx");
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ImportFromXlsx()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+                return AccessDeniedView();
+
+            //a vendor cannot import manufacturers
+            if (_workContext.CurrentVendor != null)
+                return AccessDeniedView();
+
+            try
+            {
+                var file = Request.Files["importexcelfile"];
+                if (file != null && file.ContentLength > 0)
+                {
+                    _importManager.ImportManufacturersFromXlsx(file.InputStream);
+                }
+                else
+                {
+                    ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
+                    return RedirectToAction("List");
+                }
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Imported"));
+                return RedirectToAction("List");
             }
             catch (Exception exc)
             {
@@ -606,9 +680,9 @@ namespace Nop.Admin.Controllers
             var model = new ManufacturerModel.AddManufacturerProductModel();
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
+            var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(c);
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -693,5 +767,7 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
+
+        
     }
 }

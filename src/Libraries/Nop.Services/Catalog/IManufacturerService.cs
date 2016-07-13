@@ -19,11 +19,13 @@ namespace Nop.Services.Catalog
         /// Gets all manufacturers
         /// </summary>
         /// <param name="manufacturerName">Manufacturer name</param>
+        /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Manufacturers</returns>
         IPagedList<Manufacturer> GetAllManufacturers(string manufacturerName = "",
+            int storeId = 0,
             int pageIndex = 0,
             int pageSize = int.MaxValue,
             bool showHidden = false);
@@ -91,5 +93,19 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
         void UpdateProductManufacturer(ProductManufacturer productManufacturer);
+
+        /// <summary>
+        /// Get manufacturer IDs for products
+        /// </summary>
+        /// <param name="productIds">Products IDs</param>
+        /// <returns>Manufacturer IDs for products</returns>
+        IDictionary<int, int[]> GetProductManufacturerIds(int[] productIds);
+
+        /// <summary>
+        /// Returns a list of IDs of not existing manufacturers
+        /// </summary>
+        /// <param name="manufacturerIds">The IDs of the manufacturers to check</param>
+        /// <returns>List of IDs not existing manufacturers</returns>
+        int[] GetNotExistingManufacturers(int[] manufacturerIds);
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
@@ -54,7 +55,7 @@ namespace Nop.Core.Domain.Orders
             }
 
             //add at least one tax rate (0%)
-            if (taxRatesDictionary.Count == 0)
+            if (!taxRatesDictionary.Any())
                 taxRatesDictionary.Add(decimal.Zero, decimal.Zero);
 
             return taxRatesDictionary;

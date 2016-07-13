@@ -214,6 +214,8 @@ namespace Nop.Services.Messages
         /// Gets the newsletter subscription list
         /// </summary>
         /// <param name="email">Email to search or string. Empty to load all records.</param>
+        /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="storeId">Store identifier. 0 to load all records.</param>
         /// <param name="customerRoleId">Customer role identifier. Used to filter subscribers by customer role. 0 to load all records.</param>
         /// <param name="isActive">Value indicating whether subscriber record should be active or not; null to load all records</param>
@@ -221,6 +223,7 @@ namespace Nop.Services.Messages
         /// <param name="pageSize">Page size</param>
         /// <returns>NewsLetterSubscription entities</returns>
         public virtual IPagedList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email = null,
+            DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int storeId = 0, bool? isActive = null, int customerRoleId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -230,6 +233,10 @@ namespace Nop.Services.Messages
                 var query = _subscriptionRepository.Table;
                 if (!String.IsNullOrEmpty(email))
                     query = query.Where(nls => nls.Email.Contains(email));
+                if (createdFromUtc.HasValue)
+                    query = query.Where(nls => nls.CreatedOnUtc >= createdFromUtc.Value);
+                if (createdToUtc.HasValue)
+                    query = query.Where(nls => nls.CreatedOnUtc <= createdToUtc.Value);
                 if (storeId > 0)
                     query = query.Where(nls => nls.StoreId == storeId);
                 if (isActive.HasValue)
@@ -252,6 +259,10 @@ namespace Nop.Services.Messages
                     var query = _subscriptionRepository.Table;
                     if (!String.IsNullOrEmpty(email))
                         query = query.Where(nls => nls.Email.Contains(email));
+                    if (createdFromUtc.HasValue)
+                        query = query.Where(nls => nls.CreatedOnUtc >= createdFromUtc.Value);
+                    if (createdToUtc.HasValue)
+                        query = query.Where(nls => nls.CreatedOnUtc <= createdToUtc.Value);
                     if (storeId > 0)
                         query = query.Where(nls => nls.StoreId == storeId);
                     if (isActive.HasValue)
@@ -276,6 +287,10 @@ namespace Nop.Services.Messages
                     query = query.Where(x => x.Customer.CustomerRoles.Any(cr => cr.Id == customerRoleId));
                     if (!String.IsNullOrEmpty(email))
                         query = query.Where(x => x.NewsletterSubscribers.Email.Contains(email));
+                    if (createdFromUtc.HasValue)
+                        query = query.Where(x => x.NewsletterSubscribers.CreatedOnUtc >= createdFromUtc.Value);
+                    if (createdToUtc.HasValue)
+                        query = query.Where(x => x.NewsletterSubscribers.CreatedOnUtc <= createdToUtc.Value);
                     if (storeId > 0)
                         query = query.Where(x => x.NewsletterSubscribers.StoreId == storeId);
                     if (isActive.HasValue)

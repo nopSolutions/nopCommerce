@@ -30,6 +30,14 @@ namespace Nop.Services.Logging
         }
 
         /// <summary>
+        /// Deletes a log items
+        /// </summary>
+        /// <param name="logs">Log items</param>
+        public virtual void DeleteLogs(IList<Log> logs)
+        {
+        }
+
+        /// <summary>
         /// Clears a log
         /// </summary>
         public virtual void ClearLog()

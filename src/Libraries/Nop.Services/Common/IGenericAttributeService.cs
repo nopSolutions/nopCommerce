@@ -16,6 +16,12 @@ namespace Nop.Services.Common
         void DeleteAttribute(GenericAttribute attribute);
 
         /// <summary>
+        /// Deletes an attributes
+        /// </summary>
+        /// <param name="attributes">Attributes</param>
+        void DeleteAttributes(IList<GenericAttribute> attributes);
+
+        /// <summary>
         /// Gets an attribute
         /// </summary>
         /// <param name="attributeId">Attribute identifier</param>

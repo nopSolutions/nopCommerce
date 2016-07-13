@@ -35,22 +35,20 @@ namespace Nop.Services.Orders
         /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
         /// <param name="orderId">Order identifier; pass 0 to ignore this parameter</param>
         /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
-        /// <param name="os">Order status</param>
-        /// <param name="ps">Payment status</param>
-        /// <param name="ss">Shipping status</param>
+        /// <param name="osIds">Order status identifiers</param>
+        /// <param name="psIds">Payment status identifiers</param>
+        /// <param name="ssIds">Shipping status identifiers</param>
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
-        /// <param name="ignoreCancelledOrders">A value indicating whether to ignore cancelled orders</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
         OrderAverageReportLine GetOrderAverageReportLine(int storeId = 0, int vendorId = 0,
             int billingCountryId = 0, int orderId = 0, string paymentMethodSystemName = null,
-            OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
+            List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
-            string billingEmail = null, string billingLastName = "", 
-            bool ignoreCancelledOrders = false, string orderNotes = null);
+            string billingEmail = null, string billingLastName = "", string orderNotes = null);
         
         /// <summary>
         /// Get order average report
@@ -87,17 +85,18 @@ namespace Nop.Services.Orders
             int orderBy = 1,
             int pageIndex = 0, int pageSize = int.MaxValue,
             bool showHidden = false);
-        
+
         /// <summary>
         /// Gets a list of products (identifiers) purchased by other customers who purchased a specified product
         /// </summary>
         /// <param name="storeId">Store identifier</param>
         /// <param name="productId">Product identifier</param>
         /// <param name="recordsToReturn">Records to return</param>
+        /// <param name="visibleIndividuallyOnly">A values indicating whether to load only products marked as "visible individually"; "false" to load all records; "true" to load "visible individually" only</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
         int[] GetAlsoPurchasedProductsIds(int storeId, int productId,
-            int recordsToReturn = 5, bool showHidden = false);
+            int recordsToReturn = 5, bool visibleIndividuallyOnly = true, bool showHidden = false);
 
         /// <summary>
         /// Gets a list of products that were never sold
@@ -123,16 +122,16 @@ namespace Nop.Services.Orders
         /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
-        /// <param name="os">Order status; null to load all records</param>
-        /// <param name="ps">Order payment status; null to load all records</param>
-        /// <param name="ss">Shipping status; null to load all records</param>
+        /// <param name="osIds">Order status identifiers; null to load all records</param>
+        /// <param name="psIds">Payment status identifiers; null to load all records</param>
+        /// <param name="ssIds">Shipping status identifiers; null to load all records</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
         decimal ProfitReport(int storeId = 0, int vendorId = 0,
             int billingCountryId = 0, int orderId = 0, string paymentMethodSystemName = null,
-            OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
+            List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
             string billingEmail = null, string billingLastName = "", string orderNotes = null);
     }

@@ -155,14 +155,6 @@ namespace Nop.Services.Payments
         CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest);
 
 
-
-        /// <summary>
-        /// Gets a payment method type
-        /// </summary>
-        /// <param name="paymentMethodSystemName">Payment method system name</param>
-        /// <returns>A payment method type</returns>
-        PaymentMethodType GetPaymentMethodType(string paymentMethodSystemName);
-
         /// <summary>
         /// Gets masked credit card number
         /// </summary>

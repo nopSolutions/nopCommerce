@@ -162,3 +162,4 @@ src/Presentation/Nop.Web/Plugins/*
 src/Presentation/Nop.Web/Content/Images/Thumbs/*
 src/Presentation/Nop.Web/App_Data/InstalledPlugins.txt
 src/Presentation/Nop.Web/App_Data/Settings.txt
+src/Presentation/Nop.Web/Administration/db_backups/*.bak

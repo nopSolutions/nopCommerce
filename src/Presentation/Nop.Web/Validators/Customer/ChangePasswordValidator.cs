@@ -6,7 +6,7 @@ using Nop.Web.Models.Customer;
 
 namespace Nop.Web.Validators.Customer
 {
-    public class ChangePasswordValidator : BaseNopValidator<ChangePasswordModel>
+    public partial class ChangePasswordValidator : BaseNopValidator<ChangePasswordModel>
     {
         public ChangePasswordValidator(ILocalizationService localizationService, CustomerSettings customerSettings)
         {

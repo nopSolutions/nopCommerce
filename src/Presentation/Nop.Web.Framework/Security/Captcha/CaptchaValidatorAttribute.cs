@@ -7,24 +7,25 @@ namespace Nop.Web.Framework.Security.Captcha
     {
         private const string CHALLENGE_FIELD_KEY = "recaptcha_challenge_field";
         private const string RESPONSE_FIELD_KEY = "recaptcha_response_field";
+        private const string G_RESPONSE_FIELD_KEY = "g-recaptcha-response";
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             bool valid = false;
             var captchaChallengeValue = filterContext.HttpContext.Request.Form[CHALLENGE_FIELD_KEY];
             var captchaResponseValue = filterContext.HttpContext.Request.Form[RESPONSE_FIELD_KEY];
-            if (!string.IsNullOrEmpty(captchaChallengeValue) && !string.IsNullOrEmpty(captchaResponseValue))
+            var gCaptchaResponseValue = filterContext.HttpContext.Request.Form[G_RESPONSE_FIELD_KEY];
+            if ((!string.IsNullOrEmpty(captchaChallengeValue) && !string.IsNullOrEmpty(captchaResponseValue)) || !string.IsNullOrEmpty(gCaptchaResponseValue))
             {
                 var captchaSettings = EngineContext.Current.Resolve<CaptchaSettings>();
                 if (captchaSettings.Enabled)
                 {
-                    //validate captcha
-                    var captchaValidtor = new Recaptcha.RecaptchaValidator
+                    var captchaValidtor = new GReCaptchaValidator(captchaSettings.ReCaptchaVersion)
                     {
-                        PrivateKey = captchaSettings.ReCaptchaPrivateKey,
-                        RemoteIP = filterContext.HttpContext.Request.UserHostAddress,
-                        Challenge = captchaChallengeValue,
-                        Response = captchaResponseValue
+                        SecretKey = captchaSettings.ReCaptchaPrivateKey,
+                        RemoteIp = filterContext.HttpContext.Request.UserHostAddress,
+                        Response = captchaResponseValue ?? gCaptchaResponseValue,
+                        Challenge = captchaChallengeValue
                     };
 
                     var recaptchaResponse = captchaValidtor.Validate();

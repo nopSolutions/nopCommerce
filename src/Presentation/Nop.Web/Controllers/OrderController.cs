@@ -305,7 +305,7 @@ namespace Nop.Web.Controllers
                 }
                 else
                 {
-                    displayTaxRates = _taxSettings.DisplayTaxRates && order.TaxRatesDictionary.Count > 0;
+                    displayTaxRates = _taxSettings.DisplayTaxRates && order.TaxRatesDictionary.Any();
                     displayTax = !displayTaxRates;
 
                     var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
@@ -376,7 +376,7 @@ namespace Nop.Web.Controllers
 
             //purchased products
             model.ShowSku = _catalogSettings.ShowProductSku;
-            var orderItems = _orderService.GetAllOrderItems(order.Id, null, null, null, null, null, null);
+            var orderItems = order.OrderItems;
             foreach (var orderItem in orderItems)
             {
                 var orderItemModel = new OrderDetailsModel.OrderItemModel
@@ -662,7 +662,7 @@ namespace Nop.Web.Controllers
                 _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
-            return File(bytes, "application/pdf", string.Format("order_{0}.pdf", order.Id));
+            return File(bytes, MimeTypes.ApplicationPdf, string.Format("order_{0}.pdf", order.Id));
         }
 
         //My account / Order details page / re-order

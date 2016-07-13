@@ -170,7 +170,14 @@ namespace Nop.Services.Catalog
                         else
                         {
                             //no combination configured
-                            stockMessage = localizationService.GetResource("Products.Availability.InStock");
+                            if (product.AllowAddingOnlyExistingAttributeCombinations)
+                            {
+                                stockMessage = localizationService.GetResource("Products.Availability.OutOfStock");
+                            }
+                            else
+                            {
+                                stockMessage = localizationService.GetResource("Products.Availability.InStock");
+                            }
                         }
 
                         #endregion

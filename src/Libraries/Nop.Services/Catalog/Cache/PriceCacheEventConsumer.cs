@@ -53,13 +53,14 @@ namespace Nop.Services.Catalog.Cache
         /// </summary>
         /// <remarks>
         /// {0} : product id
-        /// {1} : additional charge
-        /// {2} : include discounts (true, false)
-        /// {3} : quantity
-        /// {4} : roles of the current user
-        /// {5} : current store ID
+        /// {1} : overridden product price
+        /// {2} : additional charge
+        /// {3} : include discounts (true, false)
+        /// {4} : quantity
+        /// {5} : roles of the current user
+        /// {6} : current store ID
         /// </remarks>
-        public const string PRODUCT_PRICE_MODEL_KEY = "Nop.totals.productprice-{0}-{1}-{2}-{3}-{4}-{5}";
+        public const string PRODUCT_PRICE_MODEL_KEY = "Nop.totals.productprice-{0}-{1}-{2}-{3}-{4}-{5}-{6}";
         public const string PRODUCT_PRICE_PATTERN_KEY = "Nop.totals.productprice";
 
         /// <summary>

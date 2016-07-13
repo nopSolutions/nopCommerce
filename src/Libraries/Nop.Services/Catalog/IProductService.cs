@@ -21,6 +21,12 @@ namespace Nop.Services.Catalog
         void DeleteProduct(Product product);
 
         /// <summary>
+        /// Delete products
+        /// </summary>
+        /// <param name="products">Products</param>
+        void DeleteProducts(IList<Product> products);
+
+        /// <summary>
         /// Gets all products displayed on the home page
         /// </summary>
         /// <returns>Products</returns>
@@ -53,12 +59,18 @@ namespace Nop.Services.Catalog
         void UpdateProduct(Product product);
 
         /// <summary>
-        /// Get (visible) product number in certain category
+        /// Updates the products
+        /// </summary>
+        /// <param name="products">Product</param>
+        void UpdateProducts(IList<Product> products);
+
+        /// <summary>
+        /// Get number of product (published and visible) in certain category
         /// </summary>
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
-        /// <returns>Product number</returns>
-        int GetCategoryProductNumber(IList<int> categoryIds = null, int storeId = 0);
+        /// <returns>Number of products</returns>
+        int GetNumberOfProductsInCategory(IList<int> categoryIds = null, int storeId = 0);
 
         /// <summary>
         /// Search products
@@ -79,6 +91,7 @@ namespace Nop.Services.Catalog
         /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
+        /// <param name="searchManufacturerPartNumber">A value indicating whether to search by a specified "keyword" in manufacturer part number</param>
         /// <param name="searchSku">A value indicating whether to search by a specified "keyword" in product SKU</param>
         /// <param name="searchProductTags">A value indicating whether to search by a specified "keyword" in product tags</param>
         /// <param name="languageId">Language identifier (search for text searching)</param>
@@ -108,6 +121,7 @@ namespace Nop.Services.Catalog
             int productTagId = 0,
             string keywords = null,
             bool searchDescriptions = false,
+            bool searchManufacturerPartNumber = true,
             bool searchSku = true,
             bool searchProductTags = false,
             int languageId = 0,
@@ -137,6 +151,7 @@ namespace Nop.Services.Catalog
         /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
+        /// <param name="searchManufacturerPartNumber">A value indicating whether to search by a specified "keyword" in manufacturer part number</param>
         /// <param name="searchSku">A value indicating whether to search by a specified "keyword" in product SKU</param>
         /// <param name="searchProductTags">A value indicating whether to search by a specified "keyword" in product tags</param>
         /// <param name="languageId">Language identifier (search for text searching)</param>
@@ -168,6 +183,7 @@ namespace Nop.Services.Catalog
             int productTagId = 0,
             string keywords = null,
             bool searchDescriptions = false,
+            bool searchManufacturerPartNumber = true,
             bool searchSku = true,
             bool searchProductTags = false, 
             int languageId = 0,
@@ -207,11 +223,21 @@ namespace Nop.Services.Catalog
         /// Get low stock products
         /// </summary>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
-        /// <param name="products">Low stock products</param>
-        /// <param name="combinations">Low stock attribute combinations</param>
-        void GetLowStockProducts(int vendorId,
-            out IList<Product> products,
-            out IList<ProductAttributeCombination> combinations);
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Products</returns>
+        IPagedList<Product> GetLowStockProducts(int vendorId = 0,
+            int pageIndex = 0, int pageSize = int.MaxValue);
+
+        /// <summary>
+        /// Get low stock product combinations
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Product combinations</returns>
+        IPagedList<ProductAttributeCombination> GetLowStockProductCombinations(int vendorId = 0,
+            int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets a product by SKU
@@ -219,6 +245,13 @@ namespace Nop.Services.Catalog
         /// <param name="sku">SKU</param>
         /// <returns>Product</returns>
         Product GetProductBySku(string sku);
+
+        /// <summary>
+        /// Gets a products by SKU array
+        /// </summary>
+        /// <param name="skuArray">SKU array</param>
+        /// <returns>Products</returns>
+        IList<Product> GetProductsBySku(string[] skuArray);
 
         /// <summary>
         /// Update HasTierPrices property (used for performance optimization)
@@ -231,6 +264,13 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         void UpdateHasDiscountsApplied(Product product);
+
+        /// <summary>
+        /// Gets number of products by vendor identifier
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier</param>
+        /// <returns>Number of products</returns>
+        int GetNumberOfProductsByVendorId(int vendorId);
 
         #endregion
 
@@ -421,6 +461,13 @@ namespace Nop.Services.Catalog
         /// <param name="productPicture">Product picture</param>
         void UpdateProductPicture(ProductPicture productPicture);
 
+        /// <summary>
+        /// Get the IDs of all product images 
+        /// </summary>
+        /// <param name="productsIds">Products IDs</param>
+        /// <returns>All picture identifiers grouped by product ID</returns>
+        IDictionary<int, int[]> GetProductsImagesIds(int [] productsIds);
+
         #endregion
 
         #region Product reviews
@@ -433,10 +480,15 @@ namespace Nop.Services.Catalog
         /// <param name="fromUtc">Item creation from; null to load all records</param>
         /// <param name="toUtc">Item item creation to; null to load all records</param>
         /// <param name="message">Search title or review text; null to load all records</param>
+        /// <param name="storeId">The store identifier; pass 0 to load all records</param>
+        /// <param name="productId">The product identifier; pass 0 to load all records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Reviews</returns>
-        IList<ProductReview> GetAllProductReviews(int customerId, bool? approved,
+        IPagedList<ProductReview> GetAllProductReviews(int customerId, bool? approved,
             DateTime? fromUtc = null, DateTime? toUtc = null,
-            string message = null);
+            string message = null, int storeId = 0, int productId = 0, 
+            int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets product review
@@ -457,6 +509,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReview">Product review</param>
         void DeleteProductReview(ProductReview productReview);
+
+        /// <summary>
+        /// Deletes product reviews
+        /// </summary>
+        /// <param name="productReviews">Product reviews</param>
+        void DeleteProductReviews(IList<ProductReview> productReviews);
 
         #endregion
 

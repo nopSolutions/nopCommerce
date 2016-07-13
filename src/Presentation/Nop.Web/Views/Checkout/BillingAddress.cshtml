@@ -5,6 +5,9 @@
 
     //title
     Html.AddTitleParts(T("PageTitle.Checkout").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-checkout-page");
+    Html.AppendPageCssClassParts("html-billing-address-page");
 }
 <div class="page checkout-page billing-address-page">
     @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Address })
@@ -16,6 +19,15 @@
         {
             <div class="billing-addresses">
                 @Html.Widget("checkout_billing_address_top")
+                @if (Model.ShipToSameAddressAllowed)
+                {
+                    <div class="section ship-to-same-address">
+                        <div class="selector">
+                            @Html.CheckBoxFor(x => x.ShipToSameAddress)
+                            <label for="@Html.FieldIdFor(model => model.ShipToSameAddress)">@T("Checkout.ShipToSameAddress")</label>
+                        </div>
+                    </div>
+                }
                 @if (Model.ExistingAddresses.Count > 0)
                 {
                     <div class="section select-billing-address">
@@ -101,7 +113,16 @@
                                         }
                                     </ul>
                                     <div class="select-button">
-                                        <input type="button" value="@T("Checkout.BillToThisAddress")" class="button-1 select-billing-address-button" onclick="setLocation('@Url.RouteUrl("CheckoutSelectBillingAddress", new {addressId = item.Id})') " />
+                                        <input type="button" value="@T("Checkout.BillToThisAddress")" class="button-1 select-billing-address-button" onclick="selectBillingAddress@(item.Id)()"/>
+                                        <script type="text/javascript">
+                                            function selectBillingAddress@(item.Id)() {
+                                                if ($('#@Html.FieldIdFor(model => model.ShipToSameAddress)').is(':checked')) {
+                                                    setLocation('@Html.Raw(Url.RouteUrl("CheckoutSelectBillingAddress", new {addressId = item.Id, shipToSameAddress = "true"}))');
+                                                } else {
+                                                    setLocation('@Url.RouteUrl("CheckoutSelectBillingAddress", new {addressId = item.Id })');
+                                                }
+                                            }
+                                        </script>
                                     </div>
                                 </div>
                             }

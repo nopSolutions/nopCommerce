@@ -116,7 +116,7 @@ namespace Nop.Admin.Controllers
                     model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (affiliate != null && c.Id == affiliate.Address.CountryId) });
 
                 var states = model.Address.CountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId.Value, showHidden: true).ToList() : new List<StateProvince>();
-                if (states.Count > 0)
+                if (states.Any())
                 {
                     foreach (var s in states)
                         model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (affiliate != null && s.Id == affiliate.Address.StateProvinceId) });
@@ -262,7 +262,7 @@ namespace Nop.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    SaveSelectedTabName();
 
                     return RedirectToAction("Edit", new {id = affiliate.Id});
                 }
@@ -333,16 +333,16 @@ namespace Nop.Admin.Controllers
             DateTime? endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
-            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
-            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+            var orderStatusIds = model.OrderStatusId > 0 ? new List<int>() { model.OrderStatusId } : null;
+            var paymentStatusIds = model.PaymentStatusId > 0 ? new List<int>() { model.PaymentStatusId } : null;
+            var shippingStatusIds = model.ShippingStatusId > 0 ? new List<int>() { model.ShippingStatusId } : null;
 
             var orders = _orderService.SearchOrders(
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
-                os: orderStatus,
-                ps: paymentStatus,
-                ss: shippingStatus, 
+                osIds: orderStatusIds,
+                psIds: paymentStatusIds,
+                ssIds: shippingStatusIds,
                 affiliateId: affiliate.Id,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
@@ -353,6 +353,7 @@ namespace Nop.Admin.Controllers
                         var orderModel = new AffiliateModel.AffiliatedOrderModel();
                         orderModel.Id = order.Id;
                         orderModel.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
+                        orderModel.OrderStatusId = order.OrderStatusId;
                         orderModel.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
                         orderModel.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
                         orderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);

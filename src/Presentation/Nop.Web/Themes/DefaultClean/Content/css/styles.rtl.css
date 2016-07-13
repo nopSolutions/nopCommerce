@@ -15,7 +15,7 @@
 	box-sizing: border-box;
 }
 html {
-	margin: 0 !important;
+	margin: 0;
 	-webkit-text-size-adjust: none;
 }
 ol, ul {
@@ -354,6 +354,23 @@ label, label + * {
     white-space: nowrap;
 	font-weight: normal;
 }
+.forum-table th.replies,
+.forum-table th.views,
+.forum-table th.votes,
+.forum-table th.latest-post,
+.forum-table th.topics,
+.forum-table th.posts,
+.forum-table td.replies,
+.forum-table td.views,
+.forum-table td.votes,
+.forum-table td.latest-post,
+.forum-table td.topics,
+.forum-table td.posts{
+    display: none;
+}
+.forum-table td.image {
+    min-width: 0;
+}
 .cart td,
 .data-table td,
 .forum-table td {
@@ -367,6 +384,7 @@ label, label + * {
 }
 .forum-table td {
 	min-width: 90px;
+    padding: 10px;
 }
 .cart a,
 .data-table a,
@@ -383,10 +401,12 @@ label, label + * {
 .data-table .product,
 .data-table .message,
 .data-table .info,
-.data-table .name,
+.data-table .name {
+    min-width: 225px;
+	text-align: right;
+}
 .forum-table .forum-details,
 .forum-table .topic-details {
-	min-width: 225px;
 	text-align: right;
 }
 .cart .product a,
@@ -514,7 +534,6 @@ label, label + * {
 }
 
 .ui-dialog {
-	width: 350px !important;
 	max-width: 90%;
 	border: 1px solid #ddd;
 	box-shadow: 0 0 2px rgba(0,0,0,0.15);
@@ -586,8 +605,38 @@ label, label + * {
 	line-height: 20px;
 	/*override jQuery UI styles, do not delete doubled properties*/
 	background-color: #fff !important;
-	padding: 15px !important;
+	padding: 15px 15px 20px 15px !important;
 	color: #777;
+}
+.ui-dialog-content .page{
+    min-height: 0;
+}
+.ui-dialog-content .page-title{
+    min-height: 0;
+    margin: 0 0 15px;
+    padding: 0px 10px 10px 10px;
+    text-align: center;
+}
+.ui-dialog-content .page-title h1{
+    font-size: 24px;
+    line-height: 30px;
+}
+.ui-dialog-content .back-in-stock-subscription-page {
+    text-align: center;
+}
+.ui-dialog-content .back-in-stock-subscription-page .tooltip{
+    margin-bottom: 10px;
+}
+.ui-dialog-content .back-in-stock-subscription-page .button-1{
+	border: none;
+	background-color: #4ab2f1;
+    padding: 10px 15px;
+	font-size: 15px;
+	color: #fff;
+	text-transform: uppercase;
+}
+.ui-dialog-content .back-in-stock-subscription-page .button-1:hover {
+    background-color: #248ece;
 }
 
 .eu-cookie-bar-notification {
@@ -1322,6 +1371,9 @@ label, label + * {
 	height: 5px;
 	background-color: #ddd;
 }
+.product-filter .group li.color-item:before {
+	top: 25px;
+}
 
 .filtered-items .title {
 	margin: 0 0 5px;
@@ -1809,18 +1861,6 @@ label, label + * {
 .variant-overview .availability .back-in-stock-subscription {
 	display: inline-block;
 }
-.back-in-stock-subscription-page .notify-me-button {
-	margin: 15px 0 0;
-	border: none;
-	background-color: #4ab2f1;
-    padding: 10px 15px;
-	font-size: 15px;
-	color: #fff;
-	text-transform: uppercase;
-}
-.back-in-stock-subscription-page .notify-me-button:hover {
-	background-color: #248ece;
-}
 .overview .additional-details,
 .variant-overview .additional-details {
 	margin: 0 0 20px;
@@ -2229,7 +2269,63 @@ label, label + * {
 	z-index: -1;
 	margin: -32px 0 0;
 }
-
+.tooltip-container {
+    position: absolute;
+    width: 200px;
+    color: #000000;
+    background: #FFFFFF;
+    border: 1px solid #eeeeee;
+    text-align: center;
+    visibility: hidden;
+    border-radius: 5px;
+}
+.tooltip-container:before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    right: 50%;
+    margin-right: -7px;
+    width: 0; height: 0;
+    border-bottom: 7px solid #eeeeee;
+    border-right: 7px solid transparent;
+    border-left: 7px solid transparent;
+}
+.tooltip-container:after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    right: 50%;
+    margin-right: -6px;
+    width: 0; height: 0;
+    border-bottom: 6px solid #FFFFFF;
+    border-right: 6px solid transparent;
+    border-left: 6px solid transparent;
+}
+.color-squares li:hover .tooltip-container {
+    visibility: visible;
+    margin-right: -83px;
+    margin-top: 5px;
+    z-index: 999;
+}
+.tooltip-container .tooltip-header {
+    background-color:#F6F6F6;
+    height:25px;
+    border-top-right-radius:4px;
+    border-top-left-radius:4px;
+    padding-right:10px;
+    padding-top:5px;
+    text-align:left;
+    width: 198px;
+    font-size: 15px;
+    border-bottom: 1px #EEEEEE solid;
+}
+.tooltip-container .tooltip-body {
+    margin:5px;
+}
+.tooltip-container .tooltip-body img {
+    border: 0px #FFF;
+    width: 190px;
+}
 .giftcard {
 	margin: 0 0 20px;
 	overflow: hidden;
@@ -2750,6 +2846,16 @@ label, label + * {
 	font-size: 16px;
 	color: #4cb17c;
 }
+.customer-info-page .vat-status {
+    margin: 0 5px;
+    font-size: 14px;
+}
+.registration-page .vat-note,
+.customer-info-page .vat-note {
+    display: block;
+    font-size: 14px;
+    margin-top: 5px;
+}
 
 .login-page .customer-blocks {
 	margin: 0 0 30px;
@@ -3015,6 +3121,26 @@ label, label + * {
 	color: #444;
 }
 
+.vendorinfo-page .button-2 {
+    border: medium none;
+    background-color: #888;
+    padding: 10px 15px;
+    font-size: 14px;
+    color: #fff;
+    text-transform: uppercase;
+}
+.vendorinfo-page .button-2:hover {
+	background-color: #999;
+}
+.vendorinfo-page .vendor-picture {
+    width: 400px;
+    margin: 0 auto;
+}
+.vendorinfo-page .vendor-picture * {
+    display: block;
+    margin-top: 15px;
+}
+
 
 /********** SHOPPING CART **********/
 
@@ -3122,7 +3248,7 @@ label, label + * {
 }
 .checkout-attributes input[type="text"],
 .checkout-attributes select {
-	min-width: 200px;
+	min-width: 170px;
 }
 .checkout-attributes ul {
 	font-size: 0;
@@ -3405,6 +3531,16 @@ label, label + * {
     padding: 30px 15px;
 }
 
+.checkout-page .ship-to-same-address {
+	padding: 30px 0;
+	text-align: center;
+}
+.checkout-page .ship-to-same-address .selector {
+	margin: 0 0 5px;
+	font-weight: bold;
+	color: #444;
+}
+
 .checkout-page .pickup-in-store {
 	padding: 30px 0;
 	text-align: center;
@@ -3501,7 +3637,7 @@ label, label + * {
 }
 
 .order-review-data ul,
-.order-details-area ul,
+.order-details-area > div,
 .shipment-details-area ul {
 	width: 350px;
 	max-width: 100%;
@@ -3527,6 +3663,9 @@ label, label + * {
 .order-details-area .title:first-child,
 .shipment-details-area .title:first-child {
 	margin-top: 0;
+}
+.order-details-area .side-list-wrap {
+    margin-top: 20px;
 }
 .order-completed .details {
 	margin: 0 0 30px;
@@ -3618,6 +3757,10 @@ label, label + * {
 	display: block;
 	margin: 10px 0 0;
     background: none;
+}
+.opc .section.ship-to-same-address {
+	margin: 0 0 30px;
+	padding: 0;
 }
 .opc .section.pickup-in-store {
 	margin: 0 0 30px;
@@ -3736,7 +3879,7 @@ label, label + * {
 }
 .order-details-page .actions input {
 	display: inline-block;
-	min-width: 180px;
+	min-width: 165px;
 	margin: 5px;
 	border: none;
 	background-color: #aaa;
@@ -3755,10 +3898,13 @@ label, label + * {
 	background-color: #248ece;
 }
 
+.order-details-page .totals.section {
+    width: 370px;
+    padding: 0 10px;
+    max-width: 100%;
+    margin: 0 auto 50px;
+}
 .order-details-page .total-info {
-	width: 350px;
-	max-width: 100%;
-	margin: 0 auto 50px;
 	background-color: #f9f9f9;
 	padding: 15px 20px;
 	color: #444;
@@ -4485,6 +4631,13 @@ label, label + * {
 	padding: 0 10px 20px;
 	line-height: 22px;
 	color: #444;
+    margin-bottom: 0;
+}
+
+.topic-post .post-vote{
+    text-align: center;
+    display: table;
+    margin: 0 auto 20px;
 }
 
 .topic-post .user-posted-image,
@@ -4507,6 +4660,28 @@ label, label + * {
     font-style: italic;
 }
 
+.topic-post .post-vote span.vote {
+	cursor: pointer;
+    display: block;
+    width: 40px;
+    height: 24px;
+}
+.topic-post .post-vote span.up{
+    background: url('../images/vote-up.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.vote.up.selected{
+    background: url('../images/vote-up-selected.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.down{
+    background: url('../images/vote-down.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.vote.down.selected{
+    background: url('../images/vote-down-selected.png') no-repeat 50% 50%;
+}
+.topic-post .vote-count-post {
+    display: block;
+    font-size: 160%;
+}
 /* forum edit & send message */
 
 .forum-edit-page .page-title,
@@ -5177,6 +5352,34 @@ pre {
 	margin: 1px;
 }
 
+.topic-post .post-body {
+    float: right;
+    width: 90.5%;
+    text-align: right;
+}
+
+.forum-group .forum-table th.latest-post,
+.forum-group .forum-table th.topics,
+.forum-group .forum-table th.posts,
+.forum-group .forum-table td.latest-post,
+.forum-group .forum-table td.topics,
+.forum-group .forum-table td.posts {
+    display: table-cell;
+}
+
+.topic-group .forum-table th.latest-post,
+.topic-group .forum-table td.latest-post {
+    display: table-cell;
+}
+
+.forum-table td.image {
+    max-width: 40px;
+}
+
+.forum-table td.image div {
+    max-width: 100%;
+    background-size: contain;
+}
 }
 
 
@@ -5521,7 +5724,7 @@ pre {
 	overflow: hidden;
 }
 .order-review-data ul,
-.order-details-area ul,
+.order-details-area > div,
 .shipment-details-area ul {
 	float: right;
 	width: 48%;
@@ -5538,12 +5741,12 @@ pre {
 .order-details-page .selected-checkout-attributes {
 	padding: 0 10px;
 }
-.order-details-page .totals {
-	overflow: hidden;
+.order-details-page .tax-shipping-info {
+    text-align: right;
 }
-.order-details-page .total-info {
+.order-details-page .totals {
 	float: left;
-	margin: 0 5px;
+	clear: both;
 }
 .shipment-details-page .tracking-number .tracking-url {
     color: #4ab2f1;
@@ -5728,8 +5931,31 @@ pre {
 	border-right: 1px solid #ddd;
 	text-align: center;
 }
+
 .topic-post .post-body {
-	padding: 20px;
+    padding: 20px;
+}
+
+.topic-post .post-vote {
+    padding: 20px 0;
+}
+
+.forum-table th.replies,
+.forum-table th.views,
+.forum-table th.votes,
+.forum-table td.replies,
+.forum-table td.views,
+.forum-table td.votes {
+    display: table-cell;
+}
+
+.forum-table td.image {
+    max-width: none;
+}
+
+.forum-table td.image div {
+    max-width: none;
+    background-size: initial;
 }
 
 .ui-tabs-nav {
@@ -6488,6 +6714,15 @@ pre {
 .topic-actions .pager.upper {
 	display: block;
 	max-width: 400px;
+}
+
+.forum-table td {
+    padding: 20px;
+}
+.forum-edit-page textarea,
+.private-message-send-page textarea {
+	width: 600px;
+	height: 250px;
 }
 
 .forum-edit-page textarea,

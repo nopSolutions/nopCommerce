@@ -15,6 +15,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Vendors;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Common;
@@ -30,6 +31,7 @@ using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
+using Nop.Services.Vendors;
 using Nop.Web.Extensions;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -88,6 +90,8 @@ namespace Nop.Web.Controllers
         private readonly SecuritySettings _securitySettings;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
+        private readonly CatalogSettings _catalogSettings;
+        private readonly VendorSettings _vendorSettings;
 
         #endregion
 
@@ -134,7 +138,9 @@ namespace Nop.Web.Controllers
             CaptchaSettings captchaSettings,
             SecuritySettings securitySettings,
             ExternalAuthenticationSettings externalAuthenticationSettings,
-            StoreInformationSettings storeInformationSettings)
+            StoreInformationSettings storeInformationSettings,
+            CatalogSettings catalogSettings, 
+            VendorSettings vendorSettings)
         {
             this._authenticationService = authenticationService;
             this._dateTimeHelper = dateTimeHelper;
@@ -178,6 +184,8 @@ namespace Nop.Web.Controllers
             this._securitySettings = securitySettings;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._storeInformationSettings = storeInformationSettings;
+            this._catalogSettings = catalogSettings;
+            this._vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -276,7 +284,7 @@ namespace Nop.Web.Controllers
                             if (!String.IsNullOrEmpty(selectedAttributesXml))
                             {
                                 var enteredText = _customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id);
-                                if (enteredText.Count > 0)
+                                if (enteredText.Any())
                                     attributeModel.DefaultValue = enteredText[0];
                             }
                         }
@@ -296,7 +304,7 @@ namespace Nop.Web.Controllers
 
             return result;
         }
-
+        
         [NonAction]
         protected virtual void PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer,
             bool excludeProperties, string overrideCustomCustomerAttributesXml = "")
@@ -367,7 +375,7 @@ namespace Nop.Web.Controllers
                 {
                     //states
                     var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId, _workContext.WorkingLanguage.Id).ToList();
-                    if (states.Count > 0)
+                    if (states.Any())
                     {
                         model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectState"), Value = "0" });
 
@@ -483,7 +491,8 @@ namespace Nop.Web.Controllers
             model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
             model.HoneypotEnabled = _securitySettings.HoneypotEnabled;
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnRegistrationPage;
-            
+            model.EnteringEmailTwice = _customerSettings.EnteringEmailTwice;
+
             //countries and states
             if (_customerSettings.CountryEnabled)
             {
@@ -503,7 +512,7 @@ namespace Nop.Web.Controllers
                 {
                     //states
                     var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId, _workContext.WorkingLanguage.Id).ToList();
-                    if (states.Count > 0)
+                    if (states.Any())
                     {
                         model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectState"), Value = "0" });
 
@@ -640,7 +649,7 @@ namespace Nop.Web.Controllers
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage && !captchaValid)
             {
-                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
+                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
             }
 
             if (ModelState.IsValid)
@@ -709,15 +718,22 @@ namespace Nop.Web.Controllers
 
             if (_workContext.OriginalCustomerIfImpersonated != null)
             {
+                //activity log
+                _customerActivityService.InsertActivity(_workContext.OriginalCustomerIfImpersonated, "Impersonation.Finished", 
+                    _localizationService.GetResource("ActivityLog.Impersonation.Finished.StoreOwner"), _workContext.CurrentCustomer.Email, _workContext.CurrentCustomer.Id);
+                _customerActivityService.InsertActivity("Impersonation.Finished",
+                    _localizationService.GetResource("ActivityLog.Impersonation.Finished.Customer"), _workContext.OriginalCustomerIfImpersonated.Email, _workContext.OriginalCustomerIfImpersonated.Id);
+
                 //logout impersonated customer
                 _genericAttributeService.SaveAttribute<int?>(_workContext.OriginalCustomerIfImpersonated,
                     SystemCustomerAttributeNames.ImpersonatedCustomerId, null);
+                
                 //redirect back to customer details page (admin area)
                 return this.RedirectToAction("Edit", "Customer", new { id = _workContext.CurrentCustomer.Id, area = "Admin" });
 
             }
 
-            //activity log
+           //activity log
             _customerActivityService.InsertActivity("PublicStore.Logout", _localizationService.GetResource("ActivityLog.PublicStore.Logout"));
             //standard logout 
             _authenticationService.SignOut();
@@ -918,7 +934,7 @@ namespace Nop.Web.Controllers
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnRegistrationPage && !captchaValid)
             {
-                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
+                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
             }
 
             if (ModelState.IsValid)
@@ -1145,6 +1161,17 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        //available even when navigation is not allowed
+        [PublicStoreAllowNavigation(true)]
+        [HttpPost]
+        public ActionResult RegisterResult(string returnUrl)
+        {
+            if (String.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
+                return RedirectToRoute("HomePage");
+
+            return Redirect(returnUrl);
+        }
+
         [HttpPost]
         [PublicAntiForgery]
         [ValidateInput(false)]
@@ -1213,13 +1240,114 @@ namespace Nop.Web.Controllers
         public ActionResult CustomerNavigation(int selectedTabId = 0)
         {
             var model = new CustomerNavigationModel();
-            model.HideAvatar = !_customerSettings.AllowCustomersToUploadAvatars;
-            model.HideRewardPoints = !_rewardPointsSettings.Enabled;
-            model.HideForumSubscriptions = !_forumSettings.ForumsEnabled || !_forumSettings.AllowCustomersToManageSubscriptions;
-            model.HideReturnRequests = !_orderSettings.ReturnRequestsEnabled ||
-                _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id, 0, null, 0, 1).Count == 0;
-            model.HideDownloadableProducts = _customerSettings.HideDownloadableProductsTab;
-            model.HideBackInStockSubscriptions = _customerSettings.HideBackInStockSubscriptionsTab;
+
+            model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+            {
+                RouteName = "CustomerInfo",
+                Title = _localizationService.GetResource("Account.CustomerInfo"),
+                Tab = CustomerNavigationEnum.Info
+            });
+
+            model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+            {
+                RouteName = "CustomerAddresses",
+                Title = _localizationService.GetResource("Account.CustomerAddresses"),
+                Tab = CustomerNavigationEnum.Addresses
+            });
+
+            model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+            {
+                RouteName = "CustomerOrders",
+                Title = _localizationService.GetResource("Account.CustomerOrders"),
+                Tab = CustomerNavigationEnum.Orders
+            });
+
+            if (_orderSettings.ReturnRequestsEnabled &&
+                _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id,
+                    _workContext.CurrentCustomer.Id, 0, null, 0, 1).Any())
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerReturnRequests",
+                    Title = _localizationService.GetResource("Account.CustomerReturnRequests"),
+                    Tab = CustomerNavigationEnum.ReturnRequests
+                });
+            }
+
+            if (!_customerSettings.HideDownloadableProductsTab)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerDownloadableProducts",
+                    Title = _localizationService.GetResource("Account.DownloadableProducts"),
+                    Tab = CustomerNavigationEnum.DownloadableProducts
+                });
+            }
+
+            if (!_customerSettings.HideBackInStockSubscriptionsTab)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerBackInStockSubscriptions",
+                    Title = _localizationService.GetResource("Account.BackInStockSubscriptions"),
+                    Tab = CustomerNavigationEnum.BackInStockSubscriptions
+                });
+            }
+
+            if (_rewardPointsSettings.Enabled)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerRewardPoints",
+                    Title = _localizationService.GetResource("Account.RewardPoints"),
+                    Tab = CustomerNavigationEnum.RewardPoints
+                });
+            }
+
+            model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+            {
+                RouteName = "CustomerChangePassword",
+                Title = _localizationService.GetResource("Account.ChangePassword"),
+                Tab = CustomerNavigationEnum.ChangePassword
+            });
+
+            if (_customerSettings.AllowCustomersToUploadAvatars)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerAvatar",
+                    Title = _localizationService.GetResource("Account.Avatar"),
+                    Tab = CustomerNavigationEnum.Avatar
+                });
+            }
+
+            if (_forumSettings.ForumsEnabled && _forumSettings.AllowCustomersToManageSubscriptions)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerForumSubscriptions",
+                    Title = _localizationService.GetResource("Account.ForumSubscriptions"),
+                    Tab = CustomerNavigationEnum.ForumSubscriptions
+                });
+            }
+            if (_catalogSettings.ShowProductReviewsTabOnAccountPage)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerProductReviews",
+                    Title = _localizationService.GetResource("Account.CustomerProductReviews"),
+                    Tab = CustomerNavigationEnum.ProductReviews
+                });
+            }
+            if (_vendorSettings.AllowVendorsToEditInfo && _workContext.CurrentVendor != null)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerVendorInfo",
+                    Title = _localizationService.GetResource("Account.VendorInfo"),
+                    Tab = CustomerNavigationEnum.VendorInfo
+                });
+            }
 
             model.SelectedTab = (CustomerNavigationEnum)selectedTabId;
 
@@ -1631,8 +1759,7 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             var model = new CustomerDownloadableProductsModel();
-            var items = _orderService.GetAllOrderItems(null, customer.Id, null, null,
-                null, null, null, true);
+            var items = _orderService.GetDownloadableOrderItems(customer.Id);
             foreach (var item in items)
             {
                 var itemModel = new CustomerDownloadableProductsModel.DownloadableProductsModel

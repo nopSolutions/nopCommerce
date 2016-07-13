@@ -52,16 +52,16 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\ImageResizer.Plugins.PrettyGifs.3.4.3\lib\ImageResizer.Plugins.PrettyGifs.dll</HintPath>
     </Reference>
-    <Reference Include="itextsharp, Version=5.5.8.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\iTextSharp.5.5.8\lib\itextsharp.dll</HintPath>
+    <Reference Include="itextsharp, Version=5.5.9.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\iTextSharp.5.5.9\lib\itextsharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MaxMind.Db, Version=1.0.1.0, Culture=neutral, PublicKeyToken=66afa4cc5ae853ac, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\MaxMind.Db.1.2.0\lib\net40\MaxMind.Db.dll</HintPath>
+    <Reference Include="MaxMind.Db, Version=2.0.0.0, Culture=neutral, PublicKeyToken=66afa4cc5ae853ac, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MaxMind.Db.2.0.0\lib\net45\MaxMind.Db.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="MaxMind.GeoIP2, Version=2.3.0.0, Culture=neutral, PublicKeyToken=66afa4cc5ae853ac, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MaxMind.GeoIP2.2.4.0\lib\net40\MaxMind.GeoIP2.dll</HintPath>
+    <Reference Include="MaxMind.GeoIP2, Version=2.6.0.0, Culture=neutral, PublicKeyToken=66afa4cc5ae853ac, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MaxMind.GeoIP2.2.6.0\lib\net45\MaxMind.GeoIP2.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -94,17 +94,13 @@
       <Private>True</Private>
       <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Storage, Version=6.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\WindowsAzure.Storage.6.2.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=7.1.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\WindowsAzure.Storage.7.1.2\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="PerlRegex, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\nopCommerceCustom\PerlRegex.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -153,10 +149,6 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UserAgentStringLibrary, Version=1.0.1211.25, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\nopCommerceCustom\UserAgentStringLibrary.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Affiliates\AffiliateService.cs" />
@@ -247,6 +239,9 @@
     <Compile Include="Discounts\Cache\DiscountRequirementEventConsumer.cs" />
     <Compile Include="Discounts\DiscountRequirementValidationResult.cs" />
     <Compile Include="Discounts\DiscountValidationResult.cs" />
+    <Compile Include="ExportImport\Help\PropertyByName.cs" />
+    <Compile Include="ExportImport\Help\PropertyManager.cs" />
+    <Compile Include="Helpers\BrowscapXmlParser.cs" />
     <Compile Include="Infrastructure\AzureWebsitesMachineNameProvider.cs" />
     <Compile Include="Infrastructure\DefaultMachineNameProvider.cs" />
     <Compile Include="Infrastructure\IMachineNameProvider.cs" />
@@ -255,8 +250,10 @@
     <Compile Include="Logging\ClearLogTask.cs" />
     <Compile Include="Media\AzurePictureService.cs" />
     <Compile Include="Media\ResizeType.cs" />
+    <Compile Include="Orders\ICustomNumberFormatter.cs" />
     <Compile Include="Orders\IReturnRequestService.cs" />
     <Compile Include="Orders\IRewardPointService.cs" />
+    <Compile Include="Orders\CustomNumberFormatter.cs" />
     <Compile Include="Orders\RewardPointService.cs" />
     <Compile Include="Orders\ReturnRequestService.cs" />
     <Compile Include="Shipping\EventPublisherExtensions.cs" />

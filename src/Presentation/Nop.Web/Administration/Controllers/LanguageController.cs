@@ -64,7 +64,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentNullException("model");
             
             model.FlagFileNames = Directory
-                .EnumerateFiles(_webHelper.MapPath("~/Content/Images/flags/"), "*.png", SearchOption.TopDirectoryOnly)
+                .EnumerateFiles(CommonHelper.MapPath("~/Content/Images/flags/"), "*.png", SearchOption.TopDirectoryOnly)
                 .Select(Path.GetFileName)
                 .ToList();
         }
@@ -201,7 +201,15 @@ namespace Nop.Admin.Controllers
                 SaveStoreMappings(language, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = language.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = language.Id });
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
@@ -274,7 +282,7 @@ namespace Nop.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    SaveSelectedTabName();
 
                     return RedirectToAction("Edit", new {id = language.Id});
                 }
@@ -328,27 +336,29 @@ namespace Nop.Admin.Controllers
         //do not validate request token (XSRF)
         //for some reasons it does not work with "filtering" support
         [AdminAntiForgery(true)] 
-		public ActionResult Resources(int languageId, DataSourceRequest command,
-            Nop.Web.Framework.Kendoui.Filter filter = null, IEnumerable<Sort> sort = null)
+		public ActionResult Resources(int languageId, DataSourceRequest command, LanguageResourcesListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
-            
-		    var language = _languageService.GetLanguageById(languageId);
 
-            var resources = _localizationService
+            var query = _localizationService
                 .GetAllResourceValues(languageId)
                 .OrderBy(x => x.Key)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(model.SearchResourceName))
+                query = query.Where(l => l.Key.ToLowerInvariant().Contains(model.SearchResourceName.ToLowerInvariant()));
+            if (!string.IsNullOrEmpty(model.SearchResourceValue))
+                query = query.Where(l => l.Value.Value.ToLowerInvariant().Contains(model.SearchResourceValue.ToLowerInvariant()));
+
+            var resources = query
                 .Select(x => new LanguageResourceModel
                     {
                         LanguageId = languageId,
                         Id = x.Value.Key,
                         Name = x.Key,
                         Value = x.Value.Value,
-                    })
-                    .AsQueryable()
-                    .Filter(filter)
-                    .Sort(sort);
+                    });
             
             var gridModel = new DataSourceResult
             {

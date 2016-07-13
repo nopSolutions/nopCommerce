@@ -13,8 +13,14 @@ namespace Nop.Admin.Models.Blogs
     [Validator(typeof(BlogPostValidator))]
     public partial class BlogPostModel : BaseNopEntityModel
     {
+        public BlogPostModel()
+        {
+            AvailableLanguages = new List<SelectListItem>();
+        }
+
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Language")]
         public int LanguageId { get; set; }
+        public IList<SelectListItem> AvailableLanguages { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Language")]
         [AllowHtml]

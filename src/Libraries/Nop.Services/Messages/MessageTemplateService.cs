@@ -168,7 +168,6 @@ namespace Nop.Services.Messages
                 var query = _messageTemplateRepository.Table;
                 query = query.Where(t => t.Name == messageTemplateName);
                 query = query.OrderBy(t => t.Id);
-                query = query.OrderBy(t => t.Id);
                 var templates = query.ToList();
 
                 //store mapping
@@ -240,6 +239,8 @@ namespace Nop.Services.Messages
                 AttachedDownloadId = messageTemplate.AttachedDownloadId,
                 EmailAccountId = messageTemplate.EmailAccountId,
                 LimitedToStores = messageTemplate.LimitedToStores,
+                DelayBeforeSend = messageTemplate.DelayBeforeSend,
+                DelayPeriod = messageTemplate.DelayPeriod
             };
 
             InsertMessageTemplate(mtCopy);

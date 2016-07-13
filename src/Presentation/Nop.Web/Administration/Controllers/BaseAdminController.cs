@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Text;
+using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Web.Framework.Controllers;
@@ -10,6 +11,7 @@ namespace Nop.Admin.Controllers
     [AdminValidateIpAddress]
     [AdminAuthorize]
     [AdminAntiForgery]
+    [AdminVendorValidation]
     public abstract partial class BaseAdminController : BaseController
     {
         /// <summary>
@@ -46,34 +48,60 @@ namespace Nop.Admin.Controllers
         }
 
         /// <summary>
-        /// Save selected TAB index
+        /// Save selected TAB name
         /// </summary>
-        /// <param name="index">Idnex to save; null to automatically detect it</param>
+        /// <param name="tabName">Tab name to save; empty to automatically detect it</param>
         /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request</param>
-        protected void SaveSelectedTabIndex(int? index = null, bool persistForTheNextRequest = true)
+        protected void SaveSelectedTabName(string tabName = "", bool persistForTheNextRequest = true)
         {
             //keep this method synchronized with
-            //"GetSelectedTabIndex" method of \Nop.Web.Framework\ViewEngines\Razor\WebViewPage.cs
-            if (!index.HasValue)
+            //"GetSelectedTabName" method of \Nop.Web.Framework\HtmlExtensions.cs
+            if (string.IsNullOrEmpty(tabName))
             {
-                int tmp;
-                if (int.TryParse(this.Request.Form["selected-tab-index"], out tmp))
-                {
-                    index = tmp;
-                }
+                tabName = this.Request.Form["selected-tab-name"];
             }
-            if (index.HasValue)
+            
+            if (!string.IsNullOrEmpty(tabName))
             {
-                string dataKey = "nop.selected-tab-index";
+                const string dataKey = "nop.selected-tab-name";
                 if (persistForTheNextRequest)
                 {
-                    TempData[dataKey] = index;
+                    TempData[dataKey] = tabName;
                 }
                 else
                 {
-                    ViewData[dataKey] = index;
+                    ViewData[dataKey] = tabName;
                 }
             }
         }
+
+        /// <summary>
+        /// Creates a <see cref="T:System.Web.Mvc.JsonResult"/> object that serializes the specified object to JavaScript Object Notation (JSON) format using the content type, content encoding, and the JSON request behavior.
+        /// </summary>
+        /// 
+        /// <returns>
+        /// The result object that serializes the specified object to JSON format.
+        /// </returns>
+        /// <param name="data">The JavaScript object graph to serialize.</param>
+        /// <param name="contentType">The content type (MIME type).</param>
+        /// <param name="contentEncoding">The content encoding.</param>
+        /// <param name="behavior">The JSON request behavior</param>
+        protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)
+        {
+            //Json fix for admin area
+            //sometime our entities have big text values returned (e.g. product desriptions)
+            //of course, we can set and return them as "empty" (we already do it so). Furthermore, it's a perfoemance optimization
+            //but it's better to avoid exceptions for other entities and allow maximum JSON length
+            return new JsonResult()
+            {
+                Data = data,
+                ContentType = contentType,
+                ContentEncoding = contentEncoding,
+                JsonRequestBehavior = behavior,
+                MaxJsonLength = int.MaxValue
+            };
+            //return base.Json(data, contentType, contentEncoding, behavior);
+        }
+
     }
 }

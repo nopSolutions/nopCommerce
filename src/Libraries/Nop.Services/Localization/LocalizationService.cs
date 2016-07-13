@@ -90,9 +90,6 @@ namespace Nop.Services.Localization
             this._dataProvider = dataProvider;
             this._dbContext = dbContext;
             this._commonSettings = commonSettings;
-            this._dataProvider = dataProvider;
-            this._dbContext = dbContext;
-            this._commonSettings = commonSettings;
             this._localizationSettings = localizationSettings;
             this._eventPublisher = eventPublisher;
         }
@@ -333,6 +330,7 @@ namespace Nop.Services.Localization
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Language");
             xmlWriter.WriteAttributeString("Name", language.Name);
+            xmlWriter.WriteAttributeString("SupportedVersion", NopVersion.CurrentVersion);
 
 
             var resources = GetAllResources(language.Id);

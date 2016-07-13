@@ -8,7 +8,6 @@ using System.Reflection;
 using System.Threading;
 using System.Web;
 using System.Web.Compilation;
-using System.Web.Hosting;
 using Nop.Core.ComponentModel;
 using Nop.Core.Plugins;
 
@@ -60,8 +59,8 @@ namespace Nop.Core.Plugins
             {
                 // TODO: Add verbose exception handling / raising here since this is happening on app startup and could
                 // prevent app from starting altogether
-                var pluginFolder = new DirectoryInfo(HostingEnvironment.MapPath(PluginsPath));
-                _shadowCopyFolder = new DirectoryInfo(HostingEnvironment.MapPath(ShadowCopyPath));
+                var pluginFolder = new DirectoryInfo(CommonHelper.MapPath(PluginsPath));
+                _shadowCopyFolder = new DirectoryInfo(CommonHelper.MapPath(ShadowCopyPath));
 
                 var referencedPlugins = new List<PluginDescriptor>();
                 var incompatiblePlugins = new List<string>();
@@ -203,7 +202,7 @@ namespace Nop.Core.Plugins
             if (String.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException("systemName");
 
-            var filePath = HostingEnvironment.MapPath(InstalledPluginsFilePath);
+            var filePath = CommonHelper.MapPath(InstalledPluginsFilePath);
             if (!File.Exists(filePath))
                 using (File.Create(filePath))
                 {
@@ -228,7 +227,7 @@ namespace Nop.Core.Plugins
             if (String.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException("systemName");
 
-            var filePath = HostingEnvironment.MapPath(InstalledPluginsFilePath);
+            var filePath = CommonHelper.MapPath(InstalledPluginsFilePath);
             if (!File.Exists(filePath))
                 using (File.Create(filePath))
                 {
@@ -249,7 +248,7 @@ namespace Nop.Core.Plugins
         /// </summary>
         public static void MarkAllPluginsAsUninstalled()
         {
-            var filePath = HostingEnvironment.MapPath(InstalledPluginsFilePath);
+            var filePath = CommonHelper.MapPath(InstalledPluginsFilePath);
             if (File.Exists(filePath))
                 File.Delete(filePath);
         }
@@ -261,7 +260,7 @@ namespace Nop.Core.Plugins
         /// <summary>
         /// Get description files
         /// </summary>
-        /// <param name="pluginFolder">Plugin direcotry info</param>
+        /// <param name="pluginFolder">Plugin directory info</param>
         /// <returns>Original and parsed description files</returns>
         private static IEnumerable<KeyValuePair<FileInfo, PluginDescriptor>> GetDescriptionFilesAndDescriptors(DirectoryInfo pluginFolder)
         {
@@ -310,7 +309,7 @@ namespace Nop.Core.Plugins
             {
                 string fileNameWithoutExt = Path.GetFileNameWithoutExtension(fileInfo.FullName);
                 if (fileNameWithoutExt == null)
-                    throw new Exception(string.Format("Cannot get file extnension for {0}", fileInfo.Name));
+                    throw new Exception(string.Format("Cannot get file extension for {0}", fileInfo.Name));
                 foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
                 {
                     string assemblyName = a.FullName.Split(new[] { ',' }).FirstOrDefault();
@@ -334,14 +333,14 @@ namespace Nop.Core.Plugins
         {
             if (plug.Directory.Parent == null)
                 throw new InvalidOperationException("The plugin directory for the " + plug.Name +
-                                                    " file exists in a folder outside of the allowed nopCommerce folder heirarchy");
+                                                    " file exists in a folder outside of the allowed nopCommerce folder hierarchy");
 
             FileInfo shadowCopiedPlug;
 
             if (CommonHelper.GetTrustLevel() != AspNetHostingPermissionLevel.Unrestricted)
             {
                 //all plugins will need to be copied to ~/Plugins/bin/
-                //this is aboslutely required because all of this relies on probingPaths being set statically in the web.config
+                //this is absolutely required because all of this relies on probingPaths being set statically in the web.config
                 
                 //were running in med trust, so copy to custom bin folder
                 var shadowCopyPlugFolder = Directory.CreateDirectory(_shadowCopyFolder.FullName);
@@ -479,8 +478,7 @@ namespace Nop.Core.Plugins
         /// <returns></returns>
         private static string GetInstalledPluginsFilePath()
         { 
-            var filePath = HostingEnvironment.MapPath(InstalledPluginsFilePath);
-            return filePath;
+            return CommonHelper.MapPath(InstalledPluginsFilePath);
         }
 
         #endregion

@@ -23,7 +23,7 @@ namespace Nop.Core.Domain.Vendors
         public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
-        /// Gets the vednor
+        /// Gets the vendor
         /// </summary>
         public virtual Vendor Vendor { get; set; }
     }

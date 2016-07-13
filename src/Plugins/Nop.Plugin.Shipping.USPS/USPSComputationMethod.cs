@@ -80,7 +80,7 @@ namespace Nop.Plugin.Shipping.USPS
         /// Is a request domestic
         /// </summary>
         /// <param name="getShippingOptionRequest">Request</param>
-        /// <returns>Rsult</returns>
+        /// <returns>Result</returns>
         protected bool IsDomesticRequest(GetShippingOptionRequest getShippingOptionRequest)
         {
             //Origin Country must be USA, Collect USA from list of countries
@@ -126,7 +126,7 @@ namespace Nop.Plugin.Shipping.USPS
                 throw new NopException(string.Format("USPS shipping service. Could not load \"{0}\" measure dimension", MEASUREDIMENSIONSYSTEMKEYWORD));
 
             var baseusedMeasureDimension = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId);
-            if (usedMeasureDimension == null)
+            if (baseusedMeasureDimension == null)
                 throw new NopException("Primary dimension can't be loaded");
 
             decimal lengthTmp, widthTmp, heightTmp;
@@ -375,11 +375,11 @@ namespace Nop.Plugin.Shipping.USPS
                     if (pounds2 < 1)
                         pounds2 = 1;
                     if (height2 < 1)
-                        height2 = 1;
+                        height2 = 1; // Why assign a 1 if it is assigned below 12? Perhaps this is a mistake.
                     if (width2 < 1)
-                        width2 = 1;
+                        width2 = 1; // Similarly
                     if (length2 < 1)
-                        length2 = 1;
+                        length2 = 1; // Similarly
 
                     //little hack here for international requests
                     length2 = 12;
@@ -424,20 +424,23 @@ namespace Nop.Plugin.Shipping.USPS
 
         private string DoRequest(string url, string requestString)
         {
-            byte[] bytes = new ASCIIEncoding().GetBytes(requestString);
+            byte[] bytes = Encoding.ASCII.GetBytes(requestString);
             var request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/x-www-form-urlencoded";
+            request.Method = WebRequestMethods.Http.Post;
+            request.ContentType = MimeTypes.ApplicationXWwwFormUrlencoded;
             request.ContentLength = bytes.Length;
-            var requestStream = request.GetRequestStream();
-            requestStream.Write(bytes, 0, bytes.Length);
-            requestStream.Close();
-            var response = request.GetResponse();
-            string responseXml;
-            using (var reader = new StreamReader(response.GetResponseStream()))
-                responseXml = reader.ReadToEnd();
+            using (var requestStream = request.GetRequestStream())
+            {
+                requestStream.Write(bytes, 0, bytes.Length);
+            }
+            using (var response = request.GetResponse())
+            {
+                string responseXml;
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                    responseXml = reader.ReadToEnd();
 
-            return responseXml;
+                return responseXml;
+            }
         }
 
         private bool IsPackageTooLarge(int length, int height, int width)
@@ -517,7 +520,7 @@ namespace Nop.Plugin.Shipping.USPS
                                 tr.MoveToAttribute(i);
                                 if (tr.Name.Equals(classStr))
                                 {
-                                    // Add delimiters [] so that single digit IDs aren't found in mutli-digit IDs                                    
+                                    // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs                                    
                                     serviceId = String.Format("[{0}]", tr.Value);
                                     break;
                                 }
@@ -559,6 +562,14 @@ namespace Nop.Plugin.Shipping.USPS
 
                         }
                         while (!((tr.Name == postageStr) && (tr.NodeType == XmlNodeType.EndElement)));
+
+                        //go to the next rate if the "First-Class Mail Letter" is not in the list of domestic services to offer
+                        if (isDomestic && !carrierServicesOffered.Contains("[letter]"))
+                        {
+                            var option = serviceCode.ToLowerInvariant();
+                            if (option.Contains("letter") || option.Contains("postcard"))
+                                continue;
+                        }
 
                         //USPS issue fixed
                         var reg = (char)174; // registered sign "\u00AE"

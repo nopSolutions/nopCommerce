@@ -5,7 +5,9 @@
 
     //title
     Html.AddTitleParts(Model.ProductName);
+    //page class
     Html.AddTitleParts(T("PageTitle.ProductEmailAFriend").Text);
+    Html.AppendPageCssClassParts("html-email-a-friend-page");
 }
 <div class="page email-a-friend-page">
     <div class="page-title">

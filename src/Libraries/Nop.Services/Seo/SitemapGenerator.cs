@@ -156,7 +156,7 @@ namespace Nop.Services.Seo
 
         protected virtual void WriteManufacturers(UrlHelper urlHelper)
         {
-            var manufacturers = _manufacturerService.GetAllManufacturers();
+            var manufacturers = _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id);
             foreach (var manufacturer in manufacturers)
             {
                 var url = urlHelper.RouteUrl("Manufacturer", new { SeName = manufacturer.GetSeName() }, GetHttpProtocol());
@@ -216,18 +216,19 @@ namespace Nop.Services.Seo
         /// <param name="stream">Stream of sitemap.</param>
         public virtual void Generate(UrlHelper urlHelper, Stream stream)
         {
-            _writer = new XmlTextWriter(stream, Encoding.UTF8);
-            _writer.Formatting = Formatting.Indented;
-            _writer.WriteStartDocument();
-            _writer.WriteStartElement("urlset");
-            _writer.WriteAttributeString("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");
-            _writer.WriteAttributeString("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-            _writer.WriteAttributeString("xsi:schemaLocation", "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
+            using (_writer = new XmlTextWriter(stream, Encoding.UTF8))
+            {
+                _writer.Formatting = Formatting.Indented;
+                _writer.WriteStartDocument();
+                _writer.WriteStartElement("urlset");
+                _writer.WriteAttributeString("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");
+                _writer.WriteAttributeString("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+                _writer.WriteAttributeString("xsi:schemaLocation", "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
 
-            GenerateUrlNodes(urlHelper);
+                GenerateUrlNodes(urlHelper);
 
-            _writer.WriteEndElement();
-            _writer.Close();
+                _writer.WriteEndElement();
+            }
         }
 
         #endregion

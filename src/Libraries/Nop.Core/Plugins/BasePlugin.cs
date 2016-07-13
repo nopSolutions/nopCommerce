@@ -1,5 +1,8 @@
 ﻿namespace Nop.Core.Plugins
 {
+    /// <summary>
+    /// Base plugin
+    /// </summary>
     public abstract class BasePlugin : IPlugin
     {
         /// <summary>

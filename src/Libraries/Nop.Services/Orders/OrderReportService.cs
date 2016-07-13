@@ -120,36 +120,22 @@ namespace Nop.Services.Orders
         /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
         /// <param name="orderId">Order identifier; pass 0 to ignore this parameter</param>
         /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
-        /// <param name="os">Order status</param>
-        /// <param name="ps">Payment status</param>
-        /// <param name="ss">Shipping status</param>
+        /// <param name="osIds">Order status identifiers</param>
+        /// <param name="psIds">Payment status identifiers</param>
+        /// <param name="ssIds">Shipping status identifiers</param>
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
-        /// <param name="ignoreCancelledOrders">A value indicating whether to ignore cancelled orders</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
         public virtual OrderAverageReportLine GetOrderAverageReportLine(int storeId = 0,
             int vendorId = 0, int billingCountryId = 0, 
             int orderId = 0, string paymentMethodSystemName = null,
-            OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
+            List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
-            string billingEmail = null, string billingLastName = "", 
-            bool ignoreCancelledOrders = false, string orderNotes = null)
+            string billingEmail = null, string billingLastName = "", string orderNotes = null)
         {
-            int? orderStatusId = null;
-            if (os.HasValue)
-                orderStatusId = (int)os.Value;
-
-            int? paymentStatusId = null;
-            if (ps.HasValue)
-                paymentStatusId = (int)ps.Value;
-
-            int? shippingStatusId = null;
-            if (ss.HasValue)
-                shippingStatusId = (int)ss.Value;
-
             var query = _orderRepository.Table;
             query = query.Where(o => !o.Deleted);
             if (storeId > 0)
@@ -164,19 +150,14 @@ namespace Nop.Services.Orders
             }
             if (billingCountryId > 0)
                 query = query.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
-            if (ignoreCancelledOrders)
-            {
-                var cancelledOrderStatusId = (int)OrderStatus.Cancelled;
-                query = query.Where(o => o.OrderStatusId != cancelledOrderStatusId);
-            }
             if (!String.IsNullOrEmpty(paymentMethodSystemName))
                 query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
-            if (orderStatusId.HasValue)
-                query = query.Where(o => o.OrderStatusId == orderStatusId.Value);
-            if (paymentStatusId.HasValue)
-                query = query.Where(o => o.PaymentStatusId == paymentStatusId.Value);
-            if (shippingStatusId.HasValue)
-                query = query.Where(o => o.ShippingStatusId == shippingStatusId.Value);
+            if (osIds != null && osIds.Any())
+                query = query.Where(o => osIds.Contains(o.OrderStatusId));
+            if (psIds != null && psIds.Any())
+                query = query.Where(o => psIds.Contains(o.PaymentStatusId));
+            if (ssIds != null && ssIds.Any())
+                query = query.Where(o => ssIds.Contains(o.ShippingStatusId));
             if (startTimeUtc.HasValue)
                 query = query.Where(o => startTimeUtc.Value <= o.CreatedOnUtc);
             if (endTimeUtc.HasValue)
@@ -226,6 +207,7 @@ namespace Nop.Services.Orders
         {
             var item = new OrderAverageReportLineSummary();
             item.OrderStatus = os;
+            var orderStatuses = new List<int>() { (int)os };
 
             DateTime nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
             TimeZoneInfo timeZone = _dateTimeHelper.CurrentTimeZone;
@@ -236,7 +218,7 @@ namespace Nop.Services.Orders
             {
                 DateTime? startTime1 = _dateTimeHelper.ConvertToUtcTime(t1, timeZone);
                 var todayResult = GetOrderAverageReportLine(storeId: storeId,
-                    os: os, 
+                    osIds: orderStatuses, 
                     startTimeUtc: startTime1);
                 item.SumTodayOrders = todayResult.SumOrders;
                 item.CountTodayOrders = todayResult.CountOrders;
@@ -249,7 +231,7 @@ namespace Nop.Services.Orders
             {
                 DateTime? startTime2 = _dateTimeHelper.ConvertToUtcTime(t2, timeZone);
                 var weekResult = GetOrderAverageReportLine(storeId: storeId,
-                    os: os,
+                    osIds: orderStatuses,
                     startTimeUtc: startTime2);
                 item.SumThisWeekOrders = weekResult.SumOrders;
                 item.CountThisWeekOrders = weekResult.CountOrders;
@@ -260,7 +242,7 @@ namespace Nop.Services.Orders
             {
                 DateTime? startTime3 = _dateTimeHelper.ConvertToUtcTime(t3, timeZone);
                 var monthResult = GetOrderAverageReportLine(storeId: storeId,
-                    os: os,
+                    osIds: orderStatuses,
                     startTimeUtc: startTime3);
                 item.SumThisMonthOrders = monthResult.SumOrders;
                 item.CountThisMonthOrders = monthResult.CountOrders;
@@ -271,13 +253,13 @@ namespace Nop.Services.Orders
             {
                 DateTime? startTime4 = _dateTimeHelper.ConvertToUtcTime(t4, timeZone);
                 var yearResult = GetOrderAverageReportLine(storeId: storeId,
-                    os: os,
+                    osIds: orderStatuses,
                     startTimeUtc: startTime4);
                 item.SumThisYearOrders = yearResult.SumOrders;
                 item.CountThisYearOrders = yearResult.CountOrders;
             }
             //all time
-            var allTimeResult = GetOrderAverageReportLine(storeId: storeId, os: os);
+            var allTimeResult = GetOrderAverageReportLine(storeId: storeId, osIds: orderStatuses);
             item.SumAllTimeOrders = allTimeResult.SumOrders;
             item.CountAllTimeOrders = allTimeResult.CountOrders;
 
@@ -384,10 +366,11 @@ namespace Nop.Services.Orders
         /// <param name="storeId">Store identifier</param>
         /// <param name="productId">Product identifier</param>
         /// <param name="recordsToReturn">Records to return</param>
+        /// <param name="visibleIndividuallyOnly">A values indicating whether to load only products marked as "visible individually"; "false" to load all records; "true" to load "visible individually" only</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
         public virtual int[] GetAlsoPurchasedProductsIds(int storeId, int productId,
-            int recordsToReturn = 5, bool showHidden = false)
+            int recordsToReturn = 5, bool visibleIndividuallyOnly = true, bool showHidden = false)
         {
             if (productId == 0)
                 throw new ArgumentException("Product ID is not specified");
@@ -405,7 +388,7 @@ namespace Nop.Services.Orders
                          (!orderItem.Order.Deleted) &&
                          (storeId == 0 || orderItem.Order.StoreId == storeId) &&
                          (!p.Deleted) &&
-                         (showHidden || p.Published)
+                         (!visibleIndividuallyOnly || p.VisibleIndividually)
                          select new { orderItem, p };
 
             var query3 = from orderItem_p in query2
@@ -477,30 +460,19 @@ namespace Nop.Services.Orders
         /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
-        /// <param name="os">Order status; null to load all records</param>
-        /// <param name="ps">Order payment status; null to load all records</param>
-        /// <param name="ss">Shipping status; null to load all records</param>
+        /// <param name="osIds">Order status identifiers; null to load all records</param>
+        /// <param name="psIds">Payment status identifiers; null to load all records</param>
+        /// <param name="ssIds">Shipping status identifiers; null to load all records</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
         public virtual decimal ProfitReport(int storeId = 0, int vendorId = 0,
             int billingCountryId = 0, int orderId = 0, string paymentMethodSystemName = null,
-            OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
+            List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
             string billingEmail = null, string billingLastName = "", string orderNotes = null)
         {
-            int? orderStatusId = null;
-            if (os.HasValue)
-                orderStatusId = (int)os.Value;
-
-            int? paymentStatusId = null;
-            if (ps.HasValue)
-                paymentStatusId = (int)ps.Value;
-
-            int? shippingStatusId = null;
-            if (ss.HasValue)
-                shippingStatusId = (int)ss.Value;
             //We cannot use String.IsNullOrEmpty() in SQL Compact
             bool dontSearchEmail = String.IsNullOrEmpty(billingEmail);
             //We cannot use String.IsNullOrEmpty() in SQL Compact
@@ -509,17 +481,23 @@ namespace Nop.Services.Orders
             bool dontSearchOrderNotes = String.IsNullOrEmpty(orderNotes);
             //We cannot use String.IsNullOrEmpty() in SQL Compact
             bool dontSearchPaymentMethods = String.IsNullOrEmpty(paymentMethodSystemName);
+
+            var orders = _orderRepository.Table;
+            if (osIds != null && osIds.Any())
+                orders = orders.Where(o => osIds.Contains(o.OrderStatusId));
+            if (psIds != null && psIds.Any())
+                orders = orders.Where(o => psIds.Contains(o.PaymentStatusId));
+            if (ssIds != null && ssIds.Any())
+                orders = orders.Where(o => ssIds.Contains(o.ShippingStatusId));
+
             var query = from orderItem in _orderItemRepository.Table
-                        join o in _orderRepository.Table on orderItem.OrderId equals o.Id
+                        join o in orders on orderItem.OrderId equals o.Id
                         where (storeId == 0 || storeId == o.StoreId) &&
                               (orderId == 0 || orderId == o.Id) &&
                               (billingCountryId ==0 || (o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId)) &&
                               (dontSearchPaymentMethods || paymentMethodSystemName == o.PaymentMethodSystemName) &&
                               (!startTimeUtc.HasValue || startTimeUtc.Value <= o.CreatedOnUtc) &&
                               (!endTimeUtc.HasValue || endTimeUtc.Value >= o.CreatedOnUtc) &&
-                              (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
-                              (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
-                              (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
                               (!o.Deleted) &&
                               (vendorId == 0 || orderItem.Product.VendorId == vendorId) &&
                               //we do not ignore deleted products when calculating order reports
@@ -537,9 +515,9 @@ namespace Nop.Services.Orders
                 billingCountryId: billingCountryId,
                 orderId: orderId,
                 paymentMethodSystemName: paymentMethodSystemName,
-                os: os, 
-                ps: ps, 
-                ss: ss,
+                osIds: osIds, 
+                psIds: psIds, 
+                ssIds: ssIds,
                 startTimeUtc: startTimeUtc,
                 endTimeUtc: endTimeUtc,
                 billingEmail: billingEmail,

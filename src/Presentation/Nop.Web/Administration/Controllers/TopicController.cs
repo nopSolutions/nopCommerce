@@ -234,7 +234,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
-            var topicModels = _topicService.GetAllTopics(model.SearchStoreId, true)
+            var topicModels = _topicService.GetAllTopics(model.SearchStoreId, true, true)
                 .Select(x =>x.ToModel())
                 .ToList();
             //little hack here:
@@ -275,6 +275,7 @@ namespace Nop.Admin.Controllers
             
             //default values
             model.DisplayOrder = 1;
+            model.Published = true;
 
             return View(model);
         }
@@ -309,7 +310,15 @@ namespace Nop.Admin.Controllers
                 //activity log
                 _customerActivityService.InsertActivity("AddNewTopic", _localizationService.GetResource("ActivityLog.AddNewTopic"), topic.Title ?? topic.SystemName);
 
-                return continueEditing ? RedirectToAction("Edit", new { id = topic.Id }) : RedirectToAction("List");
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = topic.Id });
+                }
+                return RedirectToAction("List");
+
             }
 
             //If we got this far, something failed, redisplay form
@@ -393,7 +402,7 @@ namespace Nop.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    SaveSelectedTabName();
 
                     return RedirectToAction("Edit",  new {id = topic.Id});
                 }

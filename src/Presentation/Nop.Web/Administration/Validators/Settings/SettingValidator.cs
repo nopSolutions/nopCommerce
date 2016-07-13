@@ -5,7 +5,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Settings
 {
-    public class SettingValidator : BaseNopValidator<SettingModel>
+    public partial class SettingValidator : BaseNopValidator<SettingModel>
     {
         public SettingValidator(ILocalizationService localizationService)
         {
