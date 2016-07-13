@@ -228,6 +228,22 @@ namespace Nop.Services.Catalog
             _eventPublisher.EntityUpdated(productAttribute);
         }
 
+        /// <summary>
+        /// Returns a list of IDs of not existing attributes
+        /// </summary>
+        /// <param name="attributeId">The IDs of the attributes to check</param>
+        /// <returns>List of IDs not existing attributes</returns>
+        public virtual int[] GetNotExistingAttributes(int[] attributeId)
+        {
+            if (attributeId == null)
+                throw new ArgumentNullException("attributeId");
+
+            var query = _productAttributeRepository.Table;
+            var queryFilter = attributeId.Distinct().ToArray();
+            var filter = query.Select(a => a.Id).Where(m => queryFilter.Contains(m)).ToList();
+            return queryFilter.Except(filter).ToArray();
+        }
+
         #endregion
 
         #region Product attributes mappings

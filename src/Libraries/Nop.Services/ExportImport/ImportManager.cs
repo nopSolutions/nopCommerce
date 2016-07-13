@@ -35,6 +35,7 @@ namespace Nop.Services.ExportImport
         #region Fields
 
         private readonly IProductService _productService;
+        private readonly IProductAttributeService _productAttributeService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IPictureService _pictureService;
@@ -48,10 +49,10 @@ namespace Nop.Services.ExportImport
         private readonly MediaSettings _mediaSettings;
         private readonly IVendorService _vendorService;
         private readonly IProductTemplateService _productTemplateService;
-        private readonly IDownloadService _downloadService;
         private readonly IShippingService _shippingService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IMeasureService _measureService;
+        private readonly CatalogSettings _catalogSettings;
 
         #endregion
 
@@ -71,10 +72,11 @@ namespace Nop.Services.ExportImport
             MediaSettings mediaSettings,
             IVendorService vendorService,
             IProductTemplateService productTemplateService,
-            IDownloadService downloadService,
             IShippingService shippingService,
             ITaxCategoryService taxCategoryService,
-            IMeasureService measureService)
+            IMeasureService measureService,
+            IProductAttributeService productAttributeService,
+            CatalogSettings catalogSettings)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -90,10 +92,11 @@ namespace Nop.Services.ExportImport
             this._mediaSettings = mediaSettings;
             this._vendorService = vendorService;
             this._productTemplateService = productTemplateService;
-            this._downloadService = downloadService;
             this._shippingService = shippingService;
             this._taxCategoryService = taxCategoryService;
             this._measureService = measureService;
+            this._productAttributeService = productAttributeService;
+            this._catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -303,6 +306,36 @@ namespace Nop.Services.ExportImport
 
                 var manager = new PropertyManager<Product>(properties.ToArray());
 
+                var attributProperties = new[]
+                   {
+                        new PropertyByName<ExportProductAttribute>("AttributeId"),
+                        new PropertyByName<ExportProductAttribute>("AttributeName"),
+                        new PropertyByName<ExportProductAttribute>("AttributeTextPrompt"),
+                        new PropertyByName<ExportProductAttribute>("AttributeIsRequired"),
+                        new PropertyByName<ExportProductAttribute>("AttributeControlType")
+                        {
+                            DropDawnElements = AttributeControlType.TextBox.ToSelectList()
+                        },
+                        new PropertyByName<ExportProductAttribute>("AttributeDisplayOrder"), 
+                        new PropertyByName<ExportProductAttribute>("ProductAttributeValuesId"),
+                        new PropertyByName<ExportProductAttribute>("ValueName"),
+                        new PropertyByName<ExportProductAttribute>("AttributeValueType")
+                        {
+                            DropDawnElements = AttributeValueType.Simple.ToSelectList()
+                        },
+                        new PropertyByName<ExportProductAttribute>("ColorSquaresRgb"),
+                        new PropertyByName<ExportProductAttribute>("ImageSquaresPictureId"),
+                        new PropertyByName<ExportProductAttribute>("PriceAdjustment"),
+                        new PropertyByName<ExportProductAttribute>("WeightAdjustment"),
+                        new PropertyByName<ExportProductAttribute>("Cost"),
+                        new PropertyByName<ExportProductAttribute>("Quantity"),
+                        new PropertyByName<ExportProductAttribute>("IsPreSelected"),
+                        new PropertyByName<ExportProductAttribute>("DisplayOrder"),
+                        new PropertyByName<ExportProductAttribute>("PictureId")
+                    };
+
+                var managerProductAttribute = new PropertyManager<ExportProductAttribute>(attributProperties);
+
                 var endRow = 2;
                 var allCategoriesIds = new List<int>();
                 var allSku = new List<string>();
@@ -316,7 +349,7 @@ namespace Nop.Services.ExportImport
                 var allManufacturersIds = new List<int>();
                 tempProperty = manager.GetProperty("ManufacturerIds");
                 var manufacturerCellNum = tempProperty.Return(p => p.PropertyOrderPosition, -1);
-                
+
                 manager.SetSelectList("ProductType", ProductType.SimpleProduct.ToSelectList());
                 manager.SetSelectList("GiftCardType", GiftCardType.Virtual.ToSelectList());
                 manager.SetSelectList("DownloadActivationType", DownloadActivationType.Manually.ToSelectList());
@@ -332,6 +365,9 @@ namespace Nop.Services.ExportImport
                 manager.SetSelectList("TaxCategory", _taxCategoryService.GetAllTaxCategories().Select(tc => tc as BaseEntity).ToSelectList(p => (p as TaxCategory).Return(tc => tc.Name, String.Empty)));
                 manager.SetSelectList("BasepriceUnit", _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p =>(p as MeasureWeight).Return(mw => mw.Name, String.Empty)));
                 manager.SetSelectList("BasepriceBaseUnit", _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p => (p as MeasureWeight).Return(mw => mw.Name, String.Empty)));
+
+                var allAttributeIds = new List<int>();
+                var attributeIdCellNum = managerProductAttribute.GetProperty("AttributeId").PropertyOrderPosition + ExportProductAttribute.ProducAttributeCellOffset;
                 
                 //find end of data
                 while (true)
@@ -342,6 +378,39 @@ namespace Nop.Services.ExportImport
 
                     if (allColumnsAreEmpty)
                         break;
+
+                    if (new[] { 1, 2 }.Select(cellNum => worksheet.Cells[endRow, cellNum]).All(cell => cell == null || cell.Value == null || String.IsNullOrEmpty(cell.Value.ToString())) && worksheet.Row(endRow).OutlineLevel == 0)
+                    {
+                        var cellValue = worksheet.Cells[endRow, attributeIdCellNum].Value;
+                        try
+                        {
+                            var aid = cellValue.Return(Convert.ToInt32, -1);
+
+                            var productAttribute = _productAttributeService.GetProductAttributeById(aid);
+
+                            if (productAttribute != null)
+                                worksheet.Row(endRow).OutlineLevel = 1;
+                        }
+                        catch (FormatException)
+                        {
+                            if (cellValue.Return(cv => cv.ToString(), String.Empty) == "AttributeId")
+                                worksheet.Row(endRow).OutlineLevel = 1;
+                        }
+                    }
+
+                    if (worksheet.Row(endRow).OutlineLevel != 0)
+                    {
+                        managerProductAttribute.ReadFromXlsx(worksheet, endRow, ExportProductAttribute.ProducAttributeCellOffset);
+                        if (!managerProductAttribute.IsCaption)
+                        {
+                            var aid = worksheet.Cells[endRow, attributeIdCellNum].Value.Return(Convert.ToInt32, -1);
+                            if (aid > 0)
+                                allAttributeIds.Add(aid);
+                        }
+
+                        endRow++;
+                        continue;
+                    }
 
                     if (categoryCellNum > 0)
                     { 
@@ -365,6 +434,7 @@ namespace Nop.Services.ExportImport
                         if (!manufacturerIds.IsEmpty())
                             allManufacturersIds.AddRange(manufacturerIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())));
                     }
+
                     endRow++;
                 }
 
@@ -382,6 +452,13 @@ namespace Nop.Services.ExportImport
                     throw new ArgumentException(string.Format("The following manufacturer ID(s) don't exist - {0}", string.Join(", ", notExistingManufacturers)));
                 }
 
+                //performance optimization, the check for the existence of the product attributes in one SQL request
+                var notExistingProductAttributes = _productAttributeService.GetNotExistingAttributes(allAttributeIds.ToArray());
+                if (notExistingProductAttributes.Any())
+                {
+                    throw new ArgumentException(string.Format("The following product attribute ID(s) don't exist - {0}", string.Join(", ", notExistingProductAttributes)));
+                }
+
                 //performance optimization, load all products by SKU in one SQL request
                 var allProductsBySku = _productService.GetProductsBySku(allSku.ToArray());
 
@@ -394,8 +471,119 @@ namespace Nop.Services.ExportImport
                 //product to import images
                 var productPictureMetadata = new List<ProductPictureMetadata>();
 
+                Product lastLoadedProduct = null;
+
                 for (var iRow = 2; iRow < endRow; iRow++)
                 {
+                    //imports product attributes
+                    if (worksheet.Row(iRow).OutlineLevel != 0)
+                    {
+                        if (_catalogSettings.ExportImportProductAttributes)
+                        {
+                            managerProductAttribute.ReadFromXlsx(worksheet, iRow,
+                                ExportProductAttribute.ProducAttributeCellOffset);
+                            if (lastLoadedProduct == null || managerProductAttribute.IsCaption)
+                                continue;
+
+                            var productAttributeId = managerProductAttribute.GetProperty("AttributeId").IntValue;
+                            var attributeControlTypeId = managerProductAttribute.GetProperty("AttributeControlType").IntValue;
+
+                            var productAttributeValuesId = managerProductAttribute.GetProperty("ProductAttributeValuesId").IntValue;
+                            var valueName = managerProductAttribute.GetProperty("ValueName").StringValue;
+                            var attributeValueTypeId = managerProductAttribute.GetProperty("AttributeValueType").IntValue;
+                            var colorSquaresRgb = managerProductAttribute.GetProperty("ColorSquaresRgb").StringValue;
+                            var imageSquaresPictureId = managerProductAttribute.GetProperty("ImageSquaresPictureId").IntValue;
+                            var priceAdjustment = managerProductAttribute.GetProperty("PriceAdjustment").DecimalValue;
+                            var weightAdjustment = managerProductAttribute.GetProperty("WeightAdjustment").DecimalValue;
+                            var cost = managerProductAttribute.GetProperty("Cost").DecimalValue;
+                            var quantity = managerProductAttribute.GetProperty("Quantity").IntValue;
+                            var isPreSelected = managerProductAttribute.GetProperty("IsPreSelected").BooleanValue;
+                            var displayOrder = managerProductAttribute.GetProperty("DisplayOrder").IntValue;
+                            var pictureId = managerProductAttribute.GetProperty("PictureId").IntValue;
+                            var textPrompt = managerProductAttribute.GetProperty("AttributeTextPrompt").StringValue;
+                            var isRequired = managerProductAttribute.GetProperty("AttributeIsRequired").BooleanValue;
+                            var attributeDisplayOrder = managerProductAttribute.GetProperty("AttributeDisplayOrder").IntValue;
+
+                            var productAttributeMapping = lastLoadedProduct.ProductAttributeMappings.FirstOrDefault(pam => pam.ProductAttributeId == productAttributeId);
+
+                            if (productAttributeMapping == null)
+                            {
+                                //insert mapping
+                                productAttributeMapping = new ProductAttributeMapping
+                                {
+                                    ProductId = lastLoadedProduct.Id,
+                                    ProductAttributeId = productAttributeId,
+                                    TextPrompt = textPrompt,
+                                    IsRequired = isRequired,
+                                    AttributeControlTypeId = attributeControlTypeId,
+                                    DisplayOrder = attributeDisplayOrder
+                                };
+                                _productAttributeService.InsertProductAttributeMapping(productAttributeMapping);
+                            }
+                            else
+                            {
+                                productAttributeMapping.AttributeControlTypeId = attributeControlTypeId;
+                                productAttributeMapping.TextPrompt = textPrompt;
+                                productAttributeMapping.IsRequired = isRequired;
+                                productAttributeMapping.DisplayOrder = attributeDisplayOrder;
+                                _productAttributeService.UpdateProductAttributeMapping(productAttributeMapping);
+                            }
+
+                            var pav = _productAttributeService.GetProductAttributeValueById(productAttributeValuesId);
+
+                            var attributeControlType = (AttributeControlType) attributeControlTypeId;
+
+                            if (pav == null)
+                            {
+                                switch (attributeControlType)
+                                {
+                                    case AttributeControlType.Datepicker:
+                                    case AttributeControlType.FileUpload:
+                                    case AttributeControlType.MultilineTextbox:
+                                    case AttributeControlType.TextBox:
+                                        continue;
+                                }
+
+                                pav = new ProductAttributeValue
+                                {
+                                    ProductAttributeMappingId = productAttributeMapping.Id,
+                                    AttributeValueType = (AttributeValueType) attributeValueTypeId,
+                                    AssociatedProductId = lastLoadedProduct.Id,
+                                    Name = valueName,
+                                    PriceAdjustment = priceAdjustment,
+                                    WeightAdjustment = weightAdjustment,
+                                    Cost = cost,
+                                    IsPreSelected = isPreSelected,
+                                    DisplayOrder = displayOrder,
+                                    ColorSquaresRgb = colorSquaresRgb,
+                                    ImageSquaresPictureId = imageSquaresPictureId,
+                                    Quantity = quantity,
+                                    PictureId = pictureId
+                                };
+
+                                _productAttributeService.InsertProductAttributeValue(pav);
+                            }
+                            else
+                            {
+                                pav.AttributeValueTypeId = attributeValueTypeId;
+                                pav.AssociatedProductId = lastLoadedProduct.Id;
+                                pav.Name = valueName;
+                                pav.ColorSquaresRgb = colorSquaresRgb;
+                                pav.ImageSquaresPictureId = imageSquaresPictureId;
+                                pav.PriceAdjustment = priceAdjustment;
+                                pav.WeightAdjustment = weightAdjustment;
+                                pav.Cost = cost;
+                                pav.Quantity = quantity;
+                                pav.IsPreSelected = isPreSelected;
+                                pav.DisplayOrder = displayOrder;
+                                pav.PictureId = pictureId;
+
+                                _productAttributeService.UpdateProductAttributeValue(pav);
+                            }
+                        }
+                        continue;
+                    }
+
                     manager.ReadFromXlsx(worksheet, iRow);
 
                     var product = skuCellNum > 0 ? allProductsBySku.FirstOrDefault(p => p.Sku == manager.GetProperty("SKU").StringValue) : null;
@@ -760,6 +948,8 @@ namespace Nop.Services.ExportImport
                         Picture3Path = picture3,
                         IsNew = isNew
                     });
+
+                    lastLoadedProduct = product;
 
                     //update "HasTierPrices" and "HasDiscountsApplied" properties
                     //_productService.UpdateHasTierPricesProperty(product);

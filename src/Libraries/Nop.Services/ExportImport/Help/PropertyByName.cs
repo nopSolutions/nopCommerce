@@ -174,7 +174,7 @@ namespace Nop.Services.ExportImport.Help
 
         public int GetItemId(object name)
         {
-            return DropDawnElements.FirstOrDefault(ev => ev.Text == name.Return(s => s.ToString(), String.Empty)).Return(ev => Convert.ToInt32(ev.Value), 0);
+            return DropDawnElements.FirstOrDefault(ev => ev.Text.Trim() == name.Return(s => s.ToString(), String.Empty).Trim()).Return(ev => Convert.ToInt32(ev.Value), 0);
         }
 
         /// <summary>
@@ -186,5 +186,10 @@ namespace Nop.Services.ExportImport.Help
         /// Indicates whether the cell can contain an empty value. Makes sense only for a drop-down cells
         /// </summary>
         public bool AllowBlank { get; set; }
+
+        public bool IsCaption
+        {
+            get { return PropertyName == StringValue || PropertyName == _propertyValue.ToString(); }
+        }
     }
 }

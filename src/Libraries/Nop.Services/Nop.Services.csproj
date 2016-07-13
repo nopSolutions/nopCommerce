@@ -240,6 +240,7 @@
     <Compile Include="Discounts\Cache\DiscountRequirementEventConsumer.cs" />
     <Compile Include="Discounts\DiscountRequirementValidationResult.cs" />
     <Compile Include="Discounts\DiscountValidationResult.cs" />
+    <Compile Include="ExportImport\ExportProductAttribute.cs" />
     <Compile Include="ExportImport\Help\PropertyByName.cs" />
     <Compile Include="ExportImport\Help\PropertyManager.cs" />
     <Compile Include="Helpers\BrowscapXmlParser.cs" />

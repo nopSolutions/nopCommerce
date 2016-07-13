@@ -48,10 +48,10 @@ namespace Nop.Services.ExportImport
         private readonly ProductEditorSettings _productEditorSettings;
         private readonly IVendorService _vendorService;
         private readonly IProductTemplateService _productTemplateService;
-        private readonly IDownloadService _downloadService;
         private readonly IShippingService _shippingService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IMeasureService _measureService;
+        private readonly CatalogSettings _catalogSettings;
 
         #endregion
 
@@ -67,10 +67,10 @@ namespace Nop.Services.ExportImport
             ProductEditorSettings productEditorSettings,
             IVendorService vendorService,
             IProductTemplateService productTemplateService,
-            IDownloadService downloadService,
             IShippingService shippingService,
             ITaxCategoryService taxCategoryService,
-            IMeasureService measureService)
+            IMeasureService measureService,
+            CatalogSettings catalogSettings)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -82,10 +82,10 @@ namespace Nop.Services.ExportImport
             this._productEditorSettings = productEditorSettings;
             this._vendorService = vendorService;
             this._productTemplateService = productTemplateService;
-            this._downloadService = downloadService;
             this._shippingService = shippingService;
             this._taxCategoryService = taxCategoryService;
             this._measureService = measureService;
+            this._catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -235,6 +235,114 @@ namespace Nop.Services.ExportImport
             return !productAdvancedMode && !func(_productEditorSettings);
         }
 
+        private byte[] ExportProductsToXlsxWithAttributes(PropertyByName<Product>[] properties, IEnumerable<Product> itemsToExport)
+        {
+            var attributeProperties = new[]
+            {
+                new PropertyByName<ExportProductAttribute>("AttributeId", p => p.AttributeId),
+                new PropertyByName<ExportProductAttribute>("AttributeName", p => p.AttributeName),
+                new PropertyByName<ExportProductAttribute>("AttributeTextPrompt", p => p.AttributeTextPrompt),
+                new PropertyByName<ExportProductAttribute>("AttributeIsRequired", p => p.AttributeIsRequired),
+                new PropertyByName<ExportProductAttribute>("AttributeControlType", p => p.AttributeControlTypeId)
+                {
+                    DropDawnElements = AttributeControlType.TextBox.ToSelectList()
+                },
+                new PropertyByName<ExportProductAttribute>("AttributeDisplayOrder", p => p.AttributeDisplayOrder),
+                new PropertyByName<ExportProductAttribute>("ProductAttributeValuesId", p => p.Id),
+                new PropertyByName<ExportProductAttribute>("ValueName", p => p.Name),
+                new PropertyByName<ExportProductAttribute>("AttributeValueType", p => p.AttributeValueTypeId)
+                {
+                    DropDawnElements = AttributeValueType.Simple.ToSelectList()
+                },
+                new PropertyByName<ExportProductAttribute>("ColorSquaresRgb", p => p.ColorSquaresRgb),
+                new PropertyByName<ExportProductAttribute>("ImageSquaresPictureId", p => p.ImageSquaresPictureId),
+                new PropertyByName<ExportProductAttribute>("PriceAdjustment", p => p.PriceAdjustment),
+                new PropertyByName<ExportProductAttribute>("WeightAdjustment", p => p.WeightAdjustment),
+                new PropertyByName<ExportProductAttribute>("Cost", p => p.Cost),
+                new PropertyByName<ExportProductAttribute>("Quantity", p => p.Quantity),
+                new PropertyByName<ExportProductAttribute>("IsPreSelected", p => p.IsPreSelected),
+                new PropertyByName<ExportProductAttribute>("DisplayOrder", p => p.DisplayOrder),
+                new PropertyByName<ExportProductAttribute>("PictureId", p => p.PictureId)
+            };
+
+            var attributeManager = new PropertyManager<ExportProductAttribute>(attributeProperties);
+
+            using (var stream = new MemoryStream())
+            {
+                // ok, we can run the real code of the sample now
+                using (var xlPackage = new ExcelPackage(stream))
+                {
+                    // uncomment this line if you want the XML written out to the outputDir
+                    //xlPackage.DebugMode = true; 
+
+                    // get handle to the existing worksheet
+                    var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(Product).Name);
+                    //create Headers and format them 
+
+                    var manager = new PropertyManager<Product>(properties.Where(p => !p.Ignore).ToArray());
+                    manager.WriteCaption(worksheet, SetCaptionStyle);
+
+                    var row = 2;
+                    foreach (var item in itemsToExport)
+                    {
+                        manager.CurrentObject = item;
+                        manager.WriteToXlsx(worksheet, row++);
+
+                        var attributes = item.ProductAttributeMappings.SelectMany(pam => pam.ProductAttributeValues.Select(pav => new ExportProductAttribute
+                        {
+                            AttributeId = pam.ProductAttribute.Id,
+                            AttributeName = pam.ProductAttribute.Name,
+                            AttributeTextPrompt = pam.TextPrompt,
+                            AttributeIsRequired = pam.IsRequired,
+                            AttributeControlTypeId = pam.AttributeControlTypeId,
+                            AttributeDisplayOrder = pam.DisplayOrder,
+                            Id = pav.Id,
+                            Name = pav.Name,
+                            AttributeValueTypeId = pav.AttributeValueTypeId,
+                            ColorSquaresRgb = pav.ColorSquaresRgb,
+                            ImageSquaresPictureId = pav.ImageSquaresPictureId,
+                            PriceAdjustment = pav.PriceAdjustment,
+                            WeightAdjustment = pav.WeightAdjustment,
+                            Cost = pav.Cost,
+                            Quantity = pav.Quantity,
+                            IsPreSelected = pav.IsPreSelected,
+                            DisplayOrder = pav.DisplayOrder,
+                            PictureId = pav.PictureId
+                        })).ToList();
+
+                        attributes.AddRange(item.ProductAttributeMappings.Where(pam => !pam.ProductAttributeValues.Any()).Select(pam => new ExportProductAttribute
+                        {
+                            AttributeId = pam.ProductAttribute.Id,
+                            AttributeName = pam.ProductAttribute.Name,
+                            AttributeTextPrompt = pam.TextPrompt,
+                            AttributeIsRequired = pam.IsRequired,
+                            AttributeControlTypeId = pam.AttributeControlTypeId
+                        }));
+
+                        if (!attributes.Any())
+                            continue;
+
+                        attributeManager.WriteCaption(worksheet, SetCaptionStyle, row, ExportProductAttribute.ProducAttributeCellOffset);
+                        worksheet.Row(row).OutlineLevel = 1;
+                        worksheet.Row(row).Collapsed = true;
+
+                        foreach (var exportProducAttribute in attributes)
+                        {
+                            row++;
+                            attributeManager.CurrentObject = exportProducAttribute;
+                            attributeManager.WriteToXlsx(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset);
+                            worksheet.Row(row).OutlineLevel = 1;
+                            worksheet.Row(row).Collapsed = true;
+                        }
+
+                        row++;
+                    }
+
+                    xlPackage.Save();
+                }
+                return stream.ToArray();
+            }
+        }
         #endregion
 
         #region Methods
@@ -846,7 +954,9 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("Picture3", p => GetPictures(p)[2])
             };
 
-            return ExportToXlsx(properties, products);
+            var productList = products.ToList();
+
+            return _catalogSettings.ExportImportProductAttributes ? ExportProductsToXlsxWithAttributes(properties, productList): ExportToXlsx(properties, productList);
         }
 
         /// <summary>

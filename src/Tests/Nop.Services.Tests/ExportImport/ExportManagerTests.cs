@@ -39,10 +39,10 @@ namespace Nop.Services.Tests.ExportImport
         private IWorkContext _workContext;
         private IVendorService _vendorService;
         private IProductTemplateService _productTemplateService;
-        private IDownloadService _downloadService;
         private IShippingService _shippingService;
         private ITaxCategoryService _taxCategoryService;
         private IMeasureService _measureService;
+        private CatalogSettings _catalogSettings;
 
         [SetUp]
         public new void SetUp()
@@ -57,17 +57,17 @@ namespace Nop.Services.Tests.ExportImport
             _workContext = MockRepository.GenerateMock<IWorkContext>();
             _vendorService = MockRepository.GenerateMock<IVendorService>();
             _productTemplateService = MockRepository.GenerateMock<IProductTemplateService>();
-            _downloadService = MockRepository.GenerateMock<IDownloadService>();
             _shippingService = MockRepository.GenerateMock<IShippingService>();
             _taxCategoryService = MockRepository.GenerateMock<ITaxCategoryService>();
             _measureService = MockRepository.GenerateMock<IMeasureService>();
+            _catalogSettings=new CatalogSettings();
 
             _exportManager = new ExportManager(_categoryService,
                 _manufacturerService, _productAttributeService, 
                 _pictureService, _newsLetterSubscriptionService,
                 _storeService, _workContext, _productEditorSettings, 
-                _vendorService, _productTemplateService, _downloadService,
-                _shippingService, _taxCategoryService, _measureService);
+                _vendorService, _productTemplateService, _shippingService,
+                _taxCategoryService, _measureService, _catalogSettings);
         }
 
         //[Test]

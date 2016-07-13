@@ -4734,6 +4734,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.EmailAFriendEnabled.Hint">
     <Value>Check to allow customers to use the 'Email a friend' option in your store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductAttributes">
+    <Value>Export/Import products with their attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductAttributes.Hint">
+    <Value>Check if need Export/Import products with their attributes</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreDiscounts">
     <Value>Ignore discounts (sitewide)</Value>
   </LocaleResource>
