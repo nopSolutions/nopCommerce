@@ -1526,6 +1526,18 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.OnlyAdminCanDeleteAdmin">
     <Value>You''re not allowed to delete administrators. Only administrators can do it.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.CustomerRoles">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.CustomerRoles.NoRoles">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.CustomerRoles.Hint">
+    <Value>Choose customer roles of this user</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.CustomerRoles.NoRoles">
+    <Value>No customer roles available. Create at least one customer role before mapping.</Value>
+  </LocaleResource>
 </Language>
 '
 

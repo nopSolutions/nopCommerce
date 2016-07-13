@@ -15,7 +15,6 @@
         <div id="customer-edit" class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Customers.Customers.Info"), true)
-                @Html.RenderBootstrapTabHeader("tab-roles", @T("Admin.Customers.Customers.CustomerRoles"))
                 @if (Model.Id > 0)
                 {
                     @Html.RenderBootstrapTabHeader("tab-orders", @T("Admin.Customers.Customers.Orders"))
@@ -33,7 +32,6 @@
             </ul>
             <div class="tab-content">
                 @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
-                @Html.RenderBootstrapTabContent("tab-roles", TabCustomerRoles())
                 @if (Model.Id > 0)
                 {
                     @Html.RenderBootstrapTabContent("tab-orders", @TabOrders())
@@ -100,7 +98,6 @@
             });
         </script>
     }
-
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -238,6 +235,34 @@
                         </div>
                     </div>
                 }
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.SelectedCustomerRoleIds)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.SelectedCustomerRoleIds, new {SelectList = Model.AvailableCustomerRoles})
+                        <script>
+                            $(document).ready(function() {
+                                var customerRolesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                                customerRolesIdsInput.setOptions({
+                                    customerRolesIdsInput: false
+                                });
+
+                                @if (Model.AvailableCustomerRoles.Count == 0)
+                                {
+                                    <text>
+                                customerRolesIdsInput.setOptions({
+                                    enable: false,
+                                    placeholder: '@T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")'
+                                });
+                                customerRolesIdsInput._placeholder();
+                                customerRolesIdsInput._enable();
+                                </text>
+                                }
+                            });
+                        </script>
+                    </div>
+                </div>
                 <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.VendorId)
@@ -556,33 +581,6 @@
                             @Html.NopDisplayFor(model => model.LastVisitedPage)
                         </div>
                     </div>
-                }
-            </div>
-        </div>
-    </div>
-}
-
-@helper TabCustomerRoles()
-{
-    <div class="panel-group">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                @if (Model.AvailableCustomerRoles != null && Model.AvailableCustomerRoles.Count > 0)
-                {
-                    foreach (var customerRole in Model.AvailableCustomerRoles)
-                    {
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id"
-                                       @if (Model.SelectedCustomerRoleIds != null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id)) { <text> checked="checked" </text> } />
-                                @customerRole.Name
-                            </label>
-                        </div>
-                    }
-                }
-                else
-                {
-                    @T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")
                 }
             </div>
         </div>
