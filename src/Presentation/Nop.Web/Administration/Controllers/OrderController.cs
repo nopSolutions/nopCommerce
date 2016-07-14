@@ -32,6 +32,7 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Tracking;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
@@ -950,13 +951,7 @@ namespace Nop.Admin.Controllers
 
             if (prepareShipmentEvent && !String.IsNullOrEmpty(shipment.TrackingNumber))
             {
-                var order = shipment.Order;
-                var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(order.ShippingRateComputationMethodSystemName);
-                var provider = _shippingService.LoadPickupPointProviderBySystemName(order.ShippingRateComputationMethodSystemName);
-                var shipmentTracker = (srcm != null && srcm.PluginDescriptor.Installed && srcm.IsShippingRateComputationMethodActive(_shippingSettings))
-                    ? srcm.ShipmentTracker : (provider != null && provider.PluginDescriptor.Installed && provider.IsPickupPointProviderActive(_shippingSettings))
-                        ? provider.ShipmentTracker : null;
-
+                var shipmentTracker = shipment.GetShipmentTracker(_shippingService, _shippingSettings);
                 if (shipmentTracker != null)
                 {
                     model.TrackingNumberUrl = shipmentTracker.GetUrl(shipment.TrackingNumber);
@@ -964,7 +959,6 @@ namespace Nop.Admin.Controllers
                     {
                         var shipmentEvents = shipmentTracker.GetShipmentEvents(shipment.TrackingNumber);
                         if (shipmentEvents != null)
-                        {
                             foreach (var shipmentEvent in shipmentEvents)
                             {
                                 var shipmentStatusEventModel = new ShipmentModel.ShipmentStatusEventModel();
@@ -977,7 +971,6 @@ namespace Nop.Admin.Controllers
                                 shipmentStatusEventModel.Location = shipmentEvent.Location;
                                 model.ShipmentStatusEvents.Add(shipmentStatusEventModel);
                             }
-                        }
                     }
                 }
             }

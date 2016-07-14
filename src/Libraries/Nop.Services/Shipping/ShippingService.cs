@@ -16,6 +16,7 @@ using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
+using Nop.Services.Shipping.Pickup;
 
 namespace Nop.Services.Shipping
 {

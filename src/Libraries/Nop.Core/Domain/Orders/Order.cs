@@ -316,7 +316,7 @@ namespace Nop.Core.Domain.Orders
         public string ShippingMethod { get; set; }
 
         /// <summary>
-        /// Gets or sets the shipping rate computation method identifier
+        /// Gets or sets the shipping rate computation method identifier or the pickup point provider identifier (if PickUpInStore is true)
         /// </summary>
         public string ShippingRateComputationMethodSystemName { get; set; }
 

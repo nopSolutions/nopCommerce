@@ -3,7 +3,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Plugins;
 using Nop.Services.Shipping.Tracking;
 
-namespace Nop.Services.Shipping
+namespace Nop.Services.Shipping.Pickup
 {
     /// <summary>
     /// Represents an interface of pickup point provider

@@ -51,6 +51,7 @@ using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
 
 namespace Nop.Admin.Extensions

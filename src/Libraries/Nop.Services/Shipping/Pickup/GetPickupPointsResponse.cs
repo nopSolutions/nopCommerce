@@ -1,7 +1,7 @@
 using Nop.Core.Domain.Shipping;
 using System.Collections.Generic;
 
-namespace Nop.Services.Shipping
+namespace Nop.Services.Shipping.Pickup
 {
     /// <summary>
     /// Represents a response of getting pickup points

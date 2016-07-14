@@ -259,6 +259,7 @@
     <Compile Include="Shipping\EventPublisherExtensions.cs" />
     <Compile Include="Shipping\Pickup\GetPickupPointsResponse.cs" />
     <Compile Include="Shipping\Pickup\IPickupPointProvider.cs" />
+    <Compile Include="Shipping\Tracking\ShipmentExtensions.cs" />
     <Compile Include="Topics\ITopicTemplateService.cs" />
     <Compile Include="Topics\TopicTemplateService.cs" />
     <Compile Include="Vendors\VendorExtensions.cs" />

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Nop.Core.Domain.Shipping;
+using Nop.Services.Shipping.Pickup;
 
 namespace Nop.Services.Shipping
 {

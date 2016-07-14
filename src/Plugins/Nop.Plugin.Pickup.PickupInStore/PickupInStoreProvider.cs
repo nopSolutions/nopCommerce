@@ -10,7 +10,7 @@ using Nop.Plugin.Pickup.PickupInStore.Services;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
-using Nop.Services.Shipping;
+using Nop.Services.Shipping.Pickup;
 using Nop.Services.Shipping.Tracking;
 
 namespace Nop.Plugin.Pickup.PickupInStore
