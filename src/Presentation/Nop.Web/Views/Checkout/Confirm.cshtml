@@ -74,8 +74,8 @@
                         <input type="submit" name="nextstep" value="@T("Checkout.ConfirmButton")" class="button-1 confirm-order-next-step-button" />
                     </div>
 					<script>
-                        $(document).on('submit', 'form', function() {
-                            var button = $(this).find('input[type="submit"]');
+                        $('#confirm-order-form').on('submit', function () {
+                            var button = $(this).find('input[type="submit"][name="nextstep"]');
                             setTimeout(function() {
                                 button.attr('disabled', 'disabled');
                             }, 0);
