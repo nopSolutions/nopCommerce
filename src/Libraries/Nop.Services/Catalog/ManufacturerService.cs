@@ -203,7 +203,7 @@ namespace Nop.Services.Catalog
         /// Inserts a manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
-        public virtual void InsertManufacturer(Manufacturer manufacturer)
+        public virtual Manufacturer InsertManufacturer(Manufacturer manufacturer)
         {
             if (manufacturer == null)
                 throw new ArgumentNullException("manufacturer");
@@ -216,6 +216,7 @@ namespace Nop.Services.Catalog
 
             //event notification
             _eventPublisher.EntityInserted(manufacturer);
+            return manufacturer;
         }
 
         /// <summary>

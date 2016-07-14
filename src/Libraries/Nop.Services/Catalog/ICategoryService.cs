@@ -55,7 +55,7 @@ namespace Nop.Services.Catalog
         /// Inserts category
         /// </summary>
         /// <param name="category">Category</param>
-        void InsertCategory(Category category);
+        Category InsertCategory(Category category);
 
         /// <summary>
         /// Updates the category
