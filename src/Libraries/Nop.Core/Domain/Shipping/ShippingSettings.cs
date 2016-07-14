@@ -8,12 +8,18 @@ namespace Nop.Core.Domain.Shipping
         public ShippingSettings()
         {
             ActiveShippingRateComputationMethodSystemNames = new List<string>();
+            ActivePickupPointProviderSystemNames = new List<string>();
         }
 
         /// <summary>
         /// Gets or sets system names of active shipping rate computation methods
         /// </summary>
         public List<string> ActiveShippingRateComputationMethodSystemNames { get; set; }
+
+        /// <summary>
+        /// Gets or sets system names of active pickup point providers
+        /// </summary>
+        public List<string> ActivePickupPointProviderSystemNames { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating "Ship to the same address" option is enabled
@@ -26,10 +32,15 @@ namespace Nop.Core.Domain.Shipping
         public bool AllowPickUpInStore { get; set; }
 
         /// <summary>
-        /// Gets or sets "pick up in store" fee (used with "AllowPickUpInStore" setting enabled)
+        /// Gets or sets a value indicating whether display a pickup points in the map
         /// </summary>
-        public decimal PickUpInStoreFee { get; set; }
+        public bool DisplayPickupPointsOnMap { get; set; }
 
+        /// <summary>
+        /// Gets or sets Google map API key
+        /// </summary>
+        public string GoogleMapsApiKey { get; set; }
+        
         /// <summary>
         /// Gets or sets a value indicating whether the system should use warehouse location when requesting shipping rates
         /// This is useful when you ship from multiple warehouses

@@ -58,6 +58,9 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
 
+            //activity log
+            _customerActivityService.InsertActivity("EditActivityLogTypes", _localizationService.GetResource("ActivityLog.EditActivityLogTypes"));
+
             string formKey = "checkbox_activity_types";
             var checkedActivityTypes = form[formKey] != null ? form[formKey].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x)).ToList() : new List<int>();
             
@@ -67,6 +70,7 @@ namespace Nop.Admin.Controllers
                 activityType.Enabled = checkedActivityTypes.Contains(activityType.Id);
                 _customerActivityService.UpdateActivityType(activityType);
             }
+
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.ActivityLog.ActivityLogType.Updated"));
             return RedirectToAction("ListTypes");
         }
@@ -138,6 +142,9 @@ namespace Nop.Admin.Controllers
             }
             _customerActivityService.DeleteActivity(activityLog);
 
+            //activity log
+            _customerActivityService.InsertActivity("DeleteActivityLog", _localizationService.GetResource("ActivityLog.DeleteActivityLog"));
+
             return new NullJsonResult();
         }
 
@@ -147,10 +154,13 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             _customerActivityService.ClearAllActivities();
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteActivityLog", _localizationService.GetResource("ActivityLog.DeleteActivityLog"));
+
             return RedirectToAction("ListLogs");
         }
 
         #endregion
-
     }
 }

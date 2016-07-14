@@ -153,7 +153,7 @@ namespace Nop.Services.Discounts
         public virtual IList<Discount> GetAllDiscounts(DiscountType? discountType,
             string couponCode = "", string discountName = "", bool showHidden = false)
         {
-            //we load all discounts, and filter them by passed "discountType" parameter later
+            //we load all discounts, and filter them using "discountType" parameter later (in memory)
             //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
             //that's why let's access the database only once
             string key = string.Format(DISCOUNTS_ALL_KEY, showHidden, couponCode, discountName);
@@ -396,7 +396,7 @@ namespace Nop.Services.Discounts
 
             //discount requirements
             //UNDONE we should inject static cache manager into constructor. we we already have "per request" cache manager injected. better way to do it?
-            //we cache meta info of rdiscount requirements. this way we should not load them for each HTTP request
+            //we cache meta info of discount requirements. this way we should not load them for each HTTP request
             var staticCacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
             string key = string.Format(DiscountRequirementEventConsumer.DISCOUNT_REQUIREMENT_MODEL_KEY, discount.Id);
             //var requirements = discount.DiscountRequirements;

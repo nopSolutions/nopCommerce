@@ -270,9 +270,11 @@
                         @Html.AntiForgeryToken()
                         <div class="form-group">
                             <div class="col-md-2">
-                                <label class="control-label">
-                                    @T("Admin.Common.CsvFile")
-                                </label>
+                                <div class="label-wrapper">
+                                    <label class="control-label">
+                                        @T("Admin.Common.CsvFile")
+                                    </label>
+                                </div>
                             </div>
                             <div class="col-md-10">
                                 <input type="file" id="importcsvfile" name="importcsvfile" class="form-control" />

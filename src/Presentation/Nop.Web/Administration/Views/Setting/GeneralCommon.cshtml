@@ -23,9 +23,20 @@
     </div>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             bindBootstrapTabSelectEvent('generalsettings-edit');
+            $("#@Html.FieldIdFor(model => model.StoreInformationSettings.SitemapEnabled)").click(toggleSitemapSettings);
+            toggleSitemapSettings();
         });
+
+        function toggleSitemapSettings() {
+            if ($('#@Html.FieldIdFor(model => model.StoreInformationSettings.SitemapEnabled)').is(':checked')) {
+                $("#pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts").show();
+            }
+            else {
+                $("#pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts").hide();
+            }
+        }
     </script>
 
     <div class="content">
@@ -33,7 +44,6 @@
             @Html.Action("StoreScopeConfiguration", "Setting")
             @Html.Action("Mode", "Setting")
             @Html.ValidationSummary(false)
-
 
             <div class="panel-group">
                 <div class="panel panel-default">
@@ -44,17 +54,17 @@
                                 @Html.NopLabelFor(model => model.StoreInformationSettings.DefaultStoreTheme)
                             </div>
                             <div class="col-md-9">
-                                <div id="theme-selection-block" class="clearfix">
+                                <div id="theme-selection-block" class="theme-selection-block clearfix">
                                     @foreach (var theme in Model.StoreInformationSettings.AvailableStoreThemes)
                                     {
-                                        <div class="checkbox" style="float: left;">
-                                            <label style="padding-left: 0; padding-right: 20px;">
-                                                <span style="display: block">
-                                                    <input type="radio" style="margin: 0 5px 8px 0;" name="@Html.FieldNameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.ThemeName"
-                                                           @if (theme.ThemeName == Model.StoreInformationSettings.DefaultStoreTheme) { <text> checked="checked" </text>       }>
+                                        <div class="checkbox">
+                                            <label>
+                                                <span>
+                                                    <input type="radio" name="@Html.FieldNameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.ThemeName"
+                                                           @if (theme.ThemeName == Model.StoreInformationSettings.DefaultStoreTheme) { <text> checked="checked" </text>  }>
                                                     @theme.ThemeTitle
                                                 </span>
-                                                <img src="@Url.Content(theme.PreviewImageUrl)" alt="@theme.PreviewText" title="@theme.PreviewText" width="175">
+                                                <img src="@Url.Content(theme.PreviewImageUrl)" alt="@theme.PreviewText" title="@theme.PreviewText">
                                             </label>
                                         </div>
                                     }
@@ -71,6 +81,16 @@
                             <div class="col-md-9">
                                 @Html.NopEditorFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme)
                                 @Html.ValidationMessageFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.LogoPictureId_OverrideForStore, "logo-block", Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.StoreInformationSettings.LogoPictureId)
+                            </div>
+                            <div class="col-md-9" id="logo-block">
+                                @Html.NopEditorFor(model => model.StoreInformationSettings.LogoPictureId)
+                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.LogoPictureId)
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
@@ -151,6 +171,46 @@
                             <div class="col-md-9">
                                 @Html.NopEditorFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm)
                                 @Html.ValidationMessageFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.SitemapEnabled_OverrideForStore, model => model.StoreInformationSettings.SitemapEnabled, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.StoreInformationSettings.SitemapEnabled)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.StoreInformationSettings.SitemapEnabled)
+                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.SitemapEnabled)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting" id="pnlSitemapIncludeCategories">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.SitemapIncludeCategories_OverrideForStore, model => model.StoreInformationSettings.SitemapIncludeCategories, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.StoreInformationSettings.SitemapIncludeCategories)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.StoreInformationSettings.SitemapIncludeCategories)
+                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.SitemapIncludeCategories)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting" id="pnlSitemapIncludeManufacturers">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.SitemapIncludeManufacturers_OverrideForStore, model => model.StoreInformationSettings.SitemapIncludeManufacturers, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.StoreInformationSettings.SitemapIncludeManufacturers)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.StoreInformationSettings.SitemapIncludeManufacturers)
+                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.SitemapIncludeManufacturers)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting" id="pnlSitemapIncludeProducts">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.SitemapIncludeProducts_OverrideForStore, model => model.StoreInformationSettings.SitemapIncludeProducts, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.StoreInformationSettings.SitemapIncludeProducts)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.StoreInformationSettings.SitemapIncludeProducts)
+                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.SitemapIncludeProducts)
                             </div>
                         </div>
                     </div>
@@ -285,6 +345,16 @@
                             <div class="col-md-9">
                                 @Html.NopEditorFor(model => model.SeoSettings.OpenGraphMetaTags)
                                 @Html.ValidationMessageFor(model => model.SeoSettings.OpenGraphMetaTags)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.CustomHeadTags_OverrideForStore, model => model.SeoSettings.CustomHeadTags, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.SeoSettings.CustomHeadTags)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.SeoSettings.CustomHeadTags)
+                                @Html.ValidationMessageFor(model => model.SeoSettings.CustomHeadTags)
                             </div>
                         </div>
                     </div>
@@ -483,40 +553,40 @@
                         </div>
                     </div>
                     <script type="text/javascript">
-                $(document).ready(function() {
-                    $("#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)").click(toggleReCaptcha);
-                    toggleReCaptcha();
-                });
+                        $(document).ready(function() {
+                            $("#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)").click(toggleReCaptcha);
+                            toggleReCaptcha();
+                        });
 
-                function toggleReCaptcha() {
-                    if ($('#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)').is(':checked')) {
-                        $('#ssCaptchaShowOnLoginPagepnl').show();
-                        $('#ssCaptchaShowOnRegistrationPagepnl').show();
-                        $('#ssCaptchaShowOnContactUsPagepnl').show();
-                        $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
-                        $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
-                        $('#ssCaptchaShowOnBlogCommentPagepnl').show();
-                        $('#ssCaptchaShowOnNewsCommentPagepnl').show();
-                        $('#ssCaptchaShowOnProductReviewPagepnl').show();
-                        $('#ssCaptchaShowOnApplyVendorPagepnl').show();
-                        $('#ssReCaptchaPublicKeypnl').show();
-                        $('#ssReCaptchaPrivateKeypnl').show();
-                        $('#ssReCaptchaVersionpnl').show();
-                    } else {
-                        $('#ssCaptchaShowOnLoginPagepnl').hide();
-                        $('#ssCaptchaShowOnRegistrationPagepnl').hide();
-                        $('#ssCaptchaShowOnContactUsPagepnl').hide();
-                        $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
-                        $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();
-                        $('#ssCaptchaShowOnBlogCommentPagepnl').hide();
-                        $('#ssCaptchaShowOnNewsCommentPagepnl').hide();
-                        $('#ssCaptchaShowOnProductReviewPagepnl').hide();
-                        $('#ssCaptchaShowOnApplyVendorPagepnl').hide();
-                        $('#ssReCaptchaPublicKeypnl').hide();
-                        $('#ssReCaptchaPrivateKeypnl').hide();
-                        $('#ssReCaptchaVersionpnl').hide();
-                    }
-                }
+                        function toggleReCaptcha() {
+                            if ($('#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)').is(':checked')) {
+                                $('#ssCaptchaShowOnLoginPagepnl').show();
+                                $('#ssCaptchaShowOnRegistrationPagepnl').show();
+                                $('#ssCaptchaShowOnContactUsPagepnl').show();
+                                $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
+                                $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
+                                $('#ssCaptchaShowOnBlogCommentPagepnl').show();
+                                $('#ssCaptchaShowOnNewsCommentPagepnl').show();
+                                $('#ssCaptchaShowOnProductReviewPagepnl').show();
+                                $('#ssCaptchaShowOnApplyVendorPagepnl').show();
+                                $('#ssReCaptchaPublicKeypnl').show();
+                                $('#ssReCaptchaPrivateKeypnl').show();
+                                $('#ssReCaptchaVersionpnl').show();
+                            } else {
+                                $('#ssCaptchaShowOnLoginPagepnl').hide();
+                                $('#ssCaptchaShowOnRegistrationPagepnl').hide();
+                                $('#ssCaptchaShowOnContactUsPagepnl').hide();
+                                $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
+                                $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();
+                                $('#ssCaptchaShowOnBlogCommentPagepnl').hide();
+                                $('#ssCaptchaShowOnNewsCommentPagepnl').hide();
+                                $('#ssCaptchaShowOnProductReviewPagepnl').hide();
+                                $('#ssCaptchaShowOnApplyVendorPagepnl').hide();
+                                $('#ssReCaptchaPublicKeypnl').hide();
+                                $('#ssReCaptchaPrivateKeypnl').hide();
+                                $('#ssReCaptchaVersionpnl').hide();
+                            }
+                        }
                     </script>
                 </div>
                 <div class="panel panel-default advanced-setting">
@@ -644,19 +714,21 @@
                             }
                         </p>
                         @if (Model.FullTextSettings.Supported)
-                {
+                        {
                             <div class="form-group">
                                 <div class="col-md-3">
-                                    <label class="control-label">
-                                        @if (Model.FullTextSettings.Enabled)
-                                        {
-                                            @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyEnabled")
-                                        }
-                                        else
-                                        {
-                                            @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyDisabled")
-                                        }
-                                    </label>
+                                    <div class="label-wrapper">
+                                        <label class="control-label">
+                                            @if (Model.FullTextSettings.Enabled)
+                                            {
+                                                @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyEnabled")
+                                            }
+                                            else
+                                            {
+                                                @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyDisabled")
+                                            }
+                                        </label>
+                                    </div>
                                 </div>
                                 <div class="col-md-9">
                                     <button type="submit" name="togglefulltext" class="btn btn-primary">

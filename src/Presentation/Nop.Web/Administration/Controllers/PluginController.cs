@@ -20,6 +20,7 @@ using Nop.Services.Localization;
 using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Pickup;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
@@ -106,7 +107,7 @@ namespace Nop.Admin.Controllers
                     .Select(s => s.ToModel())
                     .ToList();
                 pluginModel.SelectedStoreIds = pluginDescriptor.LimitedToStores.ToArray();
-                pluginModel.LimitedToStores = pluginDescriptor.LimitedToStores.Count > 0;
+                pluginModel.LimitedToStores = pluginDescriptor.LimitedToStores.Any();
             }
 
 
@@ -130,6 +131,11 @@ namespace Nop.Admin.Controllers
                 {
                     //shipping rate computation method
                     configurationUrl = Url.Action("ConfigureProvider", "Shipping", new { systemName = pluginDescriptor.SystemName });
+                }
+                else if (pluginInstance is IPickupPointProvider)
+                {
+                    //pickup point provider
+                    configurationUrl = Url.Action("ConfigurePickupPointProvider", "Shipping", new { systemName = pluginDescriptor.SystemName });
                 }
                 else if (pluginInstance is ITaxProvider)
                 {
@@ -168,6 +174,12 @@ namespace Nop.Admin.Controllers
                     //shipping rate computation method
                     pluginModel.CanChangeEnabled = true;
                     pluginModel.IsEnabled = ((IShippingRateComputationMethod)pluginInstance).IsShippingRateComputationMethodActive(_shippingSettings);
+                }
+                else if (pluginInstance is IPickupPointProvider)
+                {
+                    //pickup point provider
+                    pluginModel.CanChangeEnabled = true;
+                    pluginModel.IsEnabled = ((IPickupPointProvider)pluginInstance).IsPickupPointProviderActive(_shippingSettings);
                 }
                 else if (pluginInstance is ITaxProvider)
                 {
@@ -461,6 +473,29 @@ namespace Nop.Admin.Controllers
                             {
                                 //mark as active
                                 _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add(srcm.PluginDescriptor.SystemName);
+                                _settingService.SaveSetting(_shippingSettings);
+                            }
+                        }
+                    }
+                    else if (pluginInstance is IPickupPointProvider)
+                    {
+                        //pickup point provider
+                        var pickupPointProvider = (IPickupPointProvider)pluginInstance;
+                        if (pickupPointProvider.IsPickupPointProviderActive(_shippingSettings))
+                        {
+                            if (!model.IsEnabled)
+                            {
+                                //mark as disabled
+                                _shippingSettings.ActivePickupPointProviderSystemNames.Remove(pickupPointProvider.PluginDescriptor.SystemName);
+                                _settingService.SaveSetting(_shippingSettings);
+                            }
+                        }
+                        else
+                        {
+                            if (model.IsEnabled)
+                            {
+                                //mark as active
+                                _shippingSettings.ActivePickupPointProviderSystemNames.Add(pickupPointProvider.PluginDescriptor.SystemName);
                                 _settingService.SaveSetting(_shippingSettings);
                             }
                         }

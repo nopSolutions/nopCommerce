@@ -672,6 +672,17 @@ namespace Nop.Web.Infrastructure.Cache
         public const string RETURNREQUESTACTIONS_PATTERN_KEY = "Nop.pres.returnrequestactions";
 
         /// <summary>
+        /// Key for logo
+        /// </summary>
+        /// <remarks>
+        /// {0} : current store ID
+        /// {1} : current theme
+        /// {2} : is connection SSL secured (included in a picture URL)
+        /// </remarks>
+        public const string STORE_LOGO_PATH = "Nop.pres.logo-{0}-{1}-{2}";
+        public const string STORE_LOGO_PATH_PATTERN_KEY = "Nop.pres.logo";
+
+        /// <summary>
         /// Key for available languages
         /// </summary>
         /// <remarks>
@@ -685,7 +696,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// </summary>
         /// <remarks>
         /// {0} : language ID
-        /// {0} : current store ID
+        /// {1} : current store ID
         /// </remarks>
         public const string AVAILABLE_CURRENCIES_MODEL_KEY = "Nop.pres.currencies.all-{0}-{1}";
         public const string AVAILABLE_CURRENCIES_PATTERN_KEY = "Nop.pres.currencies";
@@ -812,6 +823,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY); //depends on NewsSettings.MainPageNewsCount
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY); //depends on distinct sitemap settings
             _cacheManager.RemoveByPattern(WIDGET_PATTERN_KEY); //depends on WidgetSettings and certain settings of widgets
+            _cacheManager.RemoveByPattern(STORE_LOGO_PATH_PATTERN_KEY); //depends on StoreInformationSettings.LogoPictureId
         }
 
         //vendors

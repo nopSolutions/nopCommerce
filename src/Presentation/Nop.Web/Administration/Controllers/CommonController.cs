@@ -297,7 +297,7 @@ namespace Nop.Admin.Controllers
 
             //shipping rate coputation methods
             var srcMethods = _shippingService.LoadActiveShippingRateComputationMethods();
-            if (srcMethods.Count == 0)
+            if (!srcMethods.Any())
                 model.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Fail,

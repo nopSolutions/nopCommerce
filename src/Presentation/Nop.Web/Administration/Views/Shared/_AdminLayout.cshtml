@@ -85,8 +85,8 @@
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     @Html.NopHeadCustom()
-    @Html.NopCssFiles(this.Url, ResourceLocation.Head)
-    @Html.NopScripts(this.Url, ResourceLocation.Head)
+    @Html.NopCssFiles(this.Url, ResourceLocation.Head, false)
+    @Html.NopScripts(this.Url, ResourceLocation.Head, false)
 </head>
 <body class="hold-transition skin-blue sidebar-mini @if (hideSidebar)
                                                     {<text>sidebar-collapse</text>}">
@@ -163,11 +163,9 @@
                                     @Html.Widget("admin_header_middle", area: "Admin")
                                 </li>
                                 <li>
-                                    <span class="public-store">
                                     <a href="@Url.Action("Index", "Home", new {area = ""})">
                                         @T("Admin.Header.PublicStore")
                                     </a>
-                                </span>
                                 </li>
                                 @if (canManageMaintenance)
                                 {

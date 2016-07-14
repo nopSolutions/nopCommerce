@@ -388,7 +388,7 @@ namespace Nop.Services.Customers
             }
             return sortedCustomers;
         }
-
+        
         /// <summary>
         /// Gets a customer by GUID
         /// </summary>
@@ -558,7 +558,7 @@ namespace Nop.Services.Customers
             {
                 _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.SelectedShippingOption, null, storeId);
                 _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.OfferedShippingOptions, null, storeId);
-                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.SelectedPickUpInStore, false, storeId);
+                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.SelectedPickupPoint, null, storeId);
             }
 
             //clear selected payment method

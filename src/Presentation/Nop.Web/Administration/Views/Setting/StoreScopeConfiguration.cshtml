@@ -21,8 +21,12 @@
 
 <div class="form-group">
     <div class="col-md-12">
-        <label class="control-label" style="float:left;margin-right:10px;">@T("Admin.Configuration.Settings.StoreScope")</label>
-        @Html.NopDropDownList("store-scope-configuration", stores, new {onchange = "setLocation(this.value);", style = "width: auto;min-width: 300px;" })
+        <div class="label-wrapper" style="float: left; margin-right: 10px;">
+            <label class="control-label">
+                @T("Admin.Configuration.Settings.StoreScope")
+            </label>
+        </div>
+        @Html.NopDropDownList("store-scope-configuration", stores, new {onchange = "setLocation(this.value);", style = "width: auto;min-width: 300px;"})
         @if (Model.StoreId > 0)
         {
             <div class="checkbox">

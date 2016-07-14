@@ -213,6 +213,11 @@ namespace Nop.Web.Infrastructure
                             new { controller = "BackInStockSubscription", action = "SubscribePopup" },
                             new { productId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("BackInStockSubscribeSend",
+                            "backinstocksubscribesend/{productId}",
+                            new { controller = "BackInStockSubscription", action = "SubscribePopupPOST" },
+                            new { productId = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
             //downloads
             routes.MapRoute("GetSampleDownload",
                             "download/sample/{productid}",

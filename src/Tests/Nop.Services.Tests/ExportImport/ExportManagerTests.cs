@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
@@ -9,6 +11,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
+using Nop.Services.Configuration;
 using Nop.Services.ExportImport;
 using Nop.Services.Media;
 using Nop.Services.Messages;
@@ -28,6 +31,8 @@ namespace Nop.Services.Tests.ExportImport
         private INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private IExportManager _exportManager;
         private IStoreService _storeService;
+        private ProductEditorSettings _productEditorSettings;
+        private IWorkContext _workContext;
 
         [SetUp]
         public new void SetUp()
@@ -38,11 +43,13 @@ namespace Nop.Services.Tests.ExportImport
             _productAttributeService = MockRepository.GenerateMock<IProductAttributeService>();
             _pictureService = MockRepository.GenerateMock<IPictureService>();
             _newsLetterSubscriptionService = MockRepository.GenerateMock<INewsLetterSubscriptionService>();
+            _productEditorSettings = new ProductEditorSettings();
+            _workContext = MockRepository.GenerateMock<IWorkContext>();
 
             _exportManager = new ExportManager(_categoryService,
                 _manufacturerService, _productAttributeService, 
                 _pictureService, _newsLetterSubscriptionService,
-                _storeService);
+                _storeService, _workContext, _productEditorSettings);
         }
 
         //[Test]

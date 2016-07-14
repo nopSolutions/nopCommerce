@@ -6,3 +6,4 @@ SupportedVersions: 3.80
 Author: nopCommerce team, Nicolas Muniere
 DisplayOrder: 1
 FileName: Nop.Plugin.Widgets.GoogleAnalytics.dll
+Description:

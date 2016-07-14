@@ -287,7 +287,7 @@ namespace Nop.Admin.Controllers
                 var errors = _orderProcessingService.CancelRecurringPayment(payment);
                 var model = new RecurringPaymentModel();
                 PrepareRecurringPaymentModel(model, payment);
-                if (errors.Count > 0)
+                if (errors.Any())
                 {
                     foreach (var error in errors)
                         ErrorNotification(error, false);

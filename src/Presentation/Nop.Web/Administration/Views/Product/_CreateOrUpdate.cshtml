@@ -11,42 +11,35 @@
 
 <div class="content">
     <div class="form-horizontal">
+        <div class="row">
+            <div class="col-md-12 clearfix">
+                <div class="pull-left">
+                    @Html.Action("Mode", "Setting", new { modeName = "product-advanced-mode" })
+                </div>
+                <button type="button" class="btn btn-info pull-left margin-l-10" id="product-editor-settings" data-toggle="modal" data-target="#productsettings-window">
+                    <i class="fa fa-gear"></i>
+                    @T("Admin.Configuration.Settings.ProductEditor.Button")
+                </button>
+            </div>
+        </div>
         <div id="product-edit" class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Catalog.Products.Info"), true)
-                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"))
+                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"), customCssClass:  Model.ProductEditorSettingsModel.Seo ? "" : "advanced-setting")
                 @Html.RenderBootstrapTabHeader("tab-pictures", @T("Admin.Catalog.Products.Pictures"))
-                @Html.RenderBootstrapTabHeader("tab-categories", @T("Admin.Catalog.Products.Categories"))
-                @Html.RenderBootstrapTabHeader("tab-manufacturers", @T("Admin.Catalog.Products.Manufacturers"))
-                @Html.RenderBootstrapTabHeader("tab-specification-attributes", @T("Admin.Catalog.Products.SpecificationAttributes"))
                 @Html.RenderBootstrapTabHeader("tab-product-attributes", @T("Admin.Catalog.Products.ProductAttributes"))
-                @Html.RenderBootstrapTabHeader("tab-tier-prices", @T("Admin.Catalog.Products.TierPrices"))
-                @Html.RenderBootstrapTabHeader("tab-discounts", @T("Admin.Catalog.Products.Discounts"))
-                @Html.RenderBootstrapTabHeader("tab-acl", @T("Admin.Catalog.Products.Acl"))
-                @Html.RenderBootstrapTabHeader("tab-stores", @T("Admin.Catalog.Products.Stores"))
-                @Html.RenderBootstrapTabHeader("tab-related-products", @T("Admin.Catalog.Products.RelatedProducts"))
-                @Html.RenderBootstrapTabHeader("tab-cross-sells", @T("Admin.Catalog.Products.CrossSells"))
-                @Html.RenderBootstrapTabHeader("tab-associated-products", @T("Admin.Catalog.Products.AssociatedProducts"))
+                @Html.RenderBootstrapTabHeader("tab-specification-attributes", @T("Admin.Catalog.Products.SpecificationAttributes"))
                 @if (Model.Id > 0)
                 {
-                    @Html.RenderBootstrapTabHeader("tab-purchased-with-orders", @T("Admin.Catalog.Products.PurchasedWithOrders"))
+                    @Html.RenderBootstrapTabHeader("tab-purchased-with-orders", @T("Admin.Catalog.Products.PurchasedWithOrders"), customCssClass: Model.ProductEditorSettingsModel.PurchasedWithOrders ? "" : "advanced-setting")
                 }
             </ul>
             <div class="tab-content">
                 @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
                 @Html.RenderBootstrapTabContent("tab-seo", @TabSeo())
                 @Html.RenderBootstrapTabContent("tab-pictures", @TabPictures())
-                @Html.RenderBootstrapTabContent("tab-categories", @TabCategories())
-                @Html.RenderBootstrapTabContent("tab-manufacturers", @TabManufacturers())
                 @Html.RenderBootstrapTabContent("tab-specification-attributes", @TabSpecificationAttributes())
                 @Html.RenderBootstrapTabContent("tab-product-attributes", @TabProductAttributes())
-                @Html.RenderBootstrapTabContent("tab-tier-prices", @TabTierPrices())
-                @Html.RenderBootstrapTabContent("tab-discounts", @TabDiscounts())
-                @Html.RenderBootstrapTabContent("tab-acl", @TabAcl())
-                @Html.RenderBootstrapTabContent("tab-stores", @TabStores())
-                @Html.RenderBootstrapTabContent("tab-related-products", @TabRelatedProducts())
-                @Html.RenderBootstrapTabContent("tab-cross-sells", @TabCrossSells())
-                @Html.RenderBootstrapTabContent("tab-associated-products", @TabAssociatedProducts())
                 @if (Model.Id > 0)
                 {
                     @Html.RenderBootstrapTabContent("tab-purchased-with-orders", @TabPurchasedWithOrders())
@@ -79,39 +72,9 @@
     @Html.Partial("_CreateOrUpdate.SEO", Model)
 }
 
-@helper TabCategories()
-{
-    @Html.Partial("_CreateOrUpdate.Categories", Model)
-}
-
-@helper TabManufacturers()
-{
-    @Html.Partial("_CreateOrUpdate.Manufacturers", Model)
-}
-
 @helper TabPictures()
 {
     @Html.Partial("_CreateOrUpdate.Pictures", Model)
-}
-
-@helper TabSpecificationAttributes()
-{
-    @Html.Partial("_CreateOrUpdate.SpecificationAttributes", Model)
-}
-
-@helper TabAcl()
-{
-    @Html.Partial("_CreateOrUpdate.Acl", Model)
-}
-
-@helper TabStores()
-{
-    @Html.Partial("_CreateOrUpdate.Stores", Model)
-}
-
-@helper TabTierPrices()
-{
-    @Html.Partial("_CreateOrUpdate.TierPrices", Model)
 }
 
 @helper TabProductAttributes()
@@ -119,24 +82,9 @@
     @Html.Partial("_CreateOrUpdate.ProductAttributes", Model)
 }
 
-@helper TabDiscounts()
+@helper TabSpecificationAttributes()
 {
-    @Html.Partial("_CreateOrUpdate.Discounts", Model)
-}
-
-@helper TabRelatedProducts()
-{
-    @Html.Partial("_CreateOrUpdate.RelatedProducts", Model)
-}
-
-@helper TabCrossSells()
-{
-    @Html.Partial("_CreateOrUpdate.CrossSells", Model)
-}
-
-@helper TabAssociatedProducts()
-{
-    @Html.Partial("_CreateOrUpdate.AssociatedProducts", Model)
+    @Html.Partial("_CreateOrUpdate.SpecificationAttributes", Model)
 }
 
 @helper TabPurchasedWithOrders()

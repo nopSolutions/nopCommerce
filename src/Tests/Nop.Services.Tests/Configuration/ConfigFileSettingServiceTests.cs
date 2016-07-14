@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Nop.Services.Configuration;
 using Nop.Tests;
 using NUnit.Framework;
@@ -26,7 +27,7 @@ namespace Nop.Services.Tests.Configuration
         {
             var settings = config.GetAllSettings();
             settings.ShouldNotBeNull();
-            (settings.Count > 0).ShouldBeTrue();
+            (settings.Any()).ShouldBeTrue();
         }
 
         [Test]

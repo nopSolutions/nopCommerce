@@ -4786,9 +4786,10 @@ namespace Nop.Services.Installation
                 BillingAddress = (Address)fourthCustomer.BillingAddress.Clone(),
                 ShippingAddress = (Address)fourthCustomer.ShippingAddress.Clone(),
                 ShippingStatus = ShippingStatus.Shipped,
-                ShippingMethod = "In-Store Pickup",
-                PickUpInStore = false,
-                ShippingRateComputationMethodSystemName = "Shipping.FixedRate",
+                ShippingMethod = "Pickup in store",
+                PickUpInStore = true,
+                PickupAddress = (Address)fourthCustomer.ShippingAddress.Clone(),
+                ShippingRateComputationMethodSystemName = "Pickup.PickupInStore",
                 CustomValuesXml = string.Empty,
                 VatNumber = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow
@@ -5743,6 +5744,7 @@ namespace Nop.Services.Installation
                         "eucookielawaccept",
                         "page-not-found"
                     },
+                CustomHeadTags = "",
             });
 
             settingService.SaveSetting(new AdminAreaSettings
@@ -6041,9 +6043,10 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new ShippingSettings
             {
                 ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedRate" },
+                ActivePickupPointProviderSystemNames = new List<string> { "Pickup.PickupInStore" },
                 ShipToSameAddress = false,
                 AllowPickUpInStore = true,
-                PickUpInStoreFee = decimal.Zero,
+                DisplayPickupPointsOnMap = false,
                 UseWarehouseLocation = false,
                 NotifyCustomerAboutShippingFromMultipleLocations = false,
                 FreeShippingOverXEnabled = false,
@@ -10765,6 +10768,12 @@ namespace Nop.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
+                                                  SystemKeyword = "DeleteActivityLog",
+                                                  Enabled = true,
+                                                  Name = "Delete activity log"
+                                              },
+                                          new ActivityLogType
+                                              {
                                                   SystemKeyword = "DeleteCategory",
                                                   Enabled = true,
                                                   Name = "Delete category"
@@ -10852,6 +10861,12 @@ namespace Nop.Services.Installation
                                                   SystemKeyword = "DeleteWidget",
                                                   Enabled = true,
                                                   Name = "Delete a widget"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "EditActivityLogTypes",
+                                                  Enabled = true,
+                                                  Name = "Edit activity log types"
                                               },
                                           new ActivityLogType
                                               {

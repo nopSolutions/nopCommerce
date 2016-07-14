@@ -72,6 +72,7 @@ namespace Nop.Services.Tests.Logging
             };
             _cacheManager = new NopNullCache();
             _workContext = MockRepository.GenerateMock<IWorkContext>();
+            _webHelper = MockRepository.GenerateMock<IWebHelper>();
             _activityLogRepository = MockRepository.GenerateMock<IRepository<ActivityLog>>();
             _activityLogTypeRepository = MockRepository.GenerateMock<IRepository<ActivityLogType>>();
             _activityLogTypeRepository.Expect(x => x.Table).Return(new List<ActivityLogType> { _activityType1, _activityType2 }.AsQueryable());

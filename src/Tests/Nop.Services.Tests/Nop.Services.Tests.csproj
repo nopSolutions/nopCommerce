@@ -117,9 +117,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Affiliates\AffiliateExtensionsTest.cs" />
-    <Compile Include="Affiliates\AffiliateServiceTest.cs" />
-    <Compile Include="Catalog\BackInStockSubscriptionServiceTest.cs" />
     <Compile Include="Catalog\ProductExtensionTests.cs" />
     <Compile Include="Catalog\TierPriceExtensionTests.cs" />
     <Compile Include="Catalog\PriceCalculationServiceTests.cs" />

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -82,7 +83,7 @@ namespace Nop.Services.Payments
             if (request == null)
                 throw new ArgumentNullException("request");
 
-            if (request.CustomValues.Count == 0)
+            if (!request.CustomValues.Any())
                 return null;
 
             //XmlSerializer won't serialize objects that implement IDictionary by default.
@@ -161,7 +162,7 @@ namespace Nop.Services.Payments
 
             public void WriteXml(XmlWriter writer)
             {
-                if (Dictionary.Count == 0)
+                if (!Dictionary.Any())
                     return;
 
                 foreach (var key in this.Dictionary.Keys)

@@ -25,10 +25,13 @@
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
+                <p>
+                    @T("Admin.Catalog.Attributes.SpecificationAttributes.Description")
+                </p>
                 <div id="specificationattributes-grid"></div>
 
                 <script>
-                    $(document).ready(function () {
+                    $(document).ready(function() {
                         $("#specificationattributes-grid").kendoGrid({
                             dataSource: {
                                 type: "json",
@@ -64,20 +67,22 @@
                                 mode: "inline"
                             },
                             scrollable: false,
-                            columns: [{
-                                field: "Name",
-                                title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name")",
-                                width: 300
-                            }, {
-                                field: "DisplayOrder",
-                                title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder")",
-                                width: 100
-                            }, {
-                                field: "Id",
-                                title: "@T("Admin.Common.Edit")",
-                                width: 100,
-                                template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-                            }]
+                            columns: [
+                                {
+                                    field: "Name",
+                                    title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name")",
+                                    width: 300
+                                }, {
+                                    field: "DisplayOrder",
+                                    title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder")",
+                                    width: 100
+                                }, {
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Edit")",
+                                    width: 100,
+                                    template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                                }
+                            ]
                         });
                     });
                 </script>
