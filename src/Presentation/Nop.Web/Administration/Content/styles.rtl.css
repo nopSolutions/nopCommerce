@@ -491,12 +491,15 @@ td.k-state-focused.k-state-selected {
     display: inline-block;
     padding-top: 6px;
 }
-.form-group .k-autocomplete, .form-group .k-combobox, .form-group .k-datepicker,
-.form-group .k-timepicker, .form-group .k-datetimepicker, .form-group .k-colorpicker,
-.form-group .k-numerictextbox, .form-group .k-dropdown, .form-group .k-selectbox,
-.form-group .k-textbox, .form-group .k-datetimepicker {
+.form-horizontal .k-autocomplete, .form-horizontal .k-combobox, .form-horizontal .k-datepicker,
+.form-horizontal .k-timepicker, .form-horizontal .k-datetimepicker, .form-horizontal .k-colorpicker,
+.form-horizontal .k-numerictextbox, .form-horizontal .k-dropdown, .form-horizontal .k-selectbox,
+.form-horizontal .k-textbox, .form-horizontal .k-datetimepicker {
     width: 200px !important;
     max-width: 100%;
+    border-radius: 0;
+    border-color: #d2d6de;
+    height: 34px;
 }
 .tag-editor {
     border: 1px solid #d2d6de !important;
