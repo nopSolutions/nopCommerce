@@ -17,6 +17,7 @@ namespace Nop.Web.Models.Order
 
             BillingAddress = new AddressModel();
             ShippingAddress = new AddressModel();
+            PickupAddress = new AddressModel();
 
             CustomValues = new Dictionary<string, object>();
         }
@@ -34,6 +35,7 @@ namespace Nop.Web.Models.Order
         
         public bool IsShippable { get; set; }
         public bool PickUpInStore { get; set; }
+        public AddressModel PickupAddress { get; set; }
         public string ShippingStatus { get; set; }
         public AddressModel ShippingAddress { get; set; }
         public string ShippingMethod { get; set; }

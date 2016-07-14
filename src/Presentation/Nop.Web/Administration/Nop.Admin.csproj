@@ -257,6 +257,7 @@
     <Compile Include="Models\Settings\ReturnRequestReasonModel.cs" />
     <Compile Include="Models\Settings\SortOptionModel.cs" />
     <Compile Include="Models\Settings\VendorSettingsModel.cs" />
+    <Compile Include="Models\Shipping\PickupPointProviderModel.cs" />
     <Compile Include="Models\Shipping\WarehouseModel.cs" />
     <Compile Include="Models\Shipping\DeliveryDateModel.cs" />
     <Compile Include="Models\Templates\TopicTemplateModel.cs" />
@@ -2147,6 +2148,8 @@
     <Content Include="Views\Setting\ReturnRequestActionEdit.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\MultiSelect.cshtml" />
     <Content Include="Views\Setting\Mode.cshtml" />
+    <Content Include="Views\Shipping\PickupPointProviders.cshtml" />
+    <Content Include="Views\Shipping\ConfigurePickupPointProvider.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Product\AddAttributeCombinationPopup.cshtml" />

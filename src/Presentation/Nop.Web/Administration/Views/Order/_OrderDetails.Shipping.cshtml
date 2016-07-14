@@ -3,7 +3,7 @@
 <div class="panel-group">
     @if (Model.IsShippable)
     {
-        if (Model.IsShippable && Model.ShippingAddress != null)
+        if (Model.ShippingAddress != null)
         {
             <div class="panel panel-default">
                 <div class="panel-body">
@@ -12,9 +12,9 @@
                             @Html.NopLabelFor(model => model.ShippingAddress)
                         </div>
                         <div class="col-md-9">
-                            <img alt="google maps" src="@Url.Content("~/Administration/Content/images/google-maps.gif")"/>
+                            <img alt="google maps" src="@Url.Content("~/Administration/Content/images/google-maps.gif")" />
                             <a href="@Html.Raw(Model.ShippingAddressGoogleMapsUrl)" style="margin-bottom: 10px;" target="_blank">@T("Admin.Orders.Fields.ShippingAddress.ViewOnGoogleMaps")</a>
-                            
+
                             <table class="table table-hover table-bordered" style="max-width: 400px;">
                                 @if (Model.ShippingAddress.FirstNameEnabled || Model.ShippingAddress.LastNameEnabled)
                                 {
@@ -160,6 +160,70 @@
             </div>
         }
 
+        if (Model.PickupAddress != null)
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.PickupAddress)
+                        </div>
+                        <div class="col-md-9">
+                            <img alt="google maps" src="@Url.Content("~/Administration/Content/images/google-maps.gif")" />
+                            <a href="@Html.Raw(Model.PickupAddressGoogleMapsUrl)" style="margin-bottom: 10px;" target="_blank">@T("Admin.Orders.Fields.PickupAddress.ViewOnGoogleMaps")</a>
+
+                            <table class="table table-hover table-bordered" style="max-width: 400px;">
+                                @if (!string.IsNullOrEmpty(Model.PickupAddress.Address1))
+                                {
+                                    <tr>
+                                        <td>
+                                            @T("Admin.Orders.Address.Address1")
+                                        </td>
+                                        <td>
+                                            @Model.PickupAddress.Address1
+                                        </td>
+                                    </tr>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.PickupAddress.City))
+                                {
+                                    <tr>
+                                        <td>
+                                            @T("Admin.Orders.Address.City")
+                                        </td>
+                                        <td>
+                                            @Model.PickupAddress.City
+                                        </td>
+                                    </tr>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.PickupAddress.CountryName))
+                                {
+                                    <tr>
+                                        <td>
+                                            @T("Admin.Orders.Address.Country")
+                                        </td>
+                                        <td>
+                                            @Model.PickupAddress.CountryName
+                                        </td>
+                                    </tr>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.PickupAddress.ZipPostalCode))
+                                {
+                                    <tr>
+                                        <td>
+                                            @T("Admin.Orders.Address.ZipPostalCode")
+                                        </td>
+                                        <td>
+                                            @Model.PickupAddress.ZipPostalCode
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
@@ -224,7 +288,7 @@
                             @Html.NopLabelFor(model => model.ShippingStatus)
                         </div>
                         <div class="col-md-9">
-                             @Html.NopDisplayFor(model => model.ShippingStatus)
+                            @Html.NopDisplayFor(model => model.ShippingStatus)
                         </div>
                     </div>
                 }

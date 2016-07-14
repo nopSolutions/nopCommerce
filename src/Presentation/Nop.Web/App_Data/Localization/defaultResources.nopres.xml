@@ -6706,13 +6706,19 @@
     <Value>"Pick Up in Store" enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickUpInStore.Hint">
-    <Value>A value indicating whether "Pick Up in Store" option is enabled during checkout.</Value>
+    <Value>A value indicating whether "Pick Up in Store" option is enabled during checkout. Please ensure that you have at least one active pickup point provider.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.BypassShippingMethodSelectionIfOnlyOne">
     <Value>Bypass shipping method page if there's only one</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.BypassShippingMethodSelectionIfOnlyOne.Hint">
     <Value>Check to bypass a shipping method page during checkout if there's only one shipping method available.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.DisplayPickupPointsOnMap">
+    <Value>Display pickup points on the map</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.DisplayPickupPointsOnMap.Hint">
+    <Value>Check to display pickup points on the map.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.DisplayShipmentEventsToCustomers">
     <Value>Display shipment events (customers)</Value>
@@ -6750,17 +6756,17 @@
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.FreeShippingOverXValue.Hint">
     <Value>All orders with a total greater than the value of 'X' will qualify for free shipping.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.GoogleMapsApiKey">
+    <Value>Google maps API key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.GoogleMapsApiKey.Hint">
+    <Value>Specify Google maps API key.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.NotifyCustomerAboutShippingFromMultipleLocations">
     <Value>Notify customer about shipping from multiple locations</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.NotifyCustomerAboutShippingFromMultipleLocations.Hint">
     <Value>Check if you want customers to be notified when shipping from multiple locations.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Shipping.PickUpInStoreFee">
-    <Value>"Pick Up in Store" fee</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Shipping.PickUpInStoreFee.Hint">
-    <Value>Specify "Pick Up in Store" fee.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShipToSameAddress">
     <Value>Ship to the same address</Value>
@@ -7169,6 +7175,33 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Methods.Updated">
     <Value>The shipping method has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPointProviders">
+    <Value>Pickup point providers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPointProviders.BackToList">
+    <Value>back to pickup point provider list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPointProviders.Configure">
+    <Value>Configure</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPointProviders.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPointProviders.Fields.FriendlyName">
+    <Value>Friendly name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPointProviders.Fields.IsActive">
+    <Value>Is active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPointProviders.Fields.Logo">
+    <Value>Logo</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPointProviders.Fields.SystemName">
+    <Value>System name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoints">
+    <Value>Pickup points</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Providers">
     <Value>Shipping providers</Value>
@@ -9720,6 +9753,15 @@
   <LocaleResource Name="Admin.Orders.Fields.PaymentStatus.Hint">
     <Value>The status of the payment.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.PickupAddress">
+    <Value>Pickup point address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.PickupAddress.Hint">
+    <Value>Pickup point address info.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.PickupAddress.ViewOnGoogleMaps">
+    <Value>View address on Google Maps</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.Profit">
     <Value>Profit</Value>
   </LocaleResource>
@@ -12159,17 +12201,20 @@
   <LocaleResource Name="Checkout.PaymentMethod">
     <Value>Payment method</Value>
   </LocaleResource>
-  <LocaleResource Name="Checkout.PickUpInStore">
-    <Value>In-Store Pickup</Value>
+  <LocaleResource Name="Checkout.PickupPoints">
+    <Value>Pickup</Value>
   </LocaleResource>
-  <LocaleResource Name="Checkout.PickUpInStoreAndFee">
-    <Value>In-Store Pickup ({0})</Value>
+  <LocaleResource Name="Checkout.PickupPoints.Description">
+    <Value>Pick up your items at the store</Value>
   </LocaleResource>
-  <LocaleResource Name="Checkout.PickUpInStore.Description">
-    <Value>Pick up your items at the store (put your store address here)</Value>
+  <LocaleResource Name="Checkout.PickupPoints.Name">
+    <Value>Pickup at {0}</Value>
   </LocaleResource>
-  <LocaleResource Name="Checkout.PickUpInStore.MethodName">
-    <Value>In-Store Pickup</Value>
+  <LocaleResource Name="Checkout.PickupPoints.NotAvailable">
+    <Value>Pickup points could not be loaded</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickupPoints.SelectPickupPoint">
+    <Value>Select pickup point</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.PlacedOrderDetails">
     <Value>Click here for order details.</Value>
@@ -13572,6 +13617,9 @@
   <LocaleResource Name="Order.Phone">
     <Value>Phone</Value>
   </LocaleResource>
+  <LocaleResource Name="Order.PickupAddress">
+    <Value>Pickup point address</Value>
+  </LocaleResource>
   <LocaleResource Name="Order.Print">
     <Value>Print</Value>
   </LocaleResource>
@@ -13637,6 +13685,9 @@
   </LocaleResource>
   <LocaleResource Name="Order.Shipments.Phone">
     <Value>Phone</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.PickupAddress">
+    <Value>Pickup point address</Value>
   </LocaleResource>
   <LocaleResource Name="Order.Shipments.Product(s)">
     <Value>Shipped product(s)</Value>
@@ -13958,6 +14009,9 @@
   </LocaleResource>
   <LocaleResource Name="PDFInvoice.Phone">
     <Value>Phone: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.Pickup">
+    <Value>Pickup point:</Value>
   </LocaleResource>
   <LocaleResource Name="PDFInvoice.Product(s)">
     <Value>Product(s)</Value>

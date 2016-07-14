@@ -32,6 +32,7 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Tracking;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
@@ -685,8 +686,18 @@ namespace Nop.Admin.Controllers
                     model.ShippingAddress.PhoneRequired = _addressSettings.PhoneRequired;
                     model.ShippingAddress.FaxEnabled = _addressSettings.FaxEnabled;
                     model.ShippingAddress.FaxRequired = _addressSettings.FaxRequired;
-                    
+
                     model.ShippingAddressGoogleMapsUrl = string.Format("http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={0}", Server.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (order.ShippingAddress.Country != null ? order.ShippingAddress.Country.Name : "")));
+                }
+                else
+                {
+                    if (order.PickupAddress != null)
+                    {
+                        model.PickupAddress = order.PickupAddress.ToModel();
+                        model.PickupAddressGoogleMapsUrl = string.Format("http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={0}",
+                            Server.UrlEncode(string.Format("{0} {1} {2} {3}", order.PickupAddress.Address1, order.PickupAddress.ZipPostalCode, order.PickupAddress.City,
+                                order.PickupAddress.Country != null ? order.PickupAddress.Country.Name : string.Empty)));
+                    }
                 }
                 model.ShippingMethod = order.ShippingMethod;
 
@@ -940,35 +951,26 @@ namespace Nop.Admin.Controllers
 
             if (prepareShipmentEvent && !String.IsNullOrEmpty(shipment.TrackingNumber))
             {
-                var order = shipment.Order;
-                var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(order.ShippingRateComputationMethodSystemName);
-                if (srcm != null &&
-                    srcm.PluginDescriptor.Installed &&
-                    srcm.IsShippingRateComputationMethodActive(_shippingSettings))
+                var shipmentTracker = shipment.GetShipmentTracker(_shippingService, _shippingSettings);
+                if (shipmentTracker != null)
                 {
-                    var shipmentTracker = srcm.ShipmentTracker;
-                    if (shipmentTracker != null)
+                    model.TrackingNumberUrl = shipmentTracker.GetUrl(shipment.TrackingNumber);
+                    if (_shippingSettings.DisplayShipmentEventsToStoreOwner)
                     {
-                        model.TrackingNumberUrl = shipmentTracker.GetUrl(shipment.TrackingNumber);
-                        if (_shippingSettings.DisplayShipmentEventsToStoreOwner)
-                        {
-                            var shipmentEvents = shipmentTracker.GetShipmentEvents(shipment.TrackingNumber);
-                            if (shipmentEvents != null)
+                        var shipmentEvents = shipmentTracker.GetShipmentEvents(shipment.TrackingNumber);
+                        if (shipmentEvents != null)
+                            foreach (var shipmentEvent in shipmentEvents)
                             {
-                                foreach (var shipmentEvent in shipmentEvents)
-                                {
-                                    var shipmentStatusEventModel = new ShipmentModel.ShipmentStatusEventModel();
-                                    var shipmentEventCountry = _countryService.GetCountryByTwoLetterIsoCode(shipmentEvent.CountryCode);
-                                    shipmentStatusEventModel.Country = shipmentEventCountry != null
-                                        ? shipmentEventCountry.GetLocalized(x => x.Name)
-                                        : shipmentEvent.CountryCode;
-                                    shipmentStatusEventModel.Date = shipmentEvent.Date;
-                                    shipmentStatusEventModel.EventName = shipmentEvent.EventName;
-                                    shipmentStatusEventModel.Location = shipmentEvent.Location;
-                                    model.ShipmentStatusEvents.Add(shipmentStatusEventModel);
-                                }
+                                var shipmentStatusEventModel = new ShipmentModel.ShipmentStatusEventModel();
+                                var shipmentEventCountry = _countryService.GetCountryByTwoLetterIsoCode(shipmentEvent.CountryCode);
+                                shipmentStatusEventModel.Country = shipmentEventCountry != null
+                                    ? shipmentEventCountry.GetLocalized(x => x.Name)
+                                    : shipmentEvent.CountryCode;
+                                shipmentStatusEventModel.Date = shipmentEvent.Date;
+                                shipmentStatusEventModel.EventName = shipmentEvent.EventName;
+                                shipmentStatusEventModel.Location = shipmentEvent.Location;
+                                model.ShipmentStatusEvents.Add(shipmentStatusEventModel);
                             }
-                        }
                     }
                 }
             }

@@ -43,8 +43,7 @@ namespace Nop.Core.Domain.Customers
         public static string LanguageAutomaticallyDetected { get { return "LanguageAutomaticallyDetected"; } }
         public static string SelectedPaymentMethod { get { return "SelectedPaymentMethod"; } }
         public static string SelectedShippingOption { get { return "SelectedShippingOption"; } }
-        //value indicating whether customer chose "pick up in store" option
-        public static string SelectedPickUpInStore { get { return "SelectedPickUpInStore"; } }
+        public static string SelectedPickupPoint { get { return "SelectedPickupPoint"; } }
         public static string CheckoutAttributes { get { return "CheckoutAttributes"; } }
         public static string OfferedShippingOptions { get { return "OfferedShippingOptions"; } }
         public static string LastContinueShoppingPage { get { return "LastContinueShoppingPage"; } }

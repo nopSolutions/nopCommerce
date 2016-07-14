@@ -3542,13 +3542,21 @@ label, label + * {
 }
 
 .checkout-page .pickup-in-store {
-	padding: 30px 0;
 	text-align: center;
 }
 .checkout-page .pickup-in-store .selector {
 	margin: 0 0 5px;
 	font-weight: bold;
 	color: #444;
+}
+
+.select-pickup-point {
+    text-align: center;
+}
+.checkout-page .pickup-points-map {
+	min-width: 400px;
+    min-height: 350px;
+    vertical-align: middle;
 }
 
 .shipping-method .method-list,
