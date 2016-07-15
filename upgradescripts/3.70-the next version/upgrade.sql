@@ -1016,6 +1016,12 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator">
     <Value>You can''t delete the last administrator. At least one administrator account should exists.</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditActivityLogTypes">
+    <Value>Edited activity log types</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteActivityLog">
+    <Value>Deleted activity log</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3613,3 +3619,20 @@ GO
  	VALUES (N'seosettings.customheadtags', N'', 0)
  END
  GO
+
+ 
+--new activity types
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'EditActivityLogTypes')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'EditActivityLogTypes', N'Edit activity log types', N'true')
+END
+GO
+ 
+--new activity types
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'DeleteActivityLog')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'DeleteActivityLog', N'Delete activity log', N'true')
+END
+GO

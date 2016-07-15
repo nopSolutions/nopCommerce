@@ -10766,6 +10766,12 @@ namespace Nop.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
+                                                  SystemKeyword = "DeleteActivityLog",
+                                                  Enabled = true,
+                                                  Name = "Delete activity log"
+                                              },
+                                          new ActivityLogType
+                                              {
                                                   SystemKeyword = "DeleteCategory",
                                                   Enabled = true,
                                                   Name = "Delete category"
@@ -10853,6 +10859,12 @@ namespace Nop.Services.Installation
                                                   SystemKeyword = "DeleteWidget",
                                                   Enabled = true,
                                                   Name = "Delete a widget"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "EditActivityLogTypes",
+                                                  Enabled = true,
+                                                  Name = "Edit activity log types"
                                               },
                                           new ActivityLogType
                                               {
