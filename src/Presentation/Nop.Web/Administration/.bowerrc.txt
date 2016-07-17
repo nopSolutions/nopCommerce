@@ -1,0 +1,8 @@
+{
+	"install" : {
+		"path" : {
+			"css" : "./Content",
+			"js"  : "./Scripts"
+		}
+	}
+}

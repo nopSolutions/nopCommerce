@@ -1,0 +1,18 @@
+{
+  "name": "Admin NopCommerce",
+  "homepage": "https://github.com/nopSolutions/nopCommerce",
+  "authors": [
+    "Isaque Prestes Ferreira <isaquepferreira@hotmail.com>"
+  ],
+  "description": "",
+  "main": "Layout.cshtml",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
