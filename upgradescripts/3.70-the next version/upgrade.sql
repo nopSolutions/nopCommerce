@@ -1640,6 +1640,79 @@ set @resources='
   <LocaleResource Name="PDFInvoice.Pickup">
     <Value>Pickup point:</Value>
   </LocaleResource>
+
+  <LocaleResource Name="Admin.Orders.Fields.OrderSubtotal">
+    <Value>Order subtotal</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderSubtotal.Hint">
+    <Value>The subtotal of this order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderSubtotalExclTax">
+    <Value>excl tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderSubtotalExclTax.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderSubtotalInclTax">
+    <Value>incl tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderSubtotalInclTax.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderShipping">
+    <Value>Order shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderShipping.Hint">
+    <Value>The total shipping cost for this order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderShippingExclTax">
+    <Value>excl tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderShippingExclTax.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderShippingInclTax">
+    <Value>incl tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderShippingInclTax.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderSubTotalDiscount">
+    <Value>Order subtotal discount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderSubTotalDiscount.Hint">
+    <Value>The subtotal discount of this order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderSubTotalDiscountExclTax">
+    <Value>excl tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderSubTotalDiscountExclTax.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderSubTotalDiscountInclTax">
+    <Value>incl tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderSubTotalDiscountInclTax.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.PaymentMethodAdditionalFee">
+    <Value>Payment method additional fee</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.PaymentMethodAdditionalFee.Hint">
+    <Value>The payment method additional fee for this order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.PaymentMethodAdditionalFeeExclTax">
+    <Value>excl tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.PaymentMethodAdditionalFeeExclTax.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.PaymentMethodAdditionalFeeInclTax">
+    <Value>incl tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.PaymentMethodAdditionalFeeInclTax.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

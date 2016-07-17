@@ -200,90 +200,135 @@
                         </div>
                     </div>
                 }
+
                 <div class="form-group">
-                    @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
-                    {
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.OrderSubtotalInclTax)
+                    <div class="col-md-3">
+                        <div class="label-wrapper">
+                            <label class="control-label">@T("Admin.Orders.Fields.OrderSubtotal")</label>
+                            <div class="ico-help" title="@T("Admin.Orders.Fields.OrderSubtotal.Hint")">
+                                <i class="fa fa-question-circle"></i>
+                            </div>
                         </div>
-                        <div class="col-md-1">
-                            @Html.NopDisplayFor(model => model.OrderSubtotalInclTax)
+                    </div>
+                    <div class="col-md-7">
+                        <div class="row">
+                            @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
+                            {
+                                <div class="col-md-2">
+                                    <div class="form-text-row">
+                                        @Html.DisplayFor(model => model.OrderSubtotalInclTax) <strong>@T("Admin.Orders.Fields.OrderSubtotalInclTax")</strong>
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
+                            {
+                                <div class="col-md-10">
+                                    <div class="form-text-row">
+                                        @Html.DisplayFor(model => model.OrderSubtotalExclTax) <strong>@T("Admin.Orders.Fields.OrderSubtotalExclTax")</strong>
+                                    </div>
+                                </div>
+                            }
                         </div>
-                    }
-                    @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
-                    {
-                        <div class="col-md-2">
-                            @Html.NopLabelFor(model => model.OrderSubtotalExclTax)
-                        </div>
-                        <div class="col-md-6">
-                            @Html.NopDisplayFor(model => model.OrderSubtotalExclTax)
-                        </div>
-                    }
+                    </div>
                 </div>
+                if (((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax) && !String.IsNullOrEmpty(Model.OrderSubTotalDiscountInclTax)) ||
+                    ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax) && !String.IsNullOrEmpty(Model.OrderSubTotalDiscountExclTax)))
+                {
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <div class="label-wrapper">
+                                <label class="control-label">@T("Admin.Orders.Fields.OrderSubTotalDiscount")</label>
+                                <div class="ico-help" title="@T("Admin.Orders.Fields.OrderSubTotalDiscount.Hint")">
+                                    <i class="fa fa-question-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="row">
+                                @if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax) && !String.IsNullOrEmpty(Model.OrderSubTotalDiscountInclTax))
+                                {
+                                    <div class="col-md-2">
+                                        <div class="form-text-row">
+                                            @Html.DisplayFor(model => model.OrderSubTotalDiscountInclTax) <strong>@T("Admin.Orders.Fields.OrderSubTotalDiscountInclTax")</strong>
+                                        </div>
+                                    </div>
+                                }
+                                @if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax) && !String.IsNullOrEmpty(Model.OrderSubTotalDiscountExclTax))
+                                {
+                                    <div class="col-md-10">
+                                        <div class="form-text-row">
+                                            @Html.DisplayFor(model => model.OrderSubTotalDiscountExclTax) <strong>@T("Admin.Orders.Fields.OrderSubTotalDiscountExclTax")</strong>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
                 <div class="form-group">
-                    @if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
-                         && !String.IsNullOrEmpty(Model.OrderSubTotalDiscountInclTax))
-                    {
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.OrderSubTotalDiscountInclTax)
+                    <div class="col-md-3">
+                        <div class="label-wrapper">
+                            <label class="control-label">@T("Admin.Orders.Fields.OrderShipping")</label>
+                            <div class="ico-help" title="@T("Admin.Orders.Fields.OrderShipping.Hint")">
+                                <i class="fa fa-question-circle"></i>
+                            </div>
                         </div>
-                        <div class="col-md-1">
-                            @Html.NopDisplayFor(model => model.OrderSubTotalDiscountInclTax)
+                    </div>
+                    <div class="col-md-7">
+                        <div class="row">
+                            @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
+                            {
+                                <div class="col-md-2">
+                                    <div class="form-text-row">
+                                        @Html.DisplayFor(model => model.OrderShippingInclTax) <strong>@T("Admin.Orders.Fields.OrderShippingInclTax")</strong>
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
+                            {
+                                <div class="col-md-2">
+                                    <div class="form-text-row">
+                                        @Html.DisplayFor(model => model.OrderShippingExclTax) <strong>@T("Admin.Orders.Fields.OrderShippingExclTax")</strong>
+                                    </div>
+                                </div>
+                            }
                         </div>
-                    }
-                    @if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
-                         && !String.IsNullOrEmpty(Model.OrderSubTotalDiscountExclTax))
-                    {
-                        <div class="col-md-2">
-                            @Html.NopLabelFor(model => model.OrderSubTotalDiscountExclTax)
-                        </div>
-                        <div class="col-md-6">
-                            @Html.NopDisplayFor(model => model.OrderSubTotalDiscountExclTax)
-                        </div>
-                    }
+                    </div>
                 </div>
-                <div class="form-group">
-                    @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
-                    {
+                if (((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax) && !String.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeInclTax)) ||
+                    ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax) && !String.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeExclTax)))
+                {
+                    <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.OrderShippingInclTax)
+                            <div class="label-wrapper">
+                                <label class="control-label">@T("Admin.Orders.Fields.PaymentMethodAdditionalFee")</label>
+                                <div class="ico-help" title="@T("Admin.Orders.Fields.PaymentMethodAdditionalFee.Hint")">
+                                    <i class="fa fa-question-circle"></i>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-1">
-                            @Html.NopDisplayFor(model => model.OrderShippingInclTax)
+                        <div class="col-md-7">
+                            <div class="row">
+                                @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
+                                {
+                                    <div class="col-md-2">
+                                        <div class="form-text-row">
+                                            @Html.DisplayFor(model => model.PaymentMethodAdditionalFeeInclTax) <strong>@T("Admin.Orders.Fields.PaymentMethodAdditionalFeeInclTax")</strong>
+</div>
+                                    </div>
+                                }
+                                @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
+                                {
+                                    <div class="col-md-2">
+                                        <div class="form-text-row">
+                                            @Html.DisplayFor(model => model.PaymentMethodAdditionalFeeExclTax) <strong>@T("Admin.Orders.Fields.PaymentMethodAdditionalFeeExclTax")</strong>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
                         </div>
-                    }
-                    @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
-                    {
-                        <div class="col-md-2">
-                            @Html.NopLabelFor(model => model.OrderShippingExclTax)
-                        </div>
-                        <div class="col-md-6">
-                            @Html.NopDisplayFor(model => model.OrderShippingExclTax)
-                        </div>
-                    }
-                </div>
-                <div class="form-group">
-                    @if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
-                         && !String.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeInclTax))
-                    {
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeInclTax)
-                        </div>
-                        <div class="col-md-1">
-                            @Html.NopDisplayFor(model => model.PaymentMethodAdditionalFeeInclTax)
-                        </div>
-                    }
-                    @if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
-                         && !String.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeExclTax))
-                    {
-                        <div class="col-md-2">
-                            @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeExclTax)
-                        </div>
-                        <div class="col-md-6">
-                            @Html.NopDisplayFor(model => model.PaymentMethodAdditionalFeeExclTax)
-                        </div>
-                    }
-                </div>
+                    </div>
+                }
 
                 if (Model.DisplayTaxRates)
                 {
