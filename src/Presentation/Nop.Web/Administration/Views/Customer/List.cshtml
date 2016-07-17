@@ -137,7 +137,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                                }
+                                }
+                            </div>
+                            <div class="col-md-7">
                                 @if (Model.CompanyEnabled)
                                 {
                                     <div class="form-group">
@@ -160,8 +162,6 @@
                                         </div>
                                     </div>
                                 }
-                            </div>
-                            <div class="col-md-7">
                                 @if (Model.ZipPostalCodeEnabled)
                                 {
                                     <div class="form-group">
@@ -186,7 +186,7 @@
                                         @Html.NopLabelFor(model => model.SearchCustomerRoleIds)
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.EditorFor(model => model.SearchCustomerRoleIds, new { SelectList = Model.AvailableCustomerRoles })
+                                        @Html.EditorFor(model => model.SearchCustomerRoleIds, new {SelectList = Model.AvailableCustomerRoles})
                                         <script>
                                             $(document).ready(function() {
                                                 var rolesIdsInput = $('#@Html.FieldIdFor(model => model.SearchCustomerRoleIds)').data("kendoMultiSelect");
