@@ -477,6 +477,9 @@ td.k-state-focused.k-state-selected {
     margin-left: 5px;
     color: #FF5E5E;
 }
+.form-horizontal .label-wrapper span.required {
+    float: none;
+}
 .form-group {
     margin-bottom: 5px;
 }
