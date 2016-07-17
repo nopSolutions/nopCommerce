@@ -82,12 +82,9 @@
                             @Html.ValidationMessageFor(model => model.Quantity)
                         </div>
                     </div>
-                </div>
-            </div>
 
-            @(Html.LocalizedEditor<ProductModel.ProductAttributeValueModel, ProductModel.ProductAttributeValueLocalizedModel>("productattributevalue-localized",
-                @<div class="panel panel-default">
-                    <div class="panel-body">
+                    @(Html.LocalizedEditor<ProductModel.ProductAttributeValueModel, ProductModel.ProductAttributeValueLocalizedModel>("productattributevalue-localized",
+                    @<div>
                         <div class="form-group">
                             <div class="col-md-3">
                                 @Html.NopLabelFor(model => model.Locales[item].Name)
@@ -99,10 +96,8 @@
                         </div>
                         @Html.HiddenFor(model => model.Locales[item].LanguageId)
                     </div>
-                </div>
     ,
-                @<div class="panel panel-default">
-                    <div class="panel-body">
+                    @<div>
                         <div class="form-group">
                             <div class="col-md-3">
                                 @Html.NopLabelFor(model => model.Name)
@@ -113,10 +108,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
     ))
-            <div class="panel panel-default">
-                <div class="panel-body">
                     @if (Model.DisplayColorSquaresRgb)
                     {
                         <div class="form-group">
@@ -201,7 +193,7 @@
                                 <li style="float: left; width: 110px;">
                                     <p style="float: left; padding-top: 20px;">
                                         <input type="radio" name="@Html.FieldNameFor(x => x.PictureId)" value="0" id="id_image_0"
-                                               @if (Model.PictureId == 0) { <text> checked="checked" </text>                            }>
+                                               @if (Model.PictureId == 0) { <text> checked="checked" </text>                              }>
                                     </p>
                                     <p style="float: left; padding-top: 20px;">
                                         <label for="id_image_0">
@@ -214,7 +206,7 @@
                                     <li style="float: left; width: 110px;">
                                         <p style="float: left; padding-top: 20px;">
                                             <input type="radio" name="@Html.FieldNameFor(x => x.PictureId)" value="@picture.PictureId" id="id_image_@picture.PictureId"
-                                                   @if (picture.PictureId == Model.PictureId) { <text> checked="checked" </text>                            }>
+                                                   @if (picture.PictureId == Model.PictureId) { <text> checked="checked" </text>                              }>
                                         </p>
                                         <p style="float: left;">
                                             <label for="id_image_@picture.PictureId">

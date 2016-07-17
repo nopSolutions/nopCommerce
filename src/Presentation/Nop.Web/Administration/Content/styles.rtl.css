@@ -570,7 +570,7 @@ input[type=file].form-control {
 }
 
 /* PRODUCT EDIT/CREATE */
-.form-group + .product-info-localized-block .nav-tabs-custom{
+.form-group + .nav-tabs-localized-fields{
     margin-top: 15px;
 }
 
