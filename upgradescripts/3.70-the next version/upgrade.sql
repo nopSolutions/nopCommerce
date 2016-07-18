@@ -1311,13 +1311,13 @@ set @resources='
     <Value>Check if the product can be shipped. You can manage shipping settings by selecting Configuration > Shipping.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Weight.Hint">
-    <Value>The product  weight. You can manage weight measurement by selecting Configuration > Measures.</Value>
+    <Value>The product weight.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Length.Hint">
-    <Value>The product length. You can manage length measurement by selecting Configuration > Measures.</Value>
+    <Value>The product length.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Width.Hint">
-    <Value>The product  width. You can manage width measurement by selecting Configuration > Measures.</Value>
+    <Value>The product width.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShipSeparately.Hint">
     <Value>Check if the product should be shipped separately from other products (in single box). Notice that if the order includes several items of this product, all of them will be shipped separately.</Value>
@@ -1353,7 +1353,7 @@ set @resources='
     <Value>Choose a delivery date which will be displayed in the public store. You can manage delivery dates by selecting Configuration > Shipping > Delivery dates.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Height.Hint">
-    <Value>The product  height. You can manage height measurement by selecting Configuration > Measures.</Value>
+    <Value>The product height.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SubjectToAcl">
     <Value></Value>

@@ -2515,7 +2515,7 @@
     <Value>Height</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Height.Hint">
-    <Value>The product  height. You can manage height measurement by selecting Configuration > Measures.</Value>
+    <Value>The product height.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ID">
     <Value>ID</Value>
@@ -2575,7 +2575,7 @@
     <Value>Length</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Length.Hint">
-    <Value>The product length. You can manage length measurement by selecting Configuration > Measures.</Value>
+    <Value>The product length.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.LowStockActivity">
     <Value>Low stock activity</Value>
@@ -2944,13 +2944,13 @@
     <Value>Weight</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Weight.Hint">
-    <Value>The product  weight. You can manage weight measurement by selecting Configuration > Measures.</Value>
+    <Value>The product weight.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Width">
     <Value>Width</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Width.Hint">
-    <Value>The product  width. You can manage width measurement by selecting Configuration > Measures.</Value>
+    <Value>The product width.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.GiftCard">
     <Value>Gift card</Value>
