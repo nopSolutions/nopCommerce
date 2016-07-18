@@ -1643,6 +1643,9 @@ set @resources='
   <LocaleResource Name="Admin.Common.ActionConfirmation">
     <Value>Are you sure you want to perform this action?</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Header.Logout">
+    <Value>Logout</Value>
+  </LocaleResource>
 </Language>
 '
 

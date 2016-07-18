@@ -9382,7 +9382,7 @@
     <Value>Clear cache</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Header.Logout">
-    <Value>Logout?</Value>
+    <Value>Logout</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Header.PublicStore">
     <Value>Public store</Value>
