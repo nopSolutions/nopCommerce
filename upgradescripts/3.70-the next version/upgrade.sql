@@ -1023,7 +1023,7 @@ set @resources='
      <Value>Mark as new. Start date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MaximumCartQuantity">
-     <Value>Maximum cart quantity</Value>
+     <Value>Maximum cart qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MinimumCartQuantity">
      <Value>Minimum cart qty</Value>
