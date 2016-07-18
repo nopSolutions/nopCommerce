@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
@@ -7,12 +8,16 @@ namespace Nop.Admin.Models.Customers
 {
     public partial class CustomerListModel : BaseNopModel
     {
-        [NopResourceDisplayName("Admin.Customers.Customers.List.CustomerRoles")]
-        [AllowHtml]
-        public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
+        public CustomerListModel()
+        {
+            SearchCustomerRoleIds = new List<int>();
+            AvailableCustomerRoles = new List<SelectListItem>();
+        }
 
+        [UIHint("MultiSelect")]
         [NopResourceDisplayName("Admin.Customers.Customers.List.CustomerRoles")]
-        public int[] SearchCustomerRoleIds { get; set; }
+        public IList<int> SearchCustomerRoleIds { get; set; }
+        public IList<SelectListItem> AvailableCustomerRoles { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.List.SearchEmail")]
         [AllowHtml]

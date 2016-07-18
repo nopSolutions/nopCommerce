@@ -11,44 +11,39 @@
 {
     @Html.AntiForgeryToken()
     <div class="panel-group">
-        @(Html.LocalizedEditor<ConfigurationModel, ConfigurationModel.ConfigurationLocalizedModel>("plugin-settings-localized",
-        @<div class="panel panel-default">
+        <div class="panel panel-default">
             <div class="panel-body">
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.DescriptionText_OverrideForStore, model => model.Locales[item].DescriptionText, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.Locales[item].DescriptionText)
+                @(Html.LocalizedEditor<ConfigurationModel, ConfigurationModel.ConfigurationLocalizedModel>("plugin-settings-localized",
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.OverrideStoreCheckboxFor(model => model.DescriptionText_OverrideForStore, model => model.Locales[item].DescriptionText, Model.ActiveStoreScopeConfiguration)
+                            @Html.NopLabelFor(model => model.Locales[item].DescriptionText)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopTextAreaFor(model => model.Locales[item].DescriptionText)
+                            @Html.ValidationMessageFor(model => model.Locales[item].DescriptionText)
+                        </div>
                     </div>
-                    <div class="col-md-9">
-                        @Html.NopTextAreaFor(model => model.Locales[item].DescriptionText)
-                        @Html.ValidationMessageFor(model => model.Locales[item].DescriptionText)
-                    </div>
+                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
                 </div>
-                @Html.HiddenFor(model => model.Locales[item].LanguageId)
-            </div>
-        </div>
     ,
-        @<div class="panel panel-default">
-            <div class="panel-body">
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.DescriptionText_OverrideForStore, model => model.DescriptionText, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.DescriptionText)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopTextAreaFor(model => model.DescriptionText)
-                        @Html.ValidationMessageFor(model => model.DescriptionText)
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.OverrideStoreCheckboxFor(model => model.DescriptionText_OverrideForStore, model => model.DescriptionText, Model.ActiveStoreScopeConfiguration)
+                            @Html.NopLabelFor(model => model.DescriptionText)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopTextAreaFor(model => model.DescriptionText)
+                            @Html.ValidationMessageFor(model => model.DescriptionText)
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
     ,
     //localizable settings per store (overrriden store settings) are not supported yet
     true
     ))
-
-        <div class="panel panel-default">
-            <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.AdditionalFee_OverrideForStore, model => model.AdditionalFee, Model.ActiveStoreScopeConfiguration)

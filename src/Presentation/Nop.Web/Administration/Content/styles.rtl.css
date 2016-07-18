@@ -8,6 +8,9 @@ ul, ol {
 .margin-l-10 {
     margin-right: 10px;
 }
+.margin-l-5 {
+    margin-right: 5px;
+}
 .margin-t-5 {
     margin-top: 5px;
 }
@@ -101,6 +104,16 @@ ul.common-list {
     -ms-transition: all 0.2s;
     -o-transition: all 0.2s;
     transition: all 0.2s;
+}
+.dropdown-menu button {
+    border: none;
+    padding: 3px 20px;
+}
+.dropdown-menu li:hover {
+    background: rgba(0,0,0,0.1);
+}
+.dropdown-menu li:hover button{
+    background-color: transparent !important;
 }
 
 /*override font-awesome styles*/
@@ -368,16 +381,6 @@ td.k-state-focused.k-state-selected {
 .navbar-custom-menu > .navbar-nav > li {
     height: 50px;
 }
-.maintenance-menu.dropdown-menu button {
-    border: none;
-    padding: 3px 20px;
-}
-.maintenance-menu.dropdown-menu li:hover {
-    background: rgba(0,0,0,0.1);
-}
-.maintenance-menu.dropdown-menu li:hover button{
-    background-color: transparent !important;
-}
 
 /* NAV TABS */
 .nav > li > a > img {
@@ -475,6 +478,9 @@ td.k-state-focused.k-state-selected {
     margin-right: 5px;
     color: #FF5E5E;
 }
+.form-horizontal .label-wrapper span.required {
+    float: none;
+}
 .form-group {
     margin-bottom: 5px;
 }
@@ -564,7 +570,7 @@ input[type=file].form-control {
 }
 
 /* PRODUCT EDIT/CREATE */
-.form-group + .product-info-localized-block .nav-tabs-custom{
+.form-group + .nav-tabs-localized-fields{
     margin-top: 15px;
 }
 
