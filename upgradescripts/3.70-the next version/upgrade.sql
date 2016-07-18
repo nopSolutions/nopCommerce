@@ -1781,6 +1781,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Measures.Weights.Fields.SystemKeyword.Required">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Permission.ManageMeasures">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -4475,4 +4478,9 @@ GO
 --delete setting
 DELETE FROM [Setting]
 WHERE [name] = N'commonsettings.deleteguesttaskolderthanminutes'
+GO
+
+--delete permission
+DELETE FROM [PermissionRecord]
+WHERE [SystemName] = N'ManageMeasures'
 GO

@@ -14181,9 +14181,6 @@
   <LocaleResource Name="Permission.ManageManufacturers">
     <Value>Admin area. Manage Manufacturers</Value>
   </LocaleResource>
-  <LocaleResource Name="Permission.ManageMeasures">
-    <Value>Admin area. Manage Measures</Value>
-  </LocaleResource>
   <LocaleResource Name="Permission.ManageMessageQueue">
     <Value>Admin area. Manage Message Queue</Value>
   </LocaleResource>
