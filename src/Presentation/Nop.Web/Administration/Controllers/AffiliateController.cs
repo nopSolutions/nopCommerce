@@ -318,7 +318,7 @@ namespace Nop.Admin.Controllers
             return PartialView(model);
         }
         [HttpPost]
-        public ActionResult AffiliatedOrderList(DataSourceRequest command, AffiliatedOrderListModel model)
+        public ActionResult AffiliatedOrderListGrid(DataSourceRequest command, AffiliatedOrderListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();

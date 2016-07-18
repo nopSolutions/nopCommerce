@@ -4307,3 +4307,31 @@ GO
 ALTER TABLE [dbo].[Order] WITH CHECK ADD CONSTRAINT [Order_PickupAddress] FOREIGN KEY([PickupAddressId])
 REFERENCES [dbo].[Address] ([Id])
 GO
+
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'adminareasettings.hideadvertisementsonadminarea')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'adminareasettings.hideadvertisementsonadminarea', N'false', 0)
+END
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [name] = N'commonsettings.hideadvertisementsonadminarea'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.deleteguesttaskolderthanminutes')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.deleteguesttaskolderthanminutes', N'1440', 0)
+END
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [name] = N'commonsettings.deleteguesttaskolderthanminutes'
+GO
