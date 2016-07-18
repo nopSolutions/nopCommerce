@@ -935,9 +935,6 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Price">
      <Value>Price</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Tax">
-     <Value>Tax</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Shipping">
      <Value>Shipping</Value>
   </LocaleResource>

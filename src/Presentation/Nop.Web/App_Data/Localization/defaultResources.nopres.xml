@@ -6432,9 +6432,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Tabs">
     <Value>Tabs</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Tax">
-    <Value>Tax</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Shipping">
     <Value>Shipping</Value>
   </LocaleResource>
