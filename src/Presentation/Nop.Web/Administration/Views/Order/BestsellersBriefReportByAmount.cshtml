@@ -30,17 +30,6 @@
         <div id="bestsellers-byamount-grid"></div>
 
         <script>
-            //row index
-            var rowNumber_BriefByAmount = 0;
-            function onBriefByAmountDataBound(data) {
-                return rowNumber_BriefByAmount = 0;
-            }
-            function onBriefByAmountIncrease(max) {
-                if (rowNumber_BriefByAmount === max)
-                    rowNumber_BriefByAmount = 0;
-                ++rowNumber_BriefByAmount;
-            }
-
             $(document).ready(function () {
                 $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
                     var collapsed = !$('#@panelId').hasClass('collapsed-box');
@@ -80,7 +69,6 @@
                         confirmation: false,
                         mode: "inline"
                     },
-                    dataBound: onBriefByAmountDataBound,
                     scrollable: false,
                     columns: [{
                         field: "ProductName",
@@ -90,8 +78,7 @@
                         title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalQuantity")"
                     }, {
                         field: "TotalAmount",
-                        title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalAmount")",
-                        template: '# onBriefByAmountIncrease(4) # <span>#=TotalAmount#</span>'
+                        title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalAmount")"
                     }, {
                         field: "ProductId",
                         title: "@T("Admin.Common.View")",
