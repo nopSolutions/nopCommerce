@@ -41,5 +41,11 @@ namespace Nop.Services.Orders
         /// <param name="storeId">Store identifier; pass </param>
         /// <returns>Balance</returns>
         int GetRewardPointsBalance(int customerId, int storeId);
+
+        /// <summary>
+        /// Updates the reward point history entry
+        /// </summary>
+        /// <param name="rewardPointsHistory">Reward point history entry</param>
+        void UpdateRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory);
     }
 }

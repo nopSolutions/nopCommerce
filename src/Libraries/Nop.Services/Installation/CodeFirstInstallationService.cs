@@ -6013,6 +6013,7 @@ namespace Nop.Services.Installation
                 MinOrderSubtotalAmount = 0,
                 MinOrderSubtotalAmountIncludingTax = false,
                 MinOrderTotalAmount = 0,
+                AutoUpdateOrderTotalsOnEditingOrder = true,
                 AnonymousCheckoutAllowed = true,
                 TermsOfServiceOnShoppingCartPage = true,
                 TermsOfServiceOnOrderConfirmPage = false,

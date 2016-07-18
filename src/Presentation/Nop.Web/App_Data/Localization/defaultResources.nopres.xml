@@ -6105,6 +6105,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderPlacedEmail.Hint">
     <Value>Check to attach PDF invoice to the "order placed" email sent to a customer.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoUpdateOrderTotalsOnEditingOrder">
+    <Value>Auto update order totals</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoUpdateOrderTotalsOnEditingOrder.Hint">
+    <Value>Check to automatically update order totals on editing an order in admin area.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.DisableBillingAddressCheckoutStep">
     <Value>Disable "Billing address" step</Value>
   </LocaleResource>

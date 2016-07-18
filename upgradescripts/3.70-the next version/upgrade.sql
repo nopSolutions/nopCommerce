@@ -2126,6 +2126,12 @@ set @resources='
   <LocaleResource Name="Admin.Affiliates.Description">
     <Value>Affiliate is an Internet-based marketing practice in which a business rewards one or more affiliates for each visitor or customer. It is a web-based pay-for-performance program designed to compensate affiliate partner for driving qualified leads or sales to a merchant web site.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoUpdateOrderTotalsOnEditingOrder">
+    <Value>Auto update order totals</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoUpdateOrderTotalsOnEditingOrder.Hint">
+    <Value>Check to automatically update order totals on editing an order in admin area.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -4825,4 +4831,12 @@ GO
 --delete permission
 DELETE FROM [PermissionRecord]
 WHERE [SystemName] = N'ManageMeasures'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.autoupdateordertotalsoneditingorder')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'ordersettings.autoupdateordertotalsoneditingorder', N'true', 0)
+END
 GO

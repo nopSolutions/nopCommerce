@@ -26,6 +26,12 @@ namespace Nop.Services.Orders
         PlaceOrderResult PlaceOrder(ProcessPaymentRequest processPaymentRequest);
 
         /// <summary>
+        /// Update order totals
+        /// </summary>
+        /// <param name="updateOrderParameters">Parameters for the updating order</param>
+        void UpdateOrderTotals(UpdateOrderParameters updateOrderParameters);
+
+        /// <summary>
         /// Deletes an order
         /// </summary>
         /// <param name="order">The order</param>
