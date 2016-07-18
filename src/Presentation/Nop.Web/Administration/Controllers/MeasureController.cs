@@ -121,7 +121,7 @@ namespace Nop.Admin.Controllers
 
             if (weight.Id == _measureSettings.BaseWeightId)
             {
-                return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Configuration.Measures.Weights.CantDeletePrimary") });
+                return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Configuration.Shipping.Measures.Weights.CantDeletePrimary") });
             }
 
             _measureService.DeleteMeasureWeight(weight);
@@ -217,7 +217,7 @@ namespace Nop.Admin.Controllers
 
             if (dimension.Id == _measureSettings.BaseDimensionId)
             {
-                return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Configuration.Measures.Dimensions.CantDeletePrimary") });
+                return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Configuration.Shipping.Measures.Dimensions.CantDeletePrimary") });
             }
 
             _measureService.DeleteMeasureDimension(dimension);

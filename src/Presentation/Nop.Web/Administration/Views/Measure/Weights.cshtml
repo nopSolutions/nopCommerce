@@ -76,15 +76,15 @@
             columns: [
                 {
                     field: "Name",
-                    title: "@T("Admin.Configuration.Measures.Weights.Fields.Name")",
+                    title: "@T("Admin.Configuration.Shipping.Measures.Weights.Fields.Name")",
                     width: 300
                 }, {
                     field: "SystemKeyword",
-                    title: "@T("Admin.Configuration.Measures.Weights.Fields.SystemKeyword")",
+                    title: "@T("Admin.Configuration.Shipping.Measures.Weights.Fields.SystemKeyword")",
                     width: 200
                 }, {
                     field: "Ratio",
-                    title: "@T("Admin.Configuration.Measures.Weights.Fields.Ratio")",
+                    title: "@T("Admin.Configuration.Shipping.Measures.Weights.Fields.Ratio")",
                     width: 200,
                     editor: function(container, options) {
                         $('<input name="' + options.field + '"/>')
@@ -96,22 +96,22 @@
                     }
                 }, {
                     field: "DisplayOrder",
-                    title: "@T("Admin.Configuration.Measures.Weights.Fields.DisplayOrder")",
+                    title: "@T("Admin.Configuration.Shipping.Measures.Weights.Fields.DisplayOrder")",
                     //integer format
                     format: "{0:0}",
                     width: 100
                 }, {
                     field: "IsPrimaryWeight",
-                    title: "@T("Admin.Configuration.Measures.Weights.Fields.IsPrimaryWeight")",
+                    title: "@T("Admin.Configuration.Shipping.Measures.Weights.Fields.IsPrimaryWeight")",
                     width: 150,
                     headerAttributes: { style: "text-align:center" },
                     attributes: { style: "text-align:center" },
                     template: '# if(IsPrimaryWeight) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                 }, {
                     field: "Id",
-                    title: "@T("Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight")",
+                    title: "@T("Admin.Configuration.Shipping.Measures.Weights.Fields.MarkAsPrimaryWeight")",
                     width: 150,
-                    template: '<a onclick="markAsPrimaryWeight(#=Id#)" class="btn bg-green">@T("Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight")</a>'
+                    template: '<a onclick="markAsPrimaryWeight(#=Id#)" class="btn bg-green">@T("Admin.Configuration.Shipping.Measures.Weights.Fields.MarkAsPrimaryWeight")</a>'
                 }, {
                     command: [
                         {
