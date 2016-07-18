@@ -115,6 +115,14 @@ ul.common-list {
     background-color: transparent !important;
 }
 
+/*MODAL WINDOWS*/
+.modal-content {
+    text-align: left;
+}
+.modal-body {
+    font-size: 14px;
+}
+
 /*override font-awesome styles*/
 .fa {
     padding-right: 5px !important;

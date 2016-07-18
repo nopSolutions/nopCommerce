@@ -1640,6 +1640,9 @@ set @resources='
   <LocaleResource Name="PDFInvoice.Pickup">
     <Value>Pickup point:</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.ActionConfirmation">
+    <Value>Are you sure you want to perform this action?</Value>
+  </LocaleResource>
 </Language>
 '
 

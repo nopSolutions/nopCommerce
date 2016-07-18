@@ -93,9 +93,10 @@
                             <div class="input-group-btn">
                                 @if (Model.CanCancelOrder)
                                 {
-                                    <button type="submit" name="cancelorder" id="cancelorder" class="btn bg-red" style="margin-right: 3px;" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+                                    <button type="submit" name="cancelorder" id="cancelorder" class="btn bg-red" style="margin-right: 3px;">
                                         @T("Admin.Orders.Fields.OrderStatus.Cancel")
                                     </button>
+                                    @Html.ActionConfirmation("cancelorder")
                                 }
                                 <button type="submit" name="btnChangeOrderStatus" onclick="toggleChangeOrderStatus(true);return false;" id="btnChangeOrderStatus" class="btn btn-primary">
                                     @T("Admin.Orders.Fields.OrderStatus.Change")
@@ -105,9 +106,11 @@
                                         <em>@T("Admin.Orders.Fields.OrderStatus.Change.ForAdvancedUsers")</em>
                                     </div>
                                     @Html.NopDropDownListFor(model => model.OrderStatusId, ((OrderStatus)Model.OrderStatusId).ToSelectList())
-                                    <button type="submit" name="btnSaveOrderStatus" id="btnSaveOrderStatus" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');" style="margin-left: 3px">
+                                    <button type="submit" name="btnSaveOrderStatus" id="btnSaveOrderStatus" class="btn btn-primary" style="margin-left: 3px">
                                         @T("Admin.Common.Save")
                                     </button>
+                                    @Html.ActionConfirmation("btnSaveOrderStatus")
+
                                     <button type="submit" name="btnCancelOrderStatus" onclick="toggleChangeOrderStatus(false);return false;" id="btnCancelOrderStatus" class="btn bg-teal" style="margin-left: 3px">
                                         @T("Admin.Common.Cancel")
                                     </button>
@@ -511,9 +514,12 @@
                         <button type="submit" name="btnEditOrderTotals" onclick="toggleOrderTotals(true);return false;" id="btnEditOrderTotals" class="btn btn-primary">
                             @T("Admin.Orders.Fields.EditOrderTotals")
                         </button>
-                        <button type="submit" name="btnSaveOrderTotals" id="btnSaveOrderTotals" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+
+                        <button type="submit" name="btnSaveOrderTotals" id="btnSaveOrderTotals" class="btn btn-primary">
                             @T("Admin.Orders.Fields.SaveOrderTotals")
                         </button>
+                        @Html.ActionConfirmation("btnSaveOrderTotals")
+
                         <button type="submit" name="btnCancelOrderTotals" onclick="toggleOrderTotals(false);return false;" id="btnCancelOrderTotals" class="btn bg-teal">
                             @T("Admin.Orders.Fields.CancelOrderTotals")
                         </button>
@@ -611,9 +617,12 @@
                             <button type="submit" name="btnEditCC" onclick="toggleCC(true);return false;" id="btnEditCC" class="btn btn-primary">
                                 @T("Admin.Orders.Fields.EditCC")
                             </button>
-                            <button type="submit" name="btnSaveCC" id="btnSaveCC" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+
+                            <button type="submit" name="btnSaveCC" id="btnSaveCC" class="btn btn-primary">
                                 @T("Admin.Orders.Fields.SaveCC")
                             </button>
+                            @Html.ActionConfirmation("btnSaveCC")
+
                             <button type="submit" name="btnCancelCC" onclick="toggleCC(false);return false;" id="btnCancelCC" class="btn bg-teal">
                                 @T("Admin.Orders.Fields.CancelCC")
                             </button>
@@ -684,31 +693,35 @@
                         {
                             if (Model.CanCapture)
                             {
-                                <button type="submit" name="captureorder" id="captureorder" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+                                <button type="submit" name="captureorder" id="captureorder" class="btn btn-primary">
                                     @T("Admin.Orders.Fields.Capture")
                                 </button>
                                 <text>&nbsp;</text>
+                                @Html.ActionConfirmation("captureorder")
                             }
                             if (Model.CanMarkOrderAsPaid)
                             {
-                                <button type="submit" name="markorderaspaid" id="markorderaspaid" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+                                <button type="submit" name="markorderaspaid" id="markorderaspaid" class="btn btn-primary">
                                     @T("Admin.Orders.Fields.MarkAsPaid")
                                 </button>
                                 <text>&nbsp;</text>
+                                @Html.ActionConfirmation("markorderaspaid")
                             }
                             if (Model.CanRefund)
                             {
-                                <button type="submit" name="refundorder" id="refundorder" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+                                <button type="submit" name="refundorder" id="refundorder" class="btn btn-primary">
                                     @T("Admin.Orders.Fields.Refund")
                                 </button>
                                 <text>&nbsp;</text>
+                                @Html.ActionConfirmation("refundorder")
                             }
                             if (Model.CanRefundOffline)
                             {
-                                <button type="submit" name="refundorderoffline" id="refundorderoffline" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+                                <button type="submit" name="refundorderoffline" id="refundorderoffline" class="btn btn-primary">
                                     @T("Admin.Orders.Fields.RefundOffline")
                                 </button>
                                 <text>&nbsp;</text>
+                                @Html.ActionConfirmation("refundorderoffline")
                             }
                             if (Model.CanPartiallyRefund)
                             {
@@ -726,17 +739,19 @@
                             }
                             if (Model.CanVoid)
                             {
-                                <button type="submit" name="voidorder" id="voidorder" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+                                <button type="submit" name="voidorder" id="voidorder" class="btn btn-primary">
                                     @T("Admin.Orders.Fields.Void")
                                 </button>
                                 <text>&nbsp;</text>
+                                @Html.ActionConfirmation("voidorder")
                             }
                             if (Model.CanVoidOffline)
                             {
-                                <button type="submit" name="voidorderoffline" id="voidorderoffline" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+                                <button type="submit" name="voidorderoffline" id="voidorderoffline" class="btn btn-primary">
                                     @T("Admin.Orders.Fields.VoidOffline")
                                 </button>
                                 <text>&nbsp;</text>
+                                @Html.ActionConfirmation("voidorderoffline")
                             }
                         }
                     </div>

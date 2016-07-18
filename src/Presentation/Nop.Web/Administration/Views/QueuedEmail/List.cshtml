@@ -22,10 +22,11 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.System.QueuedEmails.DeleteSelected")
             </button>
-            <button type="submit" name="delete-all" class="btn bg-red" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+            <button type="submit" id="delete-all" name="delete-all" class="btn bg-red">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.System.QueuedEmails.DeleteAll")
             </button>
+            @Html.ActionConfirmation("delete-all")
         </div>
     </div>
 

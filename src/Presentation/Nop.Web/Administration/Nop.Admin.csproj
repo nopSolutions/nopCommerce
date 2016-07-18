@@ -2150,6 +2150,7 @@
     <Content Include="Views\Setting\Mode.cshtml" />
     <Content Include="Views\Shipping\PickupPointProviders.cshtml" />
     <Content Include="Views\Shipping\ConfigurePickupPointProvider.cshtml" />
+    <Content Include="Views\Shared\Confirm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Product\AddAttributeCombinationPopup.cshtml" />

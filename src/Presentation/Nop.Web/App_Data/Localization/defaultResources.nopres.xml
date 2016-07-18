@@ -3528,6 +3528,9 @@
   <LocaleResource Name="Admin.Catalog.ProductTags.Fields.ProductCount">
     <Value>Tagged products</Value>
   </LocaleResource>
+   <LocaleResource Name="Admin.Common.ActionConfirmation">
+    <Value>Are you sure you want to perform this action?</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.AddNew">
     <Value>Add new</Value>
   </LocaleResource>

@@ -263,9 +263,12 @@
                                     <button type="submit" onclick="toggleEditShippingMethod(true);return false;" id="btnEditShippingMethod" class="btn btn-primary">
                                         @T("Admin.Common.Edit")
                                     </button>
-                                    <button type="submit" id="btnSaveShippingMethod" name="save-shipping-method" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+
+                                    <button type="submit" id="btnSaveShippingMethod" name="save-shipping-method" class="btn btn-primary">
                                         @T("Admin.Common.Save")
                                     </button>
+                                    @Html.ActionConfirmation("btnSaveShippingMethod")
+
                                     <button type="submit" onclick="toggleEditShippingMethod(false);return false;" id="btnCancelShippingMethod" class="btn bg-teal">
                                         @T("Admin.Common.Cancel")
                                     </button>
