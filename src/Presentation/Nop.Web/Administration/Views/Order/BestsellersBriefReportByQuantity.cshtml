@@ -88,12 +88,7 @@
                     }, {
                         field: "TotalQuantity",
                         title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalQuantity")",
-                        template: '# onBriefByQuantityIncrease(4) # <span class="grid-report-item ' +
-                            '# if(rowNumber_BriefByQuantity == 1) {# yellow #} #' +
-                            '# if(rowNumber_BriefByQuantity == 2) {# blue #} #' +
-                            '# if(rowNumber_BriefByQuantity == 3) {# red #} #' +
-                            '# if(rowNumber_BriefByQuantity == 4) {# green #} #' +
-                            '">#=TotalQuantity#</span>'
+                        template: '# onBriefByQuantityIncrease(4) # <span>#=TotalQuantity#</span>'
                     }, {
                         field: "TotalAmount",
                         title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalAmount")"

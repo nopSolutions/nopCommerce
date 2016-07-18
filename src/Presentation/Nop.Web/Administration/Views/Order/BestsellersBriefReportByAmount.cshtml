@@ -91,12 +91,7 @@
                     }, {
                         field: "TotalAmount",
                         title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalAmount")",
-                        template: '# onBriefByAmountIncrease(4) # <span class="grid-report-item ' +
-                            '# if(rowNumber_BriefByAmount == 1) {# yellow #} #' +
-                            '# if(rowNumber_BriefByAmount == 2) {# blue #} #' +
-                            '# if(rowNumber_BriefByAmount == 3) {# red #} #' +
-                            '# if(rowNumber_BriefByAmount == 4) {# green #} #' +
-                            '">#=TotalAmount#</span>'
+                        template: '# onBriefByAmountIncrease(4) # <span>#=TotalAmount#</span>'
                     }, {
                         field: "ProductId",
                         title: "@T("Admin.Common.View")",
