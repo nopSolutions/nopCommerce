@@ -38,15 +38,6 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-10">
-                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Published)
-                                            </div>
-                                            <div class="col-md-2">
-                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Published)
-                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Published)
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-md-10">
                                                 @Html.NopLabelFor(model => model.ProductEditorSettingsModel.ProductType)
                                             </div>
                                             <div class="col-md-2">
@@ -70,6 +61,15 @@
                                             <div class="col-md-2">
                                                 @Html.NopEditorFor(model => model.ProductEditorSettingsModel.VisibleIndividually)
                                                 @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.VisibleIndividually)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Published)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Published)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Published)
                                             </div>
                                         </div>
                                         <div class="form-group">
