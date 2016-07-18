@@ -65,8 +65,9 @@ namespace Nop.Services.Orders
         /// Gets a value indicating whether shipping is free
         /// </summary>
         /// <param name="cart">Cart</param>
+        /// <param name="subTotal">Subtotal amount; pass null to calculate subtotal</param>
         /// <returns>A value indicating whether shipping is free</returns>
-        bool IsFreeShipping(IList<ShoppingCartItem> cart);
+        bool IsFreeShipping(IList<ShoppingCartItem> cart, decimal? subTotal = null);
 
         /// <summary>
         /// Gets shopping cart shipping total
@@ -161,6 +162,12 @@ namespace Nop.Services.Orders
 
 
 
+        /// <summary>
+        /// Update order totals
+        /// </summary>
+        /// <param name="updateOrderParameters">Parameters for the updating order</param>
+        /// <param name="restoredCart">Shopping cart</param>
+        void UpdateOrderTotals(UpdateOrderParameters updateOrderParameters, IList<ShoppingCartItem> restoredCart);
 
         /// <summary>
         /// Converts existing reward points to amount

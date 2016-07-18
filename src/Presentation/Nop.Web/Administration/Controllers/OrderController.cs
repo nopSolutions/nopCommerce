@@ -826,7 +826,8 @@ namespace Nop.Admin.Controllers
                 UnitPriceInclTax = presetPriceInclTax,
                 Quantity = presetQty,
                 SubTotalExclTax = presetPriceExclTax,
-                SubTotalInclTax = presetPriceInclTax
+                SubTotalInclTax = presetPriceInclTax,
+                AutoUpdateOrderTotals = _orderSettings.AutoUpdateOrderTotalsOnEditingOrder
             };
 
             //attributes
@@ -1783,6 +1784,10 @@ namespace Nop.Admin.Controllers
             var model = new OrderModel();
             PrepareOrderDetailsModel(model, order);
 
+            var warnings = TempData["nop.admin.order.warnings"] as List<string>;
+            if (warnings != null)
+                model.Warnings = warnings;
+
             return View(model);
         }
 
@@ -2138,14 +2143,17 @@ namespace Nop.Admin.Controllers
             {
                 int qtyDifference = orderItem.Quantity - quantity;
 
-                orderItem.UnitPriceInclTax = unitPriceInclTax;
-                orderItem.UnitPriceExclTax = unitPriceExclTax;
-                orderItem.Quantity = quantity;
-                orderItem.DiscountAmountInclTax = discountInclTax;
-                orderItem.DiscountAmountExclTax = discountExclTax;
-                orderItem.PriceInclTax = priceInclTax;
-                orderItem.PriceExclTax = priceExclTax;
-                _orderService.UpdateOrder(order);
+                if (!_orderSettings.AutoUpdateOrderTotalsOnEditingOrder)
+                {
+                    orderItem.UnitPriceInclTax = unitPriceInclTax;
+                    orderItem.UnitPriceExclTax = unitPriceExclTax;
+                    orderItem.Quantity = quantity;
+                    orderItem.DiscountAmountInclTax = discountInclTax;
+                    orderItem.DiscountAmountExclTax = discountExclTax;
+                    orderItem.PriceInclTax = priceInclTax;
+                    orderItem.PriceExclTax = priceExclTax;
+                    _orderService.UpdateOrder(order);
+                }
 
                 //adjust inventory
                 _productService.AdjustInventory(orderItem.Product, qtyDifference, orderItem.AttributesXml);
@@ -2160,6 +2168,24 @@ namespace Nop.Admin.Controllers
                 _orderService.DeleteOrderItem(orderItem);
             }
 
+            //update order totals
+            var updateOrderParameters = new UpdateOrderParameters
+            {
+                UpdatedOrder = order,
+                UpdatedOrderItem = orderItem,
+                PriceInclTax = unitPriceInclTax,
+                PriceExclTax = unitPriceExclTax,
+                DiscountAmountInclTax = discountInclTax,
+                DiscountAmountExclTax = discountExclTax,
+                SubTotalInclTax = priceInclTax,
+                SubTotalExclTax = priceExclTax,
+                Quantity = quantity,
+                PriceChanged = unitPriceInclTax != orderItem.UnitPriceInclTax || unitPriceExclTax != orderItem.UnitPriceExclTax,
+                DiscountAmountChanged = discountInclTax != orderItem.DiscountAmountInclTax || discountExclTax != orderItem.DiscountAmountExclTax,
+                SubTotalChanged = priceInclTax != orderItem.PriceInclTax || priceExclTax != orderItem.PriceExclTax
+            };
+            _orderProcessingService.UpdateOrderTotals(updateOrderParameters);
+
             //add a note
             order.OrderNotes.Add(new OrderNote
             {
@@ -2172,6 +2198,7 @@ namespace Nop.Admin.Controllers
 
             var model = new OrderModel();
             PrepareOrderDetailsModel(model, order);
+            model.Warnings = updateOrderParameters.Warnings;
 
             //selected tab
             SaveSelectedTabName(persistForTheNextRequest: false);
@@ -2230,6 +2257,16 @@ namespace Nop.Admin.Controllers
                 //delete item
                 _orderService.DeleteOrderItem(orderItem);
 
+                //update order totals
+                var updateOrderParameters = new UpdateOrderParameters
+                {
+                    UpdatedOrder = order,
+                    UpdatedOrderItem = orderItem
+                };
+                _orderProcessingService.UpdateOrderTotals(updateOrderParameters);
+
+
+
                 //add a note
                 order.OrderNotes.Add(new OrderNote
                 {
@@ -2242,6 +2279,7 @@ namespace Nop.Admin.Controllers
 
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
+                model.Warnings = updateOrderParameters.Warnings;
 
                 //selected tab
                 SaveSelectedTabName(persistForTheNextRequest: false);
@@ -2632,6 +2670,21 @@ namespace Nop.Admin.Controllers
                 //adjust inventory
                 _productService.AdjustInventory(orderItem.Product, -orderItem.Quantity, orderItem.AttributesXml);
 
+                //update order totals
+                var updateOrderParameters = new UpdateOrderParameters
+                {
+                    UpdatedOrder = order,
+                    UpdatedOrderItem = orderItem,
+                    PriceInclTax = unitPriceInclTax,
+                    PriceExclTax = unitPriceExclTax,
+                    SubTotalInclTax = priceInclTax,
+                    SubTotalExclTax = priceExclTax,
+                    Quantity = quantity,
+                    PriceChanged = unitPriceInclTax != orderItem.UnitPriceInclTax || unitPriceExclTax != orderItem.UnitPriceExclTax,
+                    SubTotalChanged = priceInclTax != orderItem.PriceInclTax || priceExclTax != orderItem.PriceExclTax
+                };
+                _orderProcessingService.UpdateOrderTotals(updateOrderParameters);
+
                 //add a note
                 order.OrderNotes.Add(new OrderNote
                 {
@@ -2667,6 +2720,7 @@ namespace Nop.Admin.Controllers
                 }
 
                 //redirect to order details page
+                TempData["nop.admin.order.warnings"] = updateOrderParameters.Warnings;
                 return RedirectToAction("Edit", "Order", new { id = order.Id });
             }
             

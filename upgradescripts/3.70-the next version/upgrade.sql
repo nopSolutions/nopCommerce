@@ -2132,6 +2132,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.OneColumnProductPage">
     <Value>One column product page</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoUpdateOrderTotalsOnEditingOrder">
+    <Value>Auto update order totals</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoUpdateOrderTotalsOnEditingOrder.Hint">
+    <Value>Check to automatically update order totals on editing an order in admin area.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -4831,4 +4837,12 @@ GO
 --delete permission
 DELETE FROM [PermissionRecord]
 WHERE [SystemName] = N'ManageMeasures'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.autoupdateordertotalsoneditingorder')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'ordersettings.autoupdateordertotalsoneditingorder', N'true', 0)
+END
 GO

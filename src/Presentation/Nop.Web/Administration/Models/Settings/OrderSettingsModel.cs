@@ -35,6 +35,10 @@ namespace Nop.Admin.Models.Settings
         public decimal MinOrderTotalAmount { get; set; }
         public bool MinOrderTotalAmount_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.AutoUpdateOrderTotalsOnEditingOrder")]
+        public bool AutoUpdateOrderTotalsOnEditingOrder { get; set; }
+        public bool AutoUpdateOrderTotalsOnEditingOrder_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.AnonymousCheckoutAllowed")]
         public bool AnonymousCheckoutAllowed { get; set; }
         public bool AnonymousCheckoutAllowed_OverrideForStore { get; set; }
