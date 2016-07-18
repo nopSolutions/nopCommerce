@@ -198,6 +198,9 @@
   <LocaleResource Name="Account.CustomerProductReviews.ApprovalStatus.Pending">
     <Value>Pending</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.CustomerProductReviews.NoRecords">
+    <Value>You haven't written any reviews yet</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.CustomerProductReviews.ProductReviewFor">
     <Value>Product review for</Value>
   </LocaleResource>
