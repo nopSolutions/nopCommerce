@@ -80,51 +80,51 @@
 
 <!DOCTYPE html>
 <html@(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
-<head>
-    <title>@adminPageTitle</title>
-    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    @Html.NopHeadCustom()
-    @Html.NopCssFiles(this.Url, ResourceLocation.Head, false)
-    @Html.NopScripts(this.Url, ResourceLocation.Head, false)
-</head>
-<body class="hold-transition skin-blue sidebar-mini @if (hideSidebar)
+    <head>
+        <title>@adminPageTitle</title>
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        @Html.NopHeadCustom()
+        @Html.NopCssFiles(this.Url, ResourceLocation.Head, false)
+        @Html.NopScripts(this.Url, ResourceLocation.Head, false)
+    </head>
+    <body class="hold-transition skin-blue sidebar-mini @if (hideSidebar)
                                                     {<text>sidebar-collapse</text>}">
-    <div class="throbber">
-        <div class="curtain">
-        </div>
-        <div class="curtain-content">
-            <div>
-                <h1 class="throbber-header">@T("Common.Wait...")</h1>
-                <p>
-                    <img src="@Url.Content("~/administration/content/images/throbber-synchronizing.gif")" alt="" />
-                </p>
+        <div class="throbber">
+            <div class="curtain">
+            </div>
+            <div class="curtain-content">
+                <div>
+                    <h1 class="throbber-header">@T("Common.Wait...")</h1>
+                    <p>
+                        <img src="@Url.Content("~/administration/content/images/throbber-synchronizing.gif")" alt="" />
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
-    <div id="ajaxBusy">
-        <span>&nbsp;</span>
-    </div>
-    <div class="wrapper">
-        @if (IsSectionDefined("header"))
-        {
-            @RenderSection("header")
-        }
-        else
-        {
-            @Html.Widget("admin_header_before", area: "Admin")
-            <div class="main-header">
-                <a href="@Url.Content("~/admin")" class="logo">
-                    <!-- mini logo for sidebar mini 50x50 pixels -->
-                    <span class="logo-mini"></span>
-                    <!-- logo for regular state and mobile devices -->
-                    <span class="logo-lg"></span>
-                </a>
-                <div class="navbar navbar-static-top" role="navigation">
-                    <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-                        <span class="sr-only">&nbsp;</span>
+        <div id="ajaxBusy">
+            <span>&nbsp;</span>
+        </div>
+        <div class="wrapper">
+            @if (IsSectionDefined("header"))
+            {
+                @RenderSection("header")
+            }
+            else
+            {
+                @Html.Widget("admin_header_before", area: "Admin")
+                <div class="main-header">
+                    <a href="@Url.Content("~/admin")" class="logo">
+                        <!-- mini logo for sidebar mini 50x50 pixels -->
+                        <span class="logo-mini"></span>
+                        <!-- logo for regular state and mobile devices -->
+                        <span class="logo-lg"></span>
                     </a>
-                    @Html.Widget("admin_header_toggle_after", area: "Admin")
+                    <div class="navbar navbar-static-top" role="navigation">
+                        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                            <span class="sr-only">&nbsp;</span>
+                        </a>
+                        @Html.Widget("admin_header_toggle_after", area: "Admin")
                         <div class="navbar-custom-menu">
                             @Html.Widget("admin_header_navbar_before", area: "Admin")
                             <ul class="nav navbar-nav">
@@ -173,7 +173,7 @@
                                         <a href="#" data-toggle="dropdown"><i class="fa fa-gears"></i></a>
                                         <ul class="maintenance-menu dropdown-menu bg-light-blue" role="menu">
                                             <li>
-                                                @using (Html.BeginForm("ClearCache", "Common", new {area = "Admin"}))
+                                                @using (Html.BeginForm("ClearCache", "Common", new { area = "Admin" }))
                                                 {
                                                     @Html.AntiForgeryToken()
                                                     @Html.Hidden("returnurl", HttpContext.Current.Request.RawUrl)
@@ -205,71 +205,82 @@
                             </ul>
                             @Html.Widget("admin_header_navbar_after", area: "Admin")
                         </div>
-                </div>
-            </div>
-            @Html.Widget("admin_header_after", area: "Admin")
-        }
-        @if (IsSectionDefined("headermenu"))
-        {
-            @RenderSection("headermenu")
-        }
-        else
-        {
-            <div class="main-sidebar">
-                <div class="sidebar">
-                    @Html.Widget("admin_searchbox_before", area: "Admin")
-                    <div class="sidebar-form">
-                        <div id="search-box">
-                            <input type="text" class="form-control admin-search-box typeahead" placeholder="@T("Admin.Menu.Search")">
-                        </div>
                     </div>
-                    <script>
-                        $(document).ready(function () {
-                            Admin.Search.init();
-                        });
-                    </script>
-                    @Html.Widget("admin_menu_before", area: "Admin")
-                    @Html.Partial("Menu")
                 </div>
-            </div>
-        }
-        <div class="content-wrapper">
-            @Html.Partial("Notifications")
-            <div>
-                @RenderBody()
-            </div>
-        </div>
-        <div class="main-footer clearfix">
-            <div class="text-center">
-                @(EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(DateTime.Now).ToString("f"))
-            </div>
-            @if (!EngineContext.Current.Resolve<StoreInformationSettings>().HidePoweredByNopCommerce)
+                @Html.Widget("admin_header_after", area: "Admin")
+            }
+            @if (IsSectionDefined("headermenu"))
             {
-                @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
-                    Please find more info at http://www.nopcommerce.com/copyrightremoval.aspx*@
-                <div class="pull-left">
-                    Powered by <a href="http://www.nopcommerce.com/?utm_source=admin-panel&utm_medium=footer&utm_campaign=admin-panel" target="_blank">nopCommerce</a>
+                @RenderSection("headermenu")
+            }
+            else
+            {
+                <div class="main-sidebar">
+                    <div class="sidebar">
+                        @Html.Widget("admin_searchbox_before", area: "Admin")
+                        <div class="sidebar-form">
+                            <div id="search-box">
+                                <input type="text" class="form-control admin-search-box typeahead" placeholder="@T("Admin.Menu.Search")">
+                            </div>
+                        </div>
+                        <script>
+                            $(document).ready(function () {
+                                Admin.Search.init();
+                            });
+                        </script>
+                        @Html.Widget("admin_menu_before", area: "Admin")
+                        @Html.Partial("Menu")
+                    </div>
                 </div>
             }
-            <div class="pull-right hidden-xs">
-                <b>nopCommerce version @NopVersion.CurrentVersion</b>
+            <div class="content-wrapper">
+                @Html.Partial("Notifications")
+                <div>
+                    @RenderBody()
+                </div>
+            </div>
+            <div class="main-footer clearfix">
+                <div class="text-center">
+                    @(EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(DateTime.Now).ToString("f"))
+                </div>
+                @if (!EngineContext.Current.Resolve<StoreInformationSettings>().HidePoweredByNopCommerce)
+                {
+                    @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
+                        Please find more info at http://www.nopcommerce.com/copyrightremoval.aspx*@
+                    <div class="pull-left">
+                        Powered by <a href="http://www.nopcommerce.com/?utm_source=admin-panel&utm_medium=footer&utm_campaign=admin-panel" target="_blank">nopCommerce</a>
+                    </div>
+                }
+                <div class="pull-right hidden-xs">
+                    <b>nopCommerce version @NopVersion.CurrentVersion</b>
+                </div>
             </div>
         </div>
-    </div>
 
-    @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
-    @Html.NopScripts(this.Url, ResourceLocation.Foot)
+        <script>
+            var AdminLTEOptions = {
+                boxWidgetOptions: {
+                    boxWidgetIcons: {
+                        collapse: 'fa-compress',
+                        open: 'fa-expand'
+                    }
+                }
+            };
+        </script>
 
-    <a id="backTop" class="btn btn-back-top bg-teal"></a>
-    <script>
-        $(document).ready(function () {
-            $('#backTop').backTop();
+        @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
+        @Html.NopScripts(this.Url, ResourceLocation.Foot)
 
-            $('a.sidebar-toggle').on('click', function () {
-                var collapsed = $('body').hasClass('sidebar-collapse');
-                saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
+        <a id="backTop" class="btn btn-back-top bg-teal"></a>
+        <script>
+            $(document).ready(function () {
+                $('#backTop').backTop();
+
+                $('a.sidebar-toggle').on('click', function () {
+                    var collapsed = $('body').hasClass('sidebar-collapse');
+                    saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
+                });
             });
-        });
-    </script>
-</body>
-</html>
+        </script>
+    </body>
+    </html>

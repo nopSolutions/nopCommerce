@@ -1539,10 +1539,13 @@ set @resources='
     <Value>No customer roles available. Create at least one customer role before mapping.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Description">
-    <Value>Specification attributes are product features i.e, screen size, number of USB-ports, visible on product details page. Specification attributes can be used for filtering products on the category details page. Unlike product attributes, specification attributes are used for information purposes only.</Value>
+    <Value>Specification attributes are product features i.e, screen size, number of USB-ports, visible on product details page. Specification attributes can be used for filtering products on the category details page. Unlike product attributes, specification attributes are used for information purposes only.  You can add attributes to editing product in the Catalog > Products > Edit product page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.Description">
-    <Value>Product attributes are quantifiable or descriptive aspects of a product (such as, color). For example, if you were to create an attribute for color, with the values of blue, green, yellow, and so on, you may want to apply this attribute to shirts, which you sell in various colors (you can adjust a price or weight for any of existing attribute values). You can add attribute for your product using existing list of attributes, or if you need to create a new one go to Catalog > Attributes > Product attributes. Please notice that if you want to manage inventory by product attributes (e.g. 5 green shirts and 3 blue ones), then ensure that Inventory method is set to Track inventory by product attributes.</Value>
+    <Value>Product attributes are quantifiable or descriptive aspects of a product (such as, color). On this page you can edit existing attributes or create new one. You can add attributes to editing product and make attributes combinations in the Catalog > Products > Edit product page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Description">
+    <Value>Checkout attributes are displayed in the shopping cart and provide the opportunity to offer more services to customers, i.e. gift wrapping,  before placing the order.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickUpInStore.Hint">
     <Value>A value indicating whether "Pick Up in Store" option is enabled during checkout. Please ensure that you have at least one active pickup point provider.</Value>
@@ -1636,6 +1639,9 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="PDFInvoice.Pickup">
     <Value>Pickup point:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerProductReviews.NoRecords">
+    <Value>You haven''t written any reviews yet</Value>
   </LocaleResource>
 </Language>
 '
@@ -4303,4 +4309,32 @@ GO
 
 ALTER TABLE [dbo].[Order] WITH CHECK ADD CONSTRAINT [Order_PickupAddress] FOREIGN KEY([PickupAddressId])
 REFERENCES [dbo].[Address] ([Id])
+GO
+
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'adminareasettings.hideadvertisementsonadminarea')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'adminareasettings.hideadvertisementsonadminarea', N'false', 0)
+END
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [name] = N'commonsettings.hideadvertisementsonadminarea'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.deleteguesttaskolderthanminutes')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.deleteguesttaskolderthanminutes', N'1440', 0)
+END
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [name] = N'commonsettings.deleteguesttaskolderthanminutes'
 GO

@@ -7,7 +7,13 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.RecipientName)
+                    <div class="label-wrapper">
+                        <label class="control-label">@T("Admin.GiftCards.Fields.RecipientName")</label>
+                        <span class="required">*</span>
+                        <div class="ico-help" title="@T("Admin.GiftCards.Fields.RecipientName.Hint")">
+                            <i class="fa fa-question-circle"></i>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-6">
                     @Html.NopEditorFor(model => model.RecipientName)
@@ -17,7 +23,13 @@
             {
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.RecipientEmail)
+                        <div class="label-wrapper">
+                            <label class="control-label">@T("Admin.GiftCards.Fields.RecipientEmail")</label>
+                            <span class="required">*</span>
+                            <div class="ico-help" title="@T("Admin.GiftCards.Fields.RecipientEmail.Hint")">
+                                <i class="fa fa-question-circle"></i>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-6">
                         @Html.NopEditorFor(model => model.RecipientEmail)
@@ -26,7 +38,13 @@
             }
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.SenderName)
+                    <div class="label-wrapper">
+                        <label class="control-label">@T("Admin.GiftCards.Fields.SenderName")</label>
+                        <span class="required">*</span>
+                        <div class="ico-help" title="@T("Admin.GiftCards.Fields.SenderName.Hint")">
+                            <i class="fa fa-question-circle"></i>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-6">
                     @Html.NopEditorFor(model => model.SenderName)
@@ -36,7 +54,13 @@
             {
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.SenderEmail)
+                        <div class="label-wrapper">
+                            <label class="control-label">@T("Admin.GiftCards.Fields.SenderEmail")</label>
+                            <span class="required">*</span>
+                            <div class="ico-help" title="@T("Admin.GiftCards.Fields.SenderEmail.Hint")">
+                                <i class="fa fa-question-circle"></i>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-6">
                         @Html.NopEditorFor(model => model.SenderEmail)
