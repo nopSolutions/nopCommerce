@@ -575,6 +575,10 @@ input[type=file].form-control {
 .editor-settings-modal-dialog .col-md-4 {
     padding: 7px;
 }
+.store-scope-configuration .label-wrapper {
+    float: left;
+    margin-right: 10px;
+}
 
 /* PRODUCT EDIT/CREATE */
 .form-group + .nav-tabs-localized-fields{
