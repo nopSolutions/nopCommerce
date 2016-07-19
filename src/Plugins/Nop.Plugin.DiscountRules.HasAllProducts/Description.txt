@@ -6,4 +6,4 @@ SupportedVersions: 3.80
 Author: nopCommerce team
 DisplayOrder: 1
 FileName: Nop.Plugin.DiscountRules.HasAllProducts.dll
-Description:
+Description: This plugin allows you to configure discounts for customers who have certain products in the cart

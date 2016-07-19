@@ -6,4 +6,4 @@ SupportedVersions: 3.80
 Author: nopCommerce team, Nicolas Muniere
 DisplayOrder: 1
 FileName: Nop.Plugin.Widgets.GoogleAnalytics.dll
-Description:
+Description: This plugin integrates with Google Analytics. It keeps track of statistics about the visitors and ecommerce conversion on your website
