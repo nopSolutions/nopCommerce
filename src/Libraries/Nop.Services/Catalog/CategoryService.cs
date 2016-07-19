@@ -11,6 +11,8 @@ using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Security;
 using Nop.Services.Stores;
+using Nop.Data;
+using System.Data.SqlClient;
 
 namespace Nop.Services.Catalog
 {
@@ -598,7 +600,27 @@ namespace Nop.Services.Catalog
                 .Select(p => new {p.ProductId, p.CategoryId}).ToList()
                 .GroupBy(a => a.ProductId)
                 .ToDictionary(items => items.Key, items => items.Select(a => a.CategoryId).ToArray());
-        } 
+        }
+
+        /// <summary>
+        /// Get top menu categories
+        /// </summary>
+        /// <returns>List of top menu categories limited to current store and not limited to store</returns>
+        public virtual IList<Category> GetTopMenuCategories()
+        {
+            List<Category> topmenucategories = new List<Category>();
+            DataSettingsManager setman = new DataSettingsManager();
+            var settings = setman.LoadSettings();
+            using (var db = new NopObjectContext(settings.DataConnectionString))
+            {
+                var notstorecategories = db.SqlQuery<Category>("SELECT * FROM Category WHERE LimitedToStores = 0 AND IncludeInTopMenu = 1").ToList();
+                var storecategories = db.SqlQuery<Category>("SELECT * FROM Category WHERE Id IN (SELECT EntityId FROM StoreMapping WHERE EntityName = 'Category' AND StoreId = @storeid) AND LimitedToStores = 1 AND IncludeInTopMenu = 1", new SqlParameter("storeid", _storeContext.CurrentStore.Id)).ToList();
+                topmenucategories.AddRange(notstorecategories);
+                topmenucategories.AddRange(storecategories);
+            }
+            return topmenucategories;
+        }
+
         #endregion
     }
 }
