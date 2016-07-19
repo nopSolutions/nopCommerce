@@ -30,7 +30,6 @@ namespace Nop.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
-        private readonly IWebHelper _webHelper;
 
 		#endregion
 
@@ -41,8 +40,7 @@ namespace Nop.Admin.Controllers
             ICurrencyService currencyService,
             IStoreService storeService, 
             IStoreMappingService storeMappingService,
-            IPermissionService permissionService,
-            IWebHelper webHelper)
+            IPermissionService permissionService)
 		{
 			this._localizationService = localizationService;
             this._languageService = languageService;
@@ -50,7 +48,6 @@ namespace Nop.Admin.Controllers
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
-            this._webHelper= webHelper;
 		}
 
 		#endregion 

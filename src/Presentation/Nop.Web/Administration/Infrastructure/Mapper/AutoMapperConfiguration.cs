@@ -160,7 +160,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.SendImmediately, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<MessageTemplateModel, MessageTemplate>()
-                    .ForMember(dest => dest.DelayPeriod, mo => mo.Ignore());
+                    .ForMember(dest => dest.DelayPeriod, mo => mo.Ignore())
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
                 //queued email
                 cfg.CreateMap<QueuedEmail, QueuedEmailModel>()
                     .ForMember(dest => dest.EmailAccountName,
