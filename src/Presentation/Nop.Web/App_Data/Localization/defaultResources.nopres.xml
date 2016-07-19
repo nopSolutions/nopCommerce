@@ -6694,10 +6694,7 @@
     <Value>Check to display "ship to the same address" option during checkout ("billing address" step). In this case case "shipping address" with appropriate options (e.g. pick up in store) will be skipped. Also note that all billing countries should support shipping ("Allow shipping" checkbox ticked).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingOriginAddress">
-    <Value>Shipping Origin</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingOriginAddress.Hint">
-    <Value>Shipping origin address.</Value>
+    <Value>Shipping origin</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.UseWarehouseLocation">
     <Value>Use warehouse location</Value>
@@ -6832,10 +6829,7 @@
     <Value>A value indicating whether customers are allowed to select tax display type.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.DefaultTaxAddress">
-    <Value>Default tax address</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Tax.DefaultTaxAddress.Hint">
-    <Value>The default address used for tax calculation.</Value>
+    <Value>Default tax address (used for tax calculation)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.DisplayTaxRates">
     <Value>Display all applied tax rates</Value>

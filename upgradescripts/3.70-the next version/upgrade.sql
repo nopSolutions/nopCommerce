@@ -2024,6 +2024,18 @@ set @resources='
   <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreAcl.Notification">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingOriginAddress.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.DefaultTaxAddress.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.DefaultTaxAddress">
+    <Value>Default tax address (used for tax calculation)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingOriginAddress">
+    <Value>Shipping origin</Value>
+  </LocaleResource>
 </Language>
 '
 
