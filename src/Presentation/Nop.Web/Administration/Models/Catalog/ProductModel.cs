@@ -392,25 +392,25 @@ namespace Nop.Admin.Models.Catalog
 
 
         //ACL (customer roles)
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SelectedCustomerRoleIds")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AclCustomerRoles")]
         [UIHint("MultiSelect")]
         public IList<int> SelectedCustomerRoleIds { get; set; }
         public IList<SelectListItem> AvailableCustomerRoles { get; set; }
 
         //store mapping
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SelectedStoreIds")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.LimitedToStores")]
         [UIHint("MultiSelect")]
         public IList<int> SelectedStoreIds { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
 
         //categories
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SelectedCategoryIds")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Categories")]
         [UIHint("MultiSelect")]
         public IList<int> SelectedCategoryIds { get; set; }
         public IList<SelectListItem> AvailableCategories { get; set; }
 
         //manufacturers
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SelectedManufacturerIds")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Manufacturers")]
         [UIHint("MultiSelect")]
         public IList<int> SelectedManufacturerIds { get; set; }
         public IList<SelectListItem> AvailableManufacturers { get; set; }

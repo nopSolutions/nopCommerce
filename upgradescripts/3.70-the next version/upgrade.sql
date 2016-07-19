@@ -746,11 +746,17 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Categories.SaveBeforeEdit">
     <Value></Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCategoryIds">
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Categories">
     <Value>Categories</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCategoryIds.Hint">
-    <Value>Product category mappings.</Value>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Categories.Hint">
+    <Value>Choose categories. You can manage product categories by selecting Catalog > Categories.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Categories.NoCategoriesAvailable">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Categories.NoCategoriesAvailable">
+    <Value>No categories available.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Blog.AllowNotRegisteredUsersToLeaveComments">
     <Value>Allow guests to leave comments</Value>
@@ -887,11 +893,11 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Manufacturers.SaveBeforeEdit">
     <Value></Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedManufacturerIds">
-     <Value>Manufacturers</Value>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Manufacturers">
+    <Value>Manufacturers</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedManufacturerIds.Hint">
-     <Value>Product manufacturer mappings.</Value>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Manufacturers.Hint">
+    <Value>Choose the manufacturer. You can manage manufacturers by selecting Catalog > Manufacturers.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ACL">
      <Value>Customer roles</Value>
@@ -1166,13 +1172,13 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Discounts">
      <Value></Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedStoreIds">
+  <LocaleResource Name="Admin.Catalog.Products.Fields.LimitedToStores">
     <Value>Limited to stores</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCustomerRoleIds">
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AclCustomerRoles">
      <Value>Customer roles</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCustomerRoleIds.Hint">
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AclCustomerRoles.Hint">
     <Value>Choose one or several customer roles  i.e. administrators, vendors, guests, who will be able to see this product in catalog. if you don’t need this option just leave this field empty. You can manage customer roles by selecting Customers > Customer roles.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Acl">
@@ -1325,14 +1331,8 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShipSeparately.Hint">
     <Value>Check if the product should be shipped separately from other products (in single box). Notice that if the order includes several items of this product, all of them will be shipped separately.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCategoryIds.Hint">
-    <Value>Choose categories. You can manage product categories by selecting Catalog > Categories.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedManufacturerIds.Hint">
-     <Value>Choose the manufacturer. You can manage manufacturers by selecting Catalog > Manufacturers.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedStoreIds.Hint">
-     <Value>Option to limit a product to a certain store. If you use different stores, choose one or several from the list. You can manage stores by selecting Configuration > Stores. if you don’t need this option just leave this field empty.</Value>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.LimitedToStores.Hint">
+     <Value>Option to limit a product to a certain store. If you have multiple stores, choose one or several from the list. If you don’t need this option just leave this field empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Vendor.Hint">
     <Value>Choose the vendor. You can manage vendors by selecting Customers > Vendors.</Value>
@@ -1369,12 +1369,6 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Description">
     <Value>Also note that some attribute control types that support custom user input (e.g. file upload, textboxes, date picker) are useless with attribute combinations</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.LimitedToStores">
-    <Value></Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.LimitedToStores.Hint">
-    <Value></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerRole">
      <Value>Limited to customer role</Value>
@@ -1836,6 +1830,12 @@ set @resources='
     <Value></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Discounts.NoDiscounts">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Stores.NoStoresAvailable">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerIds">
     <Value></Value>
   </LocaleResource>
 </Language>
