@@ -113,7 +113,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                 //countries
                 cfg.CreateMap<CountryModel, Country>()
                     .ForMember(dest => dest.StateProvinces, mo => mo.Ignore())
-                    .ForMember(dest => dest.RestrictedShippingMethods, mo => mo.Ignore());
+                    .ForMember(dest => dest.RestrictedShippingMethods, mo => mo.Ignore())
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
                 cfg.CreateMap<Country, CountryModel>()
                     .ForMember(dest => dest.NumberOfStates,
                         mo => mo.MapFrom(src => src.StateProvinces != null ? src.StateProvinces.Count : 0))

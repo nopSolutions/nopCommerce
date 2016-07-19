@@ -3738,12 +3738,6 @@
   <LocaleResource Name="Admin.Configuration.Countries.Fields.AllowsShipping.Hint">
     <Value>Allow shipping to customers located in this country.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Countries.Fields.AvailableStores">
-    <Value>Stores</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Countries.Fields.AvailableStores.Hint">
-    <Value>Select stores for which the country will be shown.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Countries.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
@@ -3754,7 +3748,7 @@
     <Value>Limited to stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Countries.Fields.LimitedToStores.Hint">
-    <Value>Determines whether the country is available only at certain stores.</Value>
+    <Value>Option to limit this country to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Countries.Fields.Name">
     <Value>Name</Value>
@@ -3863,9 +3857,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Countries.States.SaveBeforeEdit">
     <Value>You need to save the country before you can add states for this country page.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Countries.Stores">
-    <Value>Stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Countries.UnpublishSelected">
     <Value>Unpublish selected</Value>

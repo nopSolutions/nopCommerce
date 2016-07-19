@@ -1916,6 +1916,18 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Manufacturers.Stores">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Countries.Fields.AvailableStores">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Countries.Fields.AvailableStores.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Countries.Fields.LimitedToStores.Hint">
+    <Value>Option to limit this country to a certain store. If you have multiple stores, choose one or several from the list. If you don''t use this option just leave this field empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Countries.Stores">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
