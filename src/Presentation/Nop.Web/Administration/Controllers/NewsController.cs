@@ -82,22 +82,26 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
+            if (!excludeProperties && newsItem != null)
+                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(newsItem).ToList();
+
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
             {
-                if (newsItem != null)
+                model.AvailableStores.Add(new SelectListItem
                 {
-                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(newsItem);
-                }
+                    Text = store.Name,
+                    Value = store.Id.ToString(),
+                    Selected = model.SelectedStoreIds.Contains(store.Id)
+                });
             }
         }
 
         [NonAction]
         protected virtual void SaveStoreMappings(NewsItem newsItem, NewsItemModel model)
         {
+            newsItem.LimitedToStores = model.SelectedStoreIds.Any();
+
             var existingStoreMappings = _storeMappingService.GetStoreMappings(newsItem);
             var allStores = _storeService.GetAllStores();
             foreach (var store in allStores)
@@ -117,8 +121,7 @@ namespace Nop.Admin.Controllers
                 }
             }
         }
-
-
+        
         #endregion
 
         #region News items

@@ -7794,12 +7794,6 @@
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.AllowComments.Hint">
     <Value>When checked, customers can leave comments about your news entry.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.AvailableStores">
-    <Value>Stores</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.AvailableStores.Hint">
-    <Value>Select stores for which the news will be shown.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.Comments">
     <Value>View comments</Value>
   </LocaleResource>
@@ -7831,7 +7825,7 @@
     <Value>Limited to stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.LimitedToStores.Hint">
-    <Value>Determines whether the news is available only at certain stores.</Value>
+    <Value>Option to limit this news item to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.MetaDescription">
     <Value>Meta description</Value>
@@ -7895,9 +7889,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.List.SearchStore.Hint">
     <Value>Search by a specific store.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Stores">
-    <Value>Stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Updated">
     <Value>The news item has been updated successfully.</Value>
