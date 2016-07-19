@@ -197,22 +197,26 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableCustomerRoles = _customerService
-                .GetAllCustomerRoles(true)
-                .Select(cr => cr.ToModel())
-                .ToList();
-            if (!excludeProperties)
+            if (!excludeProperties && manufacturer != null)
+                model.SelectedCustomerRoleIds = _aclService.GetCustomerRoleIdsWithAccess(manufacturer).ToList();
+
+            var allRoles = _customerService.GetAllCustomerRoles(true);
+            foreach (var role in allRoles)
             {
-                if (manufacturer != null)
+                model.AvailableCustomerRoles.Add(new SelectListItem
                 {
-                    model.SelectedCustomerRoleIds = _aclService.GetCustomerRoleIdsWithAccess(manufacturer);
-                }
+                    Text = role.Name,
+                    Value = role.Id.ToString(),
+                    Selected = model.SelectedCustomerRoleIds.Contains(role.Id)
+                });
             }
         }
 
         [NonAction]
         protected virtual void SaveManufacturerAcl(Manufacturer manufacturer, ManufacturerModel model)
         {
+            manufacturer.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
+
             var existingAclRecords = _aclService.GetAclRecords(manufacturer);
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
             foreach (var customerRole in allCustomerRoles)

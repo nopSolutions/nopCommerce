@@ -1838,6 +1838,48 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerIds">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.SubjectToAcl">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.SubjectToAcl.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.AclCustomerRoles">
+    <Value>Limited to customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.AclCustomerRoles.Hint">
+    <Value>Select customer roles for which the category will be shown. Leave empty if you want this category to be visible to all users.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Acl">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.SubjectToAcl">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.SubjectToAcl.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AclCustomerRoles">
+    <Value>Limited to customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AclCustomerRoles.Hint">
+    <Value>Select customer roles for which the manufacturer will be shown. Leave empty if you want this manufacturer to be visible to all users.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Acl">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.SubjectToAcl">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.SubjectToAcl.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Acl">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AclCustomerRoles.Hint">
+    <Value>Select customer roles for which the topic will be shown. Leave empty if you want this topic to be visible to all users.</Value>
+  </LocaleResource>
 </Language>
 '
 

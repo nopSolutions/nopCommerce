@@ -1701,9 +1701,6 @@
   <LocaleResource Name="Admin.Catalog.Categories">
     <Value>Categories</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Acl">
-    <Value>Access control list</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Added">
     <Value>The new category has been added successfully.</Value>
   </LocaleResource>
@@ -1723,10 +1720,10 @@
     <Value>Edit category details</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.AclCustomerRoles">
-    <Value>Customer roles</Value>
+    <Value>Limited to customer roles</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.AclCustomerRoles.Hint">
-    <Value>Select customer roles for which the category will be shown.</Value>
+    <Value>Select customer roles for which the category will be shown. Leave empty if you want this category to be visible to all users.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.AllowCustomersToSelectPageSize">
     <Value>Allow customers to select page size</Value>
@@ -1863,12 +1860,6 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomePage.Hint">
     <Value>Check if you want to show a category on home page.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.SubjectToAcl">
-    <Value>Subject to ACL</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.SubjectToAcl.Hint">
-    <Value>Determines whether the category is subject to ACL (access control list).</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Imported">
     <Value>Categories have been imported successfully.</Value>
   </LocaleResource>
@@ -1926,9 +1917,6 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers">
     <Value>Manufacturers</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturers.Acl">
-    <Value>Access control list</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Added">
     <Value>The new manufacturer has been added successfully.</Value>
   </LocaleResource>
@@ -1954,10 +1942,10 @@
     <Value>Edit manufacturer details</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AclCustomerRoles">
-    <Value>Customer roles</Value>
+    <Value>Limited to customer roles</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AclCustomerRoles.Hint">
-    <Value>Select customer roles for which the manufacturer will be shown.</Value>
+    <Value>Select customer roles for which the manufacturer will be shown. Leave empty if you want this manufacturer to be visible to all users.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AllowCustomersToSelectPageSize">
     <Value>Allow customers to select page size</Value>
@@ -2066,12 +2054,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.SeName.Hint">
     <Value>Set a search engine friendly page name e.g. 'the-best-manufacturer' to make your page URL 'http://www.yourStore.com/the-best-manufacturer'. Leave empty to generate it automatically based on the name of the manufacturer.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.SubjectToAcl">
-    <Value>Subject to ACL</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.SubjectToAcl.Hint">
-    <Value>Determines whether the manufacturer is subject to ACL (access control list).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Imported">
     <Value>Manufacturers have been imported successfully.</Value>
@@ -8091,9 +8073,6 @@
   <LocaleResource Name="Admin.ContentManagement.Topics">
     <Value>Topics (pages)</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Topics.Acl">
-    <Value>Access control list</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Added">
     <Value>The new topic has been added successfully.</Value>
   </LocaleResource>
@@ -8119,7 +8098,7 @@
     <Value>Customer roles</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AclCustomerRoles.Hint">
-    <Value>Select customer roles for which the topic will be shown.</Value>
+    <Value>Select customer roles for which the topic will be shown. Leave empty if you want this topic to be visible to all users.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AvailableStores">
     <Value>Stores</Value>
@@ -8225,12 +8204,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Store.Hint">
     <Value>Choose a store this topic is assigned to.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.SubjectToAcl">
-    <Value>Subject to ACL</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.SubjectToAcl.Hint">
-    <Value>Determines whether the topic is subject to ACL (access control list).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.SystemName">
     <Value>System name</Value>

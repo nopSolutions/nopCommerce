@@ -276,8 +276,7 @@ namespace Nop.Admin.Controllers
         [NonAction]
         protected virtual void SaveProductAcl(Product product, ProductModel model)
         {
-            if (model.SelectedCustomerRoleIds.Any())
-                product.SubjectToAcl = true;
+            product.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
 
             var existingAclRecords = _aclService.GetAclRecords(product);
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);

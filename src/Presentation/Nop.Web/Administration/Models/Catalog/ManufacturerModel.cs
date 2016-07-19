@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
-using Nop.Admin.Models.Customers;
 using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Catalog;
 using Nop.Web.Framework;
@@ -25,6 +24,9 @@ namespace Nop.Admin.Models.Catalog
 
             AvailableDiscounts = new List<SelectListItem>();
             SelectedDiscountIds = new List<int>();
+
+            SelectedCustomerRoleIds = new List<int>();
+            AvailableCustomerRoles = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Name")]
@@ -82,13 +84,14 @@ namespace Nop.Admin.Models.Catalog
         public int DisplayOrder { get; set; }
         
         public IList<ManufacturerLocalizedModel> Locales { get; set; }
-        
-        //ACL
-        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.SubjectToAcl")]
-        public bool SubjectToAcl { get; set; }
+
+
+        //ACL (customer roles)
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.AclCustomerRoles")]
-        public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
-        public int[] SelectedCustomerRoleIds { get; set; }
+        [UIHint("MultiSelect")]
+        public IList<int> SelectedCustomerRoleIds { get; set; }
+        public IList<SelectListItem> AvailableCustomerRoles { get; set; }
+
 
         //Store mapping
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.LimitedToStores")]

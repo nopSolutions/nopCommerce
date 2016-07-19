@@ -203,7 +203,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
                     .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
-                cfg.CreateMap<TopicModel, Topic>();
+                cfg.CreateMap<TopicModel, Topic>()
+                    .ForMember(dest => dest.SubjectToAcl, mo => mo.Ignore());
 
                 //category
                 cfg.CreateMap<Category, CategoryModel>()
@@ -223,6 +224,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.Deleted, mo => mo.Ignore())
+                    .ForMember(dest => dest.SubjectToAcl, mo => mo.Ignore())
                     .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore());
                 //manufacturer
                 cfg.CreateMap<Manufacturer, ManufacturerModel>()
@@ -237,6 +239,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<ManufacturerModel, Manufacturer>()
+                    .ForMember(dest => dest.SubjectToAcl, mo => mo.Ignore())
                     .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.Deleted, mo => mo.Ignore())
