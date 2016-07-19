@@ -1928,6 +1928,21 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Countries.Stores">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.Fields.AvailableStores">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.Fields.AvailableStores.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.Fields.LimitedToStores.Hint">
+    <Value>Option to limit this currency to a certain store. If you have multiple stores, choose one or several from the list. If you don''t use this option just leave this field empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.Stores">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.Info">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

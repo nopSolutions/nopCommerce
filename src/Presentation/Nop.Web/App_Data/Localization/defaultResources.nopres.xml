@@ -3891,12 +3891,6 @@
   <LocaleResource Name="Admin.Configuration.Currencies.EditCurrencyDetails">
     <Value>Edit currency details</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Currencies.Fields.AvailableStores">
-    <Value>Stores</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Currencies.Fields.AvailableStores.Hint">
-    <Value>Select stores for which the currency will be shown.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Currencies.Fields.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
@@ -3958,7 +3952,7 @@
     <Value>Limited to stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Currencies.Fields.LimitedToStores.Hint">
-    <Value>Determines whether the currency is available only at certain stores.</Value>
+    <Value>Option to limit this currency to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency">
     <Value>Mark as primary exchange rate currency</Value>
@@ -3996,9 +3990,6 @@
   <LocaleResource Name="Admin.Configuration.Currencies.GetLiveRates">
     <Value>Get live rates</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Currencies.Info">
-    <Value>Info</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Currencies.LiveRates">
     <Value>Live currency rates</Value>
   </LocaleResource>
@@ -4007,9 +3998,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Currencies.Select">
     <Value>Select a currency</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Currencies.Stores">
-    <Value>Stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Currencies.Updated">
     <Value>The currency has been updated successfully.</Value>
