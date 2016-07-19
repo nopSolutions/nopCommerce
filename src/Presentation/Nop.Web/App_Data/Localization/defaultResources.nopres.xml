@@ -1870,7 +1870,7 @@
     <Value>Categories have been imported successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Info">
-    <Value>Category Info</Value>
+    <Value>Category info</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.List.ImportFromExcelTip">
     <Value>Imported categories are distinguished by ID. If the ID already exists, then its corresponding category will be updated. For new categories ID do not need to specify</Value>
@@ -2071,7 +2071,7 @@
     <Value>Manufacturers have been imported successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Info">
-    <Value>Manufacturer Info</Value>
+    <Value>Manufacturer info</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.List.ImportFromExcelTip">
     <Value>Imported manufacturers are distinguished by ID. If the ID already exists, then its corresponding manufacturer will be updated. For new manufacturers ID do not need to specify</Value>
@@ -2962,7 +2962,7 @@
     <Value>Products have been imported successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Info">
-    <Value>Product Info</Value>
+    <Value>Product info</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Inventory">
     <Value>Inventory</Value>
@@ -8506,7 +8506,7 @@
     <Value>Customers</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.ActivityLog">
-    <Value>Activity Log</Value>
+    <Value>Activity log</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.ActivityLog.ActivityLogType">
     <Value>Activity Log Type</Value>
@@ -8857,7 +8857,7 @@
     <Value>Zip / postal code is required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Impersonate">
-    <Value>Place order (Impersonate)</Value>
+    <Value>Place order (impersonate)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Impersonate.Button">
     <Value>Place order</Value>
@@ -8869,7 +8869,7 @@
     <Value>Note: Click 'finish session' link in order to finish this session</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Info">
-    <Value>Customer Info</Value>
+    <Value>Customer info</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.List.CustomerRoles">
     <Value>Customer roles</Value>
