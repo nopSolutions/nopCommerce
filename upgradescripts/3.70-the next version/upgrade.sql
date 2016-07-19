@@ -1904,6 +1904,18 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Categories.Stores">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AvailableStores">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AvailableStores.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.LimitedToStores.Hint">
+    <Value>Option to limit this manufacturer to a certain store. If you have multiple stores, choose one or several from the list. If you don''t use this option just leave this field empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Stores">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

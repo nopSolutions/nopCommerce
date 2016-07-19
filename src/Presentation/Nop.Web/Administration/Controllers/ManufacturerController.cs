@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
@@ -243,22 +242,26 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
+            if (!excludeProperties && manufacturer != null)
+                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(manufacturer).ToList();
+
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
             {
-                if (manufacturer != null)
+                model.AvailableStores.Add(new SelectListItem
                 {
-                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(manufacturer);
-                }
+                    Text = store.Name,
+                    Value = store.Id.ToString(),
+                    Selected = model.SelectedStoreIds.Contains(store.Id)
+                });
             }
         }
 
         [NonAction]
         protected virtual void SaveStoreMappings(Manufacturer manufacturer, ManufacturerModel model)
         {
+            manufacturer.LimitedToStores = model.SelectedStoreIds.Any();
+
             var existingStoreMappings = _storeMappingService.GetStoreMappings(manufacturer);
             var allStores = _storeService.GetAllStores();
             foreach (var store in allStores)

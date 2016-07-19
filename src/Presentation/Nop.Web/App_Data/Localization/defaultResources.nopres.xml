@@ -1774,7 +1774,7 @@
     <Value>Limited to stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.LimitedToStores.Hint">
-    <Value>Option to limit this category to a certain store. If you have multiple stores, choose one or several from the list. If you don''t use this option just leave this field empty.</Value>
+    <Value>Option to limit this category to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.MetaDescription">
     <Value>Meta description</Value>
@@ -1944,12 +1944,6 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AllowCustomersToSelectPageSize.Hint">
     <Value>Whether customers are allowed to select the page size from a predefined list of options.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AvailableStores">
-    <Value>Stores</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AvailableStores.Hint">
-    <Value>Select stores for which the manufacturer will be shown.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
@@ -1972,7 +1966,7 @@
     <Value>Limited to stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.LimitedToStores.Hint">
-    <Value>Determines whether the manufacturer is available only at certain stores.</Value>
+    <Value>Option to limit this manufacturer to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ManufacturerTemplate">
     <Value>Manufacturer template</Value>
@@ -2084,9 +2078,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Products.SaveBeforeEdit">
     <Value>You need to save the manufacturer before you can add products for this manufacturer page.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturers.Stores">
-    <Value>Stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Updated">
     <Value>The manufacturer has been updated successfully.</Value>

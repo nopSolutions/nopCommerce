@@ -27,6 +27,9 @@ namespace Nop.Admin.Models.Catalog
 
             SelectedCustomerRoleIds = new List<int>();
             AvailableCustomerRoles = new List<SelectListItem>();
+
+            SelectedStoreIds = new List<int>();
+            AvailableStores = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Name")]
@@ -92,13 +95,12 @@ namespace Nop.Admin.Models.Catalog
         public IList<int> SelectedCustomerRoleIds { get; set; }
         public IList<SelectListItem> AvailableCustomerRoles { get; set; }
 
-
-        //Store mapping
+        
+        //store mapping
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.LimitedToStores")]
-        public bool LimitedToStores { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.AvailableStores")]
-        public List<StoreModel> AvailableStores { get; set; }
-        public int[] SelectedStoreIds { get; set; }
+        [UIHint("MultiSelect")]
+        public IList<int> SelectedStoreIds { get; set; }
+        public IList<SelectListItem> AvailableStores { get; set; }
 
 
         //discounts

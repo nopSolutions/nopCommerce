@@ -244,6 +244,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.Deleted, mo => mo.Ignore())
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore())
                     .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore());
                 ;
 
