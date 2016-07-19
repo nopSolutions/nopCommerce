@@ -79,22 +79,26 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
+            if (!excludeProperties && blogPost != null)
+                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(blogPost).ToList();
+
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
             {
-                if (blogPost != null)
+                model.AvailableStores.Add(new SelectListItem
                 {
-                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(blogPost);
-                }
+                    Text = store.Name,
+                    Value = store.Id.ToString(),
+                    Selected = model.SelectedStoreIds.Contains(store.Id)
+                });
             }
         }
 
         [NonAction]
         protected virtual void SaveStoreMappings(BlogPost blogPost, BlogPostModel model)
         {
+            blogPost.LimitedToStores = model.SelectedStoreIds.Any();
+
             var existingStoreMappings = _storeMappingService.GetStoreMappings(blogPost);
             var allStores = _storeService.GetAllStores();
             foreach (var store in allStores)

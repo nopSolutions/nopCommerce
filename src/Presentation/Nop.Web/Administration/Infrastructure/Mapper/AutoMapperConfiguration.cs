@@ -511,7 +511,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CommentCount, mo => mo.Ignore())
                     .ForMember(dest => dest.StartDateUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.EndDateUtc, mo => mo.Ignore())
-                    .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
+                    .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
                 //news
                 cfg.CreateMap<NewsItem, NewsItemModel>()
                     .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName(src.LanguageId, true, false)))

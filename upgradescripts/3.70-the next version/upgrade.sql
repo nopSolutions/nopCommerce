@@ -1331,9 +1331,6 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShipSeparately.Hint">
     <Value>Check if the product should be shipped separately from other products (in single box). Notice that if the order includes several items of this product, all of them will be shipped separately.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.LimitedToStores.Hint">
-     <Value>Option to limit a product to a certain store. If you have multiple stores, choose one or several from the list. If you don’t need this option just leave this field empty.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Vendor.Hint">
     <Value>Choose the vendor. You can manage vendors by selecting Customers > Vendors.</Value>
   </LocaleResource>
@@ -1879,6 +1876,21 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AclCustomerRoles.Hint">
     <Value>Select customer roles for which the topic will be shown. Leave empty if you want this topic to be visible to all users.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.AvailableStores">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.AvailableStores.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.LimitedToStores.Hint">
+     <Value>Option to limit this product to a certain store. If you have multiple stores, choose one or several from the list. If you don''t use this option just leave this field empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.LimitedToStores.Hint">
+    <Value>Option to limit this blog post to a certain store. If you have multiple stores, choose one or several from the list. If you don''t use this option just leave this field empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Stores">
+    <Value></Value>
   </LocaleResource>
 </Language>
 '

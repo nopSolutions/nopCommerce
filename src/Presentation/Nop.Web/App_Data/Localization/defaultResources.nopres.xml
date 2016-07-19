@@ -2830,7 +2830,7 @@
     <Value>Limited to stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.LimitedToStores.Hint">
-     <Value>Option to limit a product to a certain store. If you have multiple stores, choose one or several from the list. If you don’t need this option just leave this field empty.</Value>
+    <Value>Option to limit this product to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShipSeparately">
     <Value>Ship separately</Value>
@@ -7452,12 +7452,6 @@
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.AllowComments.Hint">
     <Value>When checked, customers can leave comments about your blog entry.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.AvailableStores">
-    <Value>Stores</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.AvailableStores.Hint">
-    <Value>Select stores for which the blog post will be shown.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Body">
     <Value>Body</Value>
   </LocaleResource>
@@ -7495,7 +7489,7 @@
     <Value>Limited to stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.LimitedToStores.Hint">
-    <Value>Determines whether the blog post is available only at certain stores.</Value>
+    <Value>Option to limit this blog post to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.MetaDescription">
     <Value>Meta description</Value>
@@ -7547,9 +7541,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Info">
     <Value>Info</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Stores">
-    <Value>Stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Updated">
     <Value>The blog post has been updated successfully.</Value>
