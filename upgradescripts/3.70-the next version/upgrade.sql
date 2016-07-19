@@ -1179,7 +1179,7 @@ set @resources='
      <Value>Customer roles</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.AclCustomerRoles.Hint">
-    <Value>Choose one or several customer roles  i.e. administrators, vendors, guests, who will be able to see this product in catalog. if you don’t need this option just leave this field empty. You can manage customer roles by selecting Customers > Customer roles.</Value>
+    <Value>Choose one or several customer roles i.e. administrators, vendors, guests, who will be able to see this product in catalog. If you don''t need this option just leave this field empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Acl">
      <Value></Value>
@@ -2017,6 +2017,12 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Fields.LimitedToStores.Hint">
     <Value>Option to limit this plugin to a certain store. If you have multiple stores, choose one or several from the list. If you don''t use this option just leave this field empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreStoreLimitations.Notification">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreAcl.Notification">
+    <Value></Value>
   </LocaleResource>
 </Language>
 '

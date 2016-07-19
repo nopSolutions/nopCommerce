@@ -2483,12 +2483,6 @@
     <Content Include="Views\Discount\ManufacturerAddPopup.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Common\MultistoreDisabledWarning.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Common\AclDisabledWarning.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Product\ProductAttributeConditionPopup.cshtml" />
   </ItemGroup>
   <ItemGroup>

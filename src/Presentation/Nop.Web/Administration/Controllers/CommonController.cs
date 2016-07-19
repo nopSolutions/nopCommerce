@@ -768,27 +768,6 @@ namespace Nop.Admin.Controllers
         }
 
 
-        //action displaying notification (warning) to a store owner that "limit per store" feature is ignored
-        [ChildActionOnly]
-        public ActionResult MultistoreDisabledWarning()
-        {
-            //This setting is disabled. No warnings.
-            if (!_catalogSettings.IgnoreStoreLimitations)
-                return Content("");
-
-            return PartialView();
-        }
-        //action displaying notification (warning) to a store owner that "ACL rules" feature is ignored
-        [ChildActionOnly]
-        public ActionResult AclDisabledWarning()
-        {
-            //This setting is disabled. No warnings.
-            if (!_catalogSettings.IgnoreAcl)
-                return Content("");
-
-            return PartialView();
-        }
-
         #endregion
     }
 }
