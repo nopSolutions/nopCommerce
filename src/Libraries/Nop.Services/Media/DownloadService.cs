@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -65,8 +66,8 @@ namespace Nop.Services.Media
             var query = from o in _downloadRepository.Table
                         where o.DownloadGuid == downloadGuid
                         select o;
-            var order = query.FirstOrDefault();
-            return order;
+
+            return query.FirstOrDefault();
         }
 
         /// <summary>
@@ -194,6 +195,15 @@ namespace Nop.Services.Media
             return IsDownloadAllowed(orderItem) &&
                 orderItem.LicenseDownloadId.HasValue &&
                 orderItem.LicenseDownloadId > 0;
+        }
+
+        /// <summary>
+        /// Gets all downloads
+        /// </summary>
+        /// <returns></returns>
+        public IList<Download> GetAllDownload()
+        {
+            return _downloadRepository.Table.ToList();
         }
 
         #endregion

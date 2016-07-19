@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 
@@ -23,7 +24,7 @@ namespace Nop.Services.ExportImport.Help
         /// <param name="properties">All acsess properties</param>
         public PropertyManager(PropertyByName<T>[] properties)
         {
-            _properties=new Dictionary<string, PropertyByName<T>>();
+            _properties = new Dictionary<string, PropertyByName<T>>();
 
             var poz = 1;
             foreach (var propertyByName in properties)
@@ -79,7 +80,24 @@ namespace Nop.Services.ExportImport.Help
 
             foreach (var prop in _properties.Values)
             {
-                worksheet.Cells[row, prop.PropertyOrderPosition].Value = prop.GetProperty(CurrentObject);
+                var cell = worksheet.Cells[row, prop.PropertyOrderPosition];
+                if (prop.IsDropDownCell)
+                {
+                    var validator = cell.DataValidation.AddListDataValidation();
+
+                    cell.Value = prop.GetItemText(prop.GetProperty(CurrentObject));
+                    validator.AllowBlank = prop.AllowBlank;
+
+                    foreach (var enumItem in prop.GetDropDawnElements())
+                    {
+                        validator.Formula.Values.Add(enumItem);
+                    }
+                }
+                else
+                {
+                    cell.Value = prop.GetProperty(CurrentObject);
+                }
+                
             }
         }
 
@@ -132,14 +150,20 @@ namespace Nop.Services.ExportImport.Help
         {
             return _properties.ContainsKey(propertyName) ? _properties[propertyName] : null;
         }
-
-
+        
         /// <summary>
         /// Get property array
         /// </summary>
         public PropertyByName<T>[] GetProperties
         {
             get { return _properties.Values.ToArray(); }
+        }
+
+        public void SetSelectList(string propertyName, SelectList list)
+        {
+            var tempProperty = GetProperty(propertyName);
+            if (tempProperty != null)
+                tempProperty.DropDawnElements = list;
         }
     }
 }

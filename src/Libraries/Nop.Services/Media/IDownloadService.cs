@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 
@@ -55,5 +56,10 @@ namespace Nop.Services.Media
         /// <returns>True if license download is allowed; otherwise, false.</returns>
         bool IsLicenseDownloadAllowed(OrderItem orderItem);
 
+        /// <summary>
+        /// Gets all downloads
+        /// </summary>
+        /// <returns></returns>
+        IList<Download> GetAllDownload();
     }
 }

@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Helpers;
-using Nop.Services.Localization;
 using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Web.Framework
@@ -23,18 +21,7 @@ namespace Nop.Web.Framework
         public static SelectList ToSelectList<TEnum>(this TEnum enumObj, 
             bool markCurrentAsSelected = true, int[] valuesToExclude = null) where TEnum : struct
         {
-            if (!typeof(TEnum).IsEnum) throw new ArgumentException("An Enumeration type is required.", "enumObj");
-
-            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-
-            var values = from TEnum enumValue in Enum.GetValues(typeof(TEnum))
-                         where valuesToExclude == null || !valuesToExclude.Contains(Convert.ToInt32(enumValue))
-                         select new { ID = Convert.ToInt32(enumValue), Name = enumValue.GetLocalizedEnum(localizationService, workContext) };
-            object selectedValue = null;
-            if (markCurrentAsSelected)
-                selectedValue = Convert.ToInt32(enumObj);
-            return new SelectList(values, "ID", "Name", selectedValue);
+            return Services.Extensions.ToSelectList(enumObj, markCurrentAsSelected, valuesToExclude, true);
         }
 
         /// <summary>
