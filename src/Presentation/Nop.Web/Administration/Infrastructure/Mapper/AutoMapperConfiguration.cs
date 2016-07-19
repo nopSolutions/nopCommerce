@@ -207,7 +207,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<TopicModel, Topic>()
-                    .ForMember(dest => dest.SubjectToAcl, mo => mo.Ignore());
+                    .ForMember(dest => dest.SubjectToAcl, mo => mo.Ignore())
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
 
                 //category
                 cfg.CreateMap<Category, CategoryModel>()
@@ -536,7 +537,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CommentCount, mo => mo.Ignore())
                     .ForMember(dest => dest.StartDateUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.EndDateUtc, mo => mo.Ignore())
-                    .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
+                    .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
                 //news
                 cfg.CreateMap<Poll, PollModel>()
                     .ForMember(dest => dest.StartDate, mo => mo.Ignore())
@@ -586,7 +588,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                 cfg.CreateMap<CheckoutAttributeModel, CheckoutAttribute>()
                     .ForMember(dest => dest.AttributeControlType, mo => mo.Ignore())
                     .ForMember(dest => dest.ConditionAttributeXml, mo => mo.Ignore())
-                    .ForMember(dest => dest.CheckoutAttributeValues, mo => mo.Ignore());
+                    .ForMember(dest => dest.CheckoutAttributeValues, mo => mo.Ignore())
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
                 //customer attributes
                 cfg.CreateMap<CustomerAttribute, CustomerAttributeModel>()
                     .ForMember(dest => dest.AttributeControlTypeName, mo => mo.Ignore())

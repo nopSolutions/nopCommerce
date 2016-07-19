@@ -16,7 +16,6 @@
             <ul class="nav nav-tabs">
                 @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Catalog.Attributes.CheckoutAttributes.Info"), true)
                 @Html.RenderBootstrapTabHeader("tab-values", @T("Admin.Catalog.Attributes.CheckoutAttributes.Values"))
-                @Html.RenderBootstrapTabHeader("tab-stores", @T("Admin.Catalog.Attributes.CheckoutAttributes.Stores"))
                 @if (Model.ConditionAllowed)
                 {
                     @Html.RenderBootstrapTabHeader("tab-condition", @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition"))
@@ -25,7 +24,6 @@
             <div class="tab-content">
                 @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
                 @Html.RenderBootstrapTabContent("tab-values", @TabValues())
-                @Html.RenderBootstrapTabContent("tab-stores", @TabStores())
                 @if (Model.ConditionAllowed)
                 {
                     @Html.RenderBootstrapTabContent("tab-condition", @TabCondition())
@@ -250,6 +248,34 @@
                         @Html.ValidationMessageFor(model => model.DefaultValue)
                     </div>
                 </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.SelectedStoreIds)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.SelectedStoreIds, new { SelectList = Model.AvailableStores })
+                        <script>
+                                $(document).ready(function() {
+                                    var storesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                                    storesIdsInput.setOptions({
+                                        autoClose: false
+                                    });
+
+                                    @if (Model.AvailableStores.Count == 0)
+                                    {
+                                        <text>
+                                    storesIdsInput.setOptions({
+                                        enable: false,
+                                        placeholder: 'No stores available'
+                                    });
+                                    storesIdsInput._placeholder();
+                                    storesIdsInput._enable();
+                                    </text>
+                                    }
+                                });
+                        </script>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -380,64 +406,6 @@
         </div>
     </div>
 
-}
-
-@helper TabStores()
-{
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
-            toggleStoreMapping();
-        });
-
-        function toggleStoreMapping() {
-            if ($('#@Html.FieldIdFor(model => model.LimitedToStores)').is(':checked')) {
-                $('#pnl-available-stores').show();
-            } else {
-                $('#pnl-available-stores').hide();
-            }
-        }
-    </script>
-
-    <div class="panel-group">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.LimitedToStores)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.LimitedToStores)
-                        @Html.ValidationMessageFor(model => model.LimitedToStores)
-                    </div>
-                </div>
-                <div class="form-group" id="pnl-available-stores">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.AvailableStores)
-                    </div>
-                    <div class="col-md-9">
-                        @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
-                        {
-                            @Html.Action("MultistoreDisabledWarning", "Common")
-                            foreach (var store in Model.AvailableStores)
-                            {
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />
-                                        @store.Name
-                                    </label>
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <text>No stores defined</text>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 }
 
 @helper TabCondition()

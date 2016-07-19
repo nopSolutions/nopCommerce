@@ -173,22 +173,26 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
+            if (!excludeProperties && topic != null)
+                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(topic).ToList();
+
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
             {
-                if (topic != null)
+                model.AvailableStores.Add(new SelectListItem
                 {
-                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(topic);
-                }
+                    Text = store.Name,
+                    Value = store.Id.ToString(),
+                    Selected = model.SelectedStoreIds.Contains(store.Id)
+                });
             }
         }
 
         [NonAction]
         protected virtual void SaveStoreMappings(Topic topic, TopicModel model)
         {
+            topic.LimitedToStores = model.SelectedStoreIds.Any();
+
             var existingStoreMappings = _storeMappingService.GetStoreMappings(topic);
             var allStores = _storeService.GetAllStores();
             foreach (var store in allStores)

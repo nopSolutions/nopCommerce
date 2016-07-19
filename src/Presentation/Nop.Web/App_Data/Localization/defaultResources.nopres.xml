@@ -1317,12 +1317,6 @@
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.AttributeControlType.Hint">
     <Value>Choose how to display your attribute values.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.AvailableStores">
-    <Value>Stores</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.AvailableStores.Hint">
-    <Value>Select stores for which the attribute will be shown.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.DefaultValue">
     <Value>Default value</Value>
   </LocaleResource>
@@ -1363,7 +1357,7 @@
     <Value>Limited to stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.LimitedToStores.Hint">
-    <Value>Determines whether the attribute is available only at certain stores.</Value>
+    <Value>Option to limit this attribute to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.MaxLength">
     <Value>Maximum length</Value>
@@ -1406,9 +1400,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Info">
     <Value>Attribute info</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Stores">
-    <Value>Stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Updated">
     <Value>The attribute has been updated successfully.</Value>
@@ -8022,12 +8013,6 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AclCustomerRoles.Hint">
     <Value>Select customer roles for which the topic will be shown. Leave empty if you want this topic to be visible to all users.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AvailableStores">
-    <Value>Stores</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AvailableStores.Hint">
-    <Value>Select stores for which the topic will be shown.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Body">
     <Value>Body</Value>
   </LocaleResource>
@@ -8080,7 +8065,7 @@
     <Value>Limited to stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.LimitedToStores.Hint">
-    <Value>Determines whether the topic is available only at certain stores.</Value>
+    <Value>Option to limit this topic to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.MetaDescription">
     <Value>Meta description</Value>
@@ -8162,9 +8147,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.List.SearchStore.Hint">
     <Value>Search by a specific store.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Topics.Stores">
-    <Value>Stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Updated">
     <Value>The topic has been updated successfully.</Value>
