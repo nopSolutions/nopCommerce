@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
-using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Blogs;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;

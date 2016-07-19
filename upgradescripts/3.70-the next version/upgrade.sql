@@ -1892,6 +1892,18 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Stores">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.AvailableStores">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.AvailableStores.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.LimitedToStores.Hint">
+    <Value>Option to limit this category to a certain store. If you have multiple stores, choose one or several from the list. If you don''t use this option just leave this field empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Stores">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -1731,12 +1731,6 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.AllowCustomersToSelectPageSize.Hint">
     <Value>Whether customers are allowed to select the page size from a predefined list of options.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.AvailableStores">
-    <Value>Stores</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.AvailableStores.Hint">
-    <Value>Select stores for which the category will be shown.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.CategoryTemplate">
     <Value>Category template</Value>
   </LocaleResource>
@@ -1780,7 +1774,7 @@
     <Value>Limited to stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.LimitedToStores.Hint">
-    <Value>Determines whether the category is available only at certain stores.</Value>
+    <Value>Option to limit this category to a certain store. If you have multiple stores, choose one or several from the list. If you don''t use this option just leave this field empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.MetaDescription">
     <Value>Meta description</Value>
@@ -1901,9 +1895,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Products.SaveBeforeEdit">
     <Value>You need to save the category before you can add products for this category page.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Stores">
-    <Value>Stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.SwitchToListView">
     <Value>switch to list view</Value>
