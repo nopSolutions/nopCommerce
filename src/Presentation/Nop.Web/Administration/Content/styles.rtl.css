@@ -419,11 +419,11 @@ td.k-state-focused.k-state-selected {
     border-right-color: #ddd;
     border-left-color: #ddd;
 }
-.nav-tabs-custom .nav-tabs-custom > .tab-content {
+.nav-tabs-custom > .tab-content {
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
 }
-.nav-tabs-custom .nav-tabs-custom > .nav-tabs > li.active > a {
+.nav-tabs-custom > .nav-tabs > li.active > a {
     border-left: 1px solid #ddd !important;
     border-right: 1px solid #ddd !important;
 }
