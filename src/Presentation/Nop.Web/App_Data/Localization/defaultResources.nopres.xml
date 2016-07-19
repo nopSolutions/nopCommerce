@@ -1719,12 +1719,6 @@
   <LocaleResource Name="Admin.Catalog.Categories.Deleted">
     <Value>The category has been deleted successfully.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Discounts">
-    <Value>Discounts</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Discounts.NoDiscounts">
-    <Value>No discounts available. Create at least one discount before mapping.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.EditCategoryDetails">
     <Value>Edit category details</Value>
   </LocaleResource>
@@ -1763,6 +1757,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.Description.Hint">
     <Value>The description of the category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.Discounts">
+    <Value>Discounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.Discounts.Hint">
+    <Value>Select discounts to apply to this category. You can manage discounts by selecting Discounts from the Promotions menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.Discounts.NoDiscounts">
+    <Value>No discounts available. Create at least one discount before mapping.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.DisplayOrder">
     <Value>Display order</Value>
@@ -1938,10 +1941,13 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Deleted">
     <Value>The manufacturer has been deleted successfully.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturers.Discounts">
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Discounts">
     <Value>Discounts</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturers.Discounts.NoDiscounts">
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Discounts.Hint">
+    <Value>Select discounts to apply to this manufacturer. You can manage discounts by selecting Discounts from the Promotions menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Discounts.NoDiscounts">
     <Value>No discounts available. Create at least one discount before mapping.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.EditManufacturerDetails">
@@ -2298,9 +2304,6 @@
   <LocaleResource Name="Admin.Catalog.Products.Deleted">
     <Value>The product has been deleted successfully.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Discounts.NoDiscounts">
-    <Value>No discounts available. Create at least one discount before mapping.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.DownloadableProduct">
     <Value>Downloadable product</Value>
   </LocaleResource>
@@ -2450,6 +2453,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DisableWishlistButton.Hint">
     <Value>Check to disable the wishlist button for this product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Discounts">
+    <Value>Discounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Discounts.Hint">
+    <Value>Select discounts to apply to this product. You can manage discounts by selecting Discounts from the Promotions menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Discounts.NoDiscounts">
+    <Value>No discounts available. Create at least one discount before mapping.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayOrder">
     <Value>Display order</Value>
@@ -2825,12 +2837,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedCustomerRoleIds.Hint">
     <Value>Choose one or several customer roles  i.e. administrators, vendors, guests, who will be able to see this product in catalog. if you don’t need this option just leave this field empty. You can manage customer roles by selecting Customers > Customer roles.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedDiscountIds">
-    <Value>Discounts</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedDiscountIds.Hint">
-    <Value>Select discouts. You can manage discounts by selecting Discounts from the Promotions menu.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedManufacturerIds">
     <Value>Manufacturers</Value>

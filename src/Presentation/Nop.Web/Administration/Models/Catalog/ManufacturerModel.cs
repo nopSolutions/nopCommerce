@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Models.Customers;
-using Nop.Admin.Models.Discounts;
 using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Catalog;
 using Nop.Web.Framework;
@@ -23,6 +22,9 @@ namespace Nop.Admin.Models.Catalog
             }
             Locales = new List<ManufacturerLocalizedModel>();
             AvailableManufacturerTemplates = new List<SelectListItem>();
+
+            AvailableDiscounts = new List<SelectListItem>();
+            SelectedDiscountIds = new List<int>();
         }
 
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Name")]
@@ -97,8 +99,10 @@ namespace Nop.Admin.Models.Catalog
 
 
         //discounts
-        public List<DiscountModel> AvailableDiscounts { get; set; }
-        public int[] SelectedDiscountIds { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Discounts")]
+        [UIHint("MultiSelect")]
+        public IList<int> SelectedDiscountIds { get; set; }
+        public IList<SelectListItem> AvailableDiscounts { get; set; }
 
 
         #region Nested classes
