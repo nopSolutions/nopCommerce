@@ -1784,6 +1784,24 @@ set @resources='
   <LocaleResource Name="Permission.ManageMeasures">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Info">
+    <Value>Customer info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ActivityLog">
+    <Value>Activity log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Impersonate">
+    <Value>Place order (impersonate)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Info">
+    <Value>Product info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Info">
+    <Value>Category info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Info">
+    <Value>Manufacturer info</Value>
+  </LocaleResource>
 </Language>
 '
 
