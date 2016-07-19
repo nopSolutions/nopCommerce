@@ -102,17 +102,21 @@ namespace Nop.Admin.Controllers
             if (prepareStores)
             {
                 //stores
-                pluginModel.AvailableStores = _storeService
-                    .GetAllStores()
-                    .Select(s => s.ToModel())
-                    .ToList();
-                pluginModel.SelectedStoreIds = pluginDescriptor.LimitedToStores.ToArray();
-                pluginModel.LimitedToStores = pluginDescriptor.LimitedToStores.Any();
+                pluginModel.SelectedStoreIds = pluginDescriptor.LimitedToStores.ToList();
+                var allStores = _storeService.GetAllStores();
+                foreach (var store in allStores)
+                {
+                    pluginModel.AvailableStores.Add(new SelectListItem
+                    {
+                        Text = store.Name,
+                        Value = store.Id.ToString(),
+                        Selected = pluginModel.SelectedStoreIds.Contains(store.Id)
+                    });
+                }
             }
 
 
             //configuration URLs
-
             if (pluginDescriptor.Installed)
             {
                 //specify configuration URL only when a plugin is already installed
@@ -415,7 +419,7 @@ namespace Nop.Admin.Controllers
                 pluginDescriptor.FriendlyName = model.FriendlyName;
                 pluginDescriptor.DisplayOrder = model.DisplayOrder;
                 pluginDescriptor.LimitedToStores.Clear();
-                if (model.LimitedToStores && model.SelectedStoreIds != null)
+                if (model.SelectedStoreIds.Any())
                 {
                     pluginDescriptor.LimitedToStores = model.SelectedStoreIds.ToList();
                 }

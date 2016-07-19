@@ -465,7 +465,6 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CanChangeEnabled, mo => mo.Ignore())
                     .ForMember(dest => dest.IsEnabled, mo => mo.Ignore())
                     .ForMember(dest => dest.LogoUrl, mo => mo.Ignore())
-                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                     .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                     .ForMember(dest => dest.Locales, mo => mo.Ignore())
