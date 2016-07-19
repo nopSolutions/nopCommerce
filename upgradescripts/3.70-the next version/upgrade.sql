@@ -1943,6 +1943,18 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Currencies.Info">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Fields.AvailableStores">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Fields.AvailableStores.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Fields.LimitedToStores.Hint">
+    <Value>Option to limit this language to a certain store. If you have multiple stores, choose one or several from the list. If you don''t use this option just leave this field empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Stores">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

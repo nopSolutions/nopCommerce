@@ -4143,12 +4143,6 @@
   <LocaleResource Name="Admin.Configuration.Languages.Export">
     <Value>Export resources</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Languages.Fields.AvailableStores">
-    <Value>Stores</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Languages.Fields.AvailableStores.Hint">
-    <Value>Select stores for which the language will be shown.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Fields.DefaultCurrency">
     <Value>Default currency</Value>
   </LocaleResource>
@@ -4183,7 +4177,7 @@
     <Value>Limited to stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Fields.LimitedToStores.Hint">
-    <Value>Determines whether the language is available only at certain stores.</Value>
+    <Value>Option to limit this language to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Fields.Name">
     <Value>Name</Value>
@@ -4262,9 +4256,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Resources.SearchResourceValue.Hint">
     <Value>Search by a specific resource value.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Languages.Stores">
-    <Value>Stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Updated">
     <Value>The language has been updated successfully.</Value>

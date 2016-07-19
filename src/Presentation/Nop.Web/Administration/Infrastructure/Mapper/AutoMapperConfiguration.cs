@@ -138,7 +138,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.Search, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<LanguageModel, Language>()
-                    .ForMember(dest => dest.LocaleStringResources, mo => mo.Ignore());
+                    .ForMember(dest => dest.LocaleStringResources, mo => mo.Ignore())
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
                 //email account
                 cfg.CreateMap<EmailAccount, EmailAccountModel>()
                     .ForMember(dest => dest.Password, mo => mo.Ignore())
