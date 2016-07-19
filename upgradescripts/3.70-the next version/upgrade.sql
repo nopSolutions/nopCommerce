@@ -1151,11 +1151,17 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableStores.Hint">
      <Value></Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedDiscountIds">
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Discounts">
      <Value>Discounts</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.SelectedDiscountIds.Hint">
-     <Value>Select discounts.</Value>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Discounts.Hint">
+     <Value>Select discounts to apply to this product. You can manage discounts by selecting Discounts from the Promotions menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Discounts.NoDiscounts">
+    <Value>No discounts available. Create at least one discount before mapping.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Discounts.NoDiscounts">
+    <Value></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Discounts">
      <Value></Value>
@@ -1801,6 +1807,36 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Info">
     <Value>Manufacturer info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.Discounts">
+    <Value>Discounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.Discounts.Hint">
+    <Value>Select discounts to apply to this category. You can manage discounts by selecting Discounts from the Promotions menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.Discounts.NoDiscounts">
+    <Value>No discounts available. Create at least one discount before mapping.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Discounts">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Discounts.NoDiscounts">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Discounts">
+    <Value>Discounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Discounts.Hint">
+    <Value>Select discounts to apply to this manufacturer. You can manage discounts by selecting Discounts from the Promotions menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Discounts.NoDiscounts">
+    <Value>No discounts available. Create at least one discount before mapping.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Discounts">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Discounts.NoDiscounts">
+    <Value></Value>
   </LocaleResource>
 </Language>
 '

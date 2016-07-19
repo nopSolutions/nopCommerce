@@ -421,7 +421,7 @@ namespace Nop.Admin.Models.Catalog
         public IList<SelectListItem> AvailableVendors { get; set; }
 
         //discounts
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SelectedDiscountIds")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Discounts")]
         [UIHint("MultiSelect")]
         public IList<int> SelectedDiscountIds { get; set; }
         public IList<SelectListItem> AvailableDiscounts { get; set; }

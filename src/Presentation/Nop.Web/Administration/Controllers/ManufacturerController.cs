@@ -177,14 +177,17 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableDiscounts = _discountService
-                .GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true)
-                .Select(d => d.ToModel())
-                .ToList();
-
             if (!excludeProperties && manufacturer != null)
+                model.SelectedDiscountIds = manufacturer.AppliedDiscounts.Select(d => d.Id).ToList();
+
+            foreach (var discount in _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true))
             {
-                model.SelectedDiscountIds = manufacturer.AppliedDiscounts.Select(d => d.Id).ToArray();
+                model.AvailableDiscounts.Add(new SelectListItem
+                {
+                    Text = discount.Name,
+                    Value = discount.Id.ToString(),
+                    Selected = model.SelectedDiscountIds.Contains(discount.Id)
+                });
             }
         }
 

@@ -183,21 +183,24 @@ namespace Nop.Admin.Controllers
                 });
             }
         }
-
+        
         [NonAction]
         protected virtual void PrepareDiscountModel(CategoryModel model, Category category, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableDiscounts = _discountService
-                .GetAllDiscounts(DiscountType.AssignedToCategories, showHidden: true)
-                .Select(d => d.ToModel())
-                .ToList();
-
             if (!excludeProperties && category != null)
+                model.SelectedDiscountIds = category.AppliedDiscounts.Select(d => d.Id).ToList();
+
+            foreach (var discount in _discountService.GetAllDiscounts(DiscountType.AssignedToCategories, showHidden: true))
             {
-                model.SelectedDiscountIds = category.AppliedDiscounts.Select(d => d.Id).ToArray();
+                model.AvailableDiscounts.Add(new SelectListItem
+                {
+                    Text = discount.Name,
+                    Value = discount.Id.ToString(),
+                    Selected = model.SelectedDiscountIds.Contains(discount.Id)
+                });
             }
         }
 
