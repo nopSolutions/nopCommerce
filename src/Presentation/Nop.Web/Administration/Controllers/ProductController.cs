@@ -322,8 +322,7 @@ namespace Nop.Admin.Controllers
         [NonAction]
         protected virtual void SaveStoreMappings(Product product, ProductModel model)
         {
-            if (model.SelectedStoreIds.Any())
-                product.LimitedToStores = true;
+            product.LimitedToStores = model.SelectedStoreIds.Any();
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(product);
             var allStores = _storeService.GetAllStores();
