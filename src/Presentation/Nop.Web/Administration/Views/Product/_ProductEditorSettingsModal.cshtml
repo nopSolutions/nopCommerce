@@ -25,6 +25,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.CommonInfo")
+                                        <input type="checkbox" class="select-all-fields pull-right" />
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
@@ -203,6 +204,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.AdvancedProductTypes")
+                                        <input type="checkbox" class="select-all-fields pull-right" />
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
@@ -250,6 +252,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Price")
+                                        <input type="checkbox" class="select-all-fields pull-right" />
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
@@ -383,6 +386,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Shipping")
+                                        <input type="checkbox" class="select-all-fields pull-right" />
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
@@ -426,6 +430,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Mappings")
+                                        <input type="checkbox" class="select-all-fields pull-right" />
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
@@ -455,6 +460,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Inventory")
+                                        <input type="checkbox" class="select-all-fields pull-right" />
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
@@ -588,6 +594,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Security")
+                                        <input type="checkbox" class="select-all-fields pull-right" />
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
@@ -604,6 +611,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.LinkedProducts")
+                                        <input type="checkbox" class="select-all-fields pull-right" />
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
@@ -638,6 +646,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Tabs")
+                                        <input type="checkbox" class="select-all-fields pull-right" />
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
@@ -669,6 +678,20 @@
                         </div>
                     </div>
                 }
+                <script>
+                    $(document).ready(function () {
+                        $('input[type=checkbox].select-all-fields').each(function (index, value) {
+                            if ($('input[type=checkbox]:checked', $(this).closest('.panel')).length > 0) {
+                                $(this).attr('checked', true);
+                            }
+                        });
+
+
+                        $('input[type=checkbox].select-all-fields').on('click', function() {
+                            $('input[type=checkbox]', $(this).closest('.panel')).attr('checked', $(this).is(':checked'));
+                        });
+                    });
+                </script>
             </div>
         </div>
     </div>
