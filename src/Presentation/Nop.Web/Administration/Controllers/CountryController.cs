@@ -122,7 +122,7 @@ namespace Nop.Admin.Controllers
             var allStores = _storeService.GetAllStores();
             foreach (var store in allStores)
             {
-                if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
+                if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)

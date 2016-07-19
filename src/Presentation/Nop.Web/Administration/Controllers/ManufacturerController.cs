@@ -220,7 +220,7 @@ namespace Nop.Admin.Controllers
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
             foreach (var customerRole in allCustomerRoles)
             {
-                if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                 {
                     //new role
                     if (existingAclRecords.Count(acl => acl.CustomerRoleId == customerRole.Id) == 0)
@@ -266,7 +266,7 @@ namespace Nop.Admin.Controllers
             var allStores = _storeService.GetAllStores();
             foreach (var store in allStores)
             {
-                if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
+                if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
