@@ -1035,7 +1035,7 @@ set @resources='
      <Value>Minimum stock qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ModalDescription">
-     <Value>Check fields you want to see on the product edit page in the "basic" mode.</Value>
+     <Value>Check fields you want to see on the product details page in the "basic" mode.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ModalTitle">
      <Value>Settings</Value>
