@@ -549,7 +549,7 @@ td.k-state-focused.k-state-selected {
 .panel-search .k-multiselect.k-header {
     max-width: 423px;
 }
-.panel-search-popup .btn-search {
+.panel-popup .btn-search {
     margin-left: auto;
     margin-right: auto;
     display: block;
@@ -866,8 +866,11 @@ span.grid-report-item.red {
     .form-horizontal .label-wrapper .ico-help {
         display: none;
     }
-    .form-horizontal .panel-search-popup .ico-help {
+    .form-horizontal .panel-popup .ico-help  {
         display: block;
+    }
+    .form-horizontal .panel-popup .form-group input[type=checkbox] {
+        margin-top: 10px;
     }
     .form-control {
         margin-bottom: 3px;
@@ -889,9 +892,14 @@ span.grid-report-item.red {
         margin-bottom: 3px;
         margin-top: 5px;
     }
-    .form-horizontal .panel-search-popup .label-wrapper {
+    .form-horizontal .panel-popup .label-wrapper {
         float: right;
-        margin: 0;
+    }
+    .form-horizontal .panel-popup .label-wrapper .control-label {
+        padding-top: 0;
+    }
+    .form-horizontal .panel-popup .form-group input[type=checkbox] {
+        margin-top: 10px;
     }
     .form-horizontal span.required {
         float: none;
@@ -920,7 +928,7 @@ span.grid-report-item.red {
     }
 
     /* FORM ELEMENTS */
-    .form-horizontal .panel-search-popup .label-wrapper {
+    .form-horizontal .panel-popup .label-wrapper {
         float: left;
     }
 }
