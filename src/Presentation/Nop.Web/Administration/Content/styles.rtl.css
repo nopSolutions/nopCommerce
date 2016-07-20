@@ -388,6 +388,11 @@ td.k-state-focused.k-state-selected {
 .navbar-custom-menu > .navbar-nav > li {
     height: 50px;
 }
+.navbar-custom-menu li.account-info{
+    line-height: 50px;
+    color: #fff;
+    padding: 0 15px;
+}
 
 /* NAV TABS */
 .nav > li > a > img {
@@ -908,11 +913,6 @@ span.grid-report-item.red {
     /* HEADER */
     .main-header {
         max-height: 200px;
-    }
-
-    /* NAV BAR */
-    .navbar-nav > .user-menu .user-image {
-        margin-top: -2px;
     }
 
     /* FORM ELEMENTS */

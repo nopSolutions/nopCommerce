@@ -71,9 +71,6 @@
 
     //avatar
     var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
-    var avatarUrl = EngineContext.Current.Resolve<IPictureService>()
-        .GetPictureUrl(currentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
-        160, true, defaultPictureType: PictureType.Avatar);
 
     //info: we specify "Admin" area for actions and widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
 }
@@ -133,30 +130,13 @@
                                 </li>
                                 @if (currentCustomer.IsRegistered())
                                 {
-                                    <li class="dropdown user user-menu">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                            <img src="@avatarUrl" class="user-image" alt="">
-                                            <span class="hidden-xs">@currentCustomer.GetFullName()</span>
+                                    <li class="account-info">
+                                        @currentCustomer.GetFullName()
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Logout", "Customer", new {area = ""}, null)">
+                                            @T("Admin.Header.Logout")
                                         </a>
-                                        <ul class="dropdown-menu">
-                                            <!-- User image -->
-                                            <li class="user-header">
-                                                <img src="@avatarUrl" class="img-circle" alt="">
-                                                <p>
-                                                    @currentCustomer.GetFullName()
-                                                    <small>@currentCustomer.Email</small>
-                                                </p>
-                                            </li>
-                                            <!-- Menu Footer-->
-                                            <li class="user-footer">
-                                                <div class="pull-left">
-                                                    <a href="@Url.Action("Edit", "Customer", new {id = currentCustomer.Id})" class="btn btn-default btn-flat">Profile</a>
-                                                </div>
-                                                <div class="pull-right">
-                                                    <a href="@Url.Action("Logout", "Customer", new {area = ""}, null)" class="btn btn-default btn-flat">@T("Admin.Header.Logout")</a>
-                                                </div>
-                                            </li>
-                                        </ul>
                                     </li>
                                 }
                                 <li>
