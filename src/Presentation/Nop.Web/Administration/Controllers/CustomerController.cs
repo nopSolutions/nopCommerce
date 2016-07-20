@@ -767,7 +767,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //load registered customers by default
-            var defaultRoleIds = new List<int>(_customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id);
+            var defaultRoleIds = new List<int> {_customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id};
             var model = new CustomerListModel
             {
                 UsernamesEnabled = _customerSettings.UsernamesEnabled,
@@ -783,7 +783,8 @@ namespace Nop.Admin.Controllers
                 model.AvailableCustomerRoles.Add(new SelectListItem
                 {
                     Text = role.Name,
-                    Value = role.Id.ToString()
+                    Value = role.Id.ToString(),
+                    Selected = defaultRoleIds.Any(x => x == role.Id)
                 });
             }
 
