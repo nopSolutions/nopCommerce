@@ -2137,6 +2137,8 @@
     <Content Include="Views\Measure\List.cshtml" />
     <Content Include="Views\Product\_ProductEditorSettingsModal.cshtml" />
     <Content Include="Views\Product\_CreateOrUpdate.PurchasedWithOrders.cshtml" />
+    <Content Include="Views\Common\AclDisabledWarning.cshtml" />
+    <Content Include="Views\Common\MultistoreDisabledWarning.cshtml" />
     <None Include="Views\Product\_ProductAttributes.cshtml" />
     <Content Include="Views\Setting\_ReturnRequestReasons.cshtml" />
     <Content Include="Views\Setting\ReturnRequestReasonEdit.cshtml" />
