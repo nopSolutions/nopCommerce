@@ -1179,7 +1179,7 @@ set @resources='
      <Value>Customer roles</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.AclCustomerRoles.Hint">
-    <Value>Choose one or several customer roles i.e. administrators, vendors, guests, who will be able to see this product in catalog. If you don''t need this option just leave this field empty.</Value>
+    <Value>Choose one or several customer roles i.e. administrators, vendors, guests, who will be able to see this product in catalog. If you don''t need this option just leave this field empty. In order to use this functionality you have to disable the following setting: Catalog settings > Ignore ACL rules (sitewide).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Acl">
      <Value></Value>
@@ -1884,7 +1884,7 @@ set @resources='
     <Value></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.LimitedToStores.Hint">
-     <Value>Option to limit this product to a certain store. If you have multiple stores, choose one or several from the list. If you don''t use this option just leave this field empty.</Value>
+    <Value>Option to limit this product to a certain store. If you have multiple stores, choose one or several from the list. If you don''t use this option just leave this field empty. In order to use this functionality you have to disable the following setting: Catalog settings > Ignore "limit per store" rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.LimitedToStores.Hint">
     <Value>Option to limit this blog post to a certain store. If you have multiple stores, choose one or several from the list. If you don''t use this option just leave this field empty.</Value>

@@ -514,6 +514,10 @@ td.k-state-focused.k-state-selected {
     display: inline-block;
     padding-top: 6px;
 }
+.form-group .callout {
+    padding: 8px 15px;
+    margin-left: -20px !important;
+}
 .form-horizontal .k-autocomplete, .form-horizontal .k-combobox, .form-horizontal .k-datepicker,
 .form-horizontal .k-timepicker, .form-horizontal .k-datetimepicker, .form-horizontal .k-colorpicker,
 .form-horizontal .k-numerictextbox, .form-horizontal .k-dropdown, .form-horizontal .k-selectbox,
@@ -888,6 +892,10 @@ span.grid-report-item.red {
     }
     .form-group input[type=checkbox] {
         margin-top: 2px;
+    }
+    .form-group .callout {
+        margin-left: 0 !important;
+        margin-top: 5px !important;
     }
     .panel-search .form-control {
         max-width: 100%;

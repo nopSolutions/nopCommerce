@@ -110,17 +110,19 @@
                         @Html.NopLabelFor(model => model.SelectedStoreIds)
                     </div>
                     <div class="col-md-9">
-                        @Html.EditorFor(model => model.SelectedStoreIds, new { SelectList = Model.AvailableStores })
-                        <script>
-                                $(document).ready(function() {
-                                    var storesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
-                                    storesIdsInput.setOptions({
-                                        autoClose: false
-                                    });
+                        <div class="row">
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.SelectedStoreIds, new {SelectList = Model.AvailableStores})
+                                <script>
+                                    $(document).ready(function() {
+                                        var storesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                                        storesIdsInput.setOptions({
+                                            autoClose: false
+                                        });
 
-                                    @if (Model.AvailableStores.Count == 0)
-                                    {
-                                        <text>
+                                        @if (Model.AvailableStores.Count == 0)
+                                        {
+                                            <text>
                                     storesIdsInput.setOptions({
                                         enable: false,
                                         placeholder: 'No stores available'
@@ -128,9 +130,14 @@
                                     storesIdsInput._placeholder();
                                     storesIdsInput._enable();
                                     </text>
-                                    }
-                                });
-                        </script>
+                                        }
+                                    });
+                                </script>
+                            </div>
+                            <div class="col-md-8">
+                                @Html.Action("MultistoreDisabledWarning", "Common")
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">

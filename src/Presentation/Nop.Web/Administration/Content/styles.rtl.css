@@ -889,6 +889,10 @@ span.grid-report-item.red {
     .form-group input[type=checkbox] {
         margin-top: 2px;
     }
+    .form-group .callout {
+        margin-right: 0 !important;
+        margin-top: 5px !important;
+    }
     .panel-search .form-control {
         max-width: 100%;
     }

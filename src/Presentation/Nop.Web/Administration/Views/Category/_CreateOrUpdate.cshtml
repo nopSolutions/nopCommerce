@@ -220,27 +220,34 @@
                         @Html.NopLabelFor(model => model.SelectedCustomerRoleIds)
                     </div>
                     <div class="col-md-9">
-                        @Html.EditorFor(model => model.SelectedCustomerRoleIds, new { SelectList = Model.AvailableCustomerRoles })
-                        <script>
-                            $(document).ready(function() {
-                                var rolesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
-                                rolesIdsInput.setOptions({
-                                    autoClose: false
-                                });
+                        <div class="row">
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.SelectedCustomerRoleIds, new {SelectList = Model.AvailableCustomerRoles})
+                                <script>
+                                    $(document).ready(function() {
+                                        var rolesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                                        rolesIdsInput.setOptions({
+                                            autoClose: false
+                                        });
 
-                                @if (Model.AvailableCustomerRoles.Count == 0)
-                                {
-                                    <text>
-                                rolesIdsInput.setOptions({
-                                    enable: false,
-                                    placeholder: 'No customer roles available'
-                                });
-                                rolesIdsInput._placeholder();
-                                rolesIdsInput._enable();
-                                </text>
-                                }
-                            });
-                        </script>
+                                        @if (Model.AvailableCustomerRoles.Count == 0)
+                                        {
+                                            <text>
+                                        rolesIdsInput.setOptions({
+                                            enable: false,
+                                            placeholder: 'No customer roles available'
+                                        });
+                                        rolesIdsInput._placeholder();
+                                        rolesIdsInput._enable();
+                                    </text>
+                                        }
+                                    });
+                                </script>
+                            </div>
+                            <div class="col-md-8">
+                                @Html.Action("AclDisabledWarning", "Common")
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -248,8 +255,10 @@
                         @Html.NopLabelFor(model => model.SelectedStoreIds)
                     </div>
                     <div class="col-md-9">
-                        @Html.EditorFor(model => model.SelectedStoreIds, new { SelectList = Model.AvailableStores })
-                        <script>
+                        <div class="row">
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.SelectedStoreIds, new { SelectList = Model.AvailableStores })
+                                <script>
                                 $(document).ready(function() {
                                     var storesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
                                     storesIdsInput.setOptions({
@@ -268,7 +277,12 @@
                                     </text>
                                     }
                                 });
-                        </script>
+                                </script>
+                            </div>
+                            <div class="col-md-8">
+                                @Html.Action("MultistoreDisabledWarning", "Common")
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
