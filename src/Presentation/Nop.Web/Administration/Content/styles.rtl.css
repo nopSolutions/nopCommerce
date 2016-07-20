@@ -380,6 +380,9 @@ td.k-state-focused.k-state-selected {
 .skin-blue .sidebar-form input[type="text"] {
     border-radius: 2px;
 }
+.treeview-menu>li.current-active-item>a {
+    color: #fff;
+}
 .admin-search-box {
     background: url(images/search-icon.png) no-repeat 3%;
     padding-left: 30px;
