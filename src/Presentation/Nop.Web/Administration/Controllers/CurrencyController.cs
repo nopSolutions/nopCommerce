@@ -277,9 +277,6 @@ namespace Nop.Admin.Controllers
 
                 if (continueEditing)
                 {
-                    //selected tab
-                    SaveSelectedTabName();
-
                     return RedirectToAction("Edit", new { id = currency.Id });
                 }
                 return RedirectToAction("List");
@@ -351,9 +348,6 @@ namespace Nop.Admin.Controllers
 
                 if (continueEditing)
                 {
-                    //selected tab
-                    SaveSelectedTabName();
-
                     return RedirectToAction("Edit", new {id = currency.Id});
                 }
                 return RedirectToAction("List");

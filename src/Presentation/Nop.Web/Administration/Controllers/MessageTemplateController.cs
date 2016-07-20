@@ -280,9 +280,6 @@ namespace Nop.Admin.Controllers
                 
                 if (continueEditing)
                 {
-                    //selected tab
-                    SaveSelectedTabName();
-
                     return RedirectToAction("Edit",  new {id = messageTemplate.Id});
                 }
                 return RedirectToAction("List");
