@@ -471,6 +471,7 @@ td.k-state-focused.k-state-selected {
 .form-horizontal .label-wrapper {
     display: table;
     float: right;
+    min-height: 28px;
 }
 .form-horizontal .label-wrapper .control-label {
     display: table-cell;
@@ -480,6 +481,13 @@ td.k-state-focused.k-state-selected {
     color: #3c8dbc;
     font-size: 1.17em;
     padding-left: 6px;
+}
+.form-horizontal .label-wrapper i.fa {
+    width: 16px;
+}
+.form-horizontal .label-wrapper i.fa:before {
+    position: absolute;
+    top: 9px;
 }
 .form-horizontal span.required {
     float: right;
