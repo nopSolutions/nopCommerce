@@ -31,9 +31,6 @@ ul, ol {
 .field-validation-error, .validation-summary-errors {
     color: red;
 }
-.uploaded-image {
-    margin-bottom: 5px;
-}
 ul.common-list {
     list-style: none;
     padding-right: 0;
@@ -649,10 +646,14 @@ table td .form-group {
     border-radius: 4px;
     background-color: #00a65a;
     border-color: #008d4c;
-    margin-top: 5px;
+    float: right;
+    margin-left: 5px;
 }
 .qq-upload-list {
-    margin-top: 5px !important;
+    float: right;
+}
+.qq-upload-list .qq-upload-success {
+    margin-left: 5px !important;
 }
 .qq-upload-list li.qq-upload-success {
     background-color: #3c8dbc !important;
