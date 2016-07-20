@@ -588,7 +588,7 @@ input[type=file].form-control {
 .editor-settings-modal-dialog .panel-group {
     margin-bottom: 0;
 }
-.editor-settings-modal-dialog .panel-body {
+.editor-settings-modal-dialog .panel-body, .editor-settings-modal-dialog .panel-heading {
     padding: 10px 5px;
 }
 .editor-settings-modal-dialog .col-md-4 {
