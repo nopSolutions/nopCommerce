@@ -2114,6 +2114,18 @@ set @resources='
   <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreAcl.Notification">
     <Value>In order to use this functionality you have to disable the following setting: Catalog settings > Ignore ACL rules (sitewide).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Description">
+    <Value>The Return Request feature (RMA) enables customers to send products back to you. Here you can find all submitted return requests.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.RecurringPayments.Description">
+    <Value>Recurring payments are used for automatic renewal of consumable merchandise or subscription services.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ACL.Description">
+    <Value>Access control list is a list of permissions attached to customer roles. This list specifies the access rights of users to objects.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Description">
+    <Value>Affiliate is an Internet-based marketing practice in which a business rewards one or more affiliates for each visitor or customer. It is a web-based pay-for-performance program designed to compensate affiliate partner for driving qualified leads or sales to a merchant web site.</Value>
+  </LocaleResource>
 </Language>
 '
 
