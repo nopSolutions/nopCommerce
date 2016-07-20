@@ -304,7 +304,6 @@ td.k-state-focused.k-state-selected {
 .k-multiselect.k-header {
     border-color: #d2d6de;
     border-radius: 0;
-    max-width: 423px;
 }
 .k-multiselect.k-header.k-state-hover, .k-multiselect.k-header.k-state-focused {
     border-color: #3c8dbc !important;
@@ -533,6 +532,9 @@ td.k-state-focused.k-state-selected {
 }
 .panel-search .form-control {
     max-width: 425px;
+}
+.panel-search .k-multiselect.k-header {
+    max-width: 423px;
 }
 .panel-search-popup .btn-search {
     margin-right: auto;
