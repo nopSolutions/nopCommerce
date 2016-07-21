@@ -2451,6 +2451,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayStockQuantity.Hint">
     <Value>Check to display stock quantity. When enabled, customers will see stock quantity.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Download">
+    <Value>Download file</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Download.Hint">
     <Value>You can download file using URL or uploading from the computer. If you want to download file using URL check the box Use download URL.</Value>
   </LocaleResource>
@@ -2574,6 +2577,12 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManageInventoryMethod.Hint">
     <Value>Select inventory method. There are three methods: Don’t track inventory, Track inventory and Track inventory by attributes. You should use Track inventory by attributes when the product has different combinations of these attributes and then manage inventory for this combinations.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerPartNumber">
+    <Value>Manufacturer part number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerPartNumber.Hint">
+    <Value>The manufacturer's part number for this product.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Manufacturers">
     <Value>Manufacturers</Value>
   </LocaleResource>
@@ -2582,9 +2591,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Manufacturers.NoManufacturersAvailable">
     <Value>No manufacturers available.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerPartNumber.Hint">
-    <Value>The manufacturer's part number for this product.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNew">
     <Value>Mark as new</Value>
