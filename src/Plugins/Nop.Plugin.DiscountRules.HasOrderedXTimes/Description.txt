@@ -1,7 +1,7 @@
 ﻿Group: Discount requirements
 FriendlyName: Customer has ordered X Times
-SystemName: DiscountRequirement.HasOrderedXTimes
-Version: 1.00
+SystemName: DiscountRequirement.MustHaveOrderCount
+Version: 1.01
 SupportedVersions: 3.80
 Author: Dylan Orr
 DisplayOrder: 1
