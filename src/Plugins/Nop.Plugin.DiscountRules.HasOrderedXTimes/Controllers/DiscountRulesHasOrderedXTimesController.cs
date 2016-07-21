@@ -47,13 +47,15 @@ namespace Nop.Plugin.DiscountRules.HasOrderedXTimes.Controllers
                     return Content("Failed to load requirement.");
             }
 
+            var orderCount = _settingService.GetSettingByKey<int>(string.Format("DiscountRequirement.MustHaveOrderCount-{0}", discountRequirementId.HasValue ? discountRequirementId.Value : 0));
+
             var model = new RequirementModel();
             model.RequirementId = discountRequirementId.HasValue ? discountRequirementId.Value : 0;
             model.DiscountId = discountId;
-            model.OrderCount = 0;
+            model.OrderCount = orderCount;
 
             //add a prefix
-            ViewData.TemplateInfo.HtmlFieldPrefix = string.Format("DiscountRulesCustomerRoles{0}", discountRequirementId.HasValue ? discountRequirementId.Value.ToString() : "0");
+            ViewData.TemplateInfo.HtmlFieldPrefix = string.Format("DiscountRulesMustHaveOrderCount{0}", discountRequirementId.HasValue ? discountRequirementId.Value.ToString() : "0");
 
             return View("~/Plugins/DiscountRules.HasOrderedXTimes/Views/DiscountRulesHasOrderedXTimes/Configure.cshtml", model);
         }
