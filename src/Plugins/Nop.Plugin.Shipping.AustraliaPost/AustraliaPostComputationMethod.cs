@@ -153,7 +153,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
                             }
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         //if the size or weight of the parcel exceeds the allowable, 
                         //and if for example the set(or not set) the wrong postal code, 

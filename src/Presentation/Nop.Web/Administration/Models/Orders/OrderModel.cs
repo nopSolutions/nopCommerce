@@ -169,6 +169,9 @@ namespace Nop.Admin.Models.Orders
         //shipping info
         public bool IsShippable { get; set; }
         public bool PickUpInStore { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.PickupAddress")]
+        public AddressModel PickupAddress { get; set; }
+        public string PickupAddressGoogleMapsUrl { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.ShippingStatus")]
         public string ShippingStatus { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.ShippingStatus")]

@@ -32,6 +32,7 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Tracking;
 using Nop.Services.Stores;
 using Nop.Core.Domain;
 
@@ -661,18 +662,9 @@ namespace Nop.Services.Messages
             {
                 //we cannot inject IShippingService into constructor because it'll cause circular references.
                 //that's why we resolve it here this way
-                var shippingService = EngineContext.Current.Resolve<IShippingService>();
-                var srcm = shippingService.LoadShippingRateComputationMethodBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
-                if (srcm != null &&
-                    srcm.PluginDescriptor.Installed &&
-                    srcm.IsShippingRateComputationMethodActive(_shippingSettings))
-                {
-                    var shipmentTracker = srcm.ShipmentTracker;
-                    if (shipmentTracker != null)
-                    {
-                        trackingNumberUrl = shipmentTracker.GetUrl(shipment.TrackingNumber);
-                    }
-                }
+                var shipmentTracker = shipment.GetShipmentTracker(EngineContext.Current.Resolve<IShippingService>(), _shippingSettings);
+                if (shipmentTracker != null)
+                    trackingNumberUrl = shipmentTracker.GetUrl(shipment.TrackingNumber);
             }
             tokens.Add(new Token("Shipment.TrackingNumberURL", trackingNumberUrl, true));
             tokens.Add(new Token("Shipment.Product(s)", ProductListToHtmlTable(shipment, languageId), true));

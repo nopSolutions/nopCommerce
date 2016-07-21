@@ -5,8 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
+using Nop.Admin.Helpers;
 using Nop.Admin.Models.Orders;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -30,6 +32,7 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Tracking;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
@@ -85,6 +88,7 @@ namespace Nop.Admin.Controllers
 	    private readonly IAffiliateService _affiliateService;
 	    private readonly IPictureService _pictureService;
         private readonly ICustomerActivityService _customerActivityService;
+	    private readonly ICacheManager _cacheManager;
 
         private readonly OrderSettings _orderSettings;
         private readonly CurrencySettings _currencySettings;
@@ -138,6 +142,7 @@ namespace Nop.Admin.Controllers
             IAffiliateService affiliateService,
             IPictureService pictureService,
             ICustomerActivityService customerActivityService,
+            ICacheManager cacheManager,
             OrderSettings orderSettings,
             CurrencySettings currencySettings, 
             TaxSettings taxSettings,
@@ -186,6 +191,7 @@ namespace Nop.Admin.Controllers
             this._affiliateService = affiliateService;
             this._pictureService = pictureService;
             this._customerActivityService = customerActivityService;
+            this._cacheManager = cacheManager;
             this._orderSettings = orderSettings;
             this._currencySettings = currencySettings;
             this._taxSettings = taxSettings;
@@ -385,50 +391,6 @@ namespace Nop.Admin.Controllers
                 {
                     attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
                 }
-            }
-
-            #endregion
-
-            #region Gift cards
-
-            if (product.IsGiftCard)
-            {
-                string recipientName = "";
-                string recipientEmail = "";
-                string senderName = "";
-                string senderEmail = "";
-                string giftCardMessage = "";
-                foreach (string formKey in form.AllKeys)
-                {
-                    if (formKey.Equals(string.Format("giftcard_{0}.RecipientName", product.Id), StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        recipientName = form[formKey];
-                        continue;
-                    }
-                    if (formKey.Equals(string.Format("giftcard_{0}.RecipientEmail", product.Id), StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        recipientEmail = form[formKey];
-                        continue;
-                    }
-                    if (formKey.Equals(string.Format("giftcard_{0}.SenderName", product.Id), StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        senderName = form[formKey];
-                        continue;
-                    }
-                    if (formKey.Equals(string.Format("giftcard_{0}.SenderEmail", product.Id), StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        senderEmail = form[formKey];
-                        continue;
-                    }
-                    if (formKey.Equals(string.Format("giftcard_{0}.Message", product.Id), StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        giftCardMessage = form[formKey];
-                        continue;
-                    }
-                }
-
-                attributesXml = _productAttributeParser.AddGiftCardAttribute(attributesXml,
-                    recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
             }
 
             #endregion
@@ -724,8 +686,18 @@ namespace Nop.Admin.Controllers
                     model.ShippingAddress.PhoneRequired = _addressSettings.PhoneRequired;
                     model.ShippingAddress.FaxEnabled = _addressSettings.FaxEnabled;
                     model.ShippingAddress.FaxRequired = _addressSettings.FaxRequired;
-                    
+
                     model.ShippingAddressGoogleMapsUrl = string.Format("http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={0}", Server.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (order.ShippingAddress.Country != null ? order.ShippingAddress.Country.Name : "")));
+                }
+                else
+                {
+                    if (order.PickupAddress != null)
+                    {
+                        model.PickupAddress = order.PickupAddress.ToModel();
+                        model.PickupAddressGoogleMapsUrl = string.Format("http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={0}",
+                            Server.UrlEncode(string.Format("{0} {1} {2} {3}", order.PickupAddress.Address1, order.PickupAddress.ZipPostalCode, order.PickupAddress.City,
+                                order.PickupAddress.Country != null ? order.PickupAddress.Country.Name : string.Empty)));
+                    }
                 }
                 model.ShippingMethod = order.ShippingMethod;
 
@@ -979,35 +951,26 @@ namespace Nop.Admin.Controllers
 
             if (prepareShipmentEvent && !String.IsNullOrEmpty(shipment.TrackingNumber))
             {
-                var order = shipment.Order;
-                var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(order.ShippingRateComputationMethodSystemName);
-                if (srcm != null &&
-                    srcm.PluginDescriptor.Installed &&
-                    srcm.IsShippingRateComputationMethodActive(_shippingSettings))
+                var shipmentTracker = shipment.GetShipmentTracker(_shippingService, _shippingSettings);
+                if (shipmentTracker != null)
                 {
-                    var shipmentTracker = srcm.ShipmentTracker;
-                    if (shipmentTracker != null)
+                    model.TrackingNumberUrl = shipmentTracker.GetUrl(shipment.TrackingNumber);
+                    if (_shippingSettings.DisplayShipmentEventsToStoreOwner)
                     {
-                        model.TrackingNumberUrl = shipmentTracker.GetUrl(shipment.TrackingNumber);
-                        if (_shippingSettings.DisplayShipmentEventsToStoreOwner)
-                        {
-                            var shipmentEvents = shipmentTracker.GetShipmentEvents(shipment.TrackingNumber);
-                            if (shipmentEvents != null)
+                        var shipmentEvents = shipmentTracker.GetShipmentEvents(shipment.TrackingNumber);
+                        if (shipmentEvents != null)
+                            foreach (var shipmentEvent in shipmentEvents)
                             {
-                                foreach (var shipmentEvent in shipmentEvents)
-                                {
-                                    var shipmentStatusEventModel = new ShipmentModel.ShipmentStatusEventModel();
-                                    var shipmentEventCountry = _countryService.GetCountryByTwoLetterIsoCode(shipmentEvent.CountryCode);
-                                    shipmentStatusEventModel.Country = shipmentEventCountry != null
-                                        ? shipmentEventCountry.GetLocalized(x => x.Name)
-                                        : shipmentEvent.CountryCode;
-                                    shipmentStatusEventModel.Date = shipmentEvent.Date;
-                                    shipmentStatusEventModel.EventName = shipmentEvent.EventName;
-                                    shipmentStatusEventModel.Location = shipmentEvent.Location;
-                                    model.ShipmentStatusEvents.Add(shipmentStatusEventModel);
-                                }
+                                var shipmentStatusEventModel = new ShipmentModel.ShipmentStatusEventModel();
+                                var shipmentEventCountry = _countryService.GetCountryByTwoLetterIsoCode(shipmentEvent.CountryCode);
+                                shipmentStatusEventModel.Country = shipmentEventCountry != null
+                                    ? shipmentEventCountry.GetLocalized(x => x.Name)
+                                    : shipmentEvent.CountryCode;
+                                shipmentStatusEventModel.Date = shipmentEvent.Date;
+                                shipmentStatusEventModel.EventName = shipmentEvent.EventName;
+                                shipmentStatusEventModel.Location = shipmentEvent.Location;
+                                model.ShipmentStatusEvents.Add(shipmentStatusEventModel);
                             }
-                        }
                     }
                 }
             }
@@ -2480,9 +2443,9 @@ namespace Nop.Admin.Controllers
             model.OrderId = orderId;
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
+            var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(c);
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -3865,9 +3828,9 @@ namespace Nop.Admin.Controllers
 
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
+            var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(c);
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -4166,7 +4129,7 @@ namespace Nop.Admin.Controllers
 	    }
 
         [AcceptVerbs(HttpVerbs.Get)]
-	    public ActionResult LoadOrderStatistics(string period)
+        public ActionResult LoadOrderStatistics(string period)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
@@ -4184,39 +4147,38 @@ namespace Nop.Admin.Controllers
             {
                 case "year":
                     //year statistics
-
                     var yearAgoRoundedDt = nowDt.AddYears(-1).AddMonths(1);
                     var searchYearDateUser = new DateTime(yearAgoRoundedDt.Year, yearAgoRoundedDt.Month, 1);
                     if (!timeZone.IsInvalidTime(searchYearDateUser))
                     {
                         DateTime searchYearDateUtc = _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone);
 
-                        do
+                        for (int i = 0; i <= 12; i++)
                         {
-                            result.Add(new {
+                            result.Add(new
+                            {
                                 date = searchYearDateUser.Date.ToString("Y"),
                                 value = _orderService.SearchOrders(
                                     createdFromUtc: searchYearDateUtc,
                                     createdToUtc: searchYearDateUtc.AddMonths(1),
                                     pageIndex: 0,
                                     pageSize: 1).TotalCount.ToString()
-                                });
+                            });
 
                             searchYearDateUtc = searchYearDateUtc.AddMonths(1);
                             searchYearDateUser = searchYearDateUser.AddMonths(1);
-
-                        } while (!(searchYearDateUser.Year == nowDt.Year && searchYearDateUser.Month > nowDt.Month));
+                        }
                     }
                     break;
 
                 case "month":
                     //month statistics
-                    var searchMonthDateUser = new DateTime(nowDt.Year, nowDt.AddMonths(-1).Month, nowDt.AddMonths(-1).Day);
+                    var searchMonthDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-30).Month, nowDt.AddDays(-30).Day);
                     if (!timeZone.IsInvalidTime(searchMonthDateUser))
                     {
                         DateTime searchMonthDateUtc = _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone);
 
-                        do
+                        for (int i = 0; i <= 30; i++)
                         {
                             result.Add(new
                             {
@@ -4230,8 +4192,7 @@ namespace Nop.Admin.Controllers
 
                             searchMonthDateUtc = searchMonthDateUtc.AddDays(1);
                             searchMonthDateUser = searchMonthDateUser.AddDays(1);
-
-                        } while (!(searchMonthDateUser.Month == nowDt.Month && searchMonthDateUser.Day > nowDt.Day));
+                        }
                     }
                     break;
 
@@ -4243,7 +4204,7 @@ namespace Nop.Admin.Controllers
                     {
                         DateTime searchWeekDateUtc = _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone);
 
-                        do
+                        for (int i = 0; i <= 7; i++)
                         {
                             result.Add(new
                             {
@@ -4257,8 +4218,7 @@ namespace Nop.Admin.Controllers
 
                             searchWeekDateUtc = searchWeekDateUtc.AddDays(1);
                             searchWeekDateUser = searchWeekDateUser.AddDays(1);
-
-                        } while (!(searchWeekDateUser.Month == nowDt.Month && searchWeekDateUser.Day > nowDt.Day));
+                        }
                     }
                     break;
             }

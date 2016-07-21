@@ -516,7 +516,7 @@ namespace Nop.Admin.Controllers
                     model.LastIpAddress = customer.LastIpAddress;
                     model.LastVisitedPage = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
 
-                    model.SelectedCustomerRoleIds = customer.CustomerRoles.Select(cr => cr.Id).ToArray();
+                    model.SelectedCustomerRoleIds = customer.CustomerRoles.Select(cr => cr.Id).ToList();
 
                     //newsletter subscriptions
                     if (!String.IsNullOrEmpty(customer.Email))
@@ -626,16 +626,21 @@ namespace Nop.Admin.Controllers
                 .ToList();
 
             //customer roles
-            model.AvailableCustomerRoles = _customerService
-                .GetAllCustomerRoles(true)
-                .Select(cr => cr.ToModel())
-                .ToList();
-
-            // Precheck Registered Role as a default role while creating a new customer through admin
-            if(model.SelectedCustomerRoleIds==null && customer==null && model.AvailableCustomerRoles.Count>0)
+            var allRoles = _customerService.GetAllCustomerRoles(true);
+            var adminRole = allRoles.FirstOrDefault(c => c.SystemName == SystemCustomerRoleNames.Registered);
+            //precheck Registered Role as a default role while creating a new customer through admin
+            if (customer == null && adminRole != null)
             {
-                model.SelectedCustomerRoleIds = new[] {model.AvailableCustomerRoles
-                    .FirstOrDefault(c=>c.SystemName==SystemCustomerRoleNames.Registered).Id };
+                model.SelectedCustomerRoleIds.Add(adminRole.Id);
+            }
+            foreach (var role in allRoles)
+            {
+                model.AvailableCustomerRoles.Add(new SelectListItem
+                {
+                    Text = role.Name,
+                    Value = role.Id.ToString(),
+                    Selected = model.SelectedCustomerRoleIds.Contains(role.Id)
+                });
             }
 
             //reward points history
@@ -852,7 +857,7 @@ namespace Nop.Admin.Controllers
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
             var newCustomerRoles = new List<CustomerRole>();
             foreach (var customerRole in allCustomerRoles)
-                if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                     newCustomerRoles.Add(customerRole);
             var customerRolesError = ValidateCustomerRoles(newCustomerRoles);
             if (!String.IsNullOrEmpty(customerRolesError))
@@ -1050,7 +1055,7 @@ namespace Nop.Admin.Controllers
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
             var newCustomerRoles = new List<CustomerRole>();
             foreach (var customerRole in allCustomerRoles)
-                if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                     newCustomerRoles.Add(customerRole);
             var customerRolesError = ValidateCustomerRoles(newCustomerRoles);
             if (!String.IsNullOrEmpty(customerRolesError))
@@ -1206,8 +1211,7 @@ namespace Nop.Admin.Controllers
                             !_workContext.CurrentCustomer.IsAdmin())
                             continue;
 
-                        if (model.SelectedCustomerRoleIds != null &&
-                            model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                        if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                         {
                             //new role
                             if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) == 0)
@@ -1288,6 +1292,13 @@ namespace Nop.Admin.Controllers
             if (customer == null)
                 //No customer found with the specified id
                 return RedirectToAction("List");
+
+            //ensure that the current customer cannot change passwords of "Administrators" if he's not an admin himself
+            if (customer.IsAdmin() && !_workContext.CurrentCustomer.IsAdmin())
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.OnlyAdminCanChangePassword"));
+                return RedirectToAction("Edit", new { id = customer.Id });
+            }
 
             if (ModelState.IsValid)
             {
@@ -1380,6 +1391,14 @@ namespace Nop.Admin.Controllers
                     return RedirectToAction("Edit", new { id = customer.Id });
                 }
 
+                //ensure that the current customer cannot delete "Administrators" if he's not an admin himself
+                if (customer.IsAdmin() && !_workContext.CurrentCustomer.IsAdmin())
+                {
+                    ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.OnlyAdminCanDeleteAdmin"));
+                    return RedirectToAction("Edit", new { id = customer.Id });
+                }
+
+                //delete
                 _customerService.DeleteCustomer(customer);
 
                 //remove newsletter subscription (if exists)
@@ -2015,7 +2034,7 @@ namespace Nop.Admin.Controllers
 
             var nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
             var timeZone = _dateTimeHelper.CurrentTimeZone;
-            var searchCustomerRoleIds = new [] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id };
+            var searchCustomerRoleIds = new[] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id };
 
             switch (period)
             {
@@ -2027,7 +2046,7 @@ namespace Nop.Admin.Controllers
                     {
                         DateTime searchYearDateUtc = _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone);
 
-                        do
+                        for (int i = 0; i <= 12; i++)
                         {
                             result.Add(new
                             {
@@ -2042,19 +2061,18 @@ namespace Nop.Admin.Controllers
 
                             searchYearDateUtc = searchYearDateUtc.AddMonths(1);
                             searchYearDateUser = searchYearDateUser.AddMonths(1);
-
-                        } while (!(searchYearDateUser.Year == nowDt.Year && searchYearDateUser.Month > nowDt.Month));
+                        }
                     }
                     break;
 
                 case "month":
                     //month statistics
-                    var searchMonthDateUser = new DateTime(nowDt.Year, nowDt.AddMonths(-1).Month, nowDt.AddMonths(-1).Day);
+                    var searchMonthDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-30).Month, nowDt.AddDays(-30).Day);
                     if (!timeZone.IsInvalidTime(searchMonthDateUser))
                     {
                         DateTime searchMonthDateUtc = _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone);
 
-                        do
+                        for (int i = 0; i <= 30; i++)
                         {
                             result.Add(new
                             {
@@ -2069,8 +2087,7 @@ namespace Nop.Admin.Controllers
 
                             searchMonthDateUtc = searchMonthDateUtc.AddDays(1);
                             searchMonthDateUser = searchMonthDateUser.AddDays(1);
-
-                        } while (!(searchMonthDateUser.Month == nowDt.Month && searchMonthDateUser.Day > nowDt.Day));
+                        }
                     }
                     break;
 
@@ -2082,7 +2099,7 @@ namespace Nop.Admin.Controllers
                     {
                         DateTime searchWeekDateUtc = _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone);
 
-                        do
+                        for (int i = 0; i <= 7; i++)
                         {
                             result.Add(new
                             {
@@ -2097,15 +2114,13 @@ namespace Nop.Admin.Controllers
 
                             searchWeekDateUtc = searchWeekDateUtc.AddDays(1);
                             searchWeekDateUser = searchWeekDateUser.AddDays(1);
-
-                        } while (!(searchWeekDateUser.Month == nowDt.Month && searchWeekDateUser.Day > nowDt.Day));
+                        }
                     }
                     break;
             }
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
-
         #endregion
 
         #region Current shopping cart/ wishlist

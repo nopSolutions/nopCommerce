@@ -18,7 +18,10 @@ namespace Nop.Admin.Models.Customers
             this.AvailableTimeZones = new List<SelectListItem>();
             this.SendEmail = new SendEmailModel() { SendImmediately = true };
             this.SendPm = new SendPmModel();
-            this.AvailableCustomerRoles = new List<CustomerRoleModel>();
+
+            this.SelectedCustomerRoleIds= new List<int>();
+            this.AvailableCustomerRoles = new List<SelectListItem>();
+
             this.AssociatedExternalAuthRecords = new List<AssociatedExternalAuthModel>();
             this.AvailableCountries = new List<SelectListItem>();
             this.AvailableStates = new List<SelectListItem>();
@@ -179,8 +182,10 @@ namespace Nop.Admin.Models.Customers
         //customer roles
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CustomerRoles")]
         public string CustomerRoleNames { get; set; }
-        public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
-        public int[] SelectedCustomerRoleIds { get; set; }
+        public List<SelectListItem> AvailableCustomerRoles { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.CustomerRoles")]
+        [UIHint("MultiSelect")]
+        public IList<int> SelectedCustomerRoleIds { get; set; }
 
 
         //newsletter subscriptions (per store)

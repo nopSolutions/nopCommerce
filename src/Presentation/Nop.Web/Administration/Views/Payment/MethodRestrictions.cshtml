@@ -54,15 +54,19 @@
                                     <table class="table table-hover table-bordered">
                                         <tbody>
                                             <tr>
-                                                <th scope="col">
+                                                <th scope="col" style="padding-top: 14px;">
                                                     <strong>@T("Admin.Configuration.Payment.MethodRestrictions.Country")</strong>
                                                 </th>
                                                 @foreach (var pm in Model.AvailablePaymentMethods)
                                                 {
                                                     var systemNameWithoutDot = pm.SystemName.Replace(".", "");
                                                     <th scope="col">
-                                                        <strong>@pm.FriendlyName</strong>
-                                                        <input type="checkbox" id="selectall-@(systemNameWithoutDot)" />
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" id="selectall-@(systemNameWithoutDot)" />
+                                                                <strong>@pm.FriendlyName</strong>
+                                                            </label>
+                                                        </div>
                                                     </th>
                                                 }
                                             </tr>

@@ -74,9 +74,9 @@ namespace Nop.Web.Controllers
                 model.AlreadySubscribed = _backInStockSubscriptionService
                     .FindSubscription(_workContext.CurrentCustomer.Id, product.Id, _storeContext.CurrentStore.Id) != null;
             }
-            return View(model);
+            return PartialView(model);
         }
-        [HttpPost, ActionName("SubscribePopup")]
+        [HttpPost]
         public ActionResult SubscribePopupPOST(int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -99,7 +99,11 @@ namespace Nop.Web.Controllers
                     //subscription already exists
                     //unsubscribe
                     _backInStockSubscriptionService.DeleteSubscription(subscription);
-                    return Content("Unsubscribed");
+
+                    return Json(new
+                    {
+                        result = "Unsubscribed"
+                    });
                 }
 
                 //subscription does not exist
@@ -108,7 +112,10 @@ namespace Nop.Web.Controllers
                     .GetAllSubscriptionsByCustomerId(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, 0, 1)
                     .TotalCount >= _catalogSettings.MaximumBackInStockSubscriptions)
                 {
-                    return Content(string.Format(_localizationService.GetResource("BackInStockSubscriptions.MaxSubscriptions"), _catalogSettings.MaximumBackInStockSubscriptions));
+                    return Json(new
+                    {
+                        result = string.Format(_localizationService.GetResource("BackInStockSubscriptions.MaxSubscriptions"), _catalogSettings.MaximumBackInStockSubscriptions)
+                    });
                 }
                 subscription = new BackInStockSubscription
                 {
@@ -118,7 +125,11 @@ namespace Nop.Web.Controllers
                     CreatedOnUtc = DateTime.UtcNow
                 };
                 _backInStockSubscriptionService.InsertSubscription(subscription);
-                return Content("Subscribed");
+
+                return Json(new
+                {
+                    result = "Subscribed"
+                });
             }
 
             //subscription not possible

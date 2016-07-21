@@ -251,6 +251,8 @@ namespace Nop.Core
                 return new ShippingOptionTypeConverter();
             if (type == typeof(List<ShippingOption>) || type == typeof(IList<ShippingOption>))
                 return new ShippingOptionListTypeConverter();
+            if (type == typeof(PickupPoint))
+                return new PickupPointTypeConverter();
             if (type == typeof(Dictionary<int, int>))
                 return new GenericDictionaryTypeConverter<int, int>();
 

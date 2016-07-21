@@ -53,6 +53,12 @@ namespace Nop.Admin.Models.Settings
             public bool AllowCustomerToSelectTheme { get; set; }
             public bool AllowCustomerToSelectTheme_OverrideForStore { get; set; }
 
+            [UIHint("Picture")]
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.Logo")]
+            public int LogoPictureId { get; set; }
+            public bool LogoPictureId_OverrideForStore { get; set; }
+            
+
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayEuCookieLawWarning")]
             public bool DisplayEuCookieLawWarning { get; set; }
             public bool DisplayEuCookieLawWarning_OverrideForStore { get; set; }

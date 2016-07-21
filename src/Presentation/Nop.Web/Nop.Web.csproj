@@ -321,6 +321,7 @@
     <Compile Include="Models\Catalog\ManufacturerModel.cs" />
     <Compile Include="Models\Catalog\ManufacturerNavigationModel.cs" />
     <Compile Include="Models\Catalog\ProductDetailsModel.cs" />
+    <Compile Include="Models\Checkout\CheckoutPickupPointModel.cs" />
     <Compile Include="Models\Checkout\CheckoutShippingAddressModel.cs" />
     <Compile Include="Models\Checkout\CheckoutProgressModel.cs" />
     <Compile Include="Models\Checkout\CheckoutBillingAddressModel.cs" />
@@ -337,6 +338,7 @@
     <Compile Include="Models\Common\ContactVendorModel.cs" />
     <Compile Include="Models\Common\FooterModel.cs" />
     <Compile Include="Models\Common\FaviconModel.cs" />
+    <Compile Include="Models\Common\LogoModel.cs" />
     <Compile Include="Models\Common\PagerModel.cs" />
     <Compile Include="Models\Common\SocialModel.cs" />
     <Compile Include="Models\Common\StoreThemeModel.cs" />
@@ -484,27 +486,6 @@
     <Content Include="Content\BBEditor\images\underline.gif" />
     <Content Include="Content\BBEditor\images\unlink.gif" />
     <Content Include="Content\BBEditor\images\unordered.gif" />
-    <Content Include="Content\fancybox\blank.gif" />
-    <Content Include="Content\fancybox\fancybox-x.png" />
-    <Content Include="Content\fancybox\fancybox-y.png" />
-    <Content Include="Content\fancybox\fancybox.png" />
-    <Content Include="Content\fancybox\fancy_close.png" />
-    <Content Include="Content\fancybox\fancy_loading.png" />
-    <Content Include="Content\fancybox\fancy_nav_left.png" />
-    <Content Include="Content\fancybox\fancy_nav_right.png" />
-    <Content Include="Content\fancybox\fancy_shadow_e.png" />
-    <Content Include="Content\fancybox\fancy_shadow_n.png" />
-    <Content Include="Content\fancybox\fancy_shadow_ne.png" />
-    <Content Include="Content\fancybox\fancy_shadow_nw.png" />
-    <Content Include="Content\fancybox\fancy_shadow_s.png" />
-    <Content Include="Content\fancybox\fancy_shadow_se.png" />
-    <Content Include="Content\fancybox\fancy_shadow_sw.png" />
-    <Content Include="Content\fancybox\fancy_shadow_w.png" />
-    <Content Include="Content\fancybox\fancy_title_left.png" />
-    <Content Include="Content\fancybox\fancy_title_main.png" />
-    <Content Include="Content\fancybox\fancy_title_over.png" />
-    <Content Include="Content\fancybox\fancy_title_right.png" />
-    <Content Include="Content\fancybox\jquery.fancybox-1.3.4.css" />
     <Content Include="Content\files\ExportImport\Index.htm" />
     <Content Include="Content\files\Index.htm" />
     <Content Include="Content\Images\default-image.png" />
@@ -953,7 +934,6 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\public.ajaxcart.js" />
     <Content Include="Scripts\public.accordion.js" />
-    <Content Include="Scripts\jquery.fancybox-1.3.4.pack.js" />
     <Content Include="Scripts\public.onepagecheckout.js" />
     <Content Include="Scripts\public.common.js" />
     <Content Include="Themes\DefaultClean\Content\css\print.css" />
@@ -972,7 +952,6 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Views\Shared\Header.cshtml" />
     <Content Include="Views\Common\Footer.cshtml" />
-    <Content Include="Views\Shared\_RootPopup.cshtml" />
     <Content Include="Views\Customer\_ExternalAuthentication.AssociateMessage.cshtml" />
     <Content Include="Views\ExternalAuthentication\ExternalMethods.cshtml" />
     <Content Include="Views\Customer\_ExternalAuthentication.Errors.cshtml" />
@@ -1012,9 +991,9 @@
     <Content Include="Views\ShoppingCart\_EstimateShippingResult.cshtml" />
     <Content Include="Views\Product\CustomerProductReviews.cshtml" />
     <Content Include="Views\Vendor\Info.cshtml" />
+    <Content Include="Views\Common\Logo.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="obj\" />
     <Folder Include="Plugins\bin\" />
   </ItemGroup>
   <ItemGroup>

@@ -96,6 +96,7 @@
     <Compile Include="Caching\RedisCacheManager.cs" />
     <Compile Include="ComponentModel\GenericDictionaryTypeConverter.cs" />
     <Compile Include="ComponentModel\WriteLockDisposable.cs" />
+    <Compile Include="Domain\Catalog\ProductEditorSettings.cs" />
     <Compile Include="Domain\Catalog\Events.cs" />
     <Compile Include="Domain\Catalog\PredefinedProductAttributeValue.cs" />
     <Compile Include="Domain\Catalog\RentalPricePeriod.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Domain\Orders\ReturnRequestAction.cs" />
     <Compile Include="Domain\Seo\WwwRequirement.cs" />
     <Compile Include="Domain\Shipping\Events.cs" />
+    <Compile Include="Domain\Shipping\PickupPoint.cs" />
     <Compile Include="Domain\Shipping\Warehouse.cs" />
     <Compile Include="Domain\Shipping\DeliveryDate.cs" />
     <Compile Include="Domain\Topics\TopicTemplate.cs" />

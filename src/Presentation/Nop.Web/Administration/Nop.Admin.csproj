@@ -58,8 +58,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="AutoMapper, Version=5.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\AutoMapper.5.0.0\lib\net45\AutoMapper.dll</HintPath>
+    <Reference Include="AutoMapper, Version=5.0.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\AutoMapper.5.0.2\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FluentValidation, Version=6.2.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -208,6 +208,7 @@
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\QueuedEmailController.cs" />
     <Compile Include="Extensions\AttributeParserHelper.cs" />
+    <Compile Include="Helpers\SelectListHelper.cs" />
     <Compile Include="Infrastructure\Mapper\AutoMapperConfiguration.cs" />
     <Compile Include="Infrastructure\Cache\ModelCacheEventConsumer.cs" />
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
@@ -250,11 +251,13 @@
     <Compile Include="Models\Plugins\OfficialFeedListModel.cs" />
     <Compile Include="Models\Plugins\PluginListModel.cs" />
     <Compile Include="Models\Settings\AllSettingsListModel.cs" />
+    <Compile Include="Models\Settings\ProductEditorSettingsModel.cs" />
     <Compile Include="Models\Settings\ModeModel.cs" />
     <Compile Include="Models\Settings\ReturnRequestActionModel.cs" />
     <Compile Include="Models\Settings\ReturnRequestReasonModel.cs" />
     <Compile Include="Models\Settings\SortOptionModel.cs" />
     <Compile Include="Models\Settings\VendorSettingsModel.cs" />
+    <Compile Include="Models\Shipping\PickupPointProviderModel.cs" />
     <Compile Include="Models\Shipping\WarehouseModel.cs" />
     <Compile Include="Models\Shipping\DeliveryDateModel.cs" />
     <Compile Include="Models\Templates\TopicTemplateModel.cs" />
@@ -1574,7 +1577,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Product\Create.cshtml" />
@@ -2130,6 +2135,8 @@
     <Content Include="Content\Roxy_Fileman\lang\pl.json" />
     <Content Include="Content\Roxy_Fileman\lang\pt.json" />
     <Content Include="Views\Measure\List.cshtml" />
+    <Content Include="Views\Product\_ProductEditorSettingsModal.cshtml" />
+    <Content Include="Views\Product\_CreateOrUpdate.PurchasedWithOrders.cshtml" />
     <None Include="Views\Product\_ProductAttributes.cshtml" />
     <Content Include="Views\Setting\_ReturnRequestReasons.cshtml" />
     <Content Include="Views\Setting\ReturnRequestReasonEdit.cshtml" />
@@ -2141,6 +2148,8 @@
     <Content Include="Views\Setting\ReturnRequestActionEdit.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\MultiSelect.cshtml" />
     <Content Include="Views\Setting\Mode.cshtml" />
+    <Content Include="Views\Shipping\PickupPointProviders.cshtml" />
+    <Content Include="Views\Shipping\ConfigurePickupPointProvider.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Product\AddAttributeCombinationPopup.cshtml" />
@@ -2320,36 +2329,16 @@
     <Content Include="Views\Product\_CreateOrUpdate.Info.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Product\_CreateOrUpdate.Stores.cshtml" />
     <Content Include="Views\Product\_CreateOrUpdate.SpecificationAttributes.cshtml" />
-    <Content Include="Views\Product\_CreateOrUpdate.Acl.cshtml" />
     <Content Include="Views\Product\_CreateOrUpdate.ProductAttributes.cshtml" />
-    <Content Include="Views\Product\_CreateOrUpdate.TierPrices.cshtml" />
-    <Content Include="Views\Product\_CreateOrUpdate.Discounts.cshtml" />
-    <Content Include="Views\Product\_CreateOrUpdate.AssociatedProducts.cshtml" />
     <Content Include="Views\Product\AssociatedProductAddPopup.cshtml" />
     <Content Include="Views\Product\_CreateOrUpdate.SEO.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Product\_CreateOrUpdate.Categories.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Product\_CreateOrUpdate.Manufacturers.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Product\_CreateOrUpdate.RelatedProducts.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Product\_CreateOrUpdate.CrossSells.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Product\_CreateOrUpdate.Pictures.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Product\AssociateProductToAttributeValuePopup.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Product\_CreateOrUpdate.PurchasedWithOrders.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shipping\CreateDeliveryDate.cshtml" />

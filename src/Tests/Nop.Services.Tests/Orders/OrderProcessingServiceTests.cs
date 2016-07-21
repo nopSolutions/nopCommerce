@@ -232,6 +232,7 @@ namespace Nop.Services.Tests.Orders
                 _customerActivityService, _currencyService, _affiliateService,
                 _eventPublisher,_pdfService, _rewardPointService,
                 _genericAttributeService,
+                _countryService,
                 _shippingSettings, _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings,
                 _currencySettings);
