@@ -4,7 +4,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading;
-using System.Web.Hosting;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Configuration;
