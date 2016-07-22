@@ -48,11 +48,13 @@ namespace Nop.Plugin.DiscountRules.HasOrderedXTimes.Controllers
             }
 
             var orderCount = _settingService.GetSettingByKey<int>(string.Format("DiscountRequirement.MustHaveOrderCount-{0}", discountRequirementId.HasValue ? discountRequirementId.Value : 0));
+            var comparisonOperator = _settingService.GetSettingByKey<ComparisonOperators>(string.Format("DiscountRequirement.MustHaveOrderCount-comparisonOperator-{0}", discountRequirementId.HasValue ? discountRequirementId.Value : 0));
 
             var model = new RequirementModel();
             model.RequirementId = discountRequirementId.HasValue ? discountRequirementId.Value : 0;
             model.DiscountId = discountId;
             model.OrderCount = orderCount;
+            model.ComparisonOperator = comparisonOperator;
 
             //add a prefix
             ViewData.TemplateInfo.HtmlFieldPrefix = string.Format("DiscountRulesMustHaveOrderCount{0}", discountRequirementId.HasValue ? discountRequirementId.Value.ToString() : "0");
@@ -62,7 +64,7 @@ namespace Nop.Plugin.DiscountRules.HasOrderedXTimes.Controllers
 
         [HttpPost]
         [AdminAntiForgery]
-        public ActionResult Configure(int discountId, int? discountRequirementId, int orderCount)
+        public ActionResult Configure(int discountId, int? discountRequirementId, int orderCount, ComparisonOperators comparisonOperator)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
@@ -79,6 +81,7 @@ namespace Nop.Plugin.DiscountRules.HasOrderedXTimes.Controllers
             {
                 //update existing rule
                 _settingService.SetSetting(string.Format("DiscountRequirement.MustHaveOrderCount-{0}", discountRequirement.Id), orderCount);
+                _settingService.SetSetting(string.Format("DiscountRequirement.MustHaveOrderCount-comparisonOperator-{0}", discountRequirement.Id), comparisonOperator);
             }
             else
             {
@@ -91,6 +94,7 @@ namespace Nop.Plugin.DiscountRules.HasOrderedXTimes.Controllers
                 _discountService.UpdateDiscount(discount);
 
                 _settingService.SetSetting(string.Format("DiscountRequirement.MustHaveOrderCount-{0}", discountRequirement.Id), orderCount);
+                _settingService.SetSetting(string.Format("DiscountRequirement.MustHaveOrderCount-comparisonOperator-{0}", discountRequirement.Id), comparisonOperator);
             }
             return Json(new { Result = true, NewRequirementId = discountRequirement.Id }, JsonRequestBehavior.AllowGet);
         }
