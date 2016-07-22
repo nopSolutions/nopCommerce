@@ -413,68 +413,16 @@ namespace Nop.Services.Orders
                 //calculate subtotal for the updated order item
                 if (shoppingCartItem.Id == updatedOrderItem.Id)
                 {
-                    var itemPriceExclTax = updateOrderParameters.PriceExclTax;
-                    var itemPriceInclTax = updateOrderParameters.PriceInclTax;
-                    var itemDiscountAmountExclTax = updateOrderParameters.DiscountAmountExclTax;
-                    var itemDiscountAmountInclTax = updateOrderParameters.DiscountAmountInclTax;
-                    itemSubTotalExclTax = updateOrderParameters.SubTotalExclTax;
-                    itemSubTotalInclTax = updateOrderParameters.SubTotalInclTax;
-
-                    //if subtotal values were manually changed get them, else need some calculation
-                    if (!updateOrderParameters.SubTotalChanged)
-                    {
-                        if (updateOrderParameters.DiscountAmountChanged)
-                        {
-                            if (updateOrderParameters.PriceChanged)
-                            {
-                                //price and discount amount were manually changed, not need for the complex calculation
-                                itemSubTotalExclTax = (itemPriceExclTax - itemDiscountAmountExclTax) * shoppingCartItem.Quantity;
-                                itemSubTotalInclTax = (itemPriceInclTax - itemDiscountAmountInclTax) * shoppingCartItem.Quantity;
-                            }
-                            else
-                            {
-                                //discount amount was manually changed, calculate price and subtotal with entered discount amount
-                                var itemPrice = _priceCalculationService.GetUnitPrice(shoppingCartItem, false);
-                                itemPriceExclTax = _taxService.GetProductPrice(shoppingCartItem.Product, itemPrice, false, customer, out taxRate);
-                                itemPriceInclTax = _taxService.GetProductPrice(shoppingCartItem.Product, itemPrice, true, customer, out taxRate);
-                                itemSubTotalExclTax = (itemPriceExclTax - itemDiscountAmountExclTax) * shoppingCartItem.Quantity;
-                                itemSubTotalInclTax = (itemPriceInclTax - itemDiscountAmountInclTax) * shoppingCartItem.Quantity;
-                            }
-                        }
-                        else
-                        {
-                            if (updateOrderParameters.PriceChanged)
-                            {
-                                //price was manually changed, calculate discount amount and subtotal
-                                itemSubTotalExclTax = _priceCalculationService.GetSubTotalWithOverridenPrice(shoppingCartItem, updateOrderParameters.PriceExclTax,
-                                    out itemDiscountAmountExclTax, out itemDiscounts);
-                                itemSubTotalInclTax = _priceCalculationService.GetSubTotalWithOverridenPrice(shoppingCartItem, updateOrderParameters.PriceInclTax,
-                                    out itemDiscountAmountInclTax, out itemDiscounts);
-                            }
-                            else
-                            {
-                                //only quantity was changed or added new order item, calculate all
-                                var itemPrice = _priceCalculationService.GetUnitPrice(shoppingCartItem);
-                                var itemSubTotal = _priceCalculationService.GetSubTotal(shoppingCartItem, true, out itemDiscountAmountExclTax, out itemDiscounts);
-
-                                itemPriceExclTax = _taxService.GetProductPrice(shoppingCartItem.Product, itemPrice, false, customer, out taxRate);
-                                itemPriceInclTax = _taxService.GetProductPrice(shoppingCartItem.Product, itemPrice, true, customer, out taxRate);
-                                itemDiscountAmountExclTax = _taxService.GetProductPrice(shoppingCartItem.Product, itemDiscountAmountExclTax, false, customer, out taxRate);
-                                itemDiscountAmountInclTax = _taxService.GetProductPrice(shoppingCartItem.Product, itemDiscountAmountExclTax, true, customer, out taxRate);
-                                itemSubTotalExclTax = _taxService.GetProductPrice(shoppingCartItem.Product, itemSubTotal, false, customer, out taxRate);
-                                itemSubTotalInclTax = _taxService.GetProductPrice(shoppingCartItem.Product, itemSubTotal, true, customer, out taxRate);
-                            }
-                        }
-                    }
-
                     //update order item 
-                    updatedOrderItem.UnitPriceExclTax = itemPriceExclTax;
-                    updatedOrderItem.UnitPriceInclTax = itemPriceInclTax;
-                    updatedOrderItem.DiscountAmountExclTax = itemDiscountAmountExclTax;
-                    updatedOrderItem.DiscountAmountInclTax = itemDiscountAmountInclTax;
-                    updatedOrderItem.PriceExclTax = itemSubTotalExclTax;
-                    updatedOrderItem.PriceInclTax = itemSubTotalInclTax;
+                    updatedOrderItem.UnitPriceExclTax = updateOrderParameters.PriceExclTax;
+                    updatedOrderItem.UnitPriceInclTax = updateOrderParameters.PriceInclTax;
+                    updatedOrderItem.DiscountAmountExclTax = updateOrderParameters.DiscountAmountExclTax;
+                    updatedOrderItem.DiscountAmountInclTax = updateOrderParameters.DiscountAmountInclTax;
+                    updatedOrderItem.PriceExclTax = itemSubTotalExclTax = updateOrderParameters.SubTotalExclTax;
+                    updatedOrderItem.PriceInclTax = itemSubTotalInclTax = updateOrderParameters.SubTotalInclTax;
                     updatedOrderItem.Quantity = shoppingCartItem.Quantity;
+
+                    taxRate = Math.Round((100 * (itemSubTotalInclTax - itemSubTotalExclTax)) / itemSubTotalExclTax, 3);
                 }
                 else
                 {
@@ -722,13 +670,16 @@ namespace Nop.Services.Orders
                 if (paymentMethodAdditionalFeeTax < decimal.Zero)
                     paymentMethodAdditionalFeeTax = decimal.Zero;
 
-                var paymentTaxRate = Math.Round(100 * paymentMethodAdditionalFeeTax / updatedOrder.PaymentMethodAdditionalFeeExclTax, 3);
-                if (paymentTaxRate > decimal.Zero && paymentMethodAdditionalFeeTax > decimal.Zero)
+                if (updatedOrder.PaymentMethodAdditionalFeeExclTax > decimal.Zero)
                 {
-                    if (!taxRates.ContainsKey(paymentTaxRate))
-                        taxRates.Add(paymentTaxRate, paymentMethodAdditionalFeeTax);
-                    else
-                        taxRates[paymentTaxRate] = taxRates[paymentTaxRate] + paymentMethodAdditionalFeeTax;
+                    var paymentTaxRate = Math.Round(100 * paymentMethodAdditionalFeeTax / updatedOrder.PaymentMethodAdditionalFeeExclTax, 3);
+                    if (paymentTaxRate > decimal.Zero && paymentMethodAdditionalFeeTax > decimal.Zero)
+                    {
+                        if (!taxRates.ContainsKey(paymentTaxRate))
+                            taxRates.Add(paymentTaxRate, paymentMethodAdditionalFeeTax);
+                        else
+                            taxRates[paymentTaxRate] = taxRates[paymentTaxRate] + paymentMethodAdditionalFeeTax;
+                    }
                 }
             }
 

@@ -2179,10 +2179,7 @@ namespace Nop.Admin.Controllers
                 DiscountAmountExclTax = discountExclTax,
                 SubTotalInclTax = priceInclTax,
                 SubTotalExclTax = priceExclTax,
-                Quantity = quantity,
-                PriceChanged = unitPriceInclTax != orderItem.UnitPriceInclTax || unitPriceExclTax != orderItem.UnitPriceExclTax,
-                DiscountAmountChanged = discountInclTax != orderItem.DiscountAmountInclTax || discountExclTax != orderItem.DiscountAmountExclTax,
-                SubTotalChanged = priceInclTax != orderItem.PriceInclTax || priceExclTax != orderItem.PriceExclTax
+                Quantity = quantity
             };
             _orderProcessingService.UpdateOrderTotals(updateOrderParameters);
 
@@ -2679,9 +2676,7 @@ namespace Nop.Admin.Controllers
                     PriceExclTax = unitPriceExclTax,
                     SubTotalInclTax = priceInclTax,
                     SubTotalExclTax = priceExclTax,
-                    Quantity = quantity,
-                    PriceChanged = unitPriceInclTax != orderItem.UnitPriceInclTax || unitPriceExclTax != orderItem.UnitPriceExclTax,
-                    SubTotalChanged = priceInclTax != orderItem.PriceInclTax || priceExclTax != orderItem.PriceExclTax
+                    Quantity = quantity
                 };
                 _orderProcessingService.UpdateOrderTotals(updateOrderParameters);
 

@@ -6115,7 +6115,7 @@
     <Value>Auto update order totals</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.AutoUpdateOrderTotalsOnEditingOrder.Hint">
-    <Value>Check to automatically update order totals on editing an order in admin area.</Value>
+    <Value>Check to automatically update order totals on editing an order in admin area. IMPORANT: currently this functionality is in BETA testing status.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.DisableBillingAddressCheckoutStep">
     <Value>Disable "Billing address" step</Value>

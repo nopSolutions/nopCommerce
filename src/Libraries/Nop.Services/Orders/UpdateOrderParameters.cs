@@ -62,21 +62,6 @@ namespace Nop.Services.Orders
         public decimal SubTotalExclTax { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether price was changed
-        /// </summary>
-        public bool PriceChanged { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether discount amount was changed
-        /// </summary>
-        public bool DiscountAmountChanged { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether subtotal was changed
-        /// </summary>
-        public bool SubTotalChanged { get; set; }
-
-        /// <summary>
         /// Warnings
         /// </summary>
         public List<string> Warnings { get; set; }

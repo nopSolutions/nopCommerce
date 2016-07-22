@@ -2136,7 +2136,7 @@ set @resources='
     <Value>Auto update order totals</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.AutoUpdateOrderTotalsOnEditingOrder.Hint">
-    <Value>Check to automatically update order totals on editing an order in admin area.</Value>
+    <Value>Check to automatically update order totals on editing an order in admin area. IMPORANT: currently this functionality is in BETA testing status.</Value>
   </LocaleResource>
 </Language>
 '
@@ -4843,6 +4843,6 @@ GO
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.autoupdateordertotalsoneditingorder')
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
-	VALUES (N'ordersettings.autoupdateordertotalsoneditingorder', N'true', 0)
+	VALUES (N'ordersettings.autoupdateordertotalsoneditingorder', N'false', 0)
 END
 GO
