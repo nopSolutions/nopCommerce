@@ -10,6 +10,8 @@ namespace Nop.Plugin.DiscountRules.HasOrderedXTimes.Models
 
         public int RequirementId { get; set; }
 
+        public ComparisonOperators ComparisonOperator { get; set; }
+
         //TODO: Come back to this
         public int OrderCount { get; set; }
     }

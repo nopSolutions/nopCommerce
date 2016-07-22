@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\DiscountRulesHasOrderedXTimesController.cs" />
+    <Compile Include="ComparisonOperators.cs" />
     <Compile Include="HasOrderedXTimesDiscountRequirementRule.cs" />
     <Compile Include="Models\RequirementModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -79,6 +80,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="logo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="web.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

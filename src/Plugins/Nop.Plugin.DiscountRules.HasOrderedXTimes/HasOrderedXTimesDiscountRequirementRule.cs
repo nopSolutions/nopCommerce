@@ -35,6 +35,8 @@ namespace Nop.Plugin.DiscountRules.HasOrderedXTimes
             var orderRequirement =
                 _settingService.GetSettingByKey<int>(string.Format("DiscountRequirement.MustHaveOrderCount-{0}",
                     request.DiscountRequirementId));
+            var comparisonOperator = _settingService.GetSettingByKey<ComparisonOperators>(string.Format("DiscountRequirement.MustHaveOrderCount-comparisonOperator-{0}", request.DiscountRequirementId));
+
             if (orderRequirement == 0)
             {
                 result.IsValid = true;
@@ -51,17 +53,36 @@ namespace Nop.Plugin.DiscountRules.HasOrderedXTimes
                 osIds: new List<int>() { (int)OrderStatus.Complete });
             var orderCount = orders.Count;
 
-            if (orderCount > orderRequirement)
+            if (Comparison(orderRequirement, orderCount, comparisonOperator))
             {
                 result.IsValid = true;
             }
                 //TODO This should be localized resource.
             else
             {
-                result.UserError = "Not enough orders";
+                result.UserError = "Invalid order requirement";
             }
 
             return result;
+        }
+
+        private bool Comparison(int orderRequirement, int orderCount, ComparisonOperators comparisonOperator)
+        {
+            switch (comparisonOperator)
+            {
+                case ComparisonOperators.EqualTo:
+                    return orderRequirement == orderCount;
+                case ComparisonOperators.GreaterThan:
+                    return orderCount > orderRequirement;
+                case ComparisonOperators.GreaterThanOrEqualTo:
+                    return orderCount >= orderRequirement;
+                case ComparisonOperators.LessThan:
+                    return orderCount < orderRequirement;
+                case ComparisonOperators.LessThanOrEqualTo:
+                    return orderCount <= orderRequirement;
+                default:
+                    return false;
+            }
         }
 
         public string GetConfigurationUrl(int discountId, int? discountRequirementId)
