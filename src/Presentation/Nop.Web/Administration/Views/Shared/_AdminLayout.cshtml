@@ -220,9 +220,6 @@
                 </div>
             </div>
             <div class="main-footer clearfix">
-                <div class="text-center">
-                    @(EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(DateTime.Now).ToString("f"))
-                </div>
                 @if (!EngineContext.Current.Resolve<StoreInformationSettings>().HidePoweredByNopCommerce)
                 {
                     @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
@@ -233,6 +230,9 @@
                 }
                 <div class="pull-right hidden-xs">
                     <b>nopCommerce version @NopVersion.CurrentVersion</b>
+                </div>
+                <div class="text-center">
+                    @(EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(DateTime.Now).ToString("f"))
                 </div>
             </div>
         </div>
