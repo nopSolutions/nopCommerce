@@ -20,25 +20,34 @@
 <div id="@(clientId + "value")">
     @Html.HiddenFor(x => x)
 </div>
-<div id="@(clientId + "image")" class="uploaded-image">
-    <img src="@(pictureService.GetPictureUrl(Model, pictureSize, true))" />
+<div class="row">
+    <div class="col-md-12">
+        <div id="@(clientId + "image")" class="uploaded-image">
+            <img src="@(pictureService.GetPictureUrl(Model, pictureSize, true))"/>
+        </div>
+    </div>
 </div>
-<div class="remove-image-button">
-    @if (picture != null)
-    {
-        <span id="@(clientId + "remove")" class="btn bg-red">@T("Admin.Picture.RemovePicture")</span>
-    }
-    else
-    {
-        <span id="@(clientId + "remove")" class="btn bg-red" style="display:none;">@T("Admin.Picture.RemovePicture")</span>
-    }
+<div class="row">
+    <div class="col-md-12">
+        @*fine uploader container*@
+        <div id="@clientId" class="upload-image-button pull-left margin-t-5">
+            <noscript>
+                <p>Please enable JavaScript to use file uploader.</p>
+            </noscript>
+        </div>
+        <div class="remove-image-button pull-left margin-t-5">
+            @if (picture != null)
+            {
+                <span id="@(clientId + "remove")" class="btn bg-red">@T("Admin.Picture.RemovePicture")</span>
+            }
+            else
+            {
+                <span id="@(clientId + "remove")" class="btn bg-red" style="display: none;">@T("Admin.Picture.RemovePicture")</span>
+            }
+        </div>
+    </div>
 </div>
-@*fine uploader container*@
-<div id="@clientId" class="upload-image-button">
-    <noscript>
-        <p>Please enable JavaScript to use file uploader.</p>
-    </noscript>
-</div>
+
 @*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
 <script type="text/template" id="@(clientId)-qq-template">
     <div class="qq-uploader-selector qq-uploader">

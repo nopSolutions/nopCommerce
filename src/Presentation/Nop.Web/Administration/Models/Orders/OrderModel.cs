@@ -19,6 +19,7 @@ namespace Nop.Admin.Models.Orders
             GiftCards = new List<GiftCard>();
             Items = new List<OrderItemModel>();
             UsedDiscounts = new List<UsedDiscountModel>();
+            Warnings = new List<string>();
         }
 
         public bool IsLoggedInAsVendor { get; set; }
@@ -232,6 +233,9 @@ namespace Nop.Admin.Models.Orders
         public bool CanVoid { get; set; }
         public bool CanVoidOffline { get; set; }
 
+        //warnings
+        public List<string> Warnings { get; set; }
+
         #region Nested Classes
 
         public partial class OrderItemModel : BaseNopEntityModel
@@ -408,6 +412,7 @@ namespace Nop.Admin.Models.Orders
                 /// </summary>
                 public bool HasCondition { get; set; }
 
+                public bool AutoUpdateOrderTotals { get; set; }
             }
 
             public partial class ProductAttributeModel : BaseNopEntityModel

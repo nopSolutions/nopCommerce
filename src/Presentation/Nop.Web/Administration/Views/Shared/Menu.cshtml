@@ -26,7 +26,7 @@
 
     if (!String.IsNullOrEmpty(url))
     {
-        <li @(isActive ? Html.Raw("class=\"active\"") : null)>
+        <li @(isActive ? Html.Raw("class=\"active current-active-item\"") : null)>
             <a href="@url" class="menu-item-link">
                 @if (!String.IsNullOrEmpty(item.IconClass))
                 {
@@ -40,7 +40,7 @@
     }
     else
     {
-        <li class="treeview @(isActive ? Html.Raw("active") : null)">
+        <li class="treeview @(isActive ? Html.Raw("active current-active-item") : null)">
             <a href="#">
                 @if (!String.IsNullOrEmpty(item.IconClass))
                 {

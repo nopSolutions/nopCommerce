@@ -414,9 +414,10 @@
                                 <div class="input-group input-group-short">
                                     @Html.NopEditorFor(model => model.SecuritySettings.EncryptionKey)
                                     <span class="input-group-btn">
-                                        <button type="submit" name="changeencryptionkey" id="changeencryptionkey" class="btn btn-info" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+                                        <button type="submit" name="changeencryptionkey" id="changeencryptionkey" class="btn btn-info">
                                             @T("Admin.Common.Change")
                                         </button>
+                                        @Html.ActionConfirmation("changeencryptionkey")
                                     </span>
                                 </div>
                                 @Html.ValidationMessageFor(model => model.SecuritySettings.EncryptionKey)

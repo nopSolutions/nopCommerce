@@ -22,15 +22,15 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default">
+            <div class="panel panel-default panel-popup">
                 <div class="panel-body">
                     @(Html.LocalizedEditor<CheckoutAttributeValueModel, CheckoutAttributeValueLocalizedModel>("checkoutattributevalue-localized",
                     @<div>
                         <div class="form-group">
-                            <div class="col-md-3">
+                            <div class="col-sm-3">
                                 @Html.NopLabelFor(model => model.Locales[item].Name)
                             </div>
-                            <div class="col-md-9">
+                            <div class="col-sm-9">
                                 @Html.NopEditorFor(model => model.Locales[item].Name)
                                 @Html.ValidationMessageFor(model => model.Locales[item].Name)
                             </div>
@@ -40,10 +40,10 @@
     ,
                     @<div>
                         <div class="form-group">
-                            <div class="col-md-3">
+                            <div class="col-sm-3">
                                 @Html.NopLabelFor(model => model.Name)
                             </div>
-                            <div class="col-md-9">
+                            <div class="col-sm-9">
                                 @Html.NopEditorFor(model => model.Name)
                                 @Html.ValidationMessageFor(model => model.Name)
                             </div>
@@ -53,10 +53,10 @@
                     @if (Model.DisplayColorSquaresRgb)
                     {
                         <div class="form-group">
-                            <div class="col-md-3">
+                            <div class="col-sm-3">
                                 @Html.NopLabelFor(model => model.ColorSquaresRgb)
                             </div>
-                            <div class="col-md-9">
+                            <div class="col-sm-9">
                                 @Html.NopEditorFor(model => model.ColorSquaresRgb)
                                 <div id="color-picker"></div>
                                 <script type="text/javascript">
@@ -69,37 +69,37 @@
                         </div>
                     }
                     <div class="form-group">
-                        <div class="col-md-3">
+                        <div class="col-sm-3">
                             @Html.NopLabelFor(model => model.PriceAdjustment)
                         </div>
-                        <div class="col-md-9">
+                        <div class="col-sm-9">
                             @Html.NopEditorFor(model => model.PriceAdjustment) [@Model.PrimaryStoreCurrencyCode]
                             @Html.ValidationMessageFor(model => model.PriceAdjustment)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-md-3">
+                        <div class="col-sm-3">
                             @Html.NopLabelFor(model => model.WeightAdjustment)
                         </div>
-                        <div class="col-md-9">
+                        <div class="col-sm-9">
                             @Html.NopEditorFor(model => model.WeightAdjustment) [@Model.BaseWeightIn]
                             @Html.ValidationMessageFor(model => model.WeightAdjustment)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-md-3">
+                        <div class="col-sm-3">
                             @Html.NopLabelFor(model => model.IsPreSelected)
                         </div>
-                        <div class="col-md-9">
+                        <div class="col-sm-9">
                             @Html.NopEditorFor(model => model.IsPreSelected)
                             @Html.ValidationMessageFor(model => model.IsPreSelected)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-md-3">
+                        <div class="col-sm-3">
                             @Html.NopLabelFor(model => model.DisplayOrder)
                         </div>
-                        <div class="col-md-9">
+                        <div class="col-sm-9">
                             @Html.NopEditorFor(model => model.DisplayOrder)
                             @Html.ValidationMessageFor(model => model.DisplayOrder)
                         </div>

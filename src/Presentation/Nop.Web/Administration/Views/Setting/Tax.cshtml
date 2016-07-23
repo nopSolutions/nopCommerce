@@ -112,11 +112,20 @@
                                 @Html.ValidationMessageFor(model => model.ForceTaxExclusionFromOrderSubtotal)
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.TaxBasedOn_OverrideForStore, model => model.TaxBasedOn, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.TaxBasedOn)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDropDownListFor(model => model.TaxBasedOn, Model.TaxBasedOnValues)
+                                @Html.ValidationMessageFor(model => model.TaxBasedOn)
+                            </div>
+                        </div>
                     </div>
                     <script type="text/javascript">
-                        $(document).ready(function() {
+                        $(document).ready(function () {
                             $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectTaxDisplayType)").click(toggleTaxDisplayType);
-
                             toggleTaxDisplayType();
                         });
 
@@ -131,23 +140,11 @@
                     </script>
                 </div>
                 <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @Html.OverrideStoreCheckboxFor(model => model.DefaultTaxAddress_OverrideForStore, "pnlDefaultTaxAddress", Model.ActiveStoreScopeConfiguration)
+                        @T("Admin.Configuration.Settings.Tax.DefaultTaxAddress")
+                    </div>
                     <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.TaxBasedOn_OverrideForStore, model => model.TaxBasedOn, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.TaxBasedOn)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopDropDownListFor(model => model.TaxBasedOn, Model.TaxBasedOnValues)
-                                @Html.ValidationMessageFor(model => model.TaxBasedOn)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.DefaultTaxAddress_OverrideForStore, "pnlDefaultTaxAddress", Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.DefaultTaxAddress)
-                            </div>
-                        </div>
                         <div id="pnlDefaultTaxAddress">
                             @Html.EditorFor(x => x.DefaultTaxAddress, "Address")
                         </div>
@@ -238,7 +235,7 @@
                         </div>
                     </div>
                     <script type="text/javascript">
-                        $(document).ready(function() {
+                        $(document).ready(function () {
                             $("#@Html.FieldIdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)").click(togglePayment);
 
                             togglePayment();
@@ -320,7 +317,7 @@
                             </div>
                         </div>
                         <script type="text/javascript">
-                            $(document).ready(function() {
+                            $(document).ready(function () {
                                 $("#@Html.FieldIdFor(model => model.EuVatEnabled)").click(toggleEUVAT);
 
                                 toggleEUVAT();

@@ -140,6 +140,37 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(window.ToString());
         }
 
+        public static MvcHtmlString ActionConfirmation(this HtmlHelper helper, string buttonId, string actionName = "")
+        {
+            if (string.IsNullOrEmpty(actionName))
+                actionName = helper.ViewContext.RouteData.GetRequiredString("action");
+
+            var modalId = MvcHtmlString.Create(buttonId + "-action-confirmation").ToHtmlString();
+
+            var actionConfirmationModel = new ActionConfirmationModel()
+            {
+                ControllerName = helper.ViewContext.RouteData.GetRequiredString("controller"),
+                ActionName = actionName,
+                WindowId = modalId
+            };
+
+            var window = new StringBuilder();
+            window.AppendLine(string.Format("<div id='{0}' class=\"modal fade\"  tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"{0}-title\">", modalId));
+            window.AppendLine(helper.Partial("Confirm", actionConfirmationModel).ToHtmlString());
+            window.AppendLine("</div>");
+
+            window.AppendLine("<script>");
+            window.AppendLine("$(document).ready(function() {");
+            window.AppendLine(string.Format("$('#{0}').attr(\"data-toggle\", \"modal\").attr(\"data-target\", \"#{1}\");", buttonId, modalId));
+            window.AppendLine(string.Format("$('#{0}-submit-button').attr(\"name\", $(\"#{1}\").attr(\"name\"));", modalId, buttonId));
+            window.AppendLine(string.Format("$(\"#{0}\").attr(\"name\", \"\")", buttonId));
+            window.AppendLine(string.Format("if($(\"#{0}\").attr(\"type\") == \"submit\")$(\"#{0}\").attr(\"type\", \"button\")", buttonId));
+            window.AppendLine("});");
+            window.AppendLine("</script>");
+
+            return MvcHtmlString.Create(window.ToString());
+        }
+
         public static MvcHtmlString OverrideStoreCheckboxFor<TModel, TValue>(this HtmlHelper<TModel> helper,
             Expression<Func<TModel, bool>> expression,
             Expression<Func<TModel, TValue>> forInputExpression,

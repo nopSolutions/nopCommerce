@@ -23,8 +23,15 @@
                         <div class="col-md-4">
                             <div class="panel-group">
                                 <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.CommonInfo")
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.CommonInfo")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
@@ -34,15 +41,6 @@
                                             <div class="col-md-2">
                                                 @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Id)
                                                 @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Id)
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-md-10">
-                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Published)
-                                            </div>
-                                            <div class="col-md-2">
-                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Published)
-                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Published)
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -70,6 +68,15 @@
                                             <div class="col-md-2">
                                                 @Html.NopEditorFor(model => model.ProductEditorSettingsModel.VisibleIndividually)
                                                 @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.VisibleIndividually)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Published)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Published)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Published)
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -200,45 +207,75 @@
                                         </div>
                                     </div>
                                 </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading clearfix">
+                                    <div class="form-group">
+                                        <div class="col-md-10">
+                                            @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.AdvancedProductTypes")
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input type="checkbox" class="select-all-fields"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="col-md-10">
+                                            @Html.NopLabelFor(model => model.ProductEditorSettingsModel.IsGiftCard)
+                                        </div>
+                                        <div class="col-md-2">
+                                            @Html.NopEditorFor(model => model.ProductEditorSettingsModel.IsGiftCard)
+                                            @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.IsGiftCard)
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-10">
+                                            @Html.NopLabelFor(model => model.ProductEditorSettingsModel.DownloadableProduct)
+                                        </div>
+                                        <div class="col-md-2">
+                                            @Html.NopEditorFor(model => model.ProductEditorSettingsModel.DownloadableProduct)
+                                            @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.DownloadableProduct)
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-10">
+                                            @Html.NopLabelFor(model => model.ProductEditorSettingsModel.RecurringProduct)
+                                        </div>
+                                        <div class="col-md-2">
+                                            @Html.NopEditorFor(model => model.ProductEditorSettingsModel.RecurringProduct)
+                                            @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.RecurringProduct)
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-10">
+                                            @Html.NopLabelFor(model => model.ProductEditorSettingsModel.IsRental)
+                                        </div>
+                                        <div class="col-md-2">
+                                            @Html.NopEditorFor(model => model.ProductEditorSettingsModel.IsRental)
+                                            @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.IsRental)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                                 <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.AdvancedProductTypes")
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.OneColumnProductPage")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
                                             <div class="col-md-10">
-                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.IsGiftCard)
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.OneColumnProductPage)
                                             </div>
                                             <div class="col-md-2">
-                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.IsGiftCard)
-                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.IsGiftCard)
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-md-10">
-                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.DownloadableProduct)
-                                            </div>
-                                            <div class="col-md-2">
-                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.DownloadableProduct)
-                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.DownloadableProduct)
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-md-10">
-                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.RecurringProduct)
-                                            </div>
-                                            <div class="col-md-2">
-                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.RecurringProduct)
-                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.RecurringProduct)
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-md-10">
-                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.IsRental)
-                                            </div>
-                                            <div class="col-md-2">
-                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.IsRental)
-                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.IsRental)
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.OneColumnProductPage)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.OneColumnProductPage)
                                             </div>
                                         </div>
                                     </div>
@@ -248,8 +285,15 @@
                         <div class="col-md-4">
                             <div class="panel-group">
                                 <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Price")
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Price")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
@@ -369,13 +413,6 @@
                                                 @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.PAngV)
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Tax")
-                                    </div>
-                                    <div class="panel-body">
                                         <div class="form-group">
                                             <div class="col-md-10">
                                                 @Html.NopLabelFor(model => model.ProductEditorSettingsModel.TelecommunicationsBroadcastingElectronicServices)
@@ -388,8 +425,15 @@
                                     </div>
                                 </div>
                                 <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Shipping")
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Shipping")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
@@ -431,8 +475,15 @@
                                     </div>
                                 </div>
                                 <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Mappings")
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Mappings")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
@@ -460,8 +511,15 @@
                         <div class="col-md-4">
                             <div class="panel-group">
                                 <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Inventory")
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Inventory")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
@@ -593,8 +651,15 @@
                                     </div>
                                 </div>
                                 <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Security")
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Security")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
@@ -609,8 +674,15 @@
                                     </div>
                                 </div>
                                 <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.LinkedProducts")
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.LinkedProducts")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
@@ -643,8 +715,15 @@
                                     </div>
                                 </div>
                                 <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Tabs")
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Tabs")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
@@ -676,6 +755,20 @@
                         </div>
                     </div>
                 }
+                <script>
+                    $(document).ready(function () {
+                        $('input[type=checkbox].select-all-fields').each(function (index, value) {
+                            if ($('input[type=checkbox]:checked', $(this).closest('.panel')).length > 0) {
+                                $(this).attr('checked', true);
+                            }
+                        });
+
+
+                        $('input[type=checkbox].select-all-fields').on('click', function () {
+                            $('input[type=checkbox]', $(this).closest('.panel')).attr('checked', $(this).is(':checked'));
+                        });
+                    });
+                </script>
             </div>
         </div>
     </div>

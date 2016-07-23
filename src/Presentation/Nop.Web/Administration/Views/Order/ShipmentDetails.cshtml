@@ -151,9 +151,12 @@
                                             <button type="submit" onclick="toggleShippedDate(true);return false;" id="btnEditShippedDate" class="btn btn-primary">
                                                 @T("Admin.Common.Edit")
                                             </button>
-                                            <button type="submit" id="btnSaveShippedDate" name="saveshippeddate" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+
+                                            <button type="submit" id="btnSaveShippedDate" name="saveshippeddate" class="btn btn-primary">
                                                 @T("Admin.Common.Save")
                                             </button>
+                                            @Html.ActionConfirmation("btnSaveShippedDate")
+
                                             <button type="submit" onclick="toggleShippedDate(false);return false;" id="btnCancelShippedDate" class="btn bg-teal">
                                                 @T("Admin.Common.Cancel")
                                             </button>
@@ -192,9 +195,12 @@
                                             <button type="submit" onclick="toggleDeliveryDate(true);return false;" id="btnEditDeliveryDate" class="btn btn-primary">
                                                 @T("Admin.Common.Edit")
                                             </button>
-                                            <button type="submit" id="btnSaveDeliveryDate" name="savedeliverydate" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+
+                                            <button type="submit" id="btnSaveDeliveryDate" name="savedeliverydate" class="btn btn-primary">
                                                 @T("Admin.Common.Save")
                                             </button>
+                                            @Html.ActionConfirmation("btnSaveDeliveryDate")
+
                                             <button type="submit" onclick="toggleDeliveryDate(false);return false;" id="btnCancelDeliveryDate" class="btn bg-teal">
                                                 @T("Admin.Common.Cancel")
                                             </button>
