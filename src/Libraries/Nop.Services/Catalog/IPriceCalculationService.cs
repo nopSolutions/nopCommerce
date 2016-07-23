@@ -136,17 +136,6 @@ namespace Nop.Services.Catalog
             out List<Discount> appliedDiscounts);
 
         /// <summary>
-        /// Gets the shopping cart item sub total with overriden price
-        /// </summary>
-        /// <param name="updatedShoppingCartItem">The updated shopping cart item</param>
-        /// <param name="price">Overriden price</param>
-        /// <param name="discountAmount">Applied discount amount</param>
-        /// <param name="appliedDiscounts">Applied discounts</param>
-        /// <returns></returns>
-        decimal GetSubTotalWithOverridenPrice(ShoppingCartItem updatedShoppingCartItem, decimal price, 
-            out decimal discountAmount, out List<Discount> appliedDiscounts);
-
-        /// <summary>
         /// Gets the product cost (one item)
         /// </summary>
         /// <param name="product">Product</param>
