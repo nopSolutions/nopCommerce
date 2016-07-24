@@ -158,6 +158,12 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.NotReturnable")]
         public bool NotReturnable { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.Weight")]
+        public bool Weight { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.Dimensions")]
+        public bool Dimensions { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.AvailableStartDate")]
         public bool AvailableStartDate { get; set; }
 

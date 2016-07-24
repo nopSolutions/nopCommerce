@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Linq;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Html;
 using Nop.Core.Infrastructure;
-using Nop.Services.Customers;
 
 namespace Nop.Services.Forums
 {

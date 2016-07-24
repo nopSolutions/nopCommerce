@@ -4574,6 +4574,10 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
+            //vendors cannot manage these settings
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("List");
+            
             var productEditorSettings = _settingService.LoadSetting<ProductEditorSettings>();
             productEditorSettings = model.ProductEditorSettingsModel.ToEntity(productEditorSettings);
             _settingService.SaveSetting(productEditorSettings);

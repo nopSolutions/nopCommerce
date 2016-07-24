@@ -31,7 +31,6 @@ using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
-using Nop.Services.Vendors;
 using Nop.Web.Extensions;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;

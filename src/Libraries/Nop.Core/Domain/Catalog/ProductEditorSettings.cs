@@ -26,7 +26,7 @@ namespace Nop.Core.Domain.Catalog
         public bool ProductTemplate { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether 'Admin comment' is shown
+        /// Gets or sets a value indicating whether 'Admin comment' feild is shown
         /// </summary>
         public bool AdminComment { get; set; }
 
@@ -259,6 +259,17 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether 'Not returnable' field is shown
         /// </summary>
         public bool NotReturnable { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Weight' field is shown
+        /// </summary>
+        public bool Weight { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Dimension' fields (height, length, width) are shown
+        /// </summary>
+        public bool Dimensions { get; set; }
+
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Available start date' field is shown

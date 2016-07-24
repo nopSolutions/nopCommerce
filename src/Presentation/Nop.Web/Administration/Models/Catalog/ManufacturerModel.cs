@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
-using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
