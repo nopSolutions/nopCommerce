@@ -1709,7 +1709,7 @@
                             @Html.ValidationMessageFor(model => model.IsShipEnabled)
                         </div>
                     </div>
-                    <div class="form-group" id="pnlWeight">
+                    <div class="form-group @(Model.ProductEditorSettingsModel.Weight ? null : "advanced-setting")" id="pnlWeight">
                         <div class="@leftColumnClass">
                             @Html.NopLabelFor(model => model.Weight)
                         </div>
@@ -1718,7 +1718,7 @@
                             @Html.ValidationMessageFor(model => model.Weight)
                         </div>
                     </div>
-                    <div class="form-group" id="pnlLength">
+                    <div class="form-group @(Model.ProductEditorSettingsModel.Dimensions ? null : "advanced-setting")" id="pnlLength">
                         <div class="@leftColumnClass">
                             @Html.NopLabelFor(model => model.Length)
                         </div>
@@ -1727,7 +1727,7 @@
                             @Html.ValidationMessageFor(model => model.Length)
                         </div>
                     </div>
-                    <div class="form-group" id="pnlWidth">
+                    <div class="form-group @(Model.ProductEditorSettingsModel.Dimensions ? null : "advanced-setting")" id="pnlWidth">
                         <div class="@leftColumnClass">
                             @Html.NopLabelFor(model => model.Width)
                         </div>
@@ -1736,7 +1736,7 @@
                             @Html.ValidationMessageFor(model => model.Width)
                         </div>
                     </div>
-                    <div class="form-group" id="pnlHeight">
+                    <div class="form-group @(Model.ProductEditorSettingsModel.Dimensions ? null : "advanced-setting")" id="pnlHeight">
                         <div class="@leftColumnClass">
                             @Html.NopLabelFor(model => model.Height)
                         </div>

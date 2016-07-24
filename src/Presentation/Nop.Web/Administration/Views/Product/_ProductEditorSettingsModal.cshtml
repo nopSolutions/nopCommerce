@@ -438,6 +438,24 @@
                                     <div class="panel-body">
                                         <div class="form-group">
                                             <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Weight)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Weight)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Weight)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Dimensions)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Dimensions)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Dimensions)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
                                                 @Html.NopLabelFor(model => model.ProductEditorSettingsModel.FreeShipping)
                                             </div>
                                             <div class="col-md-2">
