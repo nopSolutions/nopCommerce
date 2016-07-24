@@ -1143,6 +1143,9 @@ set @resources='
      <Value></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Manufacturers.NoManufacturersAvailable">
+     <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Manufacturers.NoManufacturersAvailable">
      <Value>No manufacturers available.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.AclCustomerRoles">
