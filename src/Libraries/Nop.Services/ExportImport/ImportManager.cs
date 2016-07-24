@@ -11,7 +11,6 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Catalog;
-using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.ExportImport.Help;
 using Nop.Services.Media;

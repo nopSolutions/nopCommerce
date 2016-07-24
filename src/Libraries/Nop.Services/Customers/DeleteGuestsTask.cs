@@ -1,5 +1,4 @@
 ﻿using System;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Tasks;
 
