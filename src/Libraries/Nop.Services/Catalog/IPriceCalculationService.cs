@@ -135,9 +135,6 @@ namespace Nop.Services.Catalog
             out decimal discountAmount,
             out List<Discount> appliedDiscounts);
 
-
-
-
         /// <summary>
         /// Gets the product cost (one item)
         /// </summary>

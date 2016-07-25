@@ -24,7 +24,12 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a minimum order total amount
         /// </summary>
         public decimal MinOrderTotalAmount { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets a value indicating whether automatically update order totals on editing an order in admin area
+        /// </summary>
+        public bool AutoUpdateOrderTotalsOnEditingOrder { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether anonymous checkout allowed
         /// </summary>

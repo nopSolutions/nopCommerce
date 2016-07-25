@@ -11,7 +11,6 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
-using Nop.Services.Configuration;
 using Nop.Services.ExportImport;
 using Nop.Services.Media;
 using Nop.Services.Messages;

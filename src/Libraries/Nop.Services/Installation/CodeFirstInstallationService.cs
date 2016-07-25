@@ -10,7 +10,6 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
@@ -5755,6 +5754,13 @@ namespace Nop.Services.Installation
                 RichEditorAllowJavaScript = false
             });
 
+
+            settingService.SaveSetting(new ProductEditorSettings
+            {
+                Weight = true,
+                Dimensions = true
+            });
+
             settingService.SaveSetting(new CatalogSettings
             {
                 AllowViewUnpublishedProductPage = true,
@@ -6013,6 +6019,7 @@ namespace Nop.Services.Installation
                 MinOrderSubtotalAmount = 0,
                 MinOrderSubtotalAmountIncludingTax = false,
                 MinOrderTotalAmount = 0,
+                AutoUpdateOrderTotalsOnEditingOrder = false,
                 AnonymousCheckoutAllowed = true,
                 TermsOfServiceOnShoppingCartPage = true,
                 TermsOfServiceOnOrderConfirmPage = false,

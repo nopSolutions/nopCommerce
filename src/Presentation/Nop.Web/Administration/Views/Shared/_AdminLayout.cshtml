@@ -4,10 +4,8 @@
 @using Nop.Core.Domain
 @using Nop.Core.Domain.Common;
 @using Nop.Core.Domain.Localization
-@using Nop.Core.Domain.Media
 @using Nop.Services.Common
 @using Nop.Services.Customers
-@using Nop.Services.Media
 @using Nop.Services.Security;
 @{
     var kendoVersion = "2014.1.318";
@@ -220,9 +218,6 @@
                 </div>
             </div>
             <div class="main-footer clearfix">
-                <div class="text-center">
-                    @(EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(DateTime.Now).ToString("f"))
-                </div>
                 @if (!EngineContext.Current.Resolve<StoreInformationSettings>().HidePoweredByNopCommerce)
                 {
                     @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
@@ -233,6 +228,9 @@
                 }
                 <div class="pull-right hidden-xs">
                     <b>nopCommerce version @NopVersion.CurrentVersion</b>
+                </div>
+                <div class="text-center">
+                    @(EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(DateTime.Now).ToString("f"))
                 </div>
             </div>
         </div>
