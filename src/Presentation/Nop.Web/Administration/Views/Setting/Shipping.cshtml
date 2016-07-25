@@ -199,13 +199,11 @@
                     </script>
                 </div>
                 <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @Html.OverrideStoreCheckboxFor(model => model.ShippingOriginAddress_OverrideForStore, "pnlShippingOriginAddress", Model.ActiveStoreScopeConfiguration)
+                        @T("Admin.Configuration.Settings.Shipping.ShippingOriginAddress")
+                    </div>
                     <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.ShippingOriginAddress_OverrideForStore, "pnlShippingOriginAddress", Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.ShippingOriginAddress)
-                            </div>
-                        </div>
                         <div id="pnlShippingOriginAddress">
                             @Html.EditorFor(x => x.ShippingOriginAddress, "Address")
                         </div>

@@ -345,12 +345,17 @@
                                         <button type="submit" name="btnEditOrderItem@(item.Id)" onclick="toggleOrderItemEdit@(item.Id)(true);return false;" id="btnEditOrderItem@(item.Id)" class="btn btn-sm btn-primary">
                                             @T("Admin.Common.Edit")
                                         </button>
-                                        <button type="submit" name="btnDeleteOrderItem@(item.Id)" id="btnDeleteOrderItem@(item.Id)" class="btn btn-sm bg-red" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+
+                                        <button type="submit" name="btnDeleteOrderItem@(item.Id)" id="btnDeleteOrderItem@(item.Id)" class="btn btn-sm bg-red">
                                             @T("Admin.Common.Delete")
                                         </button>
-                                        <button type="submit" name="btnSaveOrderItem@(item.Id)" id="btnSaveOrderItem@(item.Id)" class="btn btn-sm btn-primary" style="display: none;" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+                                        @Html.ActionConfirmation("btnDeleteOrderItem" + item.Id)
+
+                                        <button type="submit" name="btnSaveOrderItem@(item.Id)" id="btnSaveOrderItem@(item.Id)" class="btn btn-sm btn-primary" style="display: none;">
                                             @T("Admin.Common.Save")
                                         </button>
+                                        @Html.ActionConfirmation("btnSaveOrderItem" + item.Id)
+
                                         <button type="submit" name="btnCancelOrderItem@(item.Id)" onclick="toggleOrderItemEdit@(item.Id)(false);return false;" id="btnCancelOrderItem@(item.Id)" class="btn btn-sm bg-teal" style="display: none;">
                                             @T("Admin.Common.Cancel")
                                         </button>

@@ -41,6 +41,10 @@ namespace Nop.Web.Models.Catalog
             public string OldPrice { get; set; }
             public string Price { get; set; }
             public decimal PriceValue { get; set; }
+            /// <summary>
+            /// PAngV baseprice (used in Germany)
+            /// </summary>
+            public string BasePricePAngV { get; set; }
 
             public bool DisableBuyButton { get; set; }
             public bool DisableWishlistButton { get; set; }

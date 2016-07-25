@@ -23,7 +23,7 @@ namespace Nop.Admin.Controllers
     {
         #region Fields
         private readonly IStoreContext _storeContext;
-        private readonly CommonSettings _commonSettings;
+        private readonly AdminAreaSettings _adminAreaSettings;
         private readonly ISettingService _settingService;
         private readonly IPermissionService _permissionService;
         private readonly IProductService _productService;
@@ -37,8 +37,8 @@ namespace Nop.Admin.Controllers
 
         #region Ctor
 
-        public HomeController(IStoreContext storeContext, 
-            CommonSettings commonSettings, 
+        public HomeController(IStoreContext storeContext,
+            AdminAreaSettings adminAreaSettings, 
             ISettingService settingService,
             IPermissionService permissionService,
             IProductService productService,
@@ -49,7 +49,7 @@ namespace Nop.Admin.Controllers
             ICacheManager cacheManager)
         {
             this._storeContext = storeContext;
-            this._commonSettings = commonSettings;
+            this._adminAreaSettings = adminAreaSettings;
             this._settingService = settingService;
             this._permissionService = permissionService;
             this._productService = productService;
@@ -78,8 +78,8 @@ namespace Nop.Admin.Controllers
             {
                 string feedUrl = string.Format("http://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}",
                     NopVersion.CurrentVersion, 
-                    Request.Url.IsLoopback, 
-                    _commonSettings.HideAdvertisementsOnAdminArea,
+                    Request.Url.IsLoopback,
+                    _adminAreaSettings.HideAdvertisementsOnAdminArea,
                     _storeContext.CurrentStore.Url)
                     .ToLowerInvariant();
 
@@ -97,7 +97,7 @@ namespace Nop.Admin.Controllers
                 
                 var model = new NopCommerceNewsModel()
                 {
-                    HideAdvertisements = _commonSettings.HideAdvertisementsOnAdminArea
+                    HideAdvertisements = _adminAreaSettings.HideAdvertisementsOnAdminArea
                 };
                 for (int i = 0; i < rssData.Items.Count(); i++)
                 {
@@ -114,11 +114,11 @@ namespace Nop.Admin.Controllers
                     //has new items?
                     if (i == 0)
                     {
-                        var firstRequest = String.IsNullOrEmpty(_commonSettings.LastNewsTitleAdminArea);
-                        if (_commonSettings.LastNewsTitleAdminArea != newsItem.Title)
+                        var firstRequest = String.IsNullOrEmpty(_adminAreaSettings.LastNewsTitleAdminArea);
+                        if (_adminAreaSettings.LastNewsTitleAdminArea != newsItem.Title)
                         {
-                            _commonSettings.LastNewsTitleAdminArea = newsItem.Title;
-                            _settingService.SaveSetting(_commonSettings);
+                            _adminAreaSettings.LastNewsTitleAdminArea = newsItem.Title;
+                            _settingService.SaveSetting(_adminAreaSettings);
 
                             if (!firstRequest)
                             {
@@ -139,8 +139,8 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult NopCommerceNewsHideAdv()
         {
-            _commonSettings.HideAdvertisementsOnAdminArea = !_commonSettings.HideAdvertisementsOnAdminArea;
-            _settingService.SaveSetting(_commonSettings);
+            _adminAreaSettings.HideAdvertisementsOnAdminArea = !_adminAreaSettings.HideAdvertisementsOnAdminArea;
+            _settingService.SaveSetting(_adminAreaSettings);
             return Content("Setting changed");
         }
 

@@ -10,6 +10,17 @@
             It is a Dictionary implementation that allows you to change the Key (the RowID, ColumnID or CellID )
             </summary>
         </member>
+        <member name="M:CellStore`1.SetRangeValueSpecial(System.Int32,System.Int32,System.Int32,System.Int32,CellStore{`0}.SetRangeValueDelegate,System.Object)">
+            <summary>
+            Set Value for Range
+            </summary>
+            <param name="fromRow"></param>
+            <param name="fromColumn"></param>
+            <param name="toRow"></param>
+            <param name="toColumn"></param>
+            <param name="Updater"></param>
+            <param name="Value"></param>
+        </member>
         <member name="M:CellStore`1.DeleteCells(PageIndex,System.Int32,System.Int32,System.Boolean)">
             
         </member>
@@ -5475,6 +5486,11 @@
             Markerstyle
             </summary>
         </member>
+        <member name="T:OfficeOpenXml.Drawing.Chart.eTimeUnit">
+            <summary>
+            The time unit of major and minor datetime axis values
+            </summary>
+        </member>
         <member name="T:OfficeOpenXml.Drawing.Chart.eChartStyle">
             <summary>
             The build in style of the chart.
@@ -6083,6 +6099,11 @@
             Type, pie or bar
             </summary>
         </member>
+        <member name="P:OfficeOpenXml.Drawing.Chart.ExcelOfPieChart.GapWidth">
+            <summary>
+            The size of the gap between two adjacent bars/columns
+            </summary>
+        </member>
         <member name="T:OfficeOpenXml.Drawing.Chart.ExcelPieChartSerie">
             <summary>
             A serie for a pie chart
@@ -6125,6 +6146,11 @@
         <member name="P:OfficeOpenXml.Drawing.Chart.ExcelBarChart.DataLabel">
             <summary>
             Access to datalabel properties
+            </summary>
+        </member>
+        <member name="P:OfficeOpenXml.Drawing.Chart.ExcelBarChart.GapWidth">
+            <summary>
+            The size of the gap between two adjacent bars/columns
             </summary>
         </member>
         <member name="T:OfficeOpenXml.Drawing.Chart.eAxisPosition">
@@ -6333,9 +6359,21 @@
             Null is automatic
             </summary>
         </member>
+        <member name="P:OfficeOpenXml.Drawing.Chart.ExcelChartAxis.MajorTimeUnit">
+            <summary>
+            Major time unit for the axis.
+            Null is automatic
+            </summary>
+        </member>
         <member name="P:OfficeOpenXml.Drawing.Chart.ExcelChartAxis.MinorUnit">
             <summary>
             Minor unit for the axis.
+            Null is automatic
+            </summary>
+        </member>
+        <member name="P:OfficeOpenXml.Drawing.Chart.ExcelChartAxis.MinorTimeUnit">
+            <summary>
+            Minor time unit for the axis.
             Null is automatic
             </summary>
         </member>
@@ -6616,7 +6654,7 @@
             Top Left position
             </summary>
         </member>
-        <member name="P:OfficeOpenXml.Drawing.ExcelDrawing.To">
+        <member name="F:OfficeOpenXml.Drawing.ExcelDrawing._to">
             <summary>
             Bottom right position
             </summary>
@@ -6661,6 +6699,12 @@
             </summary>
             <param name="PixelWidth">Width in pixels</param>
             <param name="PixelHeight">Height in pixels</param>
+        </member>
+        <member name="M:OfficeOpenXml.Drawing.ExcelDrawing.AdjustPositionAndSize">
+            <summary>
+            Will adjust the position and size of the drawing according to chages in font of rows and to the Normal style.
+            This method will be called before save, so use it only if you need the coordinates of the drawing.
+            </summary>
         </member>
         <member name="T:OfficeOpenXml.Drawing.ExcelDrawingLineEnd">
             <summary>
@@ -6915,6 +6959,16 @@
         <member name="P:OfficeOpenXml.Drawing.Vml.ExcelVmlDrawingComment.To">
             <summary>
             To position. For comments only when Visible=true.
+            </summary>
+        </member>
+        <member name="P:OfficeOpenXml.Drawing.Vml.ExcelVmlDrawingComment.Row">
+            <summary>
+            Row position for a comment
+            </summary>
+        </member>
+        <member name="P:OfficeOpenXml.Drawing.Vml.ExcelVmlDrawingComment.Column">
+            <summary>
+            Column position for a comment
             </summary>
         </member>
         <member name="T:OfficeOpenXml.Drawing.Vml.ExcelVmlDrawingPosition">
@@ -7588,6 +7642,16 @@
             </summary>
             <param name="password"></param>
         </member>
+        <member name="T:OfficeOpenXml.ExcelRangeCopyOptionFlags">
+            <summary>
+            Flag enum, specify all flags that you want to exclude from the copy.
+            </summary>
+        </member>
+        <member name="F:OfficeOpenXml.ExcelRangeCopyOptionFlags.ExcludeFormulas">
+            <summary>
+            Exclude formulas from being copied
+            </summary>
+        </member>
         <member name="T:OfficeOpenXml.ExcelStyleCollection`1">
             <summary>
             Base collection class for styles.
@@ -8186,7 +8250,7 @@
             <summary>
             Saves all the components back into the package.
             This method recursively calls the Save method on all sub-components.
-            The package is closed after it ha
+            The package is closed after it has ben saved
             d to encrypt the workbook with. 
             </summary>
             <param name="password">This parameter overrides the Workbook.Encryption.Password.</param>
@@ -8226,6 +8290,11 @@
         <member name="P:OfficeOpenXml.ExcelPackage.File">
             <summary>
             The output file. Null if no file is used
+            </summary>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelPackage.CloseStream">
+            <summary>
+            Close the internal stream
             </summary>
         </member>
         <member name="P:OfficeOpenXml.ExcelPackage.Stream">
@@ -8941,11 +9010,16 @@
             This class provides methods for accessing/modifying VBA Functions.
             </summary>
         </member>
+        <member name="P:OfficeOpenXml.FormulaParsing.Excel.Functions.FunctionRepository.CustomCompilers">
+            <summary>
+            Gets a <see cref="T:System.Collections.Generic.Dictionary`2" /> of custom <see cref="T:OfficeOpenXml.FormulaParsing.ExpressionGraph.FunctionCompilers.FunctionCompiler"/>s.
+            </summary>
+        </member>
         <member name="M:OfficeOpenXml.FormulaParsing.Excel.Functions.FunctionRepository.LoadModule(OfficeOpenXml.FormulaParsing.Excel.Functions.IFunctionModule)">
             <summary>
             Loads a module of <see cref="T:OfficeOpenXml.FormulaParsing.Excel.Functions.ExcelFunction"/>s to the function repository.
             </summary>
-            <param name="module">A <see cref="T:OfficeOpenXml.FormulaParsing.Excel.Functions.IFunctionModule"/> that can be used for adding functions</param>
+            <param name="module">A <see cref="T:OfficeOpenXml.FormulaParsing.Excel.Functions.IFunctionModule"/> that can be used for adding functions and custom function compilers.</param>
         </member>
         <member name="M:OfficeOpenXml.FormulaParsing.Excel.Functions.FunctionRepository.Clear">
             <summary>
@@ -8976,6 +9050,20 @@
             Base class 
             </summary>
         </member>
+        <member name="P:OfficeOpenXml.FormulaParsing.Excel.Functions.FunctionsModule.Functions">
+            <summary>
+            Gets a dictionary of custom function implementations.
+            </summary>
+        </member>
+        <member name="P:OfficeOpenXml.FormulaParsing.Excel.Functions.FunctionsModule.CustomCompilers">
+            <summary>
+            Gets a dictionary of custom function compilers. A function compiler is not 
+            necessary for a custom function, unless the default expression evaluation is not
+            sufficient for the implementation of the custom function. When a FunctionCompiler instance
+            is created, it should be given a reference to the same function instance that exists
+            in the Functions collection of this module.
+            </summary>
+        </member>
         <member name="T:OfficeOpenXml.FormulaParsing.Excel.Functions.HiddenValuesHandlingFunction">
             <summary>
             Base class for functions that needs to handle cells that is not visible.
@@ -8984,6 +9072,20 @@
         <member name="P:OfficeOpenXml.FormulaParsing.Excel.Functions.HiddenValuesHandlingFunction.IgnoreHiddenValues">
             <summary>
             Set to true or false to indicate whether the function should ignore hidden values.
+            </summary>
+        </member>
+        <member name="P:OfficeOpenXml.FormulaParsing.Excel.Functions.IFunctionModule.Functions">
+            <summary>
+            Gets a dictionary of custom function implementations.
+            </summary>
+        </member>
+        <member name="P:OfficeOpenXml.FormulaParsing.Excel.Functions.IFunctionModule.CustomCompilers">
+            <summary>
+            Gets a dictionary of custom function compilers. A function compiler is not 
+            necessary for a custom function, unless the default expression evaluation is not
+            sufficient for the implementation of the custom function. When a FunctionCompiler instance
+            is created, it should be given a reference to the same function instance that exists
+            in the Functions collection of this module.
             </summary>
         </member>
         <member name="T:OfficeOpenXml.FormulaParsing.Excel.Functions.Math.MathHelper">
@@ -9002,6 +9104,11 @@
         <member name="P:OfficeOpenXml.FormulaParsing.Exceptions.ExcelErrorValueException.ErrorValue">
             <summary>
             The error value
+            </summary>
+        </member>
+        <member name="P:OfficeOpenXml.FormulaParsing.ExpressionGraph.ExcelAddressExpression.ResolveAsRange">
+            <summary>
+            Gets or sets a value that indicates whether or not to resolve directly to an <see cref="T:OfficeOpenXml.FormulaParsing.ExcelDataProvider.IRangeInfo"/>
             </summary>
         </member>
         <member name="T:OfficeOpenXml.FormulaParsing.ExpressionGraph.FunctionCompilers.IfFunctionCompiler">
@@ -9048,12 +9155,24 @@
             <param name="functionName"></param>
             <param name="functionImpl"></param>
         </member>
+        <member name="M:OfficeOpenXml.FormulaParsing.FormulaParserManager.CopyFunctionsFrom(OfficeOpenXml.ExcelWorkbook)">
+            <summary>
+            Copies existing <see cref="T:OfficeOpenXml.FormulaParsing.Excel.Functions.ExcelFunction"/>´s from one workbook to another.
+            </summary>
+            <param name="otherWorkbook">The workbook containing the forumulas to be copied.</param>
+        </member>
         <member name="M:OfficeOpenXml.FormulaParsing.FormulaParserManager.GetImplementedFunctionNames">
             <summary>
-            Returns an enumeration of all functions implemented, both the built in functions
+            Returns an enumeration of the names of all functions implemented, both the built in functions
             and functions added using the LoadFunctionModule method of this class.
             </summary>
             <returns>Function names in lower case</returns>
+        </member>
+        <member name="M:OfficeOpenXml.FormulaParsing.FormulaParserManager.GetImplementedFunctions">
+            <summary>
+            Returns an enumeration of all implemented functions, including the implementing <see cref="T:OfficeOpenXml.FormulaParsing.Excel.Functions.ExcelFunction"/> instance.
+            </summary>
+            <returns>An enumeration of <see cref="T:System.Collections.Generic.KeyValuePair`2"/>, where the key is the function name</returns>
         </member>
         <member name="M:OfficeOpenXml.FormulaParsing.FormulaParserManager.Parse(System.String)">
             <summary>
@@ -26264,12 +26383,37 @@
             Check the size and double the size if out of bound
             </summary>
         </member>
-        <member name="M:OfficeOpenXml.Utils.ConvertUtil.GetValueDouble(System.Object,System.Boolean)">
+        <member name="M:OfficeOpenXml.Utils.ConvertUtil.TryParseNumericString(System.Object,System.Double@)">
+            <summary>
+            Tries to parse a double from the specified <paramref name="candidate"/> which is expected to be a string value.
+            </summary>
+            <param name="candidate">The string value.</param>
+            <param name="result">The double value parsed from the specified <paramref name="candidate"/>.</param>
+            <returns>True if <paramref name="candidate"/> could be parsed to a double; otherwise, false.</returns>
+        </member>
+        <member name="M:OfficeOpenXml.Utils.ConvertUtil.TryParseBooleanString(System.Object,System.Boolean@)">
+            <summary>
+            Tries to parse a boolean value from the specificed <paramref name="candidate"/>.
+            </summary>
+            <param name="candidate">The value to check for boolean-ness.</param>
+            <param name="result">The boolean value parsed from the specified <paramref name="candidate"/>.</param>
+            <returns>True if <paramref name="candidate"/> could be parsed </returns>
+        </member>
+        <member name="M:OfficeOpenXml.Utils.ConvertUtil.TryParseDateString(System.Object,System.DateTime@)">
+            <summary>
+            Tries to parse a <see cref="T:System.DateTime"/> from the specified <paramref name="candidate"/> which is expected to be a string value.
+            </summary>
+            <param name="candidate">The string value.</param>
+            <param name="result">The double value parsed from the specified <paramref name="candidate"/>.</param>
+            <returns>True if <paramref name="candidate"/> could be parsed to a double; otherwise, false.</returns>
+        </member>
+        <member name="M:OfficeOpenXml.Utils.ConvertUtil.GetValueDouble(System.Object,System.Boolean,System.Boolean)">
             <summary>
             Convert an object value to a double 
             </summary>
             <param name="v"></param>
             <param name="ignoreBool"></param>
+            <param name="retNaN">Return NaN if invalid double otherwise 0</param>
             <returns></returns>
         </member>
         <member name="M:OfficeOpenXml.Utils.ConvertUtil.ExcelEscapeString(System.String)">
@@ -26919,12 +27063,15 @@
         </member>
         <member name="P:OfficeOpenXml.ExcelWorksheetView.ActiveCell">
             <summary>
-            The active cell.
+            The active cell. Single Cell address.                
+            This cell must be inside the selected range. If not, the selected range is set to the active cell address
             </summary>
         </member>
         <member name="P:OfficeOpenXml.ExcelWorksheetView.SelectedRange">
             <summary>
-            Selected Cells in the worksheet.Used in combination with ActiveCell
+            Selected Cells in the worksheet. Used in combination with ActiveCell.
+            If the active cell is not inside the selected range, the active cell will be set to the first cell in the selected range.
+            If the selected range has multiple adresses, these are separated with space. If the active cell is not within the first address in this list, the attribute ActiveCellId must be set (not supported, so it must be set via the XML).
             </summary>
         </member>
         <member name="P:OfficeOpenXml.ExcelWorksheetView.TabSelected">
@@ -27278,6 +27425,11 @@
             Hide formulas when sheet is protected
             </summary>
         </member>
+        <member name="P:OfficeOpenXml.Style.XmlAccess.ExcelXfs.QuotePrefix">
+            <summary>
+            Prefix the formula with a quote.
+            </summary>
+        </member>
         <member name="P:OfficeOpenXml.Style.XmlAccess.ExcelXfs.ReadingOrder">
             <summary>
             Readingorder
@@ -27591,6 +27743,12 @@
             </summary>
             <param name="color">The color</param>
         </member>
+        <member name="M:OfficeOpenXml.Style.ExcelColor.LookupColor">
+            <summary>
+            Return the RGB value for the Indexed or Tint property
+            </summary>
+            <returns>The RGB color starting with a #</returns>
+        </member>
         <member name="M:OfficeOpenXml.Style.ExcelColor.LookupColor(OfficeOpenXml.Style.ExcelColor)">
             <summary>
             Return the RGB value for the color object that uses the Indexed or Tint property
@@ -27702,6 +27860,14 @@
             <param name="Text">The text to add</param>
             <returns></returns>
         </member>
+        <member name="M:OfficeOpenXml.Style.ExcelRichTextCollection.Insert(System.Int32,System.String)">
+            <summary>
+            Insert a rich text string at the specified index.
+            </summary>
+            <param name="index">The zero-based index at which rich text should be inserted.</param>
+            <param name="text">The text to insert.</param>
+            <returns></returns>
+        </member>
         <member name="M:OfficeOpenXml.Style.ExcelRichTextCollection.Clear">
             <summary>
             Clear the collection
@@ -27794,6 +27960,11 @@
             <summary>
             If true the formula is hidden when the sheet is protected.
             <seealso cref="P:OfficeOpenXml.ExcelWorksheet.Protection"/>
+            </summary>
+        </member>
+        <member name="P:OfficeOpenXml.Style.ExcelStyle.QuotePrefix">
+            <summary>
+            If true the cell has a quote prefix, which indicates the value of the cell is prefixed with a single quote.
             </summary>
         </member>
         <member name="P:OfficeOpenXml.Style.ExcelStyle.XfId">
@@ -29043,6 +29214,20 @@
             Gets/sets the modified property of the document (core property)
             </summary>
         </member>
+        <member name="M:OfficeOpenXml.OfficeProperties.GetExtendedPropertyValue(System.String)">
+            <summary>
+            Get the value of an extended property 
+            </summary>
+            <param name="propertyName">The name of the property</param>
+            <returns>The value</returns>
+        </member>
+        <member name="M:OfficeOpenXml.OfficeProperties.SetExtendedPropertyValue(System.String,System.String)">
+            <summary>
+            Set the value for an extended property
+            </summary>
+            <param name="propertyName">The name of the property</param>
+            <param name="value">The value</param>
+        </member>
         <member name="P:OfficeOpenXml.OfficeProperties.CustomPropertiesXml">
             <summary>
             Provides access to the XML document which holds the document's custom properties
@@ -29240,6 +29425,11 @@
             The worksheet is hidden and cannot be shown by the user via the user interface
             </summary>
         </member>
+        <member name="T:OfficeOpenXml.ExcelCoreValue">
+            <summary>
+            For Cell value structure (for memory optimization of huge sheet)
+            </summary>
+        </member>
         <member name="T:OfficeOpenXml.ExcelChartsheet">
             <summary>
             Represents an Excel Chartsheet and provides access to its properties and methods
@@ -29329,9 +29519,15 @@
             Get/set the default height of all rows in the worksheet
             </summary>
         </member>
+        <member name="P:OfficeOpenXml.ExcelWorksheet.CustomHeight">
+            <summary>
+            'True' if defaultRowHeight value has been manually set, or is different from the default value.
+            Is automaticlly set to 'True' when assigning the DefaultRowHeight property
+            </summary>
+        </member>
         <member name="P:OfficeOpenXml.ExcelWorksheet.DefaultColWidth">
             <summary>
-            Get/set the default width of all rows in the worksheet
+            Get/set the default width of all columns in the worksheet
             </summary>
         </member>
         <member name="F:OfficeOpenXml.ExcelWorksheet.outLineSummaryBelowPath">
@@ -29755,6 +29951,82 @@
             </summary>
             <param name="column"></param>
             <returns></returns>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelWorksheet.GetValueInner(System.Int32,System.Int32)">
+            <summary>
+            Get accessor of sheet value
+            </summary>
+            <param name="row">row</param>
+            <param name="col">column</param>
+            <returns>cell value</returns>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelWorksheet.GetStyleInner(System.Int32,System.Int32)">
+            <summary>
+            Get accessor of sheet styleId
+            </summary>
+            <param name="row">row</param>
+            <param name="col">column</param>
+            <returns>cell styleId</returns>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelWorksheet.SetValueInner(System.Int32,System.Int32,System.Object)">
+            <summary>
+            Set accessor of sheet value
+            </summary>
+            <param name="row">row</param>
+            <param name="col">column</param>
+            <param name="value">value</param>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelWorksheet.SetStyleInner(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Set accessor of sheet styleId
+            </summary>
+            <param name="row">row</param>
+            <param name="col">column</param>
+            <param name="styleId">styleId</param>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelWorksheet.SetRangeValueInner(System.Int32,System.Int32,System.Int32,System.Int32,System.Object[0:,0:])">
+            <summary>
+            Bulk(Range) set accessor of sheet value, for value array
+            </summary>
+            <param name="fromRow">start row</param>
+            <param name="fromColumn">start column</param>
+            <param name="toRow">end row</param>
+            <param name="toColumn">end column</param>
+            <param name="values">set values</param>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelWorksheet.ExistsValueInner(System.Int32,System.Int32)">
+            <summary>
+            Existance check of sheet value
+            </summary>
+            <param name="row">row</param>
+            <param name="col">column</param>
+            <returns>is exists</returns>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelWorksheet.ExistsStyleInner(System.Int32,System.Int32)">
+            <summary>
+            Existance check of sheet styleId
+            </summary>
+            <param name="row">row</param>
+            <param name="col">column</param>
+            <returns>is exists</returns>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelWorksheet.ExistsValueInner(System.Int32,System.Int32,System.Object@)">
+            <summary>
+            Existance check of sheet value
+            </summary>
+            <param name="row">row</param>
+            <param name="col">column</param>
+            <param name="value"></param>
+            <returns>is exists</returns>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelWorksheet.ExistsStyleInner(System.Int32,System.Int32,System.Int32@)">
+            <summary>
+            Existance check of sheet styleId
+            </summary>
+            <param name="row">row</param>
+            <param name="col">column</param>
+            <param name="styleId"></param>
+            <returns>is exists</returns>
         </member>
         <member name="T:OfficeOpenXml.ExcelWorksheets">
             <summary>
@@ -30188,6 +30460,11 @@
             Richtext collection
             </summary>
         </member>
+        <member name="P:OfficeOpenXml.ExcelComment.Reference">
+            <summary>
+            Reference
+            </summary>
+        </member>
         <member name="T:OfficeOpenXml.ExcelCommentCollection">
             <summary>
             Collection of Excelcomment objects
@@ -30236,6 +30513,24 @@
             Removes the comment
             </summary>
             <param name="comment">The comment to remove</param>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelCommentCollection.Delete(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Shifts all comments based on their address and the location of inserted rows and columns.
+            </summary>
+            <param name="fromRow">The start row.</param>
+            <param name="fromCol">The start column.</param>
+            <param name="rows">The number of rows to insert.</param>
+            <param name="columns">The number of columns to insert.</param>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelCommentCollection.Insert(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Shifts all comments based on their address and the location of inserted rows and columns.
+            </summary>
+            <param name="fromRow">The start row.</param>
+            <param name="fromCol">The start column.</param>
+            <param name="rows">The number of rows to insert.</param>
+            <param name="columns">The number of columns to insert.</param>
         </member>
         <member name="M:OfficeOpenXml.ExcelCommentCollection.RemoveAt(System.Int32)">
             <summary>
@@ -30556,19 +30851,30 @@
             <param name="cellAddress">The alphanumeric cell address</param>
             <returns>True if the cell address is valid</returns>
         </member>
-        <member name="M:OfficeOpenXml.ExcelCellBase.UpdateFormulaReferences(System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+        <member name="M:OfficeOpenXml.ExcelCellBase.UpdateFormulaReferences(System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.String,System.String,System.Boolean)">
             <summary>
             Updates the Excel formula so that all the cellAddresses are incremented by the row and column increments
             if they fall after the afterRow and afterColumn.
             Supports inserting rows and columns into existing templates.
             </summary>
-            <param name="Formula">The Excel formula</param>
+            <param name="formula">The Excel formula</param>
             <param name="rowIncrement">The amount to increment the cell reference by</param>
             <param name="colIncrement">The amount to increment the cell reference by</param>
             <param name="afterRow">Only change rows after this row</param>
             <param name="afterColumn">Only change columns after this column</param>
+            <param name="currentSheet">The sheet that contains the formula currently being processed.</param>
+            <param name="modifiedSheet">The sheet where cells are being inserted or deleted.</param>
             <param name="setFixed">Fixed address</param>
-            <returns></returns>
+            <returns>The updated version of the <paramref name="formula"/>.</returns>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelCellBase.UpdateFormulaSheetReferences(System.String,System.String,System.String)">
+            <summary>
+            Updates all the references to a renamed sheet in a formula.
+            </summary>
+            <param name="formula">The formula to updated.</param>
+            <param name="oldSheetName">The old sheet name.</param>
+            <param name="newSheetName">The new sheet name.</param>
+            <returns>The formula with all cross-sheet references updated.</returns>
         </member>
         <member name="T:OfficeOpenXml.ExcelHyperLink">
             <summary>
@@ -31252,31 +31558,40 @@
             Reference to the worksheet
             </summary>
         </member>
-        <member name="M:OfficeOpenXml.ExcelRangeBase.SetUnknown(OfficeOpenXml.ExcelRangeBase._setValue,System.Object)">
+        <member name="M:OfficeOpenXml.ExcelRangeBase.ChangeAddress">
+            <summary>
+            On change address handler
+            </summary>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelRangeBase.SetUnknown(OfficeOpenXml.ExcelRangeBase,OfficeOpenXml.ExcelRangeBase._setValue,System.Object)">
             <summary>
             We dont know the address yet. Set the delegate first time a property is set.
             </summary>
+            <param name="range"></param>
             <param name="valueMethod"></param>
             <param name="value"></param>
         </member>
-        <member name="M:OfficeOpenXml.ExcelRangeBase.SetSingle(OfficeOpenXml.ExcelRangeBase._setValue,System.Object)">
+        <member name="M:OfficeOpenXml.ExcelRangeBase.SetSingle(OfficeOpenXml.ExcelRangeBase,OfficeOpenXml.ExcelRangeBase._setValue,System.Object)">
             <summary>
             Set a single cell
             </summary>
+            <param name="range"></param>
             <param name="valueMethod"></param>
             <param name="value"></param>
         </member>
-        <member name="M:OfficeOpenXml.ExcelRangeBase.SetRange(OfficeOpenXml.ExcelRangeBase._setValue,System.Object)">
+        <member name="M:OfficeOpenXml.ExcelRangeBase.SetRange(OfficeOpenXml.ExcelRangeBase,OfficeOpenXml.ExcelRangeBase._setValue,System.Object)">
             <summary>
             Set a range
             </summary>
+            <param name="range"></param>
             <param name="valueMethod"></param>
             <param name="value"></param>
         </member>
-        <member name="M:OfficeOpenXml.ExcelRangeBase.SetMultiRange(OfficeOpenXml.ExcelRangeBase._setValue,System.Object)">
+        <member name="M:OfficeOpenXml.ExcelRangeBase.SetMultiRange(OfficeOpenXml.ExcelRangeBase,OfficeOpenXml.ExcelRangeBase._setValue,System.Object)">
             <summary>
             Set a multirange (A1:A2,C1:C2)
             </summary>
+            <param name="range"></param>
             <param name="valueMethod"></param>
             <param name="value"></param>
         </member>
@@ -31288,10 +31603,11 @@
             <param name="valueMethod"></param>
             <param name="value"></param>
         </member>
-        <member name="M:OfficeOpenXml.ExcelRangeBase.Set_SharedFormula(System.String,OfficeOpenXml.ExcelAddress,System.Boolean)">
+        <member name="M:OfficeOpenXml.ExcelRangeBase.Set_SharedFormula(OfficeOpenXml.ExcelRangeBase,System.String,OfficeOpenXml.ExcelAddress,System.Boolean)">
             <summary>
             Handles shared formulas
             </summary>
+            <param name="range">The range</param>
             <param name="value">The  formula</param>
             <param name="address">The address of the formula</param>
             <param name="IsArray">If the forumla is an array formula.</param>
@@ -31605,6 +31921,13 @@
             Copies the range of cells to an other range
             </summary>
             <param name="Destination">The start cell where the range will be copied.</param>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelRangeBase.Copy(OfficeOpenXml.ExcelRangeBase,System.Nullable{OfficeOpenXml.ExcelRangeCopyOptionFlags})">
+            <summary>
+            Copies the range of cells to an other range
+            </summary>
+            <param name="Destination">The start cell where the range will be copied.</param>
+            <param name="excelRangeCopyOptionFlags">Cell parts that will not be copied. If Formulas are specified, the formulas will NOT be copied.</param>
         </member>
         <member name="M:OfficeOpenXml.ExcelRangeBase.Clear">
             <summary>

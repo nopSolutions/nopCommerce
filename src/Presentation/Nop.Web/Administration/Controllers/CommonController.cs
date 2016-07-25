@@ -772,8 +772,24 @@ namespace Nop.Admin.Controllers
         [ChildActionOnly]
         public ActionResult MultistoreDisabledWarning()
         {
+            //default setting
+            bool enabled = _catalogSettings.IgnoreStoreLimitations;
+            if (!enabled)
+            {
+                //overridden settings
+                var stores = _storeService.GetAllStores();
+                foreach (var store in stores)
+                {
+                    if (!enabled)
+                    {
+                        var catalogSettings = _settingService.LoadSetting<CatalogSettings>(store.Id);
+                        enabled = catalogSettings.IgnoreStoreLimitations;
+                    }
+                }
+            }
+
             //This setting is disabled. No warnings.
-            if (!_catalogSettings.IgnoreStoreLimitations)
+            if (!enabled)
                 return Content("");
 
             return PartialView();
@@ -782,8 +798,24 @@ namespace Nop.Admin.Controllers
         [ChildActionOnly]
         public ActionResult AclDisabledWarning()
         {
+            //default setting
+            bool enabled = _catalogSettings.IgnoreAcl;
+            if (!enabled)
+            {
+                //overridden settings
+                var stores = _storeService.GetAllStores();
+                foreach (var store in stores)
+                {
+                    if (!enabled)
+                    {
+                        var catalogSettings = _settingService.LoadSetting<CatalogSettings>(store.Id);
+                        enabled = catalogSettings.IgnoreAcl;
+                    }
+                }
+            }
+
             //This setting is disabled. No warnings.
-            if (!_catalogSettings.IgnoreAcl)
+            if (!enabled)
                 return Content("");
 
             return PartialView();

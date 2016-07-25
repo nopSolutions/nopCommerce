@@ -5692,8 +5692,7 @@ namespace Nop.Services.Installation
                 Log404Errors = true,
                 BreadcrumbDelimiter = "/",
                 RenderXuaCompatible = false,
-                XuaCompatibleValue = "IE=edge",
-                DeleteGuestTaskOlderThanMinutes = 1440
+                XuaCompatibleValue = "IE=edge"
             });
 
             settingService.SaveSetting(new SeoSettings
@@ -5885,6 +5884,7 @@ namespace Nop.Services.Installation
                 SuffixDeletedCustomers = false,
                 EnteringEmailTwice = false,
                 RequireRegistrationForDownloadableProducts = false,
+                DeleteGuestTaskOlderThanMinutes = 1440
             });
 
             settingService.SaveSetting(new AddressSettings

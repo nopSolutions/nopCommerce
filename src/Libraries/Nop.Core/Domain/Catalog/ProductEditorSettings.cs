@@ -319,5 +319,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether 'Purchased with orders' tab is shown
         /// </summary>
         public bool PurchasedWithOrders { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether one column is used on the product details page
+        /// </summary>
+        public bool OneColumnProductPage { get; set; }
     }
 }

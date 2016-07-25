@@ -59,19 +59,5 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets ignore words (phrases) to be ignored when logging errors/messages
         /// </summary>
         public List<string> IgnoreLogWordlist { get; set; }
-
-        /// <summary>
-        /// Gets or sets interval (in minutes) with which the Delete Guest Task runs
-        /// </summary>
-        public int DeleteGuestTaskOlderThanMinutes { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether advertisements (news) should be hidden
-        /// </summary>
-        public bool HideAdvertisementsOnAdminArea { get; set; }
-        /// <summary>
-        /// Gets or sets title of last news (admin area)
-        /// </summary>
-        public string LastNewsTitleAdminArea { get; set; }
     }
 }

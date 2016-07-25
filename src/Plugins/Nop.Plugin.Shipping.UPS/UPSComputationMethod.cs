@@ -447,6 +447,9 @@ namespace Nop.Plugin.Shipping.UPS
 
         private string DoRequest(string url, string requestString)
         {
+            //UPS requires TLS 1.2 since May 2016
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
             byte[] bytes = Encoding.ASCII.GetBytes(requestString);
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = WebRequestMethods.Http.Post;

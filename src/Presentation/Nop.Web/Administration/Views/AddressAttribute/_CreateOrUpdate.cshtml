@@ -40,39 +40,35 @@
 @helper TabInfo()
 {
     <div class="panel-group">
-        @(Html.LocalizedEditor<AddressAttributeModel, AddressAttributeLocalizedModel>("addressattribute-localized",
-        @<div class="panel panel-default">
-            <div class="panel-body">
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.Locales[item].Name)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.Locales[item].Name)
-                        @Html.ValidationMessageFor(model => model.Locales[item].Name)
-                    </div>
-                </div>
-                @Html.HiddenFor(model => model.Locales[item].LanguageId)
-            </div>
-        </div>
-    ,
-        @<div class="panel panel-default">
-            <div class="panel-body">
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.Name)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.Name)
-                        @Html.ValidationMessageFor(model => model.Name)
-                    </div>
-                </div>
-            </div>
-        </div>
-    ))
-
         <div class="panel panel-default">
             <div class="panel-body">
+                @(Html.LocalizedEditor<AddressAttributeModel, AddressAttributeLocalizedModel>("addressattribute-localized",
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Locales[item].Name)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Locales[item].Name)
+                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                        </div>
+                    </div>
+                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                </div>
+            ,
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Name)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Name)
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                    </div>
+                </div>
+                      ))
+
                 <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IsRequired)
@@ -90,8 +86,8 @@
                         @{
                             var attributeControlTypes = ((AttributeControlType)Model.AttributeControlTypeId)
                                 .ToSelectList(valuesToExclude:
-                                //these attributes don't support some control types
-                                new[] { (int)AttributeControlType.FileUpload, (int)AttributeControlType.Datepicker, (int)AttributeControlType.ColorSquares, (int)AttributeControlType.ImageSquares });
+                                    //these attributes don't support some control types
+                                    new[] { (int)AttributeControlType.FileUpload, (int)AttributeControlType.Datepicker, (int)AttributeControlType.ColorSquares, (int)AttributeControlType.ImageSquares });
                         }
                         @Html.NopDropDownListFor(model => model.AttributeControlTypeId, attributeControlTypes)
                         @Html.ValidationMessageFor(model => model.AttributeControlTypeId)

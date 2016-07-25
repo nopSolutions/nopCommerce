@@ -31,12 +31,18 @@
                 </div>
             }
         }
+        else
+        {
+            <div class="no-data">
+                @T("Account.CustomerProductReviews.NoRecords")
+            </div>
+        }
     </div>
 </div>
 
 @helper GetReviewRow(CustomerProductReviewModel review)
 {
-int ratingPercent = review.Rating * 20;
+    int ratingPercent = review.Rating * 20;
     <div class="product-review-item">
         <div class="review-item-head">
             <div class="review-title">

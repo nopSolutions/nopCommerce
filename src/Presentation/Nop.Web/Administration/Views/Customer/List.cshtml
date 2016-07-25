@@ -137,7 +137,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                                }
+                                }
+                            </div>
+                            <div class="col-md-7">
                                 @if (Model.CompanyEnabled)
                                 {
                                     <div class="form-group">
@@ -160,8 +162,6 @@
                                         </div>
                                     </div>
                                 }
-                            </div>
-                            <div class="col-md-7">
                                 @if (Model.ZipPostalCodeEnabled)
                                 {
                                     <div class="form-group">
@@ -186,16 +186,27 @@
                                         @Html.NopLabelFor(model => model.SearchCustomerRoleIds)
                                     </div>
                                     <div class="col-md-8">
-                                        @foreach (var customerRole in Model.AvailableCustomerRoles)
-                                        {
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" name="SearchCustomerRoleIds" value="@customerRole.Id"
-                                                           @if (Model.SearchCustomerRoleIds != null && Model.SearchCustomerRoleIds.Contains(customerRole.Id)) { <text> checked="checked" </text>   } />
-                                                    @customerRole.Name
-                                                </label>
-                                            </div>
-                                        }
+                                        @Html.EditorFor(model => model.SearchCustomerRoleIds, new {SelectList = Model.AvailableCustomerRoles})
+                                        <script>
+                                            $(document).ready(function() {
+                                                var rolesIdsInput = $('#@Html.FieldIdFor(model => model.SearchCustomerRoleIds)').data("kendoMultiSelect");
+                                                rolesIdsInput.setOptions({
+                                                    autoClose: false
+                                                });
+
+                                                @if (Model.AvailableCustomerRoles.Count == 0)
+                                                {
+                                                    <text>
+                                                        rolesIdsInput.setOptions({
+                                                            enable: false,
+                                                            placeholder: '@T("Admin.Catalog.Products.CustomerRoles.NoCustomerRolesAvailable")'
+                                                        });
+                                                        rolesIdsInput._placeholder();
+                                                        rolesIdsInput._enable();
+                                                    </text>
+                                                }
+                                            });
+                                        </script>
                                     </div>
                                 </div>
                             </div>
@@ -413,13 +424,8 @@
                             }
 
                             function additionalData() {
-                                var customerRoleIds = [];
-                                $('[name=SearchCustomerRoleIds]:checked').each(function() {
-                                    customerRoleIds.push($(this).val());
-                                });
-
                                 var data = {
-                                    SearchCustomerRoleIds: customerRoleIds.join(","),
+                                    SearchCustomerRoleIds: $('#@Html.FieldIdFor(model => model.SearchCustomerRoleIds)').val(),
                                     SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val(),
                                     SearchUsername: $('#@Html.FieldIdFor(model => model.SearchUsername)').val(),
                                     SearchFirstName: $('#@Html.FieldIdFor(model => model.SearchFirstName)').val(),
