@@ -546,6 +546,13 @@ namespace Nop.Web.Controllers
                         _mediaSettings.CartThumbPictureSize, true, cartItemModel.ProductName);
                 }
 
+                //Do other Items require this one?
+                bool requiredItemDependencies = false;
+                foreach (var item in cart.Where(item => item.Product.ParseRequiredProductIds().Contains(cartItemModel.ProductId)))
+                {
+                    requiredItemDependencies = true;
+                }
+                cartItemModel.HasRequiredItemDependencies = requiredItemDependencies;
                 //item warnings
                 var itemWarnings = _shoppingCartService.GetShoppingCartItemWarnings(
                     _workContext.CurrentCustomer,
