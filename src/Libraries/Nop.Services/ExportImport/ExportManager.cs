@@ -9,7 +9,6 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
@@ -171,12 +170,12 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="product">Product</param>
         /// <returns>List of categories</returns>
-        protected virtual string GetCategoryIds(Product product)
+        protected virtual string GetCategories(Product product)
         {
             string categoryIds = null;
             foreach (var pc in _categoryService.GetProductCategoriesByProductId(product.Id))
             {
-                categoryIds += pc.CategoryId;
+                categoryIds += pc.Category.Name;
                 categoryIds += ";";
             }
             return categoryIds;
@@ -187,12 +186,12 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="product">Product</param>
         /// <returns>List of manufacturer</returns>
-        protected virtual string GetManufacturerIds(Product product)
+        protected virtual string GetManufacturers(Product product)
         {
             string manufacturerIds = null;
             foreach (var pm in _manufacturerService.GetProductManufacturersByProductId(product.Id))
             {
-                manufacturerIds += pm.ManufacturerId;
+                manufacturerIds += pm.Manufacturer.Name;
                 manufacturerIds += ";";
             }
             return manufacturerIds;
@@ -947,8 +946,8 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("Length", p => p.Length, IgnoreExportPoductProperty(p => p.Dimensions)),
                 new PropertyByName<Product>("Width", p => p.Width, IgnoreExportPoductProperty(p => p.Dimensions)),
                 new PropertyByName<Product>("Height", p => p.Height, IgnoreExportPoductProperty(p => p.Dimensions)),
-                new PropertyByName<Product>("CategoryIds", GetCategoryIds),
-                new PropertyByName<Product>("ManufacturerIds", GetManufacturerIds),
+                new PropertyByName<Product>("Categories", GetCategories),
+                new PropertyByName<Product>("Manufacturers", GetManufacturers),
                 new PropertyByName<Product>("Picture1", p => GetPictures(p)[0]),
                 new PropertyByName<Product>("Picture2", p => GetPictures(p)[1]),
                 new PropertyByName<Product>("Picture3", p => GetPictures(p)[2])
