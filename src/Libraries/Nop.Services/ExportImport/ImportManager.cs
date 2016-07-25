@@ -883,6 +883,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Manufacturer>("MetaKeywords"),
                 new PropertyByName<Manufacturer>("MetaDescription"),
                 new PropertyByName<Manufacturer>("MetaTitle"),
+                new PropertyByName<Manufacturer>("SeName"),
                 new PropertyByName<Manufacturer>("Picture"),
                 new PropertyByName<Manufacturer>("PageSize"),
                 new PropertyByName<Manufacturer>("AllowCustomersToSelectPageSize"),
@@ -948,6 +949,10 @@ namespace Nop.Services.ExportImport
                     else
                         _manufacturerService.UpdateManufacturer(manufacturer);
 
+                    //search engine name
+                    var seName = manager.GetProperty("SeName").StringValue;
+                    _urlRecordService.SaveSlug(manufacturer, manufacturer.ValidateSeName(seName, manufacturer.Name, true), 0);
+
                     iRow++;
                 }
             }
@@ -968,6 +973,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Category>("MetaKeywords"),
                 new PropertyByName<Category>("MetaDescription"),
                 new PropertyByName<Category>("MetaTitle"),
+                new PropertyByName<Category>("SeName"),
                 new PropertyByName<Category>("ParentCategoryId"),
                 new PropertyByName<Category>("Picture"),
                 new PropertyByName<Category>("PageSize"),
@@ -1038,6 +1044,10 @@ namespace Nop.Services.ExportImport
                         _categoryService.InsertCategory(category);
                     else
                         _categoryService.UpdateCategory(category);
+
+                    //search engine name
+                    var seName = manager.GetProperty("SeName").StringValue;
+                    _urlRecordService.SaveSlug(category, category.ValidateSeName(seName, category.Name, true), 0);
 
                     iRow++;
                 }
