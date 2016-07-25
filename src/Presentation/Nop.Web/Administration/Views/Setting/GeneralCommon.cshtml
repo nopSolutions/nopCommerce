@@ -83,7 +83,7 @@
                                 @Html.ValidationMessageFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme)
                             </div>
                         </div>
-                        <div class="form-group advanced-setting">
+                        <div class="form-group">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.LogoPictureId_OverrideForStore, "logo-block", Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.StoreInformationSettings.LogoPictureId)
