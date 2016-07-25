@@ -974,6 +974,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DeliveryDate">
      <Value>Delivery date</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Dimensions">
+    <Value>Dimensions</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisableBuyButton">
      <Value>Disable buy button</Value>
   </LocaleResource>
@@ -1112,6 +1115,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Warehouse">
      <Value>Warehouses</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Weight">
+    <Value>Weight</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Prices">
      <Value>Prices</Value>
   </LocaleResource>
@@ -1143,6 +1149,9 @@ set @resources='
      <Value></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Manufacturers.NoManufacturersAvailable">
+     <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Manufacturers.NoManufacturersAvailable">
      <Value>No manufacturers available.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.AclCustomerRoles">
@@ -1230,7 +1239,7 @@ set @resources='
     <Value>No stores available.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Tabs">
-    <Value>Tabs</Value>
+    <Value>Tabs and display options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Seo">
     <Value>SEO</Value>
@@ -4844,5 +4853,21 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.autoupdate
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'ordersettings.autoupdateordertotalsoneditingorder', N'false', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'producteditorsettings.weight')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'producteditorsettings.weight', N'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'producteditorsettings.dimensions')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'producteditorsettings.dimensions', N'true', 0)
 END
 GO

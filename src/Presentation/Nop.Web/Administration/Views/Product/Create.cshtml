@@ -28,6 +28,8 @@
     </div>
     @Html.Partial("_CreateOrUpdate", Model)
 }
-
-@*product editor settings modal*@
-@Html.Partial("_ProductEditorSettingsModal", Model)
+@if (!Model.IsLoggedInAsVendor)
+{
+    //product editor settings modal
+    @Html.Partial("_ProductEditorSettingsModal", Model)
+}
