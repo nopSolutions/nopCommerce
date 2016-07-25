@@ -1239,7 +1239,7 @@ set @resources='
     <Value>No stores available.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Tabs">
-    <Value>Tabs</Value>
+    <Value>Tabs and display options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Seo">
     <Value>SEO</Value>
