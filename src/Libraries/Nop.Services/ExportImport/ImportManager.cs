@@ -314,14 +314,14 @@ namespace Nop.Services.ExportImport
                         new PropertyByName<ExportProductAttribute>("AttributeIsRequired"),
                         new PropertyByName<ExportProductAttribute>("AttributeControlType")
                         {
-                            DropDawnElements = AttributeControlType.TextBox.ToSelectList()
+                            DropDownElements = AttributeControlType.TextBox.ToSelectList(useLocalization: false)
                         },
                         new PropertyByName<ExportProductAttribute>("AttributeDisplayOrder"), 
-                        new PropertyByName<ExportProductAttribute>("ProductAttributeValuesId"),
+                        new PropertyByName<ExportProductAttribute>("ProductAttributeValueId"),
                         new PropertyByName<ExportProductAttribute>("ValueName"),
                         new PropertyByName<ExportProductAttribute>("AttributeValueType")
                         {
-                            DropDawnElements = AttributeValueType.Simple.ToSelectList()
+                            DropDownElements = AttributeValueType.Simple.ToSelectList(useLocalization: false)
                         },
                         new PropertyByName<ExportProductAttribute>("ColorSquaresRgb"),
                         new PropertyByName<ExportProductAttribute>("ImageSquaresPictureId"),
@@ -350,14 +350,14 @@ namespace Nop.Services.ExportImport
                 tempProperty = manager.GetProperty("Manufacturers");
                 var manufacturerCellNum = tempProperty.Return(p => p.PropertyOrderPosition, -1);
 
-                manager.SetSelectList("ProductType", ProductType.SimpleProduct.ToSelectList());
-                manager.SetSelectList("GiftCardType", GiftCardType.Virtual.ToSelectList());
-                manager.SetSelectList("DownloadActivationType", DownloadActivationType.Manually.ToSelectList());
-                manager.SetSelectList("ManageInventoryMethod", ManageInventoryMethod.DontManageStock.ToSelectList());
-                manager.SetSelectList("LowStockActivity", LowStockActivity.Nothing.ToSelectList());
-                manager.SetSelectList("BackorderMode", BackorderMode.NoBackorders.ToSelectList());
-                manager.SetSelectList("RecurringCyclePeriod", RecurringProductCyclePeriod.Days.ToSelectList());
-                manager.SetSelectList("RentalPricePeriod", RentalPricePeriod.Days.ToSelectList());
+                manager.SetSelectList("ProductType", ProductType.SimpleProduct.ToSelectList(useLocalization: false));
+                manager.SetSelectList("GiftCardType", GiftCardType.Virtual.ToSelectList(useLocalization: false));
+                manager.SetSelectList("DownloadActivationType", DownloadActivationType.Manually.ToSelectList(useLocalization: false));
+                manager.SetSelectList("ManageInventoryMethod", ManageInventoryMethod.DontManageStock.ToSelectList(useLocalization: false));
+                manager.SetSelectList("LowStockActivity", LowStockActivity.Nothing.ToSelectList(useLocalization: false));
+                manager.SetSelectList("BackorderMode", BackorderMode.NoBackorders.ToSelectList(useLocalization: false));
+                manager.SetSelectList("RecurringCyclePeriod", RecurringProductCyclePeriod.Days.ToSelectList(useLocalization: false));
+                manager.SetSelectList("RentalPricePeriod", RentalPricePeriod.Days.ToSelectList(useLocalization: false));
 
                 manager.SetSelectList("Vendor", _vendorService.GetAllVendors(showHidden: true).Select(v => v as BaseEntity).ToSelectList(p => (p as Vendor).Return(v => v.Name, String.Empty)));
                 manager.SetSelectList("ProductTemplate", _productTemplateService.GetAllProductTemplates().Select(pt => pt as BaseEntity).ToSelectList(p => (p as ProductTemplate).Return(pt => pt.Name, String.Empty)));
@@ -404,8 +404,7 @@ namespace Nop.Services.ExportImport
                         if (!managerProductAttribute.IsCaption)
                         {
                             var aid = worksheet.Cells[endRow, attributeIdCellNum].Value.Return(Convert.ToInt32, -1);
-                            if (aid > 0)
-                                allAttributeIds.Add(aid);
+                            allAttributeIds.Add(aid);
                         }
 
                         endRow++;
@@ -493,8 +492,8 @@ namespace Nop.Services.ExportImport
 
                             var productAttributeId = managerProductAttribute.GetProperty("AttributeId").IntValue;
                             var attributeControlTypeId = managerProductAttribute.GetProperty("AttributeControlType").IntValue;
-
-                            var productAttributeValuesId = managerProductAttribute.GetProperty("ProductAttributeValuesId").IntValue;
+                            
+                            var productAttributeValueId = managerProductAttribute.GetProperty("ProductAttributeValueId").IntValue;
                             var valueName = managerProductAttribute.GetProperty("ValueName").StringValue;
                             var attributeValueTypeId = managerProductAttribute.GetProperty("AttributeValueType").IntValue;
                             var colorSquaresRgb = managerProductAttribute.GetProperty("ColorSquaresRgb").StringValue;
@@ -511,7 +510,7 @@ namespace Nop.Services.ExportImport
                             var attributeDisplayOrder = managerProductAttribute.GetProperty("AttributeDisplayOrder").IntValue;
 
                             var productAttributeMapping = lastLoadedProduct.ProductAttributeMappings.FirstOrDefault(pam => pam.ProductAttributeId == productAttributeId);
-
+                            
                             if (productAttributeMapping == null)
                             {
                                 //insert mapping
@@ -535,7 +534,7 @@ namespace Nop.Services.ExportImport
                                 _productAttributeService.UpdateProductAttributeMapping(productAttributeMapping);
                             }
 
-                            var pav = _productAttributeService.GetProductAttributeValueById(productAttributeValuesId);
+                            var pav = _productAttributeService.GetProductAttributeValueById(productAttributeValueId);
 
                             var attributeControlType = (AttributeControlType) attributeControlTypeId;
 

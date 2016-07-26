@@ -89,7 +89,7 @@ namespace Nop.Services.ExportImport.Help
                     cell.Value = prop.GetItemText(prop.GetProperty(CurrentObject));
                     validator.AllowBlank = prop.AllowBlank;
 
-                    foreach (var enumItem in prop.GetDropDawnElements())
+                    foreach (var enumItem in prop.GetDropDownElements())
                     {
                         validator.Formula.Values.Add(enumItem);
                     }
@@ -166,7 +166,7 @@ namespace Nop.Services.ExportImport.Help
         {
             var tempProperty = GetProperty(propertyName);
             if (tempProperty != null)
-                tempProperty.DropDawnElements = list;
+                tempProperty.DropDownElements = list;
         }
         
         public bool IsCaption

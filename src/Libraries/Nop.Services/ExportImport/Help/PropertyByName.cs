@@ -159,28 +159,28 @@ namespace Nop.Services.ExportImport.Help
 
         public bool IsDropDownCell
         {
-            get { return DropDawnElements != null; }
+            get { return DropDownElements != null; }
         }
 
-        public string[] GetDropDawnElements()
+        public string[] GetDropDownElements()
         {
-            return DropDawnElements.Select(ev => ev.Text).ToArray();
+            return DropDownElements.Select(ev => ev.Text).ToArray();
         }
 
         public string GetItemText(object id)
         {
-            return DropDawnElements.FirstOrDefault(ev => ev.Value == id.ToString()).Return(ev => ev.Text, String.Empty);
+            return DropDownElements.FirstOrDefault(ev => ev.Value == id.ToString()).Return(ev => ev.Text, String.Empty);
         }
 
         public int GetItemId(object name)
         {
-            return DropDawnElements.FirstOrDefault(ev => ev.Text.Trim() == name.Return(s => s.ToString(), String.Empty).Trim()).Return(ev => Convert.ToInt32(ev.Value), 0);
+            return DropDownElements.FirstOrDefault(ev => ev.Text.Trim() == name.Return(s => s.ToString(), String.Empty).Trim()).Return(ev => Convert.ToInt32(ev.Value), 0);
         }
 
         /// <summary>
         /// Elements for a drop-down cell
         /// </summary>
-        public SelectList DropDawnElements { get; set; }
+        public SelectList DropDownElements { get; set; }
 
         /// <summary>
         /// Indicates whether the cell can contain an empty value. Makes sense only for a drop-down cells

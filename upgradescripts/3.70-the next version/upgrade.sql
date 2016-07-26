@@ -2148,10 +2148,10 @@ set @resources='
     <Value>Check to automatically update order totals on editing an order in admin area. IMPORANT: currently this functionality is in BETA testing status.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductAttributes">
-    <Value>Export/Import products with their attributes</Value>
+    <Value>Export/Import products with attributes</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductAttributes.Hint">
-    <Value>Check if need Export/Import products with their attributes</Value>
+    <Value>Check if products should be exported/imported with product attributes</Value>
   </LocaleResource>
 </Language>
 '
