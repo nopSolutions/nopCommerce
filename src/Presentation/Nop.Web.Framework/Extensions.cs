@@ -18,12 +18,6 @@ namespace Nop.Web.Framework
             return current.Skip((command.Page - 1) * command.PageSize).Take(command.PageSize);
         }
 
-        public static SelectList ToSelectList<TEnum>(this TEnum enumObj, 
-            bool markCurrentAsSelected = true, int[] valuesToExclude = null) where TEnum : struct
-        {
-            return Services.Extensions.ToSelectList(enumObj, markCurrentAsSelected, valuesToExclude, true);
-        }
-
         /// <summary>
         /// Returns a value indicating whether real selection is not possible
         /// </summary>

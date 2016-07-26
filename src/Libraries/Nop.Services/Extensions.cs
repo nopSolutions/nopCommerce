@@ -14,7 +14,7 @@ namespace Nop.Services
     public static class Extensions
     {
         public static SelectList ToSelectList<TEnum>(this TEnum enumObj,
-           bool markCurrentAsSelected = true, int[] valuesToExclude = null, bool useLocalization = false) where TEnum : struct
+           bool markCurrentAsSelected = true, int[] valuesToExclude = null, bool useLocalization = true) where TEnum : struct
         {
             if (!typeof(TEnum).IsEnum) throw new ArgumentException("An Enumeration type is required.", "enumObj");
 

@@ -39,6 +39,7 @@ using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Vendors;
+using Nop.Services;
 using Nop.Services.Configuration;
 
 namespace Nop.Admin.Controllers
