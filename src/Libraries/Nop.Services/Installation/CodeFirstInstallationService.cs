@@ -5830,6 +5830,7 @@ namespace Nop.Services.Installation
                 DefaultManufacturerPageSize = 6,
                 ShowProductReviewsTabOnAccountPage = true,
                 ProductReviewsPageSizeOnAccountPage = 10,
+                ExportImportProductAttributes = true
             });
 
             settingService.SaveSetting(new LocalizationSettings

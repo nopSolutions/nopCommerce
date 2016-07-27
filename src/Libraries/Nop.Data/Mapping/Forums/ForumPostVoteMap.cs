@@ -13,11 +13,6 @@ namespace Nop.Data.Mapping.Forums
                 .WithMany()
                 .HasForeignKey(fpv => fpv.ForumPostId)
                 .WillCascadeOnDelete(true);
-
-            this.HasRequired(fpv => fpv.Customer)
-               .WithMany()
-               .HasForeignKey(fpv => fpv.CustomerId)
-               .WillCascadeOnDelete(false);
         }
     }
 }

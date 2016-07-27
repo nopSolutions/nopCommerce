@@ -762,6 +762,22 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="panel panel-default advanced-setting">
+                    <div class="panel-body">
+
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ExportImportProductAttributes_OverrideForStore, model => model.ExportImportProductAttributes, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ExportImportProductAttributes)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.ExportImportProductAttributes)
+                                @Html.ValidationMessageFor(model => model.ExportImportProductAttributes)
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="panel panel-default advanced-setting">
                     <div class="panel-body">

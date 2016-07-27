@@ -311,8 +311,7 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether to display information about shipping and tax on order details page (used in Germany)
         /// </summary>
         public bool DisplayTaxShippingInfoOrderDetailsPage { get; set; }
-
-
+        
         /// <summary>
         /// Gets or sets the default value to use for Category page size options (for new categories)
         /// </summary>
@@ -339,5 +338,9 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a display order of ProductSortingEnum values 
         /// </summary>
         public Dictionary<int, int> ProductSortingEnumDisplayOrder { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether the products need to be exported/imported with their attributes
+        /// </summary>
+        public bool ExportImportProductAttributes { get; set; }
     }
 }

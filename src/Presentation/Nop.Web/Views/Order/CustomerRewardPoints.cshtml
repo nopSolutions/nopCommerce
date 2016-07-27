@@ -32,59 +32,59 @@
             </div>
             @if (Model.RewardPoints.Count > 0)
             {
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <colgroup>
+                            <col width="25%"/>
+                            <col width="15%"/>
+                            <col width="15%"/>
+                            <col/>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th class="date">
+                                @T("RewardPoints.Fields.Date")
+                            </th>
+                            <th class="points">
+                                @T("RewardPoints.Fields.Points")
+                            </th>
+                            <th class="points-balance">
+                                @T("RewardPoints.Fields.PointsBalance")
+                            </th>
+                            <th class="message">
+                                @T("RewardPoints.Fields.Message")
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @for (int i = 0; i < Model.RewardPoints.Count; i++)
+                        {
+                            var item = Model.RewardPoints[i];
+                            <tr @(i%2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                                <td class="date">
+                                    @item.CreatedOn
+                                </td>
+                                <td class="points">
+                                    @item.Points
+                                </td>
+                                <td class="points-balance">
+                                    @item.PointsBalance
+                                </td>
+                                <td class="message">
+                                    @item.Message
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
                 var pager = Html.Pager(Model.PagerModel);
                 if (!MvcHtmlString.IsNullOrEmpty(pager))
                 {
                     <div class="pager">
                         @pager
                     </div>
-                }    
-                <div class="table-wrapper">
-                    <table class="data-table">
-                        <colgroup>
-                            <col width="25%" />
-                            <col width="15%" />
-                            <col width="15%" />
-                            <col />
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th class="date">
-                                    @T("RewardPoints.Fields.Date")
-                                </th>
-                                <th class="points">
-                                    @T("RewardPoints.Fields.Points")
-                                </th>
-                                <th class="points-balance">
-                                    @T("RewardPoints.Fields.PointsBalance")
-                                </th>
-                                <th class="message">
-                                    @T("RewardPoints.Fields.Message")
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for (int i = 0; i < Model.RewardPoints.Count; i++)
-                            {
-                                var item = Model.RewardPoints[i];
-                                <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
-                                    <td class="date">
-                                        @item.CreatedOn
-                                    </td>
-                                    <td class="points">
-                                        @item.Points
-                                    </td>
-                                    <td class="points-balance">
-                                        @item.PointsBalance
-                                    </td>
-                                    <td class="message">
-                                        @item.Message
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                }
             }
             else
             {
