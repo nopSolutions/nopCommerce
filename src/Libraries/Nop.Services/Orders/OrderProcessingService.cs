@@ -685,6 +685,15 @@ namespace Nop.Services.Orders
                 _customerService.UpdateCustomer(details.Customer);
             }
 
+            return order;
+        }
+
+        /// <summary>
+        /// Send "order placed" notifications and save order notes
+        /// </summary>
+        /// <param name="order">Order</param>
+        protected virtual void SendNotificationsAndSaveNotes(Order order)
+        {
             //notes, messages
             if (_workContext.OriginalCustomerIfImpersonated != null)
                 //this order is placed by a store administrator impersonating a customer
@@ -749,10 +758,7 @@ namespace Nop.Services.Orders
                     _orderService.UpdateOrder(order);
                 }
             }
-
-            return order;
         }
-
         /// <summary>
         /// Award (earn) reward points (for placing a new order)
         /// </summary>
@@ -1355,6 +1361,9 @@ namespace Nop.Services.Orders
 
                     #endregion
 
+                    //notifications
+                    SendNotificationsAndSaveNotes(order);
+
                     //reset checkout data
                     _customerService.ResetCheckoutData(details.Customer, processPaymentRequest.StoreId, clearCouponCodes: true, clearCheckoutAttributes: true);
                     _customerActivityService.InsertActivity("PublicStore.PlaceOrder", _localizationService.GetResource("ActivityLog.PublicStore.PlaceOrder"), order.Id);
@@ -1727,6 +1736,9 @@ namespace Nop.Services.Orders
                         //inventory
                         _productService.AdjustInventory(orderItem.Product, -orderItem.Quantity, orderItem.AttributesXml);
                     }
+
+                    //notifications
+                    SendNotificationsAndSaveNotes(order);
 
                     //check order status
                     CheckOrderStatus(order);
