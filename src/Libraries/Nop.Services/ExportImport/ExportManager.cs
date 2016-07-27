@@ -11,13 +11,20 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Directory;
 using Nop.Services.ExportImport.Help;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Seo;
+using Nop.Services.Shipping;
 using Nop.Services.Stores;
+using Nop.Services.Tax;
+using Nop.Services.Vendors;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 
@@ -38,6 +45,12 @@ namespace Nop.Services.ExportImport
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
         private readonly ProductEditorSettings _productEditorSettings;
+        private readonly IVendorService _vendorService;
+        private readonly IProductTemplateService _productTemplateService;
+        private readonly IShippingService _shippingService;
+        private readonly ITaxCategoryService _taxCategoryService;
+        private readonly IMeasureService _measureService;
+        private readonly CatalogSettings _catalogSettings;
 
         #endregion
 
@@ -50,7 +63,13 @@ namespace Nop.Services.ExportImport
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IStoreService storeService,
             IWorkContext workContext,
-            ProductEditorSettings productEditorSettings)
+            ProductEditorSettings productEditorSettings,
+            IVendorService vendorService,
+            IProductTemplateService productTemplateService,
+            IShippingService shippingService,
+            ITaxCategoryService taxCategoryService,
+            IMeasureService measureService,
+            CatalogSettings catalogSettings)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -60,6 +79,12 @@ namespace Nop.Services.ExportImport
             this._storeService = storeService;
             this._workContext = workContext;
             this._productEditorSettings = productEditorSettings;
+            this._vendorService = vendorService;
+            this._productTemplateService = productTemplateService;
+            this._shippingService = shippingService;
+            this._taxCategoryService = taxCategoryService;
+            this._measureService = measureService;
+            this._catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -145,15 +170,15 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="product">Product</param>
         /// <returns>List of categories</returns>
-        protected virtual string GetCategoryIds(Product product)
+        protected virtual string GetCategories(Product product)
         {
-            string categoryIds = null;
+            string categoryNames = null;
             foreach (var pc in _categoryService.GetProductCategoriesByProductId(product.Id))
             {
-                categoryIds += pc.CategoryId;
-                categoryIds += ";";
+                categoryNames += pc.Category.Name;
+                categoryNames += ";";
             }
-            return categoryIds;
+            return categoryNames;
         }
 
         /// <summary>
@@ -161,15 +186,15 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="product">Product</param>
         /// <returns>List of manufacturer</returns>
-        protected virtual string GetManufacturerIds(Product product)
+        protected virtual string GetManufacturers(Product product)
         {
-            string manufacturerIds = null;
+            string manufacturerNames = null;
             foreach (var pm in _manufacturerService.GetProductManufacturersByProductId(product.Id))
             {
-                manufacturerIds += pm.ManufacturerId;
-                manufacturerIds += ";";
+                manufacturerNames += pm.Manufacturer.Name;
+                manufacturerNames += ";";
             }
-            return manufacturerIds;
+            return manufacturerNames;
         }
 
         /// <summary>
@@ -209,6 +234,114 @@ namespace Nop.Services.ExportImport
             return !productAdvancedMode && !func(_productEditorSettings);
         }
 
+        private byte[] ExportProductsToXlsxWithAttributes(PropertyByName<Product>[] properties, IEnumerable<Product> itemsToExport)
+        {
+            var attributeProperties = new[]
+            {
+                new PropertyByName<ExportProductAttribute>("AttributeId", p => p.AttributeId),
+                new PropertyByName<ExportProductAttribute>("AttributeName", p => p.AttributeName),
+                new PropertyByName<ExportProductAttribute>("AttributeTextPrompt", p => p.AttributeTextPrompt),
+                new PropertyByName<ExportProductAttribute>("AttributeIsRequired", p => p.AttributeIsRequired),
+                new PropertyByName<ExportProductAttribute>("AttributeControlType", p => p.AttributeControlTypeId)
+                {
+                    DropDownElements = AttributeControlType.TextBox.ToSelectList(useLocalization: false)
+                },
+                new PropertyByName<ExportProductAttribute>("AttributeDisplayOrder", p => p.AttributeDisplayOrder),
+                new PropertyByName<ExportProductAttribute>("ProductAttributeValueId", p => p.Id),
+                new PropertyByName<ExportProductAttribute>("ValueName", p => p.Name),
+                new PropertyByName<ExportProductAttribute>("AttributeValueType", p => p.AttributeValueTypeId)
+                {
+                    DropDownElements = AttributeValueType.Simple.ToSelectList(useLocalization: false)
+                },
+                new PropertyByName<ExportProductAttribute>("ColorSquaresRgb", p => p.ColorSquaresRgb),
+                new PropertyByName<ExportProductAttribute>("ImageSquaresPictureId", p => p.ImageSquaresPictureId),
+                new PropertyByName<ExportProductAttribute>("PriceAdjustment", p => p.PriceAdjustment),
+                new PropertyByName<ExportProductAttribute>("WeightAdjustment", p => p.WeightAdjustment),
+                new PropertyByName<ExportProductAttribute>("Cost", p => p.Cost),
+                new PropertyByName<ExportProductAttribute>("Quantity", p => p.Quantity),
+                new PropertyByName<ExportProductAttribute>("IsPreSelected", p => p.IsPreSelected),
+                new PropertyByName<ExportProductAttribute>("DisplayOrder", p => p.DisplayOrder),
+                new PropertyByName<ExportProductAttribute>("PictureId", p => p.PictureId)
+            };
+
+            var attributeManager = new PropertyManager<ExportProductAttribute>(attributeProperties);
+
+            using (var stream = new MemoryStream())
+            {
+                // ok, we can run the real code of the sample now
+                using (var xlPackage = new ExcelPackage(stream))
+                {
+                    // uncomment this line if you want the XML written out to the outputDir
+                    //xlPackage.DebugMode = true; 
+
+                    // get handle to the existing worksheet
+                    var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(Product).Name);
+                    //create Headers and format them 
+
+                    var manager = new PropertyManager<Product>(properties.Where(p => !p.Ignore).ToArray());
+                    manager.WriteCaption(worksheet, SetCaptionStyle);
+
+                    var row = 2;
+                    foreach (var item in itemsToExport)
+                    {
+                        manager.CurrentObject = item;
+                        manager.WriteToXlsx(worksheet, row++);
+
+                        var attributes = item.ProductAttributeMappings.SelectMany(pam => pam.ProductAttributeValues.Select(pav => new ExportProductAttribute
+                        {
+                            AttributeId = pam.ProductAttribute.Id,
+                            AttributeName = pam.ProductAttribute.Name,
+                            AttributeTextPrompt = pam.TextPrompt,
+                            AttributeIsRequired = pam.IsRequired,
+                            AttributeControlTypeId = pam.AttributeControlTypeId,
+                            AttributeDisplayOrder = pam.DisplayOrder,
+                            Id = pav.Id,
+                            Name = pav.Name,
+                            AttributeValueTypeId = pav.AttributeValueTypeId,
+                            ColorSquaresRgb = pav.ColorSquaresRgb,
+                            ImageSquaresPictureId = pav.ImageSquaresPictureId,
+                            PriceAdjustment = pav.PriceAdjustment,
+                            WeightAdjustment = pav.WeightAdjustment,
+                            Cost = pav.Cost,
+                            Quantity = pav.Quantity,
+                            IsPreSelected = pav.IsPreSelected,
+                            DisplayOrder = pav.DisplayOrder,
+                            PictureId = pav.PictureId
+                        })).ToList();
+
+                        attributes.AddRange(item.ProductAttributeMappings.Where(pam => !pam.ProductAttributeValues.Any()).Select(pam => new ExportProductAttribute
+                        {
+                            AttributeId = pam.ProductAttribute.Id,
+                            AttributeName = pam.ProductAttribute.Name,
+                            AttributeTextPrompt = pam.TextPrompt,
+                            AttributeIsRequired = pam.IsRequired,
+                            AttributeControlTypeId = pam.AttributeControlTypeId
+                        }));
+
+                        if (!attributes.Any())
+                            continue;
+
+                        attributeManager.WriteCaption(worksheet, SetCaptionStyle, row, ExportProductAttribute.ProducAttributeCellOffset);
+                        worksheet.Row(row).OutlineLevel = 1;
+                        worksheet.Row(row).Collapsed = true;
+
+                        foreach (var exportProducAttribute in attributes)
+                        {
+                            row++;
+                            attributeManager.CurrentObject = exportProducAttribute;
+                            attributeManager.WriteToXlsx(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset);
+                            worksheet.Row(row).OutlineLevel = 1;
+                            worksheet.Row(row).Collapsed = true;
+                        }
+
+                        row++;
+                    }
+
+                    xlPackage.Save();
+                }
+                return stream.ToArray();
+            }
+        }
         #endregion
 
         #region Methods
@@ -675,14 +808,24 @@ namespace Nop.Services.ExportImport
         {
             var properties = new[]
             {
-                new PropertyByName<Product>("ProductTypeId", p => p.ProductTypeId, IgnoreExportPoductProperty(p => p.ProductType)),
+                new PropertyByName<Product>("ProductType", p => p.ProductTypeId, IgnoreExportPoductProperty(p => p.ProductType))
+                {
+                    DropDownElements = ProductType.SimpleProduct.ToSelectList(useLocalization: false)
+                },
                 new PropertyByName<Product>("ParentGroupedProductId", p => p.ParentGroupedProductId, IgnoreExportPoductProperty(p => p.ProductType)),
                 new PropertyByName<Product>("VisibleIndividually", p => p.VisibleIndividually, IgnoreExportPoductProperty(p => p.VisibleIndividually)),
                 new PropertyByName<Product>("Name", p => p.Name),
                 new PropertyByName<Product>("ShortDescription", p => p.ShortDescription),
                 new PropertyByName<Product>("FullDescription", p => p.FullDescription),
-                new PropertyByName<Product>("VendorId", p => p.VendorId.ToString(), IgnoreExportPoductProperty(p => p.Vendor)),
-                new PropertyByName<Product>("ProductTemplateId", p => p.ProductTemplateId, IgnoreExportPoductProperty(p => p.ProductTemplate)),
+                new PropertyByName<Product>("Vendor", p => p.VendorId, IgnoreExportPoductProperty(p => p.Vendor))
+                {
+                    DropDownElements = _vendorService.GetAllVendors().Select(v => v as BaseEntity).ToSelectList(p => (p as Vendor).Return(v => v.Name, String.Empty)),
+                    AllowBlank = true
+                },
+                new PropertyByName<Product>("ProductTemplate", p => p.ProductTemplateId, IgnoreExportPoductProperty(p => p.ProductTemplate))
+                {
+                    DropDownElements = _productTemplateService.GetAllProductTemplates().Select(pt => pt as BaseEntity).ToSelectList(p => (p as ProductTemplate).Return(pt => pt.Name, String.Empty)),
+                },
                 new PropertyByName<Product>("ShowOnHomePage", p => p.ShowOnHomePage, IgnoreExportPoductProperty(p => p.ShowOnHomePage)),
                 new PropertyByName<Product>("MetaKeywords", p => p.MetaKeywords, IgnoreExportPoductProperty(p => p.Seo)),
                 new PropertyByName<Product>("MetaDescription", p => p.MetaDescription, IgnoreExportPoductProperty(p => p.Seo)),
@@ -694,7 +837,10 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("ManufacturerPartNumber", p => p.ManufacturerPartNumber, IgnoreExportPoductProperty(p => p.ManufacturerPartNumber)),
                 new PropertyByName<Product>("Gtin", p => p.Gtin, IgnoreExportPoductProperty(p => p.GTIN)),
                 new PropertyByName<Product>("IsGiftCard", p => p.IsGiftCard, IgnoreExportPoductProperty(p => p.IsGiftCard)),
-                new PropertyByName<Product>("GiftCardTypeId", p => p.GiftCardTypeId, IgnoreExportPoductProperty(p => p.IsGiftCard)),
+                new PropertyByName<Product>("GiftCardType", p => p.GiftCardTypeId, IgnoreExportPoductProperty(p => p.IsGiftCard))
+                {
+                    DropDownElements = GiftCardType.Virtual.ToSelectList(useLocalization: false)
+                },
                 new PropertyByName<Product>("OverriddenGiftCardAmount", p => p.OverriddenGiftCardAmount, IgnoreExportPoductProperty(p => p.IsGiftCard)),
                 new PropertyByName<Product>("RequireOtherProducts", p => p.RequireOtherProducts, IgnoreExportPoductProperty(p => p.RequireOtherProductsAddedToTheCart)),
                 new PropertyByName<Product>("RequiredProductIds", p => p.RequiredProductIds, IgnoreExportPoductProperty(p => p.RequireOtherProductsAddedToTheCart)),
@@ -703,36 +849,64 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("DownloadId", p => p.DownloadId, IgnoreExportPoductProperty(p => p.DownloadableProduct)),
                 new PropertyByName<Product>("UnlimitedDownloads", p => p.UnlimitedDownloads, IgnoreExportPoductProperty(p => p.DownloadableProduct)),
                 new PropertyByName<Product>("MaxNumberOfDownloads", p => p.MaxNumberOfDownloads, IgnoreExportPoductProperty(p => p.DownloadableProduct)),
-                new PropertyByName<Product>("DownloadActivationTypeId", p => p.DownloadActivationTypeId, IgnoreExportPoductProperty(p => p.DownloadableProduct)),
+                new PropertyByName<Product>("DownloadActivationType", p => p.DownloadActivationTypeId, IgnoreExportPoductProperty(p => p.DownloadableProduct))
+                {
+                    DropDownElements = DownloadActivationType.Manually.ToSelectList(useLocalization: false)
+                },
                 new PropertyByName<Product>("HasSampleDownload", p => p.HasSampleDownload, IgnoreExportPoductProperty(p => p.DownloadableProduct)),
                 new PropertyByName<Product>("SampleDownloadId", p => p.SampleDownloadId, IgnoreExportPoductProperty(p => p.DownloadableProduct)),
                 new PropertyByName<Product>("HasUserAgreement", p => p.HasUserAgreement, IgnoreExportPoductProperty(p => p.DownloadableProduct)),
                 new PropertyByName<Product>("UserAgreementText", p => p.UserAgreementText, IgnoreExportPoductProperty(p => p.DownloadableProduct)),
                 new PropertyByName<Product>("IsRecurring", p => p.IsRecurring, IgnoreExportPoductProperty(p => p.RecurringProduct)),
                 new PropertyByName<Product>("RecurringCycleLength", p => p.RecurringCycleLength, IgnoreExportPoductProperty(p => p.RecurringProduct)),
-                new PropertyByName<Product>("RecurringCyclePeriodId", p => p.RecurringCyclePeriodId, IgnoreExportPoductProperty(p => p.RecurringProduct)),
+                new PropertyByName<Product>("RecurringCyclePeriod", p => p.RecurringCyclePeriodId, IgnoreExportPoductProperty(p => p.RecurringProduct))
+                {
+                    DropDownElements = RecurringProductCyclePeriod.Days.ToSelectList(useLocalization: false),
+                    AllowBlank = true
+                },
                 new PropertyByName<Product>("RecurringTotalCycles", p => p.RecurringTotalCycles, IgnoreExportPoductProperty(p => p.RecurringProduct)),
                 new PropertyByName<Product>("IsRental", p => p.IsRental, IgnoreExportPoductProperty(p => p.IsRental)),
                 new PropertyByName<Product>("RentalPriceLength", p => p.RentalPriceLength, IgnoreExportPoductProperty(p => p.IsRental)),
-                new PropertyByName<Product>("RentalPricePeriodId", p => p.RentalPricePeriodId, IgnoreExportPoductProperty(p => p.IsRental)),
+                new PropertyByName<Product>("RentalPricePeriod", p => p.RentalPricePeriodId, IgnoreExportPoductProperty(p => p.IsRental))
+                {
+                    DropDownElements = RentalPricePeriod.Days.ToSelectList(useLocalization: false),
+                    AllowBlank = true
+                },
                 new PropertyByName<Product>("IsShipEnabled", p => p.IsShipEnabled),
                 new PropertyByName<Product>("IsFreeShipping", p => p.IsFreeShipping, IgnoreExportPoductProperty(p => p.FreeShipping)),
                 new PropertyByName<Product>("ShipSeparately", p => p.ShipSeparately, IgnoreExportPoductProperty(p => p.ShipSeparately)),
                 new PropertyByName<Product>("AdditionalShippingCharge", p => p.AdditionalShippingCharge, IgnoreExportPoductProperty(p => p.AdditionalShippingCharge)),
-                new PropertyByName<Product>("DeliveryDateId", p => p.DeliveryDateId, IgnoreExportPoductProperty(p => p.DeliveryDate)),
+                new PropertyByName<Product>("DeliveryDate", p => p.DeliveryDateId, IgnoreExportPoductProperty(p => p.DeliveryDate))
+                {
+                    DropDownElements = _shippingService.GetAllDeliveryDates().Select(dd => dd as BaseEntity).ToSelectList(p => (p as DeliveryDate).Return(dd => dd.Name, String.Empty)),
+                    AllowBlank = true
+                },
                 new PropertyByName<Product>("IsTaxExempt", p => p.IsTaxExempt),
-                new PropertyByName<Product>("TaxCategoryId", p => p.TaxCategoryId),
+                new PropertyByName<Product>("TaxCategory", p => p.TaxCategoryId)
+                {
+                    DropDownElements = _taxCategoryService.GetAllTaxCategories().Select(tc => tc as BaseEntity).ToSelectList(p => (p as TaxCategory).Return(tc => tc.Name, String.Empty)),
+                    AllowBlank = true
+                },
                 new PropertyByName<Product>("IsTelecommunicationsOrBroadcastingOrElectronicServices", p => p.IsTelecommunicationsOrBroadcastingOrElectronicServices, IgnoreExportPoductProperty(p => p.TelecommunicationsBroadcastingElectronicServices)),
-                new PropertyByName<Product>("ManageInventoryMethodId", p => p.ManageInventoryMethodId),
+                new PropertyByName<Product>("ManageInventoryMethod", p => p.ManageInventoryMethodId)
+                {
+                    DropDownElements = ManageInventoryMethod.DontManageStock.ToSelectList(useLocalization: false)
+                },
                 new PropertyByName<Product>("UseMultipleWarehouses", p => p.UseMultipleWarehouses, IgnoreExportPoductProperty(p => p.UseMultipleWarehouses)),
                 new PropertyByName<Product>("WarehouseId", p => p.WarehouseId, IgnoreExportPoductProperty(p => p.Warehouse)),
                 new PropertyByName<Product>("StockQuantity", p => p.StockQuantity),
                 new PropertyByName<Product>("DisplayStockAvailability", p => p.DisplayStockAvailability, IgnoreExportPoductProperty(p => p.DisplayStockAvailability)),
                 new PropertyByName<Product>("DisplayStockQuantity", p => p.DisplayStockQuantity, IgnoreExportPoductProperty(p => p.DisplayStockQuantity)),
                 new PropertyByName<Product>("MinStockQuantity", p => p.MinStockQuantity, IgnoreExportPoductProperty(p => p.MinimumStockQuantity)),
-                new PropertyByName<Product>("LowStockActivityId", p => p.LowStockActivityId, IgnoreExportPoductProperty(p => p.LowStockActivity)),
+                new PropertyByName<Product>("LowStockActivity", p => p.LowStockActivityId, IgnoreExportPoductProperty(p => p.LowStockActivity))
+                {
+                    DropDownElements = LowStockActivity.Nothing.ToSelectList(useLocalization: false)
+                },
                 new PropertyByName<Product>("NotifyAdminForQuantityBelow", p => p.NotifyAdminForQuantityBelow, IgnoreExportPoductProperty(p => p.NotifyAdminForQuantityBelow)),
-                new PropertyByName<Product>("BackorderModeId", p => p.BackorderModeId, IgnoreExportPoductProperty(p => p.Backorders)),
+                new PropertyByName<Product>("BackorderMode", p => p.BackorderModeId, IgnoreExportPoductProperty(p => p.Backorders))
+                {
+                    DropDownElements = BackorderMode.NoBackorders.ToSelectList(useLocalization: false)
+                },
                 new PropertyByName<Product>("AllowBackInStockSubscriptions", p => p.AllowBackInStockSubscriptions, IgnoreExportPoductProperty(p => p.AllowBackInStockSubscriptions)),
                 new PropertyByName<Product>("OrderMinimumQuantity", p => p.OrderMinimumQuantity, IgnoreExportPoductProperty(p => p.MinimumCartQuantity)),
                 new PropertyByName<Product>("OrderMaximumQuantity", p => p.OrderMaximumQuantity, IgnoreExportPoductProperty(p => p.MaximumCartQuantity)),
@@ -754,9 +928,17 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("MaximumCustomerEnteredPrice", p => p.MaximumCustomerEnteredPrice, IgnoreExportPoductProperty(p => p.CustomerEntersPrice)),
                 new PropertyByName<Product>("BasepriceEnabled", p => p.BasepriceEnabled, IgnoreExportPoductProperty(p => p.PAngV)),
                 new PropertyByName<Product>("BasepriceAmount", p => p.BasepriceAmount, IgnoreExportPoductProperty(p => p.PAngV)),
-                new PropertyByName<Product>("BasepriceUnitId", p => p.BasepriceUnitId, IgnoreExportPoductProperty(p => p.PAngV)),
+                new PropertyByName<Product>("BasepriceUnit", p => p.BasepriceUnitId, IgnoreExportPoductProperty(p => p.PAngV))
+                {
+                    DropDownElements = _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p => (p as MeasureWeight).Return(mw => mw.Name, String.Empty)),
+                    AllowBlank = true
+                },
                 new PropertyByName<Product>("BasepriceBaseAmount", p => p.BasepriceBaseAmount, IgnoreExportPoductProperty(p => p.PAngV)),
-                new PropertyByName<Product>("BasepriceBaseUnitId", p => p.BasepriceBaseUnitId, IgnoreExportPoductProperty(p => p.PAngV)),
+                new PropertyByName<Product>("BasepriceBaseUnit", p => p.BasepriceBaseUnitId, IgnoreExportPoductProperty(p => p.PAngV))
+                {
+                    DropDownElements = _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p => (p as MeasureWeight).Return(mw => mw.Name, String.Empty)),
+                    AllowBlank = true
+                },
                 new PropertyByName<Product>("MarkAsNew", p => p.MarkAsNew, IgnoreExportPoductProperty(p => p.MarkAsNew)),
                 new PropertyByName<Product>("MarkAsNewStartDateTimeUtc", p => p.MarkAsNewStartDateTimeUtc, IgnoreExportPoductProperty(p => p.MarkAsNewStartDate)),
                 new PropertyByName<Product>("MarkAsNewEndDateTimeUtc", p => p.MarkAsNewEndDateTimeUtc, IgnoreExportPoductProperty(p => p.MarkAsNewEndDate)),
@@ -764,14 +946,16 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("Length", p => p.Length, IgnoreExportPoductProperty(p => p.Dimensions)),
                 new PropertyByName<Product>("Width", p => p.Width, IgnoreExportPoductProperty(p => p.Dimensions)),
                 new PropertyByName<Product>("Height", p => p.Height, IgnoreExportPoductProperty(p => p.Dimensions)),
-                new PropertyByName<Product>("CategoryIds", GetCategoryIds),
-                new PropertyByName<Product>("ManufacturerIds", GetManufacturerIds),
+                new PropertyByName<Product>("Categories", GetCategories),
+                new PropertyByName<Product>("Manufacturers", GetManufacturers),
                 new PropertyByName<Product>("Picture1", p => GetPictures(p)[0]),
                 new PropertyByName<Product>("Picture2", p => GetPictures(p)[1]),
                 new PropertyByName<Product>("Picture3", p => GetPictures(p)[2])
             };
 
-            return ExportToXlsx(properties, products);
+            var productList = products.ToList();
+
+            return _catalogSettings.ExportImportProductAttributes ? ExportProductsToXlsxWithAttributes(properties, productList): ExportToXlsx(properties, productList);
         }
 
         /// <summary>

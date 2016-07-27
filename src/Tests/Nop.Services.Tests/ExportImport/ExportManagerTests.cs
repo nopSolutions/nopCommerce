@@ -11,10 +11,15 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
+using Nop.Services.Configuration;
+using Nop.Services.Directory;
 using Nop.Services.ExportImport;
 using Nop.Services.Media;
 using Nop.Services.Messages;
+using Nop.Services.Shipping;
 using Nop.Services.Stores;
+using Nop.Services.Tax;
+using Nop.Services.Vendors;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -32,6 +37,12 @@ namespace Nop.Services.Tests.ExportImport
         private IStoreService _storeService;
         private ProductEditorSettings _productEditorSettings;
         private IWorkContext _workContext;
+        private IVendorService _vendorService;
+        private IProductTemplateService _productTemplateService;
+        private IShippingService _shippingService;
+        private ITaxCategoryService _taxCategoryService;
+        private IMeasureService _measureService;
+        private CatalogSettings _catalogSettings;
 
         [SetUp]
         public new void SetUp()
@@ -44,11 +55,19 @@ namespace Nop.Services.Tests.ExportImport
             _newsLetterSubscriptionService = MockRepository.GenerateMock<INewsLetterSubscriptionService>();
             _productEditorSettings = new ProductEditorSettings();
             _workContext = MockRepository.GenerateMock<IWorkContext>();
+            _vendorService = MockRepository.GenerateMock<IVendorService>();
+            _productTemplateService = MockRepository.GenerateMock<IProductTemplateService>();
+            _shippingService = MockRepository.GenerateMock<IShippingService>();
+            _taxCategoryService = MockRepository.GenerateMock<ITaxCategoryService>();
+            _measureService = MockRepository.GenerateMock<IMeasureService>();
+            _catalogSettings=new CatalogSettings();
 
             _exportManager = new ExportManager(_categoryService,
                 _manufacturerService, _productAttributeService, 
                 _pictureService, _newsLetterSubscriptionService,
-                _storeService, _workContext, _productEditorSettings);
+                _storeService, _workContext, _productEditorSettings, 
+                _vendorService, _productTemplateService, _shippingService,
+                _taxCategoryService, _measureService, _catalogSettings);
         }
 
         //[Test]

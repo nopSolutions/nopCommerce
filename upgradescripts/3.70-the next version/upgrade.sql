@@ -2147,6 +2147,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Order.AutoUpdateOrderTotalsOnEditingOrder.Hint">
     <Value>Check to automatically update order totals on editing an order in admin area. IMPORANT: currently this functionality is in BETA testing status.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductAttributes">
+    <Value>Export/Import products with attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductAttributes.Hint">
+    <Value>Check if products should be exported/imported with product attributes</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -4871,3 +4877,11 @@ BEGIN
 	VALUES (N'producteditorsettings.dimensions', N'true', 0)
 END
 GO
+
+--new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.exportimportproductattributes')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'catalogsettings.exportimportproductattributes', N'True', 0)
+ END
+ GO

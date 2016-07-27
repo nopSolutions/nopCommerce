@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 
@@ -23,7 +24,7 @@ namespace Nop.Services.ExportImport.Help
         /// <param name="properties">All acsess properties</param>
         public PropertyManager(PropertyByName<T>[] properties)
         {
-            _properties=new Dictionary<string, PropertyByName<T>>();
+            _properties = new Dictionary<string, PropertyByName<T>>();
 
             var poz = 1;
             foreach (var propertyByName in properties)
@@ -72,30 +73,48 @@ namespace Nop.Services.ExportImport.Help
         /// </summary>
         /// <param name="worksheet">worksheet</param>
         /// <param name="row">Row index</param>
-        public void WriteToXlsx(ExcelWorksheet worksheet, int row)
+        /// <param name="cellOffset">Cell offset</param>
+        public void WriteToXlsx(ExcelWorksheet worksheet, int row, int cellOffset = 0)
         {
             if (CurrentObject == null)
                 return;
-
+            
             foreach (var prop in _properties.Values)
             {
-                worksheet.Cells[row, prop.PropertyOrderPosition].Value = prop.GetProperty(CurrentObject);
+                var cell = worksheet.Cells[row, prop.PropertyOrderPosition + cellOffset];
+                if (prop.IsDropDownCell)
+                {
+                    var validator = cell.DataValidation.AddListDataValidation();
+
+                    cell.Value = prop.GetItemText(prop.GetProperty(CurrentObject));
+                    validator.AllowBlank = prop.AllowBlank;
+
+                    foreach (var enumItem in prop.GetDropDownElements())
+                    {
+                        validator.Formula.Values.Add(enumItem);
+                    }
+                }
+                else
+                {
+                    cell.Value = prop.GetProperty(CurrentObject);
+                }
             }
         }
-
+        
         /// <summary>
         /// Read object data from XLSX worksheet
         /// </summary>
         /// <param name="worksheet">worksheet</param>
         /// <param name="row">Row index</param>
-        public void ReadFromXlsx(ExcelWorksheet worksheet, int row)
+        /// /// <param name="cellOffset">Cell offset</param>
+        public void ReadFromXlsx(ExcelWorksheet worksheet, int row, int cellOffset = 0)
         {
             if (worksheet == null || worksheet.Cells == null)
                 return;
 
             foreach (var prop in _properties.Values)
             {
-                prop.PropertyValue = worksheet.Cells[row, prop.PropertyOrderPosition].Value;
+                prop.PropertyValue = worksheet.Cells[row, prop.PropertyOrderPosition + cellOffset].Value;
             }
         }
 
@@ -104,15 +123,16 @@ namespace Nop.Services.ExportImport.Help
         /// </summary>
         /// <param name="worksheet">worksheet</param>
         /// <param name="setStyle">Detection of cell style</param>
-        public void WriteCaption(ExcelWorksheet worksheet, Action<ExcelStyle> setStyle)
+        /// <param name="row">Row num</param>
+        /// <param name="cellOffset">Cell offset</param>
+        public void WriteCaption(ExcelWorksheet worksheet, Action<ExcelStyle> setStyle, int row = 1, int cellOffset = 0)
         {
             foreach (var caption in _properties.Values)
             {
-                var cell = worksheet.Cells[1, caption.PropertyOrderPosition];
+                var cell = worksheet.Cells[row, caption.PropertyOrderPosition + cellOffset];
                 cell.Value = caption;
                 setStyle(cell.Style);
             }
-            
         }
 
         /// <summary>
@@ -133,13 +153,25 @@ namespace Nop.Services.ExportImport.Help
             return _properties.ContainsKey(propertyName) ? _properties[propertyName] : null;
         }
 
-
         /// <summary>
         /// Get property array
         /// </summary>
         public PropertyByName<T>[] GetProperties
         {
             get { return _properties.Values.ToArray(); }
+        }
+
+
+        public void SetSelectList(string propertyName, SelectList list)
+        {
+            var tempProperty = GetProperty(propertyName);
+            if (tempProperty != null)
+                tempProperty.DropDownElements = list;
+        }
+        
+        public bool IsCaption
+        {
+            get { return _properties.Values.All(p => p.IsCaption); }
         }
     }
 }
