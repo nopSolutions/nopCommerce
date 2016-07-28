@@ -87,7 +87,7 @@ Admin.Search = (function () {
                     suggestion: itemTemplate
                 },
                 source: substringMatcher(Admin.Navigation.enumerate),
-                limit: 'all'
+                limit: 10
             });
 
             var navigateTo = function (item) {
