@@ -949,7 +949,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("Width", p => p.Width, IgnoreExportPoductProperty(p => p.Dimensions)),
                 new PropertyByName<Product>("Height", p => p.Height, IgnoreExportPoductProperty(p => p.Dimensions)),
                 new PropertyByName<Product>("Categories", GetCategories),
-                new PropertyByName<Product>("Manufacturers", GetManufacturers),
+                new PropertyByName<Product>("Manufacturers", GetManufacturers, IgnoreExportPoductProperty(p => p.Manufacturers)),
                 new PropertyByName<Product>("Picture1", p => GetPictures(p)[0]),
                 new PropertyByName<Product>("Picture2", p => GetPictures(p)[1]),
                 new PropertyByName<Product>("Picture3", p => GetPictures(p)[2])
@@ -957,7 +957,7 @@ namespace Nop.Services.ExportImport
 
             var productList = products.ToList();
 
-            return _catalogSettings.ExportImportProductAttributes ? ExportProductsToXlsxWithAttributes(properties, productList): ExportToXlsx(properties, productList);
+            return _catalogSettings.ExportImportProductAttributes ? ExportProductsToXlsxWithAttributes(properties, productList) : ExportToXlsx(properties, productList);
         }
 
         /// <summary>
