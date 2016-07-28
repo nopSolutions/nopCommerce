@@ -748,6 +748,26 @@
                                                 @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.OneColumnProductPage)
                                             </div>
                                         </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.ProductAttributes)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.ProductAttributes)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.ProductAttributes)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.SpecificationAttributes)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.SpecificationAttributes)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.SpecificationAttributes)
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>

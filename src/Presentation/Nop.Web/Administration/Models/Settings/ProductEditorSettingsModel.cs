@@ -202,5 +202,11 @@ namespace Nop.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.OneColumnProductPage")]
         public bool OneColumnProductPage { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.ProductAttributes")]
+        public bool ProductAttributes { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.SpecificationAttributes")]
+        public bool SpecificationAttributes { get; set; }
     }
 }

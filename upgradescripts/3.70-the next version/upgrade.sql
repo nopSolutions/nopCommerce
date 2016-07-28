@@ -2153,6 +2153,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductAttributes.Hint">
     <Value>Check if products should be exported/imported with product attributes</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ProductAttributes">
+    <Value>Product attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.SpecificationAttributes">
+    <Value>Specification attributes</Value>
+  </LocaleResource>  
 </Language>
 '
 
@@ -4885,3 +4891,19 @@ GO
  	VALUES (N'catalogsettings.exportimportproductattributes', N'True', 0)
  END
  GO
+ 
+ --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'producteditorsettings.productattributes')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'producteditorsettings.productattributes', N'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'producteditorsettings.specificationattributes')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'producteditorsettings.specificationattributes', N'true', 0)
+END
+GO

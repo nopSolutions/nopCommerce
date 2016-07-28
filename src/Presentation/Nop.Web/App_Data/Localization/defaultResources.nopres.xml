@@ -6495,6 +6495,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.PAngV">
     <Value>PAngV (base price) enabled</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ProductAttributes">
+    <Value>Product attributes</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ProductCost">
     <Value>Product cost</Value>
   </LocaleResource>
@@ -6539,6 +6542,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.SpecialPriceStartDate">
     <Value>Special price start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.SpecificationAttributes">
+    <Value>Specification attributes</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Stores">
     <Value>Stores</Value>

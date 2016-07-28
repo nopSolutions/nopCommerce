@@ -5758,7 +5758,9 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new ProductEditorSettings
             {
                 Weight = true,
-                Dimensions = true
+                Dimensions = true,
+                ProductAttributes = true,
+                SpecificationAttributes =true
             });
 
             settingService.SaveSetting(new CatalogSettings
