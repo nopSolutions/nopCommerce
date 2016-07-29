@@ -4631,6 +4631,7 @@ label, label + * {
 	padding: 20px;
 	font-size: 13px;
     font-style: italic;
+    clear: both;
 }
 
 .topic-post .post-vote span.vote {
