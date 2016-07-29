@@ -3557,6 +3557,8 @@ label, label + * {
 	min-width: 400px;
     min-height: 350px;
     vertical-align: middle;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .shipping-method .method-list,
