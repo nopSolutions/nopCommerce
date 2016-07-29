@@ -790,6 +790,9 @@ namespace Nop.Services.ExportImport
                             case "AllowAddingOnlyExistingAttributeCombinations":
                                 product.AllowAddingOnlyExistingAttributeCombinations = property.BooleanValue;
                                 break;
+                            case "NotReturnable":
+                                product.NotReturnable = property.BooleanValue;
+                                break;
                             case "DisableBuyButton":
                                 product.DisableBuyButton = property.BooleanValue;
                                 break;
