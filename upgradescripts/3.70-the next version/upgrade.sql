@@ -2158,7 +2158,22 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.SpecificationAttributes">
     <Value>Specification attributes</Value>
-  </LocaleResource>  
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.TaxCategory.Hint">
+    <Value>The tax classification for this attribute (used to calculate tax). You can manage tax categories by selecting Configuration : Tax : Tax Categories.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.PaymentMethodAdditionalFeeTaxClass">
+    <Value>Payment method additional fee tax category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.PaymentMethodAdditionalFeeTaxClass.Hint">
+    <Value>Select tax category used for payment method additional fee tax calculation.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.ShippingTaxClass">
+    <Value>Shipping tax category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.ShippingTaxClass.Hint">
+    <Value>Select tax category used for shipping tax calculation.</Value>
+  </LocaleResource>
 </Language>
 '
 

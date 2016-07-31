@@ -1393,7 +1393,7 @@
     <Value>Tax category</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.TaxCategory.Hint">
-    <Value>The tax classification for this option. You can manage tax classifications from Configuration : Tax : Tax Classes.</Value>
+    <Value>The tax classification for this attribute (used to calculate tax). You can manage tax categories by selecting Configuration : Tax : Tax Categories.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.TextPrompt">
     <Value>Text prompt</Value>
@@ -6952,10 +6952,10 @@
     <Value>A value indicating whether payment method additional fee is taxable.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.PaymentMethodAdditionalFeeTaxClass">
-    <Value>Payment method additional fee tax class</Value>
+    <Value>Payment method additional fee tax category</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.PaymentMethodAdditionalFeeTaxClass.Hint">
-    <Value>Select tax class used for payment method additional fee tax calculation.</Value>
+    <Value>Select tax category used for payment method additional fee tax calculation.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.PricesIncludeTax">
     <Value>Prices include tax</Value>
@@ -6976,10 +6976,10 @@
     <Value>A value indicating whether shipping price includes tax.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.ShippingTaxClass">
-    <Value>Shipping tax class</Value>
+    <Value>Shipping tax category</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.ShippingTaxClass.Hint">
-    <Value>Select tax class used for shipping tax calculation.</Value>
+    <Value>Select tax category used for shipping tax calculation.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.TaxBasedOn">
     <Value>Tax based on</Value>
