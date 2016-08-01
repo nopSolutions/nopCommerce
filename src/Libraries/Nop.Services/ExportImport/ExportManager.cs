@@ -958,8 +958,15 @@ namespace Nop.Services.ExportImport
             };
 
             var productList = products.ToList();
+            var productAdvancedMode = _workContext.CurrentCustomer.GetAttribute<bool>("product-advanced-mode");
 
-            return _catalogSettings.ExportImportProductAttributes ? ExportProductsToXlsxWithAttributes(properties, productList) : ExportToXlsx(properties, productList);
+            if (_catalogSettings.ExportImportProductAttributes)
+            {
+                if (productAdvancedMode || _productEditorSettings.ProductAttributes)
+                    return ExportProductsToXlsxWithAttributes(properties, productList);
+            }
+
+            return ExportToXlsx(properties, productList);
         }
 
         /// <summary>
