@@ -486,9 +486,17 @@
     <Content Include="Content\BBEditor\images\underline.gif" />
     <Content Include="Content\BBEditor\images\unlink.gif" />
     <Content Include="Content\BBEditor\images\unordered.gif" />
+    <Content Include="Content\bootstrap\css\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap\css\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap\css\bootstrap.css" />
+    <Content Include="Content\bootstrap\css\bootstrap.min.css" />
+    <Content Include="Content\bootstrap\css\bootstrap.rtl.css" />
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.svg" />
+
     <Content Include="Content\files\ExportImport\Index.htm" />
     <Content Include="Content\files\Index.htm" />
     <Content Include="Content\Images\default-image.png" />
+    <Content Include="Content\install\images\logo-installation.png" />
     <Content Include="Content\jquery-ui-themes\smoothness\images\animated-overlay.gif" />
     <Content Include="Content\jquery-ui-themes\smoothness\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\jquery-ui-themes\smoothness\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -582,6 +590,9 @@
     <Content Include="Content\samples\product_TabletCover.jpeg" />
     <Content Include="Content\samples\product_Windows8.jpeg" />
     <Content Include="Content\samples\product_WomenTShirt.jpg" />
+    <Content Include="Scripts\bootstrap\bootstrap.js" />
+    <Content Include="Scripts\bootstrap\bootstrap.min.js" />
+    <Content Include="Scripts\bootstrap\npm.js" />
     <Content Include="Scripts\fineuploader\edit.gif" />
     <Content Include="Scripts\fineuploader\fineuploader-4.2.2.css" />
     <Content Include="Scripts\fineuploader\fineuploader-4.2.2.min.css" />
@@ -596,6 +607,14 @@
     <Content Include="Content\samples\product_IfYouWait_1.zip" />
     <Content Include="Content\samples\product_NightVision_1.zip" />
     <Content Include="Content\samples\product_ScienceAndFaith_1.zip" />
+    <Content Include="Content\bootstrap\css\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap\css\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap\css\bootstrap.css.map" />
+    <Content Include="Content\bootstrap\css\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff2" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\fineuploader\iframe.xss.response-4.2.2.js" />
     <Content Include="Scripts\fineuploader\jquery.fineuploader-4.2.2.js" />

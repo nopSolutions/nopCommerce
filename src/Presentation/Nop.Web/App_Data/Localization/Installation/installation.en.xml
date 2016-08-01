@@ -30,7 +30,7 @@
     <Value>A SQL connection string is required</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringValues">
-    <Value>Enter SQL connection values</Value>
+    <Value>SQL connection values</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringWrongFormat">
     <Value>Wrong SQL connection string format</Value>
@@ -81,7 +81,7 @@
     <Value>The passwords do not match</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
-    <Value>Enter raw connection string (advanced)</Value>
+    <Value>Raw connection string (advanced)</Value>
   </LocaleResource>
   <LocaleResource Name="Recommended">
     <Value>[Recommended]</Value>
@@ -96,7 +96,7 @@
     <Value>Setup failed: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="SqlAuthentication">
-    <Value>Use SQL Server account</Value>
+    <Value>SQL Server account</Value>
   </LocaleResource>
   <LocaleResource Name="SqlCompact">
     <Value>Use built-in data storage (SQL Server Compact)</Value>
@@ -135,6 +135,12 @@
     <Value>To complete this wizard, you must know some information regarding your database server ("connection string"). Please contact your ISP if necessary. If you're installing on a local machine or server, you might need information from your System Admin.</Value>
   </LocaleResource>
   <LocaleResource Name="WindowsAuthentication">
-    <Value>Use integrated Windows authentication</Value>
+    <Value>Integrated Windows authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Authentication">
+    <Value>Authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionProperties">
+    <Value>Connection properties</Value>
   </LocaleResource>
 </Language>
