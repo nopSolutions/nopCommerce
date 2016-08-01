@@ -1817,7 +1817,7 @@
                             </script>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group @(Model.ProductEditorSettingsModel.Manufacturers ? null : "advanced-setting")">
                         <div class="@leftColumnClass">
                             @Html.NopLabelFor(model => model.SelectedManufacturerIds)
                         </div>
