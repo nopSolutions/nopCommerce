@@ -603,7 +603,13 @@ input[type=file].form-control {
 .form-group + .nav-tabs-localized-fields{
     margin-top: 15px;
 }
-
+.attribute-picture-selection-block .checkbox{
+    display: inline-block;
+}
+.attribute-picture-selection-block label{
+    padding-left: 0;
+    padding-right: 20px;
+}
 
 /* TINY MCE */
 .mce-panel {
