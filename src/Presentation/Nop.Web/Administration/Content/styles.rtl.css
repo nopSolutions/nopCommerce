@@ -127,6 +127,12 @@ ul.common-list {
 }
 
 /* KENDO */
+.k-grid-header .k-header:last-child, .k-grid tbody td:last-child, .k-grid tfoot td:last-child {
+    border-left-width: 0;
+}
+.k-grid-header .k-header:first-child, .k-grid tbody td:first-child, .k-grid tfoot td:first-child {
+    border-left-width: 1px;
+}
 table.adminContent {
     border-collapse: collapse;
     color: #333;
