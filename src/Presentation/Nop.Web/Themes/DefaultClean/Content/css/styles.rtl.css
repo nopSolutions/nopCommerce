@@ -3646,9 +3646,9 @@ label, label + * {
 	font-size: 16px;
 }
 
-.order-review-data ul,
+.order-review-data > div,
 .order-details-area > div,
-.shipment-details-area ul {
+.shipment-details-area > div {
 	width: 350px;
 	max-width: 100%;
 	margin: 0 auto 40px;
@@ -3674,7 +3674,14 @@ label, label + * {
 .shipment-details-area .title:first-child {
 	margin-top: 0;
 }
-.order-details-area .side-list-wrap {
+.order-review-data .title strong,
+.order-details-area .title strong,
+.shipment-details-area .title strong{
+    font-weight: 700;
+}
+.order-review-data .side-list-wrap,
+.order-details-area .side-list-wrap,
+.shipment-details-area .side-list-wrap {
     margin-top: 20px;
 }
 .order-completed .details {
@@ -5734,9 +5741,9 @@ pre {
 .shipment-details-area {
 	overflow: hidden;
 }
-.order-review-data ul,
+.order-review-data > div,
 .order-details-area > div,
-.shipment-details-area ul {
+.shipment-details-area > div {
 	float: right;
 	width: 48%;
 	margin: 0 1% 40px;
