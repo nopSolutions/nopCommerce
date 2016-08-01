@@ -6462,6 +6462,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ManufacturerPartNumber">
     <Value>Manufacturer part number</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Manufacturers">
+    <Value>Manufacturers</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MarkAsNew">
     <Value>Mark as new</Value>
   </LocaleResource>

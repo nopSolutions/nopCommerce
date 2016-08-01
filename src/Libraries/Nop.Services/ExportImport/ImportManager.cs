@@ -323,6 +323,7 @@ namespace Nop.Services.ExportImport
                         {
                             DropDownElements = AttributeValueType.Simple.ToSelectList(useLocalization: false)
                         },
+                        new PropertyByName<ExportProductAttribute>("AssociatedProductId"),
                         new PropertyByName<ExportProductAttribute>("ColorSquaresRgb"),
                         new PropertyByName<ExportProductAttribute>("ImageSquaresPictureId"),
                         new PropertyByName<ExportProductAttribute>("PriceAdjustment"),
@@ -494,6 +495,7 @@ namespace Nop.Services.ExportImport
                             var attributeControlTypeId = managerProductAttribute.GetProperty("AttributeControlType").IntValue;
                             
                             var productAttributeValueId = managerProductAttribute.GetProperty("ProductAttributeValueId").IntValue;
+                            var associatedProductId = managerProductAttribute.GetProperty("AssociatedProductId").IntValue;
                             var valueName = managerProductAttribute.GetProperty("ValueName").StringValue;
                             var attributeValueTypeId = managerProductAttribute.GetProperty("AttributeValueType").IntValue;
                             var colorSquaresRgb = managerProductAttribute.GetProperty("ColorSquaresRgb").StringValue;
@@ -553,7 +555,7 @@ namespace Nop.Services.ExportImport
                                 {
                                     ProductAttributeMappingId = productAttributeMapping.Id,
                                     AttributeValueType = (AttributeValueType) attributeValueTypeId,
-                                    AssociatedProductId = lastLoadedProduct.Id,
+                                    AssociatedProductId = associatedProductId,
                                     Name = valueName,
                                     PriceAdjustment = priceAdjustment,
                                     WeightAdjustment = weightAdjustment,
@@ -571,7 +573,7 @@ namespace Nop.Services.ExportImport
                             else
                             {
                                 pav.AttributeValueTypeId = attributeValueTypeId;
-                                pav.AssociatedProductId = lastLoadedProduct.Id;
+                                pav.AssociatedProductId = associatedProductId;
                                 pav.Name = valueName;
                                 pav.ColorSquaresRgb = colorSquaresRgb;
                                 pav.ImageSquaresPictureId = imageSquaresPictureId;

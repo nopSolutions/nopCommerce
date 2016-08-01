@@ -10,6 +10,7 @@ namespace Nop.Services.ExportImport
         public int PictureId { get; set; }
         public int AttributeControlTypeId { get; set; }
         public int AttributeValueTypeId { get; set; }
+        public int AssociatedProductId { get; set; }
         public int Id { get; set; }
         public int ImageSquaresPictureId { get; set; }
         public string Name { get; set; }

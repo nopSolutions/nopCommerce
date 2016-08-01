@@ -2180,6 +2180,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Mode.Advanced">
     <Value>Advanced</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Manufacturers">
+    <Value>Manufacturers</Value>
+  </LocaleResource> 
 </Language>
 '
 
