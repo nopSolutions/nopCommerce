@@ -2174,6 +2174,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Tax.ShippingTaxClass.Hint">
     <Value>Select tax category used for shipping tax calculation.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Mode.Basic">
+    <Value>Basic</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Mode.Advanced">
+    <Value>Advanced</Value>
+  </LocaleResource>
 </Language>
 '
 

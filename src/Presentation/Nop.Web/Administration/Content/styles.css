@@ -773,13 +773,13 @@ span.grid-report-item.red {
     font-weight: bold;
 }
 .onoffswitch-inner:before {
-    content: "Advanced";
+    content: attr(data-locale-advanced);
     padding-left: 10px;
     background-color: #3c8dbc;
     color: #FFFFFF;
 }
 .onoffswitch-inner:after {
-    content: "Basic";
+    content: attr(data-locale-basic);
     padding-right: 10px;
     background-color: #efefef;
     color: #3380ad;
