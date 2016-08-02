@@ -582,6 +582,8 @@
     <Content Include="Content\samples\product_TabletCover.jpeg" />
     <Content Include="Content\samples\product_Windows8.jpeg" />
     <Content Include="Content\samples\product_WomenTShirt.jpg" />
+    <Content Include="Content\samples\p_attribute_print_1.jpg" />
+    <Content Include="Content\samples\p_attribute_print_2.jpg" />
     <Content Include="Scripts\fineuploader\edit.gif" />
     <Content Include="Scripts\fineuploader\fineuploader-4.2.2.css" />
     <Content Include="Scripts\fineuploader\fineuploader-4.2.2.min.css" />

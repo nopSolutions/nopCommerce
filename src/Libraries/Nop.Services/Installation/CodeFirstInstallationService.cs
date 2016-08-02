@@ -4489,8 +4489,8 @@ namespace Nop.Services.Installation
                 Customer = secondCustomer,
                 CustomerLanguageId = _languageRepository.Table.First().Id,
                 CustomerIp = "127.0.0.1",
-                OrderSubtotalInclTax = 929M,
-                OrderSubtotalExclTax = 929M,
+                OrderSubtotalInclTax = 2460M,
+                OrderSubtotalExclTax = 2460M,
                 OrderSubTotalDiscountInclTax = decimal.Zero,
                 OrderSubTotalDiscountExclTax = decimal.Zero,
                 OrderShippingInclTax = decimal.Zero,
@@ -4499,7 +4499,7 @@ namespace Nop.Services.Installation
                 PaymentMethodAdditionalFeeExclTax = decimal.Zero,
                 TaxRates = "0:0;",
                 OrderTax = decimal.Zero,
-                OrderTotal = 929M,
+                OrderTotal = 2460M,
                 RefundedAmount = decimal.Zero,
                 OrderDiscount = decimal.Zero,
                 CheckoutAttributeDescription = string.Empty,
@@ -4545,16 +4545,16 @@ namespace Nop.Services.Installation
                 Order = secondOrder
             });
 
-            //item Elegant Gemstone Necklace
+            //item Vintage Style Engagement Ring
             var secondOrderItem1 = new OrderItem()
             {
                 OrderItemGuid = Guid.NewGuid(),
                 Order = secondOrder,
-                ProductId = _productRepository.Table.First(p => p.Name.Equals("Elegant Gemstone Necklace")).Id,
-                UnitPriceInclTax = 360M,
-                UnitPriceExclTax = 360M,
-                PriceInclTax = 360M,
-                PriceExclTax = 360M,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Vintage Style Engagement Ring")).Id,
+                UnitPriceInclTax = 2100M,
+                UnitPriceExclTax = 2100M,
+                PriceInclTax = 2100M,
+                PriceExclTax = 2100M,
                 OriginalProductCost = decimal.Zero,
                 AttributeDescription = string.Empty,
                 AttributesXml = string.Empty,
@@ -4576,10 +4576,10 @@ namespace Nop.Services.Installation
                 OrderItemGuid = Guid.NewGuid(),
                 Order = secondOrder,
                 ProductId = _productRepository.Table.First(p => p.Name.Equals("Flower Girl Bracelet")).Id,
-                UnitPriceInclTax = 569M,
-                UnitPriceExclTax = 569M,
-                PriceInclTax = 569M,
-                PriceExclTax = 569M,
+                UnitPriceInclTax = 360M,
+                UnitPriceExclTax = 360M,
+                PriceInclTax = 360M,
+                PriceExclTax = 360M,
                 OriginalProductCost = decimal.Zero,
                 AttributeDescription = string.Empty,
                 AttributesXml = string.Empty,
@@ -4666,7 +4666,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 Order = thirdOrder,
-                ProductId = _productRepository.Table.First(p => p.Name.Equals("If You Wait")).Id,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("If You Wait (donation)")).Id,
                 UnitPriceInclTax = 3M,
                 UnitPriceExclTax = 3M,
                 PriceInclTax = 3M,
@@ -6317,12 +6317,36 @@ namespace Nop.Services.Installation
                 Name = "1 TB",
                 DisplayOrder = 3,
             });
+            var sa5 = new SpecificationAttribute
+            {
+                Name = "Color",
+                DisplayOrder = 1,
+            };
+            sa5.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
+            {
+                Name = "Grey",
+                DisplayOrder = 2,
+                ColorSquaresRgb = "#8a97a8"
+            });
+            sa5.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
+            {
+                Name = "Red",
+                DisplayOrder = 3,
+                ColorSquaresRgb = "#8a374a"
+            });
+            sa5.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
+            {
+                Name = "Blue",
+                DisplayOrder = 4,
+                ColorSquaresRgb = "#47476f"
+            });
             var specificationAttributes = new List<SpecificationAttribute>
                                 {
                                     sa1,
                                     sa2,
                                     sa3,
-                                    sa4
+                                    sa4,
+                                    sa5
                                 };
             _specificationAttributeRepository.Insert(specificationAttributes);
         }
@@ -6334,6 +6358,10 @@ namespace Nop.Services.Installation
                 new ProductAttribute
                 {
                     Name = "Color",
+                },
+                new ProductAttribute
+                {
+                    Name = "Print",
                 },
                 new ProductAttribute
                 {
@@ -7750,12 +7778,16 @@ namespace Nop.Services.Installation
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Sound Forge Pro 11",
+                Name = "Sound Forge Pro 11 (recurring)",
                 Sku = "SF_PRO_11",
                 ShortDescription = "Advanced audio waveform editor.",
                 FullDescription = "<p>Sound Forge™ Pro is the application of choice for a generation of creative and prolific artists, producers, and editors. Record audio quickly on a rock-solid platform, address sophisticated audio processing tasks with surgical precision, and render top-notch master files with ease. New features include one-touch recording, metering for the new critical standards, more repair and restoration tools, and exclusive round-trip interoperability with SpectraLayers Pro. Taken together, these enhancements make this edition of Sound Forge Pro the deepest and most advanced audio editing platform available.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "major-league-baseball-2k9",
+                IsRecurring = true,
+                RecurringCycleLength = 30,
+                RecurringCyclePeriod = RecurringProductCyclePeriod.Months,
+                RecurringTotalCycles = 12,
                 AllowCustomerReviews = true,
                 Price = 54.99M,
                 IsShipEnabled = true,
@@ -8477,6 +8509,29 @@ namespace Nop.Services.Installation
                                 DisplayOrder = 2,
                             },
                         }
+                    },
+                    new ProductAttributeMapping
+                    {
+                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Print"),
+                        AttributeControlType = AttributeControlType.ImageSquares,
+                        IsRequired = true,
+                        ProductAttributeValues =
+                        {
+                            new ProductAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "Natural",
+                                DisplayOrder = 1,
+                                ImageSquaresPictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "p_attribute_print_2.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Natural Print")).Id,
+                            },
+                            new ProductAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "Fresh",
+                                DisplayOrder = 2,
+                                ImageSquaresPictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "p_attribute_print_1.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Fresh Print")).Id,
+                            },
+                        }
                     }
                 },
                 ProductCategories =
@@ -8494,6 +8549,18 @@ namespace Nop.Services.Installation
                         Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "Nike"),
                         DisplayOrder = 2,
                     }
+                },
+                ProductSpecificationAttributes =
+                {
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = false,
+                        DisplayOrder = 1,
+                        SpecificationAttributeOption =
+                            _specificationAttributeRepository.Table.Single(sa => sa.Name == "Color")
+                                .SpecificationAttributeOptions.Single(sao => sao.Name == "Grey")
+                    }
                 }
             };
             allProducts.Add(productNikeFloral);
@@ -8509,6 +8576,9 @@ namespace Nop.Services.Installation
             });
             _productRepository.Insert(productNikeFloral);
 
+            productNikeFloral.ProductAttributeMappings.First(x => x.ProductAttribute.Name == "Print").ProductAttributeValues.First(x => x.Name == "Natural").PictureId = productNikeFloral.ProductPictures.ElementAt(0).PictureId;
+            productNikeFloral.ProductAttributeMappings.First(x => x.ProductAttribute.Name == "Print").ProductAttributeValues.First(x => x.Name == "Fresh").PictureId = productNikeFloral.ProductPictures.ElementAt(1).PictureId;
+            _productRepository.Update(productNikeFloral);
 
 
 
@@ -8519,7 +8589,8 @@ namespace Nop.Services.Installation
                 Name = "adidas Consortium Campus 80s Running Shoes",
                 Sku = "AD_C80_RS",
                 ShortDescription = "adidas Consortium Campus 80s Primeknit Light Maroon/Running Shoes",
-                FullDescription = "<p>One of three colorways of the adidas Consortium Campus 80s Primeknit set to drop alongside each other. This pair comes in light maroon and running white. Featuring a maroon-based primeknit upper with white accents. A limited release, look out for these at select adidas Consortium accounts worldwide.</p>",
+                FullDescription =
+                    "<p>One of three colorways of the adidas Consortium Campus 80s Primeknit set to drop alongside each other. This pair comes in light maroon and running white. Featuring a maroon-based primeknit upper with white accents. A limited release, look out for these at select adidas Consortium accounts worldwide.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "etnies-mens-digit-sneaker",
                 AllowCustomerReviews = true,
@@ -8617,6 +8688,36 @@ namespace Nop.Services.Installation
                         Category = _categoryRepository.Table.Single(c => c.Name == "Shoes"),
                         DisplayOrder = 1,
                     }
+                },
+                ProductSpecificationAttributes =
+                {
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = false,
+                        DisplayOrder = 1,
+                        SpecificationAttributeOption =
+                            _specificationAttributeRepository.Table.Single(sa => sa.Name == "Color")
+                                .SpecificationAttributeOptions.Single(sao => sao.Name == "Grey")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = false,
+                        DisplayOrder = 2,
+                        SpecificationAttributeOption =
+                            _specificationAttributeRepository.Table.Single(sa => sa.Name == "Color")
+                                .SpecificationAttributeOptions.Single(sao => sao.Name == "Red")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = false,
+                        DisplayOrder = 3,
+                        SpecificationAttributeOption =
+                            _specificationAttributeRepository.Table.Single(sa => sa.Name == "Color")
+                                .SpecificationAttributeOptions.Single(sao => sao.Name == "Blue")
+                    },
                 }
             };
             allProducts.Add(productAdidas);
@@ -8654,7 +8755,8 @@ namespace Nop.Services.Installation
                 Name = "Nike SB Zoom Stefan Janoski \"Medium Mint\"",
                 Sku = "NK_ZSJ_MM",
                 ShortDescription = "Nike SB Zoom Stefan Janoski Dark Grey Medium Mint Teal ...",
-                FullDescription = "The newly Nike SB Zoom Stefan Janoski gets hit with a \"Medium Mint\" accents that sits atop a Dark Grey suede. Expected to drop in October.",
+                FullDescription =
+                    "The newly Nike SB Zoom Stefan Janoski gets hit with a \"Medium Mint\" accents that sits atop a Dark Grey suede. Expected to drop in October.",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "v-blue-juniors-cuffed-denim-short-with-rhinestones",
                 AllowCustomerReviews = true,
@@ -8692,8 +8794,21 @@ namespace Nop.Services.Installation
                         Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "Nike"),
                         DisplayOrder = 2,
                     }
+                },
+                ProductSpecificationAttributes =
+                {
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = false,
+                        DisplayOrder = 1,
+                        SpecificationAttributeOption =
+                            _specificationAttributeRepository.Table.Single(sa => sa.Name == "Color")
+                                .SpecificationAttributeOptions.Single(sao => sao.Name == "Grey")
+                    }
                 }
             };
+
             allProducts.Add(productNikeZoom);
             productNikeZoom.ProductPictures.Add(new ProductPicture
             {
@@ -9313,14 +9428,16 @@ namespace Nop.Services.Installation
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "If You Wait",
+                Name = "If You Wait (donation)",
                 Sku = "IF_YOU_WT",
                 ShortDescription = "If You Wait is the debut studio album by English indie pop band London Grammar",
                 FullDescription = "<p>Original Release Date: September 6, 2013</p><p>Genre - Electronica, dream pop downtempo, pop</p><p>Label - Metal & Dust/Ministry of Sound</p><p>Producer - Tim Bran, Roy Kerr London, Grammar</p><p>Length - 43:22</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "single-ladies-put-a-ring-on-it",
+                CustomerEntersPrice = true,
+                MinimumCustomerEnteredPrice = 0.5M,
+                MaximumCustomerEnteredPrice = 100M,
                 AllowCustomerReviews = true,
-                Price = 3M,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
                 StockQuantity = 10000,
@@ -9594,14 +9711,17 @@ namespace Nop.Services.Installation
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Elegant Gemstone Necklace",
+                Name = "Elegant Gemstone Necklace (rental)",
                 Sku = "EG_GEM_NL",
                 ShortDescription = "Classic and elegant gemstone necklace now available in our store",
                 FullDescription = "<p>For those who like jewelry, creating their ownelegant jewelry from gemstone beads provides an economical way to incorporate genuine gemstones into your jewelry wardrobe. Manufacturers create beads from all kinds of precious gemstones and semi-precious gemstones, which are available in bead shops, craft stores, and online marketplaces.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "diamond-pave-earrings",
                 AllowCustomerReviews = true,
-                Price = 569M,
+                IsRental = true,
+                RentalPriceLength = 1,
+                RentalPricePeriod = RentalPricePeriod.Days,
+                Price = 30M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
