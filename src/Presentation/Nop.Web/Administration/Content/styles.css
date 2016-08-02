@@ -135,15 +135,6 @@ table.adminContent {
     vertical-align: middle;
     text-align: left;
 }
-table.adminContent {
-    border-collapse: collapse;
-    color: #333;
-    font-size: 14px;
-    margin: 0;
-    width: 100%;
-    vertical-align: middle;
-    text-align: left;
-}
 .k-button {
     display: inline-block;
     padding: 6px 12px;
