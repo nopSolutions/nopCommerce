@@ -1296,7 +1296,7 @@ set @resources='
     <Value>Specify the cycle length. It is a time period recurring order can be repeated.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RecurringCyclePeriod.Hint">
-    <Value>Specify th cycle period. It defines units time period can be measured in.</Value>
+    <Value>Specify the cycle period. It defines units time period can be measured in.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RecurringTotalCycles.Hint">
     <Value>Total cycles are number of times customer will receive the recurring product.</Value>

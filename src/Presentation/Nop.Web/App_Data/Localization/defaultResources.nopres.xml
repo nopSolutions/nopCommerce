@@ -2758,7 +2758,7 @@
     <Value>Cycle period</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RecurringCyclePeriod.Hint">
-    <Value>Specify th cycle period. It defines units time period can be measured in.</Value>
+    <Value>Specify the cycle period. It defines units time period can be measured in.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RecurringTotalCycles">
     <Value>Total cycles</Value>
