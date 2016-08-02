@@ -4608,8 +4608,8 @@ label, label + * {
 	color: #fff;
 }
 
-.topic-post .post-body {
-	/*topic post-body also gets style from blog post-body*/
+.topic-post .post-text {
+	/*topic post-text also gets style from blog post-body*/
 	padding: 0 10px 20px;
 	line-height: 22px;
 	color: #444;
@@ -5316,7 +5316,7 @@ pre {
 	margin: 1px;
 }
 
-.topic-post .post-body {
+.topic-post .post-text {
     float: left;
     width: 90.5%;
     text-align: left;
@@ -5881,12 +5881,12 @@ pre {
 	text-align: center;
 }
 
-.topic-post .post-body {
-	padding: 20px;
+.topic-post .post-text {
+	padding: 20px 5px;
 }
 
 .topic-post .post-vote{
-    padding: 20px 0;
+    padding: 20px 0 20px 15px;
 }
 
 .forum-table th.replies,
@@ -6812,8 +6812,8 @@ pre {
 	max-width: 600px !important;
 }
 
-.topic-post .post-body {
-    width: 941px;
+.topic-post .post-text {
+    width: 930px;
     max-width: 100%;
 }
 
