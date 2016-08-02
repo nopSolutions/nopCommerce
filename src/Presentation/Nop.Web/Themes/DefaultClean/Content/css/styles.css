@@ -1363,8 +1363,15 @@ label, label + * {
 	height: 5px;
 	background-color: #ddd;
 }
+.product-filter .group li.color-item {
+    padding: 0;
+    display: inline-block;
+}
+.product-filter .group li.color-item a {
+    padding: 0;
+}
 .product-filter .group li.color-item:before {
-	top: 25px;
+    display: none;
 }
 
 .filtered-items .title {
@@ -2237,7 +2244,7 @@ label, label + * {
     overflow: hidden;
 }
 .color-squares .color {
-    display: block !important;
+    display: table !important;
     width: 32px !important;
     height: 32px !important;
     border: 1px solid #444 !important;
@@ -5239,9 +5246,15 @@ pre {
 	float: left;
 	margin: 0 25px 10px 0;
 }
+.product-filter .product-spec-group.product-spec-color {
+    max-width: 190px;
+}
 .product-filter .group li.item {
 	display: block;
 	margin: 0;
+}
+.product-filter .group li.color-item {
+    display: inline-block;
 }
 
 .item-box {
