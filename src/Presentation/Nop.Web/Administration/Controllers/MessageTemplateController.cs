@@ -292,8 +292,8 @@ namespace Nop.Admin.Controllers
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(new SelectListItem { Text = ea.DisplayName, Value = ea.Id.ToString() });
-            //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            //locales (update email account dropdownlists)
+            foreach (var locale in model.Locales)
             {
                 //available email accounts (we add "Standard" value for localizable field)
                 locale.AvailableEmailAccounts.Add(new SelectListItem
@@ -302,12 +302,13 @@ namespace Nop.Admin.Controllers
                     Value = "0"
                 });
                 foreach (var ea in _emailAccountService.GetAllEmailAccounts())
-                    locale.AvailableEmailAccounts.Add(new SelectListItem {
+                    locale.AvailableEmailAccounts.Add(new SelectListItem
+                    {
                         Text = ea.DisplayName,
                         Value = ea.Id.ToString(),
                         Selected = ea.Id == locale.EmailAccountId
                     });
-            });
+            }
             //Store
             PrepareStoresMappingModel(model, messageTemplate, true);
             return View(model);

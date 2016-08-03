@@ -23,19 +23,19 @@
     }
     @if (Model.AllowPickUpInStore)
     {
-        <div class="pickup-points" id="pickup-points-form">
+        <div class="section pickup-points" id="pickup-points-form">
             @if (Model.PickupPoints.Any())
             {
                 if (Model.PickUpInStoreOnly)
                 { 
                     @Html.HiddenFor(x => x.PickUpInStore)
                 }
-                <div class="section select-pickup-points">
+                <div class="select-pickup-points">
                     @if (Model.PickupPoints.Count == 1)
                     {
                         var point = Model.PickupPoints.First();
                         @Html.Hidden("pickup-points-id", string.Format("{0}___{1}", point.Id, point.ProviderSystemName))
-                        <div class="section single-pickup-point">
+                        <div class="single-pickup-point">
                             <ul>
                                 <li class="single-pickup-point name">@point.Name</li>
                                 <li class="single-pickup-point address">@(string.Format("{0} {1} {2}", point.Address, point.City, point.CountryName))</li>
@@ -78,7 +78,7 @@
                 if(Model.DisplayPickupPointsOnMap)
                 {
                     var src = string.Format("https://maps.googleapis.com/maps/api/js{0}", string.IsNullOrEmpty(Model.GoogleMapsApiKey) ? string.Empty : string.Format("?key={0}", Model.GoogleMapsApiKey));
-                    <div class="section pickup-points-map" id="map">
+                    <div class="pickup-points-map" id="map">
                         <script type="text/javascript">
                             var markers = new Map();
                             var googleMap = null;
@@ -163,7 +163,7 @@
                     </div>
                 }
             }
-            <div class="section message-error">
+            <div class="message-error">
                 <ul>
                     @foreach (var warning in Model.Warnings)
                     {

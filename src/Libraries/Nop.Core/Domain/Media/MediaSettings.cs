@@ -42,7 +42,7 @@ namespace Nop.Core.Domain.Media
         /// </summary>
         public int CartThumbPictureSize { get; set; }
         /// <summary>
-        /// Picture size of product pictures for minishpping cart box
+        /// Picture size of product pictures for minishipping cart box
         /// </summary>
         public int MiniCartThumbPictureSize { get; set; }
         /// <summary>
@@ -66,11 +66,11 @@ namespace Nop.Core.Domain.Media
         /// </summary>
         public int DefaultImageQuality { get; set; }
         /// <summary>
-        /// Gets or sets a vaue indicating whether single (/content/images/thumbs/) or multiple (/content/images/thumbs/001/ and /content/images/thumbs/002/) directories will used for picture thumbs
+        /// Gets or sets a value indicating whether single (/content/images/thumbs/) or multiple (/content/images/thumbs/001/ and /content/images/thumbs/002/) directories will used for picture thumbs
         /// </summary>
         public bool MultipleThumbDirectories { get; set; }
         /// <summary>
-        /// Gets or sets a value indicating whether we shold use fast HASHBYTES (hash sum) database function to compare pictures when importing products
+        /// Gets or sets a value indicating whether we should use fast HASHBYTES (hash sum) database function to compare pictures when importing products
         /// </summary>
         public bool ImportProductImagesUsingHash { get; set; }
     }

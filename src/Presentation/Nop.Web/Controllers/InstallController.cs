@@ -6,6 +6,7 @@ using System.Security.Principal;
 using System.Threading;
 using System.Web.Mvc;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
@@ -418,6 +419,9 @@ namespace Nop.Web.Controllers
                 {
                     //reset cache
                     DataSettingsHelper.ResetCache();
+
+                    var cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+                    cacheManager.Clear();
 
                     //clear provider settings if something got wrong
                     settingsManager.SaveSettings(new DataSettings

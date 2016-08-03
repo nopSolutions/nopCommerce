@@ -1192,7 +1192,7 @@
                                     },
                                     toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
                                     editable: {
-                                        confirmation: false,
+                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                         mode: "inline"
                                     },
                                     scrollable: false,
@@ -1401,7 +1401,7 @@
                                         info: false
                                     },
                                     editable: {
-                                        confirmation: false,
+                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                         mode: "inline"
                                     },
                                     scrollable: false,
@@ -1817,7 +1817,7 @@
                             </script>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group @(Model.ProductEditorSettingsModel.Manufacturers ? null : "advanced-setting")">
                         <div class="@leftColumnClass">
                             @Html.NopLabelFor(model => model.SelectedManufacturerIds)
                         </div>
@@ -2053,7 +2053,7 @@
                                         info: false
                                     },
                                     editable: {
-                                        confirmation: false,
+                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                         mode: "inline"
                                     },
                                     scrollable: false,
@@ -2175,7 +2175,7 @@
                                         info: false
                                     },
                                     editable: {
-                                        confirmation: false,
+                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                         mode: "inline"
                                     },
                                     scrollable: false,

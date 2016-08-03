@@ -233,6 +233,43 @@ namespace Nop.Services.ExportImport
             var productAdvancedMode = _workContext.CurrentCustomer.GetAttribute<bool>("product-advanced-mode");
             return !productAdvancedMode && !func(_productEditorSettings);
         }
+        
+        /// <summary>
+        /// Export objects to XLSX
+        /// </summary>
+        /// <typeparam name="T">Type of object</typeparam>
+        /// <param name="properties">Class access to the object through its properties</param>
+        /// <param name="itemsToExport">The objects to export</param>
+        /// <returns></returns>
+        protected virtual byte[] ExportToXlsx<T>(PropertyByName<T>[] properties, IEnumerable<T> itemsToExport)
+        {
+            using (var stream = new MemoryStream())
+            {
+                // ok, we can run the real code of the sample now
+                using (var xlPackage = new ExcelPackage(stream))
+                {
+                    // uncomment this line if you want the XML written out to the outputDir
+                    //xlPackage.DebugMode = true; 
+
+                    // get handle to the existing worksheet
+                    var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(T).Name);
+                    //create Headers and format them 
+
+                    var manager = new PropertyManager<T>(properties.Where(p => !p.Ignore).ToArray());
+                    manager.WriteCaption(worksheet, SetCaptionStyle);
+
+                    var row = 2;
+                    foreach (var items in itemsToExport)
+                    {
+                        manager.CurrentObject = items;
+                        manager.WriteToXlsx(worksheet, row++);
+                    }
+
+                    xlPackage.Save();
+                }
+                return stream.ToArray();
+            }
+        }
 
         private byte[] ExportProductsToXlsxWithAttributes(PropertyByName<Product>[] properties, IEnumerable<Product> itemsToExport)
         {
@@ -253,6 +290,7 @@ namespace Nop.Services.ExportImport
                 {
                     DropDownElements = AttributeValueType.Simple.ToSelectList(useLocalization: false)
                 },
+                new PropertyByName<ExportProductAttribute>("AssociatedProductId", p => p.AssociatedProductId),
                 new PropertyByName<ExportProductAttribute>("ColorSquaresRgb", p => p.ColorSquaresRgb),
                 new PropertyByName<ExportProductAttribute>("ImageSquaresPictureId", p => p.ImageSquaresPictureId),
                 new PropertyByName<ExportProductAttribute>("PriceAdjustment", p => p.PriceAdjustment),
@@ -294,6 +332,7 @@ namespace Nop.Services.ExportImport
                             AttributeTextPrompt = pam.TextPrompt,
                             AttributeIsRequired = pam.IsRequired,
                             AttributeControlTypeId = pam.AttributeControlTypeId,
+                            AssociatedProductId = pav.AssociatedProductId,
                             AttributeDisplayOrder = pam.DisplayOrder,
                             Id = pav.Id,
                             Name = pav.Name,
@@ -443,43 +482,6 @@ namespace Nop.Services.ExportImport
         }
 
         /// <summary>
-        /// Export objects to XLSX
-        /// </summary>
-        /// <typeparam name="T">Type of object</typeparam>
-        /// <param name="properties">Class access to the object through its properties</param>
-        /// <param name="itemsToExport">The objects to export</param>
-        /// <returns></returns>
-        public virtual byte[] ExportToXlsx<T>(PropertyByName<T>[] properties, IEnumerable<T> itemsToExport)
-        {
-            using (var stream = new MemoryStream())
-            {
-                // ok, we can run the real code of the sample now
-                using (var xlPackage = new ExcelPackage(stream))
-                {
-                    // uncomment this line if you want the XML written out to the outputDir
-                    //xlPackage.DebugMode = true; 
-
-                    // get handle to the existing worksheet
-                    var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(T).Name);
-                    //create Headers and format them 
-
-                    var manager = new PropertyManager<T>(properties.Where(p => !p.Ignore).ToArray());
-                    manager.WriteCaption(worksheet, SetCaptionStyle);
-
-                    var row = 2;
-                    foreach (var items in itemsToExport)
-                    {
-                        manager.CurrentObject = items;
-                        manager.WriteToXlsx(worksheet, row++);
-                    }
-
-                    xlPackage.Save();
-                }
-                return stream.ToArray();
-            }
-        }
-
-        /// <summary>
         /// Export category list to xml
         /// </summary>
         /// <returns>Result in XML format</returns>
@@ -615,6 +617,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("OrderMaximumQuantity", null, product.OrderMaximumQuantity.ToString());
                 xmlWriter.WriteElementString("AllowedQuantities", null, product.AllowedQuantities);
                 xmlWriter.WriteElementString("AllowAddingOnlyExistingAttributeCombinations", null, product.AllowAddingOnlyExistingAttributeCombinations.ToString());
+                xmlWriter.WriteElementString("NotReturnable", null, product.NotReturnable.ToString());
                 xmlWriter.WriteElementString("DisableBuyButton", null, product.DisableBuyButton.ToString());
                 xmlWriter.WriteElementString("DisableWishlistButton", null, product.DisableWishlistButton.ToString());
                 xmlWriter.WriteElementString("AvailableForPreOrder", null, product.AvailableForPreOrder.ToString());
@@ -912,6 +915,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("OrderMaximumQuantity", p => p.OrderMaximumQuantity, IgnoreExportPoductProperty(p => p.MaximumCartQuantity)),
                 new PropertyByName<Product>("AllowedQuantities", p => p.AllowedQuantities, IgnoreExportPoductProperty(p => p.AllowedQuantities)),
                 new PropertyByName<Product>("AllowAddingOnlyExistingAttributeCombinations", p => p.AllowAddingOnlyExistingAttributeCombinations, IgnoreExportPoductProperty(p => p.AllowAddingOnlyExistingAttributeCombinations)),
+                new PropertyByName<Product>("NotReturnable", p => p.NotReturnable, IgnoreExportPoductProperty(p => p.NotReturnable)),
                 new PropertyByName<Product>("DisableBuyButton", p => p.DisableBuyButton, IgnoreExportPoductProperty(p => p.DisableBuyButton)),
                 new PropertyByName<Product>("DisableWishlistButton", p => p.DisableWishlistButton, IgnoreExportPoductProperty(p => p.DisableWishlistButton)),
                 new PropertyByName<Product>("AvailableForPreOrder", p => p.AvailableForPreOrder, IgnoreExportPoductProperty(p => p.AvailableForPreOrder)),
@@ -947,15 +951,22 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("Width", p => p.Width, IgnoreExportPoductProperty(p => p.Dimensions)),
                 new PropertyByName<Product>("Height", p => p.Height, IgnoreExportPoductProperty(p => p.Dimensions)),
                 new PropertyByName<Product>("Categories", GetCategories),
-                new PropertyByName<Product>("Manufacturers", GetManufacturers),
+                new PropertyByName<Product>("Manufacturers", GetManufacturers, IgnoreExportPoductProperty(p => p.Manufacturers)),
                 new PropertyByName<Product>("Picture1", p => GetPictures(p)[0]),
                 new PropertyByName<Product>("Picture2", p => GetPictures(p)[1]),
                 new PropertyByName<Product>("Picture3", p => GetPictures(p)[2])
             };
 
             var productList = products.ToList();
+            var productAdvancedMode = _workContext.CurrentCustomer.GetAttribute<bool>("product-advanced-mode");
 
-            return _catalogSettings.ExportImportProductAttributes ? ExportProductsToXlsxWithAttributes(properties, productList): ExportToXlsx(properties, productList);
+            if (_catalogSettings.ExportImportProductAttributes)
+            {
+                if (productAdvancedMode || _productEditorSettings.ProductAttributes)
+                    return ExportProductsToXlsxWithAttributes(properties, productList);
+            }
+
+            return ExportToXlsx(properties, productList);
         }
 
         /// <summary>

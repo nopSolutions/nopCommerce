@@ -18,7 +18,7 @@
                     {
                         var groupList = group.ToList();
                         
-                        <ul class="group product-spec-group">
+                        <ul class="group product-spec-group @(groupList.Any(x => !string.IsNullOrEmpty(x.SpecificationAttributeOptionColorRgb)) ? "product-spec-color" : null )">
                             <li class="title">
                                 <strong>@groupList[0].SpecificationAttributeName</strong>
                             </li>

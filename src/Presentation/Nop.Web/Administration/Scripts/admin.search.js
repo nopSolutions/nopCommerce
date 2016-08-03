@@ -86,7 +86,8 @@ Admin.Search = (function () {
                     ].join("\n"),
                     suggestion: itemTemplate
                 },
-                source: substringMatcher(Admin.Navigation.enumerate)
+                source: substringMatcher(Admin.Navigation.enumerate),
+                limit: 10
             });
 
             var navigateTo = function (item) {
