@@ -46,6 +46,14 @@
                                     @Html.NopEditorFor(model => model.SearchDiscountCouponCode)
                                 </div>
                             </div>
+                            <div class="form-group" @(model.AvailableVendors.SelectionIsNotPossible() || model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.SearchVendorId)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopDropDownList("SearchVendorId", model.AvailableVendors)
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <div class="col-md-4">
                                     @Html.NopLabelFor(model => model.SearchDiscountTypeId)
@@ -170,7 +178,8 @@
                             var data = {
                                 SearchDiscountTypeId: $('#@Html.FieldIdFor(model => model.SearchDiscountTypeId)').val(),
                                 SearchDiscountCouponCode: $('#@Html.FieldIdFor(model => model.SearchDiscountCouponCode)').val(),
-                                SearchDiscountName: $('#@Html.FieldIdFor(model => model.SearchDiscountName)').val()
+                                SearchDiscountName: $('#@Html.FieldIdFor(model => model.SearchDiscountName)').val(),
+                                SearchVendorId: $('#@Html.FieldIdFor(model => model.SearchVendorId)').val()
                             };
                             addAntiForgeryToken(data);
                             return data;

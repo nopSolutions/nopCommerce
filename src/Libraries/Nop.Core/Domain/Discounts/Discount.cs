@@ -153,5 +153,10 @@ namespace Nop.Core.Domain.Discounts
             get { return _appliedToProducts ?? (_appliedToProducts = new List<Product>()); }
             protected set { _appliedToProducts = value; }
         }
+
+        /// <summary>
+        /// Vendor Id of the discount owner
+        /// </summary>
+        public int VendorId { get; set; }
     }
 }

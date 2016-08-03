@@ -23,5 +23,12 @@ namespace Nop.Admin.Models.Discounts
         [NopResourceDisplayName("Admin.Promotions.Discounts.List.SearchDiscountType")]
         public int SearchDiscountTypeId { get; set; }
         public IList<SelectListItem> AvailableDiscountTypes { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
+        public int SearchVendorId { get; set; }
+
+        public bool IsLoggedInAsVendor { get; set; }
+
+        public IList<SelectListItem> AvailableVendors { get; set; }
     }
 }

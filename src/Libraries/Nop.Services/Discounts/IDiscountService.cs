@@ -32,7 +32,7 @@ namespace Nop.Services.Discounts
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Discounts</returns>
         IList<Discount> GetAllDiscounts(DiscountType? discountType,
-            string couponCode = "", string discountName = "", bool showHidden = false);
+            string couponCode = "", string discountName = "", bool showHidden = false, int searchVendorId = 0);
 
         /// <summary>
         /// Inserts a discount
