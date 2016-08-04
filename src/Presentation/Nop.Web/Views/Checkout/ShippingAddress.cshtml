@@ -19,7 +19,7 @@
         {
             if (Model.AllowPickUpInStore && !Model.PickUpInStoreOnly && Model.PickupPoints.Any())
             {
-                <div class="section pickup-in-store">
+                    <div class="section pickup-in-store">
                     <div class="selector">
                         @Html.CheckBoxFor(x => x.PickUpInStore)
                         <label for="@Html.FieldIdFor(model => model.PickUpInStore)">@T("Checkout.PickupPoints").Text</label>
@@ -48,14 +48,14 @@
 
             if (Model.AllowPickUpInStore)
             {
-                <div class="pickup-points" id="pickup-points-form">
+                <div class="section pickup-points" id="pickup-points-form">
                     @if (Model.PickupPoints.Any())
                     {
                         if (Model.PickUpInStoreOnly)
                         { 
                             @Html.HiddenFor(x => x.PickUpInStore)
                         }
-                        <div class="section select-pickup-point">
+                        <div class="select-pickup-point">
                             @if (Model.PickupPoints.Count == 1)
                             {
                                 var point = Model.PickupPoints.First();
@@ -103,7 +103,7 @@
                         if(Model.DisplayPickupPointsOnMap)
                         {
                             var src = string.Format("https://maps.googleapis.com/maps/api/js{0}", string.IsNullOrEmpty(Model.GoogleMapsApiKey) ? string.Empty : string.Format("?key={0}", Model.GoogleMapsApiKey));
-                            <div class="section pickup-points-map" id="map">
+                            <div class="pickup-points-map" id="map">
                                 <script type="text/javascript">
                                     var markers = new Map();
                                     var googleMap = null;
@@ -188,7 +188,7 @@
                             </div>
                         }
                     }
-                    <div class="section message-error">
+                    <div class="message-error">
                         <ul>
                             @foreach (var warning in Model.Warnings)
                             {

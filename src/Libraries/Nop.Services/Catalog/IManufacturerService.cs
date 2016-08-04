@@ -102,10 +102,10 @@ namespace Nop.Services.Catalog
         IDictionary<int, int[]> GetProductManufacturerIds(int[] productIds);
 
         /// <summary>
-        /// Returns a list of IDs of not existing manufacturers
+        /// Returns a list of names of not existing manufacturers
         /// </summary>
-        /// <param name="manufacturerIds">The IDs of the manufacturers to check</param>
-        /// <returns>List of IDs not existing manufacturers</returns>
-        int[] GetNotExistingManufacturers(int[] manufacturerIds);
+        /// <param name="manufacturerNames">The names of the manufacturers to check</param>
+        /// <returns>List of names not existing manufacturers</returns>
+        string[] GetNotExistingManufacturers(string[] manufacturerNames);
     }
 }

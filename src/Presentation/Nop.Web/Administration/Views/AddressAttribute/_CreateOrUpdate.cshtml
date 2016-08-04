@@ -1,5 +1,6 @@
 ﻿@model AddressAttributeModel
 @using Nop.Core.Domain.Catalog;
+@using Nop.Services
 
 <script>
     $(document).ready(function () {
@@ -162,7 +163,7 @@
                                     info: false
                                 },
                                 editable: {
-                                    confirmation: false,
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                     mode: "inline"
                                 },
                                 scrollable: false,
