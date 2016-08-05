@@ -10,6 +10,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
+using Nop.Services;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
@@ -18,7 +19,6 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Security;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 
@@ -318,7 +318,7 @@ namespace Nop.Admin.Controllers
             return PartialView(model);
         }
         [HttpPost]
-        public ActionResult AffiliatedOrderList(DataSourceRequest command, AffiliatedOrderListModel model)
+        public ActionResult AffiliatedOrderListGrid(DataSourceRequest command, AffiliatedOrderListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();

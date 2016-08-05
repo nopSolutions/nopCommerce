@@ -1210,7 +1210,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
         }
 
-        //retunr requests
+        //return requests
         public void HandleEvent(EntityInserted<ReturnRequestAction> eventMessage)
         {
             _cacheManager.RemoveByPattern(RETURNREQUESTACTIONS_PATTERN_KEY);

@@ -739,7 +739,6 @@ namespace Nop.Services.Catalog
             }
             return subTotal;
         }
-        
 
 
         /// <summary>

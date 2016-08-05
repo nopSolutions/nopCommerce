@@ -185,6 +185,16 @@
                 </div>
                 <div class="form-group advanced-setting">
                     <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AutoUpdateOrderTotalsOnEditingOrder_OverrideForStore, model => model.AutoUpdateOrderTotalsOnEditingOrder, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AutoUpdateOrderTotalsOnEditingOrder)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.AutoUpdateOrderTotalsOnEditingOrder)
+                        @Html.ValidationMessageFor(model => model.AutoUpdateOrderTotalsOnEditingOrder)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.DisableBillingAddressCheckoutStep_OverrideForStore, model => model.DisableBillingAddressCheckoutStep, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.DisableBillingAddressCheckoutStep)
                     </div>

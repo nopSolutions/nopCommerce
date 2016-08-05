@@ -1,6 +1,7 @@
 ﻿@model CustomerAttributeModel
 
 @using Nop.Core.Domain.Catalog;
+@using Nop.Services
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 
@@ -41,38 +42,34 @@
 @helper TabInfo()
 {
     <div class="panel-group">
-        @(Html.LocalizedEditor<CustomerAttributeModel, CustomerAttributeLocalizedModel>("customerattribute-localized",
-        @<div class="panel panel-default">
-            <div class="panel-body">
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.Locales[item].Name)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.Locales[item].Name)
-                        @Html.ValidationMessageFor(model => model.Locales[item].Name)
-                    </div>
-                </div>
-                @Html.HiddenFor(model => model.Locales[item].LanguageId)
-            </div>
-        </div>
-    ,
-        @<div class="panel panel-default">
-            <div class="panel-body">
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.Name)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.Name)
-                        @Html.ValidationMessageFor(model => model.Name)
-                    </div>
-                </div>
-            </div>
-        </div>
-            ))
         <div class="panel panel-default">
             <div class="panel-body">
+                @(Html.LocalizedEditor<CustomerAttributeModel, CustomerAttributeLocalizedModel>("customerattribute-localized",
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Locales[item].Name)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Locales[item].Name)
+                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                        </div>
+                    </div>
+                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                </div>
+    ,
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Name)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Name)
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                    </div>
+                </div>
+            ))
                 <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IsRequired)
@@ -165,7 +162,7 @@
                                     info: false
                                 },
                                 editable: {
-                                    confirmation: false,
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                     mode: "inline"
                                 },
                                 scrollable: false,

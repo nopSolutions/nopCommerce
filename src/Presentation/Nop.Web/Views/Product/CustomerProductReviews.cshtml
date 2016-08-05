@@ -6,10 +6,12 @@
 
     //title
     Html.AddTitleParts(T("PageTitle.CustomerProductReviews").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-my-product-reviews-list-page");
 }
 @section left
 {
-    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.Info })
+    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.ProductReviews })
 }
 
 <div class="page account-page my-product-reviews-list-page">
@@ -31,12 +33,18 @@
                 </div>
             }
         }
+        else
+        {
+            <div class="no-data">
+                @T("Account.CustomerProductReviews.NoRecords")
+            </div>
+        }
     </div>
 </div>
 
 @helper GetReviewRow(CustomerProductReviewModel review)
 {
-int ratingPercent = review.Rating * 20;
+    int ratingPercent = review.Rating * 20;
     <div class="product-review-item">
         <div class="review-item-head">
             <div class="review-title">

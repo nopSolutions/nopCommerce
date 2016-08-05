@@ -99,13 +99,16 @@
 
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <div class="form-group">
-                                <div class="col-md-9 col-md-offset-3">
-                                    <p>
-                                        <strong>@T("Admin.Orders.Products.AddNew.UpdateTotals")</strong>
-                                    </p>
+                            @if (!Model.AutoUpdateOrderTotals)
+                            { 
+                                <div class="form-group">
+                                    <div class="col-md-9 col-md-offset-3">
+                                        <p>
+                                            <strong>@T("Admin.Orders.Products.AddNew.UpdateTotals")</strong>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
+                            }
                             <div class="form-group">
                                 <div class="col-md-9 col-md-offset-3">
                                     <button type="submit" class="btn btn-primary">

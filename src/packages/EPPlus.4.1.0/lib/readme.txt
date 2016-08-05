@@ -1,10 +1,10 @@
-EPPlus 4.0.5
+EPPlus 4.1
 
 Visit epplus.codeplex.com for the latest information
 
 EPPlus-Create Advanced Excel spreadsheet.
 
-New features
+New features 4.0
 
 Replaced Packaging API with DotNetZip
 * This will remove any problems with Isolated Storage and enable multithreading
@@ -105,4 +105,18 @@ Release Candidate changes
 * Added LineEnd properties to shapes
 * Added functions Value, DateValue, TimeValue
 * Removed WPF depedency.
+* And fixed a lot of issues. See http://epplus.codeplex.com/SourceControl/list/changesets for more details
+
+4.1
+* Added functions Rank, Rank.eq, Rank.avg and Search
+* Custom function compilers can now be added via FormulaParserManager
+* Applied a whole bunch of pull requests...
+ * Performance and memory usage tweeks
+ * Ability to set and retrieve 'custom' extended application propeties.
+ * Added style QuotePrefix
+ * Added support for MajorTimeUnit and MinorTimeUnit to chart axes
+ * Added GapWidth Property to BarChart and Gapwidth.
+ * Added Fill and Border properties to ChartSerie.
+ * Added support for MajorTimeUnit and MinorTimeUnit to chart axes
+ * Insert/delete row/column now shifts named ranges, comments, tables and pivottables.
 * And fixed a lot of issues. See http://epplus.codeplex.com/SourceControl/list/changesets for more details

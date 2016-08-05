@@ -18,6 +18,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Services;
 using Nop.Services.Affiliates;
 using Nop.Services.Authentication.External;
 using Nop.Services.Catalog;
@@ -767,7 +768,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //load registered customers by default
-            var defaultRoleIds = new[] {_customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id};
+            var defaultRoleIds = new List<int> {_customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id};
             var model = new CustomerListModel
             {
                 UsernamesEnabled = _customerSettings.UsernamesEnabled,
@@ -775,9 +776,19 @@ namespace Nop.Admin.Controllers
                 CompanyEnabled = _customerSettings.CompanyEnabled,
                 PhoneEnabled = _customerSettings.PhoneEnabled,
                 ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled,
-                AvailableCustomerRoles = _customerService.GetAllCustomerRoles(true).Select(cr => cr.ToModel()).ToList(),
                 SearchCustomerRoleIds = defaultRoleIds,
             };
+            var allRoles = _customerService.GetAllCustomerRoles(true);
+            foreach (var role in allRoles)
+            {
+                model.AvailableCustomerRoles.Add(new SelectListItem
+                {
+                    Text = role.Name,
+                    Value = role.Id.ToString(),
+                    Selected = defaultRoleIds.Any(x => x == role.Id)
+                });
+            }
+
             return View(model);
         }
 
@@ -2246,7 +2257,7 @@ namespace Nop.Admin.Controllers
                 searchMonthOfBirth = Convert.ToInt32(model.SearchMonthOfBirth);
 
             var customers = _customerService.GetAllCustomers(
-                customerRoleIds: model.SearchCustomerRoleIds,
+                customerRoleIds: model.SearchCustomerRoleIds.ToArray(),
                 email: model.SearchEmail,
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,
@@ -2313,7 +2324,7 @@ namespace Nop.Admin.Controllers
                 searchMonthOfBirth = Convert.ToInt32(model.SearchMonthOfBirth);
 
             var customers = _customerService.GetAllCustomers(
-                customerRoleIds: model.SearchCustomerRoleIds,
+                customerRoleIds: model.SearchCustomerRoleIds.ToArray(),
                 email: model.SearchEmail,
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,

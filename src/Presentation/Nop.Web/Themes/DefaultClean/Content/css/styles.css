@@ -1363,8 +1363,15 @@ label, label + * {
 	height: 5px;
 	background-color: #ddd;
 }
+.product-filter .group li.color-item {
+    padding: 0;
+    display: inline-block;
+}
+.product-filter .group li.color-item a {
+    padding: 0;
+}
 .product-filter .group li.color-item:before {
-	top: 25px;
+    display: none;
 }
 
 .filtered-items .title {
@@ -2237,7 +2244,7 @@ label, label + * {
     overflow: hidden;
 }
 .color-squares .color {
-    display: block !important;
+    display: table !important;
     width: 32px !important;
     height: 32px !important;
     border: 1px solid #444 !important;
@@ -3530,6 +3537,8 @@ label, label + * {
 	min-width: 400px;
     min-height: 350px;
     vertical-align: middle;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .shipping-method .method-list,
@@ -3617,9 +3626,9 @@ label, label + * {
 	font-size: 16px;
 }
 
-.order-review-data ul,
+.order-review-data > div,
 .order-details-area > div,
-.shipment-details-area ul {
+.shipment-details-area > div {
 	width: 350px;
 	max-width: 100%;
 	margin: 0 auto 40px;
@@ -3645,7 +3654,14 @@ label, label + * {
 .shipment-details-area .title:first-child {
 	margin-top: 0;
 }
-.order-details-area .side-list-wrap {
+.order-review-data .title strong,
+.order-details-area .title strong,
+.shipment-details-area .title strong{
+    font-weight: 700;
+}
+.order-review-data .side-list-wrap,
+.order-details-area .side-list-wrap,
+.shipment-details-area .side-list-wrap {
     margin-top: 20px;
 }
 .order-completed .details {
@@ -4599,8 +4615,8 @@ label, label + * {
 	color: #fff;
 }
 
-.topic-post .post-body {
-	/*topic post-body also gets style from blog post-body*/
+.topic-post .post-text {
+	/*topic post-text also gets style from blog post-body*/
 	padding: 0 10px 20px;
 	line-height: 22px;
 	color: #444;
@@ -4631,6 +4647,7 @@ label, label + * {
 	padding: 20px;
 	font-size: 13px;
     font-style: italic;
+    clear: both;
 }
 
 .topic-post .post-vote span.vote {
@@ -5229,9 +5246,15 @@ pre {
 	float: left;
 	margin: 0 25px 10px 0;
 }
+.product-filter .product-spec-group.product-spec-color {
+    max-width: 190px;
+}
 .product-filter .group li.item {
 	display: block;
 	margin: 0;
+}
+.product-filter .group li.color-item {
+    display: inline-block;
 }
 
 .item-box {
@@ -5306,7 +5329,7 @@ pre {
 	margin: 1px;
 }
 
-.topic-post .post-body {
+.topic-post .post-text {
     float: left;
     width: 90.5%;
     text-align: left;
@@ -5662,9 +5685,9 @@ pre {
 .shipment-details-area {
 	overflow: hidden;
 }
-.order-review-data ul,
+.order-review-data > div,
 .order-details-area > div,
-.shipment-details-area ul {
+.shipment-details-area > div {
 	float: left;
 	width: 48%;
 	margin: 0 1% 40px;
@@ -5871,12 +5894,12 @@ pre {
 	text-align: center;
 }
 
-.topic-post .post-body {
-	padding: 20px;
+.topic-post .post-text {
+	padding: 20px 5px;
 }
 
 .topic-post .post-vote{
-    padding: 20px 0;
+    padding: 20px 0 20px 15px;
 }
 
 .forum-table th.replies,
@@ -6802,8 +6825,8 @@ pre {
 	max-width: 600px !important;
 }
 
-.topic-post .post-body {
-    width: 941px;
+.topic-post .post-text {
+    width: 930px;
     max-width: 100%;
 }
 

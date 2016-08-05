@@ -979,10 +979,6 @@ namespace Nop.Services.Common
             if (shipments == null)
                 throw new ArgumentNullException("shipments");
 
-            var lang = _languageService.GetLanguageById(languageId);
-            if (lang == null)
-                throw new ArgumentException(string.Format("Cannot load language. ID={0}", languageId));
-
             var pageSize = PageSize.A4;
 
             if (_pdfSettings.LetterPageSizeEnabled)
@@ -1009,12 +1005,9 @@ namespace Nop.Services.Common
             {
                 var order = shipment.Order;
 
-                if (languageId == 0)
-                {
-                    lang = _languageService.GetLanguageById(order.CustomerLanguageId);
-                    if (lang == null || !lang.Published)
-                        lang = _workContext.WorkingLanguage;
-                }
+                var lang = _languageService.GetLanguageById(languageId == 0 ? order.CustomerLanguageId : languageId);
+                if (lang == null || !lang.Published)
+                    lang = _workContext.WorkingLanguage;
 
                 var addressTable = new PdfPTable(1);
                 if (lang.Rtl)

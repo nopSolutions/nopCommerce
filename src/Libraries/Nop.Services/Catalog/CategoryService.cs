@@ -566,20 +566,21 @@ namespace Nop.Services.Catalog
             //event notification
             _eventPublisher.EntityUpdated(productCategory);
         }
-        
+
+
         /// <summary>
-        /// Returns a list of IDs of not existing categories
+        /// Returns a list of names of not existing categories
         /// </summary>
-        /// <param name="categoryIds">The IDs of the categories to check</param>
-        /// <returns>List of IDs not existing categories</returns>
-        public virtual int[] GetNotExistingCategories(int[] categoryIds)
+        /// <param name="categoryNames">The nemes of the categories to check</param>
+        /// <returns>List of names not existing categories</returns>
+        public virtual string[] GetNotExistingCategories(string[] categoryNames)
         {
-            if (categoryIds == null)
-                throw new ArgumentNullException("categoryIds");
+            if (categoryNames == null)
+                throw new ArgumentNullException("categoryNames");
 
             var query = _categoryRepository.Table;
-            var queryFilter = categoryIds.Distinct().ToArray();
-            var filter = query.Select(c => c.Id).Where(c => queryFilter.Contains(c)).ToList();
+            var queryFilter = categoryNames.Distinct().ToArray();
+            var filter = query.Select(c => c.Name).Where(c => queryFilter.Contains(c)).ToList();
 
             return queryFilter.Except(filter).ToArray();
         }

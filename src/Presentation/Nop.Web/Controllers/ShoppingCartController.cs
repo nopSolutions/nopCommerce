@@ -2485,8 +2485,6 @@ namespace Nop.Web.Controllers
                             model.Warnings.Add(error);
                 }
 
-                if(!model.ShippingOptions.Any())
-                    model.Warnings.Add(_localizationService.GetResource("Checkout.ShippingIsNotAllowed"));
             }
 
             return PartialView("_EstimateShippingResult", model);

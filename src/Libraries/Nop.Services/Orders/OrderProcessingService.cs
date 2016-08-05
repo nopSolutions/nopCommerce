@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -686,6 +685,15 @@ namespace Nop.Services.Orders
                 _customerService.UpdateCustomer(details.Customer);
             }
 
+            return order;
+        }
+
+        /// <summary>
+        /// Send "order placed" notifications and save order notes
+        /// </summary>
+        /// <param name="order">Order</param>
+        protected virtual void SendNotificationsAndSaveNotes(Order order)
+        {
             //notes, messages
             if (_workContext.OriginalCustomerIfImpersonated != null)
                 //this order is placed by a store administrator impersonating a customer
@@ -750,10 +758,7 @@ namespace Nop.Services.Orders
                     _orderService.UpdateOrder(order);
                 }
             }
-
-            return order;
         }
-
         /// <summary>
         /// Award (earn) reward points (for placing a new order)
         /// </summary>
@@ -1356,6 +1361,9 @@ namespace Nop.Services.Orders
 
                     #endregion
 
+                    //notifications
+                    SendNotificationsAndSaveNotes(order);
+
                     //reset checkout data
                     _customerService.ResetCheckoutData(details.Customer, processPaymentRequest.StoreId, clearCouponCodes: true, clearCheckoutAttributes: true);
                     _customerActivityService.InsertActivity("PublicStore.PlaceOrder", _localizationService.GetResource("ActivityLog.PublicStore.PlaceOrder"), order.Id);
@@ -1393,6 +1401,118 @@ namespace Nop.Services.Orders
             #endregion
 
             return result;
+        }
+
+        /// <summary>
+        /// Update order totals
+        /// </summary>
+        /// <param name="updateOrderParameters">Parameters for the updating order</param>
+        public virtual void UpdateOrderTotals(UpdateOrderParameters updateOrderParameters)
+        {
+            if (!_orderSettings.AutoUpdateOrderTotalsOnEditingOrder)
+                return;
+
+            var updatedOrder = updateOrderParameters.UpdatedOrder;
+            var updatedOrderItem = updateOrderParameters.UpdatedOrderItem;
+
+            //restore shopping cart from order items
+            var restoredCart = updatedOrder.OrderItems.Select(orderItem => new ShoppingCartItem
+            {
+                Id = orderItem.Id,
+                AttributesXml = orderItem.AttributesXml,
+                Customer = updatedOrder.Customer,
+                Product = orderItem.Product,
+                Quantity = orderItem.Id == updatedOrderItem.Id ? updateOrderParameters.Quantity : orderItem.Quantity,
+                RentalEndDateUtc = orderItem.RentalEndDateUtc,
+                RentalStartDateUtc = orderItem.RentalStartDateUtc,
+                ShoppingCartType = ShoppingCartType.ShoppingCart,
+                StoreId = updatedOrder.StoreId
+            }).ToList();
+
+            //get shopping cart item which has been updated
+            var updatedShoppingCartItem = restoredCart.FirstOrDefault(shoppingCartItem => shoppingCartItem.Id == updatedOrderItem.Id);
+            var itemDeleted = updatedShoppingCartItem == null;
+
+            //validate shopping cart for warnings
+            updateOrderParameters.Warnings.AddRange(_shoppingCartService.GetShoppingCartWarnings(restoredCart, string.Empty, false));
+            if (!itemDeleted)
+                updateOrderParameters.Warnings.AddRange(_shoppingCartService.GetShoppingCartItemWarnings(updatedOrder.Customer, updatedShoppingCartItem.ShoppingCartType,
+                    updatedShoppingCartItem.Product, updatedOrder.StoreId, updatedShoppingCartItem.AttributesXml, updatedShoppingCartItem.CustomerEnteredPrice,
+                    updatedShoppingCartItem.RentalStartDateUtc, updatedShoppingCartItem.RentalEndDateUtc, updatedShoppingCartItem.Quantity, false));
+
+            _orderTotalCalculationService.UpdateOrderTotals(updateOrderParameters, restoredCart);
+
+            if (updateOrderParameters.PickupPoint != null)
+            {
+                updatedOrder.PickUpInStore = true;
+                updatedOrder.PickupAddress = new Address
+                {
+                    Address1 = updateOrderParameters.PickupPoint.Address,
+                    City = updateOrderParameters.PickupPoint.City,
+                    Country = _countryService.GetCountryByTwoLetterIsoCode(updateOrderParameters.PickupPoint.CountryCode),
+                    ZipPostalCode = updateOrderParameters.PickupPoint.ZipPostalCode,
+                    CreatedOnUtc = DateTime.UtcNow,
+                };
+                updatedOrder.ShippingMethod = string.Format(_localizationService.GetResource("Checkout.PickupPoints.Name"), updateOrderParameters.PickupPoint.Name);
+                updatedOrder.ShippingRateComputationMethodSystemName = updateOrderParameters.PickupPoint.ProviderSystemName;
+            }
+
+            if (!itemDeleted)
+            {
+                updatedOrderItem.ItemWeight = _shippingService.GetShoppingCartItemWeight(updatedShoppingCartItem);
+                updatedOrderItem.OriginalProductCost = _priceCalculationService.GetProductCost(updatedShoppingCartItem.Product, updatedShoppingCartItem.AttributesXml);
+                updatedOrderItem.AttributeDescription = _productAttributeFormatter.FormatAttributes(updatedShoppingCartItem.Product,
+                    updatedShoppingCartItem.AttributesXml, updatedOrder.Customer);
+
+                //gift cards
+                if (updatedShoppingCartItem.Product.IsGiftCard)
+                {
+                    string giftCardRecipientName;
+                    string giftCardRecipientEmail;
+                    string giftCardSenderName;
+                    string giftCardSenderEmail;
+                    string giftCardMessage;
+                    _productAttributeParser.GetGiftCardAttribute(updatedShoppingCartItem.AttributesXml, out giftCardRecipientName,
+                        out giftCardRecipientEmail, out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
+
+                    for (var i = 0; i < updatedShoppingCartItem.Quantity; i++)
+                    {
+                        _giftCardService.InsertGiftCard(new GiftCard
+                        {
+                            GiftCardType = updatedShoppingCartItem.Product.GiftCardType,
+                            PurchasedWithOrderItem = updatedOrderItem,
+                            Amount = updatedShoppingCartItem.Product.OverriddenGiftCardAmount.HasValue ?
+                                updatedShoppingCartItem.Product.OverriddenGiftCardAmount.Value : updatedOrderItem.UnitPriceExclTax,
+                            IsGiftCardActivated = false,
+                            GiftCardCouponCode = _giftCardService.GenerateGiftCardCode(),
+                            RecipientName = giftCardRecipientName,
+                            RecipientEmail = giftCardRecipientEmail,
+                            SenderName = giftCardSenderName,
+                            SenderEmail = giftCardSenderEmail,
+                            Message = giftCardMessage,
+                            IsRecipientNotified = false,
+                            CreatedOnUtc = DateTime.UtcNow
+                        });
+                    }
+                }
+            }
+
+            _orderService.UpdateOrder(updatedOrder);
+
+            //discount usage history
+            var discountUsageHistoryForOrder = _discountService.GetAllDiscountUsageHistory(null, updatedOrder.Customer.Id, updatedOrder.Id);
+            foreach (var discount in updateOrderParameters.AppliedDiscounts)
+            {
+                if (!discountUsageHistoryForOrder.Where(history => history.DiscountId == discount.Id).Any())
+                    _discountService.InsertDiscountUsageHistory(new DiscountUsageHistory
+                    {
+                        Discount = discount,
+                        Order = updatedOrder,
+                        CreatedOnUtc = DateTime.UtcNow
+                    });
+            }
+
+            CheckOrderStatus(updatedOrder);
         }
 
         /// <summary>
@@ -1616,6 +1736,9 @@ namespace Nop.Services.Orders
                         //inventory
                         _productService.AdjustInventory(orderItem.Product, -orderItem.Quantity, orderItem.AttributesXml);
                     }
+
+                    //notifications
+                    SendNotificationsAndSaveNotes(order);
 
                     //check order status
                     CheckOrderStatus(order);

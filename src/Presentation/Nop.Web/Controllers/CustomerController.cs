@@ -31,7 +31,6 @@ using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
-using Nop.Services.Vendors;
 using Nop.Web.Extensions;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -1245,21 +1244,24 @@ namespace Nop.Web.Controllers
             {
                 RouteName = "CustomerInfo",
                 Title = _localizationService.GetResource("Account.CustomerInfo"),
-                Tab = CustomerNavigationEnum.Info
+                Tab = CustomerNavigationEnum.Info,
+                ItemClass = "customer-info"
             });
 
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerAddresses",
                 Title = _localizationService.GetResource("Account.CustomerAddresses"),
-                Tab = CustomerNavigationEnum.Addresses
+                Tab = CustomerNavigationEnum.Addresses,
+                ItemClass = "customer-addresses"
             });
 
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerOrders",
                 Title = _localizationService.GetResource("Account.CustomerOrders"),
-                Tab = CustomerNavigationEnum.Orders
+                Tab = CustomerNavigationEnum.Orders,
+                ItemClass = "customer-orders"
             });
 
             if (_orderSettings.ReturnRequestsEnabled &&
@@ -1270,7 +1272,8 @@ namespace Nop.Web.Controllers
                 {
                     RouteName = "CustomerReturnRequests",
                     Title = _localizationService.GetResource("Account.CustomerReturnRequests"),
-                    Tab = CustomerNavigationEnum.ReturnRequests
+                    Tab = CustomerNavigationEnum.ReturnRequests,
+                    ItemClass = "return-requests"
                 });
             }
 
@@ -1280,7 +1283,8 @@ namespace Nop.Web.Controllers
                 {
                     RouteName = "CustomerDownloadableProducts",
                     Title = _localizationService.GetResource("Account.DownloadableProducts"),
-                    Tab = CustomerNavigationEnum.DownloadableProducts
+                    Tab = CustomerNavigationEnum.DownloadableProducts,
+                    ItemClass = "downloadable-products"
                 });
             }
 
@@ -1290,7 +1294,8 @@ namespace Nop.Web.Controllers
                 {
                     RouteName = "CustomerBackInStockSubscriptions",
                     Title = _localizationService.GetResource("Account.BackInStockSubscriptions"),
-                    Tab = CustomerNavigationEnum.BackInStockSubscriptions
+                    Tab = CustomerNavigationEnum.BackInStockSubscriptions,
+                    ItemClass = "back-in-stock-subscriptions"
                 });
             }
 
@@ -1300,7 +1305,8 @@ namespace Nop.Web.Controllers
                 {
                     RouteName = "CustomerRewardPoints",
                     Title = _localizationService.GetResource("Account.RewardPoints"),
-                    Tab = CustomerNavigationEnum.RewardPoints
+                    Tab = CustomerNavigationEnum.RewardPoints,
+                    ItemClass = "reward-points"
                 });
             }
 
@@ -1308,7 +1314,8 @@ namespace Nop.Web.Controllers
             {
                 RouteName = "CustomerChangePassword",
                 Title = _localizationService.GetResource("Account.ChangePassword"),
-                Tab = CustomerNavigationEnum.ChangePassword
+                Tab = CustomerNavigationEnum.ChangePassword,
+                ItemClass = "change-password"
             });
 
             if (_customerSettings.AllowCustomersToUploadAvatars)
@@ -1317,7 +1324,8 @@ namespace Nop.Web.Controllers
                 {
                     RouteName = "CustomerAvatar",
                     Title = _localizationService.GetResource("Account.Avatar"),
-                    Tab = CustomerNavigationEnum.Avatar
+                    Tab = CustomerNavigationEnum.Avatar,
+                    ItemClass = "customer-avatar"
                 });
             }
 
@@ -1327,7 +1335,8 @@ namespace Nop.Web.Controllers
                 {
                     RouteName = "CustomerForumSubscriptions",
                     Title = _localizationService.GetResource("Account.ForumSubscriptions"),
-                    Tab = CustomerNavigationEnum.ForumSubscriptions
+                    Tab = CustomerNavigationEnum.ForumSubscriptions,
+                    ItemClass = "forum-subscriptions"
                 });
             }
             if (_catalogSettings.ShowProductReviewsTabOnAccountPage)
@@ -1336,7 +1345,8 @@ namespace Nop.Web.Controllers
                 {
                     RouteName = "CustomerProductReviews",
                     Title = _localizationService.GetResource("Account.CustomerProductReviews"),
-                    Tab = CustomerNavigationEnum.ProductReviews
+                    Tab = CustomerNavigationEnum.ProductReviews,
+                    ItemClass = "customer-reviews"
                 });
             }
             if (_vendorSettings.AllowVendorsToEditInfo && _workContext.CurrentVendor != null)
@@ -1345,7 +1355,8 @@ namespace Nop.Web.Controllers
                 {
                     RouteName = "CustomerVendorInfo",
                     Title = _localizationService.GetResource("Account.VendorInfo"),
-                    Tab = CustomerNavigationEnum.VendorInfo
+                    Tab = CustomerNavigationEnum.VendorInfo,
+                    ItemClass = "customer-vendor-info"
                 });
             }
 

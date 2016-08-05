@@ -26,7 +26,7 @@ namespace Nop.Core.Domain.Catalog
         public bool ProductTemplate { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether 'Admin comment' is shown
+        /// Gets or sets a value indicating whether 'Admin comment' feild is shown
         /// </summary>
         public bool AdminComment { get; set; }
 
@@ -261,6 +261,17 @@ namespace Nop.Core.Domain.Catalog
         public bool NotReturnable { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether 'Weight' field is shown
+        /// </summary>
+        public bool Weight { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Dimension' fields (height, length, width) are shown
+        /// </summary>
+        public bool Dimensions { get; set; }
+
+
+        /// <summary>
         /// Gets or sets a value indicating whether 'Available start date' field is shown
         /// </summary>
         public bool AvailableStartDate { get; set; }
@@ -319,5 +330,25 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether 'Purchased with orders' tab is shown
         /// </summary>
         public bool PurchasedWithOrders { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether one column is used on the product details page
+        /// </summary>
+        public bool OneColumnProductPage { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Product attributes' tab is shown
+        /// </summary>
+        public bool ProductAttributes { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Specification attributes' tab is shown
+        /// </summary>
+        public bool SpecificationAttributes { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Manufacturers' field is shown
+        /// </summary>
+        public bool Manufacturers { get; set; }
     }
 }

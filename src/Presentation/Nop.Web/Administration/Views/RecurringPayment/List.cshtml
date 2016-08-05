@@ -23,6 +23,9 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
+                    <p>
+                        @T("Admin.RecurringPayments.Description")
+                    </p>
                     <div id="recurringpayments-grid"></div>
 
                     <script>
@@ -58,7 +61,7 @@
                                     pageSizes: [@(gridPageSizes)]
                                 },
                                 editable: {
-                                    confirmation: false,
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                     mode: "inline"
                                 },
                                 scrollable: false,

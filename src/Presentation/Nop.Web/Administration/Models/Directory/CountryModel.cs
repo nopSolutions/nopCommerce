@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
-using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Directory;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
@@ -15,6 +15,9 @@ namespace Nop.Admin.Models.Directory
         public CountryModel()
         {
             Locales = new List<CountryLocalizedModel>();
+
+            SelectedStoreIds = new List<int>();
+            AvailableStores = new List<SelectListItem>();
         }
         [NopResourceDisplayName("Admin.Configuration.Countries.Fields.Name")]
         [AllowHtml]
@@ -55,12 +58,11 @@ namespace Nop.Admin.Models.Directory
         public IList<CountryLocalizedModel> Locales { get; set; }
 
 
-        //Store mapping
+        //store mapping
         [NopResourceDisplayName("Admin.Configuration.Countries.Fields.LimitedToStores")]
-        public bool LimitedToStores { get; set; }
-        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.AvailableStores")]
-        public List<StoreModel> AvailableStores { get; set; }
-        public int[] SelectedStoreIds { get; set; }
+        [UIHint("MultiSelect")]
+        public IList<int> SelectedStoreIds { get; set; }
+        public IList<SelectListItem> AvailableStores { get; set; }
     }
 
     public partial class CountryLocalizedModel : ILocalizedModelLocal

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -30,7 +29,6 @@ namespace Nop.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
-        private readonly IWebHelper _webHelper;
 
 		#endregion
 
@@ -41,8 +39,7 @@ namespace Nop.Admin.Controllers
             ICurrencyService currencyService,
             IStoreService storeService, 
             IStoreMappingService storeMappingService,
-            IPermissionService permissionService,
-            IWebHelper webHelper)
+            IPermissionService permissionService)
 		{
 			this._localizationService = localizationService;
             this._languageService = languageService;
@@ -50,7 +47,6 @@ namespace Nop.Admin.Controllers
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
-            this._webHelper= webHelper;
 		}
 
 		#endregion 
@@ -75,16 +71,18 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
+            if (!excludeProperties && language != null)
+                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(language).ToList();
+
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
             {
-                if (language != null)
+                model.AvailableStores.Add(new SelectListItem
                 {
-                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(language);
-                }
+                    Text = store.Name,
+                    Value = store.Id.ToString(),
+                    Selected = model.SelectedStoreIds.Contains(store.Id)
+                });
             }
         }
 
@@ -114,11 +112,13 @@ namespace Nop.Admin.Controllers
         [NonAction]
         protected virtual void SaveStoreMappings(Language language, LanguageModel model)
         {
+            language.LimitedToStores = model.SelectedStoreIds.Any();
+
             var existingStoreMappings = _storeMappingService.GetStoreMappings(language);
             var allStores = _storeService.GetAllStores();
             foreach (var store in allStores)
             {
-                if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
+                if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)

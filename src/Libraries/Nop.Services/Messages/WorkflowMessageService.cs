@@ -71,6 +71,11 @@ namespace Nop.Services.Messages
             string attachmentFilePath = null, string attachmentFileName = null,
             string replyToEmailAddress = null, string replyToName = null)
         {
+            if (messageTemplate == null)
+                throw new ArgumentNullException("messageTemplate");
+            if (emailAccount == null)
+                throw new ArgumentNullException("emailAccount");
+
             //retrieve localized message template data
             var bcc = messageTemplate.GetLocalized(mt => mt.BccEmailAddresses, languageId);
             var subject = messageTemplate.GetLocalized(mt => mt.Subject, languageId);

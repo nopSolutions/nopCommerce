@@ -114,6 +114,15 @@
                         @Html.RequiredHint()
                         @Html.ValidationMessageFor(model => model.Email)
                     </div>
+                    @if (Model.EnteringEmailTwice)
+                    {
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.ConfirmEmail, new { }, ":")
+                            @Html.EditorFor(model => model.ConfirmEmail)
+                            @Html.RequiredHint()
+                            @Html.ValidationMessageFor(model => model.ConfirmEmail)
+                        </div>
+                    }
                     @if (Model.UsernamesEnabled)
                     {
                         <div class="inputs">
@@ -127,15 +136,6 @@
                             }
                         </div>
 
-                    }
-                    @if (Model.EnteringEmailTwice)
-                    {
-                        <div class="inputs">
-                            @Html.LabelFor(model => model.ConfirmEmail, new { }, ":")
-                            @Html.EditorFor(model => model.ConfirmEmail)
-                            @Html.RequiredHint()
-                            @Html.ValidationMessageFor(model => model.ConfirmEmail)
-                        </div>
                     }
                 </div>
             </div>

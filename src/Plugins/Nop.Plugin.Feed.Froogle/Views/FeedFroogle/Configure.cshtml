@@ -293,7 +293,7 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                                 pageSizes: [@(gridPageSizes)]
                             },
                             editable: {
-                                confirmation: false,
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                 mode: "popup",
                                 template: kendo.template($("#google-popup-editor").html())
                             },

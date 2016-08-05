@@ -457,18 +457,18 @@ namespace Nop.Services.Catalog
 
 
         /// <summary>
-        /// Returns a list of IDs of not existing manufacturers
+        /// Returns a list of names of not existing manufacturers
         /// </summary>
-        /// <param name="manufacturerIds">The IDs of the manufacturers to check</param>
-        /// <returns>List of IDs not existing manufacturers</returns>
-        public virtual int[] GetNotExistingManufacturers(int[] manufacturerIds)
+        /// <param name="manufacturerNames">The names of the manufacturers to check</param>
+        /// <returns>List of names not existing manufacturers</returns>
+        public virtual string[] GetNotExistingManufacturers(string[] manufacturerNames)
         {
-            if (manufacturerIds == null)
-                throw new ArgumentNullException("manufacturerIds");
+            if (manufacturerNames == null)
+                throw new ArgumentNullException("manufacturerNames");
 
             var query = _manufacturerRepository.Table;
-            var queryFilter = manufacturerIds.Distinct().ToArray();
-            var filter = query.Select(m => m.Id).Where(m => queryFilter.Contains(m)).ToList();
+            var queryFilter = manufacturerNames.Distinct().ToArray();
+            var filter = query.Select(m => m.Name).Where(m => queryFilter.Contains(m)).ToList();
             return queryFilter.Except(filter).ToArray();
         }
 

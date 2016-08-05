@@ -60,7 +60,6 @@ namespace Nop.Admin.Models.Settings
         public bool BypassShippingMethodSelectionIfOnlyOne { get; set; }
         public bool BypassShippingMethodSelectionIfOnlyOne_OverrideForStore { get; set; }
         
-        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.ShippingOriginAddress")]
         public AddressModel ShippingOriginAddress { get; set; }
         public bool ShippingOriginAddress_OverrideForStore { get; set; }
     }
