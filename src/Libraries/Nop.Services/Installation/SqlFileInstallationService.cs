@@ -63,7 +63,7 @@ namespace Nop.Services.Installation
 
         protected virtual void UpdateDefaultCustomer(string defaultUserEmail, string defaultUserPassword)
         {
-            var adminUser = _customerRepository.Table.Single(x => x.Email == "admin@yourStore.com");
+            var adminUser = _customerRepository.Table.Single(x => !x.IsSystemAccount);
             if (adminUser == null)
                 throw new Exception("Admin user cannot be loaded");
 
