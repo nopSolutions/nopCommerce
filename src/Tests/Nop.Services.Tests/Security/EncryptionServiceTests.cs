@@ -36,7 +36,7 @@ namespace Nop.Services.Tests.Security
             string password = "MyLittleSecret";
             var saltKey = "salt1";
             var hashedPassword = _encryptionService.CreatePasswordHash(password, saltKey, "SHA256");
-            hashedPassword.ShouldEqual("4506D65FDB6F3A8CF97278AB7C5C62DEC35EADD474BE1E6243776691D56E1B27F71C1D9085B26BD7513BED89822204D6B8FCBD6E665D46558C48F56D21B2A293");
+            hashedPassword.ShouldEqual("9C00CE74914D28BC6E99880E19D334AEC5500709E768D1F18B1C607284D801EC");
         }
 
 
