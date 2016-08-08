@@ -274,6 +274,7 @@
     <Compile Include="Infrastructure\BackwardCompatibility2XRouteProvider.cs" />
     <Compile Include="Infrastructure\GenericUrlRouteProvider.cs" />
     <Compile Include="Infrastructure\Installation\IInstallationLocalizationService.cs" />
+    <Compile Include="Infrastructure\Installation\InstallationExtensions.cs" />
     <Compile Include="Infrastructure\Installation\InstallationLanguage.cs" />
     <Compile Include="Infrastructure\Installation\InstallationLocalizationService.cs" />
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />

@@ -1,4 +1,5 @@
 ﻿@model InstallModel
+@using Nop.Core.Domain.Security
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Install;
 @using Nop.Web.Infrastructure.Installation;
@@ -174,6 +175,27 @@
                                                     @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "textbox" })
                                                 </td>
                                             </tr>
+                                            <tr>
+                                                <td nowrap="nowrap" align="left">
+                                                    <label for="EncryptionAlgorithm">
+                                                        @ILS.GetResource("EncryptionAlgorithm"):
+                                                    </label>
+                                                </td>
+                                                <td width="100%">
+                                                    @Html.NopDropDownListFor(model => model.EncryptionAlgorithm, ((EncryptionFormat) Model.EncryptionAlgorithm).ToInstallSelectList())
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td nowrap="nowrap" align="left">
+                                                    <label for="HashAlgorithm">
+                                                        @ILS.GetResource("HashAlgorithm"):
+                                                    </label>
+                                                </td>
+                                                <td width="100%">
+                                                    @Html.NopDropDownListFor(model => model.HashAlgorithm, ((HashFormat)Model.HashAlgorithm).ToInstallSelectList())
+                                                </td>
+                                            </tr>
+
                                             @if (!Model.DisableSampleDataOption)
                                             {
                                                 <tr>

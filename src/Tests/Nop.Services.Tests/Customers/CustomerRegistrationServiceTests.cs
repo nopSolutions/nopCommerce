@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
@@ -8,6 +9,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Services.Common;
+using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -42,6 +44,8 @@ namespace Nop.Services.Tests.Customers
         private RewardPointsSettings _rewardPointsSettings;
         private SecuritySettings _securitySettings;
         private IRewardPointService _rewardPointService;
+        private IStoreContext _storeContext;
+        private ISettingService _settingService;
 
         [SetUp]
         public new void SetUp()
@@ -49,7 +53,8 @@ namespace Nop.Services.Tests.Customers
             _customerSettings = new CustomerSettings();
             _securitySettings = new SecuritySettings
             {
-                EncryptionKey = "273ece6f97dd844d"
+                EncryptionKey = "273ece6f97dd844d",
+                SaltKeySize = 16
             };
             _rewardPointsSettings = new RewardPointsSettings
             {
@@ -66,7 +71,8 @@ namespace Nop.Services.Tests.Customers
                 Active = true
             };
 
-            string saltKey = _encryptionService.CreateSaltKey(5);
+
+            string saltKey = _encryptionService.CreateSaltKey(_securitySettings.SaltKeySize);
             string password = _encryptionService.CreatePasswordHash("password", saltKey);
             customer1.PasswordSalt = saltKey;
             customer1.Password = password;
@@ -129,13 +135,17 @@ namespace Nop.Services.Tests.Customers
             _rewardPointService = MockRepository.GenerateMock<IRewardPointService>();
 
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
+
+            _settingService = MockRepository.GenerateMock<ISettingService>();
+            _storeContext = MockRepository.GenerateMock<IStoreContext>();
+
             _customerService = new CustomerService(new NopNullCache(), _customerRepo, _customerRoleRepo,
                 _genericAttributeRepo, _orderRepo, _forumPostRepo, _forumTopicRepo,
                 null, null, null, null, null,
                 _genericAttributeService, null, null, _eventPublisher, _customerSettings, null);
             _customerRegistrationService = new CustomerRegistrationService(_customerService,
                 _encryptionService, _newsLetterSubscriptionService, _localizationService,
-                _storeService, _rewardPointService, _rewardPointsSettings, _customerSettings);
+                _storeService, _rewardPointService, _settingService, _storeContext, _rewardPointsSettings, _customerSettings);
         }
 
         //[Test]

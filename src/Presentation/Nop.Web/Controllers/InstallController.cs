@@ -9,6 +9,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
+using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Installation;
@@ -195,6 +196,8 @@ namespace Nop.Web.Controllers
                 SqlServerCreateDatabase = false,
                 UseCustomCollation = false,
                 Collation = "SQL_Latin1_General_CP1_CI_AS",
+                EncryptionAlgorithm = (int)EncryptionFormat.Aes256,
+                HashAlgorithm = (int)HashFormat.Sha512
             };
             foreach (var lang in _locService.GetAvailableLanguages())
             {
@@ -373,7 +376,8 @@ namespace Nop.Web.Controllers
 
                     //now resolve installation service
                     var installationService = EngineContext.Current.Resolve<IInstallationService>();
-                    installationService.InstallData(model.AdminEmail, model.AdminPassword, model.InstallSampleData);
+                    installationService.InstallData(model.AdminEmail, model.AdminPassword, 
+                        (HashFormat)model.HashAlgorithm, (EncryptionFormat)model.EncryptionAlgorithm, model.InstallSampleData);
 
                     //reset cache
                     DataSettingsHelper.ResetCache();

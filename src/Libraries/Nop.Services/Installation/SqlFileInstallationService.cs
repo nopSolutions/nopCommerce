@@ -7,9 +7,11 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 
@@ -25,6 +27,8 @@ namespace Nop.Services.Installation
         private readonly IDbContext _dbContext;
         private readonly IWebHelper _webHelper;
 
+        private HashFormat _hashFormat;
+        private EncryptionFormat _encryptionFormat;
         #endregion
 
         #region Ctor
@@ -126,15 +130,24 @@ namespace Nop.Services.Installation
             return sb.ToString();
         }
 
+        protected virtual void UpdateEncryptionInfo() {
+            var settingService = EngineContext.Current.Resolve<ISettingService>();
+            settingService.SetSetting("customersettings.hashedpasswordformat", _hashFormat.ToString());
+            settingService.SetSetting("securitysettings.encryptionformat", _encryptionFormat.ToString());
+        }
+
         #endregion
 
         #region Methods
 
-        public virtual void InstallData(string defaultUserEmail,
-            string defaultUserPassword, bool installSampleData = true)
+        public virtual void InstallData(string defaultUserEmail, string defaultUserPassword, HashFormat hashFormat, EncryptionFormat encryptionFormat, bool installSampleData = true)
         {
+            _hashFormat = hashFormat;
+            _encryptionFormat = encryptionFormat;
+
             ExecuteSqlFile(CommonHelper.MapPath("~/App_Data/Install/Fast/create_required_data.sql"));
             InstallLocaleResources();
+            UpdateEncryptionInfo();
             UpdateDefaultCustomer(defaultUserEmail, defaultUserPassword);
             UpdateDefaultStoreUrl();
 

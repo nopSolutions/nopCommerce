@@ -37,5 +37,15 @@ namespace Nop.Core.Domain.Security
         /// Gets or sets a honeypot input name
         /// </summary>
         public string HoneypotInputName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default salt key size (nop before 3.90 was 5)
+        /// </summary>
+        public int SaltKeySize { get; set; }
+
+        /// <summary>
+        /// Encryption format for sensitive data (3DES, AES)
+        /// </summary>
+        public EncryptionFormat EncryptionFormat { get; set; }
     }
 }
