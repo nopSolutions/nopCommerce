@@ -5,8 +5,8 @@ declare @resources xml
 --a resource will be deleted if its value is empty
 set @resources='
 <Language>
-  <LocaleResource Name="">
-    <Value></Value>
+  <LocaleResource Name="Account.CustomerProductReviews.NoRecords">
+    <Value>You haven''t written any reviews yet</Value>
   </LocaleResource>
 </Language>
 '
