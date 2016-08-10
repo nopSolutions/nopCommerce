@@ -1,5 +1,5 @@
 ﻿Group: Discount requirements
-FriendlyName: Customer orders minimal of product in Weight
+FriendlyName: Discount based on weight in cart
 SystemName: DiscountRequirement.WeightInCart
 Version: 1.10
 SupportedVersions: 3.90
