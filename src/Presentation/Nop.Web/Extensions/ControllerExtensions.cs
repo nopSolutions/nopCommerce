@@ -240,7 +240,8 @@ namespace Nop.Web.Extensions
                                 //prices
                                 if (permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                                 {
-                                    if (!product.CustomerEntersPrice)
+                                    //if (!product.CustomerEntersPrice)
+                                    //https://dotcontrol.atlassian.net/browse/DECO-138
                                     {
                                         if (product.CallForPrice)
                                         {
