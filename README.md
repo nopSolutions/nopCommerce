@@ -32,7 +32,7 @@ Forums: [http://www.nopcommerce.com/boards/](http://www.nopcommerce.com/boards/)
 Browse our shopping cart demo store to get a feel for nopCommerce shopping cart. Browse through the store from the customer's perspective and place an order. You won't be billed for or receive any products – the demo store examples are there only to show the extensive functionality of the shopping cart. Get a better feel for it by going through the admin panel and make changes.
 
 ##### Front End:
-[![ScreenShot](http://www.nopcommerce.com/images/demo/demo3.png)](http://demo.nopcommerce.com/)
+[![ScreenShot](http://www.nopcommerce.com/images/demo/demo3_345.png)](http://demo.nopcommerce.com/)
 
 ##### Admin area: 
 [![ScreenShot](http://www.nopcommerce.com/images/demo/admindemo.jpg)](http://admin-demo.nopcommerce.com/)
