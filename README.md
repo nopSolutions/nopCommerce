@@ -35,4 +35,4 @@ Browse our shopping cart demo store to get a feel for nopCommerce shopping cart.
 [![ScreenShot](http://www.nopcommerce.com/images/demo/demo3.png)](http://demo.nopcommerce.com/)
 
 ##### Admin area: 
-[![ScreenShot](http://www.nopcommerce.com/images/demo/demo4.png)](http://admin-demo.nopcommerce.com/)
+[![ScreenShot](http://www.nopcommerce.com/images/demo/admindemo.jpg)](http://admin-demo.nopcommerce.com/)
