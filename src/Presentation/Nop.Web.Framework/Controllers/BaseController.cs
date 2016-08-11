@@ -160,6 +160,21 @@ namespace Nop.Web.Framework.Controllers
 
 
         /// <summary>
+        /// Display "Edit" (manage) link (in public store)
+        /// </summary>
+        /// <param name="editPageUrl">Edit page URL</param>
+        protected virtual void DisplayEditLink(string editPageUrl)
+        {
+            //We cannot use ViewData because it works only for the current controller (and we pass and then render "Edit" link data in distinct controllers)
+            //that's why we use IPageHeadBuilder
+            //ViewData["nop.editpage.link"] = editPageUrl;
+            var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
+            pageHeadBuilder.AddEditPageUrl(editPageUrl);
+        }
+
+
+
+        /// <summary>
         /// Add locales for localizable entities
         /// </summary>
         /// <typeparam name="TLocalizedModelLocal">Localizable model</typeparam>

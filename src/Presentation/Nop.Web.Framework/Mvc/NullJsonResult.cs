@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 using Newtonsoft.Json;
+using Nop.Core;
 
 namespace Nop.Web.Framework.Mvc
 {
@@ -14,7 +15,7 @@ namespace Nop.Web.Framework.Mvc
             //we do it as described here - http://stackoverflow.com/questions/15939944/jquery-post-json-fails-when-returning-null-from-asp-net-mvc
 
             var response = context.HttpContext.Response;
-            response.ContentType = !String.IsNullOrEmpty(ContentType) ? ContentType : "application/json";
+            response.ContentType = !String.IsNullOrEmpty(ContentType) ? ContentType : MimeTypes.ApplicationJson;
             if (ContentEncoding != null)
                 response.ContentEncoding = ContentEncoding;
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Shipping;
@@ -98,7 +99,7 @@ namespace Nop.Plugin.Shipping.ByWeight
 
             var response = new GetShippingOptionResponse();
 
-            if (getShippingOptionRequest.Items == null || getShippingOptionRequest.Items.Count == 0)
+            if (getShippingOptionRequest.Items == null || !getShippingOptionRequest.Items.Any())
             {
                 response.AddError("No shipment items");
                 return response;

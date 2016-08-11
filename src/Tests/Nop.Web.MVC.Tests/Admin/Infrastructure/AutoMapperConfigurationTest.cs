@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Nop.Admin.Infrastructure;
+﻿using Nop.Admin.Infrastructure.Mapper;
 using NUnit.Framework;
 
 namespace Nop.Web.MVC.Tests.Admin.Infrastructure
@@ -10,9 +9,8 @@ namespace Nop.Web.MVC.Tests.Admin.Infrastructure
         [Test]
         public void Configuration_is_valid()
         {
-            var autoMapperStartupTask = new AutoMapperStartupTask();
-            autoMapperStartupTask.Execute();
-            Mapper.AssertConfigurationIsValid();
+            AutoMapperConfiguration.Init();
+            AutoMapperConfiguration.MapperConfiguration.AssertConfigurationIsValid();
         }
     }
 }

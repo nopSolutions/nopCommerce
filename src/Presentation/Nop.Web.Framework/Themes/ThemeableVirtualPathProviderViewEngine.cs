@@ -147,7 +147,7 @@ namespace Nop.Web.Framework.Themes
             bool usingAreas = !String.IsNullOrEmpty(areaName);
             List<ViewLocation> viewLocations = GetViewLocations(locations, (usingAreas) ? areaLocations : null);
 
-            if (viewLocations.Count == 0)
+            if (!viewLocations.Any())
             {
                 throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "Properties cannot be null or empty - {0}", locationsPropertyName));
             }

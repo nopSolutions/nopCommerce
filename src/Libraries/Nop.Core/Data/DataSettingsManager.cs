@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Web.Hosting;
 
 namespace Nop.Core.Data
 {
@@ -87,7 +86,6 @@ namespace Nop.Core.Data
         {
             if (String.IsNullOrEmpty(filePath))
             {
-                //use webHelper.MapPath instead of HostingEnvironment.MapPath which is not available in unit tests
                 filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename);
             }
             if (File.Exists(filePath))
@@ -107,8 +105,7 @@ namespace Nop.Core.Data
         {
             if (settings == null)
                 throw new ArgumentNullException("settings");
-
-            //use webHelper.MapPath instead of HostingEnvironment.MapPath which is not available in unit tests
+            
             string filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename);
             if (!File.Exists(filePath))
             {

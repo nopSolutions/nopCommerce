@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -127,6 +126,21 @@ namespace Nop.Services.Orders
 
             var lastRph = query.FirstOrDefault();
             return lastRph != null ? lastRph.PointsBalance : 0;
+        }
+
+        /// <summary>
+        /// Updates the reward point history entry
+        /// </summary>
+        /// <param name="rewardPointsHistory">Reward point history entry</param>
+        public virtual void UpdateRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory)
+        {
+            if (rewardPointsHistory == null)
+                throw new ArgumentNullException("rewardPointsHistory");
+
+            _rphRepository.Update(rewardPointsHistory);
+
+            //event notification
+            _eventPublisher.EntityUpdated(rewardPointsHistory);
         }
 
         #endregion

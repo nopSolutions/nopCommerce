@@ -64,7 +64,13 @@
                     <span class="tax-shipping-info">
                         @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
                     </span>
-                    }
+                }
+                @if (!String.IsNullOrEmpty(Model.ProductPrice.BasePricePAngV))
+                {
+                    <div class="base-price-pangv">
+                        @Model.ProductPrice.BasePricePAngV
+                    </div>
+                }
             </div>
             @Html.Widget("productbox_addinfo_middle", Model.Id)
             <div class="buttons">

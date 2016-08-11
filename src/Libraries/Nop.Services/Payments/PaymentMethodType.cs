@@ -6,10 +6,6 @@ namespace Nop.Services.Payments
     public enum PaymentMethodType
     {
         /// <summary>
-        /// Unknown
-        /// </summary>
-        Unknown = 0,
-        /// <summary>
         /// All payment information is entered on the site
         /// </summary>
         Standard = 10,

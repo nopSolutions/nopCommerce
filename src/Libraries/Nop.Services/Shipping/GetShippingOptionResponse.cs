@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Shipping;
 
 namespace Nop.Services.Shipping
@@ -28,7 +29,7 @@ namespace Nop.Services.Shipping
         public bool ShippingFromMultipleLocations { get; set; }
 
         /// <summary>
-        /// Gets or sets an address
+        /// Gets or sets errors
         /// </summary>
         public IList<string> Errors { get; set; }
 
@@ -39,7 +40,7 @@ namespace Nop.Services.Shipping
         {
             get 
             { 
-                return this.Errors.Count == 0; 
+                return !this.Errors.Any(); 
             }
         }
 

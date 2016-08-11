@@ -8,15 +8,12 @@
     {
         Layout = "~/Views/Shared/_ColumnsOne.cshtml";
     }
-    else
-    {
-        /*pop-up windows*/
-        Layout = "~/Views/Shared/_RootPopup.cshtml";
-    }
 
     if (!Model.IsPasswordProtected)
     {
+        //title
         Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+        //meta
         Html.AddMetaDescriptionParts(Model.MetaDescription);
         Html.AddMetaKeywordParts(Model.MetaKeywords);
     }
@@ -27,17 +24,12 @@
         var topicUrl = Url.RouteUrl("Topic", new { SeName = Model.SeName }, this.Request.Url.Scheme);
         Html.AddCanonicalUrlParts(topicUrl);
     }
+
+    //page class
+    Html.AppendPageCssClassParts("html-topic-page");
 }
 @if (Model.IsPasswordProtected)
 {
-    // For popup topics, use a minimal layout that includes the Ajax and jQuery scripts
-    if (isPopup != null && isPopup == true)
-    {
-        Layout = "~/Views/Shared/_RootPopup.cshtml";
-    }
-    
-    
-    
     <script type="text/javascript">
         $(document).ready(function () {
             $('#button-password').click(function () {
@@ -65,7 +57,7 @@
                             $('#ph-topic').show();
                         }
                         else {
-                            $('#password-error').text(data.Error);
+                            $('#password-error').text(data.Error).fadeIn("slow");
                             $('#ph-password #password').select().focus();
                         }
                     }
@@ -91,9 +83,7 @@
                 @Html.Password("password")
                 <input type="submit" id="button-password" value="@T("Topic.Button")" class="button-1 topic-password-button" />
             </div>
-            <div class="password-error">
-                <span id="password-error"></span>
-            </div>
+            <div class="password-error" id="password-error" style="display: none;"></div>
         }
     </div>
 }

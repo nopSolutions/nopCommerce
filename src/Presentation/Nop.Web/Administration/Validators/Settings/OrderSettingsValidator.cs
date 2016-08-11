@@ -6,7 +6,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Settings
 {
-    public class OrderSettingsValidator : BaseNopValidator<OrderSettingsModel>
+    public partial class OrderSettingsValidator : BaseNopValidator<OrderSettingsModel>
     {
         public OrderSettingsValidator(ILocalizationService localizationService)
         {

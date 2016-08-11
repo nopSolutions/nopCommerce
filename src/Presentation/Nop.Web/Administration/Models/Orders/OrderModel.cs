@@ -19,6 +19,7 @@ namespace Nop.Admin.Models.Orders
             GiftCards = new List<GiftCard>();
             Items = new List<OrderItemModel>();
             UsedDiscounts = new List<UsedDiscountModel>();
+            Warnings = new List<string>();
         }
 
         public bool IsLoggedInAsVendor { get; set; }
@@ -132,6 +133,8 @@ namespace Nop.Admin.Models.Orders
         //payment info
         [NopResourceDisplayName("Admin.Orders.Fields.PaymentStatus")]
         public string PaymentStatus { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.PaymentStatus")]
+        public int PaymentStatusId { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.PaymentMethod")]
         public string PaymentMethod { get; set; }
 
@@ -167,8 +170,13 @@ namespace Nop.Admin.Models.Orders
         //shipping info
         public bool IsShippable { get; set; }
         public bool PickUpInStore { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.PickupAddress")]
+        public AddressModel PickupAddress { get; set; }
+        public string PickupAddressGoogleMapsUrl { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.ShippingStatus")]
         public string ShippingStatus { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.ShippingStatus")]
+        public int ShippingStatusId { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.ShippingAddress")]
         public AddressModel ShippingAddress { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.ShippingMethod")]
@@ -225,14 +233,17 @@ namespace Nop.Admin.Models.Orders
         public bool CanVoid { get; set; }
         public bool CanVoidOffline { get; set; }
 
+        //warnings
+        public List<string> Warnings { get; set; }
+
         #region Nested Classes
 
         public partial class OrderItemModel : BaseNopEntityModel
         {
             public OrderItemModel()
             {
-                ReturnRequestIds = new List<int>();
                 PurchasedGiftCardIds = new List<int>();
+                ReturnRequests = new List<ReturnRequestBriefModel>();
             }
             public int ProductId { get; set; }
             public string ProductName { get; set; }
@@ -261,7 +272,7 @@ namespace Nop.Admin.Models.Orders
             public string AttributeInfo { get; set; }
             public string RecurringInfo { get; set; }
             public string RentalInfo { get; set; }
-            public IList<int> ReturnRequestIds { get; set; }
+            public IList<ReturnRequestBriefModel> ReturnRequests { get; set; }
             public IList<int> PurchasedGiftCardIds { get; set; }
 
             public bool IsDownload { get; set; }
@@ -269,6 +280,15 @@ namespace Nop.Admin.Models.Orders
             public DownloadActivationType DownloadActivationType { get; set; }
             public bool IsDownloadActivated { get; set; }
             public Guid LicenseDownloadGuid { get; set; }
+
+            #region Nested Classes
+
+            public partial class ReturnRequestBriefModel : BaseNopEntityModel
+            {
+                public string CustomNumber { get; set; }
+            }
+
+            #endregion
         }
 
         public partial class TaxRate : BaseNopModel
@@ -387,6 +407,12 @@ namespace Nop.Admin.Models.Orders
 
                 public List<string> Warnings { get; set; }
 
+                /// <summary>
+                /// A value indicating whether this attribute depends on some other attribute
+                /// </summary>
+                public bool HasCondition { get; set; }
+
+                public bool AutoUpdateOrderTotals { get; set; }
             }
 
             public partial class ProductAttributeModel : BaseNopEntityModel
@@ -403,6 +429,13 @@ namespace Nop.Admin.Models.Orders
                 public string TextPrompt { get; set; }
 
                 public bool IsRequired { get; set; }
+
+                public bool HasCondition { get; set; }
+
+                /// <summary>
+                /// Allowed file extensions for customer uploaded files
+                /// </summary>
+                public IList<string> AllowedFileExtensions { get; set; }
 
                 public AttributeControlType AttributeControlType { get; set; }
 
@@ -421,19 +454,19 @@ namespace Nop.Admin.Models.Orders
             {
                 public bool IsGiftCard { get; set; }
 
-                [NopResourceDisplayName("Products.GiftCard.RecipientName")]
+                [NopResourceDisplayName("Admin.GiftCards.Fields.RecipientName")]
                 [AllowHtml]
                 public string RecipientName { get; set; }
-                [NopResourceDisplayName("Products.GiftCard.RecipientEmail")]
+                [NopResourceDisplayName("Admin.GiftCards.Fields.RecipientEmail")]
                 [AllowHtml]
                 public string RecipientEmail { get; set; }
-                [NopResourceDisplayName("Products.GiftCard.SenderName")]
+                [NopResourceDisplayName("Admin.GiftCards.Fields.SenderName")]
                 [AllowHtml]
                 public string SenderName { get; set; }
-                [NopResourceDisplayName("Products.GiftCard.SenderEmail")]
+                [NopResourceDisplayName("Admin.GiftCards.Fields.SenderEmail")]
                 [AllowHtml]
                 public string SenderEmail { get; set; }
-                [NopResourceDisplayName("Products.GiftCard.Message")]
+                [NopResourceDisplayName("Admin.GiftCards.Fields.Message")]
                 [AllowHtml]
                 public string Message { get; set; }
 

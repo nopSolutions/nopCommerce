@@ -98,41 +98,44 @@ namespace Nop.Admin.Controllers
                                                            localized.Body,
                                                            localized.LanguageId);
 
-                _localizedEntityService.SaveLocalizedValue(mt,
-                                                           x => x.EmailAccountId,
-                                                           localized.EmailAccountId,
-                                                           localized.LanguageId);
+               _localizedEntityService.SaveLocalizedValue(mt,
+                                                            x => x.EmailAccountId,
+                                                            localized.EmailAccountId,
+                                                            localized.LanguageId);
             }
         }
-
-
+        
         [NonAction]
         protected virtual void PrepareStoresMappingModel(MessageTemplateModel model, MessageTemplate messageTemplate, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
+            if (!excludeProperties && messageTemplate != null)
+                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(messageTemplate).ToList();
+
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
             {
-                if (messageTemplate != null)
+                model.AvailableStores.Add(new SelectListItem
                 {
-                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(messageTemplate);
-                }
+                    Text = store.Name,
+                    Value = store.Id.ToString(),
+                    Selected = model.SelectedStoreIds.Contains(store.Id)
+                });
             }
         }
 
         [NonAction]
         protected virtual void SaveStoreMappings(MessageTemplate messageTemplate, MessageTemplateModel model)
         {
+            messageTemplate.LimitedToStores = model.SelectedStoreIds.Any();
+
             var existingStoreMappings = _storeMappingService.GetStoreMappings(messageTemplate);
             var allStores = _storeService.GetAllStores();
             foreach (var store in allStores)
             {
-                if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
+                if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
@@ -213,11 +216,12 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
             
             var model = messageTemplate.ToModel();
+            model.SendImmediately = !model.DelayBeforeSend.HasValue;
             model.HasAttachedDownload = model.AttachedDownloadId > 0;
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
-                model.AvailableEmailAccounts.Add(ea.ToModel());
+                model.AvailableEmailAccounts.Add(new SelectListItem { Text = ea.DisplayName, Value = ea.Id.ToString() });
             //Store
             PrepareStoresMappingModel(model, messageTemplate, false);
             //locales
@@ -227,8 +231,20 @@ namespace Nop.Admin.Controllers
                 locale.Subject = messageTemplate.GetLocalized(x => x.Subject, languageId, false, false);
                 locale.Body = messageTemplate.GetLocalized(x => x.Body, languageId, false, false);
 
-                var emailAccountId = messageTemplate.GetLocalized(x => x.EmailAccountId, languageId, false, false);
-                locale.EmailAccountId = emailAccountId > 0 ? emailAccountId : _emailAccountSettings.DefaultEmailAccountId;
+                locale.EmailAccountId = messageTemplate.GetLocalized(x => x.EmailAccountId, languageId, false, false);
+                //available email accounts (we add "Standard" value for localizable field)
+                locale.AvailableEmailAccounts.Add(new SelectListItem
+                {
+                    Text = _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Fields.EmailAccount.Standard"),
+                    Value = "0"
+                });
+                foreach (var ea in _emailAccountService.GetAllEmailAccounts())
+                    locale.AvailableEmailAccounts.Add(new SelectListItem
+                    {
+                        Text = ea.DisplayName,
+                        Value = ea.Id.ToString(),
+                        Selected =  ea.Id == locale.EmailAccountId
+                    });
             });
 
             return View(model);
@@ -252,6 +268,8 @@ namespace Nop.Admin.Controllers
                 //attached file
                 if (!model.HasAttachedDownload)
                     messageTemplate.AttachedDownloadId = 0;
+                if (model.SendImmediately)
+                    messageTemplate.DelayBeforeSend = null;
                 _messageTemplateService.UpdateMessageTemplate(messageTemplate);
                 //Stores
                 SaveStoreMappings(messageTemplate, model);
@@ -262,9 +280,6 @@ namespace Nop.Admin.Controllers
                 
                 if (continueEditing)
                 {
-                    //selected tab
-                    SaveSelectedTabIndex();
-
                     return RedirectToAction("Edit",  new {id = messageTemplate.Id});
                 }
                 return RedirectToAction("List");
@@ -276,7 +291,24 @@ namespace Nop.Admin.Controllers
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
-                model.AvailableEmailAccounts.Add(ea.ToModel());
+                model.AvailableEmailAccounts.Add(new SelectListItem { Text = ea.DisplayName, Value = ea.Id.ToString() });
+            //locales (update email account dropdownlists)
+            foreach (var locale in model.Locales)
+            {
+                //available email accounts (we add "Standard" value for localizable field)
+                locale.AvailableEmailAccounts.Add(new SelectListItem
+                {
+                    Text = _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Fields.EmailAccount.Standard"),
+                    Value = "0"
+                });
+                foreach (var ea in _emailAccountService.GetAllEmailAccounts())
+                    locale.AvailableEmailAccounts.Add(new SelectListItem
+                    {
+                        Text = ea.DisplayName,
+                        Value = ea.Id.ToString(),
+                        Selected = ea.Id == locale.EmailAccountId
+                    });
+            }
             //Store
             PrepareStoresMappingModel(model, messageTemplate, true);
             return View(model);

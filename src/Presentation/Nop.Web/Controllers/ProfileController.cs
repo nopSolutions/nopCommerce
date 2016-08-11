@@ -11,6 +11,7 @@ using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
+using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Security;
@@ -28,6 +29,7 @@ namespace Nop.Web.Controllers
         private readonly ICountryService _countryService;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IPermissionService _permissionService;
         private readonly ForumSettings _forumSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly MediaSettings _mediaSettings;
@@ -38,6 +40,7 @@ namespace Nop.Web.Controllers
             ICountryService countryService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
+            IPermissionService permissionService,
             ForumSettings forumSettings,
             CustomerSettings customerSettings,
             MediaSettings mediaSettings)
@@ -48,6 +51,7 @@ namespace Nop.Web.Controllers
             this._countryService = countryService;
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
+            this._permissionService = permissionService;
             this._forumSettings = forumSettings;
             this._customerSettings = customerSettings;
             this._mediaSettings = mediaSettings;
@@ -92,6 +96,12 @@ namespace Nop.Web.Controllers
                 CustomerProfileId = customer.Id,
                 ForumsEnabled = _forumSettings.ForumsEnabled
             };
+
+
+            //display "edit" (manage) link
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                DisplayEditLink(Url.Action("Edit", "Customer", new { id = customer.Id, area = "Admin" }));
+
 
             return View(model);
         }

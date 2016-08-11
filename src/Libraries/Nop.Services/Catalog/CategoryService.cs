@@ -161,11 +161,12 @@ namespace Nop.Services.Catalog
         /// Gets all categories
         /// </summary>
         /// <param name="categoryName">Category name</param>
+        /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
-        public virtual IPagedList<Category> GetAllCategories(string categoryName = "", 
+        public virtual IPagedList<Category> GetAllCategories(string categoryName = "", int storeId = 0, 
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             var query = _categoryRepository.Table;
@@ -175,10 +176,10 @@ namespace Nop.Services.Catalog
                 query = query.Where(c => c.Name.Contains(categoryName));
             query = query.Where(c => !c.Deleted);
             query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder);
-            
-            if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
+
+            if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) || (!showHidden && !_catalogSettings.IgnoreAcl))
             {
-                if (!_catalogSettings.IgnoreAcl)
+                if (!showHidden && !_catalogSettings.IgnoreAcl)
                 {
                     //ACL (access control list)
                     var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
@@ -189,15 +190,14 @@ namespace Nop.Services.Catalog
                             where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                             select c;
                 }
-                if (!_catalogSettings.IgnoreStoreLimitations)
+                if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
                 {
                     //Store mapping
-                    var currentStoreId = _storeContext.CurrentStore.Id;
                     query = from c in query
                             join sm in _storeMappingRepository.Table
                             on new { c1 = c.Id, c2 = "Category" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
                             from sm in c_sm.DefaultIfEmpty()
-                            where !c.LimitedToStores || currentStoreId == sm.StoreId
+                            where !c.LimitedToStores || storeId == sm.StoreId
                             select c;
                 }
 
@@ -217,6 +217,7 @@ namespace Nop.Services.Catalog
 
             //paging
             return new PagedList<Category>(sortedCategories, pageIndex, pageSize);
+
         }
 
         /// <summary>
@@ -566,6 +567,39 @@ namespace Nop.Services.Catalog
             _eventPublisher.EntityUpdated(productCategory);
         }
 
+
+        /// <summary>
+        /// Returns a list of names of not existing categories
+        /// </summary>
+        /// <param name="categoryNames">The nemes of the categories to check</param>
+        /// <returns>List of names not existing categories</returns>
+        public virtual string[] GetNotExistingCategories(string[] categoryNames)
+        {
+            if (categoryNames == null)
+                throw new ArgumentNullException("categoryNames");
+
+            var query = _categoryRepository.Table;
+            var queryFilter = categoryNames.Distinct().ToArray();
+            var filter = query.Select(c => c.Name).Where(c => queryFilter.Contains(c)).ToList();
+
+            return queryFilter.Except(filter).ToArray();
+        }
+
+
+        /// <summary>
+        /// Get category IDs for products
+        /// </summary>
+        /// <param name="productIds">Products IDs</param>
+        /// <returns>Category IDs for products</returns>
+        public virtual IDictionary<int, int[]> GetProductCategoryIds(int[] productIds)
+        {
+            var query = _productCategoryRepository.Table;
+
+            return query.Where(p => productIds.Contains(p.ProductId))
+                .Select(p => new {p.ProductId, p.CategoryId}).ToList()
+                .GroupBy(a => a.ProductId)
+                .ToDictionary(items => items.Key, items => items.Select(a => a.CategoryId).ToArray());
+        } 
         #endregion
     }
 }

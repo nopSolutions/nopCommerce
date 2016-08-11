@@ -24,7 +24,12 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a minimum order total amount
         /// </summary>
         public decimal MinOrderTotalAmount { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets a value indicating whether automatically update order totals on editing an order in admin area
+        /// </summary>
+        public bool AutoUpdateOrderTotalsOnEditingOrder { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether anonymous checkout allowed
         /// </summary>
@@ -72,11 +77,20 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating we should attach PDF invoice to "Order completed" email
         /// </summary>
         public bool AttachPdfInvoiceToOrderCompletedEmail { get; set; }
-        
+        /// <summary>
+        /// Gets or sets a value indicating we PDF invoices should be generated in customer language. Otherwise, use the current one
+        /// </summary>
+        public bool GeneratePdfInvoiceInCustomerLanguage { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether "Return requests" are allowed
         /// </summary>
         public bool ReturnRequestsEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value "Return requests" number mask
+        /// </summary>
+        public string ReturnRequestNumberMask { get; set; }
         
         /// <summary>
         /// Gets or sets a number of days that the Return Request Link will be available for customers after order placing.

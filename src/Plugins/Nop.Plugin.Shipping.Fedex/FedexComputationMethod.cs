@@ -98,12 +98,12 @@ namespace Nop.Plugin.Shipping.Fedex
             request.CarrierCodes[1] = RateServiceWebReference.CarrierCodeType.FDXG;
 
             decimal orderSubTotalDiscountAmount;
-            Discount orderSubTotalAppliedDiscount;
+            List<Discount> orderSubTotalAppliedDiscounts;
             decimal subTotalWithoutDiscountBase;
             decimal subTotalWithDiscountBase;
             //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal
             _orderTotalCalculationService.GetShoppingCartSubTotal(getShippingOptionRequest.Items.Select(x=>x.ShoppingCartItem).ToList(),
-                false, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
+                false, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscounts,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
             decimal subTotalBase = subTotalWithDiscountBase;
 
@@ -710,9 +710,9 @@ namespace Nop.Plugin.Shipping.Fedex
             return Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureDimension(quantity, usedMeasureDimension)));
         }
 
-        private int ConvertFromPrimaryMeasureWeight(decimal quantity, MeasureWeight usedMeasureWeighht)
+        private int ConvertFromPrimaryMeasureWeight(decimal quantity, MeasureWeight usedMeasureWeight)
         {
-            return Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureWeight(quantity, usedMeasureWeighht)));
+            return Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureWeight(quantity, usedMeasureWeight)));
         }
         
         private Currency GetRequestedShipmentCurrency(string originCountryCode, string destinCountryCode)

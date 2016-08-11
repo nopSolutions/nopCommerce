@@ -387,20 +387,6 @@ namespace Nop.Services.Payments
         }
 
 
-
-        /// <summary>
-        /// Gets a payment method type
-        /// </summary>
-        /// <param name="paymentMethodSystemName">Payment method system name</param>
-        /// <returns>A payment method type</returns>
-        public virtual PaymentMethodType GetPaymentMethodType(string paymentMethodSystemName)
-        {
-            var paymentMethod = LoadPaymentMethodBySystemName(paymentMethodSystemName);
-            if (paymentMethod == null)
-                return PaymentMethodType.Unknown;
-            return paymentMethod.PaymentMethodType;
-        }
-
         /// <summary>
         /// Gets masked credit card number
         /// </summary>

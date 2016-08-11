@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
@@ -21,10 +20,22 @@ namespace Nop.Services.ExportImport
         string ExportManufacturersToXml(IList<Manufacturer> manufacturers);
 
         /// <summary>
+        /// Export manufacturers to XLSX
+        /// </summary>
+        /// <param name="manufacturers">Manufactures</param>
+        byte[] ExportManufacturersToXlsx(IEnumerable<Manufacturer> manufacturers);
+
+        /// <summary>
         /// Export category list to xml
         /// </summary>
         /// <returns>Result in XML format</returns>
         string ExportCategoriesToXml();
+
+        /// <summary>
+        /// Export categories to XLSX
+        /// </summary>
+        /// <param name="categories">Categories</param>
+        byte[] ExportCategoriesToXlsx(IEnumerable<Category> categories);
 
         /// <summary>
         /// Export product list to xml
@@ -36,9 +47,8 @@ namespace Nop.Services.ExportImport
         /// <summary>
         /// Export products to XLSX
         /// </summary>
-        /// <param name="stream">Stream</param>
         /// <param name="products">Products</param>
-        void ExportProductsToXlsx(Stream stream, IList<Product> products);
+        byte[] ExportProductsToXlsx(IEnumerable<Product> products);
 
         /// <summary>
         /// Export order list to xml
@@ -50,17 +60,15 @@ namespace Nop.Services.ExportImport
         /// <summary>
         /// Export orders to XLSX
         /// </summary>
-        /// <param name="stream">Stream</param>
         /// <param name="orders">Orders</param>
-        void ExportOrdersToXlsx(Stream stream, IList<Order> orders);
-        
+        byte[] ExportOrdersToXlsx(IList<Order> orders);
+
         /// <summary>
         /// Export customer list to XLSX
         /// </summary>
-        /// <param name="stream">Stream</param>
         /// <param name="customers">Customers</param>
-        void ExportCustomersToXlsx(Stream stream, IList<Customer> customers);
-        
+        byte[] ExportCustomersToXlsx(IList<Customer> customers);
+
         /// <summary>
         /// Export customer list to xml
         /// </summary>

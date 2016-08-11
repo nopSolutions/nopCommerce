@@ -26,5 +26,8 @@ namespace Nop.Admin.Models.Logging
 
         [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType")]
         public IList<SelectListItem> ActivityLogType { get; set; }
+        
+        [NopResourceDisplayName("Admin.Customers.Customers.ActivityLog.IpAddress")]
+        public string IpAddress { get; set; }
     }
 }

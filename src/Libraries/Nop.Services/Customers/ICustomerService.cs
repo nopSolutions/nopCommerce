@@ -30,6 +30,7 @@ namespace Nop.Services.Customers
         /// <param name="company">Company; null to load all customers</param>
         /// <param name="phone">Phone; null to load all customers</param>
         /// <param name="zipPostalCode">Phone; null to load all customers</param>
+        /// <param name="ipAddress">IP address; null to load all customers</param>
         /// <param name="loadOnlyWithShoppingCart">Value indicating whether to load customers only with shopping cart</param>
         /// <param name="sct">Value indicating what shopping cart type to filter; userd when 'loadOnlyWithShoppingCart' param is 'true'</param>
         /// <param name="pageIndex">Page index</param>
@@ -41,8 +42,8 @@ namespace Nop.Services.Customers
             string firstName = null, string lastName = null,
             int dayOfBirth = 0, int monthOfBirth = 0,
             string company = null, string phone = null, string zipPostalCode = null,
-            bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
-            int pageIndex = 0, int pageSize = 2147483647); //Int32.MaxValue
+            string ipAddress = null, bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
+            int pageIndex = 0, int pageSize = int.MaxValue);
         
         /// <summary>
         /// Gets all customers by customer format (including deleted ones)
@@ -81,7 +82,7 @@ namespace Nop.Services.Customers
         /// <param name="customerIds">Customer identifiers</param>
         /// <returns>Customers</returns>
         IList<Customer> GetCustomersByIds(int[] customerIds);
-
+        
         /// <summary>
         /// Gets a customer by GUID
         /// </summary>

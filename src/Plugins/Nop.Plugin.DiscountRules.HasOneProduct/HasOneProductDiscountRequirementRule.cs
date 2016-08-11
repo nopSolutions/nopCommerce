@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Plugins;
 using Nop.Services.Configuration;
@@ -53,7 +52,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
                 .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => x.Trim())
                 .ToList();
-            if (restrictedProducts.Count == 0)
+            if (!restrictedProducts.Any())
                 return result;
             
             //group products in the cart by product ID

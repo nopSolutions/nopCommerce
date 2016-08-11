@@ -5,7 +5,7 @@ using Nop.Web.Models.PrivateMessages;
 
 namespace Nop.Web.Validators.PrivateMessages
 {
-    public class SendPrivateMessageValidator : BaseNopValidator<SendPrivateMessageModel>
+    public partial class SendPrivateMessageValidator : BaseNopValidator<SendPrivateMessageModel>
     {
         public SendPrivateMessageValidator(ILocalizationService localizationService)
         {

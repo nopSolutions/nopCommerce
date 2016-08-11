@@ -5,7 +5,7 @@ using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Validators.Catalog
 {
-    public class ProductEmailAFriendValidator : BaseNopValidator<ProductEmailAFriendModel>
+    public partial class ProductEmailAFriendValidator : BaseNopValidator<ProductEmailAFriendModel>
     {
         public ProductEmailAFriendValidator(ILocalizationService localizationService)
         {

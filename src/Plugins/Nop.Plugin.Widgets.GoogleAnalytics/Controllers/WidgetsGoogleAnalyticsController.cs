@@ -62,6 +62,9 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             model.EcommerceScript = googleAnalyticsSettings.EcommerceScript;
             model.EcommerceDetailScript = googleAnalyticsSettings.EcommerceDetailScript;
             model.IncludingTax = googleAnalyticsSettings.IncludingTax;
+            model.ZoneId = googleAnalyticsSettings.WidgetZone;
+            model.AvailableZones.Add(new SelectListItem() { Text = "Before body end html tag", Value = "body_end_html_tag_before" });
+            model.AvailableZones.Add(new SelectListItem() { Text = "Head html tag", Value = "head_html_tag" });
 
             model.ActiveStoreScopeConfiguration = storeScope;
             if (storeScope > 0)
@@ -71,6 +74,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
                 model.EcommerceScript_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.EcommerceScript, storeScope);
                 model.EcommerceDetailScript_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.EcommerceDetailScript, storeScope);
                 model.IncludingTax_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.IncludingTax, storeScope);
+                model.ZoneId_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.WidgetZone, storeScope);
             }
 
             return View("~/Plugins/Widgets.GoogleAnalytics/Views/WidgetsGoogleAnalytics/Configure.cshtml", model);
@@ -89,34 +93,17 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             googleAnalyticsSettings.EcommerceScript = model.EcommerceScript;
             googleAnalyticsSettings.EcommerceDetailScript = model.EcommerceDetailScript;
             googleAnalyticsSettings.IncludingTax = model.IncludingTax;
+            googleAnalyticsSettings.WidgetZone = model.ZoneId;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            if (model.GoogleId_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(googleAnalyticsSettings, x => x.GoogleId, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(googleAnalyticsSettings, x => x.GoogleId, storeScope);
-            
-            if (model.TrackingScript_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(googleAnalyticsSettings, x => x.TrackingScript, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(googleAnalyticsSettings, x => x.TrackingScript, storeScope);
-            
-            if (model.EcommerceScript_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(googleAnalyticsSettings, x => x.EcommerceScript, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(googleAnalyticsSettings, x => x.EcommerceScript, storeScope);
-            
-            if (model.EcommerceDetailScript_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(googleAnalyticsSettings, x => x.EcommerceDetailScript, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(googleAnalyticsSettings, x => x.EcommerceDetailScript, storeScope);
-
-            if (model.IncludingTax_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(googleAnalyticsSettings, x => x.IncludingTax, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(googleAnalyticsSettings, x => x.IncludingTax, storeScope);
+            _settingService.SaveSettingOverridablePerStore(googleAnalyticsSettings, x => x.GoogleId, model.GoogleId_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(googleAnalyticsSettings, x => x.TrackingScript, model.TrackingScript_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(googleAnalyticsSettings, x => x.EcommerceScript, model.EcommerceScript_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(googleAnalyticsSettings, x => x.EcommerceDetailScript, model.EcommerceDetailScript_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(googleAnalyticsSettings, x => x.IncludingTax, model.IncludingTax_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(googleAnalyticsSettings, x => x.WidgetZone, model.ZoneId_OverrideForStore, storeScope, false);
             
             //now clear settings cache
             _settingService.ClearCache();

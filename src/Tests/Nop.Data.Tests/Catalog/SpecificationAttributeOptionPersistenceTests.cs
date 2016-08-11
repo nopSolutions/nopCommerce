@@ -13,6 +13,7 @@ namespace Nop.Data.Tests.Catalog
             var specificationAttributeOption = new SpecificationAttributeOption
             {
                 Name = "SpecificationAttributeOption name 1",
+                ColorSquaresRgb = "ColorSquaresRgb 2",
                 DisplayOrder = 1,
                 SpecificationAttribute = new SpecificationAttribute
                 {
@@ -24,6 +25,7 @@ namespace Nop.Data.Tests.Catalog
             var fromDb = SaveAndLoadEntity(specificationAttributeOption);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("SpecificationAttributeOption name 1");
+            fromDb.ColorSquaresRgb.ShouldEqual("ColorSquaresRgb 2");
             fromDb.DisplayOrder.ShouldEqual(1);
 
             fromDb.SpecificationAttribute.ShouldNotBeNull();

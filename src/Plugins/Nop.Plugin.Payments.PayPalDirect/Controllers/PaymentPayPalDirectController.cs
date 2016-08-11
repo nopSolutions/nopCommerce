@@ -9,13 +9,14 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Plugin.Payments.PayPalDirect.Models;
 using Nop.Plugin.Payments.PayPalDirect.Validators;
+using Nop.Services;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Stores;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Payments.PayPalDirect.Controllers
@@ -110,41 +111,14 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            if (model.UseSandbox_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.UseSandbox, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.UseSandbox, storeScope);
-
-            if (model.TransactModeId_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.TransactMode, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.TransactMode, storeScope);
-
-            if (model.ApiAccountName_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.ApiAccountName, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.ApiAccountName, storeScope);
-
-            if (model.ApiAccountPassword_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.ApiAccountPassword, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.ApiAccountPassword, storeScope);
-
-            if (model.Signature_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.Signature, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.Signature, storeScope);
-
-            if (model.AdditionalFee_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.AdditionalFee, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.AdditionalFee, storeScope);
-
-            if (model.AdditionalFeePercentage_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.AdditionalFeePercentage, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
-
+            _settingService.SaveSettingOverridablePerStore(payPalDirectPaymentSettings, x => x.UseSandbox, model.UseSandbox_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalDirectPaymentSettings, x => x.TransactMode, model.TransactModeId_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalDirectPaymentSettings, x => x.ApiAccountName, model.ApiAccountName_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalDirectPaymentSettings, x => x.ApiAccountPassword, model.ApiAccountPassword_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalDirectPaymentSettings, x => x.Signature, model.Signature_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalDirectPaymentSettings, x => x.AdditionalFee, model.AdditionalFee_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalDirectPaymentSettings, x => x.AdditionalFeePercentage, model.AdditionalFeePercentage_OverrideForStore, storeScope, false);
+           
             //now clear settings cache
             _settingService.ClearCache();
 
@@ -343,7 +317,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                                         case PaymentStatus.Paid:
                                             {
                                                 var recurringPaymentHistory = rp.RecurringPaymentHistory;
-                                                if (recurringPaymentHistory.Count == 0)
+                                                if (!recurringPaymentHistory.Any())
                                                 {
                                                     //first payment
                                                     var rph = new RecurringPaymentHistory
@@ -358,7 +332,14 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                                                 else
                                                 {
                                                     //next payments
-                                                    _orderProcessingService.ProcessNextRecurringPayment(rp);
+                                                    var processPaymentResult = new ProcessPaymentResult();
+                                                    processPaymentResult.NewPaymentStatus = newPaymentStatus;
+                                                    if (newPaymentStatus == PaymentStatus.Authorized)
+                                                        processPaymentResult.AuthorizationTransactionId = txn_id;
+                                                    else
+                                                        processPaymentResult.CaptureTransactionId = txn_id;
+
+                                                    _orderProcessingService.ProcessNextRecurringPayment(rp, processPaymentResult);
                                                 }
                                             }
                                             break;
@@ -410,37 +391,81 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                                         break;
                                     case PaymentStatus.Authorized:
                                         {
-                                            if (_orderProcessingService.CanMarkOrderAsAuthorized(order))
+                                            //validate order total
+                                            if (Math.Round(mc_gross, 2).Equals(Math.Round(order.OrderTotal, 2)))
                                             {
-                                                _orderProcessingService.MarkAsAuthorized(order);
+                                                //valid
+                                                if (_orderProcessingService.CanMarkOrderAsAuthorized(order))
+                                                {
+                                                    _orderProcessingService.MarkAsAuthorized(order);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                //not valid
+                                                string errorStr = string.Format("PayPal IPN. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.Id);
+                                                //log
+                                                _logger.Error(errorStr);
+                                                //order note
+                                                order.OrderNotes.Add(new OrderNote
+                                                {
+                                                    Note = errorStr,
+                                                    DisplayToCustomer = false,
+                                                    CreatedOnUtc = DateTime.UtcNow
+                                                });
+                                                _orderService.UpdateOrder(order);
                                             }
                                         }
                                         break;
                                     case PaymentStatus.Paid:
                                         {
-                                            if (_orderProcessingService.CanMarkOrderAsPaid(order))
+                                            //validate order total
+                                            if (Math.Round(mc_gross, 2).Equals(Math.Round(order.OrderTotal, 2)))
                                             {
-                                                _orderProcessingService.MarkOrderAsPaid(order);
+                                                //valid
+                                                if (_orderProcessingService.CanMarkOrderAsPaid(order))
+                                                {
+                                                    order.AuthorizationTransactionId = txn_id;
+                                                    _orderService.UpdateOrder(order);
+
+                                                    _orderProcessingService.MarkOrderAsPaid(order);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                //not valid
+                                                string errorStr = string.Format("PayPal IPN. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.Id);
+                                                //log
+                                                _logger.Error(errorStr);
+                                                //order note
+                                                order.OrderNotes.Add(new OrderNote
+                                                {
+                                                    Note = errorStr,
+                                                    DisplayToCustomer = false,
+                                                    CreatedOnUtc = DateTime.UtcNow
+                                                });
+                                                _orderService.UpdateOrder(order);
                                             }
                                         }
                                         break;
                                     case PaymentStatus.Refunded:
                                         {
-                                            var totalToRefund = Math.Abs(mc_gross);
-                                            if (totalToRefund > 0 && Math.Round(totalToRefund, 2).Equals(Math.Round(order.OrderTotal, 2)))
+                                            //compare last refund transaction id with IPN transaction id
+                                            if (order.GetAttribute<string>("RefundTransactionId") != txn_id)
                                             {
-                                                //refund
-                                                if (_orderProcessingService.CanRefundOffline(order))
+                                                //refund was initiated not in the nopCommerce
+                                                var totalToRefund = Math.Abs(mc_gross);
+                                                if (totalToRefund > 0 && Math.Round(totalToRefund, 2).Equals(Math.Round(order.OrderTotal, 2)))
                                                 {
-                                                    _orderProcessingService.RefundOffline(order);
+                                                    //refund
+                                                    if (_orderProcessingService.CanRefundOffline(order))
+                                                        _orderProcessingService.RefundOffline(order);
                                                 }
-                                            }
-                                            else
-                                            {
-                                                //partial refund
-                                                if (_orderProcessingService.CanPartiallyRefundOffline(order, totalToRefund))
+                                                else
                                                 {
-                                                    _orderProcessingService.PartiallyRefundOffline(order, totalToRefund);
+                                                    //partial refund
+                                                    if (_orderProcessingService.CanPartiallyRefundOffline(order, totalToRefund))
+                                                        _orderProcessingService.PartiallyRefundOffline(order, totalToRefund);
                                                 }
                                             }
                                         }

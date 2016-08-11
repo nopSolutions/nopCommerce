@@ -38,7 +38,8 @@ namespace Nop.Services.Media
             IDbContext dbContext,
             IEventPublisher eventPublisher,
             MediaSettings mediaSettings,
-            NopConfig config)
+            NopConfig config,
+            IDataProvider dataProvider)
             : base(pictureRepository,
                 productPictureRepository,
                 settingService,
@@ -46,7 +47,8 @@ namespace Nop.Services.Media
                 logger,
                 dbContext,
                 eventPublisher,
-                mediaSettings)
+                mediaSettings,
+                dataProvider)
         {
             this._config = config;
 

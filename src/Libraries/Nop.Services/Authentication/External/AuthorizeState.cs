@@ -1,6 +1,7 @@
 //Contributor:  Nicholas Mayne
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace Nop.Services.Authentication.External
@@ -33,7 +34,7 @@ namespace Nop.Services.Authentication.External
         /// </summary>
         public bool Success
         {
-            get { return (this.Errors.Count == 0); }
+            get { return (!this.Errors.Any()); }
         }
 
         /// <summary>

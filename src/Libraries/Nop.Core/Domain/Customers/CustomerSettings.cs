@@ -134,7 +134,22 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether deleted customer records should be prefixed suffixed with "-DELETED"
         /// </summary>
         public bool SuffixDeletedCustomers { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to force entering email twice
+        /// </summary>
+        public bool EnteringEmailTwice { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether registration is required for downloadable products
+        /// </summary>
+        public bool RequireRegistrationForDownloadableProducts { get; set; }
+
+        /// <summary>
+        /// Gets or sets interval (in minutes) with which the Delete Guest Task runs
+        /// </summary>
+        public int DeleteGuestTaskOlderThanMinutes { get; set; }
+
         #region Form fields
 
         /// <summary>

@@ -47,6 +47,7 @@ namespace Nop.Services.Forums
         private readonly IRepository<Forum> _forumRepository;
         private readonly IRepository<ForumTopic> _forumTopicRepository;
         private readonly IRepository<ForumPost> _forumPostRepository;
+        private readonly IRepository<ForumPostVote> _forumPostVoteRepository;
         private readonly IRepository<PrivateMessage> _forumPrivateMessageRepository;
         private readonly IRepository<ForumSubscription> _forumSubscriptionRepository;
         private readonly ForumSettings _forumSettings;
@@ -84,6 +85,7 @@ namespace Nop.Services.Forums
             IRepository<Forum> forumRepository,
             IRepository<ForumTopic> forumTopicRepository,
             IRepository<ForumPost> forumPostRepository,
+            IRepository<ForumPostVote> forumPostVoteRepository,
             IRepository<PrivateMessage> forumPrivateMessageRepository,
             IRepository<ForumSubscription> forumSubscriptionRepository,
             ForumSettings forumSettings,
@@ -100,6 +102,7 @@ namespace Nop.Services.Forums
             this._forumRepository = forumRepository;
             this._forumTopicRepository = forumTopicRepository;
             this._forumPostRepository = forumPostRepository;
+            this._forumPostVoteRepository = forumPostVoteRepository;
             this._forumPrivateMessageRepository = forumPrivateMessageRepository;
             this._forumSubscriptionRepository = forumSubscriptionRepository;
             this._forumSettings = forumSettings;
@@ -1445,6 +1448,89 @@ namespace Nop.Services.Forums
             }
 
             return pageIndex;
+        }
+
+        /// <summary>
+        /// Get a post vote 
+        /// </summary>
+        /// <param name="postId">Post identifier</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Post vote</returns>
+        public virtual ForumPostVote GetPostVote(int postId, Customer customer)
+        {
+            if (customer == null)
+                return null;
+
+            return _forumPostVoteRepository.Table.FirstOrDefault(pv => pv.ForumPostId == postId && pv.CustomerId == customer.Id);
+        }
+
+        /// <summary>
+        /// Get post vote made since the parameter date
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="сreatedFromUtc">Date</param>
+        /// <returns>Post votes count</returns>
+        public virtual int GetNumberOfPostVotes(Customer customer, DateTime сreatedFromUtc)
+        {
+            if (customer == null)
+                return 0;
+
+            return _forumPostVoteRepository.Table.Count(pv => pv.CustomerId == customer.Id && pv.CreatedOnUtc > сreatedFromUtc);
+        }
+
+        /// <summary>
+        /// Insert a post vote
+        /// </summary>
+        /// <param name="postVote">Post vote</param>
+        public virtual void InsertPostVote(ForumPostVote postVote)
+        {
+            if (postVote == null)
+                throw new ArgumentNullException("postVote");
+
+            _forumPostVoteRepository.Insert(postVote);
+
+            //update post
+            var post = this.GetPostById(postVote.ForumPostId);
+            post.VoteCount = postVote.IsUp ? ++post.VoteCount : --post.VoteCount;
+            this.UpdatePost(post);
+
+            //event notification
+            _eventPublisher.EntityInserted(postVote);
+        }
+
+        /// <summary>
+        /// Update a post vote
+        /// </summary>
+        /// <param name="postVote">Post vote</param>
+        public virtual void UpdatePostVote(ForumPostVote postVote)
+        {
+            if (postVote == null)
+                throw new ArgumentNullException("postVote");
+
+            _forumPostVoteRepository.Update(postVote);
+
+            //event notification
+            _eventPublisher.EntityUpdated(postVote);
+        }
+
+        /// <summary>
+        /// Delete a post vote
+        /// </summary>
+        /// <param name="postVote">Post vote</param>
+        public virtual void DeletePostVote(ForumPostVote postVote)
+        {
+            if (postVote == null)
+                throw new ArgumentNullException("postVote");
+
+            _forumPostVoteRepository.Delete(postVote);
+
+            // update post
+            var post = this.GetPostById(postVote.ForumPostId);
+            post.VoteCount = postVote.IsUp ? --post.VoteCount : ++post.VoteCount;
+            this.UpdatePost(post);
+
+            //event notification
+            _eventPublisher.EntityDeleted(postVote);
         }
         #endregion
     }

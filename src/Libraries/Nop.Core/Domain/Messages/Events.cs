@@ -110,4 +110,28 @@ namespace Nop.Core.Domain.Messages
         public MessageTemplate Message { get { return _message; } }
         public IList<U> Tokens { get { return _tokens; } }
     }
+
+    public class AdditionTokensAddedEvent
+    {
+        private readonly IList<string> _tokens;
+
+        public AdditionTokensAddedEvent()
+        {
+            this._tokens=new List<string>();
+        }
+
+        public void AddTokens(params string[] additionTokens)
+        {
+            foreach (var additionToken in additionTokens)
+            {
+                this._tokens.Add(additionToken);
+            }
+        }
+
+        public IList<string> AdditionTokens { get { return _tokens; } }
+    }
+
+    public class CampaignAdditionTokensAddedEvent : AdditionTokensAddedEvent
+    {
+    }
 }

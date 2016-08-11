@@ -55,9 +55,25 @@ function displayPopupNotification(message, messagetype, modal) {
     container.html(htmlcode);
 
     var isModal = (modal ? true : false);
-    container.dialog({modal:isModal});
+    container.dialog({
+        modal: isModal,
+        width: 350
+    });
 }
+function displayPopupContentFromUrl(url, title, modal, width) {
+    var isModal = (modal ? true : false);
+    var targetWidth = (width ? width : 550);
 
+    $('<div></div>').load(url)
+        .dialog({
+            modal: isModal,
+            width: targetWidth,
+            title: title,
+            close: function(event, ui) {
+                $(this).dialog('destroy').remove();
+            }
+        });
+}
 
 var barNotificationTimeout;
 function displayBarNotification(message, messagetype, timeout) {

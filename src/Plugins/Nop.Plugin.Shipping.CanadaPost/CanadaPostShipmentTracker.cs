@@ -1,10 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Nop.Services.Logging;
 using Nop.Services.Shipping.Tracking;
 
 namespace Nop.Plugin.Shipping.CanadaPost
 {
     public class CanadaPostShipmentTracker : IShipmentTracker
     {
+        #region Fields
+
+        private readonly CanadaPostSettings _canadaPostSettings;
+        private readonly ILogger _logger;
+
+        #endregion
+
+        #region Ctor
+
+        public CanadaPostShipmentTracker(CanadaPostSettings canadaPostSettings,
+            ILogger logger)
+        {
+            this._canadaPostSettings = canadaPostSettings;
+            this._logger = logger;
+        }
+
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Gets if the current tracker can track the tracking number.
         /// </summary>
@@ -15,8 +37,8 @@ namespace Nop.Plugin.Shipping.CanadaPost
             if (string.IsNullOrWhiteSpace(trackingNumber))
                 return false;
 
-            //What is a Canada Post tracking number format?
-            return false;
+            //The PIN (Parcel Identification Number) assigned by Canada Post on creation of the shipping label and used for tracking purposes. (12, 13 or 16 characters)
+            return trackingNumber.Length == 12 || trackingNumber.Length == 13 || trackingNumber.Length == 16;
         }
 
         /// <summary>
@@ -38,8 +60,31 @@ namespace Nop.Plugin.Shipping.CanadaPost
         /// <returns>List of Shipment Events.</returns>
         public virtual IList<ShipmentStatusEvent> GetShipmentEvents(string trackingNumber)
         {
-            return new List<ShipmentStatusEvent>();
+            string errors;
+            var trackingDetails = CanadaPostHelper.GetTrackingDetails(trackingNumber,
+                _canadaPostSettings.ApiKey,_canadaPostSettings.UseSandbox, out errors);
+
+            if (trackingDetails == null)
+            {
+                _logger.Error(errors);
+                return new List<ShipmentStatusEvent>();
+            }
+
+            var events = new List<ShipmentStatusEvent>();
+            foreach (var eventItem in trackingDetails.significantevents)
+            {
+                events.Add(new ShipmentStatusEvent
+                {
+                    EventName = eventItem.eventdescription,
+                    Location = eventItem.eventsite,
+                    Date = DateTime.Parse(eventItem.eventdate)
+                });
+            }
+
+            return events;
         }
+
+        #endregion
     }
 
 }

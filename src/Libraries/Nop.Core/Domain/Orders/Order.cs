@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
@@ -54,7 +55,7 @@ namespace Nop.Core.Domain.Orders
             }
 
             //add at least one tax rate (0%)
-            if (taxRatesDictionary.Count == 0)
+            if (!taxRatesDictionary.Any())
                 taxRatesDictionary.Add(decimal.Zero, decimal.Zero);
 
             return taxRatesDictionary;
@@ -88,6 +89,11 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the shipping address identifier
         /// </summary>
         public int? ShippingAddressId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the pickup address identifier
+        /// </summary>
+        public int? PickupAddressId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether a customer chose "pick up in store" shipping option
@@ -310,7 +316,7 @@ namespace Nop.Core.Domain.Orders
         public string ShippingMethod { get; set; }
 
         /// <summary>
-        /// Gets or sets the shipping rate computation method identifier
+        /// Gets or sets the shipping rate computation method identifier or the pickup point provider identifier (if PickUpInStore is true)
         /// </summary>
         public string ShippingRateComputationMethodSystemName { get; set; }
 
@@ -347,7 +353,12 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the shipping address
         /// </summary>
         public virtual Address ShippingAddress { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets the pickup address
+        /// </summary>
+        public virtual Address PickupAddress { get; set; }
+
         /// <summary>
         /// Gets or sets the reward points history record (spent by a customer when placing this order)
         /// </summary>
