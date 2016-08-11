@@ -453,7 +453,9 @@ namespace Nop.Web.Controllers
                 {
                     model.ProductPrice.CustomerEntersPrice = true;
                 }
-                else
+                
+                //else
+                //https://dotcontrol.atlassian.net/browse/DECO-138
                 {
                     if (product.CallForPrice)
                     {
