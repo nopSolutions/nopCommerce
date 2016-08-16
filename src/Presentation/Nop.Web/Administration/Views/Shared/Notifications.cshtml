@@ -22,6 +22,7 @@
         errorMessages.AddRange(ViewData[string.Format("nop.notifications.{0}", NotifyType.Error)] as IList<string>);
     }
 
+
     //warning messages
     var warningMessages = new List<string>();
     if (TempData[string.Format("nop.notifications.{0}", NotifyType.Warning)] != null) {
