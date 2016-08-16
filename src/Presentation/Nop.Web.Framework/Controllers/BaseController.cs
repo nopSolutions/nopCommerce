@@ -135,6 +135,14 @@ namespace Nop.Web.Framework.Controllers
             AddNotification(NotifyType.Error, exception.Message, persistForTheNextRequest);
         }
         /// <summary>
+        /// Display warning notification
+        /// </summary>
+        /// <param name="message">Message</param>
+        /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request</param>
+        protected virtual void WarningNotification(string message, bool persistForTheNextRequest = true) {
+            AddNotification(NotifyType.Warning, message, persistForTheNextRequest);
+        }
+        /// <summary>
         /// Display notification
         /// </summary>
         /// <param name="type">Notification type</param>
