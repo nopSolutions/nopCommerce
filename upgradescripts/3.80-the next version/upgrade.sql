@@ -8,6 +8,24 @@ set @resources='
   <LocaleResource Name="Account.CustomerProductReviews.NoRecords">
     <Value>You haven''t written any reviews yet</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.EnteringEmailTwice.Hint">
+    <Value>Force entering email twice during registration.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.MaximumProductNumber.Hint">
+    <Value>Sets a maximum number of products per vendor.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Methods.Description">
+    <Value>Shipping methods used by offline shipping rate computation methods (e.g. "Fixed Rate Shipping" or "Shipping by weight").</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Price.Hint">
+    <Value>The price of the product. You can manage currency by selecting Configuration > Currencies.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.CustomerRoles.Hint">
+    <Value>Choose customer roles of this user.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductAttributes.Hint">
+    <Value>Check if products should be exported/imported with product attributes.</Value>
+  </LocaleResource>
 </Language>
 '
 
