@@ -68,7 +68,8 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
 
-            var model = _storePickupPointService.GetAllStorePickupPoints(0, command.Page - 1, command.PageSize).Select(x =>
+            var pickupPoints = _storePickupPointService.GetAllStorePickupPoints();
+            var model = pickupPoints.Select(x =>
             {
                 var store = _storeService.GetStoreById(x.StoreId);
                 return new StorePickupPointModel
@@ -85,7 +86,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             return Json(new DataSourceResult
             {
                 Data = model,
-                Total = model.Count
+                Total = pickupPoints.TotalCount
             });
         }
 
