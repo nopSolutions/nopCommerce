@@ -12,18 +12,46 @@ namespace Nop.Core
     public class PagedList<T> : List<T>, IPagedList<T> 
     {
         /// <summary>
-        /// Ctor (paging in performed inside)
+        /// Ctor
         /// </summary>
         /// <param name="source">source</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        public PagedList(IEnumerable<T> source, int pageIndex, int pageSize)
+        public PagedList(IQueryable<T> source, int pageIndex, int pageSize)
         {
-            Init(source, pageIndex, pageSize);
+            int total = source.Count();
+            this.TotalCount = total;
+            this.TotalPages = total / pageSize;
+
+            if (total % pageSize > 0)
+                TotalPages++;
+
+            this.PageSize = pageSize;
+            this.PageIndex = pageIndex;
+            this.AddRange(source.Skip(pageIndex * pageSize).Take(pageSize).ToList());
         }
 
         /// <summary>
-        /// Ctor (already paged soure is passed)
+        /// Ctor
+        /// </summary>
+        /// <param name="source">source</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        public PagedList(IList<T> source, int pageIndex, int pageSize)
+        {
+            TotalCount = source.Count();
+            TotalPages = TotalCount / pageSize;
+
+            if (TotalCount % pageSize > 0)
+                TotalPages++;
+
+            this.PageSize = pageSize;
+            this.PageIndex = pageIndex;
+            this.AddRange(source.Skip(pageIndex * pageSize).Take(pageSize).ToList());
+        }
+
+        /// <summary>
+        /// Ctor
         /// </summary>
         /// <param name="source">source</param>
         /// <param name="pageIndex">Page index</param>
@@ -31,33 +59,15 @@ namespace Nop.Core
         /// <param name="totalCount">Total count</param>
         public PagedList(IEnumerable<T> source, int pageIndex, int pageSize, int totalCount)
         {
-            Init(source, pageIndex, pageSize, totalCount);
-        }
-
-        /// <summary>
-        /// Initialize
-        /// </summary>
-        /// <param name="source">source</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <param name="totalCount">Total count</param>
-        private void Init(IEnumerable<T> source, int pageIndex, int pageSize, int? totalCount = null)
-        {
-            if (source == null)
-                throw new ArgumentNullException("source");
-            if (pageSize <= 0)
-                throw new ArgumentException("pageSize must be greater than zero");
-
-            TotalCount = totalCount ?? source.Count();
+            TotalCount = totalCount;
             TotalPages = TotalCount / pageSize;
 
             if (TotalCount % pageSize > 0)
                 TotalPages++;
 
-            PageSize = pageSize;
-            PageIndex = pageIndex;
-            source = totalCount == null ? source.Skip(pageIndex * pageSize).Take(pageSize) : source;
-            AddRange(source);
+            this.PageSize = pageSize;
+            this.PageIndex = pageIndex;
+            this.AddRange(source);
         }
 
         public int PageIndex { get; private set; }
