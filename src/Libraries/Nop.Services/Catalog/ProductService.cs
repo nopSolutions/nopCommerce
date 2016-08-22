@@ -1185,7 +1185,7 @@ namespace Nop.Services.Catalog
                          c.StockQuantity <= 0 &&
                          (vendorId == 0 || p.VendorId == vendorId)
                          select c;
-
+            query = query.OrderBy(c => c.ProductId);
             return new PagedList<ProductAttributeCombination>(query, pageIndex, pageSize);
         }
 
