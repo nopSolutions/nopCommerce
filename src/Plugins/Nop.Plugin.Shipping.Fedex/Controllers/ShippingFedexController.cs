@@ -3,9 +3,9 @@ using System.Text;
 using System.Web.Mvc;
 using Nop.Plugin.Shipping.Fedex.Domain;
 using Nop.Plugin.Shipping.Fedex.Models;
+using Nop.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Shipping.Fedex.Controllers

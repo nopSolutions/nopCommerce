@@ -175,7 +175,7 @@ namespace Nop.Admin.Controllers
             if (continueEditing)
             {
                 //selected tab
-                SaveSelectedTabIndex();
+                SaveSelectedTabName();
 
                 return RedirectToAction("Edit",  new {id = payment.Id});
             }
@@ -252,7 +252,7 @@ namespace Nop.Admin.Controllers
                 SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.NextPaymentProcessed"), false);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                SaveSelectedTabName(persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -264,7 +264,7 @@ namespace Nop.Admin.Controllers
                 ErrorNotification(exc, false);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                SaveSelectedTabName(persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -287,7 +287,7 @@ namespace Nop.Admin.Controllers
                 var errors = _orderProcessingService.CancelRecurringPayment(payment);
                 var model = new RecurringPaymentModel();
                 PrepareRecurringPaymentModel(model, payment);
-                if (errors.Count > 0)
+                if (errors.Any())
                 {
                     foreach (var error in errors)
                         ErrorNotification(error, false);
@@ -296,7 +296,7 @@ namespace Nop.Admin.Controllers
                     SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.Cancelled"), false);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                SaveSelectedTabName(persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -308,7 +308,7 @@ namespace Nop.Admin.Controllers
                 ErrorNotification(exc, false);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                SaveSelectedTabName(persistForTheNextRequest: false);
 
                 return View(model);
             }

@@ -21,7 +21,18 @@
                                 @item.SpecificationAttributeName
                             </td>
                             <td class="spec-value">
-                                @Html.Raw(item.ValueRaw)
+                                @if (String.IsNullOrEmpty(item.ColorSquaresRgb))
+                                {
+                                    @Html.Raw(item.ValueRaw)
+                                }
+                                else
+                                {
+                                    <div class="color-squares">
+                                        <span class="color-container" title="@Html.Raw(item.ValueRaw)">
+                                            <span class="color" style="background-color: @(item.ColorSquaresRgb);">&nbsp;</span>
+                                        </span>
+                                    </div>
+                                }
                             </td>
                         </tr>
                     }

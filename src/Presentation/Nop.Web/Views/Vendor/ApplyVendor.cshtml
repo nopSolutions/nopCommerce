@@ -5,6 +5,8 @@
 
     //title
     Html.AddTitleParts(T("PageTitle.Vendors.Apply").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-apply-vendor-page");
 }
 <div class="page apply-vendor-page">
     <div class="page-title">
@@ -21,7 +23,7 @@
         }
         else
         {
-            using (Html.BeginForm())
+            using (Html.BeginForm(null, null, FormMethod.Post, new RouteValueDictionary { { "enctype", "multipart/form-data" } }))
             {
                 @Html.AntiForgeryToken()
                 var validationSummary = Html.ValidationSummary(true);
@@ -42,6 +44,14 @@
                             @Html.TextBoxFor(model => model.Email, new { @class = "email", placeholder = T("Vendors.ApplyAccount.Email.Hint") })
                             @Html.RequiredHint()
                             @Html.ValidationMessageFor(model => model.Email)
+                        </div>
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.Description)
+                            @Html.TextAreaFor(model => model.Description, new { @class = "description" })
+                        </div>
+                        <div class="inputs">
+                            @Html.Label(T("Vendors.ApplyAccount.Picture").Text)
+                            <input name="uploadedFile" type="file"/>
                         </div>
                         @if (Model.DisplayCaptcha)
                         {

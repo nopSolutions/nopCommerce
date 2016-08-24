@@ -1,6 +1,6 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Plugins;
@@ -50,8 +50,8 @@ namespace Nop.Plugin.DiscountRules.HadSpentAmount
             if (request.Customer == null || request.Customer.IsGuest())
                 return result;
             var orders = _orderService.SearchOrders(storeId: request.Store.Id, 
-                customerId: request.Customer.Id, 
-                os: OrderStatus.Complete);
+                customerId: request.Customer.Id,
+                osIds: new List<int>() { (int)OrderStatus.Complete });
             decimal spentAmount = orders.Sum(o => o.OrderTotal);
             if (spentAmount > spentAmountRequirement)
             {

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -52,8 +51,11 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records (filter by current store if possible)</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Reward point history records</returns>
-        public virtual IList<RewardPointsHistory> GetRewardPointsHistory(int customerId = 0, bool showHidden = false)
+        public virtual IPagedList<RewardPointsHistory> GetRewardPointsHistory(int customerId = 0, bool showHidden = false,
+            int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _rphRepository.Table;
             if (customerId > 0)
@@ -66,7 +68,7 @@ namespace Nop.Services.Orders
             }
             query = query.OrderByDescending(rph => rph.CreatedOnUtc).ThenByDescending(rph => rph.Id);
 
-            var records = query.ToList();
+            var records = new PagedList<RewardPointsHistory>(query, pageIndex, pageSize);
             return records;
         }
 
@@ -124,6 +126,21 @@ namespace Nop.Services.Orders
 
             var lastRph = query.FirstOrDefault();
             return lastRph != null ? lastRph.PointsBalance : 0;
+        }
+
+        /// <summary>
+        /// Updates the reward point history entry
+        /// </summary>
+        /// <param name="rewardPointsHistory">Reward point history entry</param>
+        public virtual void UpdateRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory)
+        {
+            if (rewardPointsHistory == null)
+                throw new ArgumentNullException("rewardPointsHistory");
+
+            _rphRepository.Update(rewardPointsHistory);
+
+            //event notification
+            _eventPublisher.EntityUpdated(rewardPointsHistory);
         }
 
         #endregion

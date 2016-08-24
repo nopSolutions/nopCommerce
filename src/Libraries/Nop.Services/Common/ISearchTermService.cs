@@ -12,7 +12,7 @@ namespace Nop.Services.Common
         /// Deletes a search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-        void DeleteAddress(SearchTerm searchTerm);
+        void DeleteSearchTerm(SearchTerm searchTerm);
 
         /// <summary>
         /// Gets a search term record by identifier

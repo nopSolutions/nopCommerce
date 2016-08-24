@@ -67,6 +67,11 @@ namespace Nop.Core.Domain.Topics
         public string Body { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the entity is published
+        /// </summary>
+        public bool Published { get; set; }
+
+        /// <summary>
         /// Gets or sets a value of used topic template identifier
         /// </summary>
         public int TopicTemplateId { get; set; }

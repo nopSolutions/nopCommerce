@@ -12,10 +12,12 @@ namespace Nop.Web.Models.Customer
     {
         [AllowHtml]
         [DataType(DataType.Password)]
+        [NoTrim]
         [NopResourceDisplayName("Account.PasswordRecovery.NewPassword")]
         public string NewPassword { get; set; }
 
         [AllowHtml]
+        [NoTrim]
         [DataType(DataType.Password)]
         [NopResourceDisplayName("Account.PasswordRecovery.ConfirmNewPassword")]
         public string ConfirmNewPassword { get; set; }

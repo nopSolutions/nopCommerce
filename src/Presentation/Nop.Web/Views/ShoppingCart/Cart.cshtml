@@ -6,6 +6,8 @@
 
     //title
     Html.AddTitleParts(T("PageTitle.ShoppingCart").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-shopping-cart-page");
 }
 @if (!Model.OnePageCheckoutEnabled)
 {

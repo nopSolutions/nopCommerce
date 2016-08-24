@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -30,7 +29,6 @@ namespace Nop.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
-        private readonly IWebHelper _webHelper;
 
 		#endregion
 
@@ -41,8 +39,7 @@ namespace Nop.Admin.Controllers
             ICurrencyService currencyService,
             IStoreService storeService, 
             IStoreMappingService storeMappingService,
-            IPermissionService permissionService,
-            IWebHelper webHelper)
+            IPermissionService permissionService)
 		{
 			this._localizationService = localizationService;
             this._languageService = languageService;
@@ -50,7 +47,6 @@ namespace Nop.Admin.Controllers
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
-            this._webHelper= webHelper;
 		}
 
 		#endregion 
@@ -64,7 +60,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentNullException("model");
             
             model.FlagFileNames = Directory
-                .EnumerateFiles(_webHelper.MapPath("~/Content/Images/flags/"), "*.png", SearchOption.TopDirectoryOnly)
+                .EnumerateFiles(CommonHelper.MapPath("~/Content/Images/flags/"), "*.png", SearchOption.TopDirectoryOnly)
                 .Select(Path.GetFileName)
                 .ToList();
         }
@@ -75,16 +71,18 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
+            if (!excludeProperties && language != null)
+                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(language).ToList();
+
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
             {
-                if (language != null)
+                model.AvailableStores.Add(new SelectListItem
                 {
-                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(language);
-                }
+                    Text = store.Name,
+                    Value = store.Id.ToString(),
+                    Selected = model.SelectedStoreIds.Contains(store.Id)
+                });
             }
         }
 
@@ -114,11 +112,13 @@ namespace Nop.Admin.Controllers
         [NonAction]
         protected virtual void SaveStoreMappings(Language language, LanguageModel model)
         {
+            language.LimitedToStores = model.SelectedStoreIds.Any();
+
             var existingStoreMappings = _storeMappingService.GetStoreMappings(language);
             var allStores = _storeService.GetAllStores();
             foreach (var store in allStores)
             {
-                if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
+                if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
@@ -201,7 +201,15 @@ namespace Nop.Admin.Controllers
                 SaveStoreMappings(language, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = language.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = language.Id });
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
@@ -274,7 +282,7 @@ namespace Nop.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    SaveSelectedTabName();
 
                     return RedirectToAction("Edit", new {id = language.Id});
                 }
@@ -323,53 +331,34 @@ namespace Nop.Admin.Controllers
 		#endregion
 
 		#region Resources
-
-		public ActionResult Resources(int languageId)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedView();
-
-            //TODO do not use ViewBag, create a model
-			ViewBag.AllLanguages = _languageService.GetAllLanguages(true)
-                .Select(x => new SelectListItem
-                {
-                    Selected = (x.Id.Equals(languageId)),
-                    Text = x.Name,
-                    Value = x.Id.ToString()
-                }).ToList();
-		    var language = _languageService.GetLanguageById(languageId);
-		    ViewBag.LanguageId = languageId;
-		    ViewBag.LanguageName = language.Name;
-
-			return View();
-		}
-
+        
         [HttpPost]
         //do not validate request token (XSRF)
         //for some reasons it does not work with "filtering" support
         [AdminAntiForgery(true)] 
-		public ActionResult Resources(int languageId, DataSourceRequest command,
-            Nop.Web.Framework.Kendoui.Filter filter = null, IEnumerable<Sort> sort = null)
+		public ActionResult Resources(int languageId, DataSourceRequest command, LanguageResourcesListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
-            
-		    var language = _languageService.GetLanguageById(languageId);
 
-            var resources = _localizationService
+            var query = _localizationService
                 .GetAllResourceValues(languageId)
                 .OrderBy(x => x.Key)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(model.SearchResourceName))
+                query = query.Where(l => l.Key.ToLowerInvariant().Contains(model.SearchResourceName.ToLowerInvariant()));
+            if (!string.IsNullOrEmpty(model.SearchResourceValue))
+                query = query.Where(l => l.Value.Value.ToLowerInvariant().Contains(model.SearchResourceValue.ToLowerInvariant()));
+
+            var resources = query
                 .Select(x => new LanguageResourceModel
                     {
                         LanguageId = languageId,
-                        LanguageName = language.Name,
                         Id = x.Value.Key,
                         Name = x.Key,
                         Value = x.Value.Value,
-                    })
-                    .AsQueryable()
-                    .Filter(filter)
-                    .Sort(sort);
+                    });
             
             var gridModel = new DataSourceResult
             {

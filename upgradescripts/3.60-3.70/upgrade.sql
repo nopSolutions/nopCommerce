@@ -2277,3 +2277,13 @@ BEGIN
 	DROP TABLE #PageIndex
 END
 GO
+
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'pdfsettings.fontfilename')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'pdfsettings.fontfilename', N'FreeSerif.ttf', 0)
+END
+GO

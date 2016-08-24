@@ -38,12 +38,13 @@ namespace Nop.Services.Messages
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <param name="attachedDownloadId">Attachment download ID (another attachedment)</param>
+        /// <param name="headers">Headers</param>
         public virtual void SendEmail(EmailAccount emailAccount, string subject, string body,
             string fromAddress, string fromName, string toAddress, string toName,
              string replyTo = null, string replyToName = null,
             IEnumerable<string> bcc = null, IEnumerable<string> cc = null,
             string attachmentFilePath = null, string attachmentFileName = null,
-            int attachedDownloadId = 0)
+            int attachedDownloadId = 0, IDictionary<string, string> headers = null)
         {
             var message = new MailMessage();
             //from, to, reply to
@@ -77,7 +78,14 @@ namespace Nop.Services.Messages
             message.Body = body;
             message.IsBodyHtml = true;
 
-            //create  the file attachment for this e-mail message
+            //headers
+            if (headers != null)
+                foreach (var header in headers)
+                {
+                    message.Headers.Add(header.Key, header.Value);
+                }
+
+            //create the file attachment for this e-mail message
             if (!String.IsNullOrEmpty(attachmentFilePath) &&
                 File.Exists(attachmentFilePath))
             {
@@ -103,15 +111,15 @@ namespace Nop.Services.Messages
                         string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id.ToString();
                         fileName += download.Extension;
 
-                        
-                        var ms = new MemoryStream(download.DownloadBinary);
+
+                        var ms = new MemoryStream(download.DownloadBinary);                        
                         var attachment = new Attachment(ms, fileName);
                         //string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
                         //var attachment = new Attachment(ms, fileName, contentType);
                         attachment.ContentDisposition.CreationDate = DateTime.UtcNow;
                         attachment.ContentDisposition.ModificationDate = DateTime.UtcNow;
                         attachment.ContentDisposition.ReadDate = DateTime.UtcNow;
-                        message.Attachments.Add(attachment);
+                        message.Attachments.Add(attachment);                        
                     }
                 }
             }

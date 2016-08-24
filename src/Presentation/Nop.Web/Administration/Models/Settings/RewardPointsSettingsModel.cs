@@ -47,6 +47,10 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.PointsAccumulatedForAllStores")]
         public bool PointsAccumulatedForAllStores { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.PageSize")]
+        public int PageSize { get; set; }
+        public bool PageSize_OverrideForStore { get; set; }
+
         public string PrimaryStoreCurrencyCode { get; set; }
     }
 }

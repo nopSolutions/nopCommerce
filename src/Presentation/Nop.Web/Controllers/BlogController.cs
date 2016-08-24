@@ -17,6 +17,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
+using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Web.Framework;
@@ -31,7 +32,7 @@ namespace Nop.Web.Controllers
     [NopHttpsRequirement(SslRequirement.No)]
     public partial class BlogController : BasePublicController
     {
-		#region Fields
+        #region Fields
 
         private readonly IBlogService _blogService;
         private readonly IWorkContext _workContext;
@@ -44,31 +45,33 @@ namespace Nop.Web.Controllers
         private readonly ICacheManager _cacheManager;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IPermissionService _permissionService;
 
         private readonly MediaSettings _mediaSettings;
         private readonly BlogSettings _blogSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly CaptchaSettings _captchaSettings;
-        
+
         #endregion
 
-		#region Constructors
+        #region Constructors
 
-        public BlogController(IBlogService blogService, 
+        public BlogController(IBlogService blogService,
             IWorkContext workContext,
             IStoreContext storeContext,
-            IPictureService pictureService, 
+            IPictureService pictureService,
             ILocalizationService localizationService,
             IDateTimeHelper dateTimeHelper,
-            IWorkflowMessageService workflowMessageService, 
+            IWorkflowMessageService workflowMessageService,
             IWebHelper webHelper,
-            ICacheManager cacheManager, 
+            ICacheManager cacheManager,
             ICustomerActivityService customerActivityService,
             IStoreMappingService storeMappingService,
+            IPermissionService permissionService,
             MediaSettings mediaSettings,
             BlogSettings blogSettings,
-            LocalizationSettings localizationSettings, 
+            LocalizationSettings localizationSettings,
             CustomerSettings customerSettings,
             CaptchaSettings captchaSettings)
         {
@@ -83,6 +86,7 @@ namespace Nop.Web.Controllers
             this._cacheManager = cacheManager;
             this._customerActivityService = customerActivityService;
             this._storeMappingService = storeMappingService;
+            this._permissionService = permissionService;
 
             this._mediaSettings = mediaSettings;
             this._blogSettings = blogSettings;
@@ -91,7 +95,7 @@ namespace Nop.Web.Controllers
             this._captchaSettings = captchaSettings;
         }
 
-		#endregion
+        #endregion
 
         #region Utilities
 
@@ -134,8 +138,8 @@ namespace Nop.Web.Controllers
                     if (_customerSettings.AllowCustomersToUploadAvatars)
                     {
                         commentModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                            bc.Customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId), 
-                            _mediaSettings.AvatarPictureSize, 
+                            bc.Customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                            _mediaSettings.AvatarPictureSize,
                             _customerSettings.DefaultAvatarEnabled,
                             defaultPictureType: PictureType.Avatar);
                     }
@@ -170,7 +174,7 @@ namespace Nop.Web.Controllers
             }
             else
             {
-                blogPosts = _blogService.GetAllBlogPostsByTag(_storeContext.CurrentStore.Id, 
+                blogPosts = _blogService.GetAllBlogPostsByTag(_storeContext.CurrentStore.Id,
                     _workContext.WorkingLanguage.Id,
                     command.Tag, command.PageNumber - 1, command.PageSize);
             }
@@ -187,7 +191,7 @@ namespace Nop.Web.Controllers
 
             return model;
         }
-        
+
         #endregion
 
         #region Methods
@@ -196,7 +200,7 @@ namespace Nop.Web.Controllers
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
-            
+
             var model = PrepareBlogPostListModel(command);
             return View("List", model);
         }
@@ -223,7 +227,7 @@ namespace Nop.Web.Controllers
                                     string.Format("{0}: Blog", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                                     "Blog",
                                     new Uri(_webHelper.GetStoreLocation(false)),
-                                    "BlogRSS",
+                                    string.Format("urn:store:{0}:blog", _storeContext.CurrentStore.Id),
                                     DateTime.UtcNow);
 
             if (!_blogSettings.Enabled)
@@ -233,8 +237,8 @@ namespace Nop.Web.Controllers
             var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id, languageId);
             foreach (var blogPost in blogPosts)
             {
-                string blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, "http");
-                items.Add(new SyndicationItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl), String.Format("Blog:{0}", blogPost.Id), blogPost.CreatedOnUtc));
+                string blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
+                items.Add(new SyndicationItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl), String.Format("urn:store:{0}:blog:post:{1}", _storeContext.CurrentStore.Id, blogPost.Id), blogPost.CreatedOnUtc));
             }
             feed.Items = items;
             return new RssActionResult { Feed = feed };
@@ -254,9 +258,13 @@ namespace Nop.Web.Controllers
             //Store mapping
             if (!_storeMappingService.Authorize(blogPost))
                 return InvokeHttp404();
-            
+
             var model = new BlogPostModel();
             PrepareBlogPostModel(model, blogPost, true);
+
+            //display "edit" (manage) link
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+                DisplayEditLink(Url.Action("Edit", "Blog", new { id = blogPost.Id, area = "Admin" }));
 
             return View(model);
         }
@@ -282,7 +290,7 @@ namespace Nop.Web.Controllers
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage && !captchaValid)
             {
-                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
+                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
             }
 
             if (ModelState.IsValid)
@@ -359,9 +367,9 @@ namespace Nop.Web.Controllers
             {
                 var model = new List<BlogPostYearModel>();
 
-                var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id, 
+                var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
                     _workContext.WorkingLanguage.Id);
-                if (blogPosts.Count > 0)
+                if (blogPosts.Any())
                 {
                     var months = new SortedDictionary<DateTime, int>();
 
@@ -370,7 +378,7 @@ namespace Nop.Web.Controllers
                     while (DateTime.SpecifyKind(first, DateTimeKind.Utc) <= DateTime.UtcNow.AddMonths(1))
                     {
                         var list = blogPosts.GetPostsByDate(new DateTime(first.Year, first.Month, 1), new DateTime(first.Year, first.Month, 1).AddMonths(1).AddSeconds(-1));
-                        if (list.Count > 0)
+                        if (list.Any())
                         {
                             var date = new DateTime(first.Year, first.Month, 1);
                             months.Add(date, list.Count);
@@ -388,7 +396,7 @@ namespace Nop.Web.Controllers
                         if (current == 0)
                             current = date.Year;
 
-                        if (date.Year > current || model.Count == 0)
+                        if (date.Year > current || !model.Any())
                         {
                             var yearModel = new BlogPostYearModel
                             {
@@ -417,8 +425,8 @@ namespace Nop.Web.Controllers
             if (!_blogSettings.Enabled || !_blogSettings.ShowHeaderRssUrl)
                 return Content("");
 
-            string link = string.Format("<link href=\"{0}\" rel=\"alternate\" type=\"application/rss+xml\" title=\"{1}: Blog\" />",
-                Url.RouteUrl("BlogRSS", new { languageId = _workContext.WorkingLanguage.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http"), _storeContext.CurrentStore.GetLocalized(x => x.Name));
+            string link = string.Format("<link href=\"{0}\" rel=\"alternate\" type=\"{1}\" title=\"{2}: Blog\" />",
+                Url.RouteUrl("BlogRSS", new { languageId = _workContext.WorkingLanguage.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http"), MimeTypes.ApplicationRssXml, _storeContext.CurrentStore.GetLocalized(x => x.Name));
 
             return Content(link);
         }

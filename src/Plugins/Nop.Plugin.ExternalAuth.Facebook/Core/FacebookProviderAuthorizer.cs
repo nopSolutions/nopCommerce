@@ -54,12 +54,14 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
             {
                 using (var responseStream = response.GetResponseStream())
                 {
-                    var reader = new StreamReader(responseStream);
-                    var responseFromServer = reader.ReadToEnd();
-                    var userInfo = JObject.Parse(responseFromServer);
-                    if (userInfo["email"] != null)
+                    using (var reader = new StreamReader(responseStream))
                     {
-                        return userInfo["email"].ToString();
+                        var responseFromServer = reader.ReadToEnd();
+                        var userInfo = JObject.Parse(responseFromServer);
+                        if (userInfo["email"] != null)
+                        {
+                            return userInfo["email"].ToString();
+                        }
                     }
                 }
             }

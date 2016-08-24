@@ -4,9 +4,9 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading;
-using System.Web.Hosting;
 using System.Web.Mvc;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
@@ -65,7 +65,7 @@ namespace Nop.Web.Controllers
                 }
                 return true;
             }
-            catch 
+            catch
             {
                 return false;
             }
@@ -76,9 +76,14 @@ namespace Nop.Web.Controllers
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <param name="collation">Server collation; the default one will be used if not specified</param>
+        /// <param name="triesToConnect">
+        /// Number of times to try to connect to database. 
+        /// If connection cannot be open, then error will be returned. 
+        /// Pass 0 to skip this validation.
+        /// </param>
         /// <returns>Error</returns>
         [NonAction]
-        protected string CreateDatabase(string connectionString, string collation)
+        protected string CreateDatabase(string connectionString, string collation, int triesToConnect = 10)
         {
             try
             {
@@ -96,8 +101,27 @@ namespace Nop.Web.Controllers
                     conn.Open();
                     using (var command = new SqlCommand(query, conn))
                     {
-                        command.ExecuteNonQuery();  
-                    } 
+                        command.ExecuteNonQuery();
+                    }
+                }
+
+                //try connect
+                if (triesToConnect > 0)
+                {
+                    //Sometimes on slow servers (hosting) there could be situations when database requires some time to be created.
+                    //But we have already started creation of tables and sample data.
+                    //As a result there is an exception thrown and the installation process cannot continue.
+                    //That's why we are in a cycle of "triesToConnect" times trying to connect to a database with a delay of one second.
+                    for (var i = 0; i <= triesToConnect; i++)
+                    {
+                        if (i == triesToConnect)
+                            throw new Exception("Unable to connect to the new database. Please try one more time");
+
+                        if (!this.SqlServerDatabaseExists(connectionString))
+                            Thread.Sleep(1000);
+                        else
+                            break;
+                    }
                 }
 
                 return string.Empty;
@@ -107,7 +131,7 @@ namespace Nop.Web.Controllers
                 return string.Format(_locService.GetResource("DatabaseCreationError"), ex.Message);
             }
         }
-        
+
         /// <summary>
         /// Create contents of connection strings used by the SqlConnection class
         /// </summary>
@@ -120,7 +144,7 @@ namespace Nop.Web.Controllers
         /// <returns>Connection string</returns>
         [NonAction]
         protected string CreateConnectionString(bool trustedConnection,
-            string serverName, string databaseName, 
+            string serverName, string databaseName,
             string userName, string password, int timeout = 0)
         {
             var builder = new SqlConnectionStringBuilder();
@@ -176,7 +200,7 @@ namespace Nop.Web.Controllers
             {
                 model.AvailableLanguages.Add(new SelectListItem
                 {
-                    Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code}),
+                    Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code }),
                     Text = lang.Name,
                     Selected = _locService.GetCurrentLanguage().Code == lang.Code,
                 });
@@ -259,16 +283,16 @@ namespace Nop.Web.Controllers
             //the identity will be the anonymous user (typically IUSR_MACHINENAME) or the authenticated request user.
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             //validate permissions
-            var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite(webHelper);
+            var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite();
             foreach (string dir in dirsToCheck)
                 if (!FilePermissionHelper.CheckPermissions(dir, false, true, true, false))
                     ModelState.AddModelError("", string.Format(_locService.GetResource("ConfigureDirectoryPermissions"), WindowsIdentity.GetCurrent().Name, dir));
 
-            var filesToCheck = FilePermissionHelper.GetFilesWrite(webHelper);
+            var filesToCheck = FilePermissionHelper.GetFilesWrite();
             foreach (string file in filesToCheck)
                 if (!FilePermissionHelper.CheckPermissions(file, false, true, true, true))
                     ModelState.AddModelError("", string.Format(_locService.GetResource("ConfigureFilePermissions"), WindowsIdentity.GetCurrent().Name, file));
-            
+
             if (ModelState.IsValid)
             {
                 var settingsManager = new DataSettingsManager();
@@ -299,7 +323,7 @@ namespace Nop.Web.Controllers
                                 model.SqlServerName, model.SqlDatabaseName,
                                 model.SqlServerUsername, model.SqlServerPassword);
                         }
-                        
+
                         if (model.SqlServerCreateDatabase)
                         {
                             if (!SqlServerDatabaseExists(connectionString))
@@ -309,10 +333,6 @@ namespace Nop.Web.Controllers
                                 var errorCreatingDatabase = CreateDatabase(connectionString, collation);
                                 if (!String.IsNullOrEmpty(errorCreatingDatabase))
                                     throw new Exception(errorCreatingDatabase);
-                                
-                                //Database cannot be created sometimes. Weird! Seems to be Entity Framework issue
-                                //that's just wait 5 seconds (3 seconds is not enough for some reasons)
-                                Thread.Sleep(5000);
                             }
                         }
                         else
@@ -330,7 +350,7 @@ namespace Nop.Web.Controllers
                         connectionString = "Data Source=" + databasePath + ";Persist Security Info=False";
 
                         //drop database if exists
-                        string databaseFullPath = HostingEnvironment.MapPath("~/App_Data/") + databaseFileName;
+                        string databaseFullPath = CommonHelper.MapPath("~/App_Data/") + databaseFileName;
                         if (System.IO.File.Exists(databaseFullPath))
                         {
                             System.IO.File.Delete(databaseFullPath);
@@ -349,8 +369,8 @@ namespace Nop.Web.Controllers
                     //init data provider
                     var dataProviderInstance = EngineContext.Current.Resolve<BaseDataProviderManager>().LoadDataProvider();
                     dataProviderInstance.InitDatabase();
-                    
-                    
+
+
                     //now resolve installation service
                     var installationService = EngineContext.Current.Resolve<IInstallationService>();
                     installationService.InstallData(model.AdminEmail, model.AdminPassword, model.InstallSampleData);
@@ -366,10 +386,10 @@ namespace Nop.Web.Controllers
                         .OrderBy(x => x.PluginDescriptor.Group)
                         .ThenBy(x => x.PluginDescriptor.DisplayOrder)
                         .ToList();
-                    var pluginsIgnoredDuringInstallation = String.IsNullOrEmpty(_config.PluginsIgnoredDuringInstallation) ? 
-                        new List<string>():
+                    var pluginsIgnoredDuringInstallation = String.IsNullOrEmpty(_config.PluginsIgnoredDuringInstallation) ?
+                        new List<string>() :
                         _config.PluginsIgnoredDuringInstallation
-                        .Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)
+                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                         .Select(x => x.Trim())
                         .ToList();
                     foreach (var plugin in plugins)
@@ -378,7 +398,7 @@ namespace Nop.Web.Controllers
                             continue;
                         plugin.Install();
                     }
-                    
+
                     //register default permissions
                     //var permissionProviders = EngineContext.Current.Resolve<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
                     var permissionProviders = new List<Type>();
@@ -399,6 +419,9 @@ namespace Nop.Web.Controllers
                 {
                     //reset cache
                     DataSettingsHelper.ResetCache();
+
+                    var cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+                    cacheManager.Clear();
 
                     //clear provider settings if something got wrong
                     settingsManager.SaveSettings(new DataSettings
@@ -428,7 +451,7 @@ namespace Nop.Web.Controllers
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");
-            
+
             //restart application
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             webHelper.RestartAppDomain();

@@ -6,7 +6,7 @@ using Nop.Web.Models.Common;
 
 namespace Nop.Web.Validators.Common
 {
-    public class ContactVendorValidator : BaseNopValidator<ContactVendorModel>
+    public partial class ContactVendorValidator : BaseNopValidator<ContactVendorModel>
     {
         public ContactVendorValidator(ILocalizationService localizationService, CommonSettings commonSettings)
         {

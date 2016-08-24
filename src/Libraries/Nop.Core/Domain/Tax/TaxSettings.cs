@@ -119,5 +119,10 @@ namespace Nop.Core.Domain.Tax
         /// Gets or sets a value indicating whether we should notify a store owner when a new VAT number is submitted
         /// </summary>
         public bool EuVatEmailAdminWhenNewVatSubmitted { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to log tax providers errors
+        /// </summary>
+        public bool LogErrors { get; set; }
     }
 }

@@ -15,7 +15,7 @@ namespace Nop.Web.Framework.Themes
                 var attribute = node.Attributes["title"];
                 ThemeTitle = attribute == null ? string.Empty : attribute.Value;
                 attribute = node.Attributes["supportRTL"];
-                SupportRtl = attribute == null ? false : bool.Parse(attribute.Value);
+                SupportRtl = attribute != null && bool.Parse(attribute.Value);
                 attribute = node.Attributes["previewImageUrl"];
                 PreviewImageUrl = attribute == null ? string.Empty : attribute.Value;
                 attribute = node.Attributes["previewText"];

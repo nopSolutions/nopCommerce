@@ -52,8 +52,7 @@ namespace Nop.Admin.Controllers
         {
             if (model == null)
                 throw new ArgumentNullException("model");
-
-            //templates
+            
             model.AvailableLanguages.Add(new SelectListItem
             {
                 Text = "---",
@@ -227,8 +226,7 @@ namespace Nop.Admin.Controllers
                     .GetAllSettings()
                     .Where(s => s.StoreId == id)
                     .ToList();
-                foreach (var setting in settingsToDelete)
-                    _settingService.DeleteSetting(setting);
+                    _settingService.DeleteSettings(settingsToDelete);
                 //when we had two stores and now have only one store, we also should delete all "per store" settings
                 var allStores = _storeService.GetAllStores();
                 if (allStores.Count == 1)
@@ -237,8 +235,7 @@ namespace Nop.Admin.Controllers
                         .GetAllSettings()
                         .Where(s => s.StoreId == allStores[0].Id)
                         .ToList();
-                    foreach (var setting in settingsToDelete)
-                        _settingService.DeleteSetting(setting);
+                        _settingService.DeleteSettings(settingsToDelete);
                 }
 
 

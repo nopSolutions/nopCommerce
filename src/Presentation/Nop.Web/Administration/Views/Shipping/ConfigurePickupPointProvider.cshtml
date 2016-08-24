@@ -1,0 +1,37 @@
+﻿@model PickupPointProviderModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Shipping.PickupPointProviders.Configure").Text + " - " + Model.FriendlyName;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Pickup points");
+}
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Configuration.Shipping.PickupPointProviders.Configure") - @Model.FriendlyName
+        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Configuration.Shipping.PickupPointProviders.BackToList").Text, "PickupPointProviders")</small>
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        @if (!string.IsNullOrEmpty(Model.ConfigurationActionName))
+        {
+            @Html.Action(Model.ConfigurationActionName, Model.ConfigurationControllerName, Model.ConfigurationRouteValues);
+        }
+        else
+        {
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @T("Admin.Common.ConfigurationNotRequired")
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

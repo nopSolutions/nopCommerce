@@ -1,9 +1,5 @@
-﻿#region Using...
-
-using System;
-using System.IO;
+﻿using System.IO;
 using System.Web.Mvc;
-using System.Web.WebPages;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
@@ -11,16 +7,16 @@ using Nop.Services.Localization;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Themes;
 
-#endregion
-
 namespace Nop.Web.Framework.ViewEngines.Razor
 {
+    /// <summary>
+    /// Web view page
+    /// </summary>
+    /// <typeparam name="TModel">Model</typeparam>
     public abstract class WebViewPage<TModel> : System.Web.Mvc.WebViewPage<TModel>
     {
-
         private ILocalizationService _localizationService;
         private Localizer _localizer;
-        private IWorkContext _workContext;
 
         /// <summary>
         /// Get a localized resources
@@ -51,15 +47,6 @@ namespace Nop.Web.Framework.ViewEngines.Razor
                 return _localizer;
             }
         }
-
-        public IWorkContext WorkContext
-        {
-            get
-            {
-                return _workContext;
-            }
-        }
-        
         public override void InitHelpers()
         {
             base.InitHelpers();
@@ -67,32 +54,7 @@ namespace Nop.Web.Framework.ViewEngines.Razor
             if (DataSettingsHelper.DatabaseIsInstalled())
             {
                 _localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-                _workContext = EngineContext.Current.Resolve<IWorkContext>();
             }
-        }
-
-        public HelperResult RenderWrappedSection(string name, object wrapperHtmlAttributes)
-        {
-            Action<TextWriter> action = delegate(TextWriter tw)
-                                {
-                                    var htmlAttributes = HtmlHelper.AnonymousObjectToHtmlAttributes(wrapperHtmlAttributes);
-                                    var tagBuilder = new TagBuilder("div");
-                                    tagBuilder.MergeAttributes(htmlAttributes);
-
-                                    var section = RenderSection(name, false);
-                                    if (section != null)
-                                    {
-                                        tw.Write(tagBuilder.ToString(TagRenderMode.StartTag));
-                                        section.WriteTo(tw);
-                                        tw.Write(tagBuilder.ToString(TagRenderMode.EndTag));
-                                    }
-                                };
-            return new HelperResult(action);
-        }
-
-        public HelperResult RenderSection(string sectionName, Func<object, HelperResult> defaultContent)
-        {
-            return IsSectionDefined(sectionName) ? RenderSection(sectionName) : defaultContent(new object());
         }
 
         public override string Layout
@@ -126,7 +88,8 @@ namespace Nop.Web.Framework.ViewEngines.Razor
         /// <returns></returns>
         public bool ShouldUseRtlTheme()
         {
-            var supportRtl = _workContext.WorkingLanguage.Rtl;
+            var workContext = EngineContext.Current.Resolve<IWorkContext>();
+            var supportRtl = workContext.WorkingLanguage.Rtl;
             if (supportRtl)
             {
                 //ensure that the active theme also supports it
@@ -136,34 +99,11 @@ namespace Nop.Web.Framework.ViewEngines.Razor
             }
             return supportRtl;
         }
-
-        /// <summary>
-        /// Gets a selected tab index (used in admin area to store selected tab index)
-        /// </summary>
-        /// <returns>Index</returns>
-        public int GetSelectedTabIndex()
-        {
-            //keep this method synchornized with
-            //"SetSelectedTabIndex" method of \Administration\Controllers\BaseNopController.cs
-            int index = 0;
-            string dataKey = "nop.selected-tab-index";
-            if (ViewData[dataKey] is int)
-            {
-                index = (int)ViewData[dataKey];
-            }
-            if (TempData[dataKey] is int)
-            {
-                index = (int)TempData[dataKey];
-            }
-
-            //ensure it's not negative
-            if (index < 0)
-                index = 0;
-
-            return index;
-        }
     }
 
+    /// <summary>
+    /// Web view page
+    /// </summary>
     public abstract class WebViewPage : WebViewPage<dynamic>
     {
     }

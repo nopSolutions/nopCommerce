@@ -19,7 +19,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
 
-        public NivoSliderPlugin(IPictureService pictureService, 
+        public NivoSliderPlugin(IPictureService pictureService,
             ISettingService settingService, IWebHelper webHelper)
         {
             this._pictureService = pictureService;
@@ -67,26 +67,26 @@ namespace Nop.Plugin.Widgets.NivoSlider
                 {"widgetZone", widgetZone}
             };
         }
-        
+
         /// <summary>
         /// Install plugin
         /// </summary>
         public override void Install()
         {
             //pictures
-            var sampleImagesPath = _webHelper.MapPath("~/Plugins/Widgets.NivoSlider/Content/nivoslider/sample-images/");
+            var sampleImagesPath = CommonHelper.MapPath("~/Plugins/Widgets.NivoSlider/Content/nivoslider/sample-images/");
 
 
             //settings
             var settings = new NivoSliderSettings
             {
-                Picture1Id = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "banner1.jpg"), "image/pjpeg", "banner_1").Id,
+                Picture1Id = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "banner1.jpg"), MimeTypes.ImagePJpeg, "banner_1").Id,
                 Text1 = "",
                 Link1 = _webHelper.GetStoreLocation(false),
-                Picture2Id = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "banner2.jpg"), "image/pjpeg", "banner_2").Id,
+                Picture2Id = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "banner2.jpg"), MimeTypes.ImagePJpeg, "banner_2").Id,
                 Text2 = "",
                 Link2 = _webHelper.GetStoreLocation(false),
-                //Picture3Id = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "banner3.jpg"), "image/pjpeg", "banner_3").Id,
+                //Picture3Id = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "banner3.jpg"), MimeTypes.ImagePJpeg, "banner_3").Id,
                 //Text3 = "",
                 //Link3 = _webHelper.GetStoreLocation(false),
             };
@@ -128,7 +128,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
             this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Text.Hint");
             this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Link");
             this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Link.Hint");
-            
+
             base.Uninstall();
         }
     }

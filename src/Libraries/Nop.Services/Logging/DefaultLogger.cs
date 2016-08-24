@@ -59,7 +59,7 @@ namespace Nop.Services.Logging
         /// <returns>Result</returns>
         protected virtual bool IgnoreLog(string message)
         {
-            if (_commonSettings.IgnoreLogWordlist.Count == 0)
+            if (!_commonSettings.IgnoreLogWordlist.Any())
                 return false;
 
             if (String.IsNullOrWhiteSpace(message))
@@ -100,6 +100,18 @@ namespace Nop.Services.Logging
                 throw new ArgumentNullException("log");
 
             _logRepository.Delete(log);
+        }
+
+        /// <summary>
+        /// Deletes a log items
+        /// </summary>
+        /// <param name="logs">Log items</param>
+        public virtual void DeleteLogs(IList<Log> logs)
+        {
+            if (logs == null)
+                throw new ArgumentNullException("logs");
+
+            _logRepository.Delete(logs);
         }
 
         /// <summary>

@@ -6,6 +6,7 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Stores;
 using Nop.Data;
 using Nop.Services.Events;
 
@@ -36,9 +37,11 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly IRepository<ProductTag> _productTagRepository;
+        private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
         private readonly CommonSettings _commonSettings;
+        private readonly CatalogSettings _catalogSettings;
         private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
 
@@ -55,17 +58,23 @@ namespace Nop.Services.Catalog
         /// <param name="commonSettings">Common settings</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="eventPublisher">Event published</param>
+        /// <param name="storeMappingService">Store mapping service</param>
+        /// <param name="catalogSettings">Catalog settings</param>
         public ProductTagService(IRepository<ProductTag> productTagRepository,
-            IDataProvider dataProvider, 
+            IRepository<StoreMapping> storeMappingRepository,
+            IDataProvider dataProvider,
             IDbContext dbContext,
             CommonSettings commonSettings,
+            CatalogSettings catalogSettings,
             ICacheManager cacheManager,
             IEventPublisher eventPublisher)
         {
             this._productTagRepository = productTagRepository;
+            this._storeMappingRepository = storeMappingRepository;
             this._dataProvider = dataProvider;
             this._dbContext = dbContext;
             this._commonSettings = commonSettings;
+            this._catalogSettings = catalogSettings;
             this._cacheManager = cacheManager;
             this._eventPublisher = eventPublisher;
         }
@@ -125,15 +134,18 @@ namespace Nop.Services.Catalog
                 {
                     //stored procedures aren't supported. Use LINQ
                     #region Search products
-                    var query = from pt in _productTagRepository.Table
-                                select new
-                                {
-                                    Id = pt.Id,
-                                    ProductCount = pt.Products
-                                        //published and not deleted products
-                                        .Count(p => !p.Deleted && p.Published)
-                                };
-
+                    var query = _productTagRepository.Table.Select(pt => new
+                    {
+                        Id = pt.Id,
+                        ProductCount = (storeId == 0 || _catalogSettings.IgnoreStoreLimitations) ?
+                            pt.Products.Count(p => !p.Deleted && p.Published)
+                            : (from p in pt.Products
+                               join sm in _storeMappingRepository.Table
+                               on new { p1 = p.Id, p2 = "Product" } equals new { p1 = sm.EntityId, p2 = sm.EntityName } into p_sm
+                               from sm in p_sm.DefaultIfEmpty()
+                               where (!p.LimitedToStores || storeId == sm.StoreId) && !p.Deleted && p.Published
+                               select p).Count()
+                    });
                     var dictionary = new Dictionary<int, int>();
                     foreach (var item in query)
                         dictionary.Add(item.Id, item.ProductCount);

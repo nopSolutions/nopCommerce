@@ -14,9 +14,7 @@ namespace Nop.Core.Domain.Common
         public bool UseSystemEmailForContactUsForm { get; set; }
 
         public bool UseStoredProceduresIfSupported { get; set; }
-
-        public bool HideAdvertisementsOnAdminArea { get; set; }
-
+        
         public bool SitemapEnabled { get; set; }
         public bool SitemapIncludeCategories { get; set; }
         public bool SitemapIncludeManufacturers { get; set; }
@@ -58,7 +56,7 @@ namespace Nop.Core.Domain.Common
         public string XuaCompatibleValue { get; set; }
 
         /// <summary>
-        /// Gets or sets a ignore words (phrases) to be ignored when logging errors/messages
+        /// Gets or sets ignore words (phrases) to be ignored when logging errors/messages
         /// </summary>
         public List<string> IgnoreLogWordlist { get; set; }
     }

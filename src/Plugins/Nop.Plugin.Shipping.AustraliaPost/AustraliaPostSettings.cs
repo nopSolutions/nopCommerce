@@ -1,14 +1,11 @@
-﻿
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 
 namespace Nop.Plugin.Shipping.AustraliaPost
 {
     public class AustraliaPostSettings : ISettings
     {
-        public string GatewayUrl { get; set; }
+        public string ApiKey { get; set; }
 
         public decimal AdditionalHandlingCharge { get; set; }
-
-        public bool HideDeliveryInformation { get; set; }
     }
 }

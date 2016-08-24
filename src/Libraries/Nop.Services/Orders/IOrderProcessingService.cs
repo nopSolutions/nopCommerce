@@ -26,6 +26,12 @@ namespace Nop.Services.Orders
         PlaceOrderResult PlaceOrder(ProcessPaymentRequest processPaymentRequest);
 
         /// <summary>
+        /// Update order totals
+        /// </summary>
+        /// <param name="updateOrderParameters">Parameters for the updating order</param>
+        void UpdateOrderTotals(UpdateOrderParameters updateOrderParameters);
+
+        /// <summary>
         /// Deletes an order
         /// </summary>
         /// <param name="order">The order</param>
@@ -33,10 +39,11 @@ namespace Nop.Services.Orders
 
 
         /// <summary>
-        /// Process next recurring psayment
+        /// Process next recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
-        void ProcessNextRecurringPayment(RecurringPayment recurringPayment);
+        /// <param name="paymentResult">Process payment result (info about last payment for automatic recurring payments)</param>
+        void ProcessNextRecurringPayment(RecurringPayment recurringPayment, ProcessPaymentResult paymentResult = null);
 
         /// <summary>
         /// Cancels a recurring payment

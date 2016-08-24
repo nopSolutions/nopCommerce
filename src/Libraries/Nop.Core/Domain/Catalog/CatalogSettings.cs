@@ -1,4 +1,5 @@
-﻿using Nop.Core.Configuration;
+﻿using System.Collections.Generic;
+using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -7,6 +8,12 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public class CatalogSettings : ISettings
     {
+        public CatalogSettings()
+        {
+            ProductSortingEnumDisabled = new List<int>();
+            ProductSortingEnumDisplayOrder= new Dictionary<int, int>();
+        }
+
         /// <summary>
         /// Gets or sets a value indicating details pages of unpublished product details pages could be open (for SEO optimization)
         /// </summary>
@@ -105,6 +112,21 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether notification of a store owner about new product reviews is enabled
         /// </summary>
         public bool NotifyStoreOwnerAboutNewProductReviews { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the product reviews will be filtered per store
+        /// </summary>
+        public bool ShowProductReviewsPerStore { get; set; }
+
+        /// <summary>
+        /// Gets or sets a show product reviews tab on account page
+        /// </summary>
+        public bool ShowProductReviewsTabOnAccountPage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the page size for product reviews in account page
+        /// </summary>
+        public int ProductReviewsPageSizeOnAccountPage { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether product 'Email a friend' feature is enabled
@@ -289,8 +311,7 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether to display information about shipping and tax on order details page (used in Germany)
         /// </summary>
         public bool DisplayTaxShippingInfoOrderDetailsPage { get; set; }
-
-
+        
         /// <summary>
         /// Gets or sets the default value to use for Category page size options (for new categories)
         /// </summary>
@@ -307,5 +328,19 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the default value to use for Manufacturer page size (for new manufacturers)
         /// </summary>
         public int DefaultManufacturerPageSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of disabled values of ProductSortingEnum
+        /// </summary>
+        public List<int> ProductSortingEnumDisabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a display order of ProductSortingEnum values 
+        /// </summary>
+        public Dictionary<int, int> ProductSortingEnumDisplayOrder { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether the products need to be exported/imported with their attributes
+        /// </summary>
+        public bool ExportImportProductAttributes { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using Nop.Web.Models.Boards;
 
 namespace Nop.Web.Validators.Boards
 {
-    public class EditForumTopicValidator : BaseNopValidator<EditForumTopicModel>
+    public partial class EditForumTopicValidator : BaseNopValidator<EditForumTopicModel>
     {
         public EditForumTopicValidator(ILocalizationService localizationService)
         {

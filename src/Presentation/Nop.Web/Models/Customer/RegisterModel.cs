@@ -23,6 +23,11 @@ namespace Nop.Web.Models.Customer
         [NopResourceDisplayName("Account.Fields.Email")]
         [AllowHtml]
         public string Email { get; set; }
+        
+        public bool EnteringEmailTwice { get; set; }
+        [NopResourceDisplayName("Account.Fields.ConfirmEmail")]
+        [AllowHtml]
+        public string ConfirmEmail { get; set; }
 
         public bool UsernamesEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.Username")]
@@ -32,11 +37,13 @@ namespace Nop.Web.Models.Customer
         public bool CheckUsernameAvailabilityEnabled { get; set; }
 
         [DataType(DataType.Password)]
+        [NoTrim]
         [NopResourceDisplayName("Account.Fields.Password")]
         [AllowHtml]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
+        [NoTrim]
         [NopResourceDisplayName("Account.Fields.ConfirmPassword")]
         [AllowHtml]
         public string ConfirmPassword { get; set; }

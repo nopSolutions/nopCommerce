@@ -48,7 +48,7 @@ namespace Nop.Plugin.Tax.CountryStateZip
                 result.Errors.Add("Address is not set");
                 return result;
             }
-            
+
             //first, load all tax rate records (cached) - loaded only once
             string cacheKey = ModelCacheEventConsumer.ALL_TAX_RATES_MODEL_KEY;
             var allTaxRates = _cacheManager.Get(cacheKey, () =>
@@ -93,7 +93,7 @@ namespace Nop.Plugin.Tax.CountryStateZip
                 if (storeId == taxRate.StoreId)
                     matchedByStore.Add(taxRate);
             //not found? use the default ones (ID == 0)
-            if (matchedByStore.Count == 0)
+            if (!matchedByStore.Any())
                 foreach (var taxRate in existingRates)
                     if (taxRate.StoreId == 0)
                         matchedByStore.Add(taxRate);
@@ -106,7 +106,7 @@ namespace Nop.Plugin.Tax.CountryStateZip
                 if (stateProvinceId == taxRate.StateProvinceId)
                     matchedByStateProvince.Add(taxRate);
             //not found? use the default ones (ID == 0)
-            if (matchedByStateProvince.Count == 0)
+            if (!matchedByStateProvince.Any())
                 foreach (var taxRate in matchedByStore)
                     if (taxRate.StateProvinceId == 0)
                         matchedByStateProvince.Add(taxRate);
@@ -118,12 +118,12 @@ namespace Nop.Plugin.Tax.CountryStateZip
                 if ((String.IsNullOrEmpty(zip) && String.IsNullOrEmpty(taxRate.Zip)) ||
                     (zip.Equals(taxRate.Zip, StringComparison.InvariantCultureIgnoreCase)))
                     matchedByZip.Add(taxRate);
-            if (matchedByZip.Count == 0)
+            if (!matchedByZip.Any())
                 foreach (var taxRate in matchedByStateProvince)
                     if (String.IsNullOrWhiteSpace(taxRate.Zip))
                         matchedByZip.Add(taxRate);
 
-            if (matchedByZip.Count > 0)
+            if (matchedByZip.Any())
                 result.TaxRate = matchedByZip[0].Percentage;
 
             return result;
@@ -165,7 +165,7 @@ namespace Nop.Plugin.Tax.CountryStateZip
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Percentage.Hint", "The tax rate.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.AddRecord", "Add tax rate");
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.AddRecord.Hint", "Adding a new tax rate");
-            
+
             base.Install();
         }
 
@@ -192,7 +192,7 @@ namespace Nop.Plugin.Tax.CountryStateZip
             this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Percentage.Hint");
             this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.AddRecord");
             this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.AddRecord.Hint");
-            
+
             base.Uninstall();
         }
     }

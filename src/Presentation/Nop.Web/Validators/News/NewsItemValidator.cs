@@ -5,7 +5,7 @@ using Nop.Web.Models.News;
 
 namespace Nop.Web.Validators.News
 {
-    public class NewsItemValidator : BaseNopValidator<NewsItemModel>
+    public partial class NewsItemValidator : BaseNopValidator<NewsItemModel>
     {
         public NewsItemValidator(ILocalizationService localizationService)
         {

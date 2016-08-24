@@ -109,20 +109,21 @@ namespace Nop.Core.Html.CodeFormatter
 			set { _embedStyleSheet = value; }
 		}
 
-		/// <overloads>Transform source code to HTML 4.01.</overloads>
-		/// 
-		/// <summary>
-		/// Transforms a source code stream to HTML 4.01.
-		/// </summary>
-		/// <param name="source">Source code stream.</param>
-		/// <returns>A string containing the HTML formatted code.</returns>
-		public string FormatCode(Stream source)
-		{
-            var reader = new StreamReader(source);
-			string s = reader.ReadToEnd();
-			reader.Close();
-			return FormatCode(s, _lineNumbers, _alternate, _embedStyleSheet, false);
-		}
+        /// <overloads>Transform source code to HTML 4.01.</overloads>
+        /// 
+        /// <summary>
+        /// Transforms a source code stream to HTML 4.01.
+        /// </summary>
+        /// <param name="source">Source code stream.</param>
+        /// <returns>A string containing the HTML formatted code.</returns>
+        public string FormatCode(Stream source)
+        {
+            using (var reader = new StreamReader(source))
+            { 
+                string s = reader.ReadToEnd();            
+			    return FormatCode(s, _lineNumbers, _alternate, _embedStyleSheet, false);
+            }
+        }
 
 		/// <summary>
 		/// Transforms a source code string to HTML 4.01.
@@ -158,8 +159,10 @@ namespace Nop.Core.Html.CodeFormatter
 		/// <returns>A string containing the CSS definitions.</returns>
 		public static string GetCssString()
 		{
-            var reader = new StreamReader(GetCssStream());
-			return reader.ReadToEnd();
+            using (var reader = new StreamReader(GetCssStream()))
+            {
+                return reader.ReadToEnd();
+            }
 		}
 
 		private Regex codeRegex;
@@ -204,7 +207,7 @@ namespace Nop.Core.Html.CodeFormatter
 			
 			if (embedStyleSheet)
 			{
-				sb.Append("<style type=\"text/css\">\n");
+				sb.AppendFormat("<style type=\"{0}\">\n",MimeTypes.TextCss);
 				sb.Append(GetCssString());
 				sb.Append("</style>\n");
 			}

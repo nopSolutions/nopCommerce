@@ -5,6 +5,8 @@
 
     //title
     Html.AddTitleParts(T("PageTitle.Blog").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-blog-page");
 }
 @section left {
     @Html.Widget("left_side_column_blog_before")
