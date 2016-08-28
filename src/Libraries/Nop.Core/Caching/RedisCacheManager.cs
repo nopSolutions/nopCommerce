@@ -132,9 +132,9 @@ namespace Nop.Core.Caching
             foreach (var ep in _connectionWrapper.GetEndpoints())
             {
                 var server = _connectionWrapper.Server(ep);
-                var keys = server.Keys(pattern: "*" + pattern + "*");
+                var keys = server.Keys(database: _db.Database, pattern: "*" + pattern + "*");
                 foreach (var key in keys)
-                    _db.KeyDelete(key);
+                    Remove(key);
             }
         }
 
@@ -151,9 +151,9 @@ namespace Nop.Core.Caching
                 //server.FlushDatabase();
 
                 //that's why we simply interate through all elements now
-                var keys = server.Keys();
+                var keys = server.Keys(database: _db.Database);
                 foreach (var key in keys)
-                    _db.KeyDelete(key);
+                    Remove(key);
             }
         }
 
