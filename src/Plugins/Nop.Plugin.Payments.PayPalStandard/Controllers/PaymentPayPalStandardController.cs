@@ -128,61 +128,18 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            if (model.UseSandbox_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.UseSandbox, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.UseSandbox, storeScope);
-
-            if (model.BusinessEmail_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.BusinessEmail, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.BusinessEmail, storeScope);
-
-            if (model.PdtToken_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.PdtToken, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.PdtToken, storeScope);
-
-            if (model.PdtValidateOrderTotal_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.PdtValidateOrderTotal, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.PdtValidateOrderTotal, storeScope);
-
-            if (model.AdditionalFee_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.AdditionalFee, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.AdditionalFee, storeScope);
-
-            if (model.AdditionalFeePercentage_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
-
-            if (model.PassProductNamesAndTotals_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope);
-
-            if (model.EnableIpn_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.EnableIpn, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.EnableIpn, storeScope);
-
-            if (model.IpnUrl_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.IpnUrl, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.IpnUrl, storeScope);
-
-            if (model.AddressOverride_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.AddressOverride, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.AddressOverride, storeScope);
-
-            if (model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, storeScope);
-
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.UseSandbox, model.UseSandbox_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.BusinessEmail, model.BusinessEmail_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.PdtToken, model.PdtToken_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.PdtValidateOrderTotal, model.PdtValidateOrderTotal_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.AdditionalFee, model.AdditionalFee_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, model.AdditionalFeePercentage_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, model.PassProductNamesAndTotals_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.EnableIpn, model.EnableIpn_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.IpnUrl, model.IpnUrl_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.AddressOverride, model.AddressOverride_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore, storeScope, false);
+            
             //now clear settings cache
             _settingService.ClearCache();
 
@@ -300,8 +257,17 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     //validate order total
                     if (payPalStandardPaymentSettings.PdtValidateOrderTotal && !Math.Round(mc_gross, 2).Equals(Math.Round(order.OrderTotal, 2)))
                     {
-                        string errorStr = string.Format("PayPal PDT. Returned order total {0} doesn't equal order total {1}", mc_gross, order.OrderTotal);
+                        string errorStr = string.Format("PayPal PDT. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.Id);
+                        //log
                         _logger.Error(errorStr);
+                        //order note
+                        order.OrderNotes.Add(new OrderNote
+                        {
+                            Note = errorStr,
+                            DisplayToCustomer = false,
+                            CreatedOnUtc = DateTime.UtcNow
+                        });
+                        _orderService.UpdateOrder(order);
 
                         return RedirectToAction("Index", "Home", new { area = "" });
                     }
@@ -435,7 +401,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                         case PaymentStatus.Paid:
                                             {
                                                 var recurringPaymentHistory = rp.RecurringPaymentHistory;
-                                                if (recurringPaymentHistory.Count == 0)
+                                                if (!recurringPaymentHistory.Any())
                                                 {
                                                     //first payment
                                                     var rph = new RecurringPaymentHistory
@@ -450,7 +416,14 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                                 else
                                                 {
                                                     //next payments
-                                                    _orderProcessingService.ProcessNextRecurringPayment(rp);
+                                                    var processPaymentResult = new ProcessPaymentResult();
+                                                    processPaymentResult.NewPaymentStatus = newPaymentStatus;
+                                                    if (newPaymentStatus == PaymentStatus.Authorized)
+                                                        processPaymentResult.AuthorizationTransactionId = txn_id;
+                                                    else
+                                                        processPaymentResult.CaptureTransactionId = txn_id;
+
+                                                    _orderProcessingService.ProcessNextRecurringPayment(rp, processPaymentResult);
                                                 }
                                             }
                                             break;
@@ -502,21 +475,60 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                         break;
                                     case PaymentStatus.Authorized:
                                         {
-                                            if (_orderProcessingService.CanMarkOrderAsAuthorized(order))
+                                            //validate order total
+                                            if (Math.Round(mc_gross, 2).Equals(Math.Round(order.OrderTotal, 2)))
                                             {
-                                                _orderProcessingService.MarkAsAuthorized(order);
+                                                //valid
+                                                if (_orderProcessingService.CanMarkOrderAsAuthorized(order))
+                                                {
+                                                    _orderProcessingService.MarkAsAuthorized(order);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                //not valid
+                                                string errorStr = string.Format("PayPal IPN. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.Id);
+                                                //log
+                                                _logger.Error(errorStr);
+                                                //order note
+                                                order.OrderNotes.Add(new OrderNote
+                                                {
+                                                    Note = errorStr,
+                                                    DisplayToCustomer = false,
+                                                    CreatedOnUtc = DateTime.UtcNow
+                                                });
+                                                _orderService.UpdateOrder(order);
                                             }
                                         }
                                         break;
                                     case PaymentStatus.Paid:
                                         {
-                                            if (_orderProcessingService.CanMarkOrderAsPaid(order))
+                                            //validate order total
+                                            if (Math.Round(mc_gross, 2).Equals(Math.Round(order.OrderTotal, 2)))
                                             {
+                                                //valid
+                                                if (_orderProcessingService.CanMarkOrderAsPaid(order))
+                                                {
+                                                    order.AuthorizationTransactionId = txn_id;
+                                                    _orderService.UpdateOrder(order);
 
-                                                order.AuthorizationTransactionId = txn_id;
+                                                    _orderProcessingService.MarkOrderAsPaid(order);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                //not valid
+                                                string errorStr = string.Format("PayPal IPN. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.Id);
+                                                //log
+                                                _logger.Error(errorStr);
+                                                //order note
+                                                order.OrderNotes.Add(new OrderNote
+                                                {
+                                                    Note = errorStr,
+                                                    DisplayToCustomer = false,
+                                                    CreatedOnUtc = DateTime.UtcNow
+                                                });
                                                 _orderService.UpdateOrder(order);
-
-                                                _orderProcessingService.MarkOrderAsPaid(order);
                                             }
                                         }
                                         break;

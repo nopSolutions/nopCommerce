@@ -6,37 +6,23 @@
 @Html.HiddenFor(model => model.Id)
 
 <script>
-    $(document).ready(function () {
-        $("#blog-post-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
+    $(document).ready(function() {
+        bindBootstrapTabSelectEvent('blog-post-edit');
     });
 </script>
-<div id="blog-post-edit">
-    <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-            @T("Admin.ContentManagement.Blog.BlogPosts.Info")
-        </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-            @T("Admin.Common.SEO")
-        </li>
-        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-            @T("Admin.ContentManagement.News.NewsItems.Stores")
-        </li>
-    </ul>
-    <div>
-        @TabInfo()
-    </div>
-    <div>
-        @TabSeo()
-    </div>
-    <div>
-        @TabStores()
+
+<div class="content">
+    <div class="form-horizontal">
+        <div id="blog-post-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.ContentManagement.Blog.BlogPosts.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"))
+            </ul>
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-seo", @TabSeo())
+            </div>
+        </div>
     </div>
 </div>
 
@@ -50,213 +36,202 @@
     }
 }
 
-@*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @{
     //resources for product tags input
-    Html.AppendCssFileParts("~/Content/tagit/jquery.tagit.css");
-    Html.AppendScriptParts("~/Scripts/tag-it.min.js");
+    Html.AppendCssFileParts("~/Administration/Content/tagEditor/jquery.tag-editor.css");
+    Html.AppendScriptParts("~/Administration/Scripts/tagEditor/jquery.tag-editor.min.js");
+    Html.AppendScriptParts("~/Administration/Scripts/tagEditor/jquery.caret.min.js");
 }
+
 @helper TabInfo()
 {
-       
-<script type="text/javascript">
-    @{
-        //TODO move to Model
-        var productTags = EngineContext.Current.Resolve<IBlogService>().GetAllBlogPostTags(0, 0, true);
-        var productTagsSb = new StringBuilder();
-        productTagsSb.Append("var sampleTags = [");
-        for (int i = 0; i < productTags.Count; i++)
-        {
-            var tag = productTags[i];
-            productTagsSb.Append("'");
-            productTagsSb.Append(HttpUtility.JavaScriptStringEncode(tag.Name));
-            productTagsSb.Append("'");
-            if (i != productTags.Count - 1)
+    <script type="text/javascript">
+        @{
+            //TODO move to Model
+            var blogTags = EngineContext.Current.Resolve<IBlogService>().GetAllBlogPostTags(0, 0, true);
+            var blogTagsSb = new StringBuilder();
+            blogTagsSb.Append("var initialBlogTags = [");
+            for (int i = 0; i < blogTags.Count; i++)
             {
-                productTagsSb.Append(",");
+                var tag = blogTags[i];
+                blogTagsSb.Append("'");
+                blogTagsSb.Append(HttpUtility.JavaScriptStringEncode(tag.Name));
+                blogTagsSb.Append("'");
+                if (i != blogTags.Count - 1)
+                {
+                    blogTagsSb.Append(",");
+                }
             }
+            blogTagsSb.Append("]");
         }
-        productTagsSb.Append("]");
-    }
-    //product tags
-    $(document).ready(function () {          
-        @Html.Raw(productTagsSb.ToString())
-        $("#@Html.FieldIdFor(model => model.Tags)").tagit({
-            availableTags: sampleTags,
-            allowSpaces: true
+        //tags
+        $(document).ready(function() {
+            @Html.Raw(blogTagsSb.ToString())
+            $("#@Html.FieldIdFor(model => model.Tags)").tagEditor({
+                autocomplete: {
+                    delay: 0,
+                    position: { collision: 'flip' },
+                    source: initialBlogTags
+                },
+                delimiter: ',',
+                placeholder: 'Enter tags ...'
+            });
         });
-    });
-</script>
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.LanguageId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.LanguageId, new SelectList(ViewBag.AllLanguages, "Id", "Name"))
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Title):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Title)
-                @Html.ValidationMessageFor(model => model.Title)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Body):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.Body, "RichEditor")
-                @Html.ValidationMessageFor(model => model.Body)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.BodyOverview):
-            </td>
-            <td class="adminData">
-                @Html.TextAreaFor(model => model.BodyOverview, new { style = "Width: 500px; Height: 150px;" })
-                @Html.ValidationMessageFor(model => model.BodyOverview)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AllowComments):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AllowComments)
-                @Html.ValidationMessageFor(model => model.AllowComments)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Tags):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Tags)
-                @Html.ValidationMessageFor(model => model.Tags)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.StartDate):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.StartDate)
-                @Html.ValidationMessageFor(model => model.StartDate)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.EndDate):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.EndDate)
-                @Html.ValidationMessageFor(model => model.EndDate)
-            </td>
-        </tr>
-    </table>
+    </script>
+
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group" @(Model.AvailableLanguages.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.LanguageId)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDropDownListFor(model => model.LanguageId, Model.AvailableLanguages)
+                        @Html.ValidationMessageFor(model => model.LanguageId)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Title)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Title)
+                        @Html.ValidationMessageFor(model => model.Title)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Body)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.EditorFor(x => x.Body, "RichEditor")
+                        @Html.ValidationMessageFor(model => model.Body)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.BodyOverview)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopTextAreaFor(model => model.BodyOverview)
+                        @Html.ValidationMessageFor(model => model.BodyOverview)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Tags)
+                    </div>
+                    <div class="col-md-9">
+                       @Html.NopEditorFor(model => model.Tags)
+                       @Html.ValidationMessageFor(model => model.Tags)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.AllowComments)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.AllowComments)
+                        @Html.ValidationMessageFor(model => model.AllowComments)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.StartDate)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.StartDate)
+                        @Html.ValidationMessageFor(model => model.StartDate)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.EndDate)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.EndDate)
+                        @Html.ValidationMessageFor(model => model.EndDate)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.SelectedStoreIds)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.SelectedStoreIds, new { SelectList = Model.AvailableStores })
+                        <script>
+                                $(document).ready(function() {
+                                    var storesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                                    storesIdsInput.setOptions({
+                                        autoClose: false
+                                    });
+
+                                    @if (Model.AvailableStores.Count == 0)
+                                    {
+                                        <text>
+                                    storesIdsInput.setOptions({
+                                        enable: false,
+                                        placeholder: 'No stores available'
+                                    });
+                                    storesIdsInput._placeholder();
+                                    storesIdsInput._enable();
+                                    </text>
+                                    }
+                                });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
+
 @helper TabSeo()
 {
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.MetaKeywords):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.MetaKeywords)
-                @Html.ValidationMessageFor(model => model.MetaKeywords)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.MetaDescription):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.MetaDescription)
-                @Html.ValidationMessageFor(model => model.MetaDescription)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.MetaTitle):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.MetaTitle)
-                @Html.ValidationMessageFor(model => model.MetaTitle)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SeName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SeName)
-                @Html.ValidationMessageFor(model => model.SeName)
-            </td>
-        </tr>
-    </table>
-}
-
-@helper TabStores()
-{
-    <script type="text/javascript">
-        $(document).ready(function () {
-
-            $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
-
-            toggleStoreMapping();
-        });
-
-
-        function toggleStoreMapping() {
-            if ($('#@Html.FieldIdFor(model => model.LimitedToStores)').is(':checked')) {
-                $('#pnl-available-stores').show();
-            }
-            else {
-                $('#pnl-available-stores').hide();
-            }
-        }
-
-    </script>
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.LimitedToStores):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.LimitedToStores)
-                @Html.ValidationMessageFor(model => model.LimitedToStores)
-            </td>
-        </tr>
-        <tr id="pnl-available-stores">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AvailableStores):
-            </td>
-            <td class="adminData">
-                @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
-                {
-                    @Html.Action("MultistoreDisabledWarning", "Common")
-                    foreach (var store in Model.AvailableStores)
-                    {
-                    <div>
-                        <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.MetaKeywords)
                     </div>
-                    }
-                }
-                else
-                {
-                    <div>No stores defined</div>
-                }
-            </td>
-        </tr>
-    </table>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(x => x.MetaKeywords)
+                        @Html.ValidationMessageFor(model => model.MetaKeywords)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.MetaDescription)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopTextAreaFor(model => model.MetaDescription)
+                        @Html.ValidationMessageFor(model => model.MetaDescription)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.MetaTitle)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.MetaTitle)
+                        @Html.ValidationMessageFor(model => model.MetaTitle)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.SeName)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.SeName)
+                        @Html.ValidationMessageFor(model => model.SeName)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
-

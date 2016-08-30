@@ -22,6 +22,7 @@ a {
 .order-details-page .order-overview .order-number {
 	font-size: 11pt;
 	text-transform: uppercase;
+    padding: 10px 40px;
 }
 .order-details-page .order-overview .order-total {
 	margin: 10px 0 0;
@@ -35,10 +36,12 @@ a {
 	overflow: hidden;
 }
 .order-details-page .order-details-area ul {
+    padding-left: 0px;
+}
+.order-details-page .order-details-area > div {
 	float: left;
-	width: 40%;
-	margin: 0 5%;
-	padding: 0;
+	width: 48%;
+	margin: 0 1% 40px;
 }
 .order-details-page .order-details-area li.title {
 	margin: 10px 0 5px;

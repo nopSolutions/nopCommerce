@@ -1,18 +1,21 @@
-﻿using FluentValidation;
+﻿using System.Linq;
+using FluentValidation;
 using FluentValidation.Results;
 using Nop.Admin.Models.Customers;
 using Nop.Core.Domain.Customers;
+using Nop.Data;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Customers
 {
-    public class CustomerValidator : BaseNopValidator<CustomerModel>
+    public partial class CustomerValidator : BaseNopValidator<CustomerModel>
     {
         public CustomerValidator(ILocalizationService localizationService,
             IStateProvinceService stateProvinceService,
-            CustomerSettings customerSettings)
+            CustomerSettings customerSettings,
+            IDbContext dbContext)
         {
             //form fields
             if (customerSettings.CountryEnabled && customerSettings.CountryRequired)
@@ -28,7 +31,7 @@ namespace Nop.Admin.Validators.Customers
                 Custom(x =>
                 {
                     //does selected country have states?
-                    var hasStates = stateProvinceService.GetStateProvincesByCountryId(x.CountryId).Count > 0;
+                    var hasStates = stateProvinceService.GetStateProvincesByCountryId(x.CountryId).Any();
                     if (hasStates)
                     {
                         //if yes, then ensure that a state is selected
@@ -54,6 +57,8 @@ namespace Nop.Admin.Validators.Customers
                 RuleFor(x => x.Phone).NotEmpty().WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Phone.Required"));
             if (customerSettings.FaxRequired && customerSettings.FaxEnabled) 
                 RuleFor(x => x.Fax).NotEmpty().WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Fax.Required"));
+
+            SetStringPropertiesMaxLength<Customer>(dbContext);
         }
     }
 }

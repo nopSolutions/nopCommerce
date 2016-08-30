@@ -1,46 +1,46 @@
 ﻿@model ReturnRequestActionModel
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 
-@(Html.LocalizedEditor<ReturnRequestActionModel, ReturnRequestActionLocalizedModel>("returnrequestaction-localized",
-    @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].Name):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].Name)
-                @Html.ValidationMessageFor(model => model.Locales[item].Name)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @(Html.LocalizedEditor<ReturnRequestActionModel, ReturnRequestActionLocalizedModel>("returnrequestaction-localized",
+            @<div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Locales[item].Name)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Locales[item].Name)
+                        @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                    </div>
+                </div>
                 @Html.HiddenFor(model => model.Locales[item].LanguageId)
-            </td>
-        </tr>
-    </table>
+            </div>
     ,
-    @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Name):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Name)
-                @Html.ValidationMessageFor(model => model.Name)
-            </td>
-        </tr>
-    </table>
+            @<div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Name)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Name)
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </div>
+                </div>
+            </div>
     ))
-<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.DisplayOrder):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.DisplayOrder)
-            @Html.ValidationMessageFor(model => model.DisplayOrder)
-        </td>
-    </tr>
-</table>
-      
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.DisplayOrder)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.DisplayOrder)
+                    @Html.ValidationMessageFor(model => model.DisplayOrder)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -5,11 +5,11 @@ using System.Web.Mvc;
 using Nop.Admin.Models.Logging;
 using Nop.Core;
 using Nop.Core.Domain.Logging;
+using Nop.Services;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 
@@ -162,9 +162,7 @@ namespace Nop.Admin.Controllers
 
             if (selectedIds != null)
             {
-                var logItems = _logger.GetLogByIds(selectedIds.ToArray());
-                foreach (var logItem in logItems)
-                    _logger.DeleteLog(logItem);
+                _logger.DeleteLogs(_logger.GetLogByIds(selectedIds.ToArray()).ToList());
             }
 
             return Json(new { Result = true});

@@ -95,7 +95,7 @@ namespace Nop.Services.Tests.Directory
         {
             var providers = _currencyService.LoadAllExchangeRateProviders();
             providers.ShouldNotBeNull();
-            (providers.Count > 0).ShouldBeTrue();
+            (providers.Any()).ShouldBeTrue();
         }
 
         [Test]

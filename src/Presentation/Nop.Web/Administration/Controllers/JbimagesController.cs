@@ -61,7 +61,7 @@ namespace Nop.Admin.Controllers
             }
 
             var directory = "~/content/images/uploaded/";
-            var filePath = Path.Combine(_webHelper.MapPath(directory), fileName);
+            var filePath = Path.Combine(CommonHelper.MapPath(directory), fileName);
 
             var fileExtension = Path.GetExtension(filePath);
             if (!GetAllowedFileTypes().Contains(fileExtension))

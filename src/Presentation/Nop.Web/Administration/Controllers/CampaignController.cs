@@ -7,6 +7,7 @@ using Nop.Admin.Extensions;
 using Nop.Admin.Models.Messages;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
+using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -29,6 +30,7 @@ namespace Nop.Admin.Controllers
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IPermissionService _permissionService;
+	    private readonly ICustomerService _customerService;
 
         public CampaignController(ICampaignService campaignService,
             IDateTimeHelper dateTimeHelper, 
@@ -39,7 +41,8 @@ namespace Nop.Admin.Controllers
             IMessageTokenProvider messageTokenProvider,
             IStoreContext storeContext,
             IStoreService storeService,
-            IPermissionService permissionService)
+            IPermissionService permissionService, 
+            ICustomerService customerService)
 		{
             this._campaignService = campaignService;
             this._dateTimeHelper = dateTimeHelper;
@@ -51,6 +54,7 @@ namespace Nop.Admin.Controllers
             this._storeContext = storeContext;
             this._storeService = storeService;
             this._permissionService = permissionService;
+            this._customerService = customerService;
 		}
 
         [NonAction]
@@ -89,6 +93,28 @@ namespace Nop.Admin.Controllers
                 });
             }
         }
+        
+        [NonAction]
+        protected virtual void PrepareCustomerRolesModel(CampaignModel model)
+	    {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableCustomerRoles.Add(new SelectListItem
+            {
+                Text = _localizationService.GetResource("Admin.Common.All"),
+                Value = "0"
+            });
+            var roles = _customerService.GetAllCustomerRoles();
+            foreach (var customerRole in roles)
+            {
+                model.AvailableCustomerRoles.Add(new SelectListItem
+                {
+                    Text = customerRole.Name,
+                    Value = customerRole.Id.ToString()
+                });
+            }
+        }
 
         public ActionResult Index()
         {
@@ -100,22 +126,42 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
 
-            return View();
+            var stores = _storeService.GetAllStores();
+            var model = new CampaignListModel();
+
+            model.AvailableStores.Add(new SelectListItem
+            {
+                Text = _localizationService.GetResource("Admin.Common.All"),
+                Value = "0"
+            });
+            
+            foreach (var store in stores)
+            {
+                model.AvailableStores.Add(new SelectListItem
+                {
+                    Text = store.Name,
+                    Value = store.Id.ToString()
+                });
+            }
+
+            return View(model);
 		}
 
         [HttpPost]
-        public ActionResult List(DataSourceRequest command)
+        public ActionResult List(DataSourceRequest command, CampaignListModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
 
-            var campaigns = _campaignService.GetAllCampaigns();
+            var campaigns = _campaignService.GetAllCampaigns(searchModel.StoreId);
             var gridModel = new DataSourceResult
             {
                 Data = campaigns.Select(x =>
                 {
                     var model = x.ToModel();
                     model.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
+                    if (x.DontSendBeforeDateUtc.HasValue)
+                        model.DontSendBeforeDate = _dateTimeHelper.ConvertToUserTime(x.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
                     return model;
                 }),
                 Total = campaigns.Count
@@ -132,6 +178,8 @@ namespace Nop.Admin.Controllers
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
+            //customer roles
+            PrepareCustomerRolesModel(model);
             return View(model);
         }
 
@@ -145,6 +193,8 @@ namespace Nop.Admin.Controllers
             {
                 var campaign = model.ToEntity();
                 campaign.CreatedOnUtc = DateTime.UtcNow;
+                campaign.DontSendBeforeDateUtc = model.DontSendBeforeDate.HasValue ?
+                    (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DontSendBeforeDate.Value) : null;
                 _campaignService.InsertCampaign(campaign);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Added"));
@@ -155,6 +205,8 @@ namespace Nop.Admin.Controllers
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
+            //customer roles
+            PrepareCustomerRolesModel(model);
             return View(model);
         }
 
@@ -169,9 +221,13 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = campaign.ToModel();
+            if (campaign.DontSendBeforeDateUtc.HasValue)
+                model.DontSendBeforeDate = _dateTimeHelper.ConvertToUserTime(campaign.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
+            //customer roles
+            PrepareCustomerRolesModel(model);
             return View(model);
 		}
 
@@ -191,6 +247,8 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 campaign = model.ToEntity(campaign);
+                campaign.DontSendBeforeDateUtc = model.DontSendBeforeDate.HasValue ?
+                    (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DontSendBeforeDate.Value) : null;
                 _campaignService.UpdateCampaign(campaign);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Updated"));
@@ -201,6 +259,8 @@ namespace Nop.Admin.Controllers
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
+            //customer roles
+            PrepareCustomerRolesModel(model);
             return View(model);
 		}
 
@@ -215,11 +275,18 @@ namespace Nop.Admin.Controllers
             if (campaign == null)
                 //No campaign found with the specified id
                 return RedirectToAction("List");
-
-
+            
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
+            //customer roles
+            PrepareCustomerRolesModel(model);
+
+            if (!CommonHelper.IsValidEmail(model.TestEmail))
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Common.WrongEmail"), false);
+                return View(model);
+            }
 
             try
             {
@@ -270,6 +337,8 @@ namespace Nop.Admin.Controllers
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
+            //customer roles
+            PrepareCustomerRolesModel(model);
 
             try
             {
@@ -280,7 +349,8 @@ namespace Nop.Admin.Controllers
                 //subscribers of certain store?
                 var store = _storeService.GetStoreById(campaign.StoreId);
                 var storeId = store != null ? store.Id : 0;
-                var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(storeId: storeId,
+                var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(storeId: storeId, 
+                    customerRoleId: model.CustomerRoleId,
                     isActive: true);
                 var totalEmailsSent = _campaignService.SendCampaign(campaign, emailAccount, subscriptions);
                 SuccessNotification(string.Format(_localizationService.GetResource("Admin.Promotions.Campaigns.MassEmailSentToCustomers"), totalEmailsSent), false);

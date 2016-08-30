@@ -11,6 +11,7 @@ namespace Nop.Web.Models.Boards
 
         public int NumPosts { get; set; }
         public int Views { get; set; }
+        public int Votes { get; set; }
         public int NumReplies { get; set; }
         public ForumTopicType ForumTopicType { get; set; }
 

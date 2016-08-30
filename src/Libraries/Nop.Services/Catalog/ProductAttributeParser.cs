@@ -466,7 +466,7 @@ namespace Nop.Services.Catalog
                         continue;
 
                     var attributeValues = _productAttributeService.GetProductAttributeValues(pam.Id);
-                    if (attributeValues.Count == 0)
+                    if (!attributeValues.Any())
                         continue;
 
                     //checkboxes could have several values ticked
@@ -489,7 +489,7 @@ namespace Nop.Services.Catalog
                         }
                     }
 
-                    if (attributesXml.Count == 0)
+                    if (!attributesXml.Any())
                     {
                         //first set of values
                         if (pam.AttributeControlType == AttributeControlType.Checkboxes ||
@@ -562,6 +562,22 @@ namespace Nop.Services.Catalog
                 allAttributesXml.AddRange(attributesXml);
             }
 
+            //validate conditional attributes (if specified)
+            //minor workaround:
+            //once it's done (validation), then we could have some duplicated combinations in result
+            //we don't remove them here (for performance optimization) because anyway it'll be done in the "GenerateAllAttributeCombinations" method of ProductController
+            for (int i = 0; i < allAttributesXml.Count; i++)
+            {
+                var attributesXml = allAttributesXml[i];
+                foreach (var attribute in allProductAttributMappings)
+                {
+                    var conditionMet = IsConditionMet(attribute, attributesXml);
+                    if (conditionMet.HasValue && !conditionMet.Value)
+                    {
+                        allAttributesXml[i] = RemoveProductAttribute(attributesXml, attribute);
+                    }
+                }
+            }
             return allAttributesXml;
         }
 

@@ -17,6 +17,7 @@ using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.News;
+using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Web.Framework;
@@ -31,7 +32,7 @@ namespace Nop.Web.Controllers
     [NopHttpsRequirement(SslRequirement.No)]
     public partial class NewsController : BasePublicController
     {
-		#region Fields
+        #region Fields
 
         private readonly INewsService _newsService;
         private readonly IWorkContext _workContext;
@@ -44,26 +45,34 @@ namespace Nop.Web.Controllers
         private readonly ICacheManager _cacheManager;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IPermissionService _permissionService;
 
         private readonly MediaSettings _mediaSettings;
         private readonly NewsSettings _newsSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly CaptchaSettings _captchaSettings;
-        
+
         #endregion
 
-		#region Constructors
+        #region Constructors
 
-        public NewsController(INewsService newsService, 
-            IWorkContext workContext, IStoreContext storeContext, 
-            IPictureService pictureService, ILocalizationService localizationService,
+        public NewsController(INewsService newsService,
+            IWorkContext workContext, 
+            IStoreContext storeContext,
+            IPictureService pictureService, 
+            ILocalizationService localizationService,
             IDateTimeHelper dateTimeHelper,
-            IWorkflowMessageService workflowMessageService, IWebHelper webHelper,
-            ICacheManager cacheManager, ICustomerActivityService customerActivityService,
+            IWorkflowMessageService workflowMessageService,
+            IWebHelper webHelper,
+            ICacheManager cacheManager, 
+            ICustomerActivityService customerActivityService,
             IStoreMappingService storeMappingService,
-            MediaSettings mediaSettings, NewsSettings newsSettings,
-            LocalizationSettings localizationSettings, CustomerSettings customerSettings,
+            IPermissionService permissionService,
+            MediaSettings mediaSettings, 
+            NewsSettings newsSettings,
+            LocalizationSettings localizationSettings, 
+            CustomerSettings customerSettings,
             CaptchaSettings captchaSettings)
         {
             this._newsService = newsService;
@@ -77,6 +86,7 @@ namespace Nop.Web.Controllers
             this._cacheManager = cacheManager;
             this._customerActivityService = customerActivityService;
             this._storeMappingService = storeMappingService;
+            this._permissionService = permissionService;
 
             this._mediaSettings = mediaSettings;
             this._newsSettings = newsSettings;
@@ -128,16 +138,16 @@ namespace Nop.Web.Controllers
                     if (_customerSettings.AllowCustomersToUploadAvatars)
                     {
                         commentModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                            nc.Customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId), 
-                            _mediaSettings.AvatarPictureSize, 
+                            nc.Customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                            _mediaSettings.AvatarPictureSize,
                             _customerSettings.DefaultAvatarEnabled,
-                            defaultPictureType:PictureType.Avatar);
+                            defaultPictureType: PictureType.Avatar);
                     }
                     model.Comments.Add(commentModel);
                 }
             }
         }
-        
+
         #endregion
 
         #region Methods
@@ -207,7 +217,7 @@ namespace Nop.Web.Controllers
                                     string.Format("{0}: News", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                                     "News",
                                     new Uri(_webHelper.GetStoreLocation(false)),
-                                    "NewsRSS",
+                                    string.Format("urn:store:{0}:news", _storeContext.CurrentStore.Id),
                                     DateTime.UtcNow);
 
             if (!_newsSettings.Enabled)
@@ -217,8 +227,8 @@ namespace Nop.Web.Controllers
             var newsItems = _newsService.GetAllNews(languageId, _storeContext.CurrentStore.Id);
             foreach (var n in newsItems)
             {
-                string newsUrl = Url.RouteUrl("NewsItem", new { SeName = n.GetSeName(n.LanguageId, ensureTwoPublishedLanguages: false) }, "http");
-                items.Add(new SyndicationItem(n.Title, n.Short, new Uri(newsUrl), String.Format("Blog:{0}", n.Id), n.CreatedOnUtc));
+                string newsUrl = Url.RouteUrl("NewsItem", new { SeName = n.GetSeName(n.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
+                items.Add(new SyndicationItem(n.Title, n.Short, new Uri(newsUrl), String.Format("urn:store:{0}:news:blog:{1}", _storeContext.CurrentStore.Id, n.Id), n.CreatedOnUtc));
             }
             feed.Items = items;
             return new RssActionResult { Feed = feed };
@@ -230,7 +240,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             var newsItem = _newsService.GetNewsById(newsItemId);
-            if (newsItem == null || 
+            if (newsItem == null ||
                 !newsItem.Published ||
                 (newsItem.StartDateUtc.HasValue && newsItem.StartDateUtc.Value >= DateTime.UtcNow) ||
                 (newsItem.EndDateUtc.HasValue && newsItem.EndDateUtc.Value <= DateTime.UtcNow) ||
@@ -240,6 +250,10 @@ namespace Nop.Web.Controllers
 
             var model = new NewsItemModel();
             PrepareNewsItemModel(model, newsItem, true);
+
+            //display "edit" (manage) link
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageNews))
+                DisplayEditLink(Url.Action("Edit", "News", new { id = newsItem.Id, area = "Admin" }));
 
             return View(model);
         }
@@ -260,7 +274,7 @@ namespace Nop.Web.Controllers
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage && !captchaValid)
             {
-                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
+                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
             }
 
             if (_workContext.CurrentCustomer.IsGuest() && !_newsSettings.AllowNotRegisteredUsersToLeaveComments)
@@ -294,7 +308,7 @@ namespace Nop.Web.Controllers
                 //The text boxes should be cleared after a comment has been posted
                 //That' why we reload the page
                 TempData["nop.news.addcomment.result"] = _localizationService.GetResource("News.Comments.SuccessfullyAdded");
-                return RedirectToRoute("NewsItem", new {SeName = newsItem.GetSeName(newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
+                return RedirectToRoute("NewsItem", new { SeName = newsItem.GetSeName(newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
             }
 
 
@@ -309,8 +323,8 @@ namespace Nop.Web.Controllers
             if (!_newsSettings.Enabled || !_newsSettings.ShowHeaderRssUrl)
                 return Content("");
 
-            string link = string.Format("<link href=\"{0}\" rel=\"alternate\" type=\"application/rss+xml\" title=\"{1}: News\" />",
-                Url.RouteUrl("NewsRSS", new { languageId = _workContext.WorkingLanguage.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http"), _storeContext.CurrentStore.GetLocalized(x => x.Name));
+            string link = string.Format("<link href=\"{0}\" rel=\"alternate\" type=\"{1}\" title=\"{2}: News\" />",
+                Url.RouteUrl("NewsRSS", new { languageId = _workContext.WorkingLanguage.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http"), MimeTypes.ApplicationRssXml, _storeContext.CurrentStore.GetLocalized(x => x.Name));
 
             return Content(link);
         }

@@ -20,6 +20,14 @@ namespace Nop.Services.Security
         string CreatePasswordHash(string password, string saltkey, string passwordFormat = "SHA1");
 
         /// <summary>
+        /// Create a data hash
+        /// </summary>
+        /// <param name="data">The data for calculating the hash</param>
+        /// <param name="hashAlgorithm">Hash algorithm</param>
+        /// <returns>Data hash</returns>
+        string CreateHash(byte [] data, string hashAlgorithm = "SHA1");
+
+        /// <summary>
         /// Encrypt text
         /// </summary>
         /// <param name="plainText">Text to encrypt</param>

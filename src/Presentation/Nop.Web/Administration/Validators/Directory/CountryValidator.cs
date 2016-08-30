@@ -5,13 +5,14 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Directory
 {
-    public class CountryValidator : BaseNopValidator<CountryModel>
+    public partial class CountryValidator : BaseNopValidator<CountryModel>
     {
         public CountryValidator(ILocalizationService localizationService)
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
                 .WithMessage(localizationService.GetResource("Admin.Configuration.Countries.Fields.Name.Required"));
+            RuleFor(p => p.Name).Length(1, 100);
 
             RuleFor(x => x.TwoLetterIsoCode)
                 .NotEmpty()

@@ -28,6 +28,7 @@ namespace Nop.Web.Controllers
         private readonly IStoreMappingService _storeMappingService;
         private readonly IAclService _aclService;
         private readonly ITopicTemplateService _topicTemplateService;
+        private readonly IPermissionService _permissionService;
 
         #endregion
 
@@ -40,7 +41,8 @@ namespace Nop.Web.Controllers
             ICacheManager cacheManager,
             IStoreMappingService storeMappingService,
             IAclService aclService,
-            ITopicTemplateService topicTemplateService)
+            ITopicTemplateService topicTemplateService,
+            IPermissionService permissionService)
         {
             this._topicService = topicService;
             this._workContext = workContext;
@@ -50,6 +52,7 @@ namespace Nop.Web.Controllers
             this._storeMappingService = storeMappingService;
             this._aclService = aclService;
             this._topicTemplateService = topicTemplateService;
+            this._permissionService = permissionService;
         }
 
         #endregion
@@ -96,6 +99,8 @@ namespace Nop.Web.Controllers
                 var topic = _topicService.GetTopicById(topicId);
                 if (topic == null)
                     return null;
+                if (!topic.Published)
+                    return null;
                 //Store mapping
                 if (!_storeMappingService.Authorize(topic))
                     return null;
@@ -121,6 +126,10 @@ namespace Nop.Web.Controllers
                 return template.ViewPath;
             });
 
+            //display "edit" (manage) link
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageTopics))
+                DisplayEditLink(Url.Action("Edit", "Topic", new { id = cacheModel.Id, area = "Admin" }));
+
             return View(templateViewPath, cacheModel);
         }
 
@@ -136,6 +145,8 @@ namespace Nop.Web.Controllers
                 //load by store
                 var topic = _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
                 if (topic == null)
+                    return null;
+                if (!topic.Published)
                     return null;
                 //ACL (access control list)
                 if (!_aclService.Authorize(topic))
@@ -159,7 +170,7 @@ namespace Nop.Web.Controllers
             });
 
             ViewBag.IsPopup = true;
-            return View(templateViewPath, cacheModel);
+            return PartialView(templateViewPath, cacheModel);
         }
 
         [ChildActionOnly]
@@ -174,6 +185,8 @@ namespace Nop.Web.Controllers
                 //load by store
                 var topic = _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
                 if (topic == null)
+                    return null;
+                if (!topic.Published)
                     return null;
                 //Store mapping
                 if (!_storeMappingService.Authorize(topic))
@@ -191,6 +204,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ValidateInput(false)]
+        [PublicAntiForgery]
         public ActionResult Authenticate(int id, string password)
         {
             var authResult = false;
@@ -200,6 +214,7 @@ namespace Nop.Web.Controllers
 
             var topic = _topicService.GetTopicById(id);
             if (topic != null &&
+                topic.Published &&
                 //password protected?
                 topic.IsPasswordProtected &&
                 //store mapping

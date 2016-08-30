@@ -180,6 +180,27 @@ namespace Nop.Services.Configuration
         }
 
         /// <summary>
+        /// Deletes settings
+        /// </summary>
+        /// <param name="settings">Settings</param>
+        public virtual void DeleteSettings(IList<Setting> settings)
+        {
+            if (settings == null)
+                throw new ArgumentNullException("settings");
+
+            _settingRepository.Delete(settings);
+
+            //cache
+            _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
+
+            //event notification
+            foreach (var setting in settings)
+            {
+                _eventPublisher.EntityDeleted(setting);
+            }
+        }
+
+        /// <summary>
         /// Gets a setting by identifier
         /// </summary>
         /// <param name="settingId">Setting identifier</param>
@@ -433,6 +454,26 @@ namespace Nop.Services.Configuration
         }
 
         /// <summary>
+        /// Save settings object (per store). If the setting is not overridden per storem then it'll be delete
+        /// </summary>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <typeparam name="TPropType">Property type</typeparam>
+        /// <param name="settings">Settings</param>
+        /// <param name="keySelector">Key selector</param>
+        /// <param name="overrideForStore">A value indicating whether to setting is overridden in some store</param>
+        /// <param name="storeId">Store ID</param>
+        /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
+        public virtual void SaveSettingOverridablePerStore<T, TPropType>(T settings,
+            Expression<Func<T, TPropType>> keySelector,
+            bool overrideForStore, int storeId = 0, bool clearCache = true) where T : ISettings, new()
+        {
+            if (overrideForStore || storeId == 0)
+                SaveSetting(settings, keySelector, storeId, clearCache);
+            else if (storeId > 0)
+                DeleteSetting(settings, keySelector, storeId);
+        }
+
+        /// <summary>
         /// Delete all settings
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
@@ -446,8 +487,7 @@ namespace Nop.Services.Configuration
                 settingsToDelete.AddRange(allSettings.Where(x => x.Name.Equals(key, StringComparison.InvariantCultureIgnoreCase)));
             }
 
-            foreach (var setting in settingsToDelete)
-                DeleteSetting(setting);
+            DeleteSettings(settingsToDelete);
         }
 
         /// <summary>

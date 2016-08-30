@@ -38,24 +38,25 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
 		}
 
-		#endregion 
+        #endregion
 
-		#region Methods
-        
-        #region Weights
+        #region Methods
 
-        public ActionResult Weights()
+        public ActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             return View();
-		}
+        }
 
-		[HttpPost]
+        #region Weights
+
+
+        [HttpPost]
         public ActionResult Weights(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             var weightsModel = _measureService.GetAllMeasureWeights()
@@ -75,7 +76,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult WeightUpdate(MeasureWeightModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
             
             if (!ModelState.IsValid)
@@ -93,7 +94,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult WeightAdd([Bind(Exclude="Id")] MeasureWeightModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
@@ -111,7 +112,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult WeightDelete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             var weight = _measureService.GetMeasureWeightById(id);
@@ -120,7 +121,7 @@ namespace Nop.Admin.Controllers
 
             if (weight.Id == _measureSettings.BaseWeightId)
             {
-                return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Configuration.Measures.Weights.CantDeletePrimary") });
+                return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Configuration.Shipping.Measures.Weights.CantDeletePrimary") });
             }
 
             _measureService.DeleteMeasureWeight(weight);
@@ -131,7 +132,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult MarkAsPrimaryWeight(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             var primaryWeight = _measureService.GetMeasureWeightById(id);
@@ -148,18 +149,10 @@ namespace Nop.Admin.Controllers
 
         #region Dimensions
 
-        public ActionResult Dimensions()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
-                return AccessDeniedView();
-
-            return View();
-        }
-
         [HttpPost]
         public ActionResult Dimensions(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             var dimensionsModel = _measureService.GetAllMeasureDimensions()
@@ -179,7 +172,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult DimensionUpdate(MeasureDimensionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
@@ -197,7 +190,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult DimensionAdd([Bind(Exclude = "Id")] MeasureDimensionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
@@ -215,7 +208,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult DimensionDelete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             var dimension = _measureService.GetMeasureDimensionById(id);
@@ -224,7 +217,7 @@ namespace Nop.Admin.Controllers
 
             if (dimension.Id == _measureSettings.BaseDimensionId)
             {
-                return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Configuration.Measures.Dimensions.CantDeletePrimary") });
+                return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Configuration.Shipping.Measures.Dimensions.CantDeletePrimary") });
             }
 
             _measureService.DeleteMeasureDimension(dimension);
@@ -235,7 +228,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult MarkAsPrimaryDimension(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             var primaryDimension = _measureService.GetMeasureDimensionById(id);

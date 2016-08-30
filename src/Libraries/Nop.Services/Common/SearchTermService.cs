@@ -36,7 +36,7 @@ namespace Nop.Services.Common
         /// Deletes a search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-        public virtual void DeleteAddress(SearchTerm searchTerm)
+        public virtual void DeleteSearchTerm(SearchTerm searchTerm)
         {
             if (searchTerm == null)
                 throw new ArgumentNullException("searchTerm");

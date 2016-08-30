@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Helpers;
-using Nop.Services.Localization;
 using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Web.Framework
@@ -20,21 +18,19 @@ namespace Nop.Web.Framework
             return current.Skip((command.Page - 1) * command.PageSize).Take(command.PageSize);
         }
 
-        public static SelectList ToSelectList<TEnum>(this TEnum enumObj, 
-            bool markCurrentAsSelected = true, int[] valuesToExclude = null) where TEnum : struct
+        /// <summary>
+        /// Returns a value indicating whether real selection is not possible
+        /// </summary>
+        /// <param name="items">Items</param>
+        /// <param name="ignoreZeroValue">A value indicating whether we should ignore items with "0" value</param>
+        /// <returns>A value indicating whether real selection is not possible</returns>
+        public static bool SelectionIsNotPossible(this IList<SelectListItem> items, bool ignoreZeroValue = true)
         {
-            if (!typeof(TEnum).IsEnum) throw new ArgumentException("An Enumeration type is required.", "enumObj");
+            if (items == null)
+                throw  new ArgumentNullException("items");
 
-            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-
-            var values = from TEnum enumValue in Enum.GetValues(typeof(TEnum))
-                         where valuesToExclude == null || !valuesToExclude.Contains(Convert.ToInt32(enumValue))
-                         select new { ID = Convert.ToInt32(enumValue), Name = enumValue.GetLocalizedEnum(localizationService, workContext) };
-            object selectedValue = null;
-            if (markCurrentAsSelected)
-                selectedValue = Convert.ToInt32(enumObj);
-            return new SelectList(values, "ID", "Name", selectedValue);
+            //we ignore items with "0" value? Usually it's something like "Select All", "etc
+            return items.Count(x => !ignoreZeroValue || !x.Value.ToString().Equals("0")) < 2;
         }
 
         /// <summary>

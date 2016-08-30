@@ -37,5 +37,10 @@ namespace Nop.Core.Domain.Logging
         /// Gets the customer
         /// </summary>
         public virtual Customer Customer { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ip address
+        /// </summary>
+        public virtual string IpAddress { get; set; }
     }
 }

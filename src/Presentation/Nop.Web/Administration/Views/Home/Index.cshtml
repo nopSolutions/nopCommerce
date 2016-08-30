@@ -1,6 +1,10 @@
-﻿@using Nop.Services.Security
-@model DashboardModel
+﻿@model DashboardModel
+
+@using Nop.Services.Security
+
 @{
+    Html.AppendCssFileParts("~/Administration/Content/ionicons/css/ionicons-2.0.1.min.css");
+
     //page title
     ViewBag.Title = T("Admin.Dashboard").Text;
 
@@ -8,102 +12,98 @@
     var canManageOrders = permissionService.Authorize(StandardPermissionProvider.ManageOrders);
     var canManageCustomers = permissionService.Authorize(StandardPermissionProvider.ManageCustomers);
     var canManageProducts = permissionService.Authorize(StandardPermissionProvider.ManageProducts);
+    var canManageReturnRequests = permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests);
 }
+
 @Html.AntiForgeryToken()
-<div class="section-title">
-    <img src="@Url.Content("~/Administration/Content/images/ico-dashboard.png")" alt="" />
-    @T("Admin.Dashboard")
+<div class="content-header">
+    <h1>
+        @T("Admin.Dashboard")
+    </h1>
 </div>
-<table class="dashboard">
-    @Html.Widget("admin_dashboard_top")
-    <tr>
-        <td class="maincol">
-            <div class="section-header">
-                <div class="title">
-                    <img src="@Url.Content("~/Administration/Content/images/ico-stat1.gif")" alt="" />
-                    @T("Admin.Dashboard.StoreStatistics")
-                </div>
-            </div>
-            @if (!Model.IsLoggedInAsVendor && canManageOrders)
-            {
-                <table class="stats">
-                    <tbody>
-                        <tr>
-                            <td class="orderaveragereport">
-                                <div class="statisticsTitle">
-                                    @T("Admin.SalesReport.Average")
-                                </div>
-                                @Html.Action("OrderAverageReport", "Order")
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            }
+
+<div class="content">
+    <div class="row">
+        <div class="col-md-12">
+            @Html.Widget("admin_dashboard_top")
             @if (!Model.IsLoggedInAsVendor)
             {
-                if (canManageOrders || canManageCustomers || canManageProducts)
-                {
-                    <table class="stats">
-                        <tbody>
-                            <tr>
-                                @if (canManageOrders)
-                                {
-                                    <td class="orderstatistics">
-                                        <div class="statisticsTitle">
-                                            @T("Admin.SalesReport.Incomplete")
-                                        </div>
-                                        @Html.Action("OrderIncompleteReport", "Order")
-                                    </td>
-                                }
-                                @if (canManageCustomers)
-                                {
-                                    <td class="customerstatistics">
-                                        <div class="statisticsTitle">
-                                            @T("Admin.Customers.Reports.RegisteredCustomers")
-                                        </div>
-                                        @Html.Action("ReportRegisteredCustomers", "Customer")
-                                    </td>
-                                }
-                                @if (canManageProducts)
-                                {
-                                    <td class="search-term-statistics">
-                                        <div class="statisticsTitle">
-                                            @T("Admin.SearchTermReport")
-                                        </div>
-                                        @Html.Action("PopularSearchTermsReport", "Common")
-                                    </td>
-                                }
-                            </tr>
-                        </tbody>
-                    </table>
-                }
+                <div class="row">
+                    <div class="col-md-12">
+                        @Html.Action("NopCommerceNews", "Home")
+                    </div>
+                </div>
             }
+            @Html.Widget("admin_dashboard_news_after")
+            @if (!Model.IsLoggedInAsVendor && canManageOrders && canManageCustomers && canManageProducts && canManageReturnRequests)
+            {
+                <div class="row">
+                    <div class="col-md-12">
+                        @Html.Action("CommonStatistics", "Home")
+                    </div>
+                </div>
+            }
+            @Html.Widget("admin_dashboard_commonstatistics_after")
+            @if (!Model.IsLoggedInAsVendor && (canManageOrders || canManageCustomers))
+            {
+                <div class="row">
+                    @if (!Model.IsLoggedInAsVendor && canManageOrders)
+                    {
+                        <div class="col-md-6">
+                            @Html.Action("OrderStatistics", "Order")
+                        </div>
+                    }
+                    @if (!Model.IsLoggedInAsVendor && canManageCustomers)
+                    {
+                        <div class="col-md-6">
+                            @Html.Action("CustomerStatistics", "Customer")
+                        </div>
+                    }
+                </div>
+            }
+            @Html.Widget("admin_dashboard_customerordercharts_after")
+            @if (!Model.IsLoggedInAsVendor && canManageOrders)
+            {
+                <div class="row">
+                    <div class="col-md-8">
+                        @Html.Action("OrderAverageReport", "Order")
+                    </div>
+                    <div class="col-md-4">
+                        @Html.Action("OrderIncompleteReport", "Order")
+                    </div>
+                </div>
+            }
+            @Html.Widget("admin_dashboard_orderreports_after")
+            @if (!Model.IsLoggedInAsVendor && (canManageOrders || canManageProducts))
+            {
+                <div class="row">
+                    @if (canManageOrders)
+                    {
+                        <div class="col-md-8">
+                            @Html.Action("LatestOrders", "Order")
+                        </div>
+                    }
+                    <div class="col-md-4">
+                        @if (canManageProducts)
+                        {
+                            @Html.Action("PopularSearchTermsReport", "Common")
+                        }
+                    </div>
+                </div>
+            }
+            @Html.Widget("admin_dashboard_latestorders_searchterms_after")
             @if (canManageOrders)
             {
-                <table class="stats">
-                    <tr>
-                        <td class="bestsellers">
-                            <div class="statisticsTitle">
-                                @T("Admin.SalesReport.BestSellers.ByQuantity")
-                            </div>
-                            @Html.Action("BestsellersBriefReportByQuantity", "Order")
-                        </td>
-                        <td class="bestsellers">
-                            <div class="statisticsTitle">
-                                @T("Admin.SalesReport.BestSellers.ByAmount")
-                            </div>
-                            @Html.Action("BestsellersBriefReportByAmount", "Order")
-                        </td>
-                    </tr>
-                </table>
+                <div class="row">
+                    <div class="col-md-6">
+                        @Html.Action("BestsellersBriefReportByQuantity", "Order")
+                    </div>
+                    <div class="col-md-6">
+                        @Html.Action("BestsellersBriefReportByAmount", "Order")
+                    </div>
+                </div>
             }
-        </td>
-        @if (!Model.IsLoggedInAsVendor)
-        {
-            <td class="rightcol">
-                @Html.Action("NopCommerceNews", "Home")
-            </td>
-        }
-    </tr>
-    @Html.Widget("admin_dashboard_bottom")
-</table>
+            @Html.Widget("admin_dashboard_bottom")
+        </div>
+    </div>
+</div>

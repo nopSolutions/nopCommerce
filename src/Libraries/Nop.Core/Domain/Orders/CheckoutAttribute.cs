@@ -86,11 +86,11 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public string DefaultValue { get; set; }
 
+        /// <summary>
+        /// Gets or sets a condition (depending on other attribute) when this attribute should be enabled (visible).
+        /// </summary>
+        public string ConditionAttributeXml { get; set; }
 
-
-
-
-        
         /// <summary>
         /// Gets the attribute control type
         /// </summary>

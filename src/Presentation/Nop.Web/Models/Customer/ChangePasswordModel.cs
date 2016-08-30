@@ -11,16 +11,19 @@ namespace Nop.Web.Models.Customer
     public partial class ChangePasswordModel : BaseNopModel
     {
         [AllowHtml]
+        [NoTrim]
         [DataType(DataType.Password)]
         [NopResourceDisplayName("Account.ChangePassword.Fields.OldPassword")]
         public string OldPassword { get; set; }
 
         [AllowHtml]
+        [NoTrim]
         [DataType(DataType.Password)]
         [NopResourceDisplayName("Account.ChangePassword.Fields.NewPassword")]
         public string NewPassword { get; set; }
 
         [AllowHtml]
+        [NoTrim]
         [DataType(DataType.Password)]
         [NopResourceDisplayName("Account.ChangePassword.Fields.ConfirmNewPassword")]
         public string ConfirmNewPassword { get; set; }

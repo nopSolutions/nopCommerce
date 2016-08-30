@@ -14,6 +14,7 @@ namespace Nop.Web.Models.Catalog
 
             this.AvailableCategories = new List<SelectListItem>();
             this.AvailableManufacturers = new List<SelectListItem>();
+            this.AvailableVendors = new List<SelectListItem>();
         }
 
         public string Warning { get; set; }
@@ -39,6 +40,11 @@ namespace Nop.Web.Models.Catalog
         [NopResourceDisplayName("Search.Manufacturer")]
         public int mid { get; set; }
         /// <summary>
+        /// Vendor ID
+        /// </summary>
+        [NopResourceDisplayName("Search.Vendor")]
+        public int vid { get; set; }
+        /// <summary>
         /// Price - From 
         /// </summary>
         [AllowHtml]
@@ -58,8 +64,13 @@ namespace Nop.Web.Models.Catalog
         /// </summary>
         [NopResourceDisplayName("Search.AdvancedSearch")]
         public bool adv { get; set; }
+        /// <summary>
+        /// A value indicating whether "allow search by vendor" is enabled
+        /// </summary>
+        public bool asv { get; set; }
         public IList<SelectListItem> AvailableCategories { get; set; }
         public IList<SelectListItem> AvailableManufacturers { get; set; }
+        public IList<SelectListItem> AvailableVendors { get; set; }
 
 
         public CatalogPagingFilteringModel PagingFilteringContext { get; set; }

@@ -16,6 +16,10 @@ namespace Nop.Web.Models.Checkout
 
         public AddressModel NewAddress { get; set; }
 
+
+        public bool ShipToSameAddress { get; set; }
+        public bool ShipToSameAddressAllowed { get; set; }
+
         /// <summary>
         /// Used on one-page checkout page
         /// </summary>

@@ -83,7 +83,7 @@ namespace Nop.Services.Tests.Discounts
         {
             var discounts = _discountService.GetAllDiscounts(null);
             discounts.ShouldNotBeNull();
-            (discounts.Count > 0).ShouldBeTrue();
+            (discounts.Any()).ShouldBeTrue();
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace Nop.Services.Tests.Discounts
         {
             var rules = _discountService.LoadAllDiscountRequirementRules();
             rules.ShouldNotBeNull();
-            (rules.Count > 0).ShouldBeTrue();
+            (rules.Any()).ShouldBeTrue();
         }
 
         [Test]

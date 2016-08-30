@@ -150,12 +150,12 @@ namespace Nop.Plugin.Shipping.UPS
             //get subTotalWithoutDiscountBase, for use as insured value (when Settings.InsurePackage)
             //(note: prior versions used "with discount", but "without discount" better reflects true value to insure.)
             decimal orderSubTotalDiscountAmount;
-            Discount orderSubTotalAppliedDiscount;
+            List<Discount> orderSubTotalAppliedDiscounts;
             decimal subTotalWithoutDiscountBase;
             decimal subTotalWithDiscountBase;
             //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal
             _orderTotalCalculationService.GetShoppingCartSubTotal(getShippingOptionRequest.Items.Select(x=>x.ShoppingCartItem).ToList(),
-                false, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
+                false, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscounts,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
 
             if (_upsSettings.Tracing)
@@ -447,20 +447,24 @@ namespace Nop.Plugin.Shipping.UPS
 
         private string DoRequest(string url, string requestString)
         {
-            byte[] bytes = new ASCIIEncoding().GetBytes(requestString);
-            var request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = bytes.Length;
-            var requestStream = request.GetRequestStream();
-            requestStream.Write(bytes, 0, bytes.Length);
-            requestStream.Close();
-            var response = request.GetResponse();
-            string responseXml;
-            using (var reader = new StreamReader(response.GetResponseStream()))
-                responseXml = reader.ReadToEnd();
+            //UPS requires TLS 1.2 since May 2016
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-            return responseXml;
+            byte[] bytes = Encoding.ASCII.GetBytes(requestString);
+            var request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = WebRequestMethods.Http.Post;
+            request.ContentType = MimeTypes.ApplicationXWwwFormUrlencoded;
+            request.ContentLength = bytes.Length;
+            using (var requestStream = request.GetRequestStream())
+                requestStream.Write(bytes, 0, bytes.Length);
+            using (var response = request.GetResponse())
+            {
+                string responseXml;
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                    responseXml = reader.ReadToEnd();
+
+                return responseXml;
+            }
         }
 
         private string GetCustomerClassificationCode(UPSCustomerClassification customerClassification)
@@ -686,7 +690,7 @@ namespace Nop.Plugin.Shipping.UPS
                             continue;
                         }
 
-                        //Weed out unwanted or unkown service rates
+                        //Weed out unwanted or unknown service rates
                         if (service.ToUpper() != "UNKNOWN")
                         {
                             var shippingOption = new ShippingOption();

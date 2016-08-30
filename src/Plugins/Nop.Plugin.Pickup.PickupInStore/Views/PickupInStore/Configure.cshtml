@@ -1,0 +1,114 @@
+﻿
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "pickup-instore-form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="pickup-points-grid"></div>
+
+                <script>
+                    $(document).ready(function() {
+                        $("#pickup-points-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("List", "PickupInStore", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Pickup.PickupInStore.Controllers" }, { "area", "" } }))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("Delete", "PickupInStore", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Pickup.PickupInStore.Controllers" }, { "area", "" } }))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id"
+                                    }
+                                },
+                                requestEnd: function (e) {
+                                    if (e.type == "update") {
+                                        this.read();
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            editable: {
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [ {
+                                field: "Name",
+                                width: 200,
+                                title: "@T("Plugins.Pickup.PickupInStore.Fields.Name")"
+                            }, {
+                                field: "OpeningHours",
+                                width: 200,
+                                title: "@T("Plugins.Pickup.PickupInStore.Fields.OpeningHours")"
+                            }, {
+                                field: "PickupFee",
+                                width: 150,
+                                title: "@T("Plugins.Pickup.PickupInStore.Fields.PickupFee")"
+                            }, {
+                                field: "StoreName",
+                                width: 100,
+                                title: "@T("Plugins.Pickup.PickupInStore.Fields.Store")"
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.Edit")",
+                                width: 100,
+                                template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.RouteUrl("Plugin.Pickup.PickupInStore.Edit")?id=#=Id#&btnId=btnRefresh&formId=pickup-instore-form', 800, 800, true); return false;\" class='btn btn-default' />"
+                            }, {
+                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                title: "@T("Admin.Common.Delete")",
+                                width: 100
+                            }]
+                        });
+                    });
+                </script>
+            </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewOption" class="btn btn-primary" value="@T("Plugins.Pickup.PickupInStore.AddNew")" onclick="javascript:OpenWindow('@(Url.RouteUrl("Plugin.Pickup.PickupInStore.Create") + "?btnId=btnRefresh&formId=pickup-instore-form")', 800, 800, true); return false;"/>
+                <input type="submit" id="btnRefresh" class="btn btn-default" style="display: none" />
+            </div>
+
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#btnRefresh').click(function () {
+                        //refresh grid
+                        var grid = $("#pickup-points-grid").data('kendoGrid');
+                        //grid.dataSource.page(1); //new search. Set page size to 1
+                        grid.dataSource.read();
+
+                        //return false to don't reload a page
+                        return false;
+                    });
+                });
+            </script>
+
+        </div>
+    </div>
+}

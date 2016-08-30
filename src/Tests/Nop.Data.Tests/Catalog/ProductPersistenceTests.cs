@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Shipping;
@@ -82,6 +83,7 @@ namespace Nop.Data.Tests.Catalog
                 OrderMaximumQuantity = 19,
                 AllowedQuantities = "1, 5,6,10",
                 AllowAddingOnlyExistingAttributeCombinations = true,
+                NotReturnable = true,
                 DisableBuyButton = true,
                 DisableWishlistButton = true,
                 AvailableForPreOrder = true,
@@ -190,6 +192,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.OrderMaximumQuantity.ShouldEqual(19);
             fromDb.AllowedQuantities.ShouldEqual("1, 5,6,10");
             fromDb.AllowAddingOnlyExistingAttributeCombinations.ShouldEqual(true);
+            fromDb.NotReturnable.ShouldEqual(true);
             fromDb.DisableBuyButton.ShouldEqual(true);
             fromDb.DisableWishlistButton.ShouldEqual(true);
             fromDb.AvailableForPreOrder.ShouldEqual(true);
@@ -347,7 +350,7 @@ namespace Nop.Data.Tests.Catalog
                         Picture = new Picture
                         {
                             PictureBinary = new byte[] { 1, 2, 3 },
-                            MimeType = "image/pjpeg",
+                            MimeType = MimeTypes.ImagePJpeg,
                             IsNew = true
                         }
                     }
@@ -361,7 +364,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.ProductPictures.First().DisplayOrder.ShouldEqual(1);
 
             fromDb.ProductPictures.First().Picture.ShouldNotBeNull();
-            fromDb.ProductPictures.First().Picture.MimeType.ShouldEqual("image/pjpeg");
+            fromDb.ProductPictures.First().Picture.MimeType.ShouldEqual(MimeTypes.ImagePJpeg);
         }
 
         [Test]

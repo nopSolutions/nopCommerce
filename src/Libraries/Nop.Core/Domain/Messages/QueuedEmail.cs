@@ -13,7 +13,7 @@ namespace Nop.Core.Domain.Messages
         public int PriorityId { get; set; }
 
         /// <summary>
-        /// Gets or sets the From property
+        /// Gets or sets the From property (email address)
         /// </summary>
         public string From { get; set; }
 
@@ -23,7 +23,7 @@ namespace Nop.Core.Domain.Messages
         public string FromName { get; set; }
 
         /// <summary>
-        /// Gets or sets the To property
+        /// Gets or sets the To property (email address)
         /// </summary>
         public string To { get; set; }
 
@@ -33,7 +33,7 @@ namespace Nop.Core.Domain.Messages
         public string ToName { get; set; }
 
         /// <summary>
-        /// Gets or sets the ReplyTo property
+        /// Gets or sets the ReplyTo property (email address)
         /// </summary>
         public string ReplyTo { get; set; }
 
@@ -81,6 +81,11 @@ namespace Nop.Core.Domain.Messages
         /// Gets or sets the date and time of item creation in UTC
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date and time in UTC before which this email should not be sent
+        /// </summary>
+        public DateTime? DontSendBeforeDateUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the send tries

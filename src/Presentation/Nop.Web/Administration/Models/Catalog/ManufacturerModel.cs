@@ -2,9 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
-using Nop.Admin.Models.Customers;
-using Nop.Admin.Models.Discounts;
-using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
@@ -23,6 +20,15 @@ namespace Nop.Admin.Models.Catalog
             }
             Locales = new List<ManufacturerLocalizedModel>();
             AvailableManufacturerTemplates = new List<SelectListItem>();
+
+            AvailableDiscounts = new List<SelectListItem>();
+            SelectedDiscountIds = new List<int>();
+
+            SelectedCustomerRoleIds = new List<int>();
+            AvailableCustomerRoles = new List<SelectListItem>();
+
+            SelectedStoreIds = new List<int>();
+            AvailableStores = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Name")]
@@ -80,25 +86,27 @@ namespace Nop.Admin.Models.Catalog
         public int DisplayOrder { get; set; }
         
         public IList<ManufacturerLocalizedModel> Locales { get; set; }
-        
-        //ACL
-        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.SubjectToAcl")]
-        public bool SubjectToAcl { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.AclCustomerRoles")]
-        public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
-        public int[] SelectedCustomerRoleIds { get; set; }
 
-        //Store mapping
+
+        //ACL (customer roles)
+        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.AclCustomerRoles")]
+        [UIHint("MultiSelect")]
+        public IList<int> SelectedCustomerRoleIds { get; set; }
+        public IList<SelectListItem> AvailableCustomerRoles { get; set; }
+
+        
+        //store mapping
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.LimitedToStores")]
-        public bool LimitedToStores { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.AvailableStores")]
-        public List<StoreModel> AvailableStores { get; set; }
-        public int[] SelectedStoreIds { get; set; }
+        [UIHint("MultiSelect")]
+        public IList<int> SelectedStoreIds { get; set; }
+        public IList<SelectListItem> AvailableStores { get; set; }
 
 
         //discounts
-        public List<DiscountModel> AvailableDiscounts { get; set; }
-        public int[] SelectedDiscountIds { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Discounts")]
+        [UIHint("MultiSelect")]
+        public IList<int> SelectedDiscountIds { get; set; }
+        public IList<SelectListItem> AvailableDiscounts { get; set; }
 
 
         #region Nested classes
