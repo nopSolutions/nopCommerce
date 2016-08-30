@@ -15,7 +15,7 @@
     <AssemblyName>Nop.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -613,6 +613,55 @@
     <Content Include="Scripts\selectivizr.min.js" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <None Include="Scripts\_references.js" />
+    <Content Include="Themes\CelClean\Content\css\ie8.css" />
+    <Content Include="Themes\CelClean\Content\css\print.css" />
+    <Content Include="Themes\CelClean\Content\css\styles.css" />
+    <Content Include="Themes\CelClean\Content\css\styles.rtl.css" />
+    <Content Include="Themes\CelClean\Content\images\ajax-loader-small.gif" />
+    <Content Include="Themes\CelClean\Content\images\back-button.png" />
+    <Content Include="Themes\CelClean\Content\images\calendar-next.png" />
+    <Content Include="Themes\CelClean\Content\images\calendar-prev.png" />
+    <Content Include="Themes\CelClean\Content\images\close.png" />
+    <Content Include="Themes\CelClean\Content\images\compare-button.png" />
+    <Content Include="Themes\CelClean\Content\images\details.png" />
+    <Content Include="Themes\CelClean\Content\images\discontinued-product-icon.png" />
+    <Content Include="Themes\CelClean\Content\images\download-button.png" />
+    <Content Include="Themes\CelClean\Content\images\edit.png" />
+    <Content Include="Themes\CelClean\Content\images\edit_.png" />
+    <Content Include="Themes\CelClean\Content\images\email-button.png" />
+    <Content Include="Themes\CelClean\Content\images\first.png" />
+    <Content Include="Themes\CelClean\Content\images\ie_warning.jpg" />
+    <Content Include="Themes\CelClean\Content\images\last.png" />
+    <Content Include="Themes\CelClean\Content\images\loading.gif" />
+    <Content Include="Themes\CelClean\Content\images\logo.png" />
+    <Content Include="Themes\CelClean\Content\images\menu-icon.png" />
+    <Content Include="Themes\CelClean\Content\images\move.png" />
+    <Content Include="Themes\CelClean\Content\images\new.png" />
+    <Content Include="Themes\CelClean\Content\images\next.png" />
+    <Content Include="Themes\CelClean\Content\images\pointer.png" />
+    <Content Include="Themes\CelClean\Content\images\prev.png" />
+    <Content Include="Themes\CelClean\Content\images\rating1.png" />
+    <Content Include="Themes\CelClean\Content\images\rating2.png" />
+    <Content Include="Themes\CelClean\Content\images\remove.png" />
+    <Content Include="Themes\CelClean\Content\images\remove_.png" />
+    <Content Include="Themes\CelClean\Content\images\reply.png" />
+    <Content Include="Themes\CelClean\Content\images\return.png" />
+    <Content Include="Themes\CelClean\Content\images\rss.png" />
+    <Content Include="Themes\CelClean\Content\images\shipping.png" />
+    <Content Include="Themes\CelClean\Content\images\shopping-bag.png" />
+    <Content Include="Themes\CelClean\Content\images\social-sprite.png" />
+    <Content Include="Themes\CelClean\Content\images\subscribe-button.png" />
+    <Content Include="Themes\CelClean\Content\images\toggle-black.png" />
+    <Content Include="Themes\CelClean\Content\images\toggle-gray.png" />
+    <Content Include="Themes\CelClean\Content\images\toggle-white.png" />
+    <Content Include="Themes\CelClean\Content\images\topic-type1.png" />
+    <Content Include="Themes\CelClean\Content\images\topic-type2.png" />
+    <Content Include="Themes\CelClean\Content\images\topic-type3.png" />
+    <Content Include="Themes\CelClean\Content\images\view-grid.png" />
+    <Content Include="Themes\CelClean\Content\images\view-list.png" />
+    <Content Include="Themes\CelClean\Content\images\watch.png" />
+    <Content Include="Themes\CelClean\Content\images\wishlist-button.png" />
+    <Content Include="Themes\CelClean\preview.png" />
     <Content Include="Themes\DefaultClean\Content\css\ie8.css" />
     <Content Include="Themes\DefaultClean\Content\css\styles.css" />
     <Content Include="Themes\DefaultClean\Content\css\styles.rtl.css" />
@@ -992,6 +1041,10 @@
     <Content Include="Views\Product\CustomerProductReviews.cshtml" />
     <Content Include="Views\Vendor\Info.cshtml" />
     <Content Include="Views\Common\Logo.cshtml" />
+    <Content Include="Themes\CelClean\theme.config" />
+    <Content Include="Themes\CelClean\Views\Catalog\TopMenu.cshtml" />
+    <Content Include="Themes\CelClean\Views\Shared\Head.cshtml" />
+    <Content Include="Themes\CelClean\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />
@@ -1204,11 +1257,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>15536</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:2451/</IISUrl>
+          <IISUrl>http://celcommerce.local</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
