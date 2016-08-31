@@ -2310,7 +2310,7 @@ namespace Nop.Services.Orders
             if (order.OrderTotal == decimal.Zero)
                 return false;
 
-            //uncomment the lines below in order to allow this operation for cancelled orders
+            //uncomment the lines below in order to disallow this operation for cancelled orders
             //if (order.OrderStatus == OrderStatus.Cancelled)
             //    return false;
 
@@ -2439,7 +2439,7 @@ namespace Nop.Services.Orders
             if (order.OrderTotal == decimal.Zero)
                 return false;
 
-            //uncomment the lines below in order to allow this operation for cancelled orders
+            //uncomment the lines below in order to disallow this operation for cancelled orders
             //if (order.OrderStatus == OrderStatus.Cancelled)
             //     return false;
 
