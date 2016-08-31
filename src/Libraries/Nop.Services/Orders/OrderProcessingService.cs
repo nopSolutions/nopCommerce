@@ -2310,6 +2310,10 @@ namespace Nop.Services.Orders
             if (order.OrderTotal == decimal.Zero)
                 return false;
 
+            //refund cannot be made if previously a partial refund has been already done. only other partial refund can be made in this case
+            if (order.RefundedAmount > decimal.Zero)
+                return false;
+
             //uncomment the lines below in order to disallow this operation for cancelled orders
             //if (order.OrderStatus == OrderStatus.Cancelled)
             //    return false;
@@ -2437,6 +2441,10 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("order");
 
             if (order.OrderTotal == decimal.Zero)
+                return false;
+
+            //refund cannot be made if previously a partial refund has been already done. only other partial refund can be made in this case
+            if (order.RefundedAmount > decimal.Zero)
                 return false;
 
             //uncomment the lines below in order to disallow this operation for cancelled orders
