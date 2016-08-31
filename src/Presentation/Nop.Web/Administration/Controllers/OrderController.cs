@@ -4200,21 +4200,18 @@ namespace Nop.Admin.Controllers
                     var searchYearDateUser = new DateTime(yearAgoRoundedDt.Year, yearAgoRoundedDt.Month, 1);
                     if (!timeZone.IsInvalidTime(searchYearDateUser))
                     {
-                        DateTime searchYearDateUtc = _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone);
-
                         for (int i = 0; i <= 12; i++)
                         {
                             result.Add(new
                             {
                                 date = searchYearDateUser.Date.ToString("Y"),
                                 value = _orderService.SearchOrders(
-                                    createdFromUtc: searchYearDateUtc,
-                                    createdToUtc: searchYearDateUtc.AddMonths(1),
+                                    createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone),
+                                    createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser.AddMonths(1)),
                                     pageIndex: 0,
                                     pageSize: 1).TotalCount.ToString()
                             });
 
-                            searchYearDateUtc = searchYearDateUtc.AddMonths(1);
                             searchYearDateUser = searchYearDateUser.AddMonths(1);
                         }
                     }
@@ -4225,21 +4222,18 @@ namespace Nop.Admin.Controllers
                     var searchMonthDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-30).Month, nowDt.AddDays(-30).Day);
                     if (!timeZone.IsInvalidTime(searchMonthDateUser))
                     {
-                        DateTime searchMonthDateUtc = _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone);
-
                         for (int i = 0; i <= 30; i++)
                         {
                             result.Add(new
                             {
                                 date = searchMonthDateUser.Date.ToString("M"),
                                 value = _orderService.SearchOrders(
-                                    createdFromUtc: searchMonthDateUtc,
-                                    createdToUtc: searchMonthDateUtc.AddDays(1),
+                                    createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone),
+                                    createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser.AddDays(1)),
                                     pageIndex: 0,
                                     pageSize: 1).TotalCount.ToString()
                             });
 
-                            searchMonthDateUtc = searchMonthDateUtc.AddDays(1);
                             searchMonthDateUser = searchMonthDateUser.AddDays(1);
                         }
                     }
@@ -4251,21 +4245,18 @@ namespace Nop.Admin.Controllers
                     var searchWeekDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-7).Month, nowDt.AddDays(-7).Day);
                     if (!timeZone.IsInvalidTime(searchWeekDateUser))
                     {
-                        DateTime searchWeekDateUtc = _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone);
-
                         for (int i = 0; i <= 7; i++)
                         {
                             result.Add(new
                             {
                                 date = searchWeekDateUser.Date.ToString("d dddd"),
                                 value = _orderService.SearchOrders(
-                                    createdFromUtc: searchWeekDateUtc,
-                                    createdToUtc: searchWeekDateUtc.AddDays(1),
+                                    createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone),
+                                    createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser.AddDays(1)),
                                     pageIndex: 0,
                                     pageSize: 1).TotalCount.ToString()
                             });
 
-                            searchWeekDateUtc = searchWeekDateUtc.AddDays(1);
                             searchWeekDateUser = searchWeekDateUser.AddDays(1);
                         }
                     }
