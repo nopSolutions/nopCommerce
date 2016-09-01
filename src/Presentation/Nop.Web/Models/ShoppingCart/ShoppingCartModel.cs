@@ -59,9 +59,10 @@ namespace Nop.Web.Models.ShoppingCart
                 AllowedQuantities = new List<SelectListItem>();
                 Warnings = new List<string>();
             }
+
             public string Sku { get; set; }
 
-            public PictureModel Picture {get;set;}
+            public PictureModel Picture { get; set; }
 
             public int ProductId { get; set; }
 
@@ -77,7 +78,7 @@ namespace Nop.Web.Models.ShoppingCart
 
             public int Quantity { get; set; }
             public List<SelectListItem> AllowedQuantities { get; set; }
-            
+
             public string AttributeInfo { get; set; }
 
             public string RecurringInfo { get; set; }
@@ -85,6 +86,8 @@ namespace Nop.Web.Models.ShoppingCart
             public string RentalInfo { get; set; }
 
             public bool AllowItemEditing { get; set; }
+
+            public bool HasRequiredItemDependencies { get; set; }
 
             public IList<string> Warnings { get; set; }
 
