@@ -2062,7 +2062,7 @@ namespace Nop.Admin.Controllers
                                 date = searchYearDateUser.Date.ToString("Y"),
                                 value = _customerService.GetAllCustomers(
                                     createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone),
-                                    createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser.AddMonths(1)),
+                                    createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser.AddMonths(1), timeZone),
                                     customerRoleIds: searchCustomerRoleIds,
                                     pageIndex: 0,
                                     pageSize: 1).TotalCount.ToString()
@@ -2085,7 +2085,7 @@ namespace Nop.Admin.Controllers
                                 date = searchMonthDateUser.Date.ToString("M"),
                                 value = _customerService.GetAllCustomers(
                                     createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone),
-                                    createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser.AddDays(1)),
+                                    createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser.AddDays(1), timeZone),
                                     customerRoleIds: searchCustomerRoleIds,
                                     pageIndex: 0,
                                     pageSize: 1).TotalCount.ToString()
@@ -2109,7 +2109,7 @@ namespace Nop.Admin.Controllers
                                 date = searchWeekDateUser.Date.ToString("d dddd"),
                                 value = _customerService.GetAllCustomers(
                                     createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone),
-                                    createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser.AddDays(1)),
+                                    createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser.AddDays(1), timeZone),
                                     customerRoleIds: searchCustomerRoleIds,
                                     pageIndex: 0,
                                     pageSize: 1).TotalCount.ToString()
