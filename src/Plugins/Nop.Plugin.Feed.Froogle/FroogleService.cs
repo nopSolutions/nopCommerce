@@ -357,13 +357,15 @@ namespace Nop.Plugin.Feed.Froogle
                                 _workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue);
                             decimal taxRate;
                             finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
-
                         }
                         else
                         {
                             finalPriceBase = product.Price;
                         }
                         decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, currency);
+                        //round price now so it matches the product details page
+                        price = RoundingHelper.RoundPrice(price);
+
                         writer.WriteElementString("g", "price", googleBaseNamespace,
                                                   price.ToString(new CultureInfo("en-US", false).NumberFormat) + " " +
                                                   currency.CurrencyCode);
