@@ -475,6 +475,10 @@ namespace Nop.Web.Controllers
                     (!String.IsNullOrEmpty(cartItemModel.AttributeInfo) || sci.Product.IsGiftCard) &&
                     sci.Product.VisibleIndividually;
 
+                //disable removal?
+                //1. do other items require this one?
+                cartItemModel.DisableRemoval = cart.Any(item => item.Product.RequireOtherProducts && item.Product.ParseRequiredProductIds().Contains(sci.ProductId));
+
                 //allowed quantities
                 var allowedQuantities = sci.Product.ParseAllowedQuantities();
                 foreach (var qty in allowedQuantities)

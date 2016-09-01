@@ -1030,7 +1030,7 @@ namespace Nop.Web.Controllers
                     {
                         foreach (var path in localizableDisallowPaths)
                         {
-                            sb.AppendFormat("Disallow: {0}{1}", language.UniqueSeoCode, path);
+                            sb.AppendFormat("Disallow: /{0}{1}", language.UniqueSeoCode, path);
                             sb.Append(newLine);
                         }
                     }

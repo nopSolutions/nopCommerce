@@ -1221,7 +1221,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("skuArray");
 
             var query = _productRepository.Table;
-            return query.Where(p => skuArray.Contains(p.Sku)).ToList();
+            return query.Where(p => !p.Deleted && skuArray.Contains(p.Sku)).ToList();
         }
 
         /// <summary>

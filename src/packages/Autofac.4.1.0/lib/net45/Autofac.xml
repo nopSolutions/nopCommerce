@@ -1463,6 +1463,28 @@
             <param name="instance">The instance to inject properties into.</param>
             <returns><paramref name="instance"/>.</returns>
         </member>
+        <member name="M:Autofac.ResolutionExtensions.InjectProperties``1(Autofac.IComponentContext,``0,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+            <summary>
+            Set any properties on <paramref name="instance"/> that can be
+            resolved in the context.
+            </summary>
+            <typeparam name="TService">Type of instance. Used only to provide method chaining.</typeparam>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="instance">The instance to inject properties into.</param>
+            <param name="parameters">Optional parameters to use during the property injection.</param>
+            <returns><paramref name="instance"/>.</returns>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.InjectProperties``1(Autofac.IComponentContext,``0,Autofac.Core.Parameter[])">
+            <summary>
+            Set any properties on <paramref name="instance"/> that can be
+            resolved in the context.
+            </summary>
+            <typeparam name="TService">Type of instance. Used only to provide method chaining.</typeparam>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="instance">The instance to inject properties into.</param>
+            <param name="parameters">Optional parameters to use during the property injection.</param>
+            <returns><paramref name="instance"/>.</returns>
+        </member>
         <member name="M:Autofac.ResolutionExtensions.InjectProperties``1(Autofac.IComponentContext,``0,Autofac.Core.IPropertySelector)">
             <summary>
             Set any properties on <paramref name="instance"/> that can be resolved by service and that satisfy the
@@ -1472,6 +1494,30 @@
             <param name="context">The context from which to resolve the service.</param>
             <param name="instance">The instance to inject properties into.</param>
             <param name="propertySelector">Selector to determine with properties should be injected.</param>
+            <returns><paramref name="instance"/>.</returns>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.InjectProperties``1(Autofac.IComponentContext,``0,Autofac.Core.IPropertySelector,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+            <summary>
+            Set any properties on <paramref name="instance"/> that can be resolved by service and that satisfy the
+            constraints imposed by <paramref name="propertySelector"/>
+            </summary>
+            <typeparam name="TService">Type of instance. Used only to provide method chaining.</typeparam>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="instance">The instance to inject properties into.</param>
+            <param name="propertySelector">Selector to determine with properties should be injected.</param>
+            <param name="parameters">Optional parameters to use during the property injection.</param>
+            <returns><paramref name="instance"/>.</returns>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.InjectProperties``1(Autofac.IComponentContext,``0,Autofac.Core.IPropertySelector,Autofac.Core.Parameter[])">
+            <summary>
+            Set any properties on <paramref name="instance"/> that can be resolved by service and that satisfy the
+            constraints imposed by <paramref name="propertySelector"/>
+            </summary>
+            <typeparam name="TService">Type of instance. Used only to provide method chaining.</typeparam>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="instance">The instance to inject properties into.</param>
+            <param name="propertySelector">Selector to determine with properties should be injected.</param>
+            <param name="parameters">Optional parameters to use during the property injection.</param>
             <returns><paramref name="instance"/>.</returns>
         </member>
         <member name="M:Autofac.ResolutionExtensions.InjectUnsetProperties``1(Autofac.IComponentContext,``0)">
@@ -1484,87 +1530,87 @@
             <param name="instance">The instance to inject properties into.</param>
             <returns><paramref name="instance"/>.</returns>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveNamed``1(Autofac.IComponentContext,System.String)">
+        <member name="M:Autofac.ResolutionExtensions.InjectUnsetProperties``1(Autofac.IComponentContext,``0,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
             <summary>
-            Retrieve a service from the context.
+            Set any null-valued properties on <paramref name="instance"/> that can be
+            resolved by the container.
             </summary>
-            <typeparam name="TService">The type to which the result will be cast.</typeparam>
+            <typeparam name="TService">Type of instance. Used only to provide method chaining.</typeparam>
             <param name="context">The context from which to resolve the service.</param>
-            <param name="serviceName">Name of the service.</param>
-            <returns>
-            The component instance that provides the service.
-            </returns>
-            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
-            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+            <param name="instance">The instance to inject properties into.</param>
+            <param name="parameters">Optional parameters to use during the property injection.</param>
+            <returns><paramref name="instance"/>.</returns>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveNamed``1(Autofac.IComponentContext,System.String,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+        <member name="M:Autofac.ResolutionExtensions.InjectUnsetProperties``1(Autofac.IComponentContext,``0,Autofac.Core.Parameter[])">
             <summary>
-            Retrieve a service from the context.
+            Set any null-valued properties on <paramref name="instance"/> that can be
+            resolved by the container.
             </summary>
-            <typeparam name="TService">The type to which the result will be cast.</typeparam>
+            <typeparam name="TService">Type of instance. Used only to provide method chaining.</typeparam>
             <param name="context">The context from which to resolve the service.</param>
-            <param name="serviceName">Name of the service.</param>
-            <param name="parameters">The parameters.</param>
-            <returns>
-            The component instance that provides the service.
-            </returns>
-            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
-            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+            <param name="instance">The instance to inject properties into.</param>
+            <param name="parameters">Optional parameters to use during the property injection.</param>
+            <returns><paramref name="instance"/>.</returns>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveNamed``1(Autofac.IComponentContext,System.String,Autofac.Core.Parameter[])">
+        <member name="M:Autofac.ResolutionExtensions.IsRegistered``1(Autofac.IComponentContext)">
             <summary>
-            Retrieve a service from the context.
+            Determine whether the specified service is available in the context.
             </summary>
-            <typeparam name="TService">The type to which the result will be cast.</typeparam>
             <param name="context">The context from which to resolve the service.</param>
-            <param name="serviceName">Name of the service.</param>
-            <param name="parameters">The parameters.</param>
-            <returns>
-            The component instance that provides the service.
-            </returns>
-            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
-            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+            <typeparam name="TService">The service to test for the registration of.</typeparam>
+            <returns>True if the service is registered.</returns>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveKeyed``1(Autofac.IComponentContext,System.Object)">
+        <member name="M:Autofac.ResolutionExtensions.IsRegistered(Autofac.IComponentContext,System.Type)">
             <summary>
-            Retrieve a service from the context.
+            Determine whether the specified service is available in the context.
             </summary>
-            <typeparam name="TService">The type to which the result will be cast.</typeparam>
             <param name="context">The context from which to resolve the service.</param>
-            <param name="serviceKey">Key of the service.</param>
-            <returns>
-            The component instance that provides the service.
-            </returns>
-            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
-            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+            <param name="serviceType">The service to test for the registration of.</param>
+            <returns>True if the service is registered.</returns>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveKeyed``1(Autofac.IComponentContext,System.Object,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+        <member name="M:Autofac.ResolutionExtensions.IsRegisteredService(Autofac.IComponentContext,Autofac.Core.Service)">
             <summary>
-            Retrieve a service from the context.
+            Determine whether the specified service is available in the context.
             </summary>
-            <typeparam name="TService">The type to which the result will be cast.</typeparam>
             <param name="context">The context from which to resolve the service.</param>
-            <param name="serviceKey">Key of the service.</param>
-            <param name="parameters">The parameters.</param>
-            <returns>
-            The component instance that provides the service.
-            </returns>
-            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
-            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+            <param name="service">The service to test for the registration of.</param>
+            <returns>True if the service is registered.</returns>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveKeyed``1(Autofac.IComponentContext,System.Object,Autofac.Core.Parameter[])">
+        <member name="M:Autofac.ResolutionExtensions.IsRegisteredWithKey``1(Autofac.IComponentContext,System.Object)">
             <summary>
-            Retrieve a service from the context.
+            Determine whether the specified service is available in the context.
             </summary>
-            <typeparam name="TService">The type to which the result will be cast.</typeparam>
             <param name="context">The context from which to resolve the service.</param>
-            <param name="serviceKey">Key of the service.</param>
-            <param name="parameters">The parameters.</param>
-            <returns>
-            The component instance that provides the service.
-            </returns>
-            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
-            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+            <param name="serviceKey">The key of the service to test for the registration of.</param>
+            <typeparam name="TService">Type type of the service to test for the registration of.</typeparam>
+            <returns>True if the service is registered.</returns>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.IsRegisteredWithKey(Autofac.IComponentContext,System.Object,System.Type)">
+            <summary>
+            Determine whether the specified service is available in the context.
+            </summary>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="serviceKey">The key of the service to test for the registration of.</param>
+            <param name="serviceType">Type type of the service to test for the registration of.</param>
+            <returns>True if the service is registered.</returns>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.IsRegisteredWithName``1(Autofac.IComponentContext,System.String)">
+            <summary>
+            Determine whether the specified service is available in the context.
+            </summary>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="serviceName">The name of the service to test for the registration of.</param>
+            <typeparam name="TService">Type type of the service to test for the registration of.</typeparam>
+            <returns>True if the service is registered.</returns>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.IsRegisteredWithName(Autofac.IComponentContext,System.String,System.Type)">
+            <summary>
+            Determine whether the specified service is available in the context.
+            </summary>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="serviceName">The name of the service to test for the registration of.</param>
+            <param name="serviceType">Type type of the service to test for the registration of.</param>
+            <returns>True if the service is registered.</returns>
         </member>
         <member name="M:Autofac.ResolutionExtensions.Resolve``1(Autofac.IComponentContext)">
             <summary>
@@ -1640,41 +1686,41 @@
             <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveNamed(Autofac.IComponentContext,System.String,System.Type)">
+        <member name="M:Autofac.ResolutionExtensions.ResolveKeyed``1(Autofac.IComponentContext,System.Object)">
             <summary>
             Retrieve a service from the context.
             </summary>
+            <typeparam name="TService">The type to which the result will be cast.</typeparam>
             <param name="context">The context from which to resolve the service.</param>
-            <param name="serviceName">The service name.</param>
-            <param name="serviceType">Type of the service.</param>
+            <param name="serviceKey">Key of the service.</param>
             <returns>
             The component instance that provides the service.
             </returns>
             <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveNamed(Autofac.IComponentContext,System.String,System.Type,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+        <member name="M:Autofac.ResolutionExtensions.ResolveKeyed``1(Autofac.IComponentContext,System.Object,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
             <summary>
             Retrieve a service from the context.
             </summary>
+            <typeparam name="TService">The type to which the result will be cast.</typeparam>
             <param name="context">The context from which to resolve the service.</param>
-            <param name="parameters">Parameters for the service.</param>
-            <param name="serviceName">The service name.</param>
-            <param name="serviceType">Type of the service.</param>
+            <param name="serviceKey">Key of the service.</param>
+            <param name="parameters">The parameters.</param>
             <returns>
             The component instance that provides the service.
             </returns>
             <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveNamed(Autofac.IComponentContext,System.String,System.Type,Autofac.Core.Parameter[])">
+        <member name="M:Autofac.ResolutionExtensions.ResolveKeyed``1(Autofac.IComponentContext,System.Object,Autofac.Core.Parameter[])">
             <summary>
             Retrieve a service from the context.
             </summary>
+            <typeparam name="TService">The type to which the result will be cast.</typeparam>
             <param name="context">The context from which to resolve the service.</param>
-            <param name="parameters">Parameters for the service.</param>
-            <param name="serviceName">The service name.</param>
-            <param name="serviceType">Type of the service.</param>
+            <param name="serviceKey">Key of the service.</param>
+            <param name="parameters">The parameters.</param>
             <returns>
             The component instance that provides the service.
             </returns>
@@ -1722,38 +1768,82 @@
             <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveService(Autofac.IComponentContext,Autofac.Core.Service)">
+        <member name="M:Autofac.ResolutionExtensions.ResolveNamed``1(Autofac.IComponentContext,System.String)">
             <summary>
             Retrieve a service from the context.
             </summary>
+            <typeparam name="TService">The type to which the result will be cast.</typeparam>
             <param name="context">The context from which to resolve the service.</param>
-            <param name="service">The service to resolve.</param>
+            <param name="serviceName">Name of the service.</param>
             <returns>
             The component instance that provides the service.
             </returns>
             <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveService(Autofac.IComponentContext,Autofac.Core.Service,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+        <member name="M:Autofac.ResolutionExtensions.ResolveNamed``1(Autofac.IComponentContext,System.String,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
             <summary>
             Retrieve a service from the context.
             </summary>
+            <typeparam name="TService">The type to which the result will be cast.</typeparam>
             <param name="context">The context from which to resolve the service.</param>
-            <param name="parameters">Parameters for the service.</param>
-            <param name="service">The service to resolve.</param>
+            <param name="serviceName">Name of the service.</param>
+            <param name="parameters">The parameters.</param>
             <returns>
             The component instance that provides the service.
             </returns>
             <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveService(Autofac.IComponentContext,Autofac.Core.Service,Autofac.Core.Parameter[])">
+        <member name="M:Autofac.ResolutionExtensions.ResolveNamed``1(Autofac.IComponentContext,System.String,Autofac.Core.Parameter[])">
+            <summary>
+            Retrieve a service from the context.
+            </summary>
+            <typeparam name="TService">The type to which the result will be cast.</typeparam>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="serviceName">Name of the service.</param>
+            <param name="parameters">The parameters.</param>
+            <returns>
+            The component instance that provides the service.
+            </returns>
+            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
+            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.ResolveNamed(Autofac.IComponentContext,System.String,System.Type)">
+            <summary>
+            Retrieve a service from the context.
+            </summary>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="serviceName">The service name.</param>
+            <param name="serviceType">Type of the service.</param>
+            <returns>
+            The component instance that provides the service.
+            </returns>
+            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
+            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.ResolveNamed(Autofac.IComponentContext,System.String,System.Type,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
             <summary>
             Retrieve a service from the context.
             </summary>
             <param name="context">The context from which to resolve the service.</param>
             <param name="parameters">Parameters for the service.</param>
-            <param name="service">The service to resolve.</param>
+            <param name="serviceName">The service name.</param>
+            <param name="serviceType">Type of the service.</param>
+            <returns>
+            The component instance that provides the service.
+            </returns>
+            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
+            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.ResolveNamed(Autofac.IComponentContext,System.String,System.Type,Autofac.Core.Parameter[])">
+            <summary>
+            Retrieve a service from the context.
+            </summary>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="parameters">Parameters for the service.</param>
+            <param name="serviceName">The service name.</param>
+            <param name="serviceType">Type of the service.</param>
             <returns>
             The component instance that provides the service.
             </returns>
@@ -1792,6 +1882,85 @@
             </summary>
             <param name="context">The context from which to resolve the service.</param>
             <param name="parameters">Parameters for the service.</param>
+            <typeparam name="TService">The service to resolve.</typeparam>
+            <returns>
+            The component instance that provides the service, or null.
+            </returns>
+            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.ResolveOptional(Autofac.IComponentContext,System.Type)">
+            <summary>
+            Retrieve a service from the context, or null if the service is not
+            registered.
+            </summary>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="serviceType">The type of the service.</param>
+            <returns>
+            The component instance that provides the service, or null.
+            </returns>
+            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.ResolveOptional(Autofac.IComponentContext,System.Type,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+            <summary>
+            Retrieve a service from the context, or null if the service is not
+            registered.
+            </summary>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="parameters">Parameters for the service.</param>
+            <param name="serviceType">The type of the service.</param>
+            <returns>
+            The component instance that provides the service, or null.
+            </returns>
+            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.ResolveOptional(Autofac.IComponentContext,System.Type,Autofac.Core.Parameter[])">
+            <summary>
+            Retrieve a service from the context, or null if the service is not
+            registered.
+            </summary>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="parameters">Parameters for the service.</param>
+            <param name="serviceType">The type of the service.</param>
+            <returns>
+            The component instance that provides the service, or null.
+            </returns>
+            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.ResolveOptionalKeyed``1(Autofac.IComponentContext,System.Object)">
+            <summary>
+            Retrieve a service from the context, or null if the service is not
+            registered.
+            </summary>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="serviceKey">The name of the service.</param>
+            <typeparam name="TService">The service to resolve.</typeparam>
+            <returns>
+            The component instance that provides the service, or null.
+            </returns>
+            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.ResolveOptionalKeyed``1(Autofac.IComponentContext,System.Object,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+            <summary>
+            Retrieve a service from the context, or null if the service is not
+            registered.
+            </summary>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="parameters">Parameters for the service.</param>
+            <param name="serviceKey">The name of the service.</param>
+            <typeparam name="TService">The service to resolve.</typeparam>
+            <returns>
+            The component instance that provides the service, or null.
+            </returns>
+            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.ResolveOptionalKeyed``1(Autofac.IComponentContext,System.Object,Autofac.Core.Parameter[])">
+            <summary>
+            Retrieve a service from the context, or null if the service is not
+            registered.
+            </summary>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="parameters">Parameters for the service.</param>
+            <param name="serviceKey">The key of the service.</param>
             <typeparam name="TService">The service to resolve.</typeparam>
             <returns>
             The component instance that provides the service, or null.
@@ -1839,85 +2008,6 @@
             </returns>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveOptionalKeyed``1(Autofac.IComponentContext,System.Object)">
-            <summary>
-            Retrieve a service from the context, or null if the service is not
-            registered.
-            </summary>
-            <param name="context">The context from which to resolve the service.</param>
-            <param name="serviceKey">The name of the service.</param>
-            <typeparam name="TService">The service to resolve.</typeparam>
-            <returns>
-            The component instance that provides the service, or null.
-            </returns>
-            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
-        </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveOptionalKeyed``1(Autofac.IComponentContext,System.Object,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
-            <summary>
-            Retrieve a service from the context, or null if the service is not
-            registered.
-            </summary>
-            <param name="context">The context from which to resolve the service.</param>
-            <param name="parameters">Parameters for the service.</param>
-            <param name="serviceKey">The name of the service.</param>
-            <typeparam name="TService">The service to resolve.</typeparam>
-            <returns>
-            The component instance that provides the service, or null.
-            </returns>
-            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
-        </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveOptionalKeyed``1(Autofac.IComponentContext,System.Object,Autofac.Core.Parameter[])">
-            <summary>
-            Retrieve a service from the context, or null if the service is not
-            registered.
-            </summary>
-            <param name="context">The context from which to resolve the service.</param>
-            <param name="parameters">Parameters for the service.</param>
-            <param name="serviceKey">The key of the service.</param>
-            <typeparam name="TService">The service to resolve.</typeparam>
-            <returns>
-            The component instance that provides the service, or null.
-            </returns>
-            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
-        </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveOptional(Autofac.IComponentContext,System.Type)">
-            <summary>
-            Retrieve a service from the context, or null if the service is not
-            registered.
-            </summary>
-            <param name="context">The context from which to resolve the service.</param>
-            <param name="serviceType">The type of the service.</param>
-            <returns>
-            The component instance that provides the service, or null.
-            </returns>
-            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
-        </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveOptional(Autofac.IComponentContext,System.Type,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
-            <summary>
-            Retrieve a service from the context, or null if the service is not
-            registered.
-            </summary>
-            <param name="context">The context from which to resolve the service.</param>
-            <param name="parameters">Parameters for the service.</param>
-            <param name="serviceType">The type of the service.</param>
-            <returns>
-            The component instance that provides the service, or null.
-            </returns>
-            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
-        </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveOptional(Autofac.IComponentContext,System.Type,Autofac.Core.Parameter[])">
-            <summary>
-            Retrieve a service from the context, or null if the service is not
-            registered.
-            </summary>
-            <param name="context">The context from which to resolve the service.</param>
-            <param name="parameters">Parameters for the service.</param>
-            <param name="serviceType">The type of the service.</param>
-            <returns>
-            The component instance that provides the service, or null.
-            </returns>
-            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
-        </member>
         <member name="M:Autofac.ResolutionExtensions.ResolveOptionalService(Autofac.IComponentContext,Autofac.Core.Service)">
             <summary>
             Retrieve a service from the context, or null if the service is not
@@ -1956,104 +2046,42 @@
             </returns>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.IsRegistered``1(Autofac.IComponentContext)">
+        <member name="M:Autofac.ResolutionExtensions.ResolveService(Autofac.IComponentContext,Autofac.Core.Service)">
             <summary>
-            Determine whether the specified service is available in the context.
-            </summary>
-            <param name="context">The context from which to resolve the service.</param>
-            <typeparam name="TService">The service to test for the registration of.</typeparam>
-            <returns>True if the service is registered.</returns>
-        </member>
-        <member name="M:Autofac.ResolutionExtensions.IsRegistered(Autofac.IComponentContext,System.Type)">
-            <summary>
-            Determine whether the specified service is available in the context.
-            </summary>
-            <param name="context">The context from which to resolve the service.</param>
-            <param name="serviceType">The service to test for the registration of.</param>
-            <returns>True if the service is registered.</returns>
-        </member>
-        <member name="M:Autofac.ResolutionExtensions.IsRegisteredWithName(Autofac.IComponentContext,System.String,System.Type)">
-            <summary>
-            Determine whether the specified service is available in the context.
-            </summary>
-            <param name="context">The context from which to resolve the service.</param>
-            <param name="serviceName">The name of the service to test for the registration of.</param>
-            <param name="serviceType">Type type of the service to test for the registration of.</param>
-            <returns>True if the service is registered.</returns>
-        </member>
-        <member name="M:Autofac.ResolutionExtensions.IsRegisteredWithName``1(Autofac.IComponentContext,System.String)">
-            <summary>
-            Determine whether the specified service is available in the context.
-            </summary>
-            <param name="context">The context from which to resolve the service.</param>
-            <param name="serviceName">The name of the service to test for the registration of.</param>
-            <typeparam name="TService">Type type of the service to test for the registration of.</typeparam>
-            <returns>True if the service is registered.</returns>
-        </member>
-        <member name="M:Autofac.ResolutionExtensions.IsRegisteredWithKey(Autofac.IComponentContext,System.Object,System.Type)">
-            <summary>
-            Determine whether the specified service is available in the context.
-            </summary>
-            <param name="context">The context from which to resolve the service.</param>
-            <param name="serviceKey">The key of the service to test for the registration of.</param>
-            <param name="serviceType">Type type of the service to test for the registration of.</param>
-            <returns>True if the service is registered.</returns>
-        </member>
-        <member name="M:Autofac.ResolutionExtensions.IsRegisteredWithKey``1(Autofac.IComponentContext,System.Object)">
-            <summary>
-            Determine whether the specified service is available in the context.
-            </summary>
-            <param name="context">The context from which to resolve the service.</param>
-            <param name="serviceKey">The key of the service to test for the registration of.</param>
-            <typeparam name="TService">Type type of the service to test for the registration of.</typeparam>
-            <returns>True if the service is registered.</returns>
-        </member>
-        <member name="M:Autofac.ResolutionExtensions.IsRegisteredService(Autofac.IComponentContext,Autofac.Core.Service)">
-            <summary>
-            Determine whether the specified service is available in the context.
-            </summary>
-            <param name="context">The context from which to resolve the service.</param>
-            <param name="service">The service to test for the registration of.</param>
-            <returns>True if the service is registered.</returns>
-        </member>
-        <member name="M:Autofac.ResolutionExtensions.TryResolveService(Autofac.IComponentContext,Autofac.Core.Service,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter},System.Object@)">
-            <summary>
-            Try to retrieve a service from the context.
+            Retrieve a service from the context.
             </summary>
             <param name="context">The context from which to resolve the service.</param>
             <param name="service">The service to resolve.</param>
-            <param name="instance">The resulting component instance providing the service, or null.</param>
-            <param name="parameters">The parameters.</param>
             <returns>
-            True if a component providing the service is available.
+            The component instance that provides the service.
             </returns>
+            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown if <paramref name="context" /> is <see langword="null" />.
-            </exception>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.TryResolveService(Autofac.IComponentContext,Autofac.Core.Service,System.Object@)">
+        <member name="M:Autofac.ResolutionExtensions.ResolveService(Autofac.IComponentContext,Autofac.Core.Service,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
             <summary>
-            Try to retrieve a service from the context.
+            Retrieve a service from the context.
             </summary>
             <param name="context">The context from which to resolve the service.</param>
+            <param name="parameters">Parameters for the service.</param>
             <param name="service">The service to resolve.</param>
-            <param name="instance">The resulting component instance providing the service, or null.</param>
             <returns>
-            True if a component providing the service is available.
+            The component instance that provides the service.
             </returns>
+            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.TryResolve(Autofac.IComponentContext,System.Type,System.Object@)">
+        <member name="M:Autofac.ResolutionExtensions.ResolveService(Autofac.IComponentContext,Autofac.Core.Service,Autofac.Core.Parameter[])">
             <summary>
-            Try to retrieve a service from the context.
+            Retrieve a service from the context.
             </summary>
             <param name="context">The context from which to resolve the service.</param>
-            <param name="serviceType">The service type to resolve.</param>
-            <param name="instance">The resulting component instance providing the service, or null.</param>
+            <param name="parameters">Parameters for the service.</param>
+            <param name="service">The service to resolve.</param>
             <returns>
-            True if a component providing the service is available.
+            The component instance that provides the service.
             </returns>
+            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
         <member name="M:Autofac.ResolutionExtensions.TryResolve``1(Autofac.IComponentContext,``0@)">
@@ -2068,13 +2096,12 @@
             </returns>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.TryResolveNamed(Autofac.IComponentContext,System.String,System.Type,System.Object@)">
+        <member name="M:Autofac.ResolutionExtensions.TryResolve(Autofac.IComponentContext,System.Type,System.Object@)">
             <summary>
             Try to retrieve a service from the context.
             </summary>
             <param name="context">The context from which to resolve the service.</param>
-            <param name="serviceName">The name of the service to resolve.</param>
-            <param name="serviceType">The type of the service to resolve.</param>
+            <param name="serviceType">The service type to resolve.</param>
             <param name="instance">The resulting component instance providing the service, or null.</param>
             <returns>
             True if a component providing the service is available.
@@ -2093,6 +2120,47 @@
             True if a component providing the service is available.
             </returns>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.TryResolveNamed(Autofac.IComponentContext,System.String,System.Type,System.Object@)">
+            <summary>
+            Try to retrieve a service from the context.
+            </summary>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="serviceName">The name of the service to resolve.</param>
+            <param name="serviceType">The type of the service to resolve.</param>
+            <param name="instance">The resulting component instance providing the service, or null.</param>
+            <returns>
+            True if a component providing the service is available.
+            </returns>
+            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.TryResolveService(Autofac.IComponentContext,Autofac.Core.Service,System.Object@)">
+            <summary>
+            Try to retrieve a service from the context.
+            </summary>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="service">The service to resolve.</param>
+            <param name="instance">The resulting component instance providing the service, or null.</param>
+            <returns>
+            True if a component providing the service is available.
+            </returns>
+            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.TryResolveService(Autofac.IComponentContext,Autofac.Core.Service,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter},System.Object@)">
+            <summary>
+            Try to retrieve a service from the context.
+            </summary>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="service">The service to resolve.</param>
+            <param name="instance">The resulting component instance providing the service, or null.</param>
+            <param name="parameters">The parameters.</param>
+            <returns>
+            True if a component providing the service is available.
+            </returns>
+            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="context" /> is <see langword="null" />.
+            </exception>
         </member>
         <member name="T:Autofac.TypedParameter">
             <summary>
