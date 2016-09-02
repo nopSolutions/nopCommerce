@@ -1,6 +1,5 @@
 using System.Linq;
 using FluentValidation;
-using Nop.Core;
 using Nop.Data;
 
 namespace Nop.Web.Framework.Validators
@@ -39,7 +38,7 @@ namespace Nop.Web.Framework.Validators
                 .Select(p => p.Name).ToArray();
 
             var maxLength = dbContext.GetColumnsMaxLength(dbObjectType.Name, names);
-            var expression = maxLength.Keys.ToDictionary(name => name, name => DynamicExpression.ParseLambda<T, string>(name, null));
+            var expression = maxLength.Keys.ToDictionary(name => name, name => Kendoui.DynamicExpression.ParseLambda<T, string>(name, null));
 
             foreach (var expr in expression)
             {

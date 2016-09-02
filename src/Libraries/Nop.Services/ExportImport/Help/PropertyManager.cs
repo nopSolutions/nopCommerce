@@ -84,12 +84,19 @@ namespace Nop.Services.ExportImport.Help
                 var cell = worksheet.Cells[row, prop.PropertyOrderPosition + cellOffset];
                 if (prop.IsDropDownCell)
                 {
+                    var dropDownElements = prop.GetDropDownElements();
+                    if (!dropDownElements.Any())
+                    {
+                        cell.Value = string.Empty;
+                        continue;
+                    }
+
                     var validator = cell.DataValidation.AddListDataValidation();
 
                     cell.Value = prop.GetItemText(prop.GetProperty(CurrentObject));
                     validator.AllowBlank = prop.AllowBlank;
 
-                    foreach (var enumItem in prop.GetDropDownElements())
+                    foreach (var enumItem in dropDownElements)
                     {
                         validator.Formula.Values.Add(enumItem);
                     }

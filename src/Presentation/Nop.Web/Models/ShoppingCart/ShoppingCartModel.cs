@@ -86,6 +86,8 @@ namespace Nop.Web.Models.ShoppingCart
 
             public bool AllowItemEditing { get; set; }
 
+            public bool DisableRemoval { get; set; }
+
             public IList<string> Warnings { get; set; }
 
         }

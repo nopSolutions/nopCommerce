@@ -1,0 +1,1935 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MaxMind.GeoIP2</name>
+    </assembly>
+    <members>
+        <member name="T:MaxMind.GeoIP2.DatabaseReader">
+            <summary>
+                Instances of this class provide a reader for the GeoIP2 database format
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.#ctor(System.String,MaxMind.Db.FileAccessMode)">
+            <summary>
+                Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.DatabaseReader" /> class.
+            </summary>
+            <param name="file">The MaxMind DB file.</param>
+            <param name="mode">The mode by which to access the DB file.</param>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.#ctor(System.String,System.Collections.Generic.IEnumerable{System.String},MaxMind.Db.FileAccessMode)">
+            <summary>
+                Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.DatabaseReader" /> class.
+            </summary>
+            <param name="file">The MaxMind DB file.</param>
+            <param name="locales">List of locale codes to use in name property from most preferred to least preferred.</param>
+            <param name="mode">The mode by which to access the DB file.</param>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.#ctor(System.IO.Stream)">
+            <summary>
+                Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.DatabaseReader" /> class.
+            </summary>
+            <param name="stream">A stream of the MaxMind DB file.</param>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.#ctor(System.IO.Stream,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.DatabaseReader" /> class.
+            </summary>
+            <param name="stream">A stream of the MaxMind DB file.</param>
+            <param name="locales">List of locale codes to use in name property from most preferred to least preferred.</param>
+        </member>
+        <member name="P:MaxMind.GeoIP2.DatabaseReader.Metadata">
+            <summary>
+                The metadata for the open MaxMind DB file.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.Dispose">
+            <summary>
+                Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.Dispose(System.Boolean)">
+            <summary>
+                Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.Country(System.Net.IPAddress)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.Country(System.String)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.TryCountry(System.Net.IPAddress,MaxMind.GeoIP2.Responses.CountryResponse@)">
+            <summary>
+                Tries to lookup a <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.TryCountry(System.String,MaxMind.GeoIP2.Responses.CountryResponse@)">
+            <summary>
+                Tries to lookup a <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.City(System.Net.IPAddress)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.City(System.String)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.TryCity(System.Net.IPAddress,MaxMind.GeoIP2.Responses.CityResponse@)">
+            <summary>
+                Tries to lookup a <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.TryCity(System.String,MaxMind.GeoIP2.Responses.CityResponse@)">
+            <summary>
+                Tries to lookup a <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.AnonymousIP(System.Net.IPAddress)">
+            <summary>
+                Look up an IP address in a GeoIP2 Anonymous IP.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.AnonymousIPResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.AnonymousIP(System.String)">
+            <summary>
+                Look up an IP address in a GeoIP2 Anonymous IP.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.AnonymousIPResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.TryAnonymousIP(System.Net.IPAddress,MaxMind.GeoIP2.Responses.AnonymousIPResponse@)">
+            <summary>
+                Tries to lookup an <see cref="T:MaxMind.GeoIP2.Responses.AnonymousIPResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.AnonymousIPResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.TryAnonymousIP(System.String,MaxMind.GeoIP2.Responses.AnonymousIPResponse@)">
+            <summary>
+                Tries to lookup an <see cref="T:MaxMind.GeoIP2.Responses.AnonymousIPResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.AnonymousIPResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.ConnectionType(System.Net.IPAddress)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.ConnectionTypeResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.ConnectionTypeResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.ConnectionType(System.String)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.ConnectionTypeResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.ConnectionTypeResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.TryConnectionType(System.Net.IPAddress,MaxMind.GeoIP2.Responses.ConnectionTypeResponse@)">
+            <summary>
+                Tries to lookup a <see cref="T:MaxMind.GeoIP2.Responses.ConnectionTypeResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.ConnectionTypeResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.TryConnectionType(System.String,MaxMind.GeoIP2.Responses.ConnectionTypeResponse@)">
+            <summary>
+                Tries to lookup a <see cref="T:MaxMind.GeoIP2.Responses.ConnectionTypeResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.ConnectionTypeResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.Domain(System.Net.IPAddress)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.DomainResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.DomainResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.Domain(System.String)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.DomainResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.DomainResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.TryDomain(System.Net.IPAddress,MaxMind.GeoIP2.Responses.DomainResponse@)">
+            <summary>
+                Tries to lookup a <see cref="T:MaxMind.GeoIP2.Responses.DomainResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.DomainResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.TryDomain(System.String,MaxMind.GeoIP2.Responses.DomainResponse@)">
+            <summary>
+                Tries to lookup a <see cref="T:MaxMind.GeoIP2.Responses.DomainResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.DomainResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.Enterprise(System.Net.IPAddress)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.EnterpriseResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.EnterpriseResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.Enterprise(System.String)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.EnterpriseResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.EnterpriseResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.TryEnterprise(System.Net.IPAddress,MaxMind.GeoIP2.Responses.EnterpriseResponse@)">
+            <summary>
+                Tries to lookup a <see cref="T:MaxMind.GeoIP2.Responses.EnterpriseResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.EnterpriseResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.TryEnterprise(System.String,MaxMind.GeoIP2.Responses.EnterpriseResponse@)">
+            <summary>
+                Tries to lookup a <see cref="T:MaxMind.GeoIP2.Responses.EnterpriseResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.EnterpriseResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.Isp(System.Net.IPAddress)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.IspResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.IspResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.Isp(System.String)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.IspResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.IspResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.TryIsp(System.Net.IPAddress,MaxMind.GeoIP2.Responses.IspResponse@)">
+            <summary>
+                Tries to lookup an <see cref="T:MaxMind.GeoIP2.Responses.IspResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.IspResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.TryIsp(System.String,MaxMind.GeoIP2.Responses.IspResponse@)">
+            <summary>
+                Tries to lookup an <see cref="T:MaxMind.GeoIP2.Responses.IspResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.IspResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="T:MaxMind.GeoIP2.IGeoIP2DatabaseReader">
+            <summary>
+                Interface for database reader
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.AnonymousIP(System.Net.IPAddress)">
+            <summary>
+                Look up an IP address in a GeoIP2 Anonymous IP.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.AnonymousIPResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.AnonymousIP(System.String)">
+            <summary>
+                Look up an IP address in a GeoIP2 Anonymous IP.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.AnonymousIPResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.TryAnonymousIP(System.Net.IPAddress,MaxMind.GeoIP2.Responses.AnonymousIPResponse@)">
+            <summary>
+                Tries to lookup an <see cref="T:MaxMind.GeoIP2.Responses.AnonymousIPResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.AnonymousIPResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.TryAnonymousIP(System.String,MaxMind.GeoIP2.Responses.AnonymousIPResponse@)">
+            <summary>
+                Tries to lookup an <see cref="T:MaxMind.GeoIP2.Responses.AnonymousIPResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.AnonymousIPResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.TryCity(System.Net.IPAddress,MaxMind.GeoIP2.Responses.CityResponse@)">
+            <summary>
+                Tries to lookup a <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.TryCity(System.String,MaxMind.GeoIP2.Responses.CityResponse@)">
+            <summary>
+                Tries to lookup a <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.TryCountry(System.Net.IPAddress,MaxMind.GeoIP2.Responses.CountryResponse@)">
+            <summary>
+                Tries to lookup a <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.TryCountry(System.String,MaxMind.GeoIP2.Responses.CountryResponse@)">
+            <summary>
+                Tries to lookup a <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.ConnectionType(System.Net.IPAddress)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.ConnectionTypeResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.ConnectionTypeResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.ConnectionType(System.String)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.ConnectionTypeResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.ConnectionTypeResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.TryConnectionType(System.Net.IPAddress,MaxMind.GeoIP2.Responses.ConnectionTypeResponse@)">
+            <summary>
+                Tries to lookup a <see cref="T:MaxMind.GeoIP2.Responses.ConnectionTypeResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.ConnectionTypeResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.TryConnectionType(System.String,MaxMind.GeoIP2.Responses.ConnectionTypeResponse@)">
+            <summary>
+                Tries to lookup a <see cref="T:MaxMind.GeoIP2.Responses.ConnectionTypeResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.ConnectionTypeResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.Domain(System.Net.IPAddress)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.DomainResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.DomainResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.Domain(System.String)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.DomainResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.DomainResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.TryDomain(System.Net.IPAddress,MaxMind.GeoIP2.Responses.DomainResponse@)">
+            <summary>
+                Tries to lookup a <see cref="T:MaxMind.GeoIP2.Responses.DomainResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.DomainResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.TryDomain(System.String,MaxMind.GeoIP2.Responses.DomainResponse@)">
+            <summary>
+                Tries to lookup a <see cref="T:MaxMind.GeoIP2.Responses.DomainResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.DomainResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.Enterprise(System.Net.IPAddress)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.EnterpriseResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.EnterpriseResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.Enterprise(System.String)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.EnterpriseResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.EnterpriseResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.TryEnterprise(System.Net.IPAddress,MaxMind.GeoIP2.Responses.EnterpriseResponse@)">
+            <summary>
+                Tries to lookup a <see cref="T:MaxMind.GeoIP2.Responses.EnterpriseResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.EnterpriseResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.TryEnterprise(System.String,MaxMind.GeoIP2.Responses.EnterpriseResponse@)">
+            <summary>
+                Tries to lookup a <see cref="T:MaxMind.GeoIP2.Responses.EnterpriseResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.EnterpriseResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.Isp(System.Net.IPAddress)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.IspResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.IspResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.Isp(System.String)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.IspResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.IspResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.TryIsp(System.Net.IPAddress,MaxMind.GeoIP2.Responses.IspResponse@)">
+            <summary>
+                Tries to lookup an <see cref="T:MaxMind.GeoIP2.Responses.IspResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.IspResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.TryIsp(System.String,MaxMind.GeoIP2.Responses.IspResponse@)">
+            <summary>
+                Tries to lookup an <see cref="T:MaxMind.GeoIP2.Responses.IspResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <param name="response">The <see cref="T:MaxMind.GeoIP2.Responses.IspResponse" />.</param>
+            <returns>A <see cref="T:System.Boolean" /> describing whether the IP address was found.</returns>
+        </member>
+        <member name="T:MaxMind.GeoIP2.IGeoIP2Provider">
+            <summary>
+                This class provides the interface implemented by both <see cref="T:MaxMind.GeoIP2.DatabaseReader" />
+                and <see cref="T:MaxMind.GeoIP2.WebServiceClient" />.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2Provider.Country(System.String)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" /> for the specified ip address.
+            </summary>
+            <param name="ipAddress">The ip address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2Provider.Country(System.Net.IPAddress)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" /> for the specified ip address.
+            </summary>
+            <param name="ipAddress">The ip address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2Provider.City(System.String)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" /> for the specified ip address.
+            </summary>
+            <param name="ipAddress">The ip address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2Provider.City(System.Net.IPAddress)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" /> for the specified ip address.
+            </summary>
+            <param name="ipAddress">The ip address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" /></returns>
+        </member>
+        <member name="T:MaxMind.GeoIP2.IGeoIP2WebServicesClient">
+            <summary>
+                Interface for web-service client
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2WebServicesClient.Country">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" /> for the requesting IP address.
+            </summary>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2WebServicesClient.City">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" /> for the requesting IP address.
+            </summary>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2WebServicesClient.Insights(System.String)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.InsightsResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.InsightsResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2WebServicesClient.Insights(System.Net.IPAddress)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.InsightsResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.InsightsResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2WebServicesClient.Insights">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.InsightsResponse" /> for the requesting IP address.
+            </summary>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.InsightsResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2WebServicesClient.CountryAsync(System.String)">
+            <summary>
+                Asynchronously query the GeoIP2 Precision: Country web service for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>Task that produces an object modeling the Country response</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2WebServicesClient.CountryAsync(System.Net.IPAddress)">
+            <summary>
+                Asynchronously query the GeoIP2 Precision: Country web service for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>Task that produces an object modeling the Country response</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2WebServicesClient.CountryAsync">
+            <summary>
+                Asynchronously query the GeoIP2 Precision: Country web service for the requesting IP address.
+            </summary>
+            <returns>Task that produces an object modeling the Country response</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2WebServicesClient.CityAsync(System.String)">
+            <summary>
+                Asynchronously query the GeoIP2 Precision: City web service for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>Task that produces an object modeling the City response</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2WebServicesClient.CityAsync(System.Net.IPAddress)">
+            <summary>
+                Asynchronously query the GeoIP2 Precision: City web service for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>Task that produces an object modeling the City response</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2WebServicesClient.CityAsync">
+            <summary>
+                Asynchronously query the GeoIP2 Precision: City web service for the requesting IP address.
+            </summary>
+            <returns>Task that produces an object modeling the City response</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2WebServicesClient.InsightsAsync(System.String)">
+            <summary>
+                Asynchronously query the GeoIP2 Precision: Insights web service for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>Task that produces an object modeling the Insights response</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2WebServicesClient.InsightsAsync(System.Net.IPAddress)">
+            <summary>
+                Asynchronously query the GeoIP2 Precision: Insights web service for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>Task that produces an object modeling the Insights response</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.IGeoIP2WebServicesClient.InsightsAsync">
+            <summary>
+                Asynchronously query the GeoIP2 Precision: Insights web service for the requesting IP address.
+            </summary>
+            <returns>Task that produces an object modeling the Insights response</returns>
+        </member>
+        <member name="T:MaxMind.GeoIP2.WebServiceClient">
+            <summary>
+                <para>
+                    This class provides a client API for all the GeoIP2 Precision web service
+                    end points. The end points are Country, City, and Insights. Each end point
+                    returns a different set of data about an IP address, with Country returning
+                    the least data and Insights the most.
+                </para>
+                <para>
+                    Each web service end point is represented by a different model class
+                    which contains data about the IP address.
+                </para>
+                <para>
+                    If the web service does not return a particular piece of data for an IP
+                    address, the associated property is not populated.
+                </para>
+                <para>
+                    The web service may not return any information for an entire record, in which
+                    case all of the properties for that model class will be empty.
+                </para>
+                <para>
+                    Usage
+                </para>
+                <para>
+                    The basic API for this class is the same for all of the web service end
+                    points. First you create a web service object with your MaxMind
+                    userID and licenseKey, then you call the method corresponding
+                    to a specific end point, passing it the IP address you want to look up.
+                </para>
+                <para>
+                    If the request succeeds, the method call will return a model class for the
+                    end point you called. This model in turn contains multiple record classes,
+                    each of which represents part of the data returned by the web service.
+                </para>
+                <para>
+                    If the request fails, the client class throws an exception.
+                </para>
+                <para>
+                    Exceptions
+                </para>
+                <para>
+                    For details on the possible errors returned by the web service itself, see
+                    <a
+                        href="http://dev.maxmind.com/geoip2/geoip/web-services">
+                        the GeoIP2 web
+                        service documentation
+                    </a>
+                    .
+                </para>
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.#ctor(System.Int32,System.String,System.String,System.Int32)">
+            <summary>
+                Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.WebServiceClient" /> class.
+            </summary>
+            <param name="userId">Your MaxMind user ID.</param>
+            <param name="licenseKey">Your MaxMind license key.</param>
+            <param name="host">The host to use when accessing the service</param>
+            <param name="timeout">Timeout in milliseconds for connection to web service. The default is 3000.</param>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.#ctor(System.Int32,System.String,System.Collections.Generic.IEnumerable{System.String},System.String,System.Int32)">
+            <summary>
+                Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.WebServiceClient" /> class.
+            </summary>
+            <param name="userId">The user unique identifier.</param>
+            <param name="licenseKey">The license key.</param>
+            <param name="locales">List of locale codes to use in name property from most preferred to least preferred.</param>
+            <param name="host">The host to use when accessing the service</param>
+            <param name="timeout">Timeout in milliseconds for connection to web service. The default is 3000.</param>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.CountryAsync(System.String)">
+            <summary>
+                Asynchronously query the GeoIP2 Precision: Country web service for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>Task that produces an object modeling the Country response</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.CountryAsync(System.Net.IPAddress)">
+            <summary>
+                Asynchronously query the GeoIP2 Precision: Country web service for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>Task that produces an object modeling the Country response</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.CountryAsync">
+            <summary>
+                Asynchronously query the GeoIP2 Precision: Country web service for the requesting IP address.
+            </summary>
+            <returns>Task that produces an object modeling the Country response</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.CityAsync(System.String)">
+            <summary>
+                Asynchronously query the GeoIP2 Precision: City web service for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>Task that produces an object modeling the City response</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.CityAsync(System.Net.IPAddress)">
+            <summary>
+                Asynchronously query the GeoIP2 Precision: City web service for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>Task that produces an object modeling the City response</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.CityAsync">
+            <summary>
+                Asynchronously query the GeoIP2 Precision: City web service for the requesting IP address.
+            </summary>
+            <returns>Task that produces an object modeling the City response</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.InsightsAsync(System.String)">
+            <summary>
+                Asynchronously query the GeoIP2 Precision: Insights web service for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>Task that produces an object modeling the Insights response</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.InsightsAsync(System.Net.IPAddress)">
+            <summary>
+                Asynchronously query the GeoIP2 Precision: Insights web service for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>Task that produces an object modeling the Insights response</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.InsightsAsync">
+            <summary>
+                Asynchronously query the GeoIP2 Precision: Insights web service for the requesting IP address.
+            </summary>
+            <returns>Task that produces an object modeling the Insights response</returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.Country(System.Net.IPAddress)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.Country(System.String)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.Country">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" /> for the requesting IP address.
+            </summary>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.City(System.Net.IPAddress)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.City(System.String)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.City">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" /> for the requesting IP address.
+            </summary>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.Insights(System.Net.IPAddress)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.InsightsResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.InsightsResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.Insights(System.String)">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.InsightsResponse" /> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.InsightsResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.Insights">
+            <summary>
+                Returns an <see cref="T:MaxMind.GeoIP2.Responses.InsightsResponse" /> for the requesting IP address.
+            </summary>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.InsightsResponse" /></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.Dispose">
+            <summary>
+                Release resources back to the operating system.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.Dispose(System.Boolean)">
+            <summary>
+                Release resources back to the operating system.
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Exceptions.AddressNotFoundException">
+            <summary>
+                This exception is thrown when the IP address is not found in the database.
+                This generally means that the address was a private or reserved address.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.AddressNotFoundException.#ctor(System.String)">
+            <summary>
+                Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.Exceptions.AddressNotFoundException" /> class.
+            </summary>
+            <param name="message">A message explaining the cause of the error.</param>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.AddressNotFoundException.#ctor(System.String,System.Exception)">
+            <summary>
+                Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.Exceptions.AddressNotFoundException" /> class.
+            </summary>
+            <param name="message">A message explaining the cause of the error.</param>
+            <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.AddressNotFoundException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Constructor for deserialization.
+            </summary>
+            <param name="info">The SerializationInfo with data.</param>
+            <param name="context">The source for this deserialization.</param>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Exceptions.AuthenticationException">
+            <summary>
+                This exception is thrown when there is an authentication error.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.AuthenticationException.#ctor(System.String)">
+            <summary>
+                Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.Exceptions.AuthenticationException" /> class.
+            </summary>
+            <param name="message">A message explaining the cause of the error.</param>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.AuthenticationException.#ctor(System.String,System.Exception)">
+            <summary>
+                Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.Exceptions.AuthenticationException" /> class.
+            </summary>
+            <param name="message">A message explaining the cause of the error.</param>
+            <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.AuthenticationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Constructor for deserialization.
+            </summary>
+            <param name="info">The SerializationInfo with data.</param>
+            <param name="context">The source for this deserialization.</param>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Exceptions.GeoIP2Exception">
+            <summary>
+                This class represents a generic GeoIP2 error. All other exceptions thrown by
+                the GeoIP2 API subclass this exception
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.GeoIP2Exception.#ctor(System.String)">
+            <summary>
+                Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.Exceptions.GeoIP2Exception" /> class.
+            </summary>
+            <param name="message">A message that describes the error.</param>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.GeoIP2Exception.#ctor(System.String,System.Exception)">
+            <summary>
+                Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.Exceptions.GeoIP2Exception" /> class.
+            </summary>
+            <param name="message">A message that describes the error.</param>
+            <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.GeoIP2Exception.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Constructor for deserialization.
+            </summary>
+            <param name="info">The SerializationInfo with data.</param>
+            <param name="context">The source for this deserialization.</param>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Exceptions.HttpException">
+            <summary>
+                This class represents an HTTP transport error. This is not an error returned
+                by the web service itself. As such, it is a IOException instead of a
+                GeoIP2Exception.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.HttpException.#ctor(System.String,System.Net.HttpStatusCode,System.Uri)">
+            <summary>
+                Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.Exceptions.HttpException" /> class.
+            </summary>
+            <param name="message">A message describing the reason why the exception was thrown.</param>
+            <param name="httpStatus">The HTTP status of the response that caused the exception.</param>
+            <param name="uri">The URL queried.</param>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.HttpException.#ctor(System.String,System.Net.HttpStatusCode,System.Uri,System.Exception)">
+            <summary>
+                Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.Exceptions.HttpException" /> class.
+            </summary>
+            <param name="message">A message describing the reason why the exception was thrown.</param>
+            <param name="httpStatus">The HTTP status of the response that caused the exception.</param>
+            <param name="uri">The URL queried.</param>
+            <param name="innerException">The underlying exception that caused this one.</param>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.HttpException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Constructor for deserialization.
+            </summary>
+            <param name="info">The SerializationInfo with data.</param>
+            <param name="context">The source for this deserialization.</param>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Exceptions.HttpException.HttpStatus">
+            <summary>
+                The HTTP status code returned by the web service.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Exceptions.HttpException.Uri">
+            <summary>
+                The URI queried by the web service.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.HttpException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Populates a SerializationInfo with the data needed to serialize the target object.
+            </summary>
+            <param name="info">The SerializationInfo to populate with data.</param>
+            <param name="context">The destination (see StreamingContext) for this serialization.</param>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Exceptions.InvalidRequestException">
+            <summary>
+                This class represents a non-specific error returned by MaxMind's GeoIP2 web
+                service. This occurs when the web service is up and responding to requests,
+                but the request sent was invalid in some way.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.InvalidRequestException.#ctor(System.String,System.String,System.Uri)">
+            <summary>
+                Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.Exceptions.InvalidRequestException" /> class.
+            </summary>
+            <param name="message">A message explaining the cause of the error.</param>
+            <param name="code">The error code returned by the web service.</param>
+            <param name="uri">The URL queried.</param>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.InvalidRequestException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Constructor for deserialization.
+            </summary>
+            <param name="info">The SerializationInfo with data.</param>
+            <param name="context">The source for this deserialization.</param>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Exceptions.InvalidRequestException.Code">
+            <summary>
+                The error code returned by the web service.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Exceptions.InvalidRequestException.Uri">
+            <summary>
+                The URI queried by the web service.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.InvalidRequestException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Populates a SerializationInfo with the data needed to serialize the target object.
+            </summary>
+            <param name="info">The SerializationInfo to populate with data.</param>
+            <param name="context">The destination (see StreamingContext) for this serialization.</param>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Exceptions.OutOfQueriesException">
+            <summary>
+                This exception is thrown when your account does not have any queries remaining for the called service.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.OutOfQueriesException.#ctor(System.String)">
+            <summary>
+                Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.Exceptions.OutOfQueriesException" /> class.
+            </summary>
+            <param name="message">A message that describes the error.</param>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.OutOfQueriesException.#ctor(System.String,System.Exception)">
+            <summary>
+                Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.Exceptions.OutOfQueriesException" /> class.
+            </summary>
+            <param name="message">A message explaining the cause of the error.</param>
+            <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.OutOfQueriesException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Constructor for deserialization.
+            </summary>
+            <param name="info">The SerializationInfo with data.</param>
+            <param name="context">The source for this deserialization.</param>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Exceptions.PermissionRequiredException">
+            <summary>
+            This class represents an authentication error.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.PermissionRequiredException.#ctor(System.String)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="message">Exception message.</param>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.PermissionRequiredException.#ctor(System.String,System.Exception)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="message">Exception message.</param>
+            <param name="innerException">The underlying exception that caused this one.</param>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Model.City">
+            <summary>
+                City-level data associated with an IP address.
+            </summary>
+            <remarks>
+                Do not use any of the city names as a database or dictionary
+                key. Use the <see cred="GeoNameId" /> instead.
+            </remarks>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.City.#ctor">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.City.#ctor(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.City.#ctor(System.Nullable{System.Int32},System.Nullable{System.Int64},System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.City.Confidence">
+            <summary>
+                A value from 0-100 indicating MaxMind's confidence that the city
+                is correct. This value is only set when using the Insights
+                web service or the Enterprise database.
+            </summary>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Model.Continent">
+            <summary>
+                Contains data for the continent record associated with an IP address.
+                Do not use any of the continent names as a database or dictionary
+                key. Use the <see cred="GeoNameId" /> or <see cred="Code" />
+                instead.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Continent.#ctor">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Continent.#ctor(System.String,System.Nullable{System.Int32},System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Continent.#ctor(System.String,System.Nullable{System.Int64},System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Continent.Code">
+            <summary>
+                A two character continent code like "NA" (North America) or "OC"
+                (Oceania).
+            </summary>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Model.Country">
+            <summary>
+                Contains data for the country record associated with an IP address.
+                Do not use any of the country names as a database or dictionary
+                key. Use the <see cred="GeoNameId" /> or <see cred="IsoCode" />
+                instead.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Country.#ctor">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Country.#ctor(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Country.#ctor(System.Nullable{System.Int32},System.Nullable{System.Int64},System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Country.Confidence">
+            <summary>
+                A value from 0-100 indicating MaxMind's confidence that the country
+                is correct. This value is only set when using the Insights
+                web service or the Enterprise database.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Country.IsoCode">
+            <summary>
+                The
+                <a
+                    href="http://en.wikipedia.org/wiki/ISO_3166-1">
+                    two-character ISO
+                    3166-1 alpha code
+                </a>
+                for the country.
+            </summary>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Model.Location">
+            <summary>
+                Contains data for the location record associated with an IP address.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Location.#ctor">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Location.#ctor(System.Nullable{System.Int32},System.Nullable{System.Double},System.Nullable{System.Double},System.Nullable{System.Int32},System.String)">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Location.AccuracyRadius">
+            <summary>
+                The approximate accuracy radius in kilometers around the
+                latitude and longitude for the IP address. This is the radius
+                where we have a 67% confidence that the device using the IP
+                address resides within the circle centered at the latitude and
+                longitude with the provided radius.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Location.AverageIncome">
+            <summary>
+                The average income in US dollars associated with the IP address.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Location.HasCoordinates">
+            <summary>
+                Determines whether both the <see cref="P:MaxMind.GeoIP2.Model.Location.Latitude">Latitude</see>
+                and <see cref="P:MaxMind.GeoIP2.Model.Location.Longitude">Longitude</see> have values.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Location.Latitude">
+            <summary>
+                The approximate latitude of the location associated with the
+                IP address. This value is not precise and should not be used
+                to identify a particular address or household.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Location.Longitude">
+            <summary>
+                The approximate longitude of the location associated with the
+                IP address. This value is not precise and should not be used
+                to identify a particular address or household.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Location.MetroCode">
+            <summary>
+                The metro code of the location if the location is in the US.
+                MaxMind returns the same metro codes as the
+                <a href="https://developers.google.com/adwords/api/docs/appendix/cities-DMAregions">Google AdWords API</a>.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Location.PopulationDensity">
+            <summary>
+                The estimated number of people per square kilometer.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Location.TimeZone">
+            <summary>
+                The time zone associated with location, as specified by the
+                <a
+                    href="http://www.iana.org/time-zones">
+                    IANA Time Zone
+                    Database
+                </a>
+                , e.g., "America/New_York".
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Location.ToString">
+            <summary>
+                Returns a <see cref="T:System.String" /> that represents this instance.
+            </summary>
+            <returns>
+                A <see cref="T:System.String" /> that represents this instance.
+            </returns>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Model.MaxMind">
+            <summary>
+                Contains data related to your MaxMind account.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.MaxMind.#ctor">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.MaxMind.#ctor(System.Nullable{System.Int32})">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.MaxMind.QueriesRemaining">
+            <summary>
+                The number of remaining queried in your account for the web
+                service end point. This will be null when using a local
+                database.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.MaxMind.ToString">
+            <summary>
+                Returns a <see cref="T:System.String" /> that represents this instance.
+            </summary>
+            <returns>
+                A <see cref="T:System.String" /> that represents this instance.
+            </returns>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Model.NamedEntity">
+            <summary>
+                Abstract class for records with name maps.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.NamedEntity.#ctor(System.Nullable{System.Int32},System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.NamedEntity.Names">
+            <summary>
+                A <see cref="T:System.Collections.Generic.Dictionary`2" />
+                from locale codes to the name in that locale. Don't use any of
+                these names as a database or dictionary key. Use the
+                <see
+                    cred="GeoNameId" />
+                or relevant code instead.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.NamedEntity.GeoNameId">
+            <summary>
+                The GeoName ID for the city.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.NamedEntity.Locales">
+            <summary>
+                Gets or sets the locales specified by the user.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.NamedEntity.Name">
+            <summary>
+                The name of the city based on the locales list passed to the
+                <see cref="T:MaxMind.GeoIP2.WebServiceClient" /> constructor. Don't use any of
+                these names as a database or dictionary key. Use the
+                <see
+                    cred="GeoNameId" />
+                or relevant code instead.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.NamedEntity.ToString">
+            <summary>
+                Returns a <see cref="T:System.String" /> that represents this instance.
+            </summary>
+            <returns>
+                A <see cref="T:System.String" /> that represents this instance.
+            </returns>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Model.Postal">
+            <summary>
+                Contains data for the postal record associated with an IP address.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Postal.#ctor">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Postal.#ctor(System.String,System.Nullable{System.Int32})">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Postal.Code">
+            <summary>
+                The postal code of the location. Postal codes are not available
+                for all countries. In some countries, this will only contain part
+                of the postal code.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Postal.Confidence">
+            <summary>
+                A value from 0-100 indicating MaxMind's confidence that the
+                postal code is correct. This value is only set when using the
+                Insights web service or the Enterprise database.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Postal.ToString">
+            <summary>
+                Returns a <see cref="T:System.String" /> that represents this instance.
+            </summary>
+            <returns>
+                A <see cref="T:System.String" /> that represents this instance.
+            </returns>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Model.RepresentedCountry">
+            <summary>
+                Contains data for the represented country associated with an IP address.
+                This class contains the country-level data associated with an IP address for
+                the IP's represented country. The represented country is the country
+                represented by something like a military base.
+                Do not use any of the country names as a database or dictionary
+                key. Use the <see cred="GeoNameId" /> or <see cred="IsoCode" />
+                instead.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.RepresentedCountry.#ctor">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.RepresentedCountry.#ctor(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.RepresentedCountry.#ctor(System.String,System.Nullable{System.Int32},System.Nullable{System.Int64},System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.RepresentedCountry.Type">
+            <summary>
+                A string indicating the type of entity that is representing the
+                country. Currently we only return <c>military</c> but this could
+                expand to include other types in the future.
+            </summary>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Model.Subdivision">
+            <summary>
+                Contains data for the subdivisions associated with an IP address.
+                Do not use any of the subdivision names as a database or dictionary
+                key. Use the <see cred="GeoNameId" /> or <see cred="IsoCode" />
+                instead.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Subdivision.#ctor">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Subdivision.#ctor(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Subdivision.#ctor(System.Nullable{System.Int32},System.Nullable{System.Int64},System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Subdivision.Confidence">
+            <summary>
+                This is a value from 0-100 indicating MaxMind's confidence that
+                the subdivision is correct. This value is only set when using the
+                Insights web service or the Enterprise database.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Subdivision.IsoCode">
+            <summary>
+                This is a string up to three characters long contain the
+                subdivision portion of the
+                <a
+                    href="http://en.wikipedia.org/wiki/ISO_3166-2 ISO 3166-2">
+                    code
+                </a>
+                .
+            </summary>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Model.Traits">
+            <summary>
+                Contains data for the traits record associated with an IP address.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Traits.#ctor">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Traits.#ctor(System.Nullable{System.Int64},System.String,System.String,System.String,System.String,System.Boolean,System.Boolean,System.Boolean,System.String,System.String,System.String)">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Traits.AutonomousSystemNumber">
+            <summary>
+                The
+                <a
+                    href="http://en.wikipedia.org/wiki/Autonomous_system_(Internet)">
+                    autonomous system number
+                </a>
+                associated with the IP address.
+                This value is only set when using the City or Insights web
+                service or the Enterprise database.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Traits.AutonomousSystemOrganization">
+            <summary>
+                The organization associated with the registered
+                <a
+                    href="http://en.wikipedia.org/wiki/Autonomous_system_(Internet)">
+                    autonomous system number
+                </a>
+                for the IP address. This value is only set when using the City or
+                Insights web service or the Enterprise database.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Traits.ConnectionType">
+            <summary>
+                The connection type of the IP address. This value is only set when
+                using the Enterprise database.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Traits.Domain">
+            <summary>
+                The second level domain associated with the IP address. This will
+                be something like "example.com" or "example.co.uk", not
+                "foo.example.com". This value is only set when using the City or
+                Insights web service or the Enterprise database.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Traits.IPAddress">
+            <summary>
+                The IP address that the data in the model is for. If you
+                performed a "me" lookup against the web service, this will be the
+                externally routable IP address for the system the code is running
+                on. If the system is behind a NAT, this may differ from the IP
+                address locally assigned to it.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Traits.IsAnonymousProxy">
+            <summary>
+                This is true if the IP is an anonymous proxy. See
+                <a href="http://dev.maxmind.com/faq/geoip#anonproxy">
+                    MaxMind's GeoIP
+                    FAQ
+                </a>
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Traits.IsLegitimateProxy">
+            <summary>
+                True if MaxMind believes this IP address to be a legitimate
+                proxy, such as an internal VPN used by a corporation.This is only
+                available in the GeoIP2 Enterprise database.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Traits.IsSatelliteProvider">
+            <summary>
+                This is true if the IP belong to a satellite Internet provider.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Traits.Isp">
+            <summary>
+                The name of the ISP associated with the IP address. This value
+                is only set when using the City or Insights web service or the
+                Enterprise database.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Traits.Organization">
+            <summary>
+                The name of the organization associated with the IP address. This
+                value is only set when using the City or Insights web service or the
+                Enterprise database.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Traits.UserType">
+            <summary>
+                The user type associated with the IP address. This can be one of
+                the following values:
+                <list type="bullet">
+                    <item>
+                        <description>business</description>
+                    </item>
+                    <item>
+                        <description>cafe</description>
+                    </item>
+                    <item>
+                        <description>cellular</description>
+                    </item>
+                    <item>
+                        <description>college</description>
+                    </item>
+                    <item>
+                        <description>content_delivery_network</description>
+                    </item>
+                    <item>
+                        <description>dialup</description>
+                    </item>
+                    <item>
+                        <description>government</description>
+                    </item>
+                    <item>
+                        <description>hosting</description>
+                    </item>
+                    <item>
+                        <description>library</description>
+                    </item>
+                    <item>
+                        <description>military</description>
+                    </item>
+                    <item>
+                        <description>residential</description>
+                    </item>
+                    <item>
+                        <description>router</description>
+                    </item>
+                    <item>
+                        <description>school</description>
+                    </item>
+                    <item>
+                        <description>search_engine_spider</description>
+                    </item>
+                    <item>
+                        <description>traveler</description>
+                    </item>
+                </list>
+                This value is only set when using the City or Insights web service
+                or the Enterprise database.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Traits.ToString">
+            <summary>
+                Returns a <see cref="T:System.String" /> that represents this instance.
+            </summary>
+            <returns>
+                A <see cref="T:System.String" /> that represents this instance.
+            </returns>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Model.WebServiceError">
+            <summary>
+                Contains data about an error that occurred while calling the web service
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.WebServiceError.Error">
+            <summary>
+                Gets or sets the error.
+            </summary>
+            <value>
+                The error message returned by the service.
+            </value>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.WebServiceError.Code">
+            <summary>
+                Gets or sets the code.
+            </summary>
+            <value>
+                The error code returned by the service.
+            </value>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Responses.AbstractCityResponse">
+            <summary>
+                Abstract class that city-level response.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.AbstractCityResponse.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.Responses.AbstractCityResponse" /> class.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.AbstractCityResponse.#ctor(MaxMind.GeoIP2.Model.City,MaxMind.GeoIP2.Model.Continent,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.Location,MaxMind.GeoIP2.Model.MaxMind,MaxMind.GeoIP2.Model.Postal,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.RepresentedCountry,System.Collections.Generic.IEnumerable{MaxMind.GeoIP2.Model.Subdivision},MaxMind.GeoIP2.Model.Traits)">
+            <summary>
+                Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.Responses.AbstractCityResponse" /> class.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AbstractCityResponse.City">
+            <summary>
+                Gets the city for the requested IP address.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AbstractCityResponse.Location">
+            <summary>
+                Gets the location for the requested IP address.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AbstractCityResponse.Postal">
+            <summary>
+                Gets the postal object for the requested IP address.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AbstractCityResponse.Subdivisions">
+            <summary>
+                An <see cref="T:System.Collections.Generic.List`1" /> of <see cref="T:MaxMind.GeoIP2.Model.Subdivision" /> objects representing
+                the country subdivisions for the requested IP address. The number
+                and type of subdivisions varies by country, but a subdivision is
+                typically a state, province, county, etc. Subdivisions are
+                ordered from most general (largest) to most specific (smallest).
+                If the response did not contain any subdivisions, this method
+                returns an empty array.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AbstractCityResponse.MostSpecificSubdivision">
+            <summary>
+                An object representing the most specific subdivision returned. If
+                the response did not contain any subdivisions, this method
+                returns an empty <see cref="T:MaxMind.GeoIP2.Model.Subdivision" /> object.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.AbstractCityResponse.ToString">
+            <summary>
+                Returns a <see cref="T:System.String" /> that represents this instance.
+            </summary>
+            <returns>
+                A <see cref="T:System.String" /> that represents this instance.
+            </returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.AbstractCityResponse.SetLocales(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                Sets the locales on all the NamedEntity properties.
+            </summary>
+            <param name="locales">The locales specified by the user.</param>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Responses.AbstractCountryResponse">
+            <summary>
+                Abstract class for country-level response.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.AbstractCountryResponse.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.Responses.AbstractCountryResponse" /> class.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.AbstractCountryResponse.#ctor(MaxMind.GeoIP2.Model.Continent,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.MaxMind,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.RepresentedCountry,MaxMind.GeoIP2.Model.Traits)">
+            <summary>
+                Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.Responses.AbstractCountryResponse" /> class.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AbstractCountryResponse.Continent">
+            <summary>
+                Gets the continent for the requested IP address.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AbstractCountryResponse.Country">
+            <summary>
+                Gets the country for the requested IP address. This
+                object represents the country where MaxMind believes
+                the end user is located
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AbstractCountryResponse.MaxMind">
+            <summary>
+                Gets the MaxMind record containing data related to your account
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AbstractCountryResponse.RegisteredCountry">
+            <summary>
+                Registered country record for the requested IP address. This
+                record represents the country where the ISP has registered a
+                given IP block and may differ from the user's country.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AbstractCountryResponse.RepresentedCountry">
+            <summary>
+                Represented country record for the requested IP address. The
+                represented country is used for things like military bases or
+                embassies. It is only present when the represented country
+                differs from the country.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AbstractCountryResponse.Traits">
+            <summary>
+                Gets the traits for the requested IP address.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.AbstractCountryResponse.ToString">
+            <summary>
+                Returns a <see cref="T:System.String" /> that represents this instance.
+            </summary>
+            <returns>
+                A <see cref="T:System.String" /> that represents this instance.
+            </returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.AbstractCountryResponse.SetLocales(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                Sets the locales on all the NamedEntity properties.
+            </summary>
+            <param name="locales">The locales specified by the user.</param>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Responses.AbstractResponse">
+            <summary>
+                Abstract class that represents a generic response.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.AbstractResponse.SetLocales(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                This is simplify the database API. Also, we may need to use the locales in the future.
+            </summary>
+            <param name="locales"></param>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Responses.AnonymousIPResponse">
+            <summary>
+                This class represents the GeoIP2 Anonymous IP response.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.AnonymousIPResponse.#ctor">
+            <summary>
+            Construct AnonymousIPResponse model
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.AnonymousIPResponse.#ctor(System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.String)">
+            <summary>
+            Construct AnonymousIPResponse model
+            </summary>
+            <param name="isAnonymous"></param>
+            <param name="isAnonymousVpn"></param>
+            <param name="isHostingProvider"></param>
+            <param name="isPublicProxy"></param>
+            <param name="isTorExitNode"></param>
+            <param name="ipAddress"></param>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AnonymousIPResponse.IsAnonymous">
+            <summary>
+                Returns true if the IP address belongs to any sort of anonymous network.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AnonymousIPResponse.IsAnonymousVpn">
+            <summary>
+                Returns true if the IP address belongs to an anonymous VPN system.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AnonymousIPResponse.IsHostingProvider">
+            <summary>
+                Returns true if the IP address belongs to a hosting provider.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AnonymousIPResponse.IsPublicProxy">
+            <summary>
+                Returns true if the IP address belongs to a public proxy.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AnonymousIPResponse.IsTorExitNode">
+            <summary>
+                Returns true if IP is a Tor exit node.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AnonymousIPResponse.IPAddress">
+            <summary>
+                The IP address that the data in the model is for. If you
+                performed a "me" lookup against the web service, this will be the
+                externally routable IP address for the system the code is running
+                on. If the system is behind a NAT, this may differ from the IP
+                address locally assigned to it.
+            </summary>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Responses.CityResponse">
+            <summary>
+                This class provides a model for the data returned by GeoIP2 Precision: City and GeoIP2 City.
+                The only difference between the City and Insights response classes is
+                which fields in each record may be populated.
+                <a href="http://dev.maxmind.com/geoip/geoip2/web-services">
+                    GeoIP2 Web
+                    Services
+                </a>
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.CityResponse.#ctor">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.CityResponse.#ctor(MaxMind.GeoIP2.Model.City,MaxMind.GeoIP2.Model.Continent,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.Location,MaxMind.GeoIP2.Model.MaxMind,MaxMind.GeoIP2.Model.Postal,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.RepresentedCountry,System.Collections.Generic.IEnumerable{MaxMind.GeoIP2.Model.Subdivision},MaxMind.GeoIP2.Model.Traits)">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Responses.ConnectionTypeResponse">
+            <summary>
+                This class represents the GeoIP2 Connection-Type response.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.ConnectionTypeResponse.#ctor">
+            <summary>
+                Construct ConnectionTypeResponse model
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.ConnectionTypeResponse.#ctor(System.String,System.String)">
+            <summary>
+                Construct ConnectionTypeResponse model
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.ConnectionTypeResponse.ConnectionType">
+            <summary>
+                The connection type of the IP address.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.ConnectionTypeResponse.IPAddress">
+            <summary>
+                The IP address that the data in the model is for. If you
+                performed a "me" lookup against the web service, this will be the
+                externally routable IP address for the system the code is running
+                on. If the system is behind a NAT, this may differ from the IP
+                address locally assigned to it.
+            </summary>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Responses.CountryResponse">
+            <summary>
+                This class provides a model for the data returned by the GeoIP2 Precision: Country and GeoIP2 Country.
+                The only difference between the City and Insights response classes is
+                which fields in each record may be populated.
+                See
+                <a href="http://dev.maxmind.com/geoip/geoip2/web-services">
+                    GeoIP2 Web
+                    Services
+                </a>
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.CountryResponse.#ctor">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.CountryResponse.#ctor(MaxMind.GeoIP2.Model.Continent,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.MaxMind,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.RepresentedCountry,MaxMind.GeoIP2.Model.Traits)">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Responses.DomainResponse">
+            <summary>
+                This class represents the GeoIP2 Domain response.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.DomainResponse.#ctor">
+            <summary>
+            Construct a DomainResponse model object.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.DomainResponse.#ctor(System.String,System.String)">
+            <summary>
+            Construct a DomainResponse model object.
+            </summary>
+            <param name="domain"></param>
+            <param name="ipAddress"></param>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.DomainResponse.Domain">
+            <summary>
+                The second level domain associated with the IP address. This will
+                be something like "example.com" or "example.co.uk", not
+                "foo.example.com".
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.DomainResponse.IPAddress">
+            <summary>
+                The IP address that the data in the model is for. If you
+                performed a "me" lookup against the web service, this will be the
+                externally routable IP address for the system the code is running
+                on. If the system is behind a NAT, this may differ from the IP
+                address locally assigned to it.
+            </summary>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Responses.EnterpriseResponse">
+            <summary>
+                This class provides a model for the data returned by the GeoIP2 Precision:
+                Insights end point.
+                The only difference between the City and Insights response classes is
+                which fields in each record may be populated.
+                <a href="http://dev.maxmind.com/geoip/geoip2/web-services">
+                    GeoIP2 Web
+                    Services
+                </a>
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.EnterpriseResponse.#ctor(MaxMind.GeoIP2.Model.City,MaxMind.GeoIP2.Model.Continent,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.Location,MaxMind.GeoIP2.Model.MaxMind,MaxMind.GeoIP2.Model.Postal,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.RepresentedCountry,System.Collections.Generic.IEnumerable{MaxMind.GeoIP2.Model.Subdivision},MaxMind.GeoIP2.Model.Traits)">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Responses.InsightsResponse">
+            <summary>
+                This class provides a model for the data returned by the GeoIP2 Precision:
+                Insights end point.
+                The only difference between the City and Insights response classes is
+                which fields in each record may be populated.
+                <a href="http://dev.maxmind.com/geoip/geoip2/web-services">
+                    GeoIP2 Web
+                    Services
+                </a>
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.InsightsResponse.#ctor">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.InsightsResponse.#ctor(MaxMind.GeoIP2.Model.City,MaxMind.GeoIP2.Model.Continent,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.Location,MaxMind.GeoIP2.Model.MaxMind,MaxMind.GeoIP2.Model.Postal,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.RepresentedCountry,System.Collections.Generic.IEnumerable{MaxMind.GeoIP2.Model.Subdivision},MaxMind.GeoIP2.Model.Traits)">
+            <summary>
+                Constructor
+            </summary>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Responses.IspResponse">
+            <summary>
+                This class represents the GeoIP2 ISP response.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.IspResponse.#ctor">
+            <summary>
+                Construct an IspResponse model.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.IspResponse.#ctor(System.Nullable{System.Int64},System.String,System.String,System.String,System.String)">
+            <summary>
+                Construct an IspResponse model.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.IspResponse.AutonomousSystemNumber">
+            <summary>
+                The
+                <a
+                    href="http://en.wikipedia.org/wiki/Autonomous_system_(Internet)">
+                    autonomous system number
+                </a>
+                associated with the IP address.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.IspResponse.AutonomousSystemOrganization">
+            <summary>
+                The organization associated with the registered
+                <a
+                    href="http://en.wikipedia.org/wiki/Autonomous_system_(Internet)">
+                    autonomous system number
+                </a>
+                for the IP address.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.IspResponse.Isp">
+            <summary>
+                The name of the ISP associated with the IP address.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.IspResponse.Organization">
+            <summary>
+                The name of the organization associated with the IP address.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.IspResponse.IPAddress">
+            <summary>
+                The IP address that the data in the model is for. If you
+                performed a "me" lookup against the web service, this will be the
+                externally routable IP address for the system the code is running
+                on. If the system is behind a NAT, this may differ from the IP
+                address locally assigned to it.
+            </summary>
+        </member>
+    </members>
+</doc>

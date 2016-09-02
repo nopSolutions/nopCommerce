@@ -822,7 +822,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("FullDescription", p => p.FullDescription),
                 new PropertyByName<Product>("Vendor", p => p.VendorId, IgnoreExportPoductProperty(p => p.Vendor))
                 {
-                    DropDownElements = _vendorService.GetAllVendors().Select(v => v as BaseEntity).ToSelectList(p => (p as Vendor).Return(v => v.Name, String.Empty)),
+                    DropDownElements = _vendorService.GetAllVendors(showHidden:true).Select(v => v as BaseEntity).ToSelectList(p => (p as Vendor).Return(v => v.Name, String.Empty)),
                     AllowBlank = true
                 },
                 new PropertyByName<Product>("ProductTemplate", p => p.ProductTemplateId, IgnoreExportPoductProperty(p => p.ProductTemplate))

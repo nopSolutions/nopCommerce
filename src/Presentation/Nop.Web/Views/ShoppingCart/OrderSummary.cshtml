@@ -87,8 +87,15 @@
                            @if (Model.IsEditable)
                            {
                                <td class="remove-from-cart">
-                                   <label class="td-title">@T("ShoppingCart.Remove"):</label>
-                                   <input type="checkbox" name="removefromcart" value="@(item.Id)" />
+                                   @if (item.DisableRemoval)
+                                   {
+                                       <text>&nbsp;</text>
+                                    }
+                                    else
+                                    {
+                                       <label class="td-title">@T("ShoppingCart.Remove"):</label>
+                                       <input type="checkbox" name="removefromcart" value="@(item.Id)" />
+                                   }
                                </td>
                            }
                            @if (Model.ShowSku)
