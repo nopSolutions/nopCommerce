@@ -255,12 +255,12 @@
                        </div>
                        <div class="terms-of-service">
                            <input id="termsofservice" type="checkbox" name="termsofservice"/>
-                           <span>
-                                @T("Checkout.TermsOfService.IAccept")
+                           <label for="termsofservice">
+                               @T("Checkout.TermsOfService.IAccept")
                                <a class="read" id="read-terms">
-                                    @T("Checkout.TermsOfService.Read")
-                                </a>
-                            </span>
+                                   @T("Checkout.TermsOfService.Read")
+                               </a>
+                           </label>
                            <script>
                                $(document).ready(function() {
                                    $('#read-terms').on('click', function(e) {
