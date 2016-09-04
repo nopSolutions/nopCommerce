@@ -4345,7 +4345,7 @@
     <Value>Payment</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions">
-    <Value>Payment method restrictions</Value>
+    <Value>Payment restrictions</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions.Country">
     <Value>Country</Value>

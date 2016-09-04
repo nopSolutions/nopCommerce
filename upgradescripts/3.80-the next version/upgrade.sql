@@ -32,6 +32,9 @@ set @resources='
   <LocaleResource Name="Admin.System.ScheduleTasks.24days">
     <Value>Task period should not exceed 24 days.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions">
+    <Value>Payment restrictions</Value>
+  </LocaleResource>
 </Language>
 '
 
