@@ -1242,6 +1242,7 @@
 		**\*.csproj;
 		**\*.csproj.user;
 		Administration\bin\**;
+		Administration\db_backups\*.bak;
 		App_Data\InstalledPlugins.txt;
 		App_Data\Settings.txt;
 		App_Data\Nop.Db.sdf;
