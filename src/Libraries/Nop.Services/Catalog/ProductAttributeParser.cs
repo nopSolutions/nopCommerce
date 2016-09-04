@@ -74,6 +74,9 @@ namespace Nop.Services.Catalog
         public virtual IList<ProductAttributeMapping> ParseProductAttributeMappings(string attributesXml)
         {
             var result = new List<ProductAttributeMapping>();
+            if (String.IsNullOrEmpty(attributesXml))
+                return result;
+
             var ids = ParseProductAttributeMappingIds(attributesXml);
             foreach (int id in ids)
             {
@@ -94,6 +97,9 @@ namespace Nop.Services.Catalog
         public virtual IList<ProductAttributeValue> ParseProductAttributeValues(string attributesXml)
         {
             var values = new List<ProductAttributeValue>();
+            if (String.IsNullOrEmpty(attributesXml))
+                return values;
+
             var attributes = ParseProductAttributeMappings(attributesXml);
             foreach (var attribute in attributes)
             {
@@ -127,6 +133,9 @@ namespace Nop.Services.Catalog
         public virtual IList<string> ParseValues(string attributesXml, int productAttributeMappingId)
         {
             var selectedValues = new List<string>();
+            if (String.IsNullOrEmpty(attributesXml))
+                return selectedValues;
+
             try
             {
                 var xmlDoc = new XmlDocument();
