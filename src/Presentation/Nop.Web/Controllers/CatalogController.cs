@@ -1461,6 +1461,7 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
+        [ValidateInput(false)]
         public ActionResult SearchTermAutoComplete(string term)
         {
             if (String.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
