@@ -1336,8 +1336,22 @@ namespace Nop.Web.Controllers
             }
 
             IPagedList<Product> products = new PagedList<Product>(new List<Product>(), 0, 1);
-            // only search if query string search keyword is set (used to avoid searching or displaying search term min length error message on /search page load)
-            if (Request.Params["q"] != null)
+            var isSearchTermSpecified = false;
+            try
+            {
+                // only search if query string search keyword is set (used to avoid searching or displaying search term min length error message on /search page load)
+                isSearchTermSpecified = Request.Params["q"] != null;
+            }
+            catch
+            {
+                //the "	A potentially dangerous Request.QueryString value was detected from the client " exception could be thrown here when some wrong char is specified (e.g. <)
+                //although we [ValidateInput(false)] attribute here we try to access "Request.Params" directly
+                //that's why we do not re-throw it
+
+                //just ensure that some search term is specified (0 length is not supported inthis case)
+                isSearchTermSpecified = !String.IsNullOrEmpty(searchTerms);
+            }
+            if (isSearchTermSpecified)
             {
                 if (searchTerms.Length < _catalogSettings.ProductSearchTermMinimumLength)
                 {
