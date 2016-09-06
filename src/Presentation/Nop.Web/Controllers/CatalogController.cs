@@ -421,19 +421,18 @@ namespace Nop.Web.Controllers
             if (category == null || category.Deleted)
                 return InvokeHttp404();
 
-            //Check whether the current user has a "Manage catalog" permission
-            //It allows him to preview a category before publishing
-            if (!category.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            var notAvailable =
+                //published?
+                !category.Published ||
+                //ACL (access control list) 
+                !_aclService.Authorize(category) ||
+                //Store mapping
+                !_storeMappingService.Authorize(category);
+            //Check whether the current user has a "Manage categories" permission (usually a store owner)
+            //We should allows him (her) to use "Preview" functionality
+            if (notAvailable && !_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return InvokeHttp404();
 
-            //ACL (access control list)
-            if (!_aclService.Authorize(category))
-                return InvokeHttp404();
-
-            //Store mapping
-            if (!_storeMappingService.Authorize(category))
-                return InvokeHttp404();
-            
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
                 SystemCustomerAttributeNames.LastContinueShoppingPage, 
@@ -759,19 +758,18 @@ namespace Nop.Web.Controllers
             if (manufacturer == null || manufacturer.Deleted)
                 return InvokeHttp404();
 
-            //Check whether the current user has a "Manage catalog" permission
-            //It allows him to preview a manufacturer before publishing
-            if (!manufacturer.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            var notAvailable =
+                //published?
+                !manufacturer.Published ||
+                //ACL (access control list) 
+                !_aclService.Authorize(manufacturer) ||
+                //Store mapping
+                !_storeMappingService.Authorize(manufacturer);
+            //Check whether the current user has a "Manage categories" permission (usually a store owner)
+            //We should allows him (her) to use "Preview" functionality
+            if (notAvailable && !_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return InvokeHttp404();
 
-            //ACL (access control list)
-            if (!_aclService.Authorize(manufacturer))
-                return InvokeHttp404();
-
-            //Store mapping
-            if (!_storeMappingService.Authorize(manufacturer))
-                return InvokeHttp404();
-            
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
                 SystemCustomerAttributeNames.LastContinueShoppingPage, 
