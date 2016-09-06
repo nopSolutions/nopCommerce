@@ -2,7 +2,7 @@
 FriendlyName: Customer had spent x.xx amount
 SystemName: DiscountRequirement.HadSpentAmount
 Version: 1.15
-SupportedVersions: 3.80
+SupportedVersions: 3.90
 Author: nopCommerce team
 DisplayOrder: 1
 FileName: Nop.Plugin.DiscountRules.HadSpentAmount.dll
