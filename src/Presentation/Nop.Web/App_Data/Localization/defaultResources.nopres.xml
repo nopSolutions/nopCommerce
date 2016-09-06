@@ -3810,6 +3810,9 @@
   <LocaleResource Name="Admin.Configuration.Countries.ImportFromCsv">
     <Value>Import states from CSV</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Countries.ImportTip">
+    <Value>You can download a CSV file with a list of states for other countries on the following page:</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Countries.ImportSuccess">
     <Value>{0} states have been successfully imported</Value>
   </LocaleResource>

@@ -38,6 +38,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.Vendor.Hint">
     <Value>Choose a vendor associated with this product. This can be useful when running a multi-vendor store to keep track of goods associated with vendor.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Countries.ImportTip">
+    <Value>You can download a CSV file with a list of states for other countries on the following page:</Value>
+  </LocaleResource>
 </Language>
 '
 
