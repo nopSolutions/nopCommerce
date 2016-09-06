@@ -35,6 +35,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions">
     <Value>Payment restrictions</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Vendor.Hint">
+    <Value>Choose a vendor associated with this product. This can be useful when running a multi-vendor store to keep track of goods associated with vendor.</Value>
+  </LocaleResource>
 </Language>
 '
 

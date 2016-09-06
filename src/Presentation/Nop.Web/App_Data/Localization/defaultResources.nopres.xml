@@ -2893,7 +2893,7 @@
     <Value>Vendor</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Vendor.Hint">
-    <Value>Choose the vendor. You can manage vendors by selecting Customers > Vendors.</Value>
+    <Value>Choose a vendor associated with this product. This can be useful when running a multi-vendor store to keep track of goods associated with vendor.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Vendor.None">
     <Value>No vendor</Value>
