@@ -2,11 +2,10 @@
     Layout = "";
 }
 @model Nop.Plugin.Payments.PurchaseOrder.Models.PaymentInfoModel
-@using Nop.Web.Framework;
 <table width="100%" cellspacing="2" cellpadding="1" border="0">
     <tr>
         <td width="100px">
-            @Html.NopLabelFor(model => model.PurchaseOrderNumber, false):
+            @Html.LabelFor(model => model.PurchaseOrderNumber, false):
         </td>
         <td>
             @Html.TextBoxFor(model => model.PurchaseOrderNumber, new { style = "Width: 165px;", autocomplete = "off" })

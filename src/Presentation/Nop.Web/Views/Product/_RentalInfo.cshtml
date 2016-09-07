@@ -2,7 +2,6 @@
 @using System.Globalization
 @using Nop.Core.Domain.Catalog
 @using Nop.Core.Infrastructure
-@using Nop.Services.Security
 @using Nop.Web.Models.Catalog
 @if (Model.IsRental)
 {
@@ -23,7 +22,7 @@
                     <span class="required">*</span>
                 </div>
                 <div class="attribute-data">
-                    <input id="@(startDateControlId)" name="@(startDateControlId)" type="text" class="datepicker" value="@(Model.RentalStartDate.HasValue ? Model.RentalStartDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" />
+                    <input id="@(startDateControlId)" name="@(startDateControlId)" type="text" class="datepicker" value="@(Model.RentalStartDate.HasValue ? Model.RentalStartDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" @if(Request.Browser.IsMobileDevice){<text>readonly</text>}/>
                     <script>
                         $(document).ready(function () {
                             $("#@(startDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: onRentalDatePickerSelect });
@@ -39,7 +38,7 @@
                     <span class="required">*</span>
                 </div>
                 <div class="attribute-data">
-                    <input id="@(endDateControlId)" name="@(endDateControlId)" type="text" class="datepicker" value="@(Model.RentalEndDate.HasValue ? Model.RentalEndDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" />
+                    <input id="@(endDateControlId)" name="@(endDateControlId)" type="text" class="datepicker" value="@(Model.RentalEndDate.HasValue ? Model.RentalEndDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" @if(Request.Browser.IsMobileDevice){<text>readonly</text>}/>
                     <script>
                         $(document).ready(function () {
                             $("#@(endDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: onRentalDatePickerSelect });
@@ -53,14 +52,13 @@
             function onRentalDatePickerSelect() {
                 @{
                     //almost the same implementation is used in the \Views\Product\_ProductAttributes.cshtml file
-                    var dynamicPriceUpdate = EngineContext.Current.Resolve<CatalogSettings>().AjaxProcessAttributeChange;
                     var productId = Model.Id;
-                    if (dynamicPriceUpdate)
+                    if (EngineContext.Current.Resolve<CatalogSettings>().AjaxProcessAttributeChange)
                     {
                         <text>
                         $.ajax({
                             cache: false,
-                            url: '@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new {productId = productId, validateAttributeConditions = false}))',
+                            url: '@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new {productId = productId, validateAttributeConditions = false, loadPicture = false }))',
                             data: $('#product-details-form').serialize(),
                             type: 'post',
                             success: function(data) {

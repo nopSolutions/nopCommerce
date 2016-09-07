@@ -15,7 +15,7 @@
 	box-sizing: border-box;
 }
 html {
-	margin: 0 !important;
+	margin: 0;
 	-webkit-text-size-adjust: none;
 }
 ol, ul {
@@ -354,6 +354,23 @@ label, label + * {
     white-space: nowrap;
 	font-weight: normal;
 }
+.forum-table th.replies,
+.forum-table th.views,
+.forum-table th.votes,
+.forum-table th.latest-post,
+.forum-table th.topics,
+.forum-table th.posts,
+.forum-table td.replies,
+.forum-table td.views,
+.forum-table td.votes,
+.forum-table td.latest-post,
+.forum-table td.topics,
+.forum-table td.posts{
+    display: none;
+}
+.forum-table td.image {
+    min-width: 0;
+}
 .cart td,
 .data-table td,
 .forum-table td {
@@ -367,6 +384,7 @@ label, label + * {
 }
 .forum-table td {
 	min-width: 90px;
+    padding: 10px;
 }
 .cart a,
 .data-table a,
@@ -383,10 +401,12 @@ label, label + * {
 .data-table .product,
 .data-table .message,
 .data-table .info,
-.data-table .name,
+.data-table .name {
+    min-width: 225px;
+	text-align: left;
+}
 .forum-table .forum-details,
 .forum-table .topic-details {
-	min-width: 225px;
 	text-align: left;
 }
 .cart .product a,
@@ -514,7 +534,6 @@ label, label + * {
 }
 
 .ui-dialog {
-	width: 350px !important;
 	max-width: 90%;
 	border: 1px solid #ddd;
 	box-shadow: 0 0 2px rgba(0,0,0,0.15);
@@ -584,8 +603,38 @@ label, label + * {
 	line-height: 20px;
 	/*override jQuery UI styles, do not delete doubled properties*/
 	background-color: #fff !important;
-	padding: 15px !important;
+	padding: 15px 15px 20px 15px !important;
 	color: #777;
+}
+.ui-dialog-content .page{
+    min-height: 0;
+}
+.ui-dialog-content .page-title{
+    min-height: 0;
+    margin: 0 0 15px;
+    padding: 0px 10px 10px 10px;
+    text-align: center;
+}
+.ui-dialog-content .page-title h1{
+    font-size: 24px;
+    line-height: 30px;
+}
+.ui-dialog-content .back-in-stock-subscription-page {
+    text-align: center;
+}
+.ui-dialog-content .back-in-stock-subscription-page .tooltip{
+    margin-bottom: 10px;
+}
+.ui-dialog-content .back-in-stock-subscription-page .button-1{
+	border: none;
+	background-color: #4ab2f1;
+    padding: 10px 15px;
+	font-size: 15px;
+	color: #fff;
+	text-transform: uppercase;
+}
+.ui-dialog-content .back-in-stock-subscription-page .button-1:hover {
+	background-color: #248ece;
 }
 
 .eu-cookie-bar-notification {
@@ -1314,6 +1363,16 @@ label, label + * {
 	height: 5px;
 	background-color: #ddd;
 }
+.product-filter .group li.color-item {
+    padding: 0;
+    display: inline-block;
+}
+.product-filter .group li.color-item a {
+    padding: 0;
+}
+.product-filter .group li.color-item:before {
+    display: none;
+}
 
 .filtered-items .title {
 	margin: 0 0 5px;
@@ -1606,7 +1665,6 @@ label, label + * {
 /********** PRODUCT PAGE **********/
 
 
-
 .product-details-page {
 	padding: 20px 0 0;
 }
@@ -1793,18 +1851,6 @@ label, label + * {
 .overview .availability .back-in-stock-subscription,
 .variant-overview .availability .back-in-stock-subscription {
 	display: inline-block;
-}
-.back-in-stock-subscription-page .notify-me-button {
-	margin: 15px 0 0;
-	border: none;
-	background-color: #4ab2f1;
-    padding: 10px 15px;
-	font-size: 15px;
-	color: #fff;
-	text-transform: uppercase;
-}
-.back-in-stock-subscription-page .notify-me-button:hover {
-	background-color: #248ece;
 }
 .overview .additional-details,
 .variant-overview .additional-details {
@@ -2198,7 +2244,7 @@ label, label + * {
     overflow: hidden;
 }
 .color-squares .color {
-    display: block !important;
+    display: table !important;
     width: 32px !important;
     height: 32px !important;
     border: 1px solid #444 !important;
@@ -2214,7 +2260,7 @@ label, label + * {
 }
 .tooltip-container {
     position: absolute;
-    width:200px;
+    width: 200px;
     color: #000000;
     background: #FFFFFF;
     border: 1px solid #eeeeee;
@@ -2785,6 +2831,16 @@ label, label + * {
 	color: #4cb17c;
 }
 
+.customer-info-page .vat-status {
+    margin: 0 5px;
+    font-size: 14px;
+}
+.registration-page .vat-note,
+.customer-info-page .vat-note {
+    display: block;
+    font-size: 14px;
+    margin-top: 5px;
+}
 .login-page .customer-blocks {
 	margin: 0 0 30px;
 }
@@ -3049,6 +3105,26 @@ label, label + * {
 	color: #444;
 }
 
+.vendorinfo-page .button-2 {
+    border: medium none;
+    background-color: #888;
+    padding: 10px 15px;
+    font-size: 14px;
+    color: #fff;
+    text-transform: uppercase;
+}
+.vendorinfo-page .button-2:hover {
+	background-color: #999;
+}
+.vendorinfo-page .vendor-picture {
+    width: 400px;
+    margin: 0 auto;
+}
+.vendorinfo-page .vendor-picture * {
+    display: block;
+    margin-top: 15px;
+}
+
 
 /********** SHOPPING CART **********/
 
@@ -3156,7 +3232,7 @@ label, label + * {
 }
 .checkout-attributes input[type="text"],
 .checkout-attributes select {
-	min-width: 200px;
+	min-width: 170px;
 }
 .checkout-attributes ul {
 	font-size: 0;
@@ -3435,14 +3511,34 @@ label, label + * {
     padding: 30px 15px;
 }
 
-.checkout-page .pickup-in-store {
+.checkout-page .ship-to-same-address {
 	padding: 30px 0;
+	text-align: center;
+}
+.checkout-page .ship-to-same-address .selector {
+	margin: 0 0 5px;
+	font-weight: bold;
+	color: #444;
+}
+
+.checkout-page .pickup-in-store {
 	text-align: center;
 }
 .checkout-page .pickup-in-store .selector {
 	margin: 0 0 5px;
 	font-weight: bold;
 	color: #444;
+}
+
+.select-pickup-point {
+    text-align: center;
+}
+.checkout-page .pickup-points-map {
+	min-width: 400px;
+    min-height: 350px;
+    vertical-align: middle;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .shipping-method .method-list,
@@ -3530,9 +3626,9 @@ label, label + * {
 	font-size: 16px;
 }
 
-.order-review-data ul,
-.order-details-area ul,
-.shipment-details-area ul {
+.order-review-data > div,
+.order-details-area > div,
+.shipment-details-area > div {
 	width: 350px;
 	max-width: 100%;
 	margin: 0 auto 40px;
@@ -3557,6 +3653,16 @@ label, label + * {
 .order-details-area .title:first-child,
 .shipment-details-area .title:first-child {
 	margin-top: 0;
+}
+.order-review-data .title strong,
+.order-details-area .title strong,
+.shipment-details-area .title strong{
+    font-weight: 700;
+}
+.order-review-data .side-list-wrap,
+.order-details-area .side-list-wrap,
+.shipment-details-area .side-list-wrap {
+    margin-top: 20px;
 }
 .order-completed .details {
 	margin: 0 0 30px;
@@ -3648,6 +3754,10 @@ label, label + * {
 	display: block;
 	margin: 10px 0 0;
     background: none;
+}
+.opc .section.ship-to-same-address {
+	margin: 0 0 30px;
+	padding: 0;
 }
 .opc .section.pickup-in-store {
 	margin: 0 0 30px;
@@ -3766,7 +3876,7 @@ label, label + * {
 }
 .order-details-page .actions input {
 	display: inline-block;
-	min-width: 180px;
+	min-width: 165px;
 	margin: 5px;
 	border: none;
 	background-color: #aaa;
@@ -3785,10 +3895,13 @@ label, label + * {
 	background-color: #248ece;
 }
 
+.order-details-page .totals.section {
+    width: 370px;
+    padding: 0 10px;
+    max-width: 100%;
+    margin: 0 auto 50px;
+}
 .order-details-page .total-info {
-	width: 350px;
-	max-width: 100%;
-	margin: 0 auto 50px;
 	background-color: #f9f9f9;
 	padding: 15px 20px;
 	color: #444;
@@ -4502,11 +4615,18 @@ label, label + * {
 	color: #fff;
 }
 
-.topic-post .post-body {
-	/*topic post-body also gets style from blog post-body*/
+.topic-post .post-text {
+	/*topic post-text also gets style from blog post-body*/
 	padding: 0 10px 20px;
 	line-height: 22px;
 	color: #444;
+    margin-bottom: 0;
+}
+
+.topic-post .post-vote{
+    text-align: center;
+    display: table;
+    margin: 0 auto 20px;
 }
 
 .topic-post .user-posted-image,
@@ -4527,8 +4647,31 @@ label, label + * {
 	padding: 20px;
 	font-size: 13px;
     font-style: italic;
+    clear: both;
 }
 
+.topic-post .post-vote span.vote {
+	cursor: pointer;
+    display: block;
+    width: 40px;
+    height: 24px;
+}
+.topic-post .post-vote span.up{
+    background: url('../images/vote-up.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.vote.up.selected{
+    background: url('../images/vote-up-selected.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.down{
+    background: url('../images/vote-down.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.vote.down.selected{
+    background: url('../images/vote-down-selected.png') no-repeat 50% 50%;
+}
+.topic-post .vote-count-post {
+    display: block;
+    font-size: 160%;
+}
 /* forum edit & send message */
 
 .forum-edit-page .page-title,
@@ -5103,9 +5246,15 @@ pre {
 	float: left;
 	margin: 0 25px 10px 0;
 }
+.product-filter .product-spec-group.product-spec-color {
+    max-width: 190px;
+}
 .product-filter .group li.item {
 	display: block;
 	margin: 0;
+}
+.product-filter .group li.color-item {
+    display: inline-block;
 }
 
 .item-box {
@@ -5180,6 +5329,34 @@ pre {
 	margin: 1px;
 }
 
+.topic-post .post-text {
+    float: left;
+    width: 90.5%;
+    text-align: left;
+}
+
+.forum-group .forum-table th.latest-post,
+.forum-group .forum-table th.topics,
+.forum-group .forum-table th.posts,
+.forum-group .forum-table td.latest-post,
+.forum-group .forum-table td.topics,
+.forum-group .forum-table td.posts {
+    display: table-cell;
+}
+
+.topic-group .forum-table th.latest-post,
+.topic-group .forum-table td.latest-post {
+    display: table-cell;
+}
+
+.forum-table td.image {
+    max-width: 40px;
+}
+
+.forum-table td.image div {
+    max-width: 100%;
+    background-size: contain;
+}
 }
 
 
@@ -5508,9 +5685,9 @@ pre {
 .shipment-details-area {
 	overflow: hidden;
 }
-.order-review-data ul,
-.order-details-area ul,
-.shipment-details-area ul {
+.order-review-data > div,
+.order-details-area > div,
+.shipment-details-area > div {
 	float: left;
 	width: 48%;
 	margin: 0 1% 40px;
@@ -5526,12 +5703,12 @@ pre {
 .order-details-page .selected-checkout-attributes {
 	padding: 0 10px;
 }
-.order-details-page .totals {
-	overflow: hidden;
+.order-details-page .tax-shipping-info {
+    text-align: right;
 }
-.order-details-page .total-info {
+.order-details-page .totals {
 	float: right;
-	margin: 0 5px;
+	clear: both;
 }
 .shipment-details-page .tracking-number .tracking-url {
     color: #4ab2f1;
@@ -5716,8 +5893,31 @@ pre {
 	border-left: 1px solid #ddd;
 	text-align: center;
 }
-.topic-post .post-body {
-	padding: 20px;
+
+.topic-post .post-text {
+	padding: 20px 5px;
+}
+
+.topic-post .post-vote{
+    padding: 20px 0 20px 15px;
+}
+
+.forum-table th.replies,
+.forum-table th.views,
+.forum-table th.votes,
+.forum-table td.replies,
+.forum-table td.views,
+.forum-table td.votes {
+    display: table-cell;
+}
+
+.forum-table td.image {
+    max-width: none;
+}
+
+.forum-table td.image div {
+    max-width: none;
+    background-size: initial;
 }
 
 .ui-tabs-nav {
@@ -6462,7 +6662,6 @@ pre {
 .forum-search-box .advanced a {
 	line-height: normal;
 }
-
 .forums-table-section td {
 	min-width: 150px;
 }
@@ -6472,12 +6671,17 @@ pre {
 .forums-table-section .view-all {
 	text-align: right;
 }
-
 .topic-actions .pager.upper {
 	display: block;
 	max-width: 400px;
 }
-
+.forum-table .forum-details,
+.forum-table .topic-details {
+	min-width: 225px;
+}
+.forum-table td {
+    padding: 20px;
+}
 .forum-edit-page textarea,
 .private-message-send-page textarea {
 	width: 600px;
@@ -6619,6 +6823,11 @@ pre {
 .forum-actions .pager,
 .topic-actions .pager {
 	max-width: 600px !important;
+}
+
+.topic-post .post-text {
+    width: 930px;
+    max-width: 100%;
 }
 
 }

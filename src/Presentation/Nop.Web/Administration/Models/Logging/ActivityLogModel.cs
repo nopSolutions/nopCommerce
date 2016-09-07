@@ -16,5 +16,7 @@ namespace Nop.Admin.Models.Logging
         public string Comment { get; set; }
         [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.ActivityLog.IpAddress")]
+        public string IpAddress { get; set; }
     }
 }

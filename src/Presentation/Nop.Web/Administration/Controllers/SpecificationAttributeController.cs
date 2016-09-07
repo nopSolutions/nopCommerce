@@ -135,7 +135,15 @@ namespace Nop.Admin.Controllers
                 _customerActivityService.InsertActivity("AddNewSpecAttribute", _localizationService.GetResource("ActivityLog.AddNewSpecAttribute"), specificationAttribute.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = specificationAttribute.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = specificationAttribute.Id });
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
@@ -189,7 +197,7 @@ namespace Nop.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    SaveSelectedTabName();
 
                     return RedirectToAction("Edit",  new {id = specificationAttribute.Id});
                 }
@@ -281,6 +289,9 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var sao = model.ToEntity();
+                //clear "Color" values if it's disabled
+                if (!model.EnableColorSquaresRgb)
+                    sao.ColorSquaresRgb = null;
 
                 _specificationAttributeService.InsertSpecificationAttributeOption(sao);
                 UpdateOptionLocales(sao, model);
@@ -307,6 +318,8 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = sao.ToModel();
+            //"Color" value
+            model.EnableColorSquaresRgb = !String.IsNullOrEmpty(sao.ColorSquaresRgb);
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -330,6 +343,10 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 sao = model.ToEntity(sao);
+                //clear "Color" values if it's disabled
+                if (!model.EnableColorSquaresRgb)
+                    sao.ColorSquaresRgb = null;
+
                 _specificationAttributeService.UpdateSpecificationAttributeOption(sao);
 
                 UpdateOptionLocales(sao, model);

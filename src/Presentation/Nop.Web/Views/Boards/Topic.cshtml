@@ -4,11 +4,15 @@
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
+    //title
     Html.AddTitleParts(Model.Subject);
+    //page class
+    Html.AppendPageCssClassParts("html-forum-topic-page");
 }
 <div class="page forum-topic-page">
     @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })
     @Html.Partial("_ForumHeader")
+    @Html.Widget("boards_topic_after_header", Model.Id)
     @Html.AntiForgeryToken()
     <div class="topic-name">
         <h1>@Model.Subject</h1>
@@ -88,6 +92,7 @@
                 RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
             });
         }
+        @Html.Widget("boards_topic_top", Model.Id)
         @if (!MvcHtmlString.IsNullOrEmpty(pager))
         {
             <div class="pager upper">
@@ -105,32 +110,32 @@
 
     <div class="topic-actions lower">
         <div class="actions">
-            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "reply-topic-button" })
+            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new {id = Model.Id}, new {@class = "reply-topic-button"})
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 <a class="watch-topic-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>
                 <script type="text/javascript">
-                    $(document).ready(function () {
-                    $('#watch-topic-bottom').click(function () {
-                        var postData = {};
-                        addAntiForgeryToken(postData);
+                    $(document).ready(function() {
+                        $('#watch-topic-bottom').click(function() {
+                            var postData = {};
+                            addAntiForgeryToken(postData);
 
-                        $.ajax({
-                            cache: false,
-                            type: 'POST',
-                            url: '@Url.RouteUrl("TopicWatch", new { id = Model.Id })',
-                            data: postData,
-                            dataType: 'json',
-                            success: function (data) {
-                                $('#watch-topic-top').text(data.Text);
-                                $('#watch-topic-bottom').text(data.Text);
-                            },
-                            error: function (xhr, ajaxOptions, thrownError) {
-                                alert('Failed to watch');
-                            }
+                            $.ajax({
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.RouteUrl("TopicWatch", new {id = Model.Id})',
+                                data: postData,
+                                dataType: 'json',
+                                success: function(data) {
+                                    $('#watch-topic-top').text(data.Text);
+                                    $('#watch-topic-bottom').text(data.Text);
+                                },
+                                error: function(xhr, ajaxOptions, thrownError) {
+                                    alert('Failed to watch');
+                                }
+                            });
                         });
                     });
-                });
                 </script>
             }
         </div>
@@ -141,6 +146,7 @@
             </div>
         }
     </div>
+    @Html.Widget("boards_topic_bottom", Model.Id)
 </div>
 <script type="text/javascript">
     function deletepost(postId) {

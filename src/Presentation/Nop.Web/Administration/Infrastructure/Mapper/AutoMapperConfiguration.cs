@@ -48,6 +48,7 @@ using Nop.Services.Cms;
 using Nop.Services.Payments;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
 
 namespace Nop.Admin.Infrastructure.Mapper
@@ -112,7 +113,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                 //countries
                 cfg.CreateMap<CountryModel, Country>()
                     .ForMember(dest => dest.StateProvinces, mo => mo.Ignore())
-                    .ForMember(dest => dest.RestrictedShippingMethods, mo => mo.Ignore());
+                    .ForMember(dest => dest.RestrictedShippingMethods, mo => mo.Ignore())
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
                 cfg.CreateMap<Country, CountryModel>()
                     .ForMember(dest => dest.NumberOfStates,
                         mo => mo.MapFrom(src => src.StateProvinces != null ? src.StateProvinces.Count : 0))
@@ -136,7 +138,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.Search, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<LanguageModel, Language>()
-                    .ForMember(dest => dest.LocaleStringResources, mo => mo.Ignore());
+                    .ForMember(dest => dest.LocaleStringResources, mo => mo.Ignore())
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
                 //email account
                 cfg.CreateMap<EmailAccount, EmailAccountModel>()
                     .ForMember(dest => dest.Password, mo => mo.Ignore())
@@ -157,7 +160,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.SendImmediately, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<MessageTemplateModel, MessageTemplate>()
-                    .ForMember(dest => dest.DelayPeriod, mo => mo.Ignore());
+                    .ForMember(dest => dest.DelayPeriod, mo => mo.Ignore())
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
                 //queued email
                 cfg.CreateMap<QueuedEmail, QueuedEmailModel>()
                     .ForMember(dest => dest.EmailAccountName,
@@ -185,6 +189,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowedTokens, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
+                    .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
                     .ForMember(dest => dest.TestEmail, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<CampaignModel, Campaign>()
@@ -201,7 +206,9 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
                     .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
-                cfg.CreateMap<TopicModel, Topic>();
+                cfg.CreateMap<TopicModel, Topic>()
+                    .ForMember(dest => dest.SubjectToAcl, mo => mo.Ignore())
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
 
                 //category
                 cfg.CreateMap<Category, CategoryModel>()
@@ -221,7 +228,9 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.Deleted, mo => mo.Ignore())
-                    .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore());
+                    .ForMember(dest => dest.SubjectToAcl, mo => mo.Ignore())
+                    .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore())
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
                 //manufacturer
                 cfg.CreateMap<Manufacturer, ManufacturerModel>()
                     .ForMember(dest => dest.AvailableManufacturerTemplates, mo => mo.Ignore())
@@ -235,9 +244,11 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<ManufacturerModel, Manufacturer>()
+                    .ForMember(dest => dest.SubjectToAcl, mo => mo.Ignore())
                     .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.Deleted, mo => mo.Ignore())
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore())
                     .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore());
                 ;
 
@@ -285,11 +296,15 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.BaseWeightIn, mo => mo.Ignore())
                     .ForMember(dest => dest.Locales, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableDiscounts, mo => mo.Ignore())
+                    .ForMember(dest => dest.SelectedCategoryIds, mo => mo.Ignore())
+                    .ForMember(dest => dest.SelectedManufacturerIds, mo => mo.Ignore())
                     .ForMember(dest => dest.SelectedDiscountIds, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableDeliveryDates, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableWarehouses, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableBasepriceUnits, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableBasepriceBaseUnits, mo => mo.Ignore())
+                    .ForMember(dest => dest.LastStockQuantity, mo => mo.Ignore())
+                    .ForMember(dest => dest.ProductEditorSettingsModel, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<ProductModel, Product>()
                     .ForMember(dest => dest.ProductTags, mo => mo.Ignore())
@@ -320,7 +335,9 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.ProductAttributeMappings, mo => mo.Ignore())
                     .ForMember(dest => dest.ProductAttributeCombinations, mo => mo.Ignore())
                     .ForMember(dest => dest.TierPrices, mo => mo.Ignore())
-                    .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore());
+                    .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore())
+                    .ForMember(dest => dest.SubjectToAcl, mo => mo.Ignore())
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
                 //logs
                 cfg.CreateMap<Log, LogModel>()
                     .ForMember(dest => dest.CustomerEmail, mo => mo.Ignore())
@@ -351,7 +368,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<CurrencyModel, Currency>()
                     .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
-                    .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore());
+                    .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
                 //measure weights
                 cfg.CreateMap<MeasureWeight, MeasureWeightModel>()
                     .ForMember(dest => dest.IsPrimaryWeight, mo => mo.Ignore())
@@ -388,6 +406,17 @@ namespace Nop.Admin.Infrastructure.Mapper
                 cfg.CreateMap<DeliveryDateModel, DeliveryDate>();
                 //shipping rate computation methods
                 cfg.CreateMap<IShippingRateComputationMethod, ShippingRateComputationMethodModel>()
+                    .ForMember(dest => dest.FriendlyName, mo => mo.MapFrom(src => src.PluginDescriptor.FriendlyName))
+                    .ForMember(dest => dest.SystemName, mo => mo.MapFrom(src => src.PluginDescriptor.SystemName))
+                    .ForMember(dest => dest.DisplayOrder, mo => mo.MapFrom(src => src.PluginDescriptor.DisplayOrder))
+                    .ForMember(dest => dest.IsActive, mo => mo.Ignore())
+                    .ForMember(dest => dest.LogoUrl, mo => mo.Ignore())
+                    .ForMember(dest => dest.ConfigurationActionName, mo => mo.Ignore())
+                    .ForMember(dest => dest.ConfigurationControllerName, mo => mo.Ignore())
+                    .ForMember(dest => dest.ConfigurationRouteValues, mo => mo.Ignore())
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                //pickup point providers
+                cfg.CreateMap<IPickupPointProvider, PickupPointProviderModel>()
                     .ForMember(dest => dest.FriendlyName, mo => mo.MapFrom(src => src.PluginDescriptor.FriendlyName))
                     .ForMember(dest => dest.SystemName, mo => mo.MapFrom(src => src.PluginDescriptor.SystemName))
                     .ForMember(dest => dest.DisplayOrder, mo => mo.MapFrom(src => src.PluginDescriptor.DisplayOrder))
@@ -436,7 +465,6 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CanChangeEnabled, mo => mo.Ignore())
                     .ForMember(dest => dest.IsEnabled, mo => mo.Ignore())
                     .ForMember(dest => dest.LogoUrl, mo => mo.Ignore())
-                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                     .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                     .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -481,14 +509,16 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                     .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
-                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                    .ForMember(dest => dest.AvailableLanguages, mo => mo.Ignore());
                 cfg.CreateMap<BlogPostModel, BlogPost>()
                     .ForMember(dest => dest.BlogComments, mo => mo.Ignore())
                     .ForMember(dest => dest.Language, mo => mo.Ignore())
                     .ForMember(dest => dest.CommentCount, mo => mo.Ignore())
                     .ForMember(dest => dest.StartDateUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.EndDateUtc, mo => mo.Ignore())
-                    .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
+                    .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
                 //news
                 cfg.CreateMap<NewsItem, NewsItemModel>()
                     .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName(src.LanguageId, true, false)))
@@ -498,19 +528,22 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                     .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
-                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                    .ForMember(dest => dest.AvailableLanguages, mo => mo.Ignore());
                 cfg.CreateMap<NewsItemModel, NewsItem>()
                     .ForMember(dest => dest.NewsComments, mo => mo.Ignore())
                     .ForMember(dest => dest.Language, mo => mo.Ignore())
                     .ForMember(dest => dest.CommentCount, mo => mo.Ignore())
                     .ForMember(dest => dest.StartDateUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.EndDateUtc, mo => mo.Ignore())
-                    .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
+                    .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
                 //news
                 cfg.CreateMap<Poll, PollModel>()
                     .ForMember(dest => dest.StartDate, mo => mo.Ignore())
                     .ForMember(dest => dest.EndDate, mo => mo.Ignore())
-                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                    .ForMember(dest => dest.AvailableLanguages, mo => mo.Ignore());
                 cfg.CreateMap<PollModel, Poll>()
                     .ForMember(dest => dest.PollAnswers, mo => mo.Ignore())
                     .ForMember(dest => dest.Language, mo => mo.Ignore())
@@ -537,6 +570,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                 cfg.CreateMap<SpecificationAttributeOption, SpecificationAttributeOptionModel>()
                     .ForMember(dest => dest.NumberOfAssociatedProducts, mo => mo.Ignore())
                     .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                    .ForMember(dest => dest.EnableColorSquaresRgb, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<SpecificationAttributeOptionModel, SpecificationAttributeOption>()
                     .ForMember(dest => dest.SpecificationAttribute, mo => mo.Ignore());
@@ -553,7 +587,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                 cfg.CreateMap<CheckoutAttributeModel, CheckoutAttribute>()
                     .ForMember(dest => dest.AttributeControlType, mo => mo.Ignore())
                     .ForMember(dest => dest.ConditionAttributeXml, mo => mo.Ignore())
-                    .ForMember(dest => dest.CheckoutAttributeValues, mo => mo.Ignore());
+                    .ForMember(dest => dest.CheckoutAttributeValues, mo => mo.Ignore())
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
                 //customer attributes
                 cfg.CreateMap<CustomerAttribute, CustomerAttributeModel>()
                     .ForMember(dest => dest.AttributeControlTypeName, mo => mo.Ignore())
@@ -641,7 +676,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<TaxSettingsModel, TaxSettings>()
-                    .ForMember(dest => dest.ActiveTaxProviderSystemName, mo => mo.Ignore());
+                    .ForMember(dest => dest.ActiveTaxProviderSystemName, mo => mo.Ignore())
+                    .ForMember(dest => dest.LogErrors, mo => mo.Ignore());
                 cfg.CreateMap<NewsSettings, NewsSettingsModel>()
                     .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
                     .ForMember(dest => dest.Enabled_OverrideForStore, mo => mo.Ignore())
@@ -663,6 +699,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.AllowGuestsToCreateTopics_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowCustomersToEditPosts_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowCustomersToDeletePosts_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.AllowPostVoting_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.MaxVotesPerDay_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowCustomersToManageSubscriptions_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.TopicsPageSize_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.PostsPageSize_OverrideForStore, mo => mo.Ignore())
@@ -706,14 +744,19 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.AllowCustomersToContactVendors_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowCustomersToApplyForVendorAccount_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowSearchByVendor_OverrideForStore, mo => mo.Ignore())
-                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                    .ForMember(dest => dest.AllowVendorsToEditInfo_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.NotifyStoreOwnerAboutVendorInformationChange_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                    .ForMember(dest => dest.MaximumProductNumber_OverrideForStore, mo => mo.Ignore());
                 cfg.CreateMap<VendorSettingsModel, VendorSettings>()
                     .ForMember(dest => dest.DefaultVendorPageSizeOptions, mo => mo.Ignore());
                 cfg.CreateMap<ShippingSettings, ShippingSettingsModel>()
                     .ForMember(dest => dest.ShippingOriginAddress, mo => mo.Ignore())
                     .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowPickUpInStore_OverrideForStore, mo => mo.Ignore())
-                    .ForMember(dest => dest.PickUpInStoreFee_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.ShipToSameAddress_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.DisplayPickupPointsOnMap_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.GoogleMapsApiKey_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.UseWarehouseLocation_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.NotifyCustomerAboutShippingFromMultipleLocations_OverrideForStore,
                         mo => mo.Ignore())
@@ -728,6 +771,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<ShippingSettingsModel, ShippingSettings>()
                     .ForMember(dest => dest.ActiveShippingRateComputationMethodSystemNames, mo => mo.Ignore())
+                    .ForMember(dest => dest.ActivePickupPointProviderSystemNames, mo => mo.Ignore())
                     .ForMember(dest => dest.ReturnValidOptionsIfThereAreAny, mo => mo.Ignore())
                     .ForMember(dest => dest.UseCubeRootMethod, mo => mo.Ignore());
                 cfg.CreateMap<CatalogSettings, CatalogSettingsModel>()
@@ -778,11 +822,6 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.ProductsByTagPageSizeOptions_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.IncludeShortDescriptionInCompareProducts_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.IncludeFullDescriptionInCompareProducts_OverrideForStore, mo => mo.Ignore())
-                    .ForMember(dest => dest.IgnoreDiscounts_OverrideForStore, mo => mo.Ignore())
-                    .ForMember(dest => dest.IgnoreFeaturedProducts_OverrideForStore, mo => mo.Ignore())
-                    .ForMember(dest => dest.IgnoreAcl_OverrideForStore, mo => mo.Ignore())
-                    .ForMember(dest => dest.IgnoreStoreLimitations_OverrideForStore, mo => mo.Ignore())
-                    .ForMember(dest => dest.CacheProductPrices_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.ManufacturersBlockItemsToDisplay_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.DisplayTaxShippingInfoFooter_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.DisplayTaxShippingInfoProductDetailsPage_OverrideForStore, mo => mo.Ignore())
@@ -790,7 +829,10 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.DisplayTaxShippingInfoShoppingCart_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.DisplayTaxShippingInfoWishlist_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.DisplayTaxShippingInfoOrderDetailsPage_OverrideForStore, mo => mo.Ignore())
-                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                    .ForMember(dest => dest.ShowProductReviewsOnAccountPage_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.ProductReviewsPageSizeOnAccountPage_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.ExportImportProductAttributes_OverrideForStore, mo => mo.Ignore());
                 cfg.CreateMap<CatalogSettingsModel, CatalogSettings>()
                     .ForMember(dest => dest.PublishBackProductWhenCancellingOrders, mo => mo.Ignore())
                     .ForMember(dest => dest.DefaultViewMode, mo => mo.Ignore())
@@ -830,6 +872,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.MinOrderSubtotalAmount_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.MinOrderSubtotalAmountIncludingTax_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.MinOrderTotalAmount_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.AutoUpdateOrderTotalsOnEditingOrder_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.AnonymousCheckoutAllowed_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.TermsOfServiceOnShoppingCartPage_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.TermsOfServiceOnOrderConfirmPage_OverrideForStore, mo => mo.Ignore())
@@ -843,8 +886,10 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.AttachPdfInvoiceToOrderPlacedEmail_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.AttachPdfInvoiceToOrderPaidEmail_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore, mo => mo.Ignore())
-                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                    .ForMember(dest => dest.ReturnRequestNumberMask_OverrideForStore, mo => mo.Ignore());
                 cfg.CreateMap<OrderSettingsModel, OrderSettings>()
+                    .ForMember(dest => dest.GeneratePdfInvoiceInCustomerLanguage, mo => mo.Ignore())
                     .ForMember(dest => dest.MinimumOrderPlacementInterval, mo => mo.Ignore());
                 cfg.CreateMap<ShoppingCartSettings, ShoppingCartSettingsModel>()
                     .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
@@ -887,7 +932,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.MaximumImageSize_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.MultipleThumbDirectories_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.DefaultImageQuality_OverrideForStore, mo => mo.Ignore())
-                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                    .ForMember(dest => dest.ImportProductImagesUsingHash_OverrideForStore, mo => mo.Ignore());
                 cfg.CreateMap<MediaSettingsModel, MediaSettings>()
                     .ForMember(dest => dest.DefaultPictureZoomEnabled, mo => mo.Ignore())
                     .ForMember(dest => dest.ImageSquarePictureSize, mo => mo.Ignore())
@@ -899,10 +945,14 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.AvatarMaximumSizeBytes, mo => mo.Ignore())
                     .ForMember(dest => dest.DownloadableProductsValidateUser, mo => mo.Ignore())
                     .ForMember(dest => dest.OnlineCustomerMinutes, mo => mo.Ignore())
-                    .ForMember(dest => dest.SuffixDeletedCustomers, mo => mo.Ignore());
+                    .ForMember(dest => dest.SuffixDeletedCustomers, mo => mo.Ignore())
+                    .ForMember(dest => dest.DeleteGuestTaskOlderThanMinutes, mo => mo.Ignore());
                 cfg.CreateMap<AddressSettings, CustomerUserSettingsModel.AddressSettingsModel>()
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<CustomerUserSettingsModel.AddressSettingsModel, AddressSettings>();
+                cfg.CreateMap<ProductEditorSettings, ProductEditorSettingsModel>()
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                cfg.CreateMap<ProductEditorSettingsModel, ProductEditorSettings>();
 
                 //return request reasons
                 cfg.CreateMap<ReturnRequestReason, ReturnRequestReasonModel>()

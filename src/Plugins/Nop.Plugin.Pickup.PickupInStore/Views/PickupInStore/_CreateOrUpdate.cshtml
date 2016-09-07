@@ -1,0 +1,102 @@
+﻿@model Nop.Plugin.Pickup.PickupInStore.Models.StorePickupPointModel
+@using Nop.Web.Framework;
+
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.Name)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.Name)
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.Description)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopTextAreaFor(model => model.Description)
+                    @Html.ValidationMessageFor(model => model.Description)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.Address.CountryId)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopDropDownListFor(model => model.Address.CountryId, Model.Address.AvailableCountries)
+                    @Html.ValidationMessageFor(model => model.Address.CountryId)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.Address.City)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.Address.City)
+                    @Html.ValidationMessageFor(model => model.Address.City)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.Address.Address1)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.Address.Address1)
+                    @Html.ValidationMessageFor(model => model.Address.Address1)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.Address.ZipPostalCode)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.Address.ZipPostalCode)
+                    @Html.ValidationMessageFor(model => model.Address.ZipPostalCode)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.OpeningHours)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.OpeningHours)
+                    @Html.ValidationMessageFor(model => model.OpeningHours)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.PickupFee)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.PickupFee)
+                    @Html.ValidationMessageFor(model => model.PickupFee)
+                </div>
+            </div>
+            <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.StoreId)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopDropDownListFor(model => model.StoreId, Model.AvailableStores)
+                    @Html.ValidationMessageFor(model => model.StoreId)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

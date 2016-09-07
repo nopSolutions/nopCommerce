@@ -195,7 +195,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             model.To = 1000000;
 
             var shippingMethods = _shippingService.GetAllShippingMethods();
-            if (shippingMethods.Count == 0)
+            if (!shippingMethods.Any())
                 return Content("No shipping methods can be loaded");
 
             //stores
@@ -281,7 +281,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             };
 
             var shippingMethods = _shippingService.GetAllShippingMethods();
-            if (shippingMethods.Count == 0)
+            if (!shippingMethods.Any())
                 return Content("No shipping methods can be loaded");
 
             var selectedStore = _storeService.GetStoreById(sbw.StoreId);

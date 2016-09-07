@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
-using Nop.Admin.Models.Customers;
-using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Topics;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
@@ -17,7 +16,12 @@ namespace Nop.Admin.Models.Topics
         {
             AvailableTopicTemplates = new List<SelectListItem>();
             Locales = new List<TopicLocalizedModel>();
-            AvailableStores = new List<StoreModel>();
+
+            SelectedCustomerRoleIds = new List<int>();
+            AvailableCustomerRoles = new List<SelectListItem>();
+
+            SelectedStoreIds = new List<int>();
+            AvailableStores = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.SystemName")]
@@ -85,19 +89,17 @@ namespace Nop.Admin.Models.Topics
 
         public IList<TopicLocalizedModel> Locales { get; set; }
 
-        //Store mapping
+        //store mapping
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.LimitedToStores")]
-        public bool LimitedToStores { get; set; }
-        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.AvailableStores")]
-        public List<StoreModel> AvailableStores { get; set; }
-        public int[] SelectedStoreIds { get; set; }
+        [UIHint("MultiSelect")]
+        public IList<int> SelectedStoreIds { get; set; }
+        public IList<SelectListItem> AvailableStores { get; set; }
 
-        //ACL
-        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.SubjectToAcl")]
-        public bool SubjectToAcl { get; set; }
-        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.AclCustomerRoles")]
-        public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
-        public int[] SelectedCustomerRoleIds { get; set; }
+        //ACL (customer roles)
+        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.AclCustomerRoles")]
+        [UIHint("MultiSelect")]
+        public IList<int> SelectedCustomerRoleIds { get; set; }
+        public IList<SelectListItem> AvailableCustomerRoles { get; set; }
 
     }
 

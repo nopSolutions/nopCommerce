@@ -11,7 +11,6 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Stores;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 
@@ -117,16 +116,16 @@ namespace Nop.Admin.Controllers
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             var productReviews = _productService.GetAllProductReviews(0, null, 
-                createdOnFromValue, createdToFromValue, model.SearchText, model.SearchStoreId, model.SearchProductId);
+                createdOnFromValue, createdToFromValue, model.SearchText, model.SearchStoreId, model.SearchProductId, command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {
-                Data = productReviews.PagedForCommand(command).Select(x =>
+                Data = productReviews.Select(x =>
                 {
                     var m = new ProductReviewModel();
                     PrepareProductReviewModel(m, x, false, true);
                     return m;
                 }),
-                Total = productReviews.Count,
+                Total = productReviews.TotalCount
             };
 
             return Json(gridModel);

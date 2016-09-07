@@ -7,6 +7,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 using System.Web;
+using Nop.Core;
 using Nop.Services.Security;
 using Nop.Web.Framework.Security;
 
@@ -25,7 +26,7 @@ namespace Nop.Admin.Controllers
         Dictionary<string, string> _settings = null;
         Dictionary<string, string> _lang = null;
         //custom code by nopCommerce team
-        string confFile = "~/Content/Roxy_Fileman/conf.json";
+        string confFile = "~/Administration/Content/Roxy_Fileman/conf.json";
         
         //custom code by nopCommerce team
         private readonly IPermissionService _permissionService;
@@ -472,13 +473,14 @@ namespace Nop.Admin.Controllers
                 int w = 0, h = 0;
                 if (GetFileType(f.Extension) == "image"){
                     try{
-                        FileStream fs = new FileStream(f.FullName, FileMode.Open);
-                        Image img = Image.FromStream(fs);
-                        w = img.Width;
-                        h = img.Height;
-                        fs.Close();
-                        fs.Dispose();
-                        img.Dispose();
+                        using (FileStream fs = new FileStream(f.FullName, FileMode.Open))
+                        {
+                            using (Image img = Image.FromStream(fs))
+                            {
+                                w = img.Width;
+                                h = img.Height;
+                            }
+                        }                        
                     }
                     catch(Exception ex){throw ex;}
                 }
@@ -506,7 +508,7 @@ namespace Nop.Admin.Controllers
             ZipFile.CreateFromDirectory(path, tmpZip,CompressionLevel.Fastest, true);
             _r.Clear();
             _r.Headers.Add("Content-Disposition", "attachment; filename=\"" + dirName + ".zip\"");
-            _r.ContentType = "application/force-download";
+            _r.ContentType = MimeTypes.ApplicationForceDownload;
             _r.TransmitFile(tmpZip);
             _r.Flush();
             System.IO.File.Delete(tmpZip);
@@ -519,7 +521,7 @@ namespace Nop.Admin.Controllers
             if(file.Exists){
                 _r.Clear();
                 _r.Headers.Add("Content-Disposition", "attachment; filename=\"" + file.Name + "\"");
-                _r.ContentType = "application/force-download";
+                _r.ContentType = MimeTypes.ApplicationForceDownload;
                 _r.TransmitFile(file.FullName);
                 _r.Flush();
                 _r.End();
@@ -629,7 +631,6 @@ namespace Nop.Admin.Controllers
             Bitmap img = new Bitmap(Bitmap.FromStream(fs));
             fs.Close();
             fs.Dispose();
-            int cropWidth = img.Width, cropHeight = img.Height;
             int cropX = 0, cropY = 0;
 
             double imgRatio = (double)img.Width / (double)img.Height;
@@ -643,8 +644,8 @@ namespace Nop.Admin.Controllers
                 height = img.Height;
 
             double cropRatio = (double)width / (double)height;
-            cropWidth = Convert.ToInt32(Math.Floor((double)img.Height * cropRatio));
-            cropHeight = Convert.ToInt32(Math.Floor((double)cropWidth / cropRatio));
+            int cropWidth = Convert.ToInt32(Math.Floor((double)img.Height * cropRatio));
+            int cropHeight = Convert.ToInt32(Math.Floor((double)cropWidth / cropRatio));
             if (cropWidth > img.Width)
             {
                 cropWidth = img.Width;
@@ -667,7 +668,7 @@ namespace Nop.Admin.Controllers
             img.Dispose();
             Image.GetThumbnailImageAbort imgCallback = new Image.GetThumbnailImageAbort(ThumbnailCallback);
 
-            _r.AddHeader("Content-Type", "image/png");
+            _r.AddHeader("Content-Type", MimeTypes.ImagePng);
             cropImg.GetThumbnailImage(width, height, imgCallback, IntPtr.Zero).Save(_r.OutputStream, ImageFormat.Png);
             _r.OutputStream.Close();
             cropImg.Dispose();

@@ -75,6 +75,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly IRepository<DeliveryDate> _deliveryDateRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
+        private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
         private readonly IRepository<ProductTemplate> _productTemplateRepository;
         private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
@@ -87,6 +88,13 @@ namespace Nop.Services.Installation
         private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IRepository<Vendor> _vendorRepository;
         private readonly IRepository<Affiliate> _affiliateRepository;
+        private readonly IRepository<Order> _orderRepository;
+        private readonly IRepository<OrderItem> _orderItemRepository;
+        private readonly IRepository<OrderNote> _orderNoteRepository;
+        private readonly IRepository<GiftCard> _giftCardRepository;
+        private readonly IRepository<Shipment> _shipmentRepository;
+        private readonly IRepository<SearchTerm> _searchTermRepository;
+        private readonly IRepository<ShipmentItem> _shipmentItemRepository;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
 
@@ -124,6 +132,7 @@ namespace Nop.Services.Installation
             IRepository<ShippingMethod> shippingMethodRepository,
             IRepository<DeliveryDate> deliveryDateRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
+            IRepository<ActivityLog> activityLogRepository,
             IRepository<ProductTag> productTagRepository,
             IRepository<ProductTemplate> productTemplateRepository,
             IRepository<CategoryTemplate> categoryTemplateRepository,
@@ -136,6 +145,13 @@ namespace Nop.Services.Installation
             IRepository<Warehouse> warehouseRepository,
             IRepository<Vendor> vendorRepository,
             IRepository<Affiliate> affiliateRepository,
+            IRepository<Order> orderRepository,
+            IRepository<OrderItem> orderItemRepository,
+            IRepository<OrderNote> orderNoteRepository,
+            IRepository<GiftCard> giftCardRepository,
+            IRepository<Shipment> shipmentRepository,
+            IRepository<ShipmentItem> shipmentItemRepository,
+            IRepository<SearchTerm> searchTermRepository,
             IGenericAttributeService genericAttributeService,
             IWebHelper webHelper)
         {
@@ -169,6 +185,7 @@ namespace Nop.Services.Installation
             this._shippingMethodRepository = shippingMethodRepository;
             this._deliveryDateRepository = deliveryDateRepository;
             this._activityLogTypeRepository = activityLogTypeRepository;
+            this._activityLogRepository = activityLogRepository;
             this._productTagRepository = productTagRepository;
             this._productTemplateRepository = productTemplateRepository;
             this._categoryTemplateRepository = categoryTemplateRepository;
@@ -181,6 +198,13 @@ namespace Nop.Services.Installation
             this._warehouseRepository = warehouseRepository;
             this._vendorRepository = vendorRepository;
             this._affiliateRepository = affiliateRepository;
+            this._orderRepository = orderRepository;
+            this._orderItemRepository = orderItemRepository;
+            this._orderNoteRepository = orderNoteRepository;
+            this._giftCardRepository = giftCardRepository;
+            this._shipmentRepository = shipmentRepository;
+            this._shipmentItemRepository = shipmentItemRepository;
+            this._searchTermRepository = searchTermRepository;
             this._genericAttributeService = genericAttributeService;
             this._webHelper = webHelper;
         }
@@ -1370,6 +1394,18 @@ namespace Nop.Services.Installation
                                     },
                                     new Country
                                     {
+                                        Name = "East Timor",
+                                        AllowsBilling = true,
+                                        AllowsShipping = true,
+                                        TwoLetterIsoCode = "TL",
+                                        ThreeLetterIsoCode = "TLS",
+                                        NumericIsoCode = 626,
+                                        SubjectToVat = false,
+                                        DisplayOrder = 100,
+                                        Published = true
+                                    },
+                                    new Country
+                                    {
                                         Name = "Ecuador",
                                         AllowsBilling = true,
                                         AllowsShipping = true,
@@ -1706,6 +1742,18 @@ namespace Nop.Services.Installation
                                     },
                                     new Country
                                     {
+                                        Name = "Palestine",
+                                        AllowsBilling = true,
+                                        AllowsShipping = true,
+                                        TwoLetterIsoCode = "PS",
+                                        ThreeLetterIsoCode = "PSE",
+                                        NumericIsoCode = 275,
+                                        SubjectToVat = false,
+                                        DisplayOrder = 100,
+                                        Published = true
+                                    },
+                                    new Country
+                                    {
                                         Name = "Paraguay",
                                         AllowsBilling = true,
                                         AllowsShipping = true,
@@ -1802,7 +1850,7 @@ namespace Nop.Services.Installation
                                     },
                                     new Country
                                     {
-                                        Name = "Russia",
+                                        Name = "Russian Federation",
                                         AllowsBilling = true,
                                         AllowsShipping = true,
                                         TwoLetterIsoCode = "RU",
@@ -2372,6 +2420,18 @@ namespace Nop.Services.Installation
                                         TwoLetterIsoCode = "CG",
                                         ThreeLetterIsoCode = "COG",
                                         NumericIsoCode = 178,
+                                        SubjectToVat = false,
+                                        DisplayOrder = 100,
+                                        Published = true
+                                    },
+                                    new Country
+                                    {
+                                        Name = "Congo (Democratic Republic of the)",
+                                        AllowsBilling = true,
+                                        AllowsShipping = true,
+                                        TwoLetterIsoCode = "CD",
+                                        ThreeLetterIsoCode = "COD",
+                                        NumericIsoCode = 180,
                                         SubjectToVat = false,
                                         DisplayOrder = 100,
                                         Published = true
@@ -3518,6 +3578,18 @@ namespace Nop.Services.Installation
                                     },
                                     new Country
                                     {
+                                        Name = "South Sudan",
+                                        AllowsBilling = true,
+                                        AllowsShipping = true,
+                                        TwoLetterIsoCode = "SS",
+                                        ThreeLetterIsoCode = "SSD",
+                                        NumericIsoCode = 728,
+                                        SubjectToVat = false,
+                                        DisplayOrder = 100,
+                                        Published = true
+                                    },
+                                    new Country
+                                    {
                                         Name = "Sri Lanka",
                                         AllowsBilling = true,
                                         AllowsShipping = true,
@@ -3982,9 +4054,9 @@ namespace Nop.Services.Installation
                 FirstName = "John",
                 LastName = "Smith",
                 PhoneNumber = "12345678",
-                Email = "admin@yourStore.com",
+                Email = defaultUserEmail,
                 FaxNumber = "",
-                Company = "Nop Solutions",
+                Company = "Nop Solutions Ltd",
                 Address1 = "21 West 52nd Street",
                 Address2 = "",
                 City = "New York",
@@ -4003,6 +4075,204 @@ namespace Nop.Services.Installation
             //set default customer name
             _genericAttributeService.SaveAttribute(adminUser, SystemCustomerAttributeNames.FirstName, "John");
             _genericAttributeService.SaveAttribute(adminUser, SystemCustomerAttributeNames.LastName, "Smith");
+
+
+            //second user
+            var secondUserEmail = "steve_gates@nopCommerce.com";
+            var secondUser = new Customer
+            {
+                CustomerGuid = Guid.NewGuid(),
+                Email = secondUserEmail,
+                Username = secondUserEmail,
+                Password = "123456",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = "",
+                Active = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                LastActivityDateUtc = DateTime.UtcNow,
+            };
+            var defaultSecondUserAddress = new Address
+            {
+                FirstName = "Steve",
+                LastName = "Gates",
+                PhoneNumber = "87654321",
+                Email = secondUserEmail,
+                FaxNumber = "",
+                Company = "Steve Company",
+                Address1 = "750 Bel Air Rd.",
+                Address2 = "",
+                City = "Los Angeles",
+                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "California"),
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
+                ZipPostalCode = "90077",
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            secondUser.Addresses.Add(defaultSecondUserAddress);
+            secondUser.BillingAddress = defaultSecondUserAddress;
+            secondUser.ShippingAddress = defaultSecondUserAddress;
+            secondUser.CustomerRoles.Add(crRegistered);
+            _customerRepository.Insert(secondUser);
+            //set default customer name
+            _genericAttributeService.SaveAttribute(secondUser, SystemCustomerAttributeNames.FirstName, defaultSecondUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(secondUser, SystemCustomerAttributeNames.LastName, defaultSecondUserAddress.LastName);
+
+
+            //third user
+            var thirdUserEmail = "arthur_holmes@nopCommerce.com";
+            var thirdUser = new Customer
+            {
+                CustomerGuid = Guid.NewGuid(),
+                Email = thirdUserEmail,
+                Username = thirdUserEmail,
+                Password = "123456",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = "",
+                Active = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                LastActivityDateUtc = DateTime.UtcNow,
+            };
+            var defaultThirdUserAddress = new Address
+            {
+                FirstName = "Arthur",
+                LastName = "Holmes",
+                PhoneNumber = "111222333",
+                Email = thirdUserEmail,
+                FaxNumber = "",
+                Company = "Holmes Company",
+                Address1 = "221B Baker Street",
+                Address2 = "",
+                City = "London",
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "GBR"),
+                ZipPostalCode = "NW1 6XE",
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            thirdUser.Addresses.Add(defaultThirdUserAddress);
+            thirdUser.BillingAddress = defaultThirdUserAddress;
+            thirdUser.ShippingAddress = defaultThirdUserAddress;
+            thirdUser.CustomerRoles.Add(crRegistered);
+            _customerRepository.Insert(thirdUser);
+            //set default customer name
+            _genericAttributeService.SaveAttribute(thirdUser, SystemCustomerAttributeNames.FirstName, defaultThirdUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(thirdUser, SystemCustomerAttributeNames.LastName, defaultThirdUserAddress.LastName);
+
+            
+            //fourth user
+            var fourthUserEmail = "james_pan@nopCommerce.com";
+            var fourthUser = new Customer
+            {
+                CustomerGuid = Guid.NewGuid(),
+                Email = fourthUserEmail,
+                Username = fourthUserEmail,
+                Password = "123456",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = "",
+                Active = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                LastActivityDateUtc = DateTime.UtcNow,
+            };
+            var defaultFourthUserAddress = new Address
+            {
+                FirstName = "James",
+                LastName = "Pan",
+                PhoneNumber = "369258147",
+                Email = fourthUserEmail,
+                FaxNumber = "",
+                Company = "Pan Company",
+                Address1 = "St Katharine’s West 16",
+                Address2 = "",
+                City = "St Andrews",
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "GBR"),
+                ZipPostalCode = "KY16 9AX",
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            fourthUser.Addresses.Add(defaultFourthUserAddress);
+            fourthUser.BillingAddress = defaultFourthUserAddress;
+            fourthUser.ShippingAddress = defaultFourthUserAddress;
+            fourthUser.CustomerRoles.Add(crRegistered);
+            _customerRepository.Insert(fourthUser);
+            //set default customer name
+            _genericAttributeService.SaveAttribute(fourthUser, SystemCustomerAttributeNames.FirstName, defaultFourthUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(fourthUser, SystemCustomerAttributeNames.LastName, defaultFourthUserAddress.LastName);
+
+
+            //fifth user
+            var fifthUserEmail = "brenda_lindgren@nopCommerce.com";
+            var fifthUser = new Customer
+            {
+                CustomerGuid = Guid.NewGuid(),
+                Email = fifthUserEmail,
+                Username = fifthUserEmail,
+                Password = "123456",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = "",
+                Active = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                LastActivityDateUtc = DateTime.UtcNow,
+            };
+            var defaultFifthUserAddress = new Address
+            {
+                FirstName = "Brenda",
+                LastName = "Lindgren",
+                PhoneNumber = "14785236",
+                Email = fifthUserEmail,
+                FaxNumber = "",
+                Company = "Brenda Company",
+                Address1 = "1249 Tongass Avenue, Suite B",
+                Address2 = "",
+                City = "Ketchikan",
+                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "Alaska"),
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
+                ZipPostalCode = "99901",
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            fifthUser.Addresses.Add(defaultFifthUserAddress);
+            fifthUser.BillingAddress = defaultFifthUserAddress;
+            fifthUser.ShippingAddress = defaultFifthUserAddress;
+            fifthUser.CustomerRoles.Add(crRegistered);
+            _customerRepository.Insert(fifthUser);
+            //set default customer name
+            _genericAttributeService.SaveAttribute(fifthUser, SystemCustomerAttributeNames.FirstName, defaultFifthUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(fifthUser, SystemCustomerAttributeNames.LastName, defaultFifthUserAddress.LastName);
+
+
+            //sixth user
+            var sixthUserEmail = "victoria_victoria@nopCommerce.com";
+            var sixthUser = new Customer
+            {
+                CustomerGuid = Guid.NewGuid(),
+                Email = sixthUserEmail,
+                Username = sixthUserEmail,
+                Password = "123456",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = "",
+                Active = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                LastActivityDateUtc = DateTime.UtcNow,
+            };
+            var defaultSixthUserAddress = new Address
+            {
+                FirstName = "Victoria",
+                LastName = "Terces",
+                PhoneNumber = "45612378",
+                Email = sixthUserEmail,
+                FaxNumber = "",
+                Company = "Terces Company",
+                Address1 = "201 1st Avenue South",
+                Address2 = "",
+                City = "Saskatoon",
+                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "Saskatchewan"),
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "CAN"),
+                ZipPostalCode = "S7K 1J9",
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            sixthUser.Addresses.Add(defaultSixthUserAddress);
+            sixthUser.BillingAddress = defaultSixthUserAddress;
+            sixthUser.ShippingAddress = defaultSixthUserAddress;
+            sixthUser.CustomerRoles.Add(crRegistered);
+            _customerRepository.Insert(sixthUser);
+            //set default customer name
+            _genericAttributeService.SaveAttribute(sixthUser, SystemCustomerAttributeNames.FirstName, defaultSixthUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(sixthUser, SystemCustomerAttributeNames.LastName, defaultSixthUserAddress.LastName);
 
 
             //search engine (crawler) built-in user
@@ -4037,6 +4307,869 @@ namespace Nop.Services.Installation
             };
             backgroundTaskUser.CustomerRoles.Add(crGuests);
             _customerRepository.Insert(backgroundTaskUser);
+        }
+
+        protected virtual void InstallOrders()
+        {
+            //default store
+            var defaultStore = _storeRepository.Table.FirstOrDefault();
+            if (defaultStore == null)
+                throw new Exception("No default store could be loaded");
+
+            //first order
+            var firstCustomer = _customerRepository.Table.First(c => c.Email.Equals("steve_gates@nopCommerce.com"));
+            var firstOrder = new Order()
+            {
+                StoreId = defaultStore.Id,
+                OrderGuid = Guid.NewGuid(),
+                Customer = firstCustomer,
+                CustomerLanguageId = _languageRepository.Table.First().Id,
+                CustomerIp = "127.0.0.1",
+                OrderSubtotalInclTax = 1855M,
+                OrderSubtotalExclTax = 1855M,
+                OrderSubTotalDiscountInclTax = decimal.Zero,
+                OrderSubTotalDiscountExclTax = decimal.Zero,
+                OrderShippingInclTax = decimal.Zero,
+                OrderShippingExclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeInclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeExclTax = decimal.Zero,
+                TaxRates = "0:0;",
+                OrderTax = decimal.Zero,
+                OrderTotal = 1855M,
+                RefundedAmount = decimal.Zero,
+                OrderDiscount = decimal.Zero,
+                CheckoutAttributeDescription = string.Empty,
+                CheckoutAttributesXml = string.Empty,
+                CustomerCurrencyCode = "USD",
+                CurrencyRate = 1M,
+                AffiliateId = 0,
+                OrderStatus = OrderStatus.Processing,
+                AllowStoringCreditCardNumber = false,
+                CardType = string.Empty,
+                CardName = string.Empty,
+                CardNumber = string.Empty,
+                MaskedCreditCardNumber = string.Empty,
+                CardCvv2 = string.Empty,
+                CardExpirationMonth = string.Empty,
+                CardExpirationYear = string.Empty,
+                PaymentMethodSystemName = "Payments.CheckMoneyOrder",
+                AuthorizationTransactionId = string.Empty,
+                AuthorizationTransactionCode = string.Empty,
+                AuthorizationTransactionResult = string.Empty,
+                CaptureTransactionId = string.Empty,
+                CaptureTransactionResult = string.Empty,
+                SubscriptionTransactionId = string.Empty,
+                PaymentStatus = PaymentStatus.Paid,
+                PaidDateUtc = DateTime.UtcNow,
+                BillingAddress = (Address)firstCustomer.BillingAddress.Clone(),
+                ShippingAddress = (Address)firstCustomer.ShippingAddress.Clone(),
+                ShippingStatus = ShippingStatus.NotYetShipped,
+                ShippingMethod = "Ground",
+                PickUpInStore = false,
+                ShippingRateComputationMethodSystemName = "Shipping.FixedRate",
+                CustomValuesXml = string.Empty,
+                VatNumber = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+            _orderRepository.Insert(firstOrder);
+
+            //item Apple iCam
+            var firstOrderItem1 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = firstOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Apple iCam")).Id,
+                UnitPriceInclTax = 1300M,
+                UnitPriceExclTax = 1300M,
+                PriceInclTax = 1300M,
+                PriceExclTax = 1300M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(firstOrderItem1);
+
+            //item Leica T Mirrorless Digital Camera
+            var fierstOrderItem2 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = firstOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Leica T Mirrorless Digital Camera")).Id,
+                UnitPriceInclTax = 530M,
+                UnitPriceExclTax = 530M,
+                PriceInclTax = 530M,
+                PriceExclTax = 530M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(fierstOrderItem2);
+
+            //item $25 Virtual Gift Card
+            var firstOrderItem3 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = firstOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("$25 Virtual Gift Card")).Id,
+                UnitPriceInclTax = 25M,
+                UnitPriceExclTax = 25M,
+                PriceInclTax = 25M,
+                PriceExclTax = 25M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = "From: Steve Gates &lt;steve_gates@nopCommerce.com&gt;<br />For: Brenda Lindgren &lt;brenda_lindgren@nopCommerce.com&gt;",
+                AttributesXml = "<Attributes><GiftCardInfo><RecipientName>Brenda Lindgren</RecipientName><RecipientEmail>brenda_lindgren@nopCommerce.com</RecipientEmail><SenderName>Steve Gates</SenderName><SenderEmail>steve_gates@gmail.com</SenderEmail><Message></Message></GiftCardInfo></Attributes>",
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(firstOrderItem3);
+
+            var firstOrderGiftcard = new GiftCard
+            {
+                GiftCardType = GiftCardType.Virtual,
+                PurchasedWithOrderItem = firstOrderItem3,
+                Amount = 25M,
+                IsGiftCardActivated = false,
+                GiftCardCouponCode = string.Empty,
+                RecipientName = "Brenda Lindgren",
+                RecipientEmail = "brenda_lindgren@nopCommerce.com",
+                SenderName = "Steve Gates",
+                SenderEmail = "steve_gates@nopCommerce.com",
+                Message = string.Empty,
+                IsRecipientNotified = false,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+            _giftCardRepository.Insert(firstOrderGiftcard);
+
+            //order notes
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order placed",
+                Order = firstOrder
+            });
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order paid",
+                Order = firstOrder
+            });
+
+
+            //second order
+            var secondCustomer = _customerRepository.Table.First(c => c.Email.Equals("arthur_holmes@nopCommerce.com"));
+            var secondOrder = new Order()
+            {
+                StoreId = defaultStore.Id,
+                OrderGuid = Guid.NewGuid(),
+                Customer = secondCustomer,
+                CustomerLanguageId = _languageRepository.Table.First().Id,
+                CustomerIp = "127.0.0.1",
+                OrderSubtotalInclTax = 2460M,
+                OrderSubtotalExclTax = 2460M,
+                OrderSubTotalDiscountInclTax = decimal.Zero,
+                OrderSubTotalDiscountExclTax = decimal.Zero,
+                OrderShippingInclTax = decimal.Zero,
+                OrderShippingExclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeInclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeExclTax = decimal.Zero,
+                TaxRates = "0:0;",
+                OrderTax = decimal.Zero,
+                OrderTotal = 2460M,
+                RefundedAmount = decimal.Zero,
+                OrderDiscount = decimal.Zero,
+                CheckoutAttributeDescription = string.Empty,
+                CheckoutAttributesXml = string.Empty,
+                CustomerCurrencyCode = "USD",
+                CurrencyRate = 1M,
+                AffiliateId = 0,
+                OrderStatus = OrderStatus.Pending,
+                AllowStoringCreditCardNumber = false,
+                CardType = string.Empty,
+                CardName = string.Empty,
+                CardNumber = string.Empty,
+                MaskedCreditCardNumber = string.Empty,
+                CardCvv2 = string.Empty,
+                CardExpirationMonth = string.Empty,
+                CardExpirationYear = string.Empty,
+                PaymentMethodSystemName = "Payments.CheckMoneyOrder",
+                AuthorizationTransactionId = string.Empty,
+                AuthorizationTransactionCode = string.Empty,
+                AuthorizationTransactionResult = string.Empty,
+                CaptureTransactionId = string.Empty,
+                CaptureTransactionResult = string.Empty,
+                SubscriptionTransactionId = string.Empty,
+                PaymentStatus = PaymentStatus.Pending,
+                PaidDateUtc = null,
+                BillingAddress = (Address)secondCustomer.BillingAddress.Clone(),
+                ShippingAddress = (Address)secondCustomer.ShippingAddress.Clone(),
+                ShippingStatus = ShippingStatus.NotYetShipped,
+                ShippingMethod = "Next Day Air",
+                PickUpInStore = false,
+                ShippingRateComputationMethodSystemName = "Shipping.FixedRate",
+                CustomValuesXml = string.Empty,
+                VatNumber = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+            _orderRepository.Insert(secondOrder);
+
+            //order notes
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order placed",
+                Order = secondOrder
+            });
+
+            //item Vintage Style Engagement Ring
+            var secondOrderItem1 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = secondOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Vintage Style Engagement Ring")).Id,
+                UnitPriceInclTax = 2100M,
+                UnitPriceExclTax = 2100M,
+                PriceInclTax = 2100M,
+                PriceExclTax = 2100M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(secondOrderItem1);
+
+            //item Flower Girl Bracelet
+            var secondOrderItem2 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = secondOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Flower Girl Bracelet")).Id,
+                UnitPriceInclTax = 360M,
+                UnitPriceExclTax = 360M,
+                PriceInclTax = 360M,
+                PriceExclTax = 360M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(secondOrderItem2);
+
+
+            //third order
+            var thirdCustomer = _customerRepository.Table.First(c => c.Email.Equals("james_pan@nopCommerce.com"));
+            var thirdOrder = new Order()
+            {
+                StoreId = defaultStore.Id,
+                OrderGuid = Guid.NewGuid(),
+                Customer = thirdCustomer,
+                CustomerLanguageId = _languageRepository.Table.First().Id,
+                CustomerIp = "127.0.0.1",
+                OrderSubtotalInclTax = 8.80M,
+                OrderSubtotalExclTax = 8.80M,
+                OrderSubTotalDiscountInclTax = decimal.Zero,
+                OrderSubTotalDiscountExclTax = decimal.Zero,
+                OrderShippingInclTax = decimal.Zero,
+                OrderShippingExclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeInclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeExclTax = decimal.Zero,
+                TaxRates = "0:0;",
+                OrderTax = decimal.Zero,
+                OrderTotal = 8.80M,
+                RefundedAmount = decimal.Zero,
+                OrderDiscount = decimal.Zero,
+                CheckoutAttributeDescription = string.Empty,
+                CheckoutAttributesXml = string.Empty,
+                CustomerCurrencyCode = "USD",
+                CurrencyRate = 1M,
+                AffiliateId = 0,
+                OrderStatus = OrderStatus.Pending,
+                AllowStoringCreditCardNumber = false,
+                CardType = string.Empty,
+                CardName = string.Empty,
+                CardNumber = string.Empty,
+                MaskedCreditCardNumber = string.Empty,
+                CardCvv2 = string.Empty,
+                CardExpirationMonth = string.Empty,
+                CardExpirationYear = string.Empty,
+                PaymentMethodSystemName = "Payments.CheckMoneyOrder",
+                AuthorizationTransactionId = string.Empty,
+                AuthorizationTransactionCode = string.Empty,
+                AuthorizationTransactionResult = string.Empty,
+                CaptureTransactionId = string.Empty,
+                CaptureTransactionResult = string.Empty,
+                SubscriptionTransactionId = string.Empty,
+                PaymentStatus = PaymentStatus.Pending,
+                PaidDateUtc = null,
+                BillingAddress = (Address)thirdCustomer.BillingAddress.Clone(),
+                ShippingAddress = null,
+                ShippingStatus = ShippingStatus.ShippingNotRequired,
+                ShippingMethod = string.Empty,
+                PickUpInStore = false,
+                ShippingRateComputationMethodSystemName = string.Empty,
+                CustomValuesXml = string.Empty,
+                VatNumber = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+            _orderRepository.Insert(thirdOrder);
+
+            //order notes
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order placed",
+                Order = thirdOrder
+            });
+
+            //item If You Wait
+            var thirdOrderItem1 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = thirdOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("If You Wait (donation)")).Id,
+                UnitPriceInclTax = 3M,
+                UnitPriceExclTax = 3M,
+                PriceInclTax = 3M,
+                PriceExclTax = 3M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(thirdOrderItem1);
+
+            //item Night Visions
+            var thirdOrderItem2 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = thirdOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Night Visions")).Id,
+                UnitPriceInclTax = 2.8M,
+                UnitPriceExclTax = 2.8M,
+                PriceInclTax = 2.8M,
+                PriceExclTax = 2.8M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(thirdOrderItem2);
+
+            //item Science & Faith
+            var thirdOrderItem3 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = thirdOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Science & Faith")).Id,
+                UnitPriceInclTax = 3M,
+                UnitPriceExclTax = 3M,
+                PriceInclTax = 3M,
+                PriceExclTax = 3M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(thirdOrderItem3);
+
+
+            //fourth order
+            var fourthCustomer = _customerRepository.Table.First(c => c.Email.Equals("brenda_lindgren@nopCommerce.com"));
+            var fourthOrder = new Order()
+            {
+                StoreId = defaultStore.Id,
+                OrderGuid = Guid.NewGuid(),
+                Customer = fourthCustomer,
+                CustomerLanguageId = _languageRepository.Table.First().Id,
+                CustomerIp = "127.0.0.1",
+                OrderSubtotalInclTax = 102M,
+                OrderSubtotalExclTax = 102M,
+                OrderSubTotalDiscountInclTax = decimal.Zero,
+                OrderSubTotalDiscountExclTax = decimal.Zero,
+                OrderShippingInclTax = decimal.Zero,
+                OrderShippingExclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeInclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeExclTax = decimal.Zero,
+                TaxRates = "0:0;",
+                OrderTax = decimal.Zero,
+                OrderTotal = 102M,
+                RefundedAmount = decimal.Zero,
+                OrderDiscount = decimal.Zero,
+                CheckoutAttributeDescription = string.Empty,
+                CheckoutAttributesXml = string.Empty,
+                CustomerCurrencyCode = "USD",
+                CurrencyRate = 1M,
+                AffiliateId = 0,
+                OrderStatus = OrderStatus.Processing,
+                AllowStoringCreditCardNumber = false,
+                CardType = string.Empty,
+                CardName = string.Empty,
+                CardNumber = string.Empty,
+                MaskedCreditCardNumber = string.Empty,
+                CardCvv2 = string.Empty,
+                CardExpirationMonth = string.Empty,
+                CardExpirationYear = string.Empty,
+                PaymentMethodSystemName = "Payments.CheckMoneyOrder",
+                AuthorizationTransactionId = string.Empty,
+                AuthorizationTransactionCode = string.Empty,
+                AuthorizationTransactionResult = string.Empty,
+                CaptureTransactionId = string.Empty,
+                CaptureTransactionResult = string.Empty,
+                SubscriptionTransactionId = string.Empty,
+                PaymentStatus = PaymentStatus.Paid,
+                PaidDateUtc = DateTime.UtcNow,
+                BillingAddress = (Address)fourthCustomer.BillingAddress.Clone(),
+                ShippingAddress = (Address)fourthCustomer.ShippingAddress.Clone(),
+                ShippingStatus = ShippingStatus.Shipped,
+                ShippingMethod = "Pickup in store",
+                PickUpInStore = true,
+                PickupAddress = (Address)fourthCustomer.ShippingAddress.Clone(),
+                ShippingRateComputationMethodSystemName = "Pickup.PickupInStore",
+                CustomValuesXml = string.Empty,
+                VatNumber = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+            _orderRepository.Insert(fourthOrder);
+
+            //order notes
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order placed",
+                Order = fourthOrder
+            });
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order paid",
+                Order = fourthOrder
+            });
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order shipped",
+                Order = fourthOrder
+            });
+
+            //item Pride and Prejudice
+            var fourthOrderItem1 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = fourthOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Pride and Prejudice")).Id,
+                UnitPriceInclTax = 24M,
+                UnitPriceExclTax = 24M,
+                PriceInclTax = 24M,
+                PriceExclTax = 24M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(fourthOrderItem1);
+
+            //item First Prize Pies
+            var fourthOrderItem2 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = fourthOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("First Prize Pies")).Id,
+                UnitPriceInclTax = 51M,
+                UnitPriceExclTax = 51M,
+                PriceInclTax = 51M,
+                PriceExclTax = 51M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(fourthOrderItem2);
+
+            //item Fahrenheit 451 by Ray Bradbury
+            var fourthOrderItem3 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = fourthOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Fahrenheit 451 by Ray Bradbury")).Id,
+                UnitPriceInclTax = 27M,
+                UnitPriceExclTax = 27M,
+                PriceInclTax = 27M,
+                PriceExclTax = 27M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(fourthOrderItem3);
+
+            //shipments
+            //shipment 1
+            var fourthOrderShipment1 = new Shipment
+            {
+                Order = fourthOrder,
+                TrackingNumber = string.Empty,
+                TotalWeight = 4M,
+                ShippedDateUtc = DateTime.UtcNow,
+                DeliveryDateUtc = DateTime.UtcNow,
+                AdminComment = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+            _shipmentRepository.Insert(fourthOrderShipment1);
+
+            var fourthOrderShipment1Item1 = new ShipmentItem()
+            {
+                OrderItemId = fourthOrderItem1.Id,
+                Quantity = 1,
+                WarehouseId = 0,
+                Shipment = fourthOrderShipment1
+            };
+            _shipmentItemRepository.Insert(fourthOrderShipment1Item1);
+
+            var fourthOrderShipment1Item2 = new ShipmentItem()
+            {
+                OrderItemId = fourthOrderItem2.Id,
+                Quantity = 1,
+                WarehouseId = 0,
+                Shipment = fourthOrderShipment1
+            };
+            _shipmentItemRepository.Insert(fourthOrderShipment1Item2);
+
+            //shipment 2
+            var fourthOrderShipment2 = new Shipment
+            {
+                Order = fourthOrder,
+                TrackingNumber = string.Empty,
+                TotalWeight = 2M,
+                ShippedDateUtc = DateTime.UtcNow,
+                DeliveryDateUtc = DateTime.UtcNow,
+                AdminComment = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+            _shipmentRepository.Insert(fourthOrderShipment2);
+
+            var fourthOrderShipment2Item1 = new ShipmentItem()
+            {
+                OrderItemId = fourthOrderItem3.Id,
+                Quantity = 1,
+                WarehouseId = 0,
+                Shipment = fourthOrderShipment2
+            };
+            _shipmentItemRepository.Insert(fourthOrderShipment2Item1);
+
+
+
+
+            //fifth order
+            var fifthCustomer = _customerRepository.Table.First(c => c.Email.Equals("victoria_victoria@nopCommerce.com"));
+            var fifthOrder = new Order()
+            {
+                StoreId = defaultStore.Id,
+                OrderGuid = Guid.NewGuid(),
+                Customer = fifthCustomer,
+                CustomerLanguageId = _languageRepository.Table.First().Id,
+                CustomerIp = "127.0.0.1",
+                OrderSubtotalInclTax = 43.50M,
+                OrderSubtotalExclTax = 43.50M,
+                OrderSubTotalDiscountInclTax = decimal.Zero,
+                OrderSubTotalDiscountExclTax = decimal.Zero,
+                OrderShippingInclTax = decimal.Zero,
+                OrderShippingExclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeInclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeExclTax = decimal.Zero,
+                TaxRates = "0:0;",
+                OrderTax = decimal.Zero,
+                OrderTotal = 43.50M,
+                RefundedAmount = decimal.Zero,
+                OrderDiscount = decimal.Zero,
+                CheckoutAttributeDescription = string.Empty,
+                CheckoutAttributesXml = string.Empty,
+                CustomerCurrencyCode = "USD",
+                CurrencyRate = 1M,
+                AffiliateId = 0,
+                OrderStatus = OrderStatus.Complete,
+                AllowStoringCreditCardNumber = false,
+                CardType = string.Empty,
+                CardName = string.Empty,
+                CardNumber = string.Empty,
+                MaskedCreditCardNumber = string.Empty,
+                CardCvv2 = string.Empty,
+                CardExpirationMonth = string.Empty,
+                CardExpirationYear = string.Empty,
+                PaymentMethodSystemName = "Payments.CheckMoneyOrder",
+                AuthorizationTransactionId = string.Empty,
+                AuthorizationTransactionCode = string.Empty,
+                AuthorizationTransactionResult = string.Empty,
+                CaptureTransactionId = string.Empty,
+                CaptureTransactionResult = string.Empty,
+                SubscriptionTransactionId = string.Empty,
+                PaymentStatus = PaymentStatus.Paid,
+                PaidDateUtc = DateTime.UtcNow,
+                BillingAddress = (Address)fifthCustomer.BillingAddress.Clone(),
+                ShippingAddress = (Address)fifthCustomer.ShippingAddress.Clone(),
+                ShippingStatus = ShippingStatus.Delivered,
+                ShippingMethod = "Ground",
+                PickUpInStore = false,
+                ShippingRateComputationMethodSystemName = "Shipping.FixedRate",
+                CustomValuesXml = string.Empty,
+                VatNumber = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+            _orderRepository.Insert(fifthOrder);
+
+            //order notes
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order placed",
+                Order = fifthOrder
+            });
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order paid",
+                Order = fifthOrder
+            });
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order shipped",
+                Order = fifthOrder
+            });
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order delivered",
+                Order = fifthOrder
+            });
+
+            //item Levi's 511 Jeans
+            var fifthOrderItem1 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = fifthOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Levi's 511 Jeans")).Id,
+                UnitPriceInclTax = 43.50M,
+                UnitPriceExclTax = 43.50M,
+                PriceInclTax = 43.50M,
+                PriceExclTax = 43.50M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(fifthOrderItem1);
+
+            //shipment 1
+            var fifthOrderShipment1 = new Shipment
+            {
+                Order = fifthOrder,
+                TrackingNumber = string.Empty,
+                TotalWeight = 2M,
+                ShippedDateUtc = DateTime.UtcNow,
+                DeliveryDateUtc = DateTime.UtcNow,
+                AdminComment = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+            _shipmentRepository.Insert(fifthOrderShipment1);
+
+            var fifthOrderShipment1Item1 = new ShipmentItem()
+            {
+                OrderItemId = fifthOrderItem1.Id,
+                Quantity = 1,
+                WarehouseId = 0,
+                Shipment = fifthOrderShipment1
+            };
+            _shipmentItemRepository.Insert(fifthOrderShipment1Item1);
+        }
+
+        protected virtual void InstallActivityLog(string defaultUserEmail)
+        {
+            //default customer/user
+            var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail);
+            if (defaultCustomer == null)
+                throw new Exception("Cannot load default customer");
+
+            _activityLogRepository.Insert(new ActivityLog()
+            {
+                ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("EditCategory")),
+                Comment = "Edited a category ('Computers')",
+                CreatedOnUtc = DateTime.UtcNow,
+                Customer = defaultCustomer,
+                IpAddress = "127.0.0.1"
+            });
+            _activityLogRepository.Insert(new ActivityLog()
+            {
+                ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("EditDiscount")),
+                Comment = "Edited a discount ('Sample discount with coupon code')",
+                CreatedOnUtc = DateTime.UtcNow,
+                Customer = defaultCustomer,
+                IpAddress = "127.0.0.1"
+            });
+            _activityLogRepository.Insert(new ActivityLog()
+            {
+                ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("EditSpecAttribute")),
+                Comment = "Edited a specification attribute ('CPU Type')",
+                CreatedOnUtc = DateTime.UtcNow,
+                Customer = defaultCustomer,
+                IpAddress = "127.0.0.1"
+            });
+            _activityLogRepository.Insert(new ActivityLog()
+            {
+                ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("AddNewProductAttribute")),
+                Comment = "Added a new product attribute ('Some attribute')",
+                CreatedOnUtc = DateTime.UtcNow,
+                Customer = defaultCustomer,
+                IpAddress = "127.0.0.1"
+            });
+            _activityLogRepository.Insert(new ActivityLog()
+            {
+                ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("DeleteGiftCard")),
+                Comment = "Deleted a gift card ('bdbbc0ef-be57')",
+                CreatedOnUtc = DateTime.UtcNow,
+                Customer = defaultCustomer,
+                IpAddress = "127.0.0.1"
+            });
+        }
+
+        protected virtual void InstallSearchTerms()
+        {
+            //default store
+            var defaultStore = _storeRepository.Table.FirstOrDefault();
+            if (defaultStore == null)
+                throw new Exception("No default store could be loaded");
+
+            _searchTermRepository.Insert(new SearchTerm()
+            {
+                Count = 34,
+                Keyword = "computer",
+                StoreId = defaultStore.Id
+            });
+            _searchTermRepository.Insert(new SearchTerm()
+            {
+                Count = 30,
+                Keyword = "camera",
+                StoreId = defaultStore.Id
+            });
+            _searchTermRepository.Insert(new SearchTerm()
+            {
+                Count = 27,
+                Keyword = "jewelry",
+                StoreId = defaultStore.Id
+            });
+            _searchTermRepository.Insert(new SearchTerm()
+            {
+                Count = 26,
+                Keyword = "shoes",
+                StoreId = defaultStore.Id
+            });
+            _searchTermRepository.Insert(new SearchTerm()
+            {
+                Count = 19,
+                Keyword = "jeans",
+                StoreId = defaultStore.Id
+            });
+            _searchTermRepository.Insert(new SearchTerm()
+            {
+                Count = 10,
+                Keyword = "gift",
+                StoreId = defaultStore.Id
+            });
         }
 
         protected virtual void HashDefaultCustomerPassword(string defaultUserEmail, string defaultUserPassword)
@@ -4156,7 +5289,7 @@ namespace Nop.Services.Installation
                                        {
                                            Name = "NewReturnRequest.StoreOwnerNotification",
                                            Subject = "%Store.Name%. New return request.",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% has just submitted a new return request. Details are below:<br />Request ID: %ReturnRequest.ID%<br />Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%<br />Reason for return: %ReturnRequest.Reason%<br />Requested action: %ReturnRequest.RequestedAction%<br />Customer comments:<br />%ReturnRequest.CustomerComment%</p>",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% has just submitted a new return request. Details are below:<br />Request ID: %ReturnRequest.CustomNumber%<br />Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%<br />Reason for return: %ReturnRequest.Reason%<br />Requested action: %ReturnRequest.RequestedAction%<br />Customer comments:<br />%ReturnRequest.CustomerComment%</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4268,7 +5401,7 @@ namespace Nop.Services.Installation
                                        {
                                            Name = "ReturnRequestStatusChanged.CustomerNotification",
                                            Subject = "%Store.Name%. Return request status was changed.",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Customer.FullName%,<br />Your return request #%ReturnRequest.ID% status has been changed.</p>",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Customer.FullName%,<br />Your return request #%ReturnRequest.CustomNumber% status has been changed.</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4365,7 +5498,15 @@ namespace Nop.Services.Installation
                                            Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just submitted for a vendor account. Details are below:<br />Vendor name: %Vendor.Name%<br />Vendor email: %Vendor.Email%<br /><br />You can activate it in admin area.</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
-                                       }
+                                       },
+                                   new MessageTemplate
+                                   {
+                                       Name = "VendorInformationChange.StoreOwnerNotification",
+                                       Subject = "%Store.Name%. Vendor information change.",
+                                       Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Vendor %Vendor.Name% (%Vendor.Email%) has just changed information about itself.</p>",
+                                       IsActive = true,
+                                       EmailAccountId = eaGeneral.Id
+                                   }
                                };
             _messageTemplateRepository.Insert(messageTemplates);
         }
@@ -4601,14 +5742,25 @@ namespace Nop.Services.Installation
                         "eucookielawaccept",
                         "page-not-found"
                     },
+                CustomHeadTags = "",
             });
 
             settingService.SaveSetting(new AdminAreaSettings
             {
                 DefaultGridPageSize = 15,
+                PopupGridPageSize = 10,
                 GridPageSizes = "10, 15, 20, 50, 100",
                 RichEditorAdditionalSettings = null,
                 RichEditorAllowJavaScript = false
+            });
+
+
+            settingService.SaveSetting(new ProductEditorSettings
+            {
+                Weight = true,
+                Dimensions = true,
+                ProductAttributes = true,
+                SpecificationAttributes =true
             });
 
             settingService.SaveSetting(new CatalogSettings
@@ -4677,7 +5829,10 @@ namespace Nop.Services.Installation
                 DefaultCategoryPageSizeOptions = "6, 3, 9",
                 DefaultCategoryPageSize = 6,
                 DefaultManufacturerPageSizeOptions = "6, 3, 9",
-                DefaultManufacturerPageSize = 6
+                DefaultManufacturerPageSize = 6,
+                ShowProductReviewsTabOnAccountPage = true,
+                ProductReviewsPageSizeOnAccountPage = 10,
+                ExportImportProductAttributes = true
             });
 
             settingService.SaveSetting(new LocalizationSettings
@@ -4689,7 +5844,7 @@ namespace Nop.Services.Installation
                 LoadAllLocaleRecordsOnStartup = true,
                 LoadAllLocalizedPropertiesOnStartup = true,
                 LoadAllUrlRecordsOnStartup = false,
-                IgnoreRtlPropertyForAdminArea = false,
+                IgnoreRtlPropertyForAdminArea = false
             });
 
             settingService.SaveSetting(new CustomerSettings
@@ -4736,6 +5891,9 @@ namespace Nop.Services.Installation
                 OnlineCustomerMinutes = 20,
                 StoreLastVisitedPage = false,
                 SuffixDeletedCustomers = false,
+                EnteringEmailTwice = false,
+                RequireRegistrationForDownloadableProducts = false,
+                DeleteGuestTaskOlderThanMinutes = 1440
             });
 
             settingService.SaveSetting(new AddressSettings
@@ -4772,14 +5930,15 @@ namespace Nop.Services.Installation
                 MaximumImageSize = 1980,
                 DefaultPictureZoomEnabled = false,
                 DefaultImageQuality = 80,
-                MultipleThumbDirectories = false
+                MultipleThumbDirectories = false,
+                ImportProductImagesUsingHash = true
             });
 
             settingService.SaveSetting(new StoreInformationSettings
             {
                 StoreClosed = false,
                 DefaultStoreTheme = "DefaultClean",
-                AllowCustomerToSelectTheme = true,
+                AllowCustomerToSelectTheme = false,
                 DisplayMiniProfilerInPublicStore = false,
                 DisplayEuCookieLawWarning = false,
                 FacebookLink = "http://www.facebook.com/nopCommerce",
@@ -4858,10 +6017,12 @@ namespace Nop.Services.Installation
 
             settingService.SaveSetting(new OrderSettings
             {
+                ReturnRequestNumberMask = "{ID}",
                 IsReOrderAllowed = true,
                 MinOrderSubtotalAmount = 0,
                 MinOrderSubtotalAmountIncludingTax = false,
                 MinOrderTotalAmount = 0,
+                AutoUpdateOrderTotalsOnEditingOrder = false,
                 AnonymousCheckoutAllowed = true,
                 TermsOfServiceOnShoppingCartPage = true,
                 TermsOfServiceOnOrderConfirmPage = false,
@@ -4871,6 +6032,7 @@ namespace Nop.Services.Installation
                 DisableOrderCompletedPage = false,
                 AttachPdfInvoiceToOrderPlacedEmail = false,
                 AttachPdfInvoiceToOrderCompletedEmail = false,
+                GeneratePdfInvoiceInCustomerLanguage = true,
                 AttachPdfInvoiceToOrderPaidEmail = false,
                 ReturnRequestsEnabled = true,
                 NumberOfDaysReturnRequestAvailable = 365,
@@ -4891,8 +6053,10 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new ShippingSettings
             {
                 ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedRate" },
+                ActivePickupPointProviderSystemNames = new List<string> { "Pickup.PickupInStore" },
+                ShipToSameAddress = false,
                 AllowPickUpInStore = true,
-                PickUpInStoreFee = decimal.Zero,
+                DisplayPickupPointsOnMap = false,
                 UseWarehouseLocation = false,
                 NotifyCustomerAboutShippingFromMultipleLocations = false,
                 FreeShippingOverXEnabled = false,
@@ -4943,7 +6107,8 @@ namespace Nop.Services.Installation
                 EuVatAllowVatExemption = true,
                 EuVatUseWebService = false,
                 EuVatAssumeValid = false,
-                EuVatEmailAdminWhenNewVatSubmitted = false
+                EuVatEmailAdminWhenNewVatSubmitted = false,
+                LogErrors = true
             });
 
             settingService.SaveSetting(new DateTimeSettings
@@ -4981,6 +6146,8 @@ namespace Nop.Services.Installation
                 AllowCustomersToManageSubscriptions = false,
                 AllowGuestsToCreatePosts = false,
                 AllowGuestsToCreateTopics = false,
+                AllowPostVoting = true,
+                MaxVotesPerDay = 30,
                 TopicSubjectMaxLength = 450,
                 PostMaxLength = 4000,
                 StrippedTopicMaxLength = 45,
@@ -5013,7 +6180,10 @@ namespace Nop.Services.Installation
                 VendorsBlockItemsToDisplay = 0,
                 ShowVendorOnProductDetailsPage = true,
                 AllowCustomersToContactVendors = true,
-                AllowCustomersToApplyForVendorAccount = true
+                AllowCustomersToApplyForVendorAccount = true,
+                AllowVendorsToEditInfo = false,
+                NotifyStoreOwnerAboutVendorInformationChange = true,
+                MaximumProductNumber = 3000
             });
 
             var eaGeneral = _emailAccountRepository.Table.FirstOrDefault();
@@ -5147,12 +6317,36 @@ namespace Nop.Services.Installation
                 Name = "1 TB",
                 DisplayOrder = 3,
             });
+            var sa5 = new SpecificationAttribute
+            {
+                Name = "Color",
+                DisplayOrder = 1,
+            };
+            sa5.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
+            {
+                Name = "Grey",
+                DisplayOrder = 2,
+                ColorSquaresRgb = "#8a97a8"
+            });
+            sa5.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
+            {
+                Name = "Red",
+                DisplayOrder = 3,
+                ColorSquaresRgb = "#8a374a"
+            });
+            sa5.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
+            {
+                Name = "Blue",
+                DisplayOrder = 4,
+                ColorSquaresRgb = "#47476f"
+            });
             var specificationAttributes = new List<SpecificationAttribute>
                                 {
                                     sa1,
                                     sa2,
                                     sa3,
-                                    sa4
+                                    sa4,
+                                    sa5
                                 };
             _specificationAttributeRepository.Insert(specificationAttributes);
         }
@@ -5164,6 +6358,10 @@ namespace Nop.Services.Installation
                 new ProductAttribute
                 {
                     Name = "Color",
+                },
+                new ProductAttribute
+                {
+                    Name = "Print",
                 },
                 new ProductAttribute
                 {
@@ -5220,7 +6418,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_computers.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Computers")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_computers.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Computers")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 1,
@@ -5239,7 +6437,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_desktops.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Desktops")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_desktops.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Desktops")).Id,
                 PriceRanges = "-1000;1000-1200;1200-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5259,7 +6457,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_notebooks.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Notebooks")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_notebooks.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Notebooks")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
@@ -5278,7 +6476,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_software.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Software")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_software.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Software")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 3,
@@ -5296,7 +6494,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_electronics.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Electronics")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_electronics.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Electronics")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 ShowOnHomePage = true,
@@ -5316,7 +6514,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_camera_photo.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Camera, photo")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_camera_photo.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Camera, photo")).Id,
                 PriceRanges = "-500;500-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5336,7 +6534,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_cell_phones.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Cell phones")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_cell_phones.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Cell phones")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
@@ -5355,7 +6553,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_accessories.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Accessories")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_accessories.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Accessories")).Id,
                 IncludeInTopMenu = true,
                 PriceRanges = "-100;100-;",
                 Published = true,
@@ -5374,7 +6572,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Apparel")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Apparel")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 ShowOnHomePage = true,
@@ -5394,7 +6592,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_shoes.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Shoes")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_shoes.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Shoes")).Id,
                 PriceRanges = "-500;500-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5414,7 +6612,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_clothing.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Clothing")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_clothing.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Clothing")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
@@ -5433,7 +6631,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel_accessories.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Apparel Accessories")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel_accessories.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Apparel Accessories")).Id,
                 IncludeInTopMenu = true,
                 PriceRanges = "-100;100-;",
                 Published = true,
@@ -5452,7 +6650,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_digital_downloads.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Digital downloads")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_digital_downloads.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Digital downloads")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 ShowOnHomePage = true,
@@ -5473,7 +6671,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_book.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Book")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_book.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Book")).Id,
                 PriceRanges = "-25;25-50;50-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5492,7 +6690,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jewelry.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Jewelry")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jewelry.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Jewelry")).Id,
                 PriceRanges = "0-500;500-700;700-3000;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5510,7 +6708,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_gift_cards.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Gift Cards")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_gift_cards.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Gift Cards")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 7,
@@ -5555,7 +6753,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_apple.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Apple")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_apple.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Apple")).Id,
                 DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -5572,7 +6770,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_hp.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Hp")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_hp.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Hp")).Id,
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -5589,7 +6787,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_nike.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Nike")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_nike.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Nike")).Id,
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -5826,12 +7024,12 @@ namespace Nop.Services.Installation
             allProducts.Add(productBuildComputer);
             productBuildComputer.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_1.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productBuildComputer.Name)),
                 DisplayOrder = 1,
             });
             productBuildComputer.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_2.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productBuildComputer.Name)),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productBuildComputer);
@@ -5882,7 +7080,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productDigitalStorm);
             productDigitalStorm.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DigitalStorm.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDigitalStorm.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DigitalStorm.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productDigitalStorm.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productDigitalStorm);
@@ -5933,7 +7131,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productLenovoIdeaCentre);
             productLenovoIdeaCentre.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoIdeaCentre.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoIdeaCentre.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoIdeaCentre.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productLenovoIdeaCentre.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productLenovoIdeaCentre);
@@ -6028,12 +7226,12 @@ namespace Nop.Services.Installation
             allProducts.Add(productAppleMacBookPro);
             productAppleMacBookPro.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleMacBookPro.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_1.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productAppleMacBookPro.Name)),
                 DisplayOrder = 1,
             });
             productAppleMacBookPro.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleMacBookPro.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_2.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productAppleMacBookPro.Name)),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productAppleMacBookPro);
@@ -6115,7 +7313,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productAsusN551JK);
             productAsusN551JK.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc_N551JK.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusN551JK.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc_N551JK.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productAsusN551JK.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productAsusN551JK);
@@ -6198,7 +7396,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productSamsungSeries);
             productSamsungSeries.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungNP900X4C.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSamsungSeries.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungNP900X4C.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productSamsungSeries.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productSamsungSeries);
@@ -6288,12 +7486,12 @@ namespace Nop.Services.Installation
             allProducts.Add(productHpSpectre);
             productHpSpectre.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpSpectre.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_1.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHpSpectre.Name)),
                 DisplayOrder = 1,
             });
             productHpSpectre.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpSpectre.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_2.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHpSpectre.Name)),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productHpSpectre);
@@ -6381,7 +7579,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productHpEnvy);
             productHpEnvy.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpEnvy6.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpEnvy.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpEnvy6.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHpEnvy.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productHpEnvy);
@@ -6463,7 +7661,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productLenovoThinkpad);
             productLenovoThinkpad.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoThinkpad.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoThinkpad.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoThinkpad.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productLenovoThinkpad.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productLenovoThinkpad);
@@ -6515,7 +7713,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productAdobePhotoshop);
             productAdobePhotoshop.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdobePhotoshop.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAdobePhotoshop.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdobePhotoshop.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productAdobePhotoshop.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productAdobePhotoshop);
@@ -6567,7 +7765,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productWindows8Pro);
             productWindows8Pro.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Windows8.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productWindows8Pro.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Windows8.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productWindows8Pro.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productWindows8Pro);
@@ -6580,12 +7778,16 @@ namespace Nop.Services.Installation
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Sound Forge Pro 11",
+                Name = "Sound Forge Pro 11 (recurring)",
                 Sku = "SF_PRO_11",
                 ShortDescription = "Advanced audio waveform editor.",
                 FullDescription = "<p>Sound Forge™ Pro is the application of choice for a generation of creative and prolific artists, producers, and editors. Record audio quickly on a rock-solid platform, address sophisticated audio processing tasks with surgical precision, and render top-notch master files with ease. New features include one-touch recording, metering for the new critical standards, more repair and restoration tools, and exclusive round-trip interoperability with SpectraLayers Pro. Taken together, these enhancements make this edition of Sound Forge Pro the deepest and most advanced audio editing platform available.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "major-league-baseball-2k9",
+                IsRecurring = true,
+                RecurringCycleLength = 30,
+                RecurringCyclePeriod = RecurringProductCyclePeriod.Months,
+                RecurringTotalCycles = 12,
                 AllowCustomerReviews = true,
                 Price = 54.99M,
                 IsShipEnabled = true,
@@ -6618,7 +7820,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productSoundForge);
             productSoundForge.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SoundForge.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSoundForge.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SoundForge.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productSoundForge.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productSoundForge);
@@ -6674,12 +7876,12 @@ namespace Nop.Services.Installation
             allProducts.Add(productNikonD5500DSLR);
             productNikonD5500DSLR.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNikonD5500DSLR.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_1.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productNikonD5500DSLR.Name)),
                 DisplayOrder = 1,
             });
             productNikonD5500DSLR.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNikonD5500DSLR.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_2.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productNikonD5500DSLR.Name)),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productNikonD5500DSLR);
@@ -6716,7 +7918,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productNikonD5500DSLR_associated_1);
             productNikonD5500DSLR_associated_1.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_black.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Black")),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_black.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Canon Digital SLR Camera - Black")),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNikonD5500DSLR_associated_1);
@@ -6753,7 +7955,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productNikonD5500DSLR_associated_2);
             productNikonD5500DSLR_associated_2.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_red.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Silver")),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_red.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Canon Digital SLR Camera - Silver")),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNikonD5500DSLR_associated_2);
@@ -6804,7 +8006,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productLeica);
             productLeica.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeicaT.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLeica.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeicaT.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productLeica.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productLeica);
@@ -6864,7 +8066,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productAppleICam);
             productAppleICam.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_iCam.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleICam.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_iCam.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productAppleICam.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productAppleICam);
@@ -6920,7 +8122,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productHtcOne);
             productHtcOne.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_M8.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOne.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_M8.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHtcOne.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productHtcOne);
@@ -6973,12 +8175,12 @@ namespace Nop.Services.Installation
             allProducts.Add(productHtcOneMini);
             productHtcOneMini.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOneMini.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_1.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHtcOneMini.Name)),
                 DisplayOrder = 1,
             });
             productHtcOneMini.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOneMini.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_2.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHtcOneMini.Name)),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productHtcOneMini);
@@ -7030,7 +8232,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productNokiaLumia);
             productNokiaLumia.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Lumia1020.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNokiaLumia.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Lumia1020.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productNokiaLumia.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNokiaLumia);
@@ -7049,7 +8251,7 @@ namespace Nop.Services.Installation
                 Name = "Beats Pill 2.0 Wireless Speaker",
                 Sku = "BP_20_WSP",
                 ShortDescription = "<b>Pill 2.0 Portable Bluetooth Speaker (1-Piece):</b> Watch your favorite movies and listen to music with striking sound quality. This lightweight, portable speaker is easy to take with you as you travel to any destination, keeping you entertained wherever you are. ",
-                FullDescription = "<p<ul><li>Pair and play with your Bluetooth® device with 30 foot range</li><li>Built-in speakerphone</li><li>7 hour rechargeable battery</li><li>Power your other devices with USB charge out</li><li>Tap two Beats Pills™ together for twice the sound with Beats Bond™</li></ul></p>",
+                FullDescription = "<ul><li>Pair and play with your Bluetooth® device with 30 foot range</li><li>Built-in speakerphone</li><li>7 hour rechargeable battery</li><li>Power your other devices with USB charge out</li><li>Tap two Beats Pills™ together for twice the sound with Beats Bond™</li></ul>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "acer-aspire-one-89-mini-notebook-case-black",
                 AllowCustomerReviews = true,
@@ -7105,12 +8307,12 @@ namespace Nop.Services.Installation
             allProducts.Add(productBeatsPill);
             productBeatsPill.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBeatsPill.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_1.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productBeatsPill.Name)),
                 DisplayOrder = 1,
             });
             productBeatsPill.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBeatsPill.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_2.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productBeatsPill.Name)),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productBeatsPill);
@@ -7161,7 +8363,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productUniversalTabletCover);
             productUniversalTabletCover.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_TabletCover.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productUniversalTabletCover.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_TabletCover.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productUniversalTabletCover.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productUniversalTabletCover);
@@ -7211,7 +8413,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productPortableSoundSpeakers);
             productPortableSoundSpeakers.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Speakers.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPortableSoundSpeakers.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Speakers.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productPortableSoundSpeakers.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productPortableSoundSpeakers);
@@ -7307,6 +8509,29 @@ namespace Nop.Services.Installation
                                 DisplayOrder = 2,
                             },
                         }
+                    },
+                    new ProductAttributeMapping
+                    {
+                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Print"),
+                        AttributeControlType = AttributeControlType.ImageSquares,
+                        IsRequired = true,
+                        ProductAttributeValues =
+                        {
+                            new ProductAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "Natural",
+                                DisplayOrder = 1,
+                                ImageSquaresPictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "p_attribute_print_2.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Natural Print")).Id,
+                            },
+                            new ProductAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "Fresh",
+                                DisplayOrder = 2,
+                                ImageSquaresPictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "p_attribute_print_1.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Fresh Print")).Id,
+                            },
+                        }
                     }
                 },
                 ProductCategories =
@@ -7324,21 +8549,36 @@ namespace Nop.Services.Installation
                         Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "Nike"),
                         DisplayOrder = 2,
                     }
+                },
+                ProductSpecificationAttributes =
+                {
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = false,
+                        DisplayOrder = 1,
+                        SpecificationAttributeOption =
+                            _specificationAttributeRepository.Table.Single(sa => sa.Name == "Color")
+                                .SpecificationAttributeOptions.Single(sao => sao.Name == "Grey")
+                    }
                 }
             };
             allProducts.Add(productNikeFloral);
             productNikeFloral.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeFloral.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_1.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productNikeFloral.Name)),
                 DisplayOrder = 1,
             });
             productNikeFloral.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeFloral.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_2.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productNikeFloral.Name)),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productNikeFloral);
 
+            productNikeFloral.ProductAttributeMappings.First(x => x.ProductAttribute.Name == "Print").ProductAttributeValues.First(x => x.Name == "Natural").PictureId = productNikeFloral.ProductPictures.ElementAt(0).PictureId;
+            productNikeFloral.ProductAttributeMappings.First(x => x.ProductAttribute.Name == "Print").ProductAttributeValues.First(x => x.Name == "Fresh").PictureId = productNikeFloral.ProductPictures.ElementAt(1).PictureId;
+            _productRepository.Update(productNikeFloral);
 
 
 
@@ -7349,7 +8589,8 @@ namespace Nop.Services.Installation
                 Name = "adidas Consortium Campus 80s Running Shoes",
                 Sku = "AD_C80_RS",
                 ShortDescription = "adidas Consortium Campus 80s Primeknit Light Maroon/Running Shoes",
-                FullDescription = "<p>One of three colorways of the adidas Consortium Campus 80s Primeknit set to drop alongside each other. This pair comes in light maroon and running white. Featuring a maroon-based primeknit upper with white accents. A limited release, look out for these at select adidas Consortium accounts worldwide.</p>",
+                FullDescription =
+                    "<p>One of three colorways of the adidas Consortium Campus 80s Primeknit set to drop alongside each other. This pair comes in light maroon and running white. Featuring a maroon-based primeknit upper with white accents. A limited release, look out for these at select adidas Consortium accounts worldwide.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "etnies-mens-digit-sneaker",
                 AllowCustomerReviews = true,
@@ -7447,22 +8688,52 @@ namespace Nop.Services.Installation
                         Category = _categoryRepository.Table.Single(c => c.Name == "Shoes"),
                         DisplayOrder = 1,
                     }
+                },
+                ProductSpecificationAttributes =
+                {
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = false,
+                        DisplayOrder = 1,
+                        SpecificationAttributeOption =
+                            _specificationAttributeRepository.Table.Single(sa => sa.Name == "Color")
+                                .SpecificationAttributeOptions.Single(sao => sao.Name == "Grey")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = false,
+                        DisplayOrder = 2,
+                        SpecificationAttributeOption =
+                            _specificationAttributeRepository.Table.Single(sa => sa.Name == "Color")
+                                .SpecificationAttributeOptions.Single(sao => sao.Name == "Red")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = false,
+                        DisplayOrder = 3,
+                        SpecificationAttributeOption =
+                            _specificationAttributeRepository.Table.Single(sa => sa.Name == "Color")
+                                .SpecificationAttributeOptions.Single(sao => sao.Name == "Blue")
+                    },
                 }
             };
             allProducts.Add(productAdidas);
             productAdidas.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productAdidas.Name)),
                 DisplayOrder = 1,
             });
             productAdidas.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_2.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productAdidas.Name)),
                 DisplayOrder = 2,
             });
             productAdidas.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_3.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_3.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productAdidas.Name)),
                 DisplayOrder = 3,
             });
 
@@ -7484,7 +8755,8 @@ namespace Nop.Services.Installation
                 Name = "Nike SB Zoom Stefan Janoski \"Medium Mint\"",
                 Sku = "NK_ZSJ_MM",
                 ShortDescription = "Nike SB Zoom Stefan Janoski Dark Grey Medium Mint Teal ...",
-                FullDescription = "The newly Nike SB Zoom Stefan Janoski gets hit with a \"Medium Mint\" accents that sits atop a Dark Grey suede. Expected to drop in October.",
+                FullDescription =
+                    "The newly Nike SB Zoom Stefan Janoski gets hit with a \"Medium Mint\" accents that sits atop a Dark Grey suede. Expected to drop in October.",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "v-blue-juniors-cuffed-denim-short-with-rhinestones",
                 AllowCustomerReviews = true,
@@ -7522,12 +8794,25 @@ namespace Nop.Services.Installation
                         Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "Nike"),
                         DisplayOrder = 2,
                     }
+                },
+                ProductSpecificationAttributes =
+                {
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = false,
+                        DisplayOrder = 1,
+                        SpecificationAttributeOption =
+                            _specificationAttributeRepository.Table.Single(sa => sa.Name == "Color")
+                                .SpecificationAttributeOptions.Single(sao => sao.Name == "Grey")
+                    }
                 }
             };
+
             allProducts.Add(productNikeZoom);
             productNikeZoom.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeZoom.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeZoom.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeZoom.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productNikeZoom.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNikeZoom);
@@ -7635,7 +8920,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productNikeTailwind);
             productNikeTailwind.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeShirt.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeTailwind.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeShirt.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productNikeTailwind.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNikeTailwind);
@@ -7704,7 +8989,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productOversizedWomenTShirt);
             productOversizedWomenTShirt.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_WomenTShirt.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productOversizedWomenTShirt.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_WomenTShirt.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productOversizedWomenTShirt.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productOversizedWomenTShirt);
@@ -7764,7 +9049,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productCustomTShirt);
             productCustomTShirt.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CustomTShirt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCustomTShirt.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CustomTShirt.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productCustomTShirt.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productCustomTShirt);
@@ -7837,12 +9122,12 @@ namespace Nop.Services.Installation
 
             productLeviJeans.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_1.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productLeviJeans.Name)),
                 DisplayOrder = 1,
             });
             productLeviJeans.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_2.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productLeviJeans.Name)),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productLeviJeans);
@@ -7931,7 +9216,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productObeyHat);
             productObeyHat.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_hat.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productObeyHat.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_hat.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productObeyHat.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productObeyHat);
@@ -7961,7 +9246,7 @@ namespace Nop.Services.Installation
                 Height = 7,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
+                StockQuantity = 0,
                 NotifyAdminForQuantityBelow = 1,
                 AllowBackInStockSubscriptions = false,
                 DisplayStockAvailability = true,
@@ -7984,7 +9269,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productBelt);
             productBelt.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Belt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBelt.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Belt.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productBelt.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productBelt);
@@ -8036,7 +9321,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productSunglasses);
             productSunglasses.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Sunglasses.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productSunglasses.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Sunglasses.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productSunglasses.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productSunglasses);
@@ -8049,7 +9334,7 @@ namespace Nop.Services.Installation
             var downloadNightVision1 = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
-                ContentType = "application/x-zip-co",
+                ContentType = MimeTypes.ApplicationXZipCo,
                 DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_NightVision_1.zip"),
                 Extension = ".zip",
                 Filename = "Night_Vision_1",
@@ -8059,7 +9344,7 @@ namespace Nop.Services.Installation
             var downloadNightVision2 = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
-                ContentType = "text/plain",
+                ContentType = MimeTypes.TextPlain,
                 DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_NightVision_2.txt"),
                 Extension = ".txt",
                 Filename = "Night_Vision_1",
@@ -8110,7 +9395,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productNightVision);
             productNightVision.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NightVisions.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNightVision.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NightVisions.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productNightVision.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNightVision);
@@ -8122,7 +9407,7 @@ namespace Nop.Services.Installation
             var downloadIfYouWait1 = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
-                ContentType = "application/x-zip-co",
+                ContentType = MimeTypes.ApplicationXZipCo,
                 DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_IfYouWait_1.zip"),
                 Extension = ".zip",
                 Filename = "If_You_Wait_1",
@@ -8132,7 +9417,7 @@ namespace Nop.Services.Installation
             var downloadIfYouWait2 = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
-                ContentType = "text/plain",
+                ContentType = MimeTypes.TextPlain,
                 DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_IfYouWait_2.txt"),
                 Extension = ".txt",
                 Filename = "If_You_Wait_1",
@@ -8143,14 +9428,16 @@ namespace Nop.Services.Installation
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "If You Wait",
+                Name = "If You Wait (donation)",
                 Sku = "IF_YOU_WT",
                 ShortDescription = "If You Wait is the debut studio album by English indie pop band London Grammar",
                 FullDescription = "<p>Original Release Date: September 6, 2013</p><p>Genre - Electronica, dream pop downtempo, pop</p><p>Label - Metal & Dust/Ministry of Sound</p><p>Producer - Tim Bran, Roy Kerr London, Grammar</p><p>Length - 43:22</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "single-ladies-put-a-ring-on-it",
+                CustomerEntersPrice = true,
+                MinimumCustomerEnteredPrice = 0.5M,
+                MaximumCustomerEnteredPrice = 100M,
                 AllowCustomerReviews = true,
-                Price = 3M,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
                 StockQuantity = 10000,
@@ -8184,7 +9471,7 @@ namespace Nop.Services.Installation
 
             productIfYouWait.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_IfYouWait.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productIfYouWait.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_IfYouWait.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productIfYouWait.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productIfYouWait);
@@ -8196,7 +9483,7 @@ namespace Nop.Services.Installation
             var downloadScienceAndFaith = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
-                ContentType = "application/x-zip-co",
+                ContentType = MimeTypes.ApplicationXZipCo,
                 DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_ScienceAndFaith_1.zip"),
                 Extension = ".zip",
                 Filename = "Science_And_Faith",
@@ -8214,7 +9501,10 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "the-battle-of-los-angeles",
                 AllowCustomerReviews = true,
-                Price = 3M,
+                CustomerEntersPrice = true,
+                MinimumCustomerEnteredPrice = 0.5M,
+                MaximumCustomerEnteredPrice = 1000M,
+                Price = decimal.Zero,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
                 StockQuantity = 10000,
@@ -8245,7 +9535,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productScienceAndFaith);
             productScienceAndFaith.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ScienceAndFaith.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productScienceAndFaith.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ScienceAndFaith.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productScienceAndFaith.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productScienceAndFaith);
@@ -8300,7 +9590,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productFahrenheit);
             productFahrenheit.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Fahrenheit451.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productFahrenheit.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Fahrenheit451.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productFahrenheit.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productFahrenheit);
@@ -8350,7 +9640,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productFirstPrizePies);
             productFirstPrizePies.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FirstPrizePies.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productFirstPrizePies.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FirstPrizePies.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productFirstPrizePies.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productFirstPrizePies);
@@ -8404,7 +9694,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productPrideAndPrejudice);
             productPrideAndPrejudice.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PrideAndPrejudice.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPrideAndPrejudice.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PrideAndPrejudice.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productPrideAndPrejudice.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productPrideAndPrejudice);
@@ -8421,14 +9711,17 @@ namespace Nop.Services.Installation
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Elegant Gemstone Necklace",
+                Name = "Elegant Gemstone Necklace (rental)",
                 Sku = "EG_GEM_NL",
                 ShortDescription = "Classic and elegant gemstone necklace now available in our store",
                 FullDescription = "<p>For those who like jewelry, creating their ownelegant jewelry from gemstone beads provides an economical way to incorporate genuine gemstones into your jewelry wardrobe. Manufacturers create beads from all kinds of precious gemstones and semi-precious gemstones, which are available in bead shops, craft stores, and online marketplaces.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "diamond-pave-earrings",
                 AllowCustomerReviews = true,
-                Price = 569M,
+                IsRental = true,
+                RentalPriceLength = 1,
+                RentalPricePeriod = RentalPricePeriod.Days,
+                Price = 30M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
@@ -8460,7 +9753,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productElegantGemstoneNecklace);
             productElegantGemstoneNecklace.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_GemstoneNecklaces.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productElegantGemstoneNecklace.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_GemstoneNecklaces.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productElegantGemstoneNecklace.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productElegantGemstoneNecklace);
@@ -8512,7 +9805,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productFlowerGirlBracelet);
             productFlowerGirlBracelet.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FlowerBracelet.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productFlowerGirlBracelet.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FlowerBracelet.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productFlowerGirlBracelet.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productFlowerGirlBracelet);
@@ -8566,7 +9859,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productEngagementRing);
             productEngagementRing.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEngagementRing.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_1.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productEngagementRing.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productEngagementRing);
@@ -8614,7 +9907,7 @@ namespace Nop.Services.Installation
             allProducts.Add(product25GiftCard);
             product25GiftCard.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_25giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product25GiftCard.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_25giftcart.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(product25GiftCard.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(product25GiftCard);
@@ -8666,7 +9959,7 @@ namespace Nop.Services.Installation
             allProducts.Add(product50GiftCard);
             product50GiftCard.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_50giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product50GiftCard.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_50giftcart.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(product50GiftCard.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(product50GiftCard);
@@ -8716,7 +10009,7 @@ namespace Nop.Services.Installation
             allProducts.Add(product100GiftCard);
             product100GiftCard.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_100giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product100GiftCard.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_100giftcart.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(product100GiftCard.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(product100GiftCard);
@@ -9605,6 +10898,12 @@ namespace Nop.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
+                                                  SystemKeyword = "DeleteActivityLog",
+                                                  Enabled = true,
+                                                  Name = "Delete activity log"
+                                              },
+                                          new ActivityLogType
+                                              {
                                                   SystemKeyword = "DeleteCategory",
                                                   Enabled = true,
                                                   Name = "Delete category"
@@ -9692,6 +10991,12 @@ namespace Nop.Services.Installation
                                                   SystemKeyword = "DeleteWidget",
                                                   Enabled = true,
                                                   Name = "Delete a widget"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "EditActivityLogTypes",
+                                                  Enabled = true,
+                                                  Name = "Edit activity log types"
                                               },
                                           new ActivityLogType
                                               {
@@ -9788,6 +11093,18 @@ namespace Nop.Services.Installation
                                                   SystemKeyword = "EditWidget",
                                                   Enabled = true,
                                                   Name = "Edit a widget"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "Impersonation.Started",
+                                                  Enabled = true,
+                                                  Name = "Customer impersonation session. Started"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "Impersonation.Finished",
+                                                  Enabled = true,
+                                                  Name = "Customer impersonation session. Finished"
                                               },
                                               //public store activities
                                           new ActivityLogType
@@ -10253,6 +11570,9 @@ namespace Nop.Services.Installation
                 InstallWarehouses();
                 InstallVendors();
                 InstallAffiliates();
+                InstallOrders();
+                InstallActivityLog(defaultUserEmail);
+                InstallSearchTerms();
             }
         }
 

@@ -17,6 +17,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
+using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Web.Framework;
@@ -44,6 +45,7 @@ namespace Nop.Web.Controllers
         private readonly ICacheManager _cacheManager;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IPermissionService _permissionService;
 
         private readonly MediaSettings _mediaSettings;
         private readonly BlogSettings _blogSettings;
@@ -66,6 +68,7 @@ namespace Nop.Web.Controllers
             ICacheManager cacheManager,
             ICustomerActivityService customerActivityService,
             IStoreMappingService storeMappingService,
+            IPermissionService permissionService,
             MediaSettings mediaSettings,
             BlogSettings blogSettings,
             LocalizationSettings localizationSettings,
@@ -83,6 +86,7 @@ namespace Nop.Web.Controllers
             this._cacheManager = cacheManager;
             this._customerActivityService = customerActivityService;
             this._storeMappingService = storeMappingService;
+            this._permissionService = permissionService;
 
             this._mediaSettings = mediaSettings;
             this._blogSettings = blogSettings;
@@ -258,6 +262,10 @@ namespace Nop.Web.Controllers
             var model = new BlogPostModel();
             PrepareBlogPostModel(model, blogPost, true);
 
+            //display "edit" (manage) link
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+                DisplayEditLink(Url.Action("Edit", "Blog", new { id = blogPost.Id, area = "Admin" }));
+
             return View(model);
         }
 
@@ -361,7 +369,7 @@ namespace Nop.Web.Controllers
 
                 var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
                     _workContext.WorkingLanguage.Id);
-                if (blogPosts.Count > 0)
+                if (blogPosts.Any())
                 {
                     var months = new SortedDictionary<DateTime, int>();
 
@@ -370,7 +378,7 @@ namespace Nop.Web.Controllers
                     while (DateTime.SpecifyKind(first, DateTimeKind.Utc) <= DateTime.UtcNow.AddMonths(1))
                     {
                         var list = blogPosts.GetPostsByDate(new DateTime(first.Year, first.Month, 1), new DateTime(first.Year, first.Month, 1).AddMonths(1).AddSeconds(-1));
-                        if (list.Count > 0)
+                        if (list.Any())
                         {
                             var date = new DateTime(first.Year, first.Month, 1);
                             months.Add(date, list.Count);
@@ -388,7 +396,7 @@ namespace Nop.Web.Controllers
                         if (current == 0)
                             current = date.Year;
 
-                        if (date.Year > current || model.Count == 0)
+                        if (date.Year > current || !model.Any())
                         {
                             var yearModel = new BlogPostYearModel
                             {
@@ -417,8 +425,8 @@ namespace Nop.Web.Controllers
             if (!_blogSettings.Enabled || !_blogSettings.ShowHeaderRssUrl)
                 return Content("");
 
-            string link = string.Format("<link href=\"{0}\" rel=\"alternate\" type=\"application/rss+xml\" title=\"{1}: Blog\" />",
-                Url.RouteUrl("BlogRSS", new { languageId = _workContext.WorkingLanguage.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http"), _storeContext.CurrentStore.GetLocalized(x => x.Name));
+            string link = string.Format("<link href=\"{0}\" rel=\"alternate\" type=\"{1}\" title=\"{2}: Blog\" />",
+                Url.RouteUrl("BlogRSS", new { languageId = _workContext.WorkingLanguage.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http"), MimeTypes.ApplicationRssXml, _storeContext.CurrentStore.GetLocalized(x => x.Name));
 
             return Content(link);
         }

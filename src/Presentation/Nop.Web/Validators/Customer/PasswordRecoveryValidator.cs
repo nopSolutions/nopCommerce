@@ -5,7 +5,7 @@ using Nop.Web.Models.Customer;
 
 namespace Nop.Web.Validators.Customer
 {
-    public class PasswordRecoveryValidator : BaseNopValidator<PasswordRecoveryModel>
+    public partial class PasswordRecoveryValidator : BaseNopValidator<PasswordRecoveryModel>
     {
         public PasswordRecoveryValidator(ILocalizationService localizationService)
         {

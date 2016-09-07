@@ -55,9 +55,26 @@ namespace Nop.Admin.Controllers
             this._storeMappingService = storeMappingService;
 		}
 
-		#endregion 
+        #endregion
 
         #region Utilities
+
+        [NonAction]
+        protected virtual void PrepareLanguagesModel(NewsItemModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            var languages = _languageService.GetAllLanguages(true);
+            foreach (var language in languages)
+            {
+                model.AvailableLanguages.Add(new SelectListItem
+                {
+                    Text = language.Name,
+                    Value = language.Id.ToString()
+                });
+            }
+        }
 
         [NonAction]
         protected virtual void PrepareStoresMappingModel(NewsItemModel model, NewsItem newsItem, bool excludeProperties)
@@ -65,27 +82,31 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
+            if (!excludeProperties && newsItem != null)
+                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(newsItem).ToList();
+
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
             {
-                if (newsItem != null)
+                model.AvailableStores.Add(new SelectListItem
                 {
-                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(newsItem);
-                }
+                    Text = store.Name,
+                    Value = store.Id.ToString(),
+                    Selected = model.SelectedStoreIds.Contains(store.Id)
+                });
             }
         }
 
         [NonAction]
         protected virtual void SaveStoreMappings(NewsItem newsItem, NewsItemModel model)
         {
+            newsItem.LimitedToStores = model.SelectedStoreIds.Any();
+
             var existingStoreMappings = _storeMappingService.GetStoreMappings(newsItem);
             var allStores = _storeService.GetAllStores();
             foreach (var store in allStores)
             {
-                if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
+                if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
@@ -100,8 +121,7 @@ namespace Nop.Admin.Controllers
                 }
             }
         }
-
-
+        
         #endregion
 
         #region News items
@@ -163,8 +183,9 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = new NewsItemModel();
+            //languages
+            PrepareLanguagesModel(model);
             //Stores
             PrepareStoresMappingModel(model, null, false);
             //default values
@@ -195,12 +216,20 @@ namespace Nop.Admin.Controllers
                 SaveStoreMappings(newsItem, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = newsItem.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = newsItem.Id });
+                }
+                return RedirectToAction("List");
+
             }
 
             //If we got this far, something failed, redisplay form
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
-            //Stores
+            PrepareLanguagesModel(model);
             PrepareStoresMappingModel(model, null, true);
             return View(model);
         }
@@ -215,10 +244,11 @@ namespace Nop.Admin.Controllers
                 //No news item found with the specified id
                 return RedirectToAction("List");
 
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = newsItem.ToModel();
             model.StartDate = newsItem.StartDateUtc;
             model.EndDate = newsItem.EndDateUtc;
+            //languages
+            PrepareLanguagesModel(model);
             //Store
             PrepareStoresMappingModel(model, newsItem, false);
             return View(model);
@@ -254,7 +284,7 @@ namespace Nop.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    SaveSelectedTabName();
 
                     return RedirectToAction("Edit", new {id = newsItem.Id});
                 }
@@ -262,8 +292,7 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
-            //Store
+            PrepareLanguagesModel(model);
             PrepareStoresMappingModel(model, newsItem, true);
             return View(model);
         }
@@ -304,18 +333,11 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            IList<NewsComment> comments;
-            if (filterByNewsItemId.HasValue)
-            {
+            IList<NewsComment> comments = filterByNewsItemId.HasValue ?
                 //filter comments by news item
-                var newsItem = _newsService.GetNewsById(filterByNewsItemId.Value);
-                comments = newsItem.NewsComments.OrderBy(bc => bc.CreatedOnUtc).ToList();
-            }
-            else
-            {
+                _newsService.GetNewsById(filterByNewsItemId.Value).NewsComments.OrderBy(bc => bc.CreatedOnUtc).ToList() :
                 //load all news comments
-                comments = _newsService.GetAllComments(0);
-            }
+                _newsService.GetAllComments(0);
 
             var gridModel = new DataSourceResult
             {

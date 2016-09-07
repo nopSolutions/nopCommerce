@@ -28,6 +28,7 @@ namespace Nop.Web.Controllers
         private readonly IStoreMappingService _storeMappingService;
         private readonly IAclService _aclService;
         private readonly ITopicTemplateService _topicTemplateService;
+        private readonly IPermissionService _permissionService;
 
         #endregion
 
@@ -40,7 +41,8 @@ namespace Nop.Web.Controllers
             ICacheManager cacheManager,
             IStoreMappingService storeMappingService,
             IAclService aclService,
-            ITopicTemplateService topicTemplateService)
+            ITopicTemplateService topicTemplateService,
+            IPermissionService permissionService)
         {
             this._topicService = topicService;
             this._workContext = workContext;
@@ -50,6 +52,7 @@ namespace Nop.Web.Controllers
             this._storeMappingService = storeMappingService;
             this._aclService = aclService;
             this._topicTemplateService = topicTemplateService;
+            this._permissionService = permissionService;
         }
 
         #endregion
@@ -123,6 +126,10 @@ namespace Nop.Web.Controllers
                 return template.ViewPath;
             });
 
+            //display "edit" (manage) link
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageTopics))
+                DisplayEditLink(Url.Action("Edit", "Topic", new { id = cacheModel.Id, area = "Admin" }));
+
             return View(templateViewPath, cacheModel);
         }
 
@@ -163,7 +170,7 @@ namespace Nop.Web.Controllers
             });
 
             ViewBag.IsPopup = true;
-            return View(templateViewPath, cacheModel);
+            return PartialView(templateViewPath, cacheModel);
         }
 
         [ChildActionOnly]

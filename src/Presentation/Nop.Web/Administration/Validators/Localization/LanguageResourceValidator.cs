@@ -5,7 +5,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Localization
 {
-    public class LanguageResourceValidator : BaseNopValidator<LanguageResourceModel>
+    public partial class LanguageResourceValidator : BaseNopValidator<LanguageResourceModel>
     {
         public LanguageResourceValidator(ILocalizationService localizationService)
         {

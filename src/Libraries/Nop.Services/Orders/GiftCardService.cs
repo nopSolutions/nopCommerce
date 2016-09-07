@@ -71,6 +71,7 @@ namespace Nop.Services.Orders
         /// Gets all gift cards
         /// </summary>
         /// <param name="purchasedWithOrderId">Associated order ID; null to load all records</param>
+        /// <param name="usedWithOrderId">The order ID in which the gift card was used; null to load all records</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="isGiftCardActivated">Value indicating whether gift card is activated; null to load all records</param>
@@ -79,7 +80,7 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Gift cards</returns>
-        public virtual IPagedList<GiftCard> GetAllGiftCards(int? purchasedWithOrderId = null,
+        public virtual IPagedList<GiftCard> GetAllGiftCards(int? purchasedWithOrderId = null, int? usedWithOrderId = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null, 
             bool? isGiftCardActivated = null, string giftCardCouponCode = null,
             string recipientName = null,
@@ -88,6 +89,8 @@ namespace Nop.Services.Orders
             var query = _giftCardRepository.Table;
             if (purchasedWithOrderId.HasValue)
                 query = query.Where(gc => gc.PurchasedWithOrderItem != null && gc.PurchasedWithOrderItem.OrderId == purchasedWithOrderId.Value);
+            if (usedWithOrderId.HasValue)
+                query = query.Where(gc => gc.GiftCardUsageHistory.Any(history => history.UsedWithOrderId == usedWithOrderId));
             if (createdFromUtc.HasValue)
                 query = query.Where(gc => createdFromUtc.Value <= gc.CreatedOnUtc);
             if (createdToUtc.HasValue)

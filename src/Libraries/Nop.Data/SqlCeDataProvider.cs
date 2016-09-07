@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
@@ -62,6 +61,16 @@ namespace Nop.Data
         public virtual DbParameter GetParameter()
         {
             return new SqlParameter();
+        }
+
+        /// <summary>
+        /// Maximum length of the data for HASHBYTES functions
+        /// returns 0 if HASHBYTES function is not supported
+        /// </summary>
+        /// <returns>Length of the data for HASHBYTES functions</returns>
+        public int SupportedLengthOfBinaryHash()
+        {
+            return 0; //HASHBYTES functions is missing in SQL CE
         }
     }
 }

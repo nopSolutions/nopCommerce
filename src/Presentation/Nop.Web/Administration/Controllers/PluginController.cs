@@ -12,6 +12,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Plugins;
+using Nop.Services;
 using Nop.Services.Authentication.External;
 using Nop.Services.Cms;
 using Nop.Services.Common;
@@ -20,9 +21,9 @@ using Nop.Services.Localization;
 using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Pickup;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 
@@ -101,17 +102,21 @@ namespace Nop.Admin.Controllers
             if (prepareStores)
             {
                 //stores
-                pluginModel.AvailableStores = _storeService
-                    .GetAllStores()
-                    .Select(s => s.ToModel())
-                    .ToList();
-                pluginModel.SelectedStoreIds = pluginDescriptor.LimitedToStores.ToArray();
-                pluginModel.LimitedToStores = pluginDescriptor.LimitedToStores.Count > 0;
+                pluginModel.SelectedStoreIds = pluginDescriptor.LimitedToStores.ToList();
+                var allStores = _storeService.GetAllStores();
+                foreach (var store in allStores)
+                {
+                    pluginModel.AvailableStores.Add(new SelectListItem
+                    {
+                        Text = store.Name,
+                        Value = store.Id.ToString(),
+                        Selected = pluginModel.SelectedStoreIds.Contains(store.Id)
+                    });
+                }
             }
 
 
             //configuration URLs
-
             if (pluginDescriptor.Installed)
             {
                 //specify configuration URL only when a plugin is already installed
@@ -130,6 +135,11 @@ namespace Nop.Admin.Controllers
                 {
                     //shipping rate computation method
                     configurationUrl = Url.Action("ConfigureProvider", "Shipping", new { systemName = pluginDescriptor.SystemName });
+                }
+                else if (pluginInstance is IPickupPointProvider)
+                {
+                    //pickup point provider
+                    configurationUrl = Url.Action("ConfigurePickupPointProvider", "Shipping", new { systemName = pluginDescriptor.SystemName });
                 }
                 else if (pluginInstance is ITaxProvider)
                 {
@@ -168,6 +178,12 @@ namespace Nop.Admin.Controllers
                     //shipping rate computation method
                     pluginModel.CanChangeEnabled = true;
                     pluginModel.IsEnabled = ((IShippingRateComputationMethod)pluginInstance).IsShippingRateComputationMethodActive(_shippingSettings);
+                }
+                else if (pluginInstance is IPickupPointProvider)
+                {
+                    //pickup point provider
+                    pluginModel.CanChangeEnabled = true;
+                    pluginModel.IsEnabled = ((IPickupPointProvider)pluginInstance).IsPickupPointProviderActive(_shippingSettings);
                 }
                 else if (pluginInstance is ITaxProvider)
                 {
@@ -336,6 +352,8 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("plugin-reload-grid")]
         public ActionResult ReloadList()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
@@ -401,7 +419,7 @@ namespace Nop.Admin.Controllers
                 pluginDescriptor.FriendlyName = model.FriendlyName;
                 pluginDescriptor.DisplayOrder = model.DisplayOrder;
                 pluginDescriptor.LimitedToStores.Clear();
-                if (model.LimitedToStores && model.SelectedStoreIds != null)
+                if (model.SelectedStoreIds.Any())
                 {
                     pluginDescriptor.LimitedToStores = model.SelectedStoreIds.ToList();
                 }
@@ -459,6 +477,29 @@ namespace Nop.Admin.Controllers
                             {
                                 //mark as active
                                 _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add(srcm.PluginDescriptor.SystemName);
+                                _settingService.SaveSetting(_shippingSettings);
+                            }
+                        }
+                    }
+                    else if (pluginInstance is IPickupPointProvider)
+                    {
+                        //pickup point provider
+                        var pickupPointProvider = (IPickupPointProvider)pluginInstance;
+                        if (pickupPointProvider.IsPickupPointProviderActive(_shippingSettings))
+                        {
+                            if (!model.IsEnabled)
+                            {
+                                //mark as disabled
+                                _shippingSettings.ActivePickupPointProviderSystemNames.Remove(pickupPointProvider.PluginDescriptor.SystemName);
+                                _settingService.SaveSetting(_shippingSettings);
+                            }
+                        }
+                        else
+                        {
+                            if (model.IsEnabled)
+                            {
+                                //mark as active
+                                _shippingSettings.ActivePickupPointProviderSystemNames.Add(pickupPointProvider.PluginDescriptor.SystemName);
                                 _settingService.SaveSetting(_shippingSettings);
                             }
                         }

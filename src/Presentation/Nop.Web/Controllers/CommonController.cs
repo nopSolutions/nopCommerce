@@ -25,6 +25,7 @@ using Nop.Services.Directory;
 using Nop.Services.Forums;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
@@ -37,6 +38,7 @@ using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
+using Nop.Web.Framework.UI;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
@@ -69,6 +71,8 @@ namespace Nop.Web.Controllers
         private readonly ICacheManager _cacheManager;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IVendorService _vendorService;
+        private readonly IPageHeadBuilder _pageHeadBuilder;
+        private readonly IPictureService _pictureService;
 
         private readonly CustomerSettings _customerSettings;
         private readonly TaxSettings _taxSettings;
@@ -108,6 +112,8 @@ namespace Nop.Web.Controllers
             ICacheManager cacheManager,
             ICustomerActivityService customerActivityService,
             IVendorService vendorService,
+            IPageHeadBuilder pageHeadBuilder,
+            IPictureService pictureService,
             CustomerSettings customerSettings,
             TaxSettings taxSettings,
             CatalogSettings catalogSettings,
@@ -142,6 +148,9 @@ namespace Nop.Web.Controllers
             this._cacheManager = cacheManager;
             this._customerActivityService = customerActivityService;
             this._vendorService = vendorService;
+            this._pageHeadBuilder = pageHeadBuilder;
+            this._pictureService = pictureService;
+
 
             this._customerSettings = customerSettings;
             this._taxSettings = taxSettings;
@@ -191,6 +200,35 @@ namespace Nop.Web.Controllers
             this.Response.TrySkipIisCustomErrors = true;
 
             return View();
+        }
+
+        //logo
+        [ChildActionOnly]
+        public ActionResult Logo()
+        {
+            var model = new LogoModel
+            {
+                StoreName = _storeContext.CurrentStore.GetLocalized(x => x.Name)
+            };
+
+            var cacheKey = string.Format(ModelCacheEventConsumer.STORE_LOGO_PATH, _storeContext.CurrentStore.Id, _themeContext.WorkingThemeName, _webHelper.IsCurrentConnectionSecured());
+            model.LogoPath = _cacheManager.Get(cacheKey, () =>
+            {
+                var logo = "";
+                var logoPictureId = _storeInformationSettings.LogoPictureId;
+                if (logoPictureId > 0)
+                {
+                    logo = _pictureService.GetPictureUrl(logoPictureId, showDefaultPicture: false);
+                }
+                if (String.IsNullOrEmpty(logo))
+                {
+                    //use default logo
+                    logo = string.Format("{0}Themes/{1}/Content/images/logo.png", _webHelper.GetStoreLocation(), _themeContext.WorkingThemeName);
+                }
+                return logo;
+            });
+
+            return PartialView(model);
         }
 
         //language
@@ -417,10 +455,31 @@ namespace Nop.Web.Controllers
                 ImpersonatedCustomerEmailUsername = customer.IsRegistered() ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
                 IsCustomerImpersonated = _workContext.OriginalCustomerIfImpersonated != null,
                 DisplayAdminLink = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel),
+                EditPageUrl = _pageHeadBuilder.GetEditPageUrl()
             };
 
             return PartialView(model);
         }
+
+
+        //social
+        [ChildActionOnly]
+        public ActionResult Social()
+        {
+            //model
+            var model = new SocialModel
+            {
+                FacebookLink = _storeInformationSettings.FacebookLink,
+                TwitterLink = _storeInformationSettings.TwitterLink,
+                YoutubeLink = _storeInformationSettings.YoutubeLink,
+                GooglePlusLink = _storeInformationSettings.GooglePlusLink,
+                WorkingLanguageId = _workContext.WorkingLanguage.Id,
+                NewsEnabled = _newsSettings.Enabled,
+            };
+
+            return PartialView(model);
+        }
+
 
         //footer
         [ChildActionOnly]
@@ -454,10 +513,6 @@ namespace Nop.Web.Controllers
                 ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 SitemapEnabled = _commonSettings.SitemapEnabled,
                 WorkingLanguageId = _workContext.WorkingLanguage.Id,
-                FacebookLink = _storeInformationSettings.FacebookLink,
-                TwitterLink = _storeInformationSettings.TwitterLink,
-                YoutubeLink = _storeInformationSettings.YoutubeLink,
-                GooglePlusLink = _storeInformationSettings.GooglePlusLink,
                 BlogEnabled = _blogSettings.Enabled,
                 CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,
                 ForumEnabled = _forumSettings.ForumsEnabled,
@@ -855,12 +910,12 @@ namespace Nop.Web.Controllers
         {
             var sb = new StringBuilder();
 
-            //if robots.txt exists, let's use it
-            string robotsFile = System.IO.Path.Combine(CommonHelper.MapPath("~/"), "robots.custom.txt");
-            if (System.IO.File.Exists(robotsFile))
+            //if robots.custom.txt exists, let's use it instead of hard-coded data below
+            string robotsFilePath = System.IO.Path.Combine(CommonHelper.MapPath("~/"), "robots.custom.txt");
+            if (System.IO.File.Exists(robotsFilePath))
             {
                 //the robots.txt file exists
-                string robotsFileContent = System.IO.File.ReadAllText(robotsFile);
+                string robotsFileContent = System.IO.File.ReadAllText(robotsFilePath);
                 sb.Append(robotsFileContent);
             }
             else
@@ -975,7 +1030,7 @@ namespace Nop.Web.Controllers
                     {
                         foreach (var path in localizableDisallowPaths)
                         {
-                            sb.AppendFormat("Disallow: {0}{1}", language.UniqueSeoCode, path);
+                            sb.AppendFormat("Disallow: /{0}{1}", language.UniqueSeoCode, path);
                             sb.Append(newLine);
                         }
                     }
@@ -991,7 +1046,7 @@ namespace Nop.Web.Controllers
             }
 
 
-            Response.ContentType = "text/plain";
+            Response.ContentType = MimeTypes.TextPlain;
             Response.Write(sb.ToString());
             return null;
         }

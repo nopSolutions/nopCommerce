@@ -10,6 +10,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
+using Nop.Services;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
@@ -18,7 +19,6 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Security;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 
@@ -116,7 +116,7 @@ namespace Nop.Admin.Controllers
                     model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (affiliate != null && c.Id == affiliate.Address.CountryId) });
 
                 var states = model.Address.CountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId.Value, showHidden: true).ToList() : new List<StateProvince>();
-                if (states.Count > 0)
+                if (states.Any())
                 {
                     foreach (var s in states)
                         model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (affiliate != null && s.Id == affiliate.Address.StateProvinceId) });
@@ -262,7 +262,7 @@ namespace Nop.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    SaveSelectedTabName();
 
                     return RedirectToAction("Edit", new {id = affiliate.Id});
                 }
@@ -318,7 +318,7 @@ namespace Nop.Admin.Controllers
             return PartialView(model);
         }
         [HttpPost]
-        public ActionResult AffiliatedOrderList(DataSourceRequest command, AffiliatedOrderListModel model)
+        public ActionResult AffiliatedOrderListGrid(DataSourceRequest command, AffiliatedOrderListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
@@ -353,6 +353,7 @@ namespace Nop.Admin.Controllers
                         var orderModel = new AffiliateModel.AffiliatedOrderModel();
                         orderModel.Id = order.Id;
                         orderModel.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
+                        orderModel.OrderStatusId = order.OrderStatusId;
                         orderModel.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
                         orderModel.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
                         orderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);

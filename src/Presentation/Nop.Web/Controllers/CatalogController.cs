@@ -63,16 +63,17 @@ namespace Nop.Web.Controllers
         private readonly ITopicService _topicService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ISearchTermService _searchTermService;
+        private readonly IMeasureService _measureService;
         private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly VendorSettings _vendorSettings;
         private readonly BlogSettings _blogSettings;
         private readonly ForumSettings _forumSettings;
         private readonly ICacheManager _cacheManager;
-        
+
         #endregion
 
-		#region Constructors
+        #region Constructors
 
         public CatalogController(ICategoryService categoryService, 
             IManufacturerService manufacturerService,
@@ -99,6 +100,7 @@ namespace Nop.Web.Controllers
             ITopicService topicService,
             IEventPublisher eventPublisher,
             ISearchTermService searchTermService,
+            IMeasureService measureService,
             MediaSettings mediaSettings,
             CatalogSettings catalogSettings,
             VendorSettings vendorSettings,
@@ -131,6 +133,7 @@ namespace Nop.Web.Controllers
             this._topicService = topicService;
             this._eventPublisher = eventPublisher;
             this._searchTermService = searchTermService;
+            this._measureService = measureService;
             this._mediaSettings = mediaSettings;
             this._catalogSettings = catalogSettings;
             this._vendorSettings = vendorSettings;
@@ -361,7 +364,7 @@ namespace Nop.Web.Controllers
                     IncludeInTopMenu = category.IncludeInTopMenu
                 };
 
-                //product number for each category
+                //nubmer of products in each category
                 if (_catalogSettings.ShowCategoryProductNumber)
                 {
                     string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NUMBER_OF_PRODUCTS_MODEL_KEY,
@@ -375,7 +378,7 @@ namespace Nop.Web.Controllers
                         //include subcategories
                         if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
                             categoryIds.AddRange(GetChildCategoryIds(category.Id));
-                        return _productService.GetCategoryProductNumber(categoryIds, _storeContext.CurrentStore.Id);
+                        return _productService.GetNumberOfProductsInCategory(categoryIds, _storeContext.CurrentStore.Id);
                     });
                 }
 
@@ -400,7 +403,7 @@ namespace Nop.Web.Controllers
                 _storeContext, _categoryService, _productService, _specificationAttributeService,
                 _priceCalculationService, _priceFormatter, _permissionService,
                 _localizationService, _taxService, _currencyService,
-                _pictureService, _webHelper, _cacheManager,
+                _pictureService, _measureService, _webHelper, _cacheManager,
                 _catalogSettings, _mediaSettings, products,
                 preparePriceModel, preparePictureModel,
                 productThumbPictureSize, prepareSpecificationAttributes,
@@ -491,12 +494,13 @@ namespace Nop.Web.Controllers
             }
 
 
-
-
+            
+            var pictureSize = _mediaSettings.CategoryThumbPictureSize;
 
             //subcategories
             string subCategoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_SUBCATEGORIES_KEY,
                 categoryId,
+                pictureSize,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id,
@@ -514,7 +518,6 @@ namespace Nop.Web.Controllers
                     };
 
                     //prepare picture model
-                    int pictureSize = _mediaSettings.CategoryThumbPictureSize;
                     var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                     subCatModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
                     {
@@ -621,6 +624,10 @@ namespace Nop.Web.Controllers
                     return template.ViewPath;
                 });
 
+            //display "edit" (manage) link
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+                DisplayEditLink(Url.Action("Edit", "Category", new { id = category.Id, area = "Admin" }));
+
             //activity log
             _customerActivityService.InsertActivity("PublicStore.ViewCategory", _localizationService.GetResource("ActivityLog.PublicStore.ViewCategory"), category.Name);
 
@@ -641,7 +648,7 @@ namespace Nop.Web.Controllers
             {
                 //product details page
                 var productCategories = _categoryService.GetProductCategoriesByProductId(currentProductId);
-                if (productCategories.Count > 0)
+                if (productCategories.Any())
                     activeCategoryId = productCategories[0].CategoryId;
             }
 
@@ -700,8 +707,11 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult HomepageCategories()
         {
+            var pictureSize = _mediaSettings.CategoryThumbPictureSize;
+
             string categoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HOMEPAGE_KEY,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
+                pictureSize,
                 _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id, 
                 _webHelper.IsCurrentConnectionSecured());
@@ -713,7 +723,6 @@ namespace Nop.Web.Controllers
                     var catModel = x.ToModel();
 
                     //prepare picture model
-                    int pictureSize = _mediaSettings.CategoryThumbPictureSize;
                     var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                     catModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
                     {
@@ -733,7 +742,7 @@ namespace Nop.Web.Controllers
                 .ToList()
             );
 
-            if (model.Count == 0)
+            if (!model.Any())
                 return Content("");
 
             return PartialView(model);
@@ -871,6 +880,10 @@ namespace Nop.Web.Controllers
                 return template.ViewPath;
             });
 
+            //display "edit" (manage) link
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+                DisplayEditLink(Url.Action("Edit", "Manufacturer", new { id = manufacturer.Id, area = "Admin" }));
+
             //activity log
             _customerActivityService.InsertActivity("PublicStore.ViewManufacturer", _localizationService.GetResource("ActivityLog.PublicStore.ViewManufacturer"), manufacturer.Name);
 
@@ -943,7 +956,7 @@ namespace Nop.Web.Controllers
                     return model;
                 });
 
-            if (cacheModel.Manufacturers.Count == 0)
+            if (!cacheModel.Manufacturers.Any())
                 return Content("");
             
             return PartialView(cacheModel);
@@ -1006,6 +1019,10 @@ namespace Nop.Web.Controllers
             model.Products = PrepareProductOverviewModels(products).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
+
+            //display "edit" (manage) link
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageVendors))
+                DisplayEditLink(Url.Action("Edit", "Vendor", new { id = vendor.Id, area = "Admin" }));
 
             return View(model);
         }
@@ -1080,7 +1097,7 @@ namespace Nop.Web.Controllers
                 return model;
             });
 
-            if (cacheModel.Vendors.Count == 0)
+            if (!cacheModel.Vendors.Any())
                 return Content("");
             
             return PartialView(cacheModel);
@@ -1126,7 +1143,7 @@ namespace Nop.Web.Controllers
                 return model;
             });
 
-            if (cacheModel.Tags.Count == 0)
+            if (!cacheModel.Tags.Any())
                 return Content("");
             
             return PartialView(cacheModel);
@@ -1260,7 +1277,7 @@ namespace Nop.Web.Controllers
                 }
                 return categoriesModel;
             });
-            if (categories.Count > 0)
+            if (categories.Any())
             {
                 //first empty entry
                 model.AvailableCategories.Add(new SelectListItem
@@ -1281,7 +1298,7 @@ namespace Nop.Web.Controllers
             }
 
             var manufacturers = _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id);
-            if (manufacturers.Count > 0)
+            if (manufacturers.Any())
             {
                 model.AvailableManufacturers.Add(new SelectListItem
                 {
@@ -1301,7 +1318,7 @@ namespace Nop.Web.Controllers
             if (model.asv)
             {
                 var vendors = _vendorService.GetAllVendors();
-                if (vendors.Count > 0)
+                if (vendors.Any())
                 {
                     model.AvailableVendors.Add(new SelectListItem
                     {
@@ -1384,7 +1401,6 @@ namespace Nop.Web.Controllers
                         priceMax: maxPriceConverted,
                         keywords: searchTerms,
                         searchDescriptions: searchInDescriptions,
-                        searchSku: searchInDescriptions,
                         searchProductTags: searchInProductTags,
                         languageId: _workContext.WorkingLanguage.Id,
                         orderBy: (ProductSortingEnum)command.OrderBy,
@@ -1457,7 +1473,6 @@ namespace Nop.Web.Controllers
             var products = _productService.SearchProducts(
                 storeId: _storeContext.CurrentStore.Id,
                 keywords: term,
-                searchSku: false,
                 languageId: _workContext.WorkingLanguage.Id,
                 visibleIndividuallyOnly: true,
                 pageSize: productNumber);

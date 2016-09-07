@@ -239,12 +239,12 @@ namespace Nop.Services.Blogs
         /// <returns>Comments</returns>
         public virtual IList<BlogComment> GetAllComments(int customerId)
         {
-            var query = from c in _blogCommentRepository.Table
-                        orderby c.CreatedOnUtc
-                        where (customerId == 0 || c.CustomerId == customerId)
-                        select c;
-            var content = query.ToList();
-            return content;
+            var query = _blogCommentRepository.Table;
+            if (customerId > 0)
+                query = query.Where(bc => bc.CustomerId == customerId);
+            query = query.OrderBy(bc => bc.CreatedOnUtc);
+            var comments = query.ToList();
+            return comments;
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
 ﻿using System;
-using AutoMapper;
+using System.Linq;
 using Nop.Admin.Infrastructure.Mapper;
 using Nop.Admin.Models.Blogs;
 using Nop.Admin.Models.Catalog;
@@ -50,6 +50,7 @@ using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
 
 namespace Nop.Admin.Extensions
@@ -492,6 +493,15 @@ namespace Nop.Admin.Extensions
 
         #endregion
 
+        #region Pickup point providers
+
+        public static PickupPointProviderModel ToModel(this IPickupPointProvider entity)
+        {
+            return entity.MapTo<IPickupPointProvider, PickupPointProviderModel>();
+        }
+
+        #endregion
+
         #region Shipping methods
 
         public static ShippingMethodModel ToModel(this ShippingMethod entity)
@@ -648,7 +658,7 @@ namespace Nop.Admin.Extensions
                             if (!String.IsNullOrEmpty(selectedAddressAttributes))
                             {
                                 var enteredText = addressAttributeParser.ParseValues(selectedAddressAttributes, attribute.Id);
-                                if (enteredText.Count > 0)
+                                if (enteredText.Any())
                                     attributeModel.DefaultValue = enteredText[0];
                             }
                         }
@@ -999,6 +1009,16 @@ namespace Nop.Admin.Extensions
             return entity.MapTo<AddressSettings, CustomerUserSettingsModel.AddressSettingsModel>();
         }
         public static AddressSettings ToEntity(this CustomerUserSettingsModel.AddressSettingsModel model, AddressSettings destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        //product editor settings
+        public static ProductEditorSettingsModel ToModel(this ProductEditorSettings entity)
+        {
+            return entity.MapTo<ProductEditorSettings, ProductEditorSettingsModel>();
+        }
+        public static ProductEditorSettings ToEntity(this ProductEditorSettingsModel model, ProductEditorSettings destination)
         {
             return model.MapTo(destination);
         }

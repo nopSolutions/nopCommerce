@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Routing;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
@@ -55,7 +56,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
 
             var response = new GetShippingOptionResponse();
 
-            if (getShippingOptionRequest.Items == null || getShippingOptionRequest.Items.Count == 0)
+            if (getShippingOptionRequest.Items == null || !getShippingOptionRequest.Items.Any())
             {
                 response.AddError("No shipment items");
                 return response;

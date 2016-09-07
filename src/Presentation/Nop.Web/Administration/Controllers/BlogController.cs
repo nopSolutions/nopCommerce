@@ -52,9 +52,26 @@ namespace Nop.Admin.Controllers
             this._storeMappingService = storeMappingService;
 		}
 
-		#endregion 
-        
+        #endregion
+
         #region Utilities
+
+        [NonAction]
+        protected virtual void PrepareLanguagesModel(BlogPostModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            var languages = _languageService.GetAllLanguages(true);
+            foreach (var language in languages)
+            {
+                model.AvailableLanguages.Add(new SelectListItem
+                {
+                    Text = language.Name,
+                    Value = language.Id.ToString()
+                });
+            }
+        }
 
         [NonAction]
         protected virtual void PrepareStoresMappingModel(BlogPostModel model, BlogPost blogPost, bool excludeProperties)
@@ -62,27 +79,31 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
+            if (!excludeProperties && blogPost != null)
+                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(blogPost).ToList();
+
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
             {
-                if (blogPost != null)
+                model.AvailableStores.Add(new SelectListItem
                 {
-                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(blogPost);
-                }
+                    Text = store.Name,
+                    Value = store.Id.ToString(),
+                    Selected = model.SelectedStoreIds.Contains(store.Id)
+                });
             }
         }
 
         [NonAction]
         protected virtual void SaveStoreMappings(BlogPost blogPost, BlogPostModel model)
         {
+            blogPost.LimitedToStores = model.SelectedStoreIds.Any();
+
             var existingStoreMappings = _storeMappingService.GetStoreMappings(blogPost);
             var allStores = _storeService.GetAllStores();
             foreach (var store in allStores)
             {
-                if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
+                if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
@@ -154,9 +175,10 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
-
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
+            
             var model = new BlogPostModel();
+            //languages
+            PrepareLanguagesModel(model);
             //Stores
             PrepareStoresMappingModel(model, null, false);
             //default values
@@ -186,12 +208,19 @@ namespace Nop.Admin.Controllers
                 SaveStoreMappings(blogPost, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = blogPost.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = blogPost.Id });
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
-            //Stores
+            PrepareLanguagesModel(model);
             PrepareStoresMappingModel(model, null, true);
             return View(model);
         }
@@ -206,10 +235,11 @@ namespace Nop.Admin.Controllers
                 //No blog post found with the specified id
                 return RedirectToAction("List");
 
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = blogPost.ToModel();
             model.StartDate = blogPost.StartDateUtc;
             model.EndDate = blogPost.EndDateUtc;
+            //languages
+            PrepareLanguagesModel(model);
             //Store
             PrepareStoresMappingModel(model, blogPost, false);
             return View(model);
@@ -244,7 +274,7 @@ namespace Nop.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    SaveSelectedTabName();
 
                     return RedirectToAction("Edit", new {id = blogPost.Id});
                 }
@@ -252,9 +282,8 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
-            //Store
             PrepareStoresMappingModel(model, blogPost, true);
+            PrepareLanguagesModel(model);
             return View(model);
 		}
 
@@ -294,18 +323,11 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
-            IList<BlogComment> comments;
-            if (filterByBlogPostId.HasValue)
-            {
+            IList<BlogComment> comments = filterByBlogPostId.HasValue ?
                 //filter comments by blog
-                var blogPost = _blogService.GetBlogPostById(filterByBlogPostId.Value);
-                comments = blogPost.BlogComments.OrderBy(bc => bc.CreatedOnUtc).ToList();
-            }
-            else
-            {
+                _blogService.GetBlogPostById(filterByBlogPostId.Value).BlogComments.OrderBy(bc => bc.CreatedOnUtc).ToList() :
                 //load all blog comments
-                comments = _blogService.GetAllComments(0);
-            }
+                _blogService.GetAllComments(0);
 
             var gridModel = new DataSourceResult
             {

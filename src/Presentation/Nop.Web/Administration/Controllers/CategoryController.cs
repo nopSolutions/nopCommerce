@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
+using Nop.Admin.Helpers;
 using Nop.Admin.Models.Catalog;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
+using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
@@ -18,7 +21,6 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Vendors;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
@@ -50,6 +52,7 @@ namespace Nop.Admin.Controllers
         private readonly CatalogSettings _catalogSettings;
         private readonly IWorkContext _workContext;
         private readonly IImportManager _importManager;
+        private readonly ICacheManager _cacheManager;
 
         #endregion
 
@@ -73,7 +76,8 @@ namespace Nop.Admin.Controllers
             ICustomerActivityService customerActivityService,
             CatalogSettings catalogSettings,
             IWorkContext workContext,
-            IImportManager importManager)
+            IImportManager importManager, 
+            ICacheManager cacheManager)
         {
             this._categoryService = categoryService;
             this._categoryTemplateService = categoryTemplateService;
@@ -96,6 +100,7 @@ namespace Nop.Admin.Controllers
             this._catalogSettings = catalogSettings;
             this._workContext = workContext;
             this._importManager = importManager;
+            this._cacheManager = cacheManager;
         }
 
         #endregion
@@ -157,15 +162,9 @@ namespace Nop.Admin.Controllers
                 Text = "[None]",
                 Value = "0"
             });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
+            var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
             foreach (var c in categories)
-            {
-                model.AvailableCategories.Add(new SelectListItem
-                {
-                    Text = c.GetFormattedBreadCrumb(categories),
-                    Value = c.Id.ToString()
-                });
-            }
+                model.AvailableCategories.Add(c);
         }
 
         [NonAction]
@@ -184,21 +183,24 @@ namespace Nop.Admin.Controllers
                 });
             }
         }
-
+        
         [NonAction]
         protected virtual void PrepareDiscountModel(CategoryModel model, Category category, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableDiscounts = _discountService
-                .GetAllDiscounts(DiscountType.AssignedToCategories, showHidden: true)
-                .Select(d => d.ToModel())
-                .ToList();
-
             if (!excludeProperties && category != null)
+                model.SelectedDiscountIds = category.AppliedDiscounts.Select(d => d.Id).ToList();
+
+            foreach (var discount in _discountService.GetAllDiscounts(DiscountType.AssignedToCategories, showHidden: true))
             {
-                model.SelectedDiscountIds = category.AppliedDiscounts.Select(d => d.Id).ToArray();
+                model.AvailableDiscounts.Add(new SelectListItem
+                {
+                    Text = discount.Name,
+                    Value = discount.Id.ToString(),
+                    Selected = model.SelectedDiscountIds.Contains(discount.Id)
+                });
             }
         }
 
@@ -208,27 +210,31 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableCustomerRoles = _customerService
-                .GetAllCustomerRoles(true)
-                .Select(cr => cr.ToModel())
-                .ToList();
-            if (!excludeProperties)
+            if (!excludeProperties && category != null)
+                model.SelectedCustomerRoleIds = _aclService.GetCustomerRoleIdsWithAccess(category).ToList();
+
+            var allRoles = _customerService.GetAllCustomerRoles(true);
+            foreach (var role in allRoles)
             {
-                if (category != null)
+                model.AvailableCustomerRoles.Add(new SelectListItem
                 {
-                    model.SelectedCustomerRoleIds = _aclService.GetCustomerRoleIdsWithAccess(category);
-                }
+                    Text = role.Name,
+                    Value = role.Id.ToString(),
+                    Selected = model.SelectedCustomerRoleIds.Contains(role.Id)
+                });
             }
         }
 
         [NonAction]
         protected virtual void SaveCategoryAcl(Category category, CategoryModel model)
         {
+            category.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
+
             var existingAclRecords = _aclService.GetAclRecords(category);
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
             foreach (var customerRole in allCustomerRoles)
             {
-                if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                 {
                     //new role
                     if (existingAclRecords.Count(acl => acl.CustomerRoleId == customerRole.Id) == 0)
@@ -250,27 +256,31 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
+            if (!excludeProperties && category != null)
+                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(category).ToList();
+
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
             {
-                if (category != null)
+                model.AvailableStores.Add(new SelectListItem
                 {
-                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(category);
-                }
+                    Text = store.Name,
+                    Value = store.Id.ToString(),
+                    Selected = model.SelectedStoreIds.Contains(store.Id)
+                });
             }
         }
 
         [NonAction]
         protected virtual void SaveStoreMappings(Category category, CategoryModel model)
         {
+            category.LimitedToStores = model.SelectedStoreIds.Any();
+
             var existingStoreMappings = _storeMappingService.GetStoreMappings(category);
             var allStores = _storeService.GetAllStores();
             foreach (var store in allStores)
             {
-                if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
+                if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
@@ -288,7 +298,7 @@ namespace Nop.Admin.Controllers
 
         #endregion
         
-        #region List / tree
+        #region List
 
         public ActionResult Index()
         {
@@ -328,29 +338,6 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
         
-        public ActionResult Tree()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-
-            return View();
-        }
-
-        [HttpPost,]
-        public ActionResult TreeLoadChildren(int id = 0)
-        {
-            var categories = _categoryService.GetAllCategoriesByParentCategoryId(id, true)
-                .Select(x => new
-                             {
-                                 id = x.Id,
-                                 Name = x.Name,
-                                 hasChildren = _categoryService.GetAllCategoriesByParentCategoryId(x.Id, true).Count > 0,
-                                 imageUrl = Url.Content("~/Administration/Content/images/ico-content.png")
-                             });
-
-            return Json(categories);
-        }
-
         #endregion
 
         #region Create / Edit / Delete
@@ -419,7 +406,15 @@ namespace Nop.Admin.Controllers
                 _customerActivityService.InsertActivity("AddNewCategory", _localizationService.GetResource("ActivityLog.AddNewCategory"), category.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Categories.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = category.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = category.Id });
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
@@ -532,7 +527,7 @@ namespace Nop.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    SaveSelectedTabName();
 
                     return RedirectToAction("Edit", new {id = category.Id});
                 }
@@ -606,7 +601,7 @@ namespace Nop.Admin.Controllers
             {
                 var bytes =_exportManager.ExportCategoriesToXlsx(_categoryService.GetAllCategories(showHidden: true).Where(p=>!p.Deleted));
                  
-                return File(bytes, "text/xls", "categories.xlsx");
+                return File(bytes, MimeTypes.TextXlsx, "categories.xlsx");
             }
             catch (Exception exc)
             {
@@ -637,7 +632,7 @@ namespace Nop.Admin.Controllers
                     ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
                     return RedirectToAction("List");
                 }
-                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Category.Imported"));
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Categories.Imported"));
                 return RedirectToAction("List");
             }
             catch (Exception exc)
@@ -714,9 +709,9 @@ namespace Nop.Admin.Controllers
             var model = new CategoryModel.AddCategoryProductModel();
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
+            var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(c);
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });

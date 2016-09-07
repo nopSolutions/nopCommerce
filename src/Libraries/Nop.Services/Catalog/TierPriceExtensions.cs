@@ -58,7 +58,7 @@ namespace Nop.Services.Catalog
                         continue;
 
                     var customerRoles = customer.CustomerRoles.Where(cr => cr.Active).ToList();
-                    if (customerRoles.Count == 0)
+                    if (!customerRoles.Any())
                         continue;
 
                     bool roleIsFound = false;

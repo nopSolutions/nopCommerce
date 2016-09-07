@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Infrastructure;
@@ -144,19 +145,33 @@ namespace Nop.Data
         /// <returns>Maximum length. Null if such rule does not exist</returns>
         public static int? GetColumnMaxLength(this IDbContext context, string entityTypeName, string columnName)
         {
-            //original: http://stackoverflow.com/questions/5081109/entity-framework-4-0-automatically-truncate-trim-string-before-insert
-            int? result = null;
+            var rez = GetColumnsMaxLength(context, entityTypeName, columnName);
+            return rez.ContainsKey(columnName) ? rez[columnName] as int? : null;
+        }
 
-            Type entType = Type.GetType(entityTypeName);
+        /// <summary>
+        /// Get columns maximum length
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="entityTypeName">Entity type name</param>
+        /// <param name="columnNames">Column names</param>
+        /// <returns></returns>
+        public static IDictionary<string, int> GetColumnsMaxLength(this IDbContext context, string entityTypeName, params string[] columnNames)
+        {
+            //original: http://stackoverflow.com/questions/5081109/entity-framework-4-0-automatically-truncate-trim-string-before-insert
+           
+            var entType = Type.GetType(entityTypeName);
             var adapter = ((IObjectContextAdapter)context).ObjectContext;
             var metadataWorkspace = adapter.MetadataWorkspace;
             var q = from meta in metadataWorkspace.GetItems(DataSpace.CSpace).Where(m => m.BuiltInTypeKind == BuiltInTypeKind.EntityType)
-                    from p in (meta as EntityType).Properties.Where(p => p.Name == columnName && p.TypeUsage.EdmType.Name == "String")
+                    from p in (meta as EntityType).Properties.Where(p => columnNames.Contains(p.Name) && p.TypeUsage.EdmType.Name == "String")
                     select p;
+
+            int temp;
 
             var queryResult = q.Where(p =>
             {
-                bool match = p.DeclaringType.Name == entityTypeName;
+                var match = p.DeclaringType.Name == entityTypeName;
                 if (!match && entType != null)
                 {
                     //Is a fully qualified name....
@@ -165,14 +180,9 @@ namespace Nop.Data
 
                 return match;
 
-            }).Select(sel => sel.TypeUsage.Facets["MaxLength"].Value);
-
-            if (queryResult.Any())
-            {
-                result = Convert.ToInt32(queryResult.First());
-            }
-
-            return result;
+            }).Select(sel => new {sel.Name, MaxLength = sel.TypeUsage.Facets["MaxLength"].Value}).Where(p=>Int32.TryParse(p.MaxLength.ToString(), out temp)).ToDictionary(p=>p.Name,p=>Convert.ToInt32(p.MaxLength));
+            
+            return queryResult;
         }
 
         public static string DbName(this IDbContext context)

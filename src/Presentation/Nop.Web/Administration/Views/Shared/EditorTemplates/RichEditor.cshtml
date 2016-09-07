@@ -1,11 +1,13 @@
 ﻿@model String
+
 @using Nop.Core
 @using Nop.Core.Domain.Common
 @using Nop.Services.Security
 @using Nop.Web.Framework.UI
+
 @{
     //we do not bundle this script file (does not work for some reasons in bundle)
-    Html.AddScriptParts("~/Content/tinymce/tinymce.min.js", true);
+    Html.AddScriptParts("~/Administration/Content/tinymce/tinymce.min.js", true);
 
     var permissionService = EngineContext.Current.Resolve<IPermissionService>();
     var allowJbimages = false;
@@ -29,15 +31,15 @@
     //false by default
     var enableFullPage = Convert.ToBoolean(ViewData["nop.RichEditor.EnableFullPage"] ?? false);
 }
+
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         @* wooncherk contribution *@
         function RoxyFileBrowser@(random)(field_name, url, type, win) {
-            var roxyFileman = '@Url.Content("~/Content/Roxy_Fileman/index.html")';
+            var roxyFileman = '@Url.Content("~/Administration/Content/Roxy_Fileman/index.html")';
             if (roxyFileman.indexOf("?") < 0) {
                 roxyFileman += "?type=" + type;
-            }
-            else {
+            } else {
                 roxyFileman += "&type=" + type;
             }
             roxyFileman += '&input=' + field_name + '&value=' + document.getElementById(field_name).value;
@@ -57,22 +59,26 @@
         var defaultEditorSettings@(random) = {
             selector: "#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)",
             fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
-            height: 350,
-            width: 790,
+            height: 200,
+            width: '100%',
+            autoresize_min_height: 200,
+            autoresize_max_height: 200,
             plugins: [
-                "advlist autolink lists link image charmap print preview anchor",
+                "advlist autolink autoresize directionality lists link image charmap print preview anchor",
                 "searchreplace visualblocks code fullscreen",
                 "insertdatetime media table contextmenu paste@(allowJbimages ? " jbimages" : null)@(enableFullPage ? " fullpage" : null)"
             ],
-            toolbar: "insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image@(allowJbimages ? " jbimages" : null)",
+            toolbar: "ltr rtl | insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image@(allowJbimages ? " jbimages" : null)",
             //"relative_urls" required by jbimages plugin to be set to "false"
             relative_urls: false,
-            @if (allowJavaScript){
+            @if (allowJavaScript)
+            {
                 <text>
             valid_elements: "*[*]",
                 </text>
             }
-            @if (allowRoxyFileman){
+            @if (allowRoxyFileman)
+            {
                 <text>
             //picture manager
             file_browser_callback: RoxyFileBrowser@(random),
@@ -91,6 +97,7 @@
         tinyMCE.init(getAdditionalEditorSettings@(random)(defaultEditorSettings@(random)));
     });
 </script>
+
 @Html.TextArea(string.Empty, /* Name suffix */
     ViewData.TemplateInfo.FormattedModelValue /* Initial value */
 )

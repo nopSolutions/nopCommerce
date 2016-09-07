@@ -22,6 +22,12 @@ namespace Nop.Admin.Models.Catalog
         [AllowHtml]
         public string Name { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.ColorSquaresRgb")]
+        [AllowHtml]
+        public string ColorSquaresRgb { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.EnableColorSquaresRgb")]
+        public bool EnableColorSquaresRgb { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 

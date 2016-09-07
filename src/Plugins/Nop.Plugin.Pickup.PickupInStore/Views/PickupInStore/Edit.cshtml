@@ -1,0 +1,26 @@
+﻿@{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+}
+@model Nop.Plugin.Pickup.PickupInStore.Models.StorePickupPointModel
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Common.Edit")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @Html.Partial("~/Plugins/Pickup.PickupInStore/Views/PickupInStore/_CreateOrUpdate.cshtml", Model)
+        </div>
+    </div>
+}

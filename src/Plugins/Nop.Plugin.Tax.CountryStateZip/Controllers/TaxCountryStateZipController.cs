@@ -54,7 +54,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
         public ActionResult Configure()
         {
             var taxCategories = _taxCategoryService.GetAllTaxCategories();
-            if (taxCategories.Count == 0)
+            if (!taxCategories.Any())
                 return Content("No tax categories can be loaded");
 
             var model = new TaxRateListModel();

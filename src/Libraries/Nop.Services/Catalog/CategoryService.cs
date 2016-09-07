@@ -176,10 +176,10 @@ namespace Nop.Services.Catalog
                 query = query.Where(c => c.Name.Contains(categoryName));
             query = query.Where(c => !c.Deleted);
             query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder);
-            
-            if (!showHidden && (!_catalogSettings.IgnoreAcl || (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)))
+
+            if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) || (!showHidden && !_catalogSettings.IgnoreAcl))
             {
-                if (!_catalogSettings.IgnoreAcl)
+                if (!showHidden && !_catalogSettings.IgnoreAcl)
                 {
                     //ACL (access control list)
                     var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
@@ -566,20 +566,21 @@ namespace Nop.Services.Catalog
             //event notification
             _eventPublisher.EntityUpdated(productCategory);
         }
-        
+
+
         /// <summary>
-        /// Returns a list of IDs of not existing categories
+        /// Returns a list of names of not existing categories
         /// </summary>
-        /// <param name="categoryIds">The IDs of the categories to check</param>
-        /// <returns>List of IDs not existing categories</returns>
-        public virtual int[] GetNotExistingCategories(int[] categoryIds)
+        /// <param name="categoryNames">The nemes of the categories to check</param>
+        /// <returns>List of names not existing categories</returns>
+        public virtual string[] GetNotExistingCategories(string[] categoryNames)
         {
-            if (categoryIds == null)
-                throw new ArgumentNullException("categoryIds");
+            if (categoryNames == null)
+                throw new ArgumentNullException("categoryNames");
 
             var query = _categoryRepository.Table;
-            var queryFilter = categoryIds.Distinct().ToArray();
-            var filter = query.Select(c => c.Id).Where(c => queryFilter.Contains(c)).ToList();
+            var queryFilter = categoryNames.Distinct().ToArray();
+            var filter = query.Select(c => c.Name).Where(c => queryFilter.Contains(c)).ToList();
 
             return queryFilter.Except(filter).ToArray();
         }

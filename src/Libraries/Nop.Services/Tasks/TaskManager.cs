@@ -57,7 +57,7 @@ namespace Nop.Services.Tasks
                 .Where(x => !x.LastStartUtc.HasValue || x.LastStartUtc.Value.AddSeconds(x.Seconds) < DateTime.UtcNow)
                 .ToList();
             //create a thread for the tasks which weren't run for a long time
-            if (notRunTasks.Count > 0)
+            if (notRunTasks.Any())
             {
                 var taskThread = new TaskThread
                 {

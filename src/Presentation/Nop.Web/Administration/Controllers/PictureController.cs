@@ -2,6 +2,7 @@
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
+using Nop.Core;
 using Nop.Services.Media;
 using Nop.Web.Framework.Security;
 
@@ -60,10 +61,10 @@ namespace Nop.Admin.Controllers
                 switch (fileExtension)
                 {
                     case ".bmp":
-                        contentType = "image/bmp";
+                        contentType = MimeTypes.ImageBmp;
                         break;
                     case ".gif":
-                        contentType = "image/gif";
+                        contentType = MimeTypes.ImageGif;
                         break;
                     case ".jpeg":
                     case ".jpg":
@@ -71,14 +72,14 @@ namespace Nop.Admin.Controllers
                     case ".jfif":
                     case ".pjpeg":
                     case ".pjp":
-                        contentType = "image/jpeg";
+                        contentType = MimeTypes.ImageJpeg;
                         break;
                     case ".png":
-                        contentType = "image/png";
+                        contentType = MimeTypes.ImagePng;
                         break;
                     case ".tiff":
                     case ".tif":
-                        contentType = "image/tiff";
+                        contentType = MimeTypes.ImageTiff;
                         break;
                     default:
                         break;
@@ -90,7 +91,7 @@ namespace Nop.Admin.Controllers
             //otherwise some browsers will pop-up a "Save As" dialog.
             return Json(new { success = true, pictureId = picture.Id,
                 imageUrl = _pictureService.GetPictureUrl(picture, 100) },
-                "text/plain");
+                MimeTypes.TextPlain);
         }
     }
 }

@@ -164,7 +164,7 @@ namespace Nop.Web.Controllers
                 model.Add(pollModel);
             }
 
-            if (model.Count == 0)
+            if (!model.Any())
                 Content("");
 
             return PartialView(model);

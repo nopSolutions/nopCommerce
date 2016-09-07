@@ -1,16 +1,19 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.Customers;
+using Nop.Core.Domain.Customers;
+using Nop.Data;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Customers
 {
-    public class CustomerRoleValidator : BaseNopValidator<CustomerRoleModel>
+    public partial class CustomerRoleValidator : BaseNopValidator<CustomerRoleModel>
     {
-        public CustomerRoleValidator(ILocalizationService localizationService)
+        public CustomerRoleValidator(ILocalizationService localizationService, IDbContext dbContext)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.Name.Required"));
-            RuleFor(x => x.Description).NotEmpty().When(k => k.AllowFormSelection).WithMessage(localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.Name.Description"));
+
+            SetStringPropertiesMaxLength<CustomerRole>(dbContext);
         }
     }
 }

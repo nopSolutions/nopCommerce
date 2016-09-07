@@ -150,8 +150,8 @@ namespace Nop.Services.Catalog
             query = query.Where(m => !m.Deleted);
             query = query.OrderBy(m => m.DisplayOrder);
 
-            if ((!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations)) || storeId > 0)
-            { 
+            if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) || (!showHidden && !_catalogSettings.IgnoreAcl))
+            {
                 if (!showHidden && !_catalogSettings.IgnoreAcl)
                 {
                     //ACL (access control list)
@@ -163,7 +163,7 @@ namespace Nop.Services.Catalog
                             where !m.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                             select m;
                 }
-                if ((!showHidden && !_catalogSettings.IgnoreStoreLimitations) || storeId > 0)
+                if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
                 {
                     //Store mapping
                     query = from m in query
@@ -457,18 +457,18 @@ namespace Nop.Services.Catalog
 
 
         /// <summary>
-        /// Returns a list of IDs of not existing manufacturers
+        /// Returns a list of names of not existing manufacturers
         /// </summary>
-        /// <param name="manufacturerIds">The IDs of the manufacturers to check</param>
-        /// <returns>List of IDs not existing manufacturers</returns>
-        public virtual int[] GetNotExistingManufacturers(int[] manufacturerIds)
+        /// <param name="manufacturerNames">The names of the manufacturers to check</param>
+        /// <returns>List of names not existing manufacturers</returns>
+        public virtual string[] GetNotExistingManufacturers(string[] manufacturerNames)
         {
-            if (manufacturerIds == null)
-                throw new ArgumentNullException("manufacturerIds");
+            if (manufacturerNames == null)
+                throw new ArgumentNullException("manufacturerNames");
 
             var query = _manufacturerRepository.Table;
-            var queryFilter = manufacturerIds.Distinct().ToArray();
-            var filter = query.Select(m => m.Id).Where(m => queryFilter.Contains(m)).ToList();
+            var queryFilter = manufacturerNames.Distinct().ToArray();
+            var filter = query.Select(m => m.Name).Where(m => queryFilter.Contains(m)).ToList();
             return queryFilter.Except(filter).ToArray();
         }
 

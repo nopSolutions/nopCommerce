@@ -141,6 +141,7 @@ namespace Nop.Admin.Controllers
             model.ServerTimeZone = TimeZone.CurrentTimeZone.StandardName;
             model.ServerLocalTime = DateTime.Now;
             model.UtcTime = DateTime.UtcNow;
+            model.CurrentUserTime = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
             model.HttpHost = _webHelper.ServerVariables("HTTP_HOST");
             foreach (var key in _httpContext.Request.ServerVariables.AllKeys)
             {
@@ -162,7 +163,6 @@ namespace Nop.Admin.Controllers
             }
             return View(model);
         }
-
 
         public ActionResult Warnings()
         {
@@ -297,7 +297,7 @@ namespace Nop.Admin.Controllers
 
             //shipping rate coputation methods
             var srcMethods = _shippingService.LoadActiveShippingRateComputationMethods();
-            if (srcMethods.Count == 0)
+            if (!srcMethods.Any())
                 model.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Fail,
@@ -519,7 +519,7 @@ namespace Nop.Admin.Controllers
             {
                 Data = backupFiles.Select(p=>new {p.Name,
                     Length = string.Format("{0:F2} Mb", p.Length / 1024f / 1024f),
-                    Link = _webHelper.GetStoreLocation(false) + "Administration/backups/"+p.Name
+                    Link = _webHelper.GetStoreLocation(false) + "Administration/db_backups/" + p.Name
                 }),
                 Total = backupFiles.Count
             };
@@ -612,7 +612,7 @@ namespace Nop.Admin.Controllers
             return Redirect(returnUrl);
         }
 
-
+        [HttpPost]
         public ActionResult ClearCache(string returnUrl = "")
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
@@ -630,7 +630,7 @@ namespace Nop.Admin.Controllers
             return Redirect(returnUrl);
         }
 
-
+        [HttpPost]
         public ActionResult RestartApplication(string returnUrl = "")
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))

@@ -119,7 +119,7 @@ namespace Nop.Services.Customers
         #region Methods
 
         #region Customers
-        
+
         /// <summary>
         /// Gets all customers
         /// </summary>
@@ -137,6 +137,7 @@ namespace Nop.Services.Customers
         /// <param name="company">Company; null to load all customers</param>
         /// <param name="phone">Phone; null to load all customers</param>
         /// <param name="zipPostalCode">Phone; null to load all customers</param>
+        /// <param name="ipAddress">IP address; null to load all customers</param>
         /// <param name="loadOnlyWithShoppingCart">Value indicating whether to load customers only with shopping cart</param>
         /// <param name="sct">Value indicating what shopping cart type to filter; userd when 'loadOnlyWithShoppingCart' param is 'true'</param>
         /// <param name="pageIndex">Page index</param>
@@ -148,7 +149,7 @@ namespace Nop.Services.Customers
             string firstName = null, string lastName = null,
             int dayOfBirth = 0, int monthOfBirth = 0,
             string company = null, string phone = null, string zipPostalCode = null,
-            bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
+            string ipAddress = null, bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _customerRepository.Table;
@@ -262,6 +263,12 @@ namespace Nop.Services.Customers
                         z.Attribute.Key == SystemCustomerAttributeNames.ZipPostalCode &&
                         z.Attribute.Value.Contains(zipPostalCode)))
                     .Select(z => z.Customer);
+            }
+
+            //search by IpAddress
+            if (!String.IsNullOrWhiteSpace(ipAddress) && CommonHelper.IsValidIpAddress(ipAddress))
+            {
+                    query = query.Where(w => w.LastIpAddress == ipAddress);
             }
 
             if (loadOnlyWithShoppingCart)
@@ -381,7 +388,7 @@ namespace Nop.Services.Customers
             }
             return sortedCustomers;
         }
-
+        
         /// <summary>
         /// Gets a customer by GUID
         /// </summary>
@@ -551,7 +558,7 @@ namespace Nop.Services.Customers
             {
                 _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.SelectedShippingOption, null, storeId);
                 _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.OfferedShippingOptions, null, storeId);
-                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.SelectedPickUpInStore, false, storeId);
+                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.SelectedPickupPoint, null, storeId);
             }
 
             //clear selected payment method

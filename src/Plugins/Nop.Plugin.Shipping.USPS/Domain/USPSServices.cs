@@ -22,6 +22,7 @@ namespace Nop.Plugin.Shipping.USPS.Domain
         {
             {"NONE (disable all domestic services)", "NONE"},
             {"First-Class", "0"},
+            {"First-Class Mail Letter", "letter"},
             {"Priority Mail Express Sunday/Holiday Guarantee", "23"},
             {"Priority Mail Express Flat-Rate Envelope Sunday/Holiday Guarantee", "25"},
             {"Priority Mail Express Hold For Pickup", "2"},
@@ -83,7 +84,7 @@ namespace Nop.Plugin.Shipping.USPS.Domain
         /// Gets the Service ID for an International service
         /// </summary>
         /// <param name="service">service name</param>
-        /// <returns>service id or emtpy string</returns>
+        /// <returns>service id or empty string</returns>
         public static string GetServiceIdInternational(string service)
         {
             var serviceId = "";
