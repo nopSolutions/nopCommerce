@@ -38,6 +38,7 @@ namespace Nop.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly ICacheManager _cacheManager;
 
         #endregion
 
@@ -54,7 +55,8 @@ namespace Nop.Admin.Controllers
             IVendorService vendorService,
             IWorkContext workContext,
             ILanguageService languageService,
-            ILocalizedEntityService localizedEntityService)
+            ILocalizedEntityService localizedEntityService,
+            ICacheManager cacheManager)
 		{
             this._customerService = customerService;
             this._localizationService = localizationService;
@@ -68,6 +70,7 @@ namespace Nop.Admin.Controllers
             this._workContext = workContext;
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
+            this._cacheManager = cacheManager;
         }
 
 		#endregion 

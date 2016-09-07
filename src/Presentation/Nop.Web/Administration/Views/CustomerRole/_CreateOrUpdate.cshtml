@@ -22,6 +22,26 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
+                    @(Html.LocalizedEditor<CustomerRoleModel, CustomerRoleLocalizedModel>("roledescription-localized",
+                    @<div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.Locales[item].Description)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.EditorFor(model => model.Locales[item].Description)
+                                @Html.ValidationMessageFor(model => model.Locales[item].Description)
+                            </div>
+                            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                        </div>
+                       ,@<div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.Description)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.EditorFor(model => model.Description)
+                                @Html.ValidationMessageFor(model => model.Description)
+                            </div>
+                         </div>))
                     <div class="form-group">
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Name)
@@ -112,6 +132,16 @@
                                 });
                             </script>
                         </div>
+@if (!Model.IsSystemRole)
+{
+    <div class="col-md-3">
+        @Html.NopLabelFor(model => model.AllowFormSelection)
+    </div>
+                        <div class="col-md-9">
+                            @Html.EditorFor(model => model.AllowFormSelection)
+                            @Html.ValidationMessageFor(model => model.AllowFormSelection)
+                        </div>
+}
                     </div>
                 </div>
             </div>
