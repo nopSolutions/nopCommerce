@@ -28,7 +28,7 @@ namespace Nop.Web.Framework
                 return;
 
             //only GET requests
-            if (!String.Equals(filterContext.HttpContext.Request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))
                 return;
 
             if (!DataSettingsHelper.DatabaseIsInstalled())
@@ -44,8 +44,8 @@ namespace Nop.Web.Framework
 
 
             //process current URL
-            var pageUrl = filterContext.HttpContext.Request.RawUrl;
-            string applicationPath = filterContext.HttpContext.Request.ApplicationPath;
+            var pageUrl = request.RawUrl;
+            string applicationPath = request.ApplicationPath;
             if (pageUrl.IsLocalizedUrl(applicationPath, true))
                 //already localized URL
                 return;
