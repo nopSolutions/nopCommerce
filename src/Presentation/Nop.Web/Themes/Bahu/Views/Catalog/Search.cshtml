@@ -1,0 +1,142 @@
+﻿@model SearchModel
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Search").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-search-page");
+}
+@using Nop.Web.Models.Catalog;
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#@Html.FieldIdFor(model => model.adv)").click(toggleAdvancedSearch);
+
+        toggleAdvancedSearch();
+    });
+
+    function toggleAdvancedSearch() {
+
+        if ($('#@Html.FieldIdFor(model => model.adv)').is(':checked')) {
+            $('#advanced-search-block').show();
+        }
+        else {
+            $('#advanced-search-block').hide();
+        }
+    }
+</script>
+<div class="page search-page">
+    <div class="page-title">
+        <h1>@T("Search")</h1>
+    </div>
+    <div class="page-body">
+        <div class="search-input">
+            @using (Html.BeginRouteForm("ProductSearch", FormMethod.Get))
+            {
+                <div class="fieldset">
+                    <div class="form-fields">
+                        <div class="basic-search">
+                            <div class="inputs">
+                                @Html.LabelFor(model => model.q, new { }, ":")
+                                @Html.TextBoxFor(model => model.q, new { @class = "search-text" })
+                            </div>
+                            @Html.Widget("productsearch_page_basic")
+                            <div class="inputs reversed">
+                                @Html.CheckBoxFor(model => model.adv)
+                                @Html.LabelFor(model => model.adv)
+                            </div>
+                        </div>
+                        <div class="advanced-search" id="advanced-search-block">
+                            @if (Model.AvailableCategories.Count > 0)
+                            {
+                                <div class="inputs">
+                                    @Html.LabelFor(model => model.cid, new { }, ":")
+                                    @Html.DropDownListFor(model => model.cid, Model.AvailableCategories)
+                                </div>
+                                <div class="inputs reversed">
+                                    @Html.CheckBoxFor(model => model.isc)
+                                    @Html.LabelFor(model => model.isc)
+                                </div>
+                            }
+                            @if (Model.AvailableManufacturers.Count > 0)
+                            {
+                                <div class="inputs">
+                                    @Html.LabelFor(model => model.mid, new { }, ":")
+                                    @Html.DropDownListFor(model => model.mid, Model.AvailableManufacturers)
+                                </div>
+                            }
+                            @if (Model.asv && Model.AvailableVendors.Count > 0)
+                            {
+                                <div class="inputs">
+                                    @Html.LabelFor(model => model.vid, new {}, ":")
+                                    @Html.DropDownListFor(model => model.vid, Model.AvailableVendors)
+                                </div>
+                            }
+                            <div class="inputs">
+                                <label>@T("Search.PriceRange"):</label>
+                                <span class="price-range">
+                                    @T("Search.PriceRange.From")
+                                    @Html.TextBoxFor(model => model.pf, new { @class = "price-from" })
+                                    @T("Search.PriceRange.To")
+                                    @Html.TextBoxFor(model => model.pt, new { @class = "price-to" })
+                                </span>
+                            </div>
+                            <div class="inputs reversed">
+                                @Html.CheckBoxFor(model => model.sid)
+                                @Html.LabelFor(model => model.sid)
+                            </div>
+                            @Html.Widget("productsearch_page_advanced")
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <input type="submit" class="button-1 search-button" value="@T("Search.Button")" />
+                </div>
+            }
+        </div>
+        @if (Model.Products.Count > 0)
+        {
+            @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext, new ViewDataDictionary())
+        }
+        @Html.Widget("productsearch_page_before_results")
+        <div class="search-results">
+            @if (!String.IsNullOrEmpty(Model.Warning))
+            {
+                <div class="warning">
+                    @Model.Warning
+                </div>
+            }
+            @if (Model.NoResults)
+            {
+                <div class="no-result">
+                    @T("Search.NoResultsText")
+                </div>
+            }
+            
+            @if (Model.Products.Count > 0)
+            {
+                <div class="@(Model.PagingFilteringContext.ViewMode == "list" ? "product-list" : "product-grid")">
+                    <div class="item-grid">
+                        @foreach (var product in Model.Products)
+                        {
+                            <div class="item-box">
+                                @Html.Partial("_ProductBox", product)
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            @{
+                var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").BooleanParameterName("adv").BooleanParameterName("isc").BooleanParameterName("sid").RenderEmptyParameters(true);
+            }
+            @if (!pager.IsEmpty())
+            {
+                <div class="pager">
+                    @pager
+                </div>
+            }
+        </div>
+        @Html.Widget("productsearch_page_after_results")
+    </div>
+</div>
