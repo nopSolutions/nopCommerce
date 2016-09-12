@@ -204,6 +204,7 @@
     <Compile Include="Catalog\IPriceFormatter.cs" />
     <Compile Include="Catalog\ProductAttributeFormatter.cs" />
     <Compile Include="Catalog\ProductAttributeParser.cs" />
+    <Compile Include="ExportImport\Extensions.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Cms\IWidgetService.cs" />
     <Compile Include="Cms\WidgetExtensions.cs" />
