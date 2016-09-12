@@ -1818,6 +1818,9 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.Parent.Hint">
     <Value>Select a parent category for this category. Leave this field empty to make this the root level category.</Value>
   </LocaleResource>
+  <LocaleResource Name=" Admin.Catalog.Categories.Fields.Parent.None">
+    <Value>[None]</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.Picture">
     <Value>Picture</Value>
   </LocaleResource>
