@@ -2730,6 +2730,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTags.Hint">
     <Value>Product tags are the keywords for product identification. The more products associated with a particular tag, the larger it will show on the tag cloud.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTags.Placeholder">
+    <Value>Enter tags ...</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTemplate">
     <Value>Product template</Value>
   </LocaleResource>

@@ -41,6 +41,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Countries.ImportTip">
     <Value>You can download a CSV file with a list of states for other countries on the following page:</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTags.Placeholder">
+    <Value>Enter tags ...</Value>
+  </LocaleResource>
 </Language>
 '
 
