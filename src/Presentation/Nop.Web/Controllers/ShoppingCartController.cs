@@ -570,14 +570,23 @@ namespace Nop.Web.Controllers
 
             #endregion
 
-            #region Button payment methods
+            #region Payment methods
 
+            //all payment methods (do not filter by country here as it could be not specified yet)
             var paymentMethods = _paymentService
                 .LoadActivePaymentMethods(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id)
-                .Where(pm => pm.PaymentMethodType == PaymentMethodType.Button)
                 .Where(pm => !pm.HidePaymentMethod(cart))
                 .ToList();
-            foreach (var pm in paymentMethods)
+            //payment methods displayed during checkout (not with "Button" type)
+            var nonButtonPaymentMethods = paymentMethods
+                .Where(pm => pm.PaymentMethodType != PaymentMethodType.Button)
+                .ToList();
+            //"button" payment methods(*displayed on the shopping cart page)
+            var buttonPaymentMethods = paymentMethods
+                .Where(pm => pm.PaymentMethodType == PaymentMethodType.Button)
+                .ToList();
+                
+            foreach (var pm in buttonPaymentMethods)
             {
                 if (cart.IsRecurring() && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
                     continue;
@@ -591,6 +600,9 @@ namespace Nop.Web.Controllers
                 model.ButtonPaymentMethodControllerNames.Add(controllerName);
                 model.ButtonPaymentMethodRouteValues.Add(routeValues);
             }
+
+            //hide "Checkout" button if we have only "Button" payment methods
+            model.HideCheckoutButton = !nonButtonPaymentMethods.Any() && model.ButtonPaymentMethodRouteValues.Any();
 
             #endregion
 
