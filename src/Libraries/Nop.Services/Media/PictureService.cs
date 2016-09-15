@@ -640,8 +640,7 @@ namespace Nop.Services.Media
             var pics = new PagedList<Picture>(query, pageIndex, pageSize);
             return pics;
         }
-
-
+        
         /// <summary>
         /// Gets pictures by product identifier
         /// </summary>
