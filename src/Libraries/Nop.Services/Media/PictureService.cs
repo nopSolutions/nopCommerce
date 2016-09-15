@@ -30,8 +30,6 @@ namespace Nop.Services.Media
 
         #region Fields
 
-        private static readonly object s_lock = new object();
-
         private readonly IRepository<Picture> _pictureRepository;
         private readonly IRepository<ProductPicture> _productPictureRepository;
         private readonly ISettingService _settingService;
