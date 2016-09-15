@@ -927,7 +927,4 @@ namespace Nop.Services.Media
 
         #endregion
     }
-
-    
-
 }
