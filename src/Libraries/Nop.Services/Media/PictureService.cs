@@ -323,8 +323,9 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="thumbFilePath">Thumb file path</param>
         /// <param name="thumbFileName">Thumb file name</param>
+        /// <param name="mimeType">MIME type</param>
         /// <param name="binary">Picture binary</param>
-        protected virtual void SaveThumb(string thumbFilePath, string thumbFileName, byte[] binary)
+        protected virtual void SaveThumb(string thumbFilePath, string thumbFileName, string mimeType, byte[] binary)
         {
             File.WriteAllBytes(thumbFilePath, binary);
         }
@@ -413,7 +414,7 @@ namespace Nop.Services.Media
                                 Quality = _mediaSettings.DefaultImageQuality
                             });
                             var destBinary = destStream.ToArray();
-                            SaveThumb(thumbFilePath, thumbFileName, destBinary);
+                            SaveThumb(thumbFilePath, thumbFileName, "", destBinary);
                         }
                     }
                 }
@@ -559,7 +560,7 @@ namespace Nop.Services.Media
                             pictureBinaryResized = pictureBinary.ToArray();
                         }
 
-                        SaveThumb(thumbFilePath, thumbFileName, pictureBinaryResized);
+                        SaveThumb(thumbFilePath, thumbFileName, picture.MimeType, pictureBinaryResized);
                     }
                     
                     mutex.ReleaseMutex();
