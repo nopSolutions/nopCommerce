@@ -46,7 +46,13 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name=" Admin.Catalog.Categories.Fields.Parent.None">
     <Value>[None]</Value>
-  </LocaleResource>  
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.HideShippingTotal">
+    <Value>Hide shipping total if shipping not required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.HideShippingTotal.Hint">
+    <Value>Check if you want Hide ''Shipping total'' label if shipping not required.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -121,3 +127,10 @@ DEALLOCATE cur_existinglanguage
 DROP TABLE #LocaleStringResourceTmp
 GO
 
+--new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.hideshippingtotal')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'shippingsettings.hideshippingtotal', N'False', 0)
+ END
+ GO

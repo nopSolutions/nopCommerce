@@ -6741,6 +6741,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.GoogleMapsApiKey.Hint">
     <Value>Specify Google maps API key.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.HideShippingTotal">
+    <Value>Hide shipping total if shipping not required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.HideShippingTotal.Hint">
+    <Value>Check if you want Hide 'Shipping total' label if shipping not required.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.NotifyCustomerAboutShippingFromMultipleLocations">
     <Value>Notify customer about shipping from multiple locations</Value>
   </LocaleResource>
@@ -13673,9 +13679,6 @@
   </LocaleResource>
   <LocaleResource Name="Order.ShippingAddress">
     <Value>Shipping Address</Value>
-  </LocaleResource>
-  <LocaleResource Name="Order.Shipping">
-    <Value>Shipping</Value>
   </LocaleResource>
   <LocaleResource Name="Order.Shipping.Name">
     <Value>Shipping Method</Value>

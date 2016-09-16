@@ -6065,6 +6065,7 @@ namespace Nop.Services.Installation
                 EstimateShippingEnabled = true,
                 DisplayShipmentEventsToCustomers = false,
                 DisplayShipmentEventsToStoreOwner = false,
+                HideShippingTotal = false,
                 ReturnValidOptionsIfThereAreAny = true,
                 BypassShippingMethodSelectionIfOnlyOne = false,
                 UseCubeRootMethod = true

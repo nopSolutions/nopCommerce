@@ -766,6 +766,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.EstimateShippingEnabled_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.DisplayShipmentEventsToCustomers_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.DisplayShipmentEventsToStoreOwner_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.HideShippingTotal_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.ShippingOriginAddress_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());

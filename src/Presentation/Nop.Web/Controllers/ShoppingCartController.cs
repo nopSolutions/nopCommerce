@@ -974,6 +974,8 @@ namespace Nop.Web.Controllers
                             model.SelectedShippingMethod = shippingOption.Name;
                     }
                 }
+                else
+                    model.HideShippingTotal = _shippingSettings.HideShippingTotal;
 
                 //payment method fee
                 var paymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
