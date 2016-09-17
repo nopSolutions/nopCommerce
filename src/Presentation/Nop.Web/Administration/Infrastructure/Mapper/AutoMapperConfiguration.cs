@@ -37,6 +37,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
@@ -50,6 +51,7 @@ using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
+using Nop.Web.Framework.Security.Captcha;
 
 namespace Nop.Admin.Infrastructure.Mapper
 {
@@ -68,6 +70,12 @@ namespace Nop.Admin.Infrastructure.Mapper
         {
             _mapperConfiguration = new MapperConfiguration(cfg =>
             {
+
+                cfg.RecognizeDestinationPrefixes("Captcha");
+                cfg.RecognizeDestinationPrefixes("ReCaptcha");
+                cfg.RecognizePrefixes("Captcha");
+                cfg.RecognizePrefixes("ReCaptcha");
+
                 //TODO remove 'CreatedOnUtc' ignore mappings because now presentation layer models have 'CreatedOn' property and core entities have 'CreatedOnUtc' property (distinct names)
 
                 //address
@@ -644,6 +652,14 @@ namespace Nop.Admin.Infrastructure.Mapper
                 cfg.CreateMap<StoreModel, Store>();
 
                 //Settings
+                cfg.CreateMap<GeneralCommonSettingsModel.SecuritySettingsModel, SecuritySettings>()
+                    .ForMember(dest => dest.AdminAreaAllowedIpAddresses, mo => mo.MapFrom(src => src.AdminAreaAllowedIpAddresses.Split()));
+                cfg.CreateMap<SecuritySettings, GeneralCommonSettingsModel.SecuritySettingsModel>()
+                    .ForMember(dest => dest.AdminAreaAllowedIpAddresses, mo => mo.MapFrom(src => string.Join(",", src.AdminAreaAllowedIpAddresses)))
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                cfg.CreateMap<GeneralCommonSettingsModel.SecuritySettingsModel, CaptchaSettings>();
+                cfg.CreateMap<CaptchaSettings, GeneralCommonSettingsModel.SecuritySettingsModel>()
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<TaxSettings, TaxSettingsModel>()
                     .ForMember(dest => dest.DefaultTaxAddress, mo => mo.Ignore())
                     .ForMember(dest => dest.TaxDisplayTypeValues, mo => mo.Ignore())
