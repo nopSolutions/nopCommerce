@@ -6108,7 +6108,7 @@ namespace Nop.Services.Installation
                 EuVatUseWebService = false,
                 EuVatAssumeValid = false,
                 EuVatEmailAdminWhenNewVatSubmitted = false,
-                LogErrors = true
+                LogErrors = false
             });
 
             settingService.SaveSetting(new DateTimeSettings
