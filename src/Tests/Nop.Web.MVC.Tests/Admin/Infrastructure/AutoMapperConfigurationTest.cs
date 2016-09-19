@@ -10,6 +10,8 @@ namespace Nop.Web.MVC.Tests.Admin.Infrastructure
         [Test]
         public void Configuration_is_valid()
         {
+            var startupTask = new AutoMapperStartupTask();
+            startupTask.Execute();
             AutoMapperConfiguration.Init();
             AutoMapperConfiguration.MapperConfiguration.AssertConfigurationIsValid();
         }

@@ -6,6 +6,7 @@ using Autofac;
 using Autofac.Integration.Mvc;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure.DependencyManagement;
+using Nop.Core.Infrastructure.Mapper;
 
 namespace Nop.Core.Infrastructure
 {
@@ -92,6 +93,9 @@ namespace Nop.Core.Infrastructure
             if (!config.IgnoreStartupTasks)
             {
                 RunStartupTasks();
+                
+                //finalise the automapper configuration
+                AutoMapperConfiguration.Init();
             }
 
         }

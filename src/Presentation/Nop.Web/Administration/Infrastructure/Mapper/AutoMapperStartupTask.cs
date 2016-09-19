@@ -979,7 +979,6 @@ namespace Nop.Admin.Infrastructure.Mapper
                 cfg.CreateMap<TopicTemplateModel, TopicTemplate>();
 
             });
-            AutoMapperConfiguration.Init();
         }
         
         public int Order
