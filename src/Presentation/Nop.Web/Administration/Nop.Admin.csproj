@@ -209,7 +209,6 @@
     <Compile Include="Controllers\QueuedEmailController.cs" />
     <Compile Include="Extensions\AttributeParserHelper.cs" />
     <Compile Include="Helpers\SelectListHelper.cs" />
-    <Compile Include="Infrastructure\Mapper\AutoMapperConfiguration.cs" />
     <Compile Include="Infrastructure\Cache\ModelCacheEventConsumer.cs" />
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
     <Compile Include="Extensions\MappingExtensions.cs" />

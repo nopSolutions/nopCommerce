@@ -1,4 +1,5 @@
 ﻿using Nop.Admin.Infrastructure.Mapper;
+using Nop.Core.Infrastructure.Mapper;
 using NUnit.Framework;
 
 namespace Nop.Web.MVC.Tests.Admin.Infrastructure
