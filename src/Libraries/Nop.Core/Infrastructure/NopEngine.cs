@@ -83,14 +83,10 @@ namespace Nop.Core.Infrastructure
         /// <param name="config">Config</param>
         protected virtual void RegisterMapperConfiguration(NopConfig config)
         {
-            var builder = new ContainerBuilder();
-            var container = builder.Build();
-            this._containerManager = new ContainerManager(container);
-
             //dependencies
             var typeFinder = new WebAppTypeFinder();
 
-            //register dependencies provided by other assemblies
+            //register mapper configurations provided by other assemblies
             var mcTypes = typeFinder.FindClassesOfType<IMapperConfiguration>();
             var mcInstances = new List<IMapperConfiguration>();
             foreach (var mcType in mcTypes)
