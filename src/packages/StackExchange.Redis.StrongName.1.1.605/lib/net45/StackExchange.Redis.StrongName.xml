@@ -534,21 +534,6 @@
             Deduces a link to the redis documentation about the specified command
             </summary>
         </member>
-        <member name="T:StackExchange.Redis.ConvertHelper">
-            <summary>
-            Helper for Array.ConvertAll() as it's missing on .Net Core.
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConvertHelper.ConvertAll``2(``0[],System.Func{``0,``1})">
-            <summary>
-            Converts array of one type to an array of another type.
-            </summary>
-            <typeparam name="TInput">Input type</typeparam>
-            <typeparam name="TOutput">Output type</typeparam>
-            <param name="source">source</param>
-            <param name="selector">selector</param>
-            <returns></returns>
-        </member>
         <member name="T:StackExchange.Redis.ProfiledCommandEnumerable">
             <summary>
             A collection of IProfiledCommands.
@@ -1181,6 +1166,11 @@
         <member name="E:StackExchange.Redis.ConnectionMultiplexer.ErrorMessage">
             <summary>
             A server replied with an error message;
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.ExportConfiguration(System.IO.Stream,StackExchange.Redis.ExportOptions)">
+            <summary>
+            Write the configuration of all servers to an output stream
             </summary>
         </member>
         <member name="P:StackExchange.Redis.ConnectionMultiplexer.LogSyncLock">
@@ -3828,19 +3818,6 @@
             The underlying origin of the error
             </summary>
         </member>
-        <member name="T:StackExchange.Redis.InternalRegexCompiledOption">
-            <summary>
-            Credits to Sam Harwell https://github.com/dotnet/corefx/issues/340#issuecomment-120749951
-            </summary>
-        </member>
-        <member name="P:StackExchange.Redis.InternalRegexCompiledOption.Default">
-            <summary>
-            Gets the default <see cref="T:System.Text.RegularExpressions.RegexOptions"/> to use.
-            <see cref="F:System.Text.RegularExpressions.RegexOptions.Compiled"/> option isn't available yet for dnxcore50.
-            This returns <see cref="F:System.Text.RegularExpressions.RegexOptions.Compiled"/> if it is supported; 
-            <see cref="F:System.Text.RegularExpressions.RegexOptions.None"/> otherwise.
-            </summary>
-        </member>
         <member name="T:StackExchange.Redis.RetransmissionReasonType">
             <summary>
             If an IProfiledCommand is a retransmission of a previous command, this enum
@@ -4203,6 +4180,18 @@
             Return the number of keys in the database.
             </summary>
             <remarks>http://redis.io/commands/dbsize</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IServer.Echo(StackExchange.Redis.RedisValue,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Return the same message passed in
+            </summary>
+            <remarks>http://redis.io/commands/echo</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IServer.EchoAsync(StackExchange.Redis.RedisValue,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Return the same message passed in
+            </summary>
+            <remarks>http://redis.io/commands/echo</remarks>
         </member>
         <member name="M:StackExchange.Redis.IServer.FlushAllDatabases(StackExchange.Redis.CommandFlags)">
             <summary>
@@ -4659,43 +4648,6 @@
             <summary>
             Execute the batch operation, sending all queued commands to the server.
             </summary>
-        </member>
-        <member name="T:StackExchange.Redis.KeyspaceIsolation.DatabaseExtensions">
-            <summary>
-                Provides the <see cref="M:StackExchange.Redis.KeyspaceIsolation.DatabaseExtensions.WithKeyPrefix(StackExchange.Redis.IDatabase,StackExchange.Redis.RedisKey)"/> extension method to <see cref="T:StackExchange.Redis.IDatabase"/>.
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.KeyspaceIsolation.DatabaseExtensions.WithKeyPrefix(StackExchange.Redis.IDatabase,StackExchange.Redis.RedisKey)">
-            <summary>
-                Creates a new <see cref="T:StackExchange.Redis.IDatabase"/> instance that provides an isolated key space
-                of the specified underyling database instance.
-            </summary>
-            <param name="database">
-                The underlying database instance that the returned instance shall use.
-            </param>
-            <param name="keyPrefix">
-                The prefix that defines a key space isolation for the returned database instance.
-            </param>
-            <returns>
-                A new <see cref="T:StackExchange.Redis.IDatabase"/> instance that invokes the specified underlying
-                <paramref name="database"/> but prepends the specified <paramref name="keyPrefix"/>
-                to all key paramters and thus forms a logical key space isolation.
-            </returns>
-            <remarks>
-            <para>
-                The following methods are not supported in a key space isolated database and
-                will throw an <see cref="T:System.NotSupportedException"/> when invoked:
-            </para>    
-            <list type="bullet">
-                <item><see cref="M:StackExchange.Redis.IDatabaseAsync.KeyRandomAsync(StackExchange.Redis.CommandFlags)"/></item>
-                <item><see cref="M:StackExchange.Redis.IDatabase.KeyRandom(StackExchange.Redis.CommandFlags)"/></item>
-            </list>
-            <para>
-                Please notice that keys passed to a script are prefixed (as normal) but care must
-                be taken when a script returns the name of a key as that will (currently) not be
-                "unprefixed".
-            </para>
-            </remarks>
         </member>
         <member name="T:StackExchange.Redis.LuaScript">
             <summary>
@@ -5380,6 +5332,12 @@
             Represents a general-purpose result from redis, that may be cast into various anticipated types
             </summary>
         </member>
+        <member name="M:StackExchange.Redis.RedisResult.Create(StackExchange.Redis.RedisValue)">
+            <summary>
+            Create a new RedisResult.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="P:StackExchange.Redis.RedisResult.IsNull">
             <summary>
             Indicates whether this result was a null result
@@ -5709,25 +5667,25 @@
             </summary>
         </member>
         <member name="M:StackExchange.Redis.RedisValue.TryParse(System.Int64@)">
-            <summary>
-            Convert to a long if possible, returning true.
+             <summary>
+             Convert to a long if possible, returning true.
             
-            Returns false otherwise.
-            </summary>
+             Returns false otherwise.
+             </summary>
         </member>
         <member name="M:StackExchange.Redis.RedisValue.TryParse(System.Int32@)">
-            <summary>
-            Convert to a int if possible, returning true.
+             <summary>
+             Convert to a int if possible, returning true.
             
-            Returns false otherwise.
-            </summary>
+             Returns false otherwise.
+             </summary>
         </member>
         <member name="M:StackExchange.Redis.RedisValue.TryParse(System.Double@)">
-            <summary>
-            Convert to a double if possible, returning true.
+             <summary>
+             Convert to a double if possible, returning true.
             
-            Returns false otherwise.
-            </summary>
+             Returns false otherwise.
+             </summary>
         </member>
         <member name="T:StackExchange.Redis.ReplicationChangeOptions">
             <summary>
@@ -6100,6 +6058,58 @@
             <summary>
             The operation should only occur when there is not an existing value 
             </summary>
+        </member>
+        <member name="T:StackExchange.Redis.ConvertHelper">
+            <summary>
+            Helper for Array.ConvertAll() as it's missing on .Net Core.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConvertHelper.ConvertAll``2(``0[],System.Func{``0,``1})">
+            <summary>
+            Converts array of one type to an array of another type.
+            </summary>
+            <typeparam name="TInput">Input type</typeparam>
+            <typeparam name="TOutput">Output type</typeparam>
+            <param name="source">source</param>
+            <param name="selector">selector</param>
+            <returns></returns>
+        </member>
+        <member name="T:StackExchange.Redis.KeyspaceIsolation.DatabaseExtensions">
+            <summary>
+                Provides the <see cref="M:StackExchange.Redis.KeyspaceIsolation.DatabaseExtensions.WithKeyPrefix(StackExchange.Redis.IDatabase,StackExchange.Redis.RedisKey)"/> extension method to <see cref="T:StackExchange.Redis.IDatabase"/>.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.KeyspaceIsolation.DatabaseExtensions.WithKeyPrefix(StackExchange.Redis.IDatabase,StackExchange.Redis.RedisKey)">
+            <summary>
+                Creates a new <see cref="T:StackExchange.Redis.IDatabase"/> instance that provides an isolated key space
+                of the specified underyling database instance.
+            </summary>
+            <param name="database">
+                The underlying database instance that the returned instance shall use.
+            </param>
+            <param name="keyPrefix">
+                The prefix that defines a key space isolation for the returned database instance.
+            </param>
+            <returns>
+                A new <see cref="T:StackExchange.Redis.IDatabase"/> instance that invokes the specified underlying
+                <paramref name="database"/> but prepends the specified <paramref name="keyPrefix"/>
+                to all key paramters and thus forms a logical key space isolation.
+            </returns>
+            <remarks>
+            <para>
+                The following methods are not supported in a key space isolated database and
+                will throw an <see cref="T:System.NotSupportedException"/> when invoked:
+            </para>    
+            <list type="bullet">
+                <item><see cref="M:StackExchange.Redis.IDatabaseAsync.KeyRandomAsync(StackExchange.Redis.CommandFlags)"/></item>
+                <item><see cref="M:StackExchange.Redis.IDatabase.KeyRandom(StackExchange.Redis.CommandFlags)"/></item>
+            </list>
+            <para>
+                Please notice that keys passed to a script are prefixed (as normal) but care must
+                be taken when a script returns the name of a key as that will (currently) not be
+                "unprefixed".
+            </para>
+            </remarks>
         </member>
     </members>
 </doc>
