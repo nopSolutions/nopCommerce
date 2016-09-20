@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Nop.Admin.Models.Blogs;
 using Nop.Admin.Models.Catalog;
 using Nop.Admin.Models.Cms;
@@ -42,6 +43,7 @@ using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Infrastructure.Mapper;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
 using Nop.Services.Cms;
@@ -54,22 +56,20 @@ using Nop.Services.Tax;
 namespace Nop.Admin.Infrastructure.Mapper
 {
     /// <summary>
-    /// AutoMapper configuration
+    /// AutoMapper configuration for admin area models
     /// </summary>
-    public static class AutoMapperConfiguration
+    public class AdminMapperConfiguration : IMapperConfiguration
     {
-        private static MapperConfiguration _mapperConfiguration;
-        private static IMapper _mapper;
-
         /// <summary>
-        /// Initialize mapper
+        /// Get configuration
         /// </summary>
-        public static void Init()
+        /// <returns>Mapper configuration action</returns>
+        public Action<IMapperConfigurationExpression> GetConfiguration()
         {
-            _mapperConfiguration = new MapperConfiguration(cfg =>
-            {
-                //TODO remove 'CreatedOnUtc' ignore mappings because now presentation layer models have 'CreatedOn' property and core entities have 'CreatedOnUtc' property (distinct names)
+            //TODO remove 'CreatedOnUtc' ignore mappings because now presentation layer models have 'CreatedOn' property and core entities have 'CreatedOnUtc' property (distinct names)
 
+            Action<IMapperConfigurationExpression> action = cfg =>
+            {
                 //address
                 cfg.CreateMap<Address, AddressModel>()
                     .ForMember(dest => dest.AddressHtml, mo => mo.Ignore())
@@ -983,29 +983,16 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<TopicTemplateModel, TopicTemplate>();
 
-            });
-            _mapper = _mapperConfiguration.CreateMapper();
+            };
+            return action;
         }
 
         /// <summary>
-        /// Mapper
+        /// rder of this mapper implementation
         /// </summary>
-        public static IMapper Mapper
+        public int Order
         {
-            get
-            {
-                return _mapper;
-            }
-        }
-        /// <summary>
-        /// Mapper configuration
-        /// </summary>
-        public static MapperConfiguration MapperConfiguration
-        {
-            get
-            {
-                return _mapperConfiguration;
-            }
+            get { return 0; }
         }
     }
 }

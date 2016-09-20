@@ -209,11 +209,10 @@
     <Compile Include="Controllers\QueuedEmailController.cs" />
     <Compile Include="Extensions\AttributeParserHelper.cs" />
     <Compile Include="Helpers\SelectListHelper.cs" />
-    <Compile Include="Infrastructure\Mapper\AutoMapperConfiguration.cs" />
+    <Compile Include="Infrastructure\Mapper\AdminMapperConfiguration.cs" />
     <Compile Include="Infrastructure\Cache\ModelCacheEventConsumer.cs" />
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
     <Compile Include="Extensions\MappingExtensions.cs" />
-    <Compile Include="Infrastructure\Mapper\AutoMapperStartupTask.cs" />
     <Compile Include="Models\Affiliates\AffiliateListModel.cs" />
     <Compile Include="Models\Affiliates\AffiliatedOrderListModel.cs" />
     <Compile Include="Models\Catalog\ProductAttributeConditionModel.cs" />
