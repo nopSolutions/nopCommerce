@@ -988,7 +988,7 @@ namespace Nop.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// rder of this mapper implementation
+        /// Order of this mapper implementation
         /// </summary>
         public int Order
         {
