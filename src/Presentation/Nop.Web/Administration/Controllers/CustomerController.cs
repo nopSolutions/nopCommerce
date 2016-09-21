@@ -551,7 +551,6 @@ namespace Nop.Admin.Controllers
             }
 
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
-            model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
@@ -1106,7 +1105,7 @@ namespace Nop.Admin.Controllers
                     }
 
                     //username
-                    if (_customerSettings.UsernamesEnabled && _customerSettings.AllowUsersToChangeUsernames)
+                    if (_customerSettings.UsernamesEnabled)
                     {
                         if (!String.IsNullOrWhiteSpace(model.Username))
                         {

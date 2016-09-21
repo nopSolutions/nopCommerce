@@ -62,7 +62,7 @@
                                 @Html.Hidden("pickup-points-id", string.Format("{0}___{1}", point.Id, point.ProviderSystemName))
                                 <ul>
                                     <li class="single-pickup-point name">@point.Name</li>
-                                    <li class="single-pickup-point address">@(string.Format("{0} {1} {2}", point.Address, point.City, point.CountryName))</li>
+                                    <li class="single-pickup-point address">@(string.Format("{0} {1} {2} {3}", point.Address, point.City, point.StateName, point.CountryName))</li>
                                     @if (!string.IsNullOrEmpty(point.PickupFee))
                                     {
                                         <li class="single-pickup-point fee">@point.PickupFee</li>
@@ -86,6 +86,10 @@
                                         if (!string.IsNullOrEmpty(point.City))
                                         {
                                             addressLine.AppendFormat(", {0}", point.City);
+                                        }
+                                        if (!string.IsNullOrEmpty(point.StateName))
+                                        {
+                                            addressLine.AppendFormat(", {0}", point.StateName);
                                         }
                                         if (!string.IsNullOrEmpty(point.CountryName))
                                         {

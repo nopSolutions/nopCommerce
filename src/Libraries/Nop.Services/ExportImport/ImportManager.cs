@@ -876,9 +876,13 @@ namespace Nop.Services.ExportImport
                         }
                     }
 
-                    //set default product type id
+                    //set some default default values if not specified
                     if (isNew && properties.All(p => p.PropertyName != "ProductTypeId"))
                         product.ProductType = ProductType.SimpleProduct;
+                    if (isNew && properties.All(p => p.PropertyName != "VisibleIndividually"))
+                        product.VisibleIndividually = true;
+                    if (isNew && properties.All(p => p.PropertyName != "Published"))
+                        product.Published = true;
 
                     product.UpdatedOnUtc = DateTime.UtcNow;
 

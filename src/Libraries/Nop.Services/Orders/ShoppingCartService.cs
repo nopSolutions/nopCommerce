@@ -865,6 +865,14 @@ namespace Nop.Services.Orders
 
                 //existing checkout attributes
                 var attributes2 = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !shoppingCart.RequiresShipping());
+
+                //validate conditional attributes only (if specified)
+                attributes2 = attributes2.Where(x =>
+                {
+                    var conditionMet = _checkoutAttributeParser.IsConditionMet(x, checkoutAttributesXml);
+                    return !conditionMet.HasValue || conditionMet.Value;
+                }).ToList();
+
                 foreach (var a2 in attributes2)
                 {
                     if (a2.IsRequired)

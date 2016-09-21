@@ -32,6 +32,69 @@ set @resources='
   <LocaleResource Name="Admin.System.ScheduleTasks.24days">
     <Value>Task period should not exceed 24 days.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions">
+    <Value>Payment restrictions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Vendor.Hint">
+    <Value>Choose a vendor associated with this product. This can be useful when running a multi-vendor store to keep track of goods associated with vendor.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Countries.ImportTip">
+    <Value>You can download a CSV file with a list of states for other countries on the following page:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTags.Placeholder">
+    <Value>Enter tags ...</Value>
+  </LocaleResource>
+  <LocaleResource Name=" Admin.Catalog.Categories.Fields.Parent.None">
+    <Value>[None]</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.HideShippingTotal">
+    <Value>Hide shipping total if shipping not required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.HideShippingTotal.Hint">
+    <Value>Check if you want Hide ''Shipping total'' label if shipping not required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.ApiAccountName">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.ApiAccountName.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.ApiAccountPassword">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.ApiAccountPassword.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.Signature">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.Signature.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.ClientId">
+    <Value>Client ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.ClientId.Hint">
+    <Value>Specify client ID.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.ClientSecret">
+    <Value>Client secret</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.ClientSecret.Hint">
+    <Value>Specify secret key.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.WebhookId">
+    <Value>Webhook ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.WebhookId.Hint">
+    <Value>Specify webhook ID.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.WebhookCreate">
+    <Value>Get webhook ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.WebhookError">
+    <Value>Webhook was not created (see details in the log)</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -106,3 +169,10 @@ DEALLOCATE cur_existinglanguage
 DROP TABLE #LocaleStringResourceTmp
 GO
 
+--new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.hideshippingtotal')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'shippingsettings.hideshippingtotal', N'False', 0)
+ END
+ GO

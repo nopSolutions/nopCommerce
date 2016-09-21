@@ -421,7 +421,7 @@ namespace Nop.Web.Controllers
             var model = new HeaderLinksModel
             {
                 IsAuthenticated = customer.IsRegistered(),
-                CustomerEmailUsername = customer.IsRegistered() ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
+                CustomerName = customer.IsRegistered() ? customer.FormatUserName() : "",
                 ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
                 AllowPrivateMessages = customer.IsRegistered() && _forumSettings.AllowPrivateMessages,
@@ -452,7 +452,7 @@ namespace Nop.Web.Controllers
 
             var model = new AdminHeaderLinksModel
             {
-                ImpersonatedCustomerEmailUsername = customer.IsRegistered() ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
+                ImpersonatedCustomerName = customer.IsRegistered() ? customer.FormatUserName() : "",
                 IsCustomerImpersonated = _workContext.OriginalCustomerIfImpersonated != null,
                 DisplayAdminLink = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel),
                 EditPageUrl = _pageHeadBuilder.GetEditPageUrl()

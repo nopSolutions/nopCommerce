@@ -223,6 +223,7 @@ namespace Nop.Web.Controllers
                         model.PickupPoints = pickupPointsResponse.PickupPoints.Select(x =>
                         {
                             var country = _countryService.GetCountryByTwoLetterIsoCode(x.CountryCode);
+                            var state = _stateProvinceService.GetStateProvinceByAbbreviation(x.StateAbbreviation);
                             var pickupPointModel = new CheckoutPickupPointModel
                             {
                                 Id = x.Id,
@@ -231,6 +232,7 @@ namespace Nop.Web.Controllers
                                 ProviderSystemName = x.ProviderSystemName,
                                 Address = x.Address,
                                 City = x.City,
+                                StateName = state != null ? state.Name : string.Empty,
                                 CountryName = country != null ? country.Name : string.Empty,
                                 ZipPostalCode = x.ZipPostalCode,
                                 Latitude = x.Latitude,
@@ -522,6 +524,24 @@ namespace Nop.Web.Controllers
                     || downloadableProductsRequireRegistration)
                 )
                 return new HttpUnauthorizedResult();
+
+            //if we have only "button" payment methods available (displayed onthe shopping cart page, not during checkout),
+            //then we should allow standard checkout
+            //all payment methods (do not filter by country here as it could be not specified yet)
+            var paymentMethods = _paymentService
+                .LoadActivePaymentMethods(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id)
+                .Where(pm => !pm.HidePaymentMethod(cart))
+                .ToList();
+            //payment methods displayed during checkout (not with "Button" type)
+            var nonButtonPaymentMethods = paymentMethods
+                .Where(pm => pm.PaymentMethodType != PaymentMethodType.Button)
+                .ToList();
+            //"button" payment methods(*displayed on the shopping cart page)
+            var buttonPaymentMethods = paymentMethods
+                .Where(pm => pm.PaymentMethodType == PaymentMethodType.Button)
+                .ToList();
+            if (!nonButtonPaymentMethods.Any() && buttonPaymentMethods.Any())
+                return RedirectToRoute("ShoppingCart");
 
             //reset checkout data
             _customerService.ResetCheckoutData(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);

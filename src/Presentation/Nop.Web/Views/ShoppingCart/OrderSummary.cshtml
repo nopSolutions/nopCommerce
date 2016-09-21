@@ -272,7 +272,7 @@
                        </div>
                    }
                    <div class="checkout-buttons">
-                       @if (String.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
+                       @if (String.IsNullOrEmpty(Model.MinOrderSubtotalWarning) && !Model.HideCheckoutButton)
                        {
                            <script type="text/javascript">
                                $(document).ready(function () {

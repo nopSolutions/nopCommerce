@@ -943,25 +943,18 @@ namespace Nop.Web.Controllers
             if (product == null || product.Deleted)
                 return InvokeHttp404();
 
-            //published?
-            if (!_catalogSettings.AllowViewUnpublishedProductPage)
-            {
-                //Check whether the current user has a "Manage catalog" permission
-                //It allows him to preview a product before publishing
-                if (!product.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                    return InvokeHttp404();
-            }
-
-            //ACL (access control list)
-            if (!_aclService.Authorize(product))
-                return InvokeHttp404();
-
-            //Store mapping
-            if (!_storeMappingService.Authorize(product))
-                return InvokeHttp404();
-
-            //availability dates
-            if (!product.IsAvailable())
+            var notAvailable =
+                //published?
+                (!product.Published && !_catalogSettings.AllowViewUnpublishedProductPage) ||
+                //ACL (access control list) 
+                !_aclService.Authorize(product) ||
+                //Store mapping
+                !_storeMappingService.Authorize(product) ||
+                //availability dates
+                !product.IsAvailable();
+            //Check whether the current user has a "Manage products" permission (usually a store owner)
+            //We should allows him (her) to use "Preview" functionality
+            if (notAvailable && !_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return InvokeHttp404();
 
             //visible individually?

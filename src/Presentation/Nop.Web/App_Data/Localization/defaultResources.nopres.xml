@@ -1818,6 +1818,9 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.Parent.Hint">
     <Value>Select a parent category for this category. Leave this field empty to make this the root level category.</Value>
   </LocaleResource>
+  <LocaleResource Name=" Admin.Catalog.Categories.Fields.Parent.None">
+    <Value>[None]</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.Picture">
     <Value>Picture</Value>
   </LocaleResource>
@@ -2730,6 +2733,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTags.Hint">
     <Value>Product tags are the keywords for product identification. The more products associated with a particular tag, the larger it will show on the tag cloud.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTags.Placeholder">
+    <Value>Enter tags ...</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTemplate">
     <Value>Product template</Value>
   </LocaleResource>
@@ -2893,7 +2899,7 @@
     <Value>Vendor</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Vendor.Hint">
-    <Value>Choose the vendor. You can manage vendors by selecting Customers > Vendors.</Value>
+    <Value>Choose a vendor associated with this product. This can be useful when running a multi-vendor store to keep track of goods associated with vendor.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Vendor.None">
     <Value>No vendor</Value>
@@ -3810,6 +3816,9 @@
   <LocaleResource Name="Admin.Configuration.Countries.ImportFromCsv">
     <Value>Import states from CSV</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Countries.ImportTip">
+    <Value>You can download a CSV file with a list of states for other countries on the following page:</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Countries.ImportSuccess">
     <Value>{0} states have been successfully imported</Value>
   </LocaleResource>
@@ -4345,7 +4354,7 @@
     <Value>Payment</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions">
-    <Value>Payment method restrictions</Value>
+    <Value>Payment restrictions</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions.Country">
     <Value>Country</Value>
@@ -6731,6 +6740,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.GoogleMapsApiKey.Hint">
     <Value>Specify Google maps API key.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.HideShippingTotal">
+    <Value>Hide shipping total if shipping not required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.HideShippingTotal.Hint">
+    <Value>Check if you want Hide 'Shipping total' label if shipping not required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.NotifyCustomerAboutShippingFromMultipleLocations">
     <Value>Notify customer about shipping from multiple locations</Value>
@@ -13664,9 +13679,6 @@
   </LocaleResource>
   <LocaleResource Name="Order.ShippingAddress">
     <Value>Shipping Address</Value>
-  </LocaleResource>
-  <LocaleResource Name="Order.Shipping">
-    <Value>Shipping</Value>
   </LocaleResource>
   <LocaleResource Name="Order.Shipping.Name">
     <Value>Shipping Method</Value>

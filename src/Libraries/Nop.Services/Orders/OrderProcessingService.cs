@@ -1614,6 +1614,7 @@ namespace Nop.Services.Orders
                     RecurringCycleLength = recurringPayment.CycleLength,
                     RecurringCyclePeriod = recurringPayment.CyclePeriod,
                     RecurringTotalCycles = recurringPayment.TotalCycles,
+                    CustomValues = initialOrder.DeserializeCustomValues()
                 };
 
                 //prepare order details
