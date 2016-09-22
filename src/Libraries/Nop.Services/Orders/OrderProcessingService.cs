@@ -1614,6 +1614,7 @@ namespace Nop.Services.Orders
                     RecurringCycleLength = recurringPayment.CycleLength,
                     RecurringCyclePeriod = recurringPayment.CyclePeriod,
                     RecurringTotalCycles = recurringPayment.TotalCycles,
+                    CustomValues = initialOrder.DeserializeCustomValues()
                 };
 
                 //prepare order details
@@ -2310,7 +2311,11 @@ namespace Nop.Services.Orders
             if (order.OrderTotal == decimal.Zero)
                 return false;
 
-            //uncomment the lines below in order to allow this operation for cancelled orders
+            //refund cannot be made if previously a partial refund has been already done. only other partial refund can be made in this case
+            if (order.RefundedAmount > decimal.Zero)
+                return false;
+
+            //uncomment the lines below in order to disallow this operation for cancelled orders
             //if (order.OrderStatus == OrderStatus.Cancelled)
             //    return false;
 
@@ -2439,7 +2444,11 @@ namespace Nop.Services.Orders
             if (order.OrderTotal == decimal.Zero)
                 return false;
 
-            //uncomment the lines below in order to allow this operation for cancelled orders
+            //refund cannot be made if previously a partial refund has been already done. only other partial refund can be made in this case
+            if (order.RefundedAmount > decimal.Zero)
+                return false;
+
+            //uncomment the lines below in order to disallow this operation for cancelled orders
             //if (order.OrderStatus == OrderStatus.Cancelled)
             //     return false;
 

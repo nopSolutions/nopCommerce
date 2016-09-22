@@ -27,32 +27,35 @@
                     </td>
                 </tr>
             }
-            <tr class="shipping-cost">
-                <td class="cart-total-left">
-                    <label>@T("ShoppingCart.Totals.Shipping"):</label>
-                    @if (Model.RequiresShipping && !String.IsNullOrEmpty(Model.SelectedShippingMethod))
-                    {
-                        <span class="selected-shipping-method">@T("ShoppingCart.Totals.Shipping.Method", Model.SelectedShippingMethod)</span>
-                    }
-                </td>
-                <td class="cart-total-right">
-                    @if (Model.RequiresShipping)
-                    {
-                        if (!String.IsNullOrEmpty(Model.Shipping))
+            @if (!Model.HideShippingTotal)
+            {
+                <tr class="shipping-cost">
+                    <td class="cart-total-left">
+                        <label>@T("ShoppingCart.Totals.Shipping"):</label>
+                        @if (Model.RequiresShipping && !String.IsNullOrEmpty(Model.SelectedShippingMethod))
                         {
-                        <span class="value-summary">@Model.Shipping</span>
+                            <span class="selected-shipping-method">@T("ShoppingCart.Totals.Shipping.Method", Model.SelectedShippingMethod)</span>
+                        }
+                    </td>
+                    <td class="cart-total-right">
+                        @if (Model.RequiresShipping)
+                        {
+                            if (!String.IsNullOrEmpty(Model.Shipping))
+                            {
+                            <span class="value-summary">@Model.Shipping</span>
+                            }
+                            else
+                            {
+                            <span>@T("ShoppingCart.Totals.CalculatedDuringCheckout")</span>
+                            }
                         }
                         else
                         {
-                        <span>@T("ShoppingCart.Totals.CalculatedDuringCheckout")</span>
+                            <span>@T("ShoppingCart.Totals.Shipping.NotRequired")</span>
                         }
-                    }
-                    else
-                    {
-                        <span>@T("ShoppingCart.Totals.Shipping.NotRequired")</span>
-                    }
-                </td>
-            </tr>
+                    </td>
+                </tr>
+            }
             @if (!String.IsNullOrEmpty(Model.PaymentMethodAdditionalFee))
             {
                 <tr class="additional-fees">

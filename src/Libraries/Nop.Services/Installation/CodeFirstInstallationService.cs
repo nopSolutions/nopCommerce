@@ -6054,7 +6054,7 @@ namespace Nop.Services.Installation
             {
                 ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedRate" },
                 ActivePickupPointProviderSystemNames = new List<string> { "Pickup.PickupInStore" },
-                ShipToSameAddress = false,
+                ShipToSameAddress = true,
                 AllowPickUpInStore = true,
                 DisplayPickupPointsOnMap = false,
                 UseWarehouseLocation = false,
@@ -6065,6 +6065,7 @@ namespace Nop.Services.Installation
                 EstimateShippingEnabled = true,
                 DisplayShipmentEventsToCustomers = false,
                 DisplayShipmentEventsToStoreOwner = false,
+                HideShippingTotal = false,
                 ReturnValidOptionsIfThereAreAny = true,
                 BypassShippingMethodSelectionIfOnlyOne = false,
                 UseCubeRootMethod = true
@@ -6108,7 +6109,7 @@ namespace Nop.Services.Installation
                 EuVatUseWebService = false,
                 EuVatAssumeValid = false,
                 EuVatEmailAdminWhenNewVatSubmitted = false,
-                LogErrors = true
+                LogErrors = false
             });
 
             settingService.SaveSetting(new DateTimeSettings

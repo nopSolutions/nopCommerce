@@ -30,8 +30,7 @@ namespace Nop.Admin.Models.Customers
             this.AvailableNewsletterSubscriptionStores = new List<StoreModel>();
             this.RewardPointsAvailableStores = new List<SelectListItem>();
         }
-
-        public bool AllowUsersToChangeUsernames { get; set; }
+       
         public bool UsernamesEnabled { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Username")]

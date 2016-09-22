@@ -49,7 +49,9 @@ namespace Nop.Web.Models.ShoppingCart
         public IList<string> ButtonPaymentMethodControllerNames { get; set; }
         public IList<RouteValueDictionary> ButtonPaymentMethodRouteValues { get; set; }
 
-		#region Nested Classes
+        public bool HideCheckoutButton { get; set; }
+
+        #region Nested Classes
 
         public partial class ShoppingCartItemModel : BaseNopEntityModel
         {
@@ -85,6 +87,8 @@ namespace Nop.Web.Models.ShoppingCart
             public string RentalInfo { get; set; }
 
             public bool AllowItemEditing { get; set; }
+
+            public bool DisableRemoval { get; set; }
 
             public IList<string> Warnings { get; set; }
 

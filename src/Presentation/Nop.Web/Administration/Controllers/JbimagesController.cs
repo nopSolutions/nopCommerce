@@ -16,13 +16,10 @@ namespace Nop.Admin.Controllers
     public partial class JbimagesController : BaseAdminController
     {
         private readonly IPermissionService _permissionService;
-        private readonly IWebHelper _webHelper;
 
-        public JbimagesController(IPermissionService permissionService,
-            IWebHelper webHelper)
+        public JbimagesController(IPermissionService permissionService)
         {
             this._permissionService = permissionService;
-            this._webHelper = webHelper;
         }
 
         [NonAction]
