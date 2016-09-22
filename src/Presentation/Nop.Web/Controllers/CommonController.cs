@@ -930,6 +930,7 @@ namespace Nop.Web.Controllers
                     "/country/getstatesbycountryid",
                     "/install",
                     "/setproductreviewhelpfulness",
+                    "/admin",
                     "/admin/"
                 };
                 var localizableDisallowPaths = new List<string>
