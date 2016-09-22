@@ -29,7 +29,6 @@ namespace Nop.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly EmailAccountSettings _emailAccountSettings;
 
         #endregion Fields
 
@@ -44,8 +43,7 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService,
             IStoreService storeService,
             IStoreMappingService storeMappingService,
-            IWorkflowMessageService workflowMessageService,
-            EmailAccountSettings emailAccountSettings)
+            IWorkflowMessageService workflowMessageService)
         {
             this._messageTemplateService = messageTemplateService;
             this._emailAccountService = emailAccountService;
@@ -57,7 +55,6 @@ namespace Nop.Admin.Controllers
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
             this._workflowMessageService = workflowMessageService;
-            this._emailAccountSettings = emailAccountSettings;
         }
 
         #endregion
