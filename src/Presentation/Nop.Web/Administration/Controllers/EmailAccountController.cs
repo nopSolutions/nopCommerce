@@ -7,6 +7,7 @@ using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
@@ -23,12 +24,14 @@ namespace Nop.Admin.Controllers
         private readonly IStoreContext _storeContext;
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly IPermissionService _permissionService;
+        private readonly ICustomerActivityService _customerActivityService;
 
-		public EmailAccountController(IEmailAccountService emailAccountService,
+        public EmailAccountController(IEmailAccountService emailAccountService,
             ILocalizationService localizationService, ISettingService settingService,
             IEmailSender emailSender, IStoreContext storeContext,
-            EmailAccountSettings emailAccountSettings, IPermissionService permissionService)
-		{
+            EmailAccountSettings emailAccountSettings, IPermissionService permissionService,
+            ICustomerActivityService customerActivityService)
+        {
             this._emailAccountService = emailAccountService;
             this._localizationService = localizationService;
             this._emailAccountSettings = emailAccountSettings;
@@ -36,7 +39,8 @@ namespace Nop.Admin.Controllers
             this._settingService = settingService;
             this._storeContext = storeContext;
             this._permissionService = permissionService;
-		}
+            this._customerActivityService = customerActivityService;
+        }
 
 		public ActionResult List()
         {
@@ -108,6 +112,9 @@ namespace Nop.Admin.Controllers
                 emailAccount.Password = model.Password;
                 _emailAccountService.InsertEmailAccount(emailAccount);
 
+                //activity log
+                _customerActivityService.InsertActivity("AddNewEmailAccount", _localizationService.GetResource("ActivityLog.AddNewEmailAccount"), emailAccount.Id);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
             }
@@ -145,6 +152,9 @@ namespace Nop.Admin.Controllers
             {
                 emailAccount = model.ToEntity(emailAccount);
                 _emailAccountService.UpdateEmailAccount(emailAccount);
+
+                //activity log
+                _customerActivityService.InsertActivity("EditEmailAccount", _localizationService.GetResource("ActivityLog.EditEmailAccount"), emailAccount.Id);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
@@ -225,7 +235,10 @@ namespace Nop.Admin.Controllers
 	        {
 	            _emailAccountService.DeleteEmailAccount(emailAccount);
 
-	            SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Deleted"));
+                //activity log
+                _customerActivityService.InsertActivity("DeleteEmailAccount", _localizationService.GetResource("ActivityLog.DeleteEmailAccount"), emailAccount.Id);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Deleted"));
 
                 return RedirectToAction("List");
 	        }

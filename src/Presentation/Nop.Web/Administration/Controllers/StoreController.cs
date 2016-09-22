@@ -6,6 +6,7 @@ using Nop.Admin.Models.Stores;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
@@ -23,6 +24,7 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IPermissionService _permissionService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion
 
@@ -33,7 +35,8 @@ namespace Nop.Admin.Controllers
             ILanguageService languageService,
             ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            ICustomerActivityService customerActivityService)
         {
             this._storeService = storeService;
             this._settingService = settingService;
@@ -41,6 +44,7 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
             this._localizedEntityService = localizedEntityService;
             this._permissionService = permissionService;
+            this._customerActivityService = customerActivityService;
         }
 
         #endregion
@@ -138,6 +142,10 @@ namespace Nop.Admin.Controllers
                 if (!store.Url.EndsWith("/"))
                     store.Url += "/";
                 _storeService.InsertStore(store);
+
+                //activity log
+                _customerActivityService.InsertActivity("AddNewStore", _localizationService.GetResource("ActivityLog.AddNewStore"), store.Id);
+
                 //locales
                 UpdateAttributeLocales(store, model);
 
@@ -192,6 +200,10 @@ namespace Nop.Admin.Controllers
                 if (!store.Url.EndsWith("/"))
                     store.Url += "/";
                 _storeService.UpdateStore(store);
+
+                //activity log
+                _customerActivityService.InsertActivity("EditStore", _localizationService.GetResource("ActivityLog.EditStore"), store.Id);
+
                 //locales
                 UpdateAttributeLocales(store, model);
 
@@ -220,6 +232,9 @@ namespace Nop.Admin.Controllers
             try
             {
                 _storeService.DeleteStore(store);
+
+                //activity log
+                _customerActivityService.InsertActivity("DeleteStore", _localizationService.GetResource("ActivityLog.DeleteStore"), store.Id);
 
                 //when we delete a store we should also ensure that all "per store" settings will also be deleted
                 var settingsToDelete = _settingService

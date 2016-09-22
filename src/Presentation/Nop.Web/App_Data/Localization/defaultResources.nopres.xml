@@ -636,26 +636,68 @@
   <LocaleResource Name="Account.YourPersonalDetails">
     <Value>Your Personal Details</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewAddressAttribute">
+    <Value>Added a new address attribute (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewAddressAttributeValue">
+    <Value>Added a new address attribute value (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewAffiliate">
+    <Value>Added a new affiliate (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewBlogPost">
+    <Value>Added a new blog post (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewCampaign">
+    <Value>Added a new campaign (ID = {0})</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewCategory">
     <Value>Added a new category ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewCheckoutAttribute">
     <Value>Added a new checkout attribute ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewCountry">
+    <Value>Added a new country (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewCurrency">
+    <Value>Added a new currency (ID = {0})</Value>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.AddNewCustomer">
     <Value>Added a new customer (ID = {0})</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewCustomerAttribute">
+    <Value>Added a new customer attribute (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewCustomerAttributeValue">
+    <Value>Added a new customer attribute value (ID = {0})</Value>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.AddNewCustomerRole">
     <Value>Added a new customer role ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewDiscount">
     <Value>Added a new discount ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewEmailAccount">
+    <Value>Added a new email account (ID = {0})</Value>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.AddNewGiftCard">
     <Value>Added a new gift card ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewLanguage">
+    <Value>Added a new language (ID = {0})</Value>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.AddNewManufacturer">
     <Value>Added a new manufacturer ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewMeasureDimension">
+    <Value>Added a new measure dimension (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewMeasureWeight">
+    <Value>Added a new measure weight (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewNews">
+    <Value>Added a new news (ID = {0})</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewProduct">
     <Value>Added a new product ('{0}')</Value>
@@ -669,8 +711,20 @@
   <LocaleResource Name="ActivityLog.AddNewSpecAttribute">
     <Value>Added a new specification attribute ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewStateProvince">
+    <Value>Added a new state or province (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewStore">
+    <Value>Added a new store (ID = {0})</Value>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.AddNewTopic">
     <Value>Added a new topic ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewVendor">
+    <Value>Added a new vendor (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewWarehouse">
+    <Value>Added a new warehouse (ID = {0})</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewWidget">
     <Value>Added a new widget (ID = {0})</Value>
@@ -678,27 +732,78 @@
   <LocaleResource Name="ActivityLog.DeleteActivityLog">
     <Value>Deleted activity log</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteAddressAttribute">
+    <Value>Deleted an address attribute (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteAddressAttributeValue">
+    <Value>Deleted an address attribute value (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteAffiliate">
+    <Value>Deleted an affiliate (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteBlogPost">
+    <Value>Deleted a blog post (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteBlogPostComment">
+    <Value>Deleted a blog post comment (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteCampaign">
+    <Value>Deleted a campaign (ID = {0})</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteCategory">
     <Value>Deleted a category ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteCheckoutAttribute">
     <Value>Deleted a checkout attribute ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteCountry">
+   <Value>Deleted a country (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteCurrency">
+   <Value>Deleted a currency (ID = {0})</Value>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.DeleteCustomer">
     <Value>Deleted a customer (ID = {0})</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteCustomerAttribute">
+   <Value>Deleted a customer attribute (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteCustomerAttributeValue">
+   <Value>Deleted a customer attribute value (ID = {0})</Value>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.DeleteCustomerRole">
     <Value>Deleted a customer role ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteDiscount">
     <Value>Deleted a discount ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteEmailAccount">
+   <Value>Deleted an email account (ID = {0})</Value>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.DeleteGiftCard">
     <Value>Deleted a gift card ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteLanguage">
+   <Value>Deleted a language (ID = {0})</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteManufacturer">
     <Value>Deleted a manufacturer ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteMeasureDimension">
+   <Value>Deleted a measure dimension (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteMeasureWeight">
+   <Value>Deleted a measure weight (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteMessageTemplate">
+   <Value>Deleted a message template (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteNews">
+   <Value>Deleted a news (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteNewsComment">
+    <Value>Deleted a news comment (ID = {0})</Value>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.DeleteOrder">
     <Value>Deleted an order (ID = {0})</Value>
   </LocaleResource>
@@ -708,6 +813,9 @@
   <LocaleResource Name="ActivityLog.DeleteProductAttribute">
     <Value>Deleted a product attribute ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteProductReview">
+   <Value>Deleted a product review (ID = {0})</Value>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.DeleteReturnRequest">
     <Value>Deleted a return request (ID = {0})</Value>
   </LocaleResource>
@@ -717,45 +825,108 @@
   <LocaleResource Name="ActivityLog.DeleteSpecAttribute">
     <Value>Deleted a specification attribute ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteStateProvince">
+   <Value>Deleted a state or province (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteStore">
+   <Value>Deleted a store (ID = {0})</Value>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.DeleteTopic">
     <Value>Deleted a topic ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteVendor">
+   <Value>Deleted a vendor (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteWarehouse">
+   <Value>Deleted a warehouse (ID = {0})</Value>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.DeleteWidget">
     <Value>Deleted a widget (ID = {0})</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditActivityLogTypes">
     <Value>Edited activity log types</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditAddressAttribute">
+   <Value>Edited an address attribute (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditAddressAttributeValue">
+    <Value>Edited an address attribute value (ID = {0})</Value>
+  </LocaleResource>  
+  <LocaleResource Name="ActivityLog.EditAffiliate">
+   <Value>Edited an affiliate (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditBlogPost">
+   <Value>Edited a blog post (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditCampaign">
+   <Value>Edited a campaign (ID = {0})</Value>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.EditCategory">
     <Value>Edited a category ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditCheckoutAttribute">
     <Value>Edited a checkout attribute ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditCountry">
+   <Value>Edited a country (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditCurrency">
+   <Value>Edited a currency (ID = {0})</Value>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.EditCustomer">
     <Value>Edited a customer (ID = {0})</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditCustomerAttribute">
+   <Value>Edited a customer attribute (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditCustomerAttributeValue">
+   <Value>Edited a customer attribute value (ID = {0})</Value>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.EditCustomerRole">
     <Value>Edited a customer role ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditDiscount">
     <Value>Edited a discount ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditEmailAccount">
+   <Value>Edited an email account (ID = {0})</Value>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.EditGiftCard">
     <Value>Edited a gift card ('{0}')</Value>
+  </LocaleResource>
+   <LocaleResource Name="ActivityLog.EditLanguage">
+   <Value>Edited a language (ID = {0})</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditManufacturer">
     <Value>Edited a manufacturer ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditMeasureDimension">
+   <Value>Edited a measure dimension (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditMeasureWeight">
+   <Value>Edited a measure weight (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditMessageTemplate">
+   <Value>Edited a message template (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditNews">
+   <Value>Edited a news (ID = {0})</Value>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.EditOrder">
     <Value>Edited an order (ID = {0}). See order notes for details</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditPlugin">
+   <Value>Edited a plugin (FriendlyName: '{0}')</Value>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.EditProduct">
     <Value>Edited a product ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditProductAttribute">
     <Value>Edited a product attribute ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditProductReview">
+   <Value>Edited a product review (ID = {0})</Value>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.EditReturnRequest">
     <Value>Edited a return request (ID = {0})</Value>
   </LocaleResource>
@@ -765,9 +936,24 @@
   <LocaleResource Name="ActivityLog.EditSpecAttribute">
     <Value>Edited a specification attribute ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditStateProvince">
+   <Value>Edited a state or province (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditStore">
+   <Value>Edited a store (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditTask">
+   <Value>Edited a task (ID = {0})</Value>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.EditTopic">
     <Value>Edited a topic ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditVendor">
+   <Value>Edited a vendor (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditWarehouse">
+   <Value>Edited a warehouse (ID = {0})</Value>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.EditWidget">
     <Value>Edited a widget (ID = {0})</Value>
   </LocaleResource>
@@ -782,6 +968,12 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.Impersonation.Finished.Customer">
     <Value>Impersonation by store owner was finished (Email: {0}, ID = {1})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.InstallNewPlugin">
+    <Value>Installed a new plugin (FriendlyName: '{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.UninstallPlugin">
+    <Value>Uninstalled a plugin (FriendlyName: '{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.AddBlogComment">
     <Value>Added a blog comment</Value>
@@ -3501,7 +3693,7 @@
   <LocaleResource Name="Admin.Catalog.ProductTags.Fields.ProductCount">
     <Value>Tagged products</Value>
   </LocaleResource>
-   <LocaleResource Name="Admin.Common.ActionConfirmation">
+  <LocaleResource Name="Admin.Common.ActionConfirmation">
     <Value>Are you sure you want to perform this action?</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.AddNew">
