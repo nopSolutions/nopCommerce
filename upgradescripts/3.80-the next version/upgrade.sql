@@ -305,6 +305,12 @@ set @resources='
   <LocaleResource Name="Reviews.ProductReviewPossibleOnlyAfterPurchasing">
     <Value>Product can be reviewed only after purchasing it</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.ExchangeRate.EcbExchange.SetCurrencyToEURO">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ExchangeRate.EcbExchange.Error">
+    <Value>You can use ECB (European central bank) exchange rate provider only when the primary exchange rate currency is supported by ECB</Value>
+  </LocaleResource>
 </Language>
 '
 
