@@ -33,6 +33,7 @@ namespace Nop.Services.Tasks
             this.Enabled = task.Enabled;
             this.StopOnError = task.StopOnError;
             this.Name = task.Name;
+            this.LastSuccessUtc = task.LastSuccessUtc;
         }
 
         #endregion
