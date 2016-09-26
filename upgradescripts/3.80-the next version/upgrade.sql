@@ -317,6 +317,12 @@ set @resources='
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.AttachedDownload.Hint">
     <Value>The attached static file that will be sent in this email.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.ContractId">
+    <Value>Contract ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.ContractId.Hint">
+    <Value>Specify contract identifier.</Value>
+  </LocaleResource>
 </Language>
 '
 
