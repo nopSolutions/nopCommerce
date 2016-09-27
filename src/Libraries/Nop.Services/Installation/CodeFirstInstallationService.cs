@@ -5784,6 +5784,7 @@ namespace Nop.Services.Installation
                 ProductReviewsMustBeApproved = false,
                 DefaultProductRatingValue = 5,
                 AllowAnonymousUsersToReviewProduct = false,
+                ProductReviewPossibleOnlyAfterPurchasing = false,
                 NotifyStoreOwnerAboutNewProductReviews = false,
                 EmailAFriendEnabled = true,
                 AllowAnonymousUsersToEmailAFriend = false,

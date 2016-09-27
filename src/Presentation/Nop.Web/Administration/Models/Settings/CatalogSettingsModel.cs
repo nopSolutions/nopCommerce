@@ -74,6 +74,10 @@ namespace Nop.Admin.Models.Settings
         public bool AllowAnonymousUsersToReviewProduct { get; set; }
         public bool AllowAnonymousUsersToReviewProduct_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductReviewPossibleOnlyAfterPurchasing")]
+        public bool ProductReviewPossibleOnlyAfterPurchasing { get; set; }
+        public bool ProductReviewPossibleOnlyAfterPurchasing_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NotifyStoreOwnerAboutNewProductReviews")]
         public bool NotifyStoreOwnerAboutNewProductReviews { get; set; }
         public bool NotifyStoreOwnerAboutNewProductReviews_OverrideForStore { get; set; }

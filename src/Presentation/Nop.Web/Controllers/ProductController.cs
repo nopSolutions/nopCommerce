@@ -11,6 +11,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
@@ -68,6 +69,7 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IProductTagService _productTagService;
         private readonly IOrderReportService _orderReportService;
+        private readonly IOrderService _orderService;
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
@@ -113,6 +115,7 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService,
             IProductTagService productTagService,
             IOrderReportService orderReportService,
+            IOrderService orderService,
             IAclService aclService,
             IStoreMappingService storeMappingService,
             IPermissionService permissionService,
@@ -154,6 +157,7 @@ namespace Nop.Web.Controllers
             this._workflowMessageService = workflowMessageService;
             this._productTagService = productTagService;
             this._orderReportService = orderReportService;
+            this._orderService = orderService;
             this._aclService = aclService;
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
@@ -1258,6 +1262,11 @@ namespace Nop.Web.Controllers
             //only registered users can leave reviews
             if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
                 ModelState.AddModelError("", _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews"));
+
+            if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing &&
+                !_orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id, productId: productId, osIds: new List<int> { (int)OrderStatus.Complete }).Any())
+                    ModelState.AddModelError(string.Empty, _localizationService.GetResource("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
+            
             //default value
             model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
             return View(model);
@@ -1283,6 +1292,10 @@ namespace Nop.Web.Controllers
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews"));
             }
+
+            if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing && 
+                !_orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id, productId: productId, osIds: new List<int> { (int)OrderStatus.Complete }).Any())
+                    ModelState.AddModelError(string.Empty, _localizationService.GetResource("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
 
             if (ModelState.IsValid)
             {

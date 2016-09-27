@@ -296,6 +296,15 @@ set @resources='
   <LocaleResource Name="ActivityLog.EditWarehouse">
     <Value>Edited a warehouse (ID = {0})</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewPossibleOnlyAfterPurchasing">
+    <Value>Product review possible only after purchasing product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewPossibleOnlyAfterPurchasing.Hint">
+    <Value>Check if product can be reviewed only by customer who have already ordered it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Reviews.ProductReviewPossibleOnlyAfterPurchasing">
+    <Value>Product can be reviewed only after purchasing it</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -304,7 +313,7 @@ CREATE TABLE #LocaleStringResourceTmp
 		[ResourceName] [nvarchar](200) NOT NULL,
 		[ResourceValue] [nvarchar](max) NOT NULL
 	)
-  
+
 INSERT INTO #LocaleStringResourceTmp (ResourceName, ResourceValue)
 SELECT	nref.value('@Name', 'nvarchar(200)'), nref.value('Value[1]', 'nvarchar(MAX)')
 FROM	@resources.nodes('//Language/LocaleResource') AS R(nref)
@@ -894,5 +903,13 @@ IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'DeleteA
 BEGIN
 	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
 	VALUES (N'DeleteAddressAttributeValue', N'Delete an address attribute value', N'true')
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.productreviewpossibleonlyafterpurchasing')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.productreviewpossibleonlyafterpurchasing', N'False', 0)
 END
 GO

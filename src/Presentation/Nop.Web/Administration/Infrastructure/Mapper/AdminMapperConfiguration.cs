@@ -796,6 +796,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.PageShareCode_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.ProductReviewsMustBeApproved_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowAnonymousUsersToReviewProduct_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.ProductReviewPossibleOnlyAfterPurchasing_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.ShowProductReviewsPerStore_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.EmailAFriendEnabled_OverrideForStore, mo => mo.Ignore())

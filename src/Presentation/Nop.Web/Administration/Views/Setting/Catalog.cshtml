@@ -155,6 +155,16 @@
                                 @Html.ValidationMessageFor(model => model.AllowAnonymousUsersToReviewProduct)
                             </div>
                         </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ProductReviewPossibleOnlyAfterPurchasing_OverrideForStore, model => model.ProductReviewPossibleOnlyAfterPurchasing, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ProductReviewPossibleOnlyAfterPurchasing)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.ProductReviewPossibleOnlyAfterPurchasing)
+                                @Html.ValidationMessageFor(model => model.ProductReviewPossibleOnlyAfterPurchasing)
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore, model => model.NotifyStoreOwnerAboutNewProductReviews, Model.ActiveStoreScopeConfiguration)
