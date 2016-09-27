@@ -6095,6 +6095,7 @@ namespace Nop.Services.Installation
                 PricesIncludeTax = false,
                 AllowCustomersToSelectTaxDisplayType = false,
                 ForceTaxExclusionFromOrderSubtotal = false,
+                DefaultTaxCategoryId = 0,
                 HideZeroTax = false,
                 HideTaxInOrderSummary = false,
                 ShippingIsTaxable = false,

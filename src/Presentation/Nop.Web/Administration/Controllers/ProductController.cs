@@ -16,6 +16,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -89,6 +90,7 @@ namespace Nop.Admin.Controllers
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IDownloadService _downloadService;
         private readonly ISettingService _settingService;
+        private readonly TaxSettings _taxSettings;
         private readonly VendorSettings _vendorSettings;
 
         #endregion
@@ -136,6 +138,7 @@ namespace Nop.Admin.Controllers
             IProductAttributeParser productAttributeParser,
             IDownloadService downloadService,
             ISettingService settingService,
+            TaxSettings taxSettings,
             VendorSettings vendorSettings)
         {
             this._productService = productService;
@@ -179,6 +182,7 @@ namespace Nop.Admin.Controllers
             this._productAttributeParser = productAttributeParser;
             this._downloadService = downloadService;
             this._settingService = settingService;
+            this._taxSettings = taxSettings;
             this._vendorSettings = vendorSettings;
         }
 
@@ -780,7 +784,7 @@ namespace Nop.Admin.Controllers
 
             //tax categories
             var taxCategories = _taxCategoryService.GetAllTaxCategories();
-            model.AvailableTaxCategories.Add(new SelectListItem { Text = "---", Value = "0" });
+            model.AvailableTaxCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Settings.Tax.TaxCategories.None"), Value = "0" });
             foreach (var tc in taxCategories)
                 model.AvailableTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString(), Selected = product != null && !setPredefinedValues && tc.Id == product.TaxCategoryId });
 
@@ -809,7 +813,7 @@ namespace Nop.Admin.Controllers
                 model.NotifyAdminForQuantityBelow = 1;
                 model.OrderMinimumQuantity = 1;
                 model.OrderMaximumQuantity = 10000;
-
+                model.TaxCategoryId = _taxSettings.DefaultTaxCategoryId;
                 model.UnlimitedDownloads = true;
                 model.IsShipEnabled = true;
                 model.AllowCustomerReviews = true;

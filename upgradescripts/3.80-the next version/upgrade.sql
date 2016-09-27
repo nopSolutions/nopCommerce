@@ -95,6 +95,15 @@ set @resources='
   <LocaleResource Name="Plugins.Payments.PayPalDirect.WebhookError">
     <Value>Webhook was not created (see details in the log)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.TaxCategories.None">
+    <Value>[None]</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.DefaultTaxCategory">
+    <Value>Default tax category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.DefaultTaxCategory.Hint">
+    <Value>Select default tax category for products.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -170,9 +179,17 @@ DROP TABLE #LocaleStringResourceTmp
 GO
 
 --new setting
- IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.hideshippingtotal')
- BEGIN
- 	INSERT [Setting] ([Name], [Value], [StoreId])
- 	VALUES (N'shippingsettings.hideshippingtotal', N'False', 0)
- END
- GO
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.hideshippingtotal')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'shippingsettings.hideshippingtotal', N'False', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'taxsettings.defaulttaxcategoryid')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'taxsettings.defaulttaxcategoryid', N'0', 0)
+END
+GO

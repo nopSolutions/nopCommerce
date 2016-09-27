@@ -6897,6 +6897,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Tax.DefaultTaxAddress">
     <Value>Default tax address (used for tax calculation)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.DefaultTaxCategory">
+    <Value>Default tax category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.DefaultTaxCategory.Hint">
+    <Value>Select default tax category for products.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.DisplayTaxRates">
     <Value>Display all applied tax rates</Value>
   </LocaleResource>
@@ -7010,6 +7016,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.TaxBasedOn.Hint">
     <Value>Tax based on.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.TaxCategories.None">
+    <Value>[None]</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.TaxDisplayType">
     <Value>Tax display type</Value>
