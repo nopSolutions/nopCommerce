@@ -5,8 +5,12 @@ namespace Nop.Admin.Models.Catalog
 {
     public partial class ProductSpecificationAttributeModel : BaseNopEntityModel
     {
+        public int AttributeTypeId { get; set; }
+
         [AllowHtml]
         public string AttributeTypeName { get; set; }
+
+        public int AttributeId { get; set; }
 
         [AllowHtml]
         public string AttributeName { get; set; }
@@ -19,5 +23,7 @@ namespace Nop.Admin.Models.Catalog
         public bool ShowOnProductPage { get; set; }
 
         public int DisplayOrder { get; set; }
+
+        public int SpecificationAttributeOptionId { get; set; } 
     }
 }

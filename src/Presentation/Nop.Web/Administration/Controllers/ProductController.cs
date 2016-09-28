@@ -2326,7 +2326,9 @@ namespace Nop.Admin.Controllers
                     var psaModel = new ProductSpecificationAttributeModel
                     {
                         Id = x.Id,
+                        AttributeTypeId = x.AttributeTypeId,
                         AttributeTypeName = x.AttributeType.GetLocalizedEnum(_localizationService, _workContext),
+                        AttributeId = x.SpecificationAttributeOption.SpecificationAttribute.Id,
                         AttributeName = x.SpecificationAttributeOption.SpecificationAttribute.Name,
                         AllowFiltering = x.AllowFiltering,
                         ShowOnProductPage = x.ShowOnProductPage,
@@ -2336,6 +2338,7 @@ namespace Nop.Admin.Controllers
                     {
                         case SpecificationAttributeType.Option:
                             psaModel.ValueRaw = HttpUtility.HtmlEncode(x.SpecificationAttributeOption.Name);
+                            psaModel.SpecificationAttributeOptionId = x.SpecificationAttributeOptionId;
                             break;
                         case SpecificationAttributeType.CustomText:
                             psaModel.ValueRaw = HttpUtility.HtmlEncode(x.CustomValue);
@@ -2386,9 +2389,15 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            //we do not allow editing these fields anymore (when we have distinct attribute types)
-            //psa.CustomValue = model.CustomValue;
-            //psa.AllowFiltering = model.AllowFiltering;
+            //we allow filtering and change option only for "Option" attribute type
+            if (model.AttributeTypeId == (int)SpecificationAttributeType.Option)
+            {
+                psa.AllowFiltering = model.AllowFiltering;
+                int specificationAttributeOptionId;
+                if (int.TryParse(model.ValueRaw, out specificationAttributeOptionId))
+                    psa.SpecificationAttributeOptionId = specificationAttributeOptionId;
+            }
+
             psa.ShowOnProductPage = model.ShowOnProductPage;
             psa.DisplayOrder = model.DisplayOrder;
             _specificationAttributeService.UpdateProductSpecificationAttribute(psa);

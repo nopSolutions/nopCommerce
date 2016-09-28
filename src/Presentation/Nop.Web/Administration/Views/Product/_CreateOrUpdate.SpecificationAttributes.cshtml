@@ -50,8 +50,8 @@
                                                 //ProductId: { editable: false, type: "number" },
                                                 AttributeTypeName: { editable: false, type: "string" },
                                                 AttributeName: { editable: false, type: "string" },
-                                                ValueRaw: { editable: false, type: "string" },
-                                                AllowFiltering: { editable: false, type: "boolean" },
+                                                ValueRaw: { editable: true, type: "string" },
+                                                AllowFiltering: { editable: true, type: "boolean" },
                                                 ShowOnProductPage: { editable: true, type: "boolean" },
                                                 DisplayOrder: { editable: true, type: "number" },
                                                 Id: { editable: false, type: "number" }
@@ -96,7 +96,28 @@
                                         field: "ValueRaw",
                                         title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.Value")",
                                         width: 200,
-                                        encoded: false
+                                        encoded: false,
+                                        editor: function setDropDownEditor(container, options) {
+                                                    if (options.model.AttributeTypeId == @((int)SpecificationAttributeType.Option)) {
+                                                        var dropDownList = $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:ValueRaw"/>')
+                                                            .appendTo(container).kendoDropDownList().data("kendoDropDownList");
+                                                        $.ajax({
+                                                            type: "GET",
+                                                            url: "@(Url.Action("GetOptionsByAttributeId", "SpecificationAttribute"))",
+                                                            data: { "attributeId": options.model.AttributeId },
+                                                            success: function (data) {
+                                                                var availableOptions = [];
+                                                                $.each(data, function(id, option) {
+                                                                    availableOptions.push({ Id: option.id, Name: option.name });
+                                                                });
+                                                                dropDownList.setDataSource(availableOptions);
+                                                                dropDownList.select(function(item) {
+                                                                    return item.Id === options.model.SpecificationAttributeOptionId;
+                                                                });
+                                                            }
+                                                        });
+                                                    }
+                                                }
                                     }, {
                                         field: "AllowFiltering",
                                         title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering")",
@@ -134,7 +155,12 @@
                                         ],
                                         width: 200
                                     }
-                                ]
+                                ],
+                                edit: function(e) {
+                                    if (e.model.AttributeTypeId != @((int)SpecificationAttributeType.Option)) {
+                                        e.container.find("input[name=AllowFiltering]").attr("disabled", true);
+                                    }
+                                }
                             });
                         });
                     </script>
