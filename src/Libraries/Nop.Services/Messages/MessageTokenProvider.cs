@@ -53,6 +53,7 @@ namespace Nop.Services.Messages
         private readonly IPaymentService _paymentService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
+        private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
 
@@ -82,6 +83,7 @@ namespace Nop.Services.Messages
             IStoreContext storeContext,
             IProductAttributeParser productAttributeParser,
             IAddressAttributeFormatter addressAttributeFormatter,
+            ICustomerAttributeFormatter customerAttributeFormatter,
             MessageTemplatesSettings templatesSettings,
             CatalogSettings catalogSettings,
             TaxSettings taxSettings,
@@ -101,6 +103,7 @@ namespace Nop.Services.Messages
             this._paymentService = paymentService;
             this._productAttributeParser = productAttributeParser;
             this._addressAttributeFormatter = addressAttributeFormatter;
+            this._customerAttributeFormatter = customerAttributeFormatter;
             this._storeService = storeService;
             this._storeContext = storeContext;
 
@@ -735,6 +738,8 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Customer.VatNumber", customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber)));
             tokens.Add(new Token("Customer.VatNumberStatus", ((VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId)).ToString()));
 
+            var customAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes);
+            tokens.Add(new Token("Customer.CustomAttributes", _customerAttributeFormatter.FormatAttributes(customAttributesXml), true));
 
 
             //note: we do not use SEO friendly URLS because we can get errors caused by having .(dot) in the URL (from the email address)
@@ -1006,7 +1011,8 @@ namespace Nop.Services.Messages
                 "%Customer.FirstName%",
                 "%Customer.LastName%",
                 "%Customer.VatNumber%",
-                "%Customer.VatNumberStatus%", 
+                "%Customer.VatNumberStatus%",
+                "%Customer.CustomAttributes%",
                 "%Customer.PasswordRecoveryURL%", 
                 "%Customer.AccountActivationURL%", 
                 "%Vendor.Name%",
