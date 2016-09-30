@@ -251,10 +251,12 @@ namespace Nop.Services.ExportImport
                     // uncomment this line if you want the XML written out to the outputDir
                     //xlPackage.DebugMode = true; 
 
-                    // get handle to the existing worksheet
+                    // get handles to the worksheets
                     var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(T).Name);
+                    var fWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductsFilters");
+                    fWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+                    
                     //create Headers and format them 
-
                     var manager = new PropertyManager<T>(properties.Where(p => !p.Ignore).ToArray());
                     manager.WriteCaption(worksheet, SetCaptionStyle);
 
@@ -262,7 +264,7 @@ namespace Nop.Services.ExportImport
                     foreach (var items in itemsToExport)
                     {
                         manager.CurrentObject = items;
-                        manager.WriteToXlsx(worksheet, row++);
+                        manager.WriteToXlsx(worksheet, row++, fWorksheet: fWorksheet);
                     }
 
                     xlPackage.Save();
@@ -312,10 +314,14 @@ namespace Nop.Services.ExportImport
                     // uncomment this line if you want the XML written out to the outputDir
                     //xlPackage.DebugMode = true; 
 
-                    // get handle to the existing worksheet
+                    // get handles to the worksheets
                     var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(Product).Name);
-                    //create Headers and format them 
+                    var fpWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductsFilters");
+                    fpWorksheet.Hidden=eWorkSheetHidden.VeryHidden;
+                    var faWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductAttributesFilters");
+                    faWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
 
+                    //create Headers and format them 
                     var manager = new PropertyManager<Product>(properties.Where(p => !p.Ignore).ToArray());
                     manager.WriteCaption(worksheet, SetCaptionStyle);
 
@@ -323,7 +329,7 @@ namespace Nop.Services.ExportImport
                     foreach (var item in itemsToExport)
                     {
                         manager.CurrentObject = item;
-                        manager.WriteToXlsx(worksheet, row++);
+                        manager.WriteToXlsx(worksheet, row++, fWorksheet: fpWorksheet);
 
                         var attributes = item.ProductAttributeMappings.SelectMany(pam => pam.ProductAttributeValues.Select(pav => new ExportProductAttribute
                         {
@@ -368,7 +374,7 @@ namespace Nop.Services.ExportImport
                         {
                             row++;
                             attributeManager.CurrentObject = exportProducAttribute;
-                            attributeManager.WriteToXlsx(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset);
+                            attributeManager.WriteToXlsx(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset, faWorksheet);
                             worksheet.Row(row).OutlineLevel = 1;
                             worksheet.Row(row).Collapsed = true;
                         }
