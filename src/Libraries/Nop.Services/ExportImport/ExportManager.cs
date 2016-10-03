@@ -365,6 +365,7 @@ namespace Nop.Services.ExportImport
                             PriceAdjustment = pav.PriceAdjustment,
                             WeightAdjustment = pav.WeightAdjustment,
                             Cost = pav.Cost,
+                            CustomerEntersQty = pav.CustomerEntersQty,
                             Quantity = pav.Quantity,
                             IsPreSelected = pav.IsPreSelected,
                             DisplayOrder = pav.DisplayOrder,
@@ -757,6 +758,7 @@ namespace Nop.Services.ExportImport
                             xmlWriter.WriteString("PriceAdjustment", productAttributeValue.PriceAdjustment);
                             xmlWriter.WriteString("WeightAdjustment", productAttributeValue.WeightAdjustment);
                             xmlWriter.WriteString("Cost", productAttributeValue.Cost);
+                            xmlWriter.WriteString("CustomerEntersQty", productAttributeValue.CustomerEntersQty);
                             xmlWriter.WriteString("Quantity", productAttributeValue.Quantity);
                             xmlWriter.WriteString("IsPreSelected", productAttributeValue.IsPreSelected);
                             xmlWriter.WriteString("DisplayOrder", productAttributeValue.DisplayOrder);

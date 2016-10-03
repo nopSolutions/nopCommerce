@@ -1239,10 +1239,12 @@ namespace Nop.Web.Controllers
                             var ctrlAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
+                                int quantity;
                                 int selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
                                     attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, selectedAttributeId.ToString());
+                                        attribute, selectedAttributeId.ToString(),
+                                        int.TryParse(form[string.Format("product_attribute_{0}_{1}_qty", attribute.Id, selectedAttributeId)], out quantity) && quantity > 1 ? (int?)quantity : null);
                             }
                         }
                         break;
@@ -1253,10 +1255,12 @@ namespace Nop.Web.Controllers
                             {
                                 foreach (var item in ctrlAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
+                                    int quantity;
                                     int selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
                                         attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
+                                            attribute, selectedAttributeId.ToString(),
+                                            int.TryParse(form[string.Format("product_attribute_{0}_{1}_qty", attribute.Id, item)], out quantity) && quantity > 1 ? (int?)quantity : null);
                                 }
                             }
                         }
@@ -1270,8 +1274,10 @@ namespace Nop.Web.Controllers
                                 .Select(v => v.Id)
                                 .ToList())
                             {
+                                int quantity;
                                 attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, selectedAttributeId.ToString());
+                                    attribute, selectedAttributeId.ToString(),
+                                    int.TryParse(form[string.Format("product_attribute_{0}_{1}_qty", attribute.Id, selectedAttributeId)], out quantity) && quantity > 1 ? (int?)quantity : null);
                             }
                         }
                         break;

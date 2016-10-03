@@ -2130,6 +2130,12 @@ label, label + * {
 	color: #444;
 }
 
+.attributes .qty-box {
+	width: 48px;
+    height: 32px;
+    text-align: center;
+}
+
 .ui-datepicker {
 	width: 280px;
 	box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);

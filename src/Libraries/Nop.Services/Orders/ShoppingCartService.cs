@@ -977,7 +977,7 @@ namespace Nop.Services.Orders
                 if (sci.ProductId == product.Id)
                 {
                     //attributes
-                    bool attributesEqual = _productAttributeParser.AreProductAttributesEqual(sci.AttributesXml, attributesXml, false);
+                    bool attributesEqual = _productAttributeParser.AreProductAttributesEqual(sci.AttributesXml, attributesXml, false, false);
 
                     //gift cards
                     bool giftCardInfoSame = true;

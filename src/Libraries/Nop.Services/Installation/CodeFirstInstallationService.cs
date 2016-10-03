@@ -6015,7 +6015,7 @@ namespace Nop.Services.Installation
                 RoundPricesDuringCalculation = true,
                 GroupTierPricesForDistinctShoppingCartItems = false,
                 AllowCartItemEditing = true,
-                RenderAssociatedAttributeValueQuantity = false
+                RenderAssociatedAttributeValueQuantity = true
             });
 
             settingService.SaveSetting(new OrderSettings

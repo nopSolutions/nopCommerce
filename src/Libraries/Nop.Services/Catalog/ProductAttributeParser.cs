@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 using Nop.Core.Domain.Catalog;
+using Nop.Data;
 
 namespace Nop.Services.Catalog
 {
@@ -14,14 +15,17 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
+        private readonly IDbContext _context;
         private readonly IProductAttributeService _productAttributeService;
 
         #endregion
 
         #region Ctor
 
-        public ProductAttributeParser(IProductAttributeService productAttributeService)
+        public ProductAttributeParser(IDbContext context,
+            IProductAttributeService productAttributeService)
         {
+            this._context = context;
             this._productAttributeService = productAttributeService;
         }
 
@@ -67,6 +71,45 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Gets selected product attribute values with the quantity entered by the customer
+        /// </summary>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="productAttributeMappingId">Product attribute mapping identifier</param>
+        /// <returns>Collections of pairs of product attribute values and their quantity</returns>
+        protected IList<Tuple<string, string>> ParseValuesWithQuantity(string attributesXml, int productAttributeMappingId)
+        {
+            var selectedValues = new List<Tuple<string, string>>();
+            if (string.IsNullOrEmpty(attributesXml))
+                return selectedValues;
+
+            try
+            {
+                var xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(attributesXml);
+
+                foreach (XmlNode attributeNode in xmlDoc.SelectNodes(@"//Attributes/ProductAttribute"))
+                {
+                    if (attributeNode.Attributes != null && attributeNode.Attributes["ID"] != null)
+                    {
+                        int attributeId;
+                        if (int.TryParse(attributeNode.Attributes["ID"].InnerText.Trim(), out attributeId) && attributeId == productAttributeMappingId)
+                        {
+                            foreach (XmlNode attributeValue in attributeNode.SelectNodes("ProductAttributeValue"))
+                            {
+                                var value = attributeValue.SelectSingleNode("Value").InnerText.Trim();
+                                var quantityNode = attributeValue.SelectSingleNode("Quantity");
+                                selectedValues.Add(new Tuple<string, string>(value, quantityNode != null ? quantityNode.InnerText.Trim() : string.Empty));
+                            }
+                        }
+                    }
+                }
+            }
+            catch { }
+
+            return selectedValues;
+        }
+
+        /// <summary>
         /// Gets selected product attribute mappings
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
@@ -93,29 +136,43 @@ namespace Nop.Services.Catalog
         /// Get product attribute values
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="productAttributeMappingId">Product attribute mapping identifier; pass 0 to load all values</param>
         /// <returns>Product attribute values</returns>
-        public virtual IList<ProductAttributeValue> ParseProductAttributeValues(string attributesXml)
+        public virtual IList<ProductAttributeValue> ParseProductAttributeValues(string attributesXml, int productAttributeMappingId = 0)
         {
             var values = new List<ProductAttributeValue>();
-            if (String.IsNullOrEmpty(attributesXml))
+            if (string.IsNullOrEmpty(attributesXml))
                 return values;
 
             var attributes = ParseProductAttributeMappings(attributesXml);
+
+            //to load values only for the passed product attribute mapping
+            if (productAttributeMappingId > 0)
+                attributes = attributes.Where(attribute => attribute.Id == productAttributeMappingId).ToList();
+
             foreach (var attribute in attributes)
             {
                 if (!attribute.ShouldHaveValues())
                     continue;
 
-                var valuesStr = ParseValues(attributesXml, attribute.Id);
-                foreach (string valueStr in valuesStr)
+                foreach (var attributeValue in ParseValuesWithQuantity(attributesXml, attribute.Id))
                 {
-                    if (!String.IsNullOrEmpty(valueStr))
+                    int attributeValueId;
+                    if (!string.IsNullOrEmpty(attributeValue.Item1) && int.TryParse(attributeValue.Item1, out attributeValueId))
                     {
-                        int id;
-                        if (int.TryParse(valueStr, out id))
+                        var value = _productAttributeService.GetProductAttributeValueById(attributeValueId);
+                        if (value != null)
                         {
-                            var value = _productAttributeService.GetProductAttributeValueById(id);
-                            if (value != null)
+                            int quantity;
+                            if (!string.IsNullOrEmpty(attributeValue.Item2) && int.TryParse(attributeValue.Item2, out quantity) && quantity != value.Quantity)
+                            {
+                                //if customer enters quantity, use new entity with new quantity
+                                var oldValue = _context.LoadOriginalCopy(value);
+                                oldValue.ProductAttributeMapping = attribute;
+                                oldValue.Quantity = quantity;
+                                values.Add(oldValue);
+                            }
+                            else
                                 values.Add(value);
                         }
                     }
@@ -176,8 +233,9 @@ namespace Nop.Services.Catalog
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="productAttributeMapping">Product attribute mapping</param>
         /// <param name="value">Value</param>
+        /// <param name="quantity">Quantity (used with AttributeValueType.AssociatedToProduct to specify the quantity entered by the customer)</param>
         /// <returns>Updated result (XML format)</returns>
-        public virtual string AddProductAttribute(string attributesXml, ProductAttributeMapping productAttributeMapping, string value)
+        public virtual string AddProductAttribute(string attributesXml, ProductAttributeMapping productAttributeMapping, string value, int? quantity = null)
         {
             string result = string.Empty;
             try
@@ -227,6 +285,14 @@ namespace Nop.Services.Catalog
                 var attributeValueValueElement = xmlDoc.CreateElement("Value");
                 attributeValueValueElement.InnerText = value;
                 attributeValueElement.AppendChild(attributeValueValueElement);
+
+                //the quantity entered by the customer
+                if (quantity.HasValue)
+                {
+                    var attributeValueQuantity = xmlDoc.CreateElement("Quantity");
+                    attributeValueQuantity.InnerText = quantity.ToString();
+                    attributeValueElement.AppendChild(attributeValueQuantity);
+                }
 
                 result = xmlDoc.OuterXml;
             }
@@ -301,8 +367,9 @@ namespace Nop.Services.Catalog
         /// <param name="attributesXml1">The attributes of the first product</param>
         /// <param name="attributesXml2">The attributes of the second product</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
+        /// <param name="ignoreQuantity">A value indicating whether we should ignore the quantity of attribute value entered by the customer</param>
         /// <returns>Result</returns>
-        public virtual bool AreProductAttributesEqual(string attributesXml1, string attributesXml2, bool ignoreNonCombinableAttributes)
+        public virtual bool AreProductAttributesEqual(string attributesXml1, string attributesXml2, bool ignoreNonCombinableAttributes, bool ignoreQuantity = true)
         {
             var attributes1 = ParseProductAttributeMappings(attributesXml1);
             if (ignoreNonCombinableAttributes)
@@ -326,20 +393,20 @@ namespace Nop.Services.Catalog
                     if (a1.Id == a2.Id)
                     {
                         hasAttribute = true;
-                        var values1Str = ParseValues(attributesXml1, a1.Id);
-                        var values2Str = ParseValues(attributesXml2, a2.Id);
+                        var values1Str = ParseValuesWithQuantity(attributesXml1, a1.Id);
+                        var values2Str = ParseValuesWithQuantity(attributesXml2, a2.Id);
                         if (values1Str.Count == values2Str.Count)
                         {
-                            foreach (string str1 in values1Str)
+                            foreach (var str1 in values1Str)
                             {
                                 bool hasValue = false;
-                                foreach (string str2 in values2Str)
+                                foreach (var str2 in values2Str)
                                 {
                                     //case insensitive? 
                                     //if (str1.Trim().ToLower() == str2.Trim().ToLower())
-                                    if (str1.Trim() == str2.Trim())
+                                    if (str1.Item1.Trim() == str2.Item1.Trim())
                                     {
-                                        hasValue = true;
+                                        hasValue = ignoreQuantity ? true : str1.Item2.Trim() == str2.Item2.Trim();
                                         break;
                                     }
                                 }

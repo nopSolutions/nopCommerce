@@ -362,6 +362,24 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Fields.CancelOrderTotals">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.CustomerEntersQty">
+    <Value>Customer enters quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.CustomerEntersQty.Hint">
+    <Value>Allow customers enter the quantity of associated product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ProductAttributes.Quantity">
+    <Value> - quantity {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.ProductAttributes.PriceAdjustment">
+    <Value>{0} [{1}{2}]</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.ProductAttributes.PriceAdjustment.PerItem">
+    <Value> per item</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.ProductAttributes.PriceAdjustment.Quantity">
+    <Value>Enter quantity</Value>
+  </LocaleResource>  
 </Language>
 '
 
@@ -992,3 +1010,34 @@ UPDATE [Setting]
 SET [Name] = N'catalogsettings.showskuonproductdetailspage' 
 WHERE [Name] = N'catalogsettings.showproductsku'
 GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductAttributeValue]') and NAME='CustomerEntersQty')
+BEGIN
+	ALTER TABLE [ProductAttributeValue]
+	ADD [CustomerEntersQty] bit NULL
+END
+GO
+
+UPDATE [ProductAttributeValue]
+SET [CustomerEntersQty] = 0
+WHERE [CustomerEntersQty] IS NULL
+GO
+
+ALTER TABLE [ProductAttributeValue] ALTER COLUMN [CustomerEntersQty] bit NOT NULL
+GO
+
+--new or update setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shoppingcartsettings.renderassociatedattributevaluequantity')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId]) 
+	VALUES (N'shoppingcartsettings.renderassociatedattributevaluequantity', N'True', 0);
+END
+ELSE
+BEGIN
+	UPDATE [Setting] 
+	SET [Value] = N'True' 
+	WHERE [Name] = N'shoppingcartsettings.renderassociatedattributevaluequantity'
+END
+GO
+

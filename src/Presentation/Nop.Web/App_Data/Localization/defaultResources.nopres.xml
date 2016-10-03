@@ -3498,6 +3498,12 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Quantity.Hint">
     <Value>Specify quantity of the associated product which will be added. Minimum allowed value is 1.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.CustomerEntersQty">
+    <Value>Customer enters quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.CustomerEntersQty.Hint">
+    <Value>Allow customers enter the quantity of associated product.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.WeightAdjustment">
     <Value>Weight adjustment</Value>
   </LocaleResource>
@@ -14526,6 +14532,9 @@
   <LocaleResource Name="PrivateMessages.YouHaveUnreadPM">
     <Value>You have {0} unread message(s) in your Inbox</Value>
   </LocaleResource>
+  <LocaleResource Name="ProductAttributes.Quantity">
+    <Value> - quantity {0}</Value>
+  </LocaleResource>
   <LocaleResource Name="Products.AlsoPurchased">
     <Value>Customers who bought this item also bought</Value>
   </LocaleResource>
@@ -14728,7 +14737,13 @@
     <Value>From {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Products.ProductAttributes.PriceAdjustment">
-    <Value>{0} [{1}]</Value>
+    <Value>{0} [{1}{2}]</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.ProductAttributes.PriceAdjustment.PerItem">
+    <Value> per item</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.ProductAttributes.PriceAdjustment.Quantity">
+    <Value>Enter quantity</Value>
   </LocaleResource>
   <LocaleResource Name="Products.ProductHasBeenAddedToCompareList">
     <Value>The product has been added to your product comparison</Value>

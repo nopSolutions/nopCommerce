@@ -662,7 +662,9 @@ namespace Nop.Web.Controllers
                             Id = attributeValue.Id,
                             Name = attributeValue.GetLocalized(x => x.Name),
                             ColorSquaresRgb = attributeValue.ColorSquaresRgb, //used with "Color squares" attribute type
-                            IsPreSelected = attributeValue.IsPreSelected
+                            IsPreSelected = attributeValue.IsPreSelected,
+                            CustomerEntersQty = attributeValue.CustomerEntersQty,
+                            Quantity = attributeValue.Quantity
                         };
                         attributeModel.Values.Add(valueModel);
 
@@ -731,14 +733,31 @@ namespace Nop.Web.Controllers
                                     foreach (var attributeValue in selectedValues)
                                         foreach (var item in attributeModel.Values)
                                             if (attributeValue.Id == item.Id)
+                                            {
                                                 item.IsPreSelected = true;
+                                                
+                                                //set customer entered quantity
+                                                if (attributeValue.CustomerEntersQty)
+                                                    item.Quantity = attributeValue.Quantity;
+                                            }
                                 }
                             }
                             break;
                         case AttributeControlType.ReadonlyCheckboxes:
                             {
-                                //do nothing
                                 //values are already pre-set
+
+                                //set customer entered quantity
+                                if (!string.IsNullOrEmpty(updatecartitem.AttributesXml))
+                                {
+                                    foreach (var attributeValue in _productAttributeParser.ParseProductAttributeValues(updatecartitem.AttributesXml)
+                                        .Where(value => value.CustomerEntersQty))
+                                    {
+                                        var item = attributeModel.Values.FirstOrDefault(value => value.Id == attributeValue.Id);
+                                        if (item != null)
+                                            item.Quantity = attributeValue.Quantity;
+                                    }
+                                }
                             }
                             break;
                         case AttributeControlType.TextBox:
