@@ -11538,6 +11538,12 @@
   <LocaleResource Name="Admin.System.QueuedEmails.EditQueuedEmailDetails">
     <Value>Edit message queue item</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.AttachedDownload">
+    <Value>Attached static file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.AttachedDownload.Hint">
+    <Value>The attached static file that will be sent in this email.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.AttachmentFilePath">
     <Value>Attached file path</Value>
   </LocaleResource>

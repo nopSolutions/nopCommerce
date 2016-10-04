@@ -181,8 +181,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.EmailAccount, mo => mo.Ignore())
                     .ForMember(dest => dest.EmailAccountId, mo => mo.Ignore())
                     .ForMember(dest => dest.AttachmentFilePath, mo => mo.Ignore())
-                    .ForMember(dest => dest.AttachmentFileName, mo => mo.Ignore())
-                    .ForMember(dest => dest.AttachedDownloadId, mo => mo.Ignore());
+                    .ForMember(dest => dest.AttachmentFileName, mo => mo.Ignore());
                 //campaign
                 cfg.CreateMap<Campaign, CampaignModel>()
                     .ForMember(dest => dest.DontSendBeforeDate, mo => mo.Ignore())

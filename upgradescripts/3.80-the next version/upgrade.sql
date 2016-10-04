@@ -311,6 +311,12 @@ set @resources='
   <LocaleResource Name="Plugins.ExchangeRate.EcbExchange.Error">
     <Value>You can use ECB (European central bank) exchange rate provider only when the primary exchange rate currency is supported by ECB</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.AttachedDownload">
+    <Value>Attached static file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.AttachedDownload.Hint">
+    <Value>The attached static file that will be sent in this email.</Value>
+  </LocaleResource>
 </Language>
 '
 
