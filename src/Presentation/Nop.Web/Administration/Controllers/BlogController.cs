@@ -9,6 +9,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Services.Blogs;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
@@ -31,16 +32,18 @@ namespace Nop.Admin.Controllers
         private readonly IUrlRecordService _urlRecordService;
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion
 
-		#region Constructors
+        #region Constructors
 
         public BlogController(IBlogService blogService, ILanguageService languageService,
             IDateTimeHelper dateTimeHelper, 
             ILocalizationService localizationService, IPermissionService permissionService,
             IUrlRecordService urlRecordService,
-            IStoreService storeService, IStoreMappingService storeMappingService)
+            IStoreService storeService, IStoreMappingService storeMappingService,
+            ICustomerActivityService customerActivityService)
         {
             this._blogService = blogService;
             this._languageService = languageService;
@@ -50,7 +53,8 @@ namespace Nop.Admin.Controllers
             this._urlRecordService = urlRecordService;
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
-		}
+            this._customerActivityService = customerActivityService;
+        }
 
         #endregion
 
@@ -199,7 +203,10 @@ namespace Nop.Admin.Controllers
                 blogPost.EndDateUtc = model.EndDate;
                 blogPost.CreatedOnUtc = DateTime.UtcNow;
                 _blogService.InsertBlogPost(blogPost);
-                
+
+                //activity log
+                _customerActivityService.InsertActivity("AddNewBlogPost", _localizationService.GetResource("ActivityLog.AddNewBlogPost"), blogPost.Id);
+
                 //search engine name
                 var seName = blogPost.ValidateSeName(model.SeName, model.Title, true);
                 _urlRecordService.SaveSlug(blogPost, seName, blogPost.LanguageId);
@@ -263,6 +270,9 @@ namespace Nop.Admin.Controllers
                 blogPost.EndDateUtc = model.EndDate;
                 _blogService.UpdateBlogPost(blogPost);
 
+                //activity log
+                _customerActivityService.InsertActivity("EditBlogPost", _localizationService.GetResource("ActivityLog.EditBlogPost"), blogPost.Id);
+
                 //search engine name
                 var seName = blogPost.ValidateSeName(model.SeName, model.Title, true);
                 _urlRecordService.SaveSlug(blogPost, seName, blogPost.LanguageId);
@@ -299,6 +309,9 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             _blogService.DeleteBlogPost(blogPost);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteBlogPost", _localizationService.GetResource("ActivityLog.DeleteBlogPost"), blogPost.Id);
 
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Deleted"));
 			return RedirectToAction("List");
@@ -360,6 +373,10 @@ namespace Nop.Admin.Controllers
 
             var blogPost = comment.BlogPost;
             _blogService.DeleteBlogComment(comment);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteBlogPostComment", _localizationService.GetResource("ActivityLog.DeleteBlogPostComment"), blogPost.Id);
+            
             //update totals
             blogPost.CommentCount = blogPost.BlogComments.Count;
             _blogService.UpdateBlogPost(blogPost);
@@ -379,6 +396,11 @@ namespace Nop.Admin.Controllers
                 var blogPosts = _blogService.GetBlogPostsByIds(comments.Select(p => p.BlogPostId).Distinct().ToArray());
 
                 _blogService.DeleteBlogComments(comments);
+                //activity log
+                foreach (var blogComment in comments)
+                {
+                    _customerActivityService.InsertActivity("DeleteBlogPostComment", _localizationService.GetResource("ActivityLog.DeleteBlogPostComment"), blogComment.Id);
+                }
                 //update totals
                 foreach (var blogPost in blogPosts)
                 {
