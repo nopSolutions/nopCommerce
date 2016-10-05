@@ -133,6 +133,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                 ClientSecret = payPalDirectPaymentSettings.ClientSecret,
                 WebhookId = payPalDirectPaymentSettings.WebhookId,
                 UseSandbox = payPalDirectPaymentSettings.UseSandbox,
+                PassPurchasedItems = payPalDirectPaymentSettings.PassPurchasedItems,
                 TransactModeId = (int)payPalDirectPaymentSettings.TransactMode,
                 AdditionalFee = payPalDirectPaymentSettings.AdditionalFee,
                 AdditionalFeePercentage = payPalDirectPaymentSettings.AdditionalFeePercentage,
@@ -144,6 +145,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                 model.ClientId_OverrideForStore = _settingService.SettingExists(payPalDirectPaymentSettings, x => x.ClientId, storeScope);
                 model.ClientSecret_OverrideForStore = _settingService.SettingExists(payPalDirectPaymentSettings, x => x.ClientSecret, storeScope);
                 model.UseSandbox_OverrideForStore = _settingService.SettingExists(payPalDirectPaymentSettings, x => x.UseSandbox, storeScope);
+                model.PassPurchasedItems_OverrideForStore = _settingService.SettingExists(payPalDirectPaymentSettings, x => x.PassPurchasedItems, storeScope);
                 model.TransactModeId_OverrideForStore = _settingService.SettingExists(payPalDirectPaymentSettings, x => x.TransactMode, storeScope);
                 model.AdditionalFee_OverrideForStore = _settingService.SettingExists(payPalDirectPaymentSettings, x => x.AdditionalFee, storeScope);
                 model.AdditionalFeePercentage_OverrideForStore = _settingService.SettingExists(payPalDirectPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
@@ -170,6 +172,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             payPalDirectPaymentSettings.ClientSecret = model.ClientSecret;
             payPalDirectPaymentSettings.WebhookId = model.WebhookId;
             payPalDirectPaymentSettings.UseSandbox = model.UseSandbox;
+            payPalDirectPaymentSettings.PassPurchasedItems = model.PassPurchasedItems;
             payPalDirectPaymentSettings.TransactMode = (TransactMode)model.TransactModeId;
             payPalDirectPaymentSettings.AdditionalFee = model.AdditionalFee;
             payPalDirectPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
@@ -181,6 +184,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             _settingService.SaveSettingOverridablePerStore(payPalDirectPaymentSettings, x => x.ClientSecret, model.ClientSecret_OverrideForStore, storeScope, false);
             _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.WebhookId, 0, false);
             _settingService.SaveSettingOverridablePerStore(payPalDirectPaymentSettings, x => x.UseSandbox, model.UseSandbox_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalDirectPaymentSettings, x => x.PassPurchasedItems, model.PassPurchasedItems_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(payPalDirectPaymentSettings, x => x.TransactMode, model.TransactModeId_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(payPalDirectPaymentSettings, x => x.AdditionalFee, model.AdditionalFee_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(payPalDirectPaymentSettings, x => x.AdditionalFeePercentage, model.AdditionalFeePercentage_OverrideForStore, storeScope, false);

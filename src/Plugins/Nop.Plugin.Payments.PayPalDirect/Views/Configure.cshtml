@@ -90,6 +90,16 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.PassPurchasedItems_OverrideForStore, model => model.PassPurchasedItems, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.PassPurchasedItems)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.PassPurchasedItems)
+                        @Html.ValidationMessageFor(model => model.PassPurchasedItems)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.AdditionalFee_OverrideForStore, model => model.AdditionalFee, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.AdditionalFee)
                     </div>

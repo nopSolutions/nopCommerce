@@ -1571,6 +1571,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.OrderID.Hint">
     <Value></Value>
   </LocaleResource>    
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.PassPurchasedItems">
+    <Value>Pass purchased items</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.PassPurchasedItems.Hint">
+    <Value>Check to pass information about purchased items to PayPal.</Value>
+  </LocaleResource>
 </Language>
 '
 
