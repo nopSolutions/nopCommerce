@@ -127,7 +127,7 @@ namespace Nop.Services.Authentication.External
             return customer.ExternalAuthenticationRecords.ToList();
         }
 
-        public virtual void DeletExternalAuthenticationRecord(ExternalAuthenticationRecord externalAuthenticationRecord)
+        public virtual void DeleteExternalAuthenticationRecord(ExternalAuthenticationRecord externalAuthenticationRecord)
         {
             if (externalAuthenticationRecord == null)
                 throw new ArgumentNullException("externalAuthenticationRecord");

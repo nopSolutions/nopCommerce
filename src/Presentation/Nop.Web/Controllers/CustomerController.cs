@@ -1548,7 +1548,7 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            _openAuthenticationService.DeletExternalAuthenticationRecord(ear);
+            _openAuthenticationService.DeleteExternalAuthenticationRecord(ear);
 
             return Json(new
             {

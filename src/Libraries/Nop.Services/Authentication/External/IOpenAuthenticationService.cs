@@ -40,7 +40,7 @@ namespace Nop.Services.Authentication.External
 
         IList<ExternalAuthenticationRecord> GetExternalIdentifiersFor(Customer customer);
 
-        void DeletExternalAuthenticationRecord(ExternalAuthenticationRecord externalAuthenticationRecord);
+        void DeleteExternalAuthenticationRecord(ExternalAuthenticationRecord externalAuthenticationRecord);
 
         void RemoveAssociation(OpenAuthenticationParameters parameters);
     }
