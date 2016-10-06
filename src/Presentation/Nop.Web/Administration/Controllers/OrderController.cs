@@ -4192,6 +4192,8 @@ namespace Nop.Admin.Controllers
             var nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
             var timeZone = _dateTimeHelper.CurrentTimeZone;
 
+            var culture = new CultureInfo(_workContext.WorkingLanguage.LanguageCulture);
+
             switch (period)
             {
                 case "year":
@@ -4204,7 +4206,7 @@ namespace Nop.Admin.Controllers
                         {
                             result.Add(new
                             {
-                                date = searchYearDateUser.Date.ToString("Y"),
+                                date = searchYearDateUser.Date.ToString("Y", culture),
                                 value = _orderService.SearchOrders(
                                     createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone),
                                     createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser.AddMonths(1), timeZone),
@@ -4226,7 +4228,7 @@ namespace Nop.Admin.Controllers
                         {
                             result.Add(new
                             {
-                                date = searchMonthDateUser.Date.ToString("M"),
+                                date = searchMonthDateUser.Date.ToString("M", culture),
                                 value = _orderService.SearchOrders(
                                     createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone),
                                     createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser.AddDays(1), timeZone),
@@ -4249,7 +4251,7 @@ namespace Nop.Admin.Controllers
                         {
                             result.Add(new
                             {
-                                date = searchWeekDateUser.Date.ToString("d dddd"),
+                                date = searchWeekDateUser.Date.ToString("d dddd", culture),
                                 value = _orderService.SearchOrders(
                                     createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone),
                                     createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser.AddDays(1), timeZone),
