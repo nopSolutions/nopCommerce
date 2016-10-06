@@ -1995,6 +1995,9 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSize.Hint">
     <Value>Set the page size for products in this category e.g. '4' products per page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSize.Positive">
+    <Value>Page size should be positive.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions">
     <Value>Page Size options (comma separated)</Value>
   </LocaleResource>
@@ -2195,6 +2198,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSize.Hint">
     <Value>Set the page size for products in this manufacturer e.g. '4' products per page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSize.Positive">
+    <Value>Page size should be positive.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions">
     <Value>Page Size options (comma separated)</Value>
@@ -12128,6 +12134,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.PageSize.Hint">
     <Value>Set the page size for products in this vendor e.g. '4' products per page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PageSize.Positive">
+    <Value>Page size should be positive.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions">
     <Value>Page Size options (comma separated)</Value>

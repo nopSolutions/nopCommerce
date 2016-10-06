@@ -326,6 +326,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewPossibleOnlyAfterPurchasing">
     <Value>Product review possible only after product purchasing</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSize.Positive">
+    <Value>Page size should be positive.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSize.Positive">
+    <Value>Page size should be positive.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PageSize.Positive">
+    <Value>Page size should be positive.</Value>
+  </LocaleResource>
 </Language>
 '
 
