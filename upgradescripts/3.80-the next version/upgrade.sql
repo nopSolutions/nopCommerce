@@ -323,6 +323,9 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.ContractId.Hint">
     <Value>Specify contract identifier.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewPossibleOnlyAfterPurchasing">
+    <Value>Product review possible only after product purchasing</Value>
+  </LocaleResource>
 </Language>
 '
 

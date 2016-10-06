@@ -5020,7 +5020,7 @@
     <Value>A page share button code. By default, we're using AddThis service.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewPossibleOnlyAfterPurchasing">
-    <Value>Product review possible only after purchasing product</Value>
+    <Value>Product review possible only after product purchasing</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewPossibleOnlyAfterPurchasing.Hint">
     <Value>Check if product can be reviewed only by customer who have already ordered it.</Value>
