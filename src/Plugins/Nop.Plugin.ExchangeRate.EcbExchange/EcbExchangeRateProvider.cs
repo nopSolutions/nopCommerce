@@ -94,7 +94,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
             }
             catch (WebException ex)
             {
-                _logger.Error("Default exchange rate provider", ex);
+                _logger.Error("ECB exchange rate provider", ex);
             }
 
             //return result for the euro
