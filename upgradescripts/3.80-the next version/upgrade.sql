@@ -335,6 +335,9 @@ set @resources='
   <LocaleResource Name="Admin.Vendors.Fields.PageSize.Positive">
     <Value>Page size should be positive.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Tags.Placeholder">
+    <Value>Enter tags ...</Value>
+  </LocaleResource>
 </Language>
 '
 

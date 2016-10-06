@@ -7737,6 +7737,9 @@
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Tags.NoDots">
     <Value>Dots are not supported by tags.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Tags.Placeholder">
+    <Value>Enter tags ...</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Title">
     <Value>Title</Value>
   </LocaleResource>
