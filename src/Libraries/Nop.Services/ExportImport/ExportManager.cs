@@ -173,7 +173,7 @@ namespace Nop.Services.ExportImport
         protected virtual string GetCategories(Product product)
         {
             string categoryNames = null;
-            foreach (var pc in _categoryService.GetProductCategoriesByProductId(product.Id))
+            foreach (var pc in _categoryService.GetProductCategoriesByProductId(product.Id, true))
             {
                 categoryNames += pc.Category.Name;
                 categoryNames += ";";
@@ -189,7 +189,7 @@ namespace Nop.Services.ExportImport
         protected virtual string GetManufacturers(Product product)
         {
             string manufacturerNames = null;
-            foreach (var pm in _manufacturerService.GetProductManufacturersByProductId(product.Id))
+            foreach (var pm in _manufacturerService.GetProductManufacturersByProductId(product.Id, true))
             {
                 manufacturerNames += pm.Manufacturer.Name;
                 manufacturerNames += ";";
