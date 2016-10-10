@@ -1769,7 +1769,6 @@ namespace Nop.Admin.Controllers
             
             //security settings
             var securitySettings = _settingService.LoadSetting<SecuritySettings>(storeScope);
-            var captchaSettings = _settingService.LoadSetting<CaptchaSettings>(storeScope);
             model.SecuritySettings.EncryptionKey = securitySettings.EncryptionKey;
             if (securitySettings.AdminAreaAllowedIpAddresses != null)
                 for (int i = 0; i < securitySettings.AdminAreaAllowedIpAddresses.Count; i++)
@@ -1782,20 +1781,10 @@ namespace Nop.Admin.Controllers
             model.SecuritySettings.EnableXsrfProtectionForAdminArea = securitySettings.EnableXsrfProtectionForAdminArea;
             model.SecuritySettings.EnableXsrfProtectionForPublicStore = securitySettings.EnableXsrfProtectionForPublicStore;
             model.SecuritySettings.HoneypotEnabled = securitySettings.HoneypotEnabled;
-            model.SecuritySettings.CaptchaEnabled = captchaSettings.Enabled;
-            model.SecuritySettings.CaptchaShowOnLoginPage = captchaSettings.ShowOnLoginPage;
-            model.SecuritySettings.CaptchaShowOnRegistrationPage = captchaSettings.ShowOnRegistrationPage;
-            model.SecuritySettings.CaptchaShowOnContactUsPage = captchaSettings.ShowOnContactUsPage;
-            model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage = captchaSettings.ShowOnEmailWishlistToFriendPage;
-            model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage = captchaSettings.ShowOnEmailProductToFriendPage;
-            model.SecuritySettings.CaptchaShowOnBlogCommentPage = captchaSettings.ShowOnBlogCommentPage;
-            model.SecuritySettings.CaptchaShowOnNewsCommentPage = captchaSettings.ShowOnNewsCommentPage;
-            model.SecuritySettings.CaptchaShowOnProductReviewPage = captchaSettings.ShowOnProductReviewPage;
-            model.SecuritySettings.CaptchaShowOnApplyVendorPage = captchaSettings.ShowOnApplyVendorPage;
-            model.SecuritySettings.ReCaptchaVersion = captchaSettings.ReCaptchaVersion;
-            model.SecuritySettings.AvailableReCaptchaVersions = ReCaptchaVersion.Version1.ToSelectList(false).ToList();
-            model.SecuritySettings.ReCaptchaPublicKey = captchaSettings.ReCaptchaPublicKey;
-            model.SecuritySettings.ReCaptchaPrivateKey = captchaSettings.ReCaptchaPrivateKey;
+
+            var captchaSettings = _settingService.LoadSetting<CaptchaSettings>(storeScope);
+            model.CaptchaSettings = captchaSettings.ToModel();
+            model.CaptchaSettings.AvailableReCaptchaVersions = ReCaptchaVersion.Version1.ToSelectList(false).ToList();
 
             //PDF settings
             var pdfSettings = _settingService.LoadSetting<PdfSettings>(storeScope);
@@ -1933,7 +1922,6 @@ namespace Nop.Admin.Controllers
 
             //security settings
             var securitySettings = _settingService.LoadSetting<SecuritySettings>(storeScope);
-            var captchaSettings = _settingService.LoadSetting<CaptchaSettings>(storeScope);
             if (securitySettings.AdminAreaAllowedIpAddresses == null)
                 securitySettings.AdminAreaAllowedIpAddresses = new List<string>();
             securitySettings.AdminAreaAllowedIpAddresses.Clear();
@@ -1946,19 +1934,10 @@ namespace Nop.Admin.Controllers
             securitySettings.EnableXsrfProtectionForPublicStore = model.SecuritySettings.EnableXsrfProtectionForPublicStore;
             securitySettings.HoneypotEnabled = model.SecuritySettings.HoneypotEnabled;
             _settingService.SaveSetting(securitySettings);
-            captchaSettings.Enabled = model.SecuritySettings.CaptchaEnabled;
-            captchaSettings.ShowOnLoginPage = model.SecuritySettings.CaptchaShowOnLoginPage;
-            captchaSettings.ShowOnRegistrationPage = model.SecuritySettings.CaptchaShowOnRegistrationPage;
-            captchaSettings.ShowOnContactUsPage = model.SecuritySettings.CaptchaShowOnContactUsPage;
-            captchaSettings.ShowOnEmailWishlistToFriendPage = model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage;
-            captchaSettings.ShowOnEmailProductToFriendPage = model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage;
-            captchaSettings.ShowOnBlogCommentPage = model.SecuritySettings.CaptchaShowOnBlogCommentPage;
-            captchaSettings.ShowOnNewsCommentPage = model.SecuritySettings.CaptchaShowOnNewsCommentPage;
-            captchaSettings.ShowOnProductReviewPage = model.SecuritySettings.CaptchaShowOnProductReviewPage;
-            captchaSettings.ShowOnApplyVendorPage = model.SecuritySettings.CaptchaShowOnApplyVendorPage;
-            captchaSettings.ReCaptchaVersion = model.SecuritySettings.ReCaptchaVersion;
-            captchaSettings.ReCaptchaPublicKey = model.SecuritySettings.ReCaptchaPublicKey;
-            captchaSettings.ReCaptchaPrivateKey = model.SecuritySettings.ReCaptchaPrivateKey;
+
+            //captcha settings
+            var captchaSettings = _settingService.LoadSetting<CaptchaSettings>(storeScope);
+            captchaSettings = model.CaptchaSettings.ToEntity(captchaSettings);
             _settingService.SaveSetting(captchaSettings);
             if (captchaSettings.Enabled &&
                 (String.IsNullOrWhiteSpace(captchaSettings.ReCaptchaPublicKey) || String.IsNullOrWhiteSpace(captchaSettings.ReCaptchaPrivateKey)))

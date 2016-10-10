@@ -52,6 +52,7 @@ using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
+using Nop.Web.Framework.Security.Captcha;
 
 namespace Nop.Admin.Infrastructure.Mapper
 {
@@ -643,6 +644,12 @@ namespace Nop.Admin.Infrastructure.Mapper
                 cfg.CreateMap<StoreModel, Store>();
 
                 //Settings
+                cfg.CreateMap<CaptchaSettings, GeneralCommonSettingsModel.CaptchaSettingsModel>()
+                    .ForMember(dest => dest.AvailableReCaptchaVersions, mo => mo.Ignore())
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                cfg.CreateMap<GeneralCommonSettingsModel.CaptchaSettingsModel, CaptchaSettings>()
+                    .ForMember(dest => dest.ReCaptchaTheme, mo => mo.Ignore())
+                    .ForMember(dest => dest.ReCaptchaLanguage, mo => mo.Ignore());
                 cfg.CreateMap<TaxSettings, TaxSettingsModel>()
                     .ForMember(dest => dest.DefaultTaxAddress, mo => mo.Ignore())
                     .ForMember(dest => dest.TaxDisplayTypeValues, mo => mo.Ignore())

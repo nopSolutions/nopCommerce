@@ -53,6 +53,7 @@ using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
+using Nop.Web.Framework.Security.Captcha;
 
 namespace Nop.Admin.Extensions
 {
@@ -1013,6 +1014,20 @@ namespace Nop.Admin.Extensions
         {
             return model.MapTo(destination);
         }
+
+
+
+        //general (captcha) settings
+        public static GeneralCommonSettingsModel.CaptchaSettingsModel ToModel(this CaptchaSettings entity)
+        {
+            return entity.MapTo<CaptchaSettings, GeneralCommonSettingsModel.CaptchaSettingsModel>();
+        }
+        public static CaptchaSettings ToEntity(this GeneralCommonSettingsModel.CaptchaSettingsModel model, CaptchaSettings destination)
+        {
+            return model.MapTo(destination);
+        }
+
+
 
         //product editor settings
         public static ProductEditorSettingsModel ToModel(this ProductEditorSettings entity)
