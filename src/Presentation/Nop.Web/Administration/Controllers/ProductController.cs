@@ -4565,7 +4565,7 @@ namespace Nop.Admin.Controllers
                 {
                     ProductId = product.Id,
                     AttributesXml = attributesXml,
-                    StockQuantity = 10000,
+                    StockQuantity = 0,
                     AllowOutOfStockOrders = false,
                     Sku = null,
                     ManufacturerPartNumber = null,
