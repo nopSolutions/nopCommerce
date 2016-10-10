@@ -24,7 +24,14 @@
                             @Html.NopLabelFor(model => model.OrderId)
                         </div>
                         <div class="col-md-9">
-                            @Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = Model.OrderId }, new { })
+                            @if (Model.OrderId > 0)
+                            {
+                                @Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new {id = Model.OrderId}, new {})
+                            }
+                            else
+                            {
+                                <text>Order item is deleted</text>
+                            }
                         </div>
                     </div>
                     <div class="form-group">
@@ -40,7 +47,14 @@
                             @Html.NopLabelFor(model => model.ProductName)
                         </div>
                         <div class="col-md-9">
-                            @Html.ActionLink(Model.ProductName, "Edit", "Product", new { id = Model.ProductId }, new { })
+                            @if (Model.ProductId > 0)
+                            {
+                                @Html.ActionLink(Model.ProductName, "Edit", "Product", new { id = Model.ProductId }, new { })
+                            }
+                            else
+                            {
+                                <text>Order item is deleted</text>
+                            }
                         </div>
                     </div>
                     <div class="form-group">
