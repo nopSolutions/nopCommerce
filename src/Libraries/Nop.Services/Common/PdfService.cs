@@ -447,18 +447,18 @@ namespace Nop.Services.Common
 
                 var orderItems = order.OrderItems;
 
-                var productsTable = new PdfPTable(_catalogSettings.ShowProductSku ? 5 : 4);
+                var productsTable = new PdfPTable(_catalogSettings.ShowSkuOnProductDetailsPage ? 5 : 4);
                 productsTable.RunDirection = GetDirection(lang);
                 productsTable.WidthPercentage = 100f;
                 if (lang.Rtl)
                 {
-                    productsTable.SetWidths(_catalogSettings.ShowProductSku
+                    productsTable.SetWidths(_catalogSettings.ShowSkuOnProductDetailsPage
                         ? new[] {15, 10, 15, 15, 45}
                         : new[] {20, 10, 20, 50});
                 }
                 else
                 {
-                    productsTable.SetWidths(_catalogSettings.ShowProductSku
+                    productsTable.SetWidths(_catalogSettings.ShowSkuOnProductDetailsPage
                         ? new[] {45, 15, 15, 10, 15}
                         : new[] {50, 20, 10, 20});
                 }
@@ -470,7 +470,7 @@ namespace Nop.Services.Common
                 productsTable.AddCell(cellProductItem);
 
                 //SKU
-                if (_catalogSettings.ShowProductSku)
+                if (_catalogSettings.ShowSkuOnProductDetailsPage)
                 {
                     cellProductItem = new PdfPCell(new Phrase(_localizationService.GetResource("PDFInvoice.SKU", lang.Id), font));
                     cellProductItem.BackgroundColor = BaseColor.LIGHT_GRAY;
@@ -528,7 +528,7 @@ namespace Nop.Services.Common
                     productsTable.AddCell(pAttribTable);
 
                     //SKU
-                    if (_catalogSettings.ShowProductSku)
+                    if (_catalogSettings.ShowSkuOnProductDetailsPage)
                     {
                         var sku = p.FormatSku(orderItem.AttributesXml, _productAttributeParser);
                         cellProductItem = new PdfPCell(new Phrase(sku ?? String.Empty, font));

@@ -29,9 +29,14 @@ namespace Nop.Core.Domain.Catalog
         public bool PublishBackProductWhenCancellingOrders { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to display product SKU
+        /// Gets or sets a value indicating whether to display product SKU on the product details page
         /// </summary>
-        public bool ShowProductSku { get; set; }
+        public bool ShowSkuOnProductDetailsPage { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to display product SKU on catalog pages
+        /// </summary>
+        public bool ShowSkuOnCatalogPages { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to display manufacturer part number of a product

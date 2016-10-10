@@ -427,12 +427,22 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.ShowProductSku_OverrideForStore, model => model.ShowProductSku, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.ShowProductSku)
+                                @Html.OverrideStoreCheckboxFor(model => model.ShowSkuOnProductDetailsPage_OverrideForStore, model => model.ShowSkuOnProductDetailsPage, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ShowSkuOnProductDetailsPage)
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.ShowProductSku)
-                                @Html.ValidationMessageFor(model => model.ShowProductSku)
+                                @Html.NopEditorFor(model => model.ShowSkuOnProductDetailsPage)
+                                @Html.ValidationMessageFor(model => model.ShowSkuOnProductDetailsPage)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ShowSkuOnCatalogPages_OverrideForStore, model => model.ShowSkuOnCatalogPages, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ShowSkuOnCatalogPages)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.ShowSkuOnCatalogPages)
+                                @Html.ValidationMessageFor(model => model.ShowSkuOnCatalogPages)
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
