@@ -264,7 +264,7 @@ namespace Nop.Services.ExportImport
                     foreach (var items in itemsToExport)
                     {
                         manager.CurrentObject = items;
-                        manager.WriteToXlsx(worksheet, row++, fWorksheet: fWorksheet);
+                        manager.WriteToXlsx(worksheet, row++, _catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities, fWorksheet: fWorksheet);
                     }
 
                     xlPackage.Save();
@@ -329,7 +329,7 @@ namespace Nop.Services.ExportImport
                     foreach (var item in itemsToExport)
                     {
                         manager.CurrentObject = item;
-                        manager.WriteToXlsx(worksheet, row++, fWorksheet: fpWorksheet);
+                        manager.WriteToXlsx(worksheet, row++, _catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities, fWorksheet: fpWorksheet);
 
                         var attributes = item.ProductAttributeMappings.SelectMany(pam => pam.ProductAttributeValues.Select(pav => new ExportProductAttribute
                         {
@@ -374,7 +374,7 @@ namespace Nop.Services.ExportImport
                         {
                             row++;
                             attributeManager.CurrentObject = exportProducAttribute;
-                            attributeManager.WriteToXlsx(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset, faWorksheet);
+                            attributeManager.WriteToXlsx(worksheet, row, _catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities, ExportProductAttribute.ProducAttributeCellOffset, faWorksheet);
                             worksheet.Row(row).OutlineLevel = 1;
                             worksheet.Row(row).Collapsed = true;
                         }

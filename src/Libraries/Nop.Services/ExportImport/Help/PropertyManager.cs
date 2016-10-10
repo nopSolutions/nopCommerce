@@ -73,9 +73,10 @@ namespace Nop.Services.ExportImport.Help
         /// </summary>
         /// <param name="worksheet">Data worksheet</param>
         /// <param name="row">Row index</param>
+        /// <param name="exportImportUseDropdownlistsForAssociatedEntities">Indicating whether need create dropdown list for export</param>
         /// <param name="cellOffset">Cell offset</param>
         /// <param name="fWorksheet">Filters worksheet</param>
-        public void WriteToXlsx(ExcelWorksheet worksheet, int row, int cellOffset = 0, ExcelWorksheet fWorksheet=null)
+        public void WriteToXlsx(ExcelWorksheet worksheet, int row, bool exportImportUseDropdownlistsForAssociatedEntities, int cellOffset = 0, ExcelWorksheet fWorksheet=null)
         {
             if (CurrentObject == null)
                 return;
@@ -92,9 +93,13 @@ namespace Nop.Services.ExportImport.Help
                         continue;
                     }
 
-                    var validator = cell.DataValidation.AddListDataValidation();
-
                     cell.Value = prop.GetItemText(prop.GetProperty(CurrentObject));
+
+                    if(!exportImportUseDropdownlistsForAssociatedEntities)
+                        continue;
+
+                    var validator = cell.DataValidation.AddListDataValidation();
+                    
                     validator.AllowBlank = prop.AllowBlank;
 
                     if(fWorksheet == null)

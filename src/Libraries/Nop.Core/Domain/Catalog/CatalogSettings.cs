@@ -343,9 +343,15 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a display order of ProductSortingEnum values 
         /// </summary>
         public Dictionary<int, int> ProductSortingEnumDisplayOrder { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether the products need to be exported/imported with their attributes
         /// </summary>
         public bool ExportImportProductAttributes { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether need create dropdown list for export
+        /// </summary>
+        public bool ExportImportUseDropdownlistsForAssociatedEntities { get; set; }
     }
 }

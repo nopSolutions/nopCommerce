@@ -856,7 +856,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.DefaultManufacturerPageSizeOptions, mo => mo.Ignore())
                     .ForMember(dest => dest.DefaultManufacturerPageSize, mo => mo.Ignore())
                     .ForMember(dest => dest.ProductSortingEnumDisabled, mo => mo.Ignore())
-                    .ForMember(dest => dest.ProductSortingEnumDisplayOrder, mo => mo.Ignore());
+                    .ForMember(dest => dest.ProductSortingEnumDisplayOrder, mo => mo.Ignore())
+                    .ForMember(dest => dest.ExportImportUseDropdownlistsForAssociatedEntities, mo => mo.Ignore());
                 cfg.CreateMap<RewardPointsSettings, RewardPointsSettingsModel>()
                     .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())
                     .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())

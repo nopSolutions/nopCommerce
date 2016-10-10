@@ -946,3 +946,11 @@ BEGIN
 	VALUES (N'catalogsettings.productreviewpossibleonlyafterpurchasing', N'False', 0)
 END
 GO
+
+ --new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.exportimportusedropdownlistsforassociatedentities')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'catalogsettings.exportimportusedropdownlistsforassociatedentities', N'True', 0)
+ END
+ GO
