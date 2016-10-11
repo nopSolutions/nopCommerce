@@ -53,6 +53,7 @@ namespace Nop.Services.ExportImport
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IMeasureService _measureService;
         private readonly CatalogSettings _catalogSettings;
+        private readonly IProductTagService _productTagService;
 
         #endregion
 
@@ -76,7 +77,8 @@ namespace Nop.Services.ExportImport
             ITaxCategoryService taxCategoryService,
             IMeasureService measureService,
             IProductAttributeService productAttributeService,
-            CatalogSettings catalogSettings)
+            CatalogSettings catalogSettings,
+            IProductTagService productTagService)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -97,6 +99,7 @@ namespace Nop.Services.ExportImport
             this._measureService = measureService;
             this._productAttributeService = productAttributeService;
             this._catalogSettings = catalogSettings;
+            this._productTagService = productTagService;
         }
 
         #endregion
@@ -949,7 +952,16 @@ namespace Nop.Services.ExportImport
                             _manufacturerService.InsertProductManufacturer(productManufacturer);
                         }
                     }
-                    
+
+                    tempProperty = manager.GetProperty("ProductTags");
+                    if (tempProperty != null)
+                    {
+                        var productTags = tempProperty.StringValue.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
+
+                        //product tag mappings
+                        _productTagService.UpdateProductTags(product, productTags);
+                    }
+
                     var picture1 = manager.GetProperty("Picture1").Return(p => p.StringValue, String.Empty);
                     var picture2 = manager.GetProperty("Picture2").Return(p => p.StringValue, String.Empty);
                     var picture3 = manager.GetProperty("Picture3").Return(p => p.StringValue, String.Empty);

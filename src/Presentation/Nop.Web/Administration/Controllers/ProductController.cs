@@ -548,62 +548,7 @@ namespace Nop.Admin.Controllers
             }
             return result.ToArray();
         }
-
-        [NonAction]
-        protected virtual void SaveProductTags(Product product, string[] productTags)
-        {
-            if (product == null)
-                throw new ArgumentNullException("product");
-
-            //product tags
-            var existingProductTags = product.ProductTags.ToList();
-            var productTagsToRemove = new List<ProductTag>();
-            foreach (var existingProductTag in existingProductTags)
-            {
-                bool found = false;
-                foreach (string newProductTag in productTags)
-                {
-                    if (existingProductTag.Name.Equals(newProductTag, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found)
-                {
-                    productTagsToRemove.Add(existingProductTag);
-                }
-            }
-            foreach (var productTag in productTagsToRemove)
-            {
-                product.ProductTags.Remove(productTag);
-                _productService.UpdateProduct(product);
-            }
-            foreach (string productTagName in productTags)
-            {
-                ProductTag productTag;
-                var productTag2 = _productTagService.GetProductTagByName(productTagName);
-                if (productTag2 == null)
-                {
-                    //add new product tag
-                    productTag = new ProductTag
-                    {
-                        Name = productTagName
-                    };
-                    _productTagService.InsertProductTag(productTag);
-                }
-                else
-                {
-                    productTag = productTag2;
-                }
-                if (!product.ProductTagExists(productTag.Id))
-                {
-                    product.ProductTags.Add(productTag);
-                    _productService.UpdateProduct(product);
-                }
-            }
-        }
-
+        
         [NonAction]
         protected virtual void PrepareProductModel(ProductModel model, Product product,
             bool setPredefinedValues, bool excludeProperties)
@@ -1149,7 +1094,7 @@ namespace Nop.Admin.Controllers
                 //discounts
                 SaveDiscountMappings(product, model);
                 //tags
-                SaveProductTags(product, ParseProductTags(model.ProductTags));
+                _productTagService.UpdateProductTags(product, ParseProductTags(model.ProductTags));
                 //warehouses
                 SaveProductWarehouseInventory(product, model);
 
@@ -1272,7 +1217,7 @@ namespace Nop.Admin.Controllers
                 //locales
                 UpdateLocales(product, model);
                 //tags
-                SaveProductTags(product, ParseProductTags(model.ProductTags));
+                _productTagService.UpdateProductTags(product, ParseProductTags(model.ProductTags));
                 //warehouses
                 SaveProductWarehouseInventory(product, model);
                 //categories

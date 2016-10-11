@@ -198,6 +198,23 @@ namespace Nop.Services.ExportImport
         }
 
         /// <summary>
+        /// Returns the list of product tag for a product separated by a ";"
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>List of product tag</returns>
+        protected virtual string GetProductTags(Product product)
+        {
+            string productTagNames = null;
+
+            foreach (var productTag in product.ProductTags)
+            {
+                productTagNames += productTag.Name;
+                productTagNames += ";";
+            }
+            return productTagNames;
+        }
+
+        /// <summary>
         /// Returns the three first image associated with the product
         /// </summary>
         /// <param name="product">Product</param>
@@ -817,6 +834,20 @@ namespace Nop.Services.ExportImport
                     xmlWriter.WriteEndElement();
                 }
 
+                if (!IgnoreExportPoductProperty(p => p.ProductTags))
+                {
+                    xmlWriter.WriteStartElement("ProductTags");
+                    var productTags = product.ProductTags;
+                    foreach (var productTag in productTags)
+                    {
+                        xmlWriter.WriteStartElement("ProductTag");
+                        xmlWriter.WriteString("Id", productTag.Id);
+                        xmlWriter.WriteString("Name", productTag.Name);
+                        xmlWriter.WriteEndElement();
+                    }
+                    xmlWriter.WriteEndElement();
+                }
+
                 xmlWriter.WriteEndElement();
             }
 
@@ -975,6 +1006,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("Height", p => p.Height, IgnoreExportPoductProperty(p => p.Dimensions)),
                 new PropertyByName<Product>("Categories", GetCategories),
                 new PropertyByName<Product>("Manufacturers", GetManufacturers, IgnoreExportPoductProperty(p => p.Manufacturers)),
+                new PropertyByName<Product>("ProductTags", GetProductTags, IgnoreExportPoductProperty(p => p.ProductTags)),
                 new PropertyByName<Product>("Picture1", p => GetPictures(p)[0]),
                 new PropertyByName<Product>("Picture2", p => GetPictures(p)[1]),
                 new PropertyByName<Product>("Picture3", p => GetPictures(p)[2])
