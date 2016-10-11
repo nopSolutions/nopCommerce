@@ -250,7 +250,7 @@ namespace Nop.Admin.Models.Customers
             public int Points { get; set; }
 
             [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.PointsBalance")]
-            public int PointsBalance { get; set; }
+            public string PointsBalance { get; set; }
 
             [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Message")]
             [AllowHtml]

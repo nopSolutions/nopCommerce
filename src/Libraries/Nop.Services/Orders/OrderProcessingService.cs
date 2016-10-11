@@ -774,8 +774,10 @@ namespace Nop.Services.Orders
                 return;
 
             //add reward points
+            var activatingDate = _rewardPointsSettings.ActivationDelay > 0
+                ? (DateTime?)(DateTime.UtcNow.AddHours(((RewardPointsActivatingDelayPeriod)_rewardPointsSettings.ActivationDelayPeriodId).ToHours(_rewardPointsSettings.ActivationDelay))) : null;
             _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, points, order.StoreId,
-                string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.Id));
+                string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.Id), activatingDate: activatingDate);
             order.RewardPointsWereAdded = true;
             _orderService.UpdateOrder(order);
         }

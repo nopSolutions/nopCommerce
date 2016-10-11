@@ -6885,6 +6885,18 @@
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Awarded.Pending">
     <Value>Order status could not be set to Pending</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ActivatePointsImmediately">
+    <Value>Activate points immediately</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ActivatePointsImmediately.Hint">
+    <Value>Activates bonus points immediately after their calculation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ActivationDelay">
+    <Value>Reward points activation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ActivationDelay.Hint">
+    <Value>Specify how many days (hours) must elapse before earned points become active. Points earned by purchase cannot be redeemed until activated. For example, you may set the days before the points become available to 7. In this case, the points earned will be available for spending 7 days after the order gets chosen awarded status.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Canceled">
     <Value>Canceled order status</Value>
   </LocaleResource>
@@ -9134,6 +9146,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints">
     <Value>Reward points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.ActivatedLater">
+    <Value>The points will be activated on {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.AddButton">
     <Value>Add (reduce) reward points</Value>
@@ -12924,6 +12939,12 @@
   <LocaleResource Name="Enums.Nop.Core.Domain.Customers.PasswordFormat.Hashed">
     <Value>Hashed</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.RewardPointsActivatingDelayPeriod.Days">
+    <Value>Days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.RewardPointsActivatingDelayPeriod.Hours">
+    <Value>Hours</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Discounts.DiscountLimitationType.NTimesOnly">
     <Value>N times only</Value>
   </LocaleResource>
@@ -14978,6 +14999,9 @@
   </LocaleResource>
   <LocaleResource Name="Reviews.Write">
     <Value>Write your own review</Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.ActivatedLater">
+    <Value>The points will be activated on {0}</Value>
   </LocaleResource>
   <LocaleResource Name="RewardPoints.CurrentBalance">
     <Value>Your current balance is {0} reward points ({1}).</Value>

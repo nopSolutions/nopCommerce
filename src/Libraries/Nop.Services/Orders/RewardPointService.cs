@@ -44,6 +44,39 @@ namespace Nop.Services.Orders
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Update reward points balance if necessary
+        /// </summary>
+        /// <param name="query">Input query</param>
+        protected void UpdateRewardPointsBalance(IQueryable<RewardPointsHistory> query)
+        {
+            //order history by date
+            query = query.OrderBy(rph => rph.CreatedOnUtc).ThenBy(rph => rph.Id);
+
+            //get has not yet activated points, but it's time to do it
+            var notActivatedRph = query.Where(rph => !rph.PointsBalance.HasValue && rph.CreatedOnUtc < DateTime.UtcNow).ToList();
+
+            //nothing to update
+            if (!notActivatedRph.Any())
+                return;
+
+            //get current points balance, LINQ to entities does not support Last method, thus order by desc and use First one
+            var lastActive = query.OrderByDescending(rph => rph.CreatedOnUtc).ThenByDescending(rph => rph.Id).FirstOrDefault(rph => rph.PointsBalance.HasValue);
+            var currentPointsBalance = lastActive != null ? lastActive.PointsBalance : 0;
+
+            //update appropriate records
+            foreach (var rph in notActivatedRph)
+            {
+                rph.PointsBalance = currentPointsBalance + rph.Points;
+                UpdateRewardPointsHistoryEntry(rph);
+                currentPointsBalance = rph.PointsBalance;
+            }
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -51,11 +84,12 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records (filter by current store if possible)</param>
+        /// <param name="showNotActivated">A value indicating whether to show reward points that did not yet activated</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Reward point history records</returns>
         public virtual IPagedList<RewardPointsHistory> GetRewardPointsHistory(int customerId = 0, bool showHidden = false,
-            int pageIndex = 0, int pageSize = int.MaxValue)
+            bool showNotActivated = true, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _rphRepository.Table;
             if (customerId > 0)
@@ -66,6 +100,15 @@ namespace Nop.Services.Orders
                 var currentStoreId = _storeContext.CurrentStore.Id;
                 query = query.Where(rph => rph.StoreId == currentStoreId);
             }
+            if (!showNotActivated)
+            {
+                //show only the points that already activated
+                query = query.Where(rph => rph.CreatedOnUtc < DateTime.UtcNow);
+            }
+
+            //update points balance
+            UpdateRewardPointsBalance(query);
+
             query = query.OrderByDescending(rph => rph.CreatedOnUtc).ThenByDescending(rph => rph.Id);
 
             var records = new PagedList<RewardPointsHistory>(query, pageIndex, pageSize);
@@ -81,9 +124,10 @@ namespace Nop.Services.Orders
         /// <param name="message">Message</param>
         /// <param name="usedWithOrder">The order for which points were redeemed (spent) as a payment</param>
         /// <param name="usedAmount">Used amount</param>
+        /// <param name="activatingDate">Date and time of activating reward points; pass null to immediately activating</param>
         public virtual void AddRewardPointsHistoryEntry(Customer customer,
             int points, int storeId, string message = "",
-            Order usedWithOrder = null, decimal usedAmount = 0M)
+            Order usedWithOrder = null, decimal usedAmount = 0M, DateTime? activatingDate = null)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -97,10 +141,10 @@ namespace Nop.Services.Orders
                 StoreId = storeId,
                 UsedWithOrder = usedWithOrder,
                 Points = points,
-                PointsBalance = GetRewardPointsBalance(customer.Id, storeId) + points,
+                PointsBalance = activatingDate.HasValue ? null : (int?)(GetRewardPointsBalance(customer.Id, storeId) + points),
                 UsedAmount = usedAmount,
                 Message = message,
-                CreatedOnUtc = DateTime.UtcNow
+                CreatedOnUtc = activatingDate ?? DateTime.UtcNow
             };
 
             _rphRepository.Insert(rph);
@@ -122,10 +166,17 @@ namespace Nop.Services.Orders
                 query = query.Where(rph => rph.CustomerId == customerId);
             if (!_rewardPointsSettings.PointsAccumulatedForAllStores)
                 query = query.Where(rph => rph.StoreId == storeId);
+
+            //show only the points that already activated
+            query = query.Where(rph => rph.CreatedOnUtc < DateTime.UtcNow);
+
+            //first update points balance
+            UpdateRewardPointsBalance(query);
+
             query = query.OrderByDescending(rph => rph.CreatedOnUtc).ThenByDescending(rph => rph.Id);
 
             var lastRph = query.FirstOrDefault();
-            return lastRph != null ? lastRph.PointsBalance : 0;
+            return lastRph != null && lastRph.PointsBalance.HasValue ? lastRph.PointsBalance.Value : 0;
         }
 
         /// <summary>

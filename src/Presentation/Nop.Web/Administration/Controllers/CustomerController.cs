@@ -1602,19 +1602,22 @@ namespace Nop.Admin.Controllers
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id");
 
-            var rewardPoints = _rewardPointService.GetRewardPointsHistory(customer.Id, true, command.Page - 1, command.PageSize);
+            var rewardPoints = _rewardPointService.GetRewardPointsHistory(customer.Id, true, true, command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = rewardPoints.Select(rph =>
                 {
                     var store = _storeService.GetStoreById(rph.StoreId);
+                    var activatingDate = _dateTimeHelper.ConvertToUserTime(rph.CreatedOnUtc, DateTimeKind.Utc);
+
                     return new CustomerModel.RewardPointsHistoryModel
                     {
                         StoreName = store != null ? store.Name : "Unknown",
                         Points = rph.Points,
-                        PointsBalance = rph.PointsBalance,
+                        PointsBalance = rph.PointsBalance.HasValue ? rph.PointsBalance.ToString()
+                            : string.Format(_localizationService.GetResource("Admin.Customers.Customers.RewardPoints.ActivatedLater"), activatingDate),
                         Message = rph.Message,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(rph.CreatedOnUtc, DateTimeKind.Utc)
+                        CreatedOn = activatingDate
                     };
                 }),
                 Total = rewardPoints.TotalCount

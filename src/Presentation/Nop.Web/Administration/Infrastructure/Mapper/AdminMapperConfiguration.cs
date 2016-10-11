@@ -872,6 +872,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.PointsForRegistration_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.PointsForPurchases_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.PointsForPurchases_Awarded_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.ActivationDelay_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.ActivatePointsImmediately, mo => mo.Ignore())
                     .ForMember(dest => dest.PointsForPurchases_Canceled_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.DisplayHowMuchWillBeEarned_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.PageSize_OverrideForStore, mo => mo.Ignore())
