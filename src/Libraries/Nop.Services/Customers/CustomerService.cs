@@ -349,6 +349,9 @@ namespace Nop.Services.Customers
             }
 
             UpdateCustomer(customer);
+
+            //event notification
+            _eventPublisher.EntityDeleted(customer);
         }
 
         /// <summary>

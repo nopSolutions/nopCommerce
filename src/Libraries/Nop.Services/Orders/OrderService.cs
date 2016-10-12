@@ -128,6 +128,9 @@ namespace Nop.Services.Orders
 
             order.Deleted = true;
             UpdateOrder(order);
+
+            //event notification
+            _eventPublisher.EntityDeleted(order);
         }
 
         /// <summary>
@@ -396,6 +399,9 @@ namespace Nop.Services.Orders
 
             recurringPayment.Deleted = true;
             UpdateRecurringPayment(recurringPayment);
+
+            //event notification
+            _eventPublisher.EntityDeleted(recurringPayment);
         }
 
         /// <summary>
