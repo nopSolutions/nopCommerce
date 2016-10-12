@@ -1022,11 +1022,7 @@ namespace Nop.Admin.Controllers
             gridModel.Data = products.Select(x =>
             {
                 var productModel = x.ToModel();
-                //little hack here:
-                //ensure that product full descriptions are not returned
-                //otherwise, we can get the following error if products have too long descriptions:
-                //"Error during serialization or deserialization using the JSON JavaScriptSerializer. The length of the string exceeds the value set on the maxJsonLength property. "
-                //also it improves performance
+                //little performance optimization: ensure that "FullDescription" is not returned
                 productModel.FullDescription = "";
 
                 //picture

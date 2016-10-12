@@ -161,11 +161,7 @@ namespace Nop.Admin.Controllers
                 Data = news.Select(x =>
                 {
                     var m = x.ToModel();
-                    //little hack here:
-                    //ensure that descriptions are not returned
-                    //otherwise, we can get the following error if entities have too long descriptions:
-                    //"Error during serialization or deserialization using the JSON JavaScriptSerializer. The length of the string exceeds the value set on the maxJsonLength property. "
-                    //also it improves performance
+                    //little performance optimization: ensure that "Full" is not returned
                     m.Full = "";
                     if (x.StartDateUtc.HasValue)
                         m.StartDate = _dateTimeHelper.ConvertToUserTime(x.StartDateUtc.Value, DateTimeKind.Utc);
