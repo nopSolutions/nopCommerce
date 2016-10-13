@@ -23,7 +23,7 @@ Complete feature list: [http://www.nopcommerce.com/featurelist.aspx](http://www.
 
 Technology & System Requirements: [http://www.nopcommerce.com/technologysystemrequirements.aspx](http://www.nopcommerce.com/technologysystemrequirements.aspx)
 
-Documentation: [http://www.nopcommerce.com/documentation.asp](http://www.nopcommerce.com/documentation.aspx)
+Documentation: [http://docs.nopcommerce.com/display/nc/nopCommerce+Documentation](http://docs.nopcommerce.com/display/nc/nopCommerce+Documentation)
 
 Forums: [http://www.nopcommerce.com/boards/](http://www.nopcommerce.com/boards/)
 
