@@ -1167,7 +1167,7 @@ namespace Nop.Web.Controllers
                                     DateTime.UtcNow);
 
             if (!_catalogSettings.NewProductsEnabled)
-                return new RssActionResult { Feed = feed };
+                return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
 
             var items = new List<SyndicationItem>();
 
@@ -1194,7 +1194,7 @@ namespace Nop.Web.Controllers
 
             }
             feed.Items = items;
-            return new RssActionResult { Feed = feed };
+            return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
 
         #endregion
