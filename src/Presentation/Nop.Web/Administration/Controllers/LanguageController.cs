@@ -273,7 +273,7 @@ namespace Nop.Admin.Controllers
                 if (allLanguages.Count == 1 && allLanguages[0].Id == language.Id &&
                     !model.Published)
                 {
-                    ErrorNotification("At least one published language is required.");
+                    ErrorNotification(_localizationService.GetResource("Admin.Configuration.Languages.PublishedLanguageRequired"));
                     return RedirectToAction("Edit", new { id = language.Id });
                 }
 
@@ -326,7 +326,7 @@ namespace Nop.Admin.Controllers
             var allLanguages = _languageService.GetAllLanguages();
             if (allLanguages.Count == 1 && allLanguages[0].Id == language.Id)
             {
-                ErrorNotification("At least one published language is required.");
+                ErrorNotification(_localizationService.GetResource("Admin.Configuration.Languages.PublishedLanguageRequired"));
                 return RedirectToAction("Edit", new { id = language.Id });
             }
             

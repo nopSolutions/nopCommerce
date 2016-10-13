@@ -339,7 +339,7 @@ namespace Nop.Admin.Controllers
                 if (allCurrencies.Count == 1 && allCurrencies[0].Id == currency.Id &&
                     !model.Published)
                 {
-                    ErrorNotification("At least one published currency is required.");
+                    ErrorNotification(_localizationService.GetResource("Admin.Configuration.Currencies.PublishedCurrencyRequired"));
                     return RedirectToAction("Edit", new { id = currency.Id });
                 }
 
@@ -397,7 +397,7 @@ namespace Nop.Admin.Controllers
                 var allCurrencies = _currencyService.GetAllCurrencies();
                 if (allCurrencies.Count == 1 && allCurrencies[0].Id == currency.Id)
                 {
-                    ErrorNotification("At least one published currency is required.");
+                    ErrorNotification(_localizationService.GetResource("Admin.Configuration.Currencies.PublishedCurrencyRequired"));
                     return RedirectToAction("Edit", new { id = currency.Id });
                 }
 

@@ -1396,7 +1396,7 @@ namespace Nop.Admin.Controllers
 
                 var newProduct = _copyProductService.CopyProduct(originalProduct,
                     copyModel.Name, copyModel.Published, copyModel.CopyImages);
-                SuccessNotification("The product has been copied successfully");
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Copied"));
                 return RedirectToAction("Edit", new { id = newProduct.Id });
             }
             catch (Exception exc)

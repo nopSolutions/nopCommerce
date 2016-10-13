@@ -2238,7 +2238,7 @@ namespace Nop.Admin.Controllers
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
 
-                ErrorNotification("This order item has an associated gift card record. Please delete it first.", false);
+                ErrorNotification(_localizationService.GetResource("Admin.Orders.OrderItem.DeleteAssociatedGiftCardRecordError"), false);
 
                 //selected tab
                 SaveSelectedTabName(persistForTheNextRequest: false);
