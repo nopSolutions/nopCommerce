@@ -1,0 +1,9 @@
+﻿'Copy local' property of the referenced assemblies are set to 'false'.
+We know that they're referenced by the main web applications. So there's no need to deploy them.
+It can dramatically reduce package size.
+
+
+Set project output path to ..\..\Presentation\Nop.Web\Plugins\{PluginName}\ (both 'Release' and 'Debug' configurations)
+
+
+All views (cshtml files) and web.config file should have "Build action" set to "Content" and "Copy to output directory" set to "Copy if newer"

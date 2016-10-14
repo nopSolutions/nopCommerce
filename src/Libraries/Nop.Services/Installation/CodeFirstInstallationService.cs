@@ -4366,7 +4366,7 @@ namespace Nop.Services.Installation
                 ShippingStatus = ShippingStatus.NotYetShipped,
                 ShippingMethod = "Ground",
                 PickUpInStore = false,
-                ShippingRateComputationMethodSystemName = "Shipping.FixedRate",
+                ShippingRateComputationMethodSystemName = "Shipping.FixedOrByWeight",
                 CustomValuesXml = string.Empty,
                 VatNumber = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow
@@ -4530,7 +4530,7 @@ namespace Nop.Services.Installation
                 ShippingStatus = ShippingStatus.NotYetShipped,
                 ShippingMethod = "Next Day Air",
                 PickUpInStore = false,
-                ShippingRateComputationMethodSystemName = "Shipping.FixedRate",
+                ShippingRateComputationMethodSystemName = "Shipping.FixedOrByWeight",
                 CustomValuesXml = string.Empty,
                 VatNumber = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow
@@ -4997,7 +4997,7 @@ namespace Nop.Services.Installation
                 ShippingStatus = ShippingStatus.Delivered,
                 ShippingMethod = "Ground",
                 PickUpInStore = false,
-                ShippingRateComputationMethodSystemName = "Shipping.FixedRate",
+                ShippingRateComputationMethodSystemName = "Shipping.FixedOrByWeight",
                 CustomValuesXml = string.Empty,
                 VatNumber = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow
@@ -6055,7 +6055,7 @@ namespace Nop.Services.Installation
 
             settingService.SaveSetting(new ShippingSettings
             {
-                ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedRate" },
+                ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedOrByWeight" },
                 ActivePickupPointProviderSystemNames = new List<string> { "Pickup.PickupInStore" },
                 ShipToSameAddress = true,
                 AllowPickUpInStore = true,
