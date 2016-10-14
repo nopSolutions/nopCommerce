@@ -331,9 +331,8 @@ namespace Nop.Core.Plugins
         /// <returns>Assembly</returns>
         private static Assembly PerformFileDeploy(FileInfo plug)
         {
-            if (plug.Directory.Parent == null)
-                throw new InvalidOperationException("The plugin directory for the " + plug.Name +
-                                                    " file exists in a folder outside of the allowed nopCommerce folder hierarchy");
+            if (plug.Directory == null || plug.Directory.Parent == null)
+                throw new InvalidOperationException("The plugin directory for the " + plug.Name + " file exists in a folder outside of the allowed nopCommerce folder hierarchy");
 
             FileInfo shadowCopiedPlug;
 
