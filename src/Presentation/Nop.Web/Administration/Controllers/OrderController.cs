@@ -1819,9 +1819,12 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            //a vendor does not have access to this functionality
+            //a vendor should have access only to his products
+            var vendorId = 0;
             if (_workContext.CurrentVendor != null)
-                return RedirectToAction("Edit", "Order", new { id = orderId });
+            {
+                vendorId = _workContext.CurrentVendor.Id;
+            }
 
             var order = _orderService.GetOrderById(orderId);
             var orders = new List<Order>();
@@ -1829,7 +1832,7 @@ namespace Nop.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
+                _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id, vendorId);
                 bytes = stream.ToArray();
             }
             return File(bytes, MimeTypes.ApplicationPdf, string.Format("order_{0}.pdf", order.Id));
@@ -1882,7 +1885,7 @@ namespace Nop.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
+                _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id, model.VendorId);
                 bytes = stream.ToArray();
             }
             return File(bytes, MimeTypes.ApplicationPdf, "orders.pdf");
@@ -1905,11 +1908,13 @@ namespace Nop.Admin.Controllers
             }
 
             //a vendor should have access only to his products
+            var vendorId = 0;
             if (_workContext.CurrentVendor != null)
             {
                 orders = orders.Where(HasAccessToOrder).ToList();
+                vendorId = _workContext.CurrentVendor.Id;
             }
-
+            
             //ensure that we at least one order selected
             if (!orders.Any())
             {
@@ -1920,7 +1925,7 @@ namespace Nop.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
+                _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id, vendorId);
                 bytes = stream.ToArray();
             }
             return File(bytes, MimeTypes.ApplicationPdf, "orders.pdf");
