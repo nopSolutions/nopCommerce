@@ -356,6 +356,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowSkuOnProductDetailsPage.Hint">
     <Value>Check to show product SKU on the product details page in public store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.CancelCC">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.CancelOrderTotals">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

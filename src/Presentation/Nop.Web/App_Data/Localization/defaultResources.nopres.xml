@@ -9639,12 +9639,6 @@
   <LocaleResource Name="Admin.Orders.Fields.BillingAddress.Hint">
     <Value>Billing address info.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Fields.CancelCC">
-    <Value>Cancel editing</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Fields.CancelOrderTotals">
-    <Value>Cancel order totals</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.Capture">
     <Value>Capture</Value>
   </LocaleResource>
