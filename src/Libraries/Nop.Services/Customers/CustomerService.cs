@@ -798,7 +798,7 @@ namespace Nop.Services.Customers
             {
                 var query = from cr in _customerRoleRepository.Table
                             orderby cr.Name
-                            where (showHidden || cr.Active)
+                            where showHidden || cr.Active
                             select cr;
                 var customerRoles = query.ToList();
                 return customerRoles;
