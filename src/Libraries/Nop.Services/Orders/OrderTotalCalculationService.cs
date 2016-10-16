@@ -1136,11 +1136,11 @@ namespace Nop.Services.Orders
         /// Gets shopping cart total
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <param name="ignoreRewardPonts">A value indicating whether we should ignore reward points (if enabled and a customer is going to use them)</param>
+        /// <param name="ignoreRewardPoints">A value indicating whether we should ignore reward points (if enabled and a customer is going to use them)</param>
         /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating order total</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
         public virtual decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
-            bool ignoreRewardPonts = false, bool usePaymentMethodAdditionalFee = true)
+            bool ignoreRewardPoints = false, bool usePaymentMethodAdditionalFee = true)
         {
             decimal discountAmount;
             List<Discount> appliedDiscounts;
@@ -1153,7 +1153,7 @@ namespace Nop.Services.Orders
                 out appliedGiftCards,
                 out redeemedRewardPoints, 
                 out redeemedRewardPointsAmount, 
-                ignoreRewardPonts,
+                ignoreRewardPoints,
                 usePaymentMethodAdditionalFee);
         }
 
@@ -1166,14 +1166,14 @@ namespace Nop.Services.Orders
         /// <param name="appliedDiscounts">Applied discounts</param>
         /// <param name="redeemedRewardPoints">Reward points to redeem</param>
         /// <param name="redeemedRewardPointsAmount">Reward points amount in primary store currency to redeem</param>
-        /// <param name="ignoreRewardPonts">A value indicating whether we should ignore reward points (if enabled and a customer is going to use them)</param>
+        /// <param name="ignoreRewardPoints">A value indicating whether we should ignore reward points (if enabled and a customer is going to use them)</param>
         /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating order total</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
         public virtual decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
             out decimal discountAmount, out List<Discount> appliedDiscounts,
             out List<AppliedGiftCard> appliedGiftCards,
             out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount,
-            bool ignoreRewardPonts = false, bool usePaymentMethodAdditionalFee = true)
+            bool ignoreRewardPoints = false, bool usePaymentMethodAdditionalFee = true)
         {
             redeemedRewardPoints = 0;
             redeemedRewardPointsAmount = decimal.Zero;
@@ -1302,9 +1302,8 @@ namespace Nop.Services.Orders
             #region Reward points
 
             if (_rewardPointsSettings.Enabled &&
-                !ignoreRewardPonts &&
-                customer.GetAttribute<bool>(SystemCustomerAttributeNames.UseRewardPointsDuringCheckout,
-                    _genericAttributeService, _storeContext.CurrentStore.Id))
+                !ignoreRewardPoints &&
+                customer.GetAttribute<bool>(SystemCustomerAttributeNames.UseRewardPointsDuringCheckout, _genericAttributeService, _storeContext.CurrentStore.Id))
             {
                 int rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(customer.Id, _storeContext.CurrentStore.Id);
                 if (CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
