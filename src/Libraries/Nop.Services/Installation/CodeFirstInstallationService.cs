@@ -5768,7 +5768,7 @@ namespace Nop.Services.Installation
                 AllowViewUnpublishedProductPage = true,
                 DisplayDiscontinuedMessageForUnpublishedProducts = true,
                 PublishBackProductWhenCancellingOrders = false,
-                ShowSkuOnProductDetailsPage = false,
+                ShowSkuOnProductDetailsPage = true,
                 ShowSkuOnCatalogPages = false,
                 ShowManufacturerPartNumber = false,
                 ShowGtin = false,
