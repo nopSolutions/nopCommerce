@@ -20,6 +20,15 @@ namespace Nop.Admin.Validators.Customers
             CustomerSettings customerSettings,
             IDbContext dbContext)
         {
+            //ensure that valid email address is entered if Registered role is checked to avoid registered customers with empty email address
+            RuleFor(x => x.Email)
+                .NotEmpty()
+                .EmailAddress()
+                //.WithMessage("Valid Email is required for customer to be in 'Registered' role")
+                .WithMessage(localizationService.GetResource("Admin.Common.WrongEmail"))
+                //only for registered users
+                .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
+
             //form fields
             if (customerSettings.CountryEnabled && customerSettings.CountryRequired)
             {

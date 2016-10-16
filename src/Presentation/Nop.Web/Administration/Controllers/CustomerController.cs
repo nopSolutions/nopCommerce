@@ -877,13 +877,6 @@ namespace Nop.Admin.Controllers
                 ErrorNotification(customerRolesError, false);
             }
 
-            // Ensure that valid email address is entered if Registered role is checked to avoid registered customers with empty email address
-            if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == SystemCustomerRoleNames.Registered) != null && !CommonHelper.IsValidEmail(model.Email))
-            {
-                ModelState.AddModelError("", "Valid Email is required for customer to be in 'Registered' role");
-                ErrorNotification("Valid Email is required for customer to be in 'Registered' role", false);
-            }
-
             if (ModelState.IsValid)
             {
                 var customer = new Customer
@@ -1074,14 +1067,7 @@ namespace Nop.Admin.Controllers
                 ModelState.AddModelError("", customerRolesError);
                 ErrorNotification(customerRolesError, false);
             }
-
-            // Ensure that valid email address is entered if Registered role is checked to avoid registered customers with empty email address
-            if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == SystemCustomerRoleNames.Registered) != null && !CommonHelper.IsValidEmail(model.Email))
-            {
-                ModelState.AddModelError("", "Valid Email is required for customer to be in 'Registered' role");
-                ErrorNotification("Valid Email is required for customer to be in 'Registered' role", false);
-            }
-
+            
             if (ModelState.IsValid)
             {
                 try
