@@ -1,0 +1,22 @@
+﻿@using DataShop.DemoPlugin.Domain
+
+@model List<DemoItem>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div>
+    <h3>Admin DemoItems View - Index</h3>
+</div>
+
+<div>
+    <ul>
+
+        @foreach (var item in Model)
+        {
+            <li>@item.ProductName</li>
+        }
+
+    </ul>
+</div>

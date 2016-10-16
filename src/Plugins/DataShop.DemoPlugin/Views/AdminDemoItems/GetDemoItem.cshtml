@@ -1,0 +1,29 @@
+﻿@using DataShop.DemoPlugin.Domain
+
+@model DemoItem
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div>
+    <h3>Admin DemoItem View - GetDemoItem</h3>
+</div>
+
+<div>
+    <p>
+        @Model.ProductId.ToString()
+    </p>
+    <p>
+        @Model.ProductName
+    </p>
+    <p>
+        @Model.CustomerId.ToString()
+    </p>
+    <p>
+        @Model.IpAddress.ToString()
+    </p>
+    <p>
+        @Model.IsRegistered.ToString()
+    </p>
+</div>

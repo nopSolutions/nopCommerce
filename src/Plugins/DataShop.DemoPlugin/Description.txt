@@ -1,0 +1,9 @@
+﻿Group: DataShop Demo
+FriendlyName: DataShop Demo Plugin
+SystemName: DataShop.DemoPlugin
+Version: 1.0
+SupportedVersions: 3.90
+Author: Extended Code
+DisplayOrder: 1
+FileName: DataShop.DemoPlugin.dll
+Description: This is a Demo Plugin
