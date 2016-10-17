@@ -8,8 +8,8 @@ using Nop.Web.Framework.Themes;
 
 namespace DataShop.DemoPlugin.Infrastructure
 {
-    //public class MyViewEngine : RazorViewEngine
-    public class MyViewEngine : ThemeableRazorViewEngine
+    //public class MyViewEngine : ThemeableRazorViewEngine
+    public class MyViewEngine : RazorViewEngine
     {
         public MyViewEngine()
         {
