@@ -34,29 +34,7 @@ namespace DataShop.DemoPlugin
 
         public void ManageSiteMap(SiteMapNode rootNode)
         {
-
-            //var menuItemBuilder = new SiteMapNode()
-            //{
-            //    SystemName = "Demo Plugin",
-            //    Title = "Demo Plugin Menu",
-            //    Visible = true,
-            //    RouteValues = new RouteValueDictionary() { { "Area", "Admin" } }
-            //};
-
-            //menuItemBuilder.ChildNodes.Add(new SiteMapNode
-            //{
-            //    SystemName = "DemoItems",
-            //    Title = "Demo Items",
-            //    //ControllerName = "AdminDemoItems",
-            //    //ActionName = "Index",
-            //    Url = "Admin/DemoPlugin/DemoItems",
-            //    Visible = true,
-            //    RouteValues = new RouteValueDictionary() { { "Area", "Admin" } }
-            //});
-
-            //rootNode.ChildNodes.Add(menuItemBuilder);
-
-            var menuItem = new SiteMapNode()
+            var subMenu1 = new SiteMapNode()
             {
                 SystemName = "AdminDemoItems",
                 Title = "Admin Demo Items",
@@ -67,30 +45,44 @@ namespace DataShop.DemoPlugin
                 RouteValues = new RouteValueDictionary() { { "area", null } },
             };
 
-            var menuItem2 = new SiteMapNode()
+            var subMenu2 = new SiteMapNode()
             {
                 SystemName = "AdminDemoItem",
                 Title = "Admin Demo Item",
                 ControllerName = "AdminDemoItems",
                 ActionName = "GetDemoItem",
                 Visible = true,
-                IconClass = "fa-dot-circle-o",
+                IconClass = "fa-smile-o",
                 RouteValues = new RouteValueDictionary() { { "area", null } },
             };
 
-            var pluginNode = rootNode.ChildNodes.FirstOrDefault(x => x.SystemName == "Third party plugins");
-
-            if (pluginNode != null)
+            var mainMenu = new SiteMapNode()
             {
-                pluginNode.ChildNodes.Add(menuItem);
-                pluginNode.ChildNodes.Add(menuItem2);
-            }
-            else
-            {
-                rootNode.ChildNodes.Add(menuItem);
-                rootNode.ChildNodes.Add(menuItem2);
-            }
+                SystemName = "AdminDemoPLugin",
+                Title = "Admin Demo Plugin",
+                Visible = true,
+                IconClass = "fa-database",
+                RouteValues = new RouteValueDictionary() { { "area", null } },
+            };
 
+            mainMenu.ChildNodes.Add(subMenu1);
+            mainMenu.ChildNodes.Add(subMenu2);
+
+            rootNode.ChildNodes.Add(mainMenu);
+
+            //rootNode.ChildNodes.Insert(0, mainMenu);
+            //rootNode.ChildNodes.Insert(2, mainMenu);
+
+            //var pluginNode = rootNode.ChildNodes.FirstOrDefault(x => x.SystemName == "Third party plugins");
+
+            //if (pluginNode != null)
+            //{
+            //    pluginNode.ChildNodes.Add(menuItem);
+            //}
+            //else
+            //{
+            //    rootNode.ChildNodes.Add(menuItem);       
+            //}
         }
 
         public override void Uninstall()
