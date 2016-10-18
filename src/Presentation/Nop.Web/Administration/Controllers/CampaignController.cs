@@ -120,6 +120,31 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [NonAction]
+        protected virtual void PrepareEmailAccountsModel(CampaignModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableEmailAccounts = _emailAccountService.GetAllEmailAccounts().Select(emailAccount => new SelectListItem
+            {
+                Value = emailAccount.Id.ToString(),
+                Text = string.Format("{0} ({1})", emailAccount.DisplayName, emailAccount.Email)
+            }).ToList();
+        }
+
+        [NonAction]
+        protected virtual EmailAccount GetEmailAccount(int emailAccountId)
+        {
+            var emailAccount = _emailAccountService.GetEmailAccountById(emailAccountId)
+                ?? _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
+
+            if (emailAccount == null)
+                throw new NopException("Email account could not be loaded");
+
+            return emailAccount;
+        }
+
         public ActionResult Index()
         {
             return RedirectToAction("List");
@@ -184,6 +209,10 @@ namespace Nop.Admin.Controllers
             PrepareStoresModel(model);
             //customer roles
             PrepareCustomerRolesModel(model);
+            //email accounts
+            PrepareEmailAccountsModel(model);
+            model.EmailAccountId = _emailAccountSettings.DefaultEmailAccountId;
+
             return View(model);
         }
 
@@ -214,6 +243,9 @@ namespace Nop.Admin.Controllers
             PrepareStoresModel(model);
             //customer roles
             PrepareCustomerRolesModel(model);
+            //email accounts
+            PrepareEmailAccountsModel(model);
+
             return View(model);
         }
 
@@ -235,6 +267,10 @@ namespace Nop.Admin.Controllers
             PrepareStoresModel(model);
             //customer roles
             PrepareCustomerRolesModel(model);
+            //email accounts
+            PrepareEmailAccountsModel(model);
+            model.EmailAccountId = _emailAccountSettings.DefaultEmailAccountId;
+
             return View(model);
 		}
 
@@ -271,6 +307,9 @@ namespace Nop.Admin.Controllers
             PrepareStoresModel(model);
             //customer roles
             PrepareCustomerRolesModel(model);
+            //email accounts
+            PrepareEmailAccountsModel(model);
+
             return View(model);
 		}
 
@@ -291,6 +330,8 @@ namespace Nop.Admin.Controllers
             PrepareStoresModel(model);
             //customer roles
             PrepareCustomerRolesModel(model);
+            //email accounts
+            PrepareEmailAccountsModel(model);
 
             if (!CommonHelper.IsValidEmail(model.TestEmail))
             {
@@ -300,11 +341,8 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
-                if (emailAccount == null)
-                    throw new NopException("Email account could not be loaded");
 
-
+                var emailAccount = GetEmailAccount(model.EmailAccountId);
                 var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(model.TestEmail, _storeContext.CurrentStore.Id);
                 if (subscription != null)
                 {
@@ -343,18 +381,17 @@ namespace Nop.Admin.Controllers
                 //No campaign found with the specified id
                 return RedirectToAction("List");
 
-
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
             //customer roles
             PrepareCustomerRolesModel(model);
+            //email accounts
+            PrepareEmailAccountsModel(model);
 
             try
             {
-                var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
-                if (emailAccount == null)
-                    throw new NopException("Email account could not be loaded");
+                var emailAccount = GetEmailAccount(model.EmailAccountId);
 
                 //subscribers of certain store?
                 var store = _storeService.GetStoreById(campaign.StoreId);
@@ -391,8 +428,8 @@ namespace Nop.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("DeleteCampaign", _localizationService.GetResource("ActivityLog.DeleteCampaign"), campaign.Id);
 
-
             SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Deleted"));
+
 			return RedirectToAction("List");
 		}
 	}

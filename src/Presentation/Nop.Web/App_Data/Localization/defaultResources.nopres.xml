@@ -10584,6 +10584,12 @@
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.DontSendBeforeDate.Hint">
     <Value>Enter a specific date and time to send the campaign. Leave empty to send it immediately.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.EmailAccount">
+    <Value>Email account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.EmailAccount.Hint">
+    <Value>The email account that will be used to send this campaign.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Name">
     <Value>Name</Value>
   </LocaleResource>
