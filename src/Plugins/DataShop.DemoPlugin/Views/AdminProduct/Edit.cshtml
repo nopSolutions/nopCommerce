@@ -1,0 +1,21 @@
+﻿@using Nop.Services.Catalog
+@using Nop.Core.Domain.Catalog
+@using Nop.Web.Framework.UI
+
+@model Product
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Products.EditProductDetails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Products");
+}
+
+<div>
+    <h3>Admin Product View - Edit</h3>
+</div>
+
+<h2>@Model.Name</h2>
+<p>@Model.ShortDescription</p>

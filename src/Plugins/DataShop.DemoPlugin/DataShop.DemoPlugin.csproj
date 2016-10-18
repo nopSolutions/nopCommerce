@@ -109,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AdminDemoItemsController.cs" />
+    <Compile Include="Controllers\AdminProductController.cs" />
     <Compile Include="Controllers\DemoItemsController.cs" />
     <Compile Include="DemoPluginProvider.cs" />
     <Compile Include="Data\DataContext.cs" />
@@ -175,6 +176,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\AdminDemoItems\GetDemoItem.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\AdminProduct\Edit.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

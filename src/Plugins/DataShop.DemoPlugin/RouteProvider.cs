@@ -36,11 +36,21 @@ namespace DataShop.DemoPlugin
              new[] { "DataShop.DemoPlugin.Controllers" }
            );
 
+            var route3 = routes.MapRoute("DataShop.DemoPlugin.Admin.Edit",
+                 "Admin/Product/Edit/{id}",
+                 new { controller = "AdminProduct", action = "Edit", area = "Admin" }, //notice 'area="Admin"' is added
+                 new { id = @"\d+" },
+                 new[] { "DataShop.DemoPlugin.Controllers" }
+            );
+
             routes.Remove(route1);
             routes.Remove(route2);
+            routes.Remove(route3);
 
             routes.Insert(0, route1);
             routes.Insert(0, route2);
+            routes.Insert(0, route3);
+
         }
     }
 }
