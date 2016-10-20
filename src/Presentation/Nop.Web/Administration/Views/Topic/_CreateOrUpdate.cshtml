@@ -338,6 +338,18 @@
                             @Html.ValidationMessageFor(model => model.Locales[item].SeName)
                         </div>
                     </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#@Html.FieldIdFor(model => model.Locales[item].SeName)').on('input propertychange paste', function () {
+                                var parameters = {
+                                    entityId: '@Model.Id',
+                                    entityName: 'Topic',
+                                    seName: $(this).val()
+                                };
+                                warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.FieldNameFor(model => model.Locales[item].SeName)', parameters);
+                            });
+                        });
+                    </script>
                     @Html.HiddenFor(model => model.Locales[item].LanguageId)
                 </div>
     ,
@@ -378,6 +390,18 @@
                             @Html.ValidationMessageFor(model => model.SeName)
                         </div>
                     </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#@Html.FieldIdFor(model => model.SeName)').on('input propertychange paste', function () {
+                                var parameters = {
+                                    entityId: '@Model.Id',
+                                    entityName: 'Topic',
+                                    seName: $(this).val()
+                                };
+                                warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.FieldNameFor(model => model.SeName)', parameters);
+                            });
+                        });
+                    </script>
                 </div>))
             </div>
         </div>

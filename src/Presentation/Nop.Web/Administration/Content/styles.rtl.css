@@ -31,6 +31,15 @@ ul, ol {
 .field-validation-error, .validation-summary-errors {
     color: red;
 }
+.field-validation-valid.warning {
+    color: #fff;
+    background-color: #f39c12;
+    margin-top: 5px;
+    display: inline-block;
+    padding: 5px;
+    border-radius: 3px;
+    border-right: 5px solid #c87f0a;
+}
 ul.common-list {
     list-style: none;
     padding-right: 0;

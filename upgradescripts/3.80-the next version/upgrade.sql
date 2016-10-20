@@ -449,6 +449,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Copied">
     <Value>The product has been copied successfully</Value>
   </LocaleResource>  
+  <LocaleResource Name="Admin.System.Warnings.URL.Reserved">
+    <Value>Entered page name already exists, so it will be replaced by ''{0}''</Value>
+  </LocaleResource>
 </Language>
 '
 

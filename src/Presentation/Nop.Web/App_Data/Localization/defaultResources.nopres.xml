@@ -12105,6 +12105,9 @@
   <LocaleResource Name="Admin.System.Warnings.URL.NoMatch">
     <Value>Specified store URL ({0}) doesn't match this store URL ({1})</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.URL.Reserved">
+    <Value>Entered page name already exists, so it will be replaced by '{0}'</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Vendors">
     <Value>Vendors</Value>
   </LocaleResource>
