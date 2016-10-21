@@ -247,7 +247,7 @@ namespace Nop.Services.Tax
             isTaxable = true;
 
             //active tax provider
-            var activeTaxProvider = LoadActiveTaxProvider();
+            var activeTaxProvider = LoadActiveTaxProvider(customer);
             if (activeTaxProvider == null)
                 return;
 
@@ -287,21 +287,23 @@ namespace Nop.Services.Tax
                     }
                 }   
         }
-        
 
         #endregion
 
         #region Methods
 
+        #region Tax providers
+
         /// <summary>
         /// Load active tax provider
         /// </summary>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <returns>Active tax provider</returns>
-        public virtual ITaxProvider LoadActiveTaxProvider()
+        public virtual ITaxProvider LoadActiveTaxProvider(Customer customer = null)
         {
             var taxProvider = LoadTaxProviderBySystemName(_taxSettings.ActiveTaxProviderSystemName);
             if (taxProvider == null)
-                taxProvider = LoadAllTaxProviders().FirstOrDefault();
+                taxProvider = LoadAllTaxProviders(customer).FirstOrDefault();
             return taxProvider;
         }
 
@@ -322,13 +324,16 @@ namespace Nop.Services.Tax
         /// <summary>
         /// Load all tax providers
         /// </summary>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <returns>Tax providers</returns>
-        public virtual IList<ITaxProvider> LoadAllTaxProviders()
+        public virtual IList<ITaxProvider> LoadAllTaxProviders(Customer customer = null)
         {
-            return _pluginFinder.GetPlugins<ITaxProvider>().ToList();
+            return _pluginFinder.GetPlugins<ITaxProvider>(customer: customer).ToList();
         }
 
+        #endregion
 
+        #region Product price
 
         /// <summary>
         /// Gets price
@@ -450,8 +455,9 @@ namespace Nop.Services.Tax
             return price;
         }
 
+        #endregion
 
-
+        #region Shipping price
 
         /// <summary>
         /// Gets shipping price
@@ -500,9 +506,9 @@ namespace Nop.Services.Tax
                 priceIncludesTax, out taxRate);
         }
 
+        #endregion
 
-
-
+        #region Payment additional fee
 
         /// <summary>
         /// Gets payment method additional handling fee
@@ -552,9 +558,9 @@ namespace Nop.Services.Tax
                 priceIncludesTax, out taxRate);
         }
 
+        #endregion
 
-
-
+        #region Checkout attribute price
 
         /// <summary>
         /// Gets checkout attribute value price
@@ -621,9 +627,9 @@ namespace Nop.Services.Tax
                 priceIncludesTax, out taxRate);
         }
 
+        #endregion
 
-
-
+        #region VAT
 
         /// <summary>
         /// Gets VAT Number status
@@ -761,10 +767,10 @@ namespace Nop.Services.Tax
                     s.Dispose();
             }
         }
-       
 
+        #endregion
 
-
+        #region Exempts
 
         /// <summary>
         /// Gets a value indicating whether a product is tax exempt
@@ -822,6 +828,8 @@ namespace Nop.Services.Tax
                    customerVatStatus == VatNumberStatus.Valid &&
                    _taxSettings.EuVatAllowVatExemption;
         }
+
+        #endregion
 
         #endregion
     }

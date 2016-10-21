@@ -58,6 +58,7 @@ namespace Nop.Services.Discounts
         private readonly ILocalizationService _localizationService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -83,7 +84,8 @@ namespace Nop.Services.Discounts
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IPluginFinder pluginFinder,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            IWorkContext workContext)
         {
             this._cacheManager = cacheManager;
             this._discountRepository = discountRepository;
@@ -94,6 +96,7 @@ namespace Nop.Services.Discounts
             this._localizationService = localizationService;
             this._pluginFinder = pluginFinder;
             this._eventPublisher = eventPublisher;
+            this._workContext = workContext;
         }
 
         #endregion
@@ -110,6 +113,8 @@ namespace Nop.Services.Discounts
         #endregion
 
         #region Methods
+
+        #region Discounts
 
         /// <summary>
         /// Delete discount
@@ -227,6 +232,25 @@ namespace Nop.Services.Discounts
         }
 
         /// <summary>
+        /// Get discount by coupon code
+        /// </summary>
+        /// <param name="couponCode">Coupon code</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Discount</returns>
+        public virtual Discount GetDiscountByCouponCode(string couponCode, bool showHidden = false)
+        {
+            if (String.IsNullOrWhiteSpace(couponCode))
+                return null;
+
+            var discount = GetAllDiscounts(null, couponCode, null, showHidden).FirstOrDefault();
+            return discount;
+        }
+
+        #endregion
+
+        #region Discount requirements
+
+        /// <summary>
         /// Delete discount requirement
         /// </summary>
         /// <param name="discountRequirement">Discount requirement</param>
@@ -260,27 +284,16 @@ namespace Nop.Services.Discounts
         /// <summary>
         /// Load all discount requirement rules
         /// </summary>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <returns>Discount requirement rules</returns>
-        public virtual IList<IDiscountRequirementRule> LoadAllDiscountRequirementRules()
+        public virtual IList<IDiscountRequirementRule> LoadAllDiscountRequirementRules(Customer customer = null)
         {
-            var rules = _pluginFinder.GetPlugins<IDiscountRequirementRule>();
-            return rules.ToList();
+            return _pluginFinder.GetPlugins<IDiscountRequirementRule>(customer: customer).ToList();
         }
 
-        /// <summary>
-        /// Get discount by coupon code
-        /// </summary>
-        /// <param name="couponCode">Coupon code</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Discount</returns>
-        public virtual Discount GetDiscountByCouponCode(string couponCode, bool showHidden = false)
-        {
-            if (String.IsNullOrWhiteSpace(couponCode))
-                return null;
+        #endregion
 
-            var discount = GetAllDiscounts(null, couponCode, null, showHidden).FirstOrDefault();
-            return discount;
-        }
+        #region Validation
 
         /// <summary>
         /// Validate discount
@@ -417,6 +430,10 @@ namespace Nop.Services.Discounts
                 var requirementRulePlugin = LoadDiscountRequirementRuleBySystemName(req.SystemName);
                 if (requirementRulePlugin == null)
                     continue;
+
+                if (!_pluginFinder.AuthorizedForUser(requirementRulePlugin.PluginDescriptor, _workContext.CurrentCustomer))
+                    continue;
+
                 if (!_pluginFinder.AuthenticateStore(requirementRulePlugin.PluginDescriptor, _storeContext.CurrentStore.Id))
                     continue;
 
@@ -437,6 +454,10 @@ namespace Nop.Services.Discounts
             result.IsValid = true;
             return result;
         }
+
+        #endregion
+
+        #region Discount usage history
 
         /// <summary>
         /// Gets a discount usage history record
@@ -525,6 +546,8 @@ namespace Nop.Services.Discounts
             //event notification
             _eventPublisher.EntityDeleted(discountUsageHistory);
         }
+
+        #endregion
 
         #endregion
     }

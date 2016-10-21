@@ -52,7 +52,7 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public DiscountController(IDiscountService discountService, 
             ILocalizationService localizationService,
@@ -140,6 +140,8 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
+
+        #region Methods
 
         #region Discounts
 
@@ -833,6 +835,8 @@ namespace Nop.Admin.Controllers
 
             return new NullJsonResult();
         }
+
+        #endregion
 
         #endregion
     }

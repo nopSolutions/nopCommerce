@@ -19,20 +19,23 @@ namespace Nop.Web.Controllers
         private readonly IStoreContext _storeContext;
         private readonly IThemeContext _themeContext;
         private readonly ICacheManager _cacheManager;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
-		#region Constructors
+        #region Ctor
 
         public WidgetController(IWidgetService widgetService, 
             IStoreContext storeContext,
             IThemeContext themeContext,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            IWorkContext workContext)
         {
             this._widgetService = widgetService;
             this._storeContext = storeContext;
             this._themeContext = themeContext;
             this._cacheManager = cacheManager;
+            this._workContext = workContext;
         }
 
         #endregion
@@ -42,13 +45,14 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult WidgetsByZone(string widgetZone, object additionalData = null)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.WIDGET_MODEL_KEY, _storeContext.CurrentStore.Id, widgetZone, _themeContext.WorkingThemeName);
+            var cacheKey = string.Format(ModelCacheEventConsumer.WIDGET_MODEL_KEY,
+                _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, widgetZone, _themeContext.WorkingThemeName);
             var cacheModel = _cacheManager.Get(cacheKey, () =>
             {
                 //model
                 var model = new List<RenderWidgetModel>();
 
-                var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone, _storeContext.CurrentStore.Id);
+                var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
                 foreach (var widget in widgets)
                 {
                     var widgetModel = new RenderWidgetModel();

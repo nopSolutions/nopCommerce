@@ -96,7 +96,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-		#region Constructors
+		#region Ctor
 
         public ShoppingCartController(IProductService productService, 
             IStoreContext storeContext,
@@ -574,7 +574,7 @@ namespace Nop.Web.Controllers
 
             //all payment methods (do not filter by country here as it could be not specified yet)
             var paymentMethods = _paymentService
-                .LoadActivePaymentMethods(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id)
+                .LoadActivePaymentMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
                 .Where(pm => !pm.HidePaymentMethod(cart))
                 .ToList();
             //payment methods displayed during checkout (not with "Button" type)
@@ -2471,7 +2471,7 @@ namespace Nop.Web.Controllers
                     ZipPostalCode = zipPostalCode,
                 };
                 GetShippingOptionResponse getShippingOptionResponse = _shippingService
-                    .GetShippingOptions(cart, address, "", _storeContext.CurrentStore.Id);
+                    .GetShippingOptions(cart, address, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
                 if (getShippingOptionResponse.Success)
                 {
                     if (getShippingOptionResponse.ShippingOptions.Any())
@@ -2502,7 +2502,7 @@ namespace Nop.Web.Controllers
 
                 if (_shippingSettings.AllowPickUpInStore)
                 {
-                    var pickupPointsResponse = _shippingService.GetPickupPoints(address, null, _storeContext.CurrentStore.Id);
+                    var pickupPointsResponse = _shippingService.GetPickupPoints(address, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
                     if (pickupPointsResponse.Success)
                     {
                         if (pickupPointsResponse.PickupPoints.Any())

@@ -71,7 +71,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-		#region Constructors
+		#region Ctor
 
         public CheckoutController(IWorkContext workContext,
             IStoreContext storeContext,
@@ -215,10 +215,11 @@ namespace Nop.Web.Controllers
             {
                 model.DisplayPickupPointsOnMap = _shippingSettings.DisplayPickupPointsOnMap;
                 model.GoogleMapsApiKey = _shippingSettings.GoogleMapsApiKey;
-                var pickupPointProviders = _shippingService.LoadActivePickupPointProviders(_storeContext.CurrentStore.Id);
+                var pickupPointProviders = _shippingService.LoadActivePickupPointProviders(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
                 if (pickupPointProviders.Any())
                 {
-                    var pickupPointsResponse = _shippingService.GetPickupPoints(_workContext.CurrentCustomer.BillingAddress, null, _storeContext.CurrentStore.Id);
+                    var pickupPointsResponse = _shippingService.GetPickupPoints(_workContext.CurrentCustomer.BillingAddress,
+                        _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
                     if (pickupPointsResponse.Success)
                         model.PickupPoints = pickupPointsResponse.PickupPoints.Select(x =>
                         {
@@ -254,7 +255,7 @@ namespace Nop.Web.Controllers
                 }
 
                 //only available pickup points
-                if (!_shippingService.LoadActiveShippingRateComputationMethods(_storeContext.CurrentStore.Id).Any())
+                if (!_shippingService.LoadActiveShippingRateComputationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id).Any())
                 {
                     if (!pickupPointProviders.Any())
                     {
@@ -311,9 +312,7 @@ namespace Nop.Web.Controllers
         {
             var model = new CheckoutShippingMethodModel();
 
-            var getShippingOptionResponse = _shippingService
-                .GetShippingOptions(cart, shippingAddress,
-                "", _storeContext.CurrentStore.Id);
+            var getShippingOptionResponse = _shippingService.GetShippingOptions(cart, shippingAddress, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
             if (getShippingOptionResponse.Success)
             {
                 //performance optimization. cache returned shipping options.
@@ -411,7 +410,7 @@ namespace Nop.Web.Controllers
 
             //filter by country
             var paymentMethods = _paymentService
-                .LoadActivePaymentMethods(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, filterByCountryId)
+                .LoadActivePaymentMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id, filterByCountryId)
                 .Where(pm => pm.PaymentMethodType == PaymentMethodType.Standard || pm.PaymentMethodType == PaymentMethodType.Redirection)
                 .Where(pm => !pm.HidePaymentMethod(cart))
                 .ToList();
@@ -532,7 +531,7 @@ namespace Nop.Web.Controllers
             //then we should allow standard checkout
             //all payment methods (do not filter by country here as it could be not specified yet)
             var paymentMethods = _paymentService
-                .LoadActivePaymentMethods(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id)
+                .LoadActivePaymentMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
                 .Where(pm => !pm.HidePaymentMethod(cart))
                 .ToList();
             //payment methods displayed during checkout (not with "Button" type)
@@ -843,8 +842,8 @@ namespace Nop.Web.Controllers
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
 
                     var pickupPoint = form["pickup-points-id"].Split(new[] { "___" }, StringSplitOptions.None);
-                    var pickupPoints = _shippingService
-                        .GetPickupPoints(_workContext.CurrentCustomer.BillingAddress, pickupPoint[1], _storeContext.CurrentStore.Id).PickupPoints.ToList();
+                    var pickupPoints = _shippingService.GetPickupPoints(_workContext.CurrentCustomer.BillingAddress,
+                        _workContext.CurrentCustomer, pickupPoint[1], _storeContext.CurrentStore.Id).PickupPoints.ToList();
                     var selectedPoint = pickupPoints.FirstOrDefault(x => x.Id.Equals(pickupPoint[0]));
                     if (selectedPoint == null)
                         return RedirectToRoute("CheckoutShippingAddress");
@@ -991,10 +990,8 @@ namespace Nop.Web.Controllers
             if (shippingOptions == null || !shippingOptions.Any())
             {
                 //not found? let's load them using shipping service
-                shippingOptions = _shippingService
-                    .GetShippingOptions(cart, _workContext.CurrentCustomer.ShippingAddress, shippingRateComputationMethodSystemName, _storeContext.CurrentStore.Id)
-                    .ShippingOptions
-                    .ToList();
+                shippingOptions = _shippingService.GetShippingOptions(cart, _workContext.CurrentCustomer.ShippingAddress,
+                    _workContext.CurrentCustomer, shippingRateComputationMethodSystemName, _storeContext.CurrentStore.Id).ShippingOptions.ToList();
             }
             else
             {
@@ -1110,7 +1107,8 @@ namespace Nop.Web.Controllers
             var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(paymentmethod);
             if (paymentMethodInst == null || 
                 !paymentMethodInst.IsPaymentMethodActive(_paymentSettings) ||
-                !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id))
+                !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id) ||
+                !_pluginFinder.AuthorizedForUser(paymentMethodInst.PluginDescriptor, _workContext.CurrentCustomer))
                 return PaymentMethod();
 
             //save
@@ -1394,7 +1392,8 @@ namespace Nop.Web.Controllers
                     var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName);
                     if (paymentMethodInst == null ||
                         !paymentMethodInst.IsPaymentMethodActive(_paymentSettings) ||
-                        !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id))
+                        !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id) ||
+                        !_pluginFinder.AuthorizedForUser(paymentMethodInst.PluginDescriptor, _workContext.CurrentCustomer))
                         throw new Exception("Selected payment method can't be parsed");
 
                     return OpcLoadStepAfterPaymentMethod(paymentMethodInst, cart);
@@ -1680,8 +1679,8 @@ namespace Nop.Web.Controllers
                         _customerService.UpdateCustomer(_workContext.CurrentCustomer);
 
                         var pickupPoint = form["pickup-points-id"].Split(new[] { "___" }, StringSplitOptions.None);
-                        var pickupPoints = _shippingService
-                            .GetPickupPoints(_workContext.CurrentCustomer.BillingAddress, pickupPoint[1], _storeContext.CurrentStore.Id).PickupPoints.ToList();
+                        var pickupPoints = _shippingService.GetPickupPoints(_workContext.CurrentCustomer.BillingAddress,
+                            _workContext.CurrentCustomer, pickupPoint[1], _storeContext.CurrentStore.Id).PickupPoints.ToList();
                         var selectedPoint = pickupPoints.FirstOrDefault(x => x.Id.Equals(pickupPoint[0]));
                         if (selectedPoint == null)
                             throw new Exception("Pickup point is not allowed");
@@ -1829,10 +1828,8 @@ namespace Nop.Web.Controllers
                 if (shippingOptions == null || !shippingOptions.Any())
                 {
                     //not found? let's load them using shipping service
-                    shippingOptions = _shippingService
-                        .GetShippingOptions(cart, _workContext.CurrentCustomer.ShippingAddress, shippingRateComputationMethodSystemName, _storeContext.CurrentStore.Id)
-                        .ShippingOptions
-                        .ToList();
+                    shippingOptions = _shippingService.GetShippingOptions(cart, _workContext.CurrentCustomer.ShippingAddress, 
+                        _workContext.CurrentCustomer, shippingRateComputationMethodSystemName, _storeContext.CurrentStore.Id).ShippingOptions.ToList();
                 }
                 else
                 {
@@ -1918,7 +1915,8 @@ namespace Nop.Web.Controllers
                 var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(paymentmethod);
                 if (paymentMethodInst == null ||
                     !paymentMethodInst.IsPaymentMethodActive(_paymentSettings) ||
-                    !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id))
+                    !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id) ||
+                    !_pluginFinder.AuthorizedForUser(paymentMethodInst.PluginDescriptor, _workContext.CurrentCustomer))
                     throw new Exception("Selected payment method can't be parsed");
 
                 //save

@@ -23,13 +23,15 @@ namespace Nop.Admin.Controllers
         private readonly ISettingService _settingService;
         private readonly IPermissionService _permissionService;
 
-	    #endregion
+        #endregion
 
-		#region Constructors
+        #region Ctor
 
         public TaxController(ITaxService taxService,
-            ITaxCategoryService taxCategoryService, TaxSettings taxSettings,
-            ISettingService settingService, IPermissionService permissionService)
+            ITaxCategoryService taxCategoryService,
+            TaxSettings taxSettings,
+            ISettingService settingService,
+            IPermissionService permissionService)
 		{
             this._taxService = taxService;
             this._taxCategoryService = taxCategoryService;

@@ -36,13 +36,16 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public CurrencyController(ICurrencyService currencyService, 
-            CurrencySettings currencySettings, ISettingService settingService,
-            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
+            CurrencySettings currencySettings, 
+            ISettingService settingService,
+            IDateTimeHelper dateTimeHelper, 
+            ILocalizationService localizationService,
             IPermissionService permissionService,
-            ILocalizedEntityService localizedEntityService, ILanguageService languageService,
+            ILocalizedEntityService localizedEntityService, 
+            ILanguageService languageService,
             IStoreService storeService, 
             IStoreMappingService storeMappingService,
             ICustomerActivityService customerActivityService)
@@ -69,10 +72,7 @@ namespace Nop.Admin.Controllers
         {
             foreach (var localized in model.Locales)
             {
-                _localizedEntityService.SaveLocalizedValue(currency,
-                                                               x => x.Name,
-                                                               localized.Name,
-                                                               localized.LanguageId);
+                _localizedEntityService.SaveLocalizedValue(currency, x => x.Name, localized.Name, localized.LanguageId);
             }
         }
 

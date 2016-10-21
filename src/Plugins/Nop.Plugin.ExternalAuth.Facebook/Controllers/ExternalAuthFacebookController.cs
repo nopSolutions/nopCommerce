@@ -121,7 +121,8 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             if (processor == null ||
                 !processor.IsMethodActive(_externalAuthenticationSettings) ||
                 !processor.PluginDescriptor.Installed ||
-                !_pluginFinder.AuthenticateStore(processor.PluginDescriptor, _storeContext.CurrentStore.Id))
+                !_pluginFinder.AuthenticateStore(processor.PluginDescriptor, _storeContext.CurrentStore.Id) ||
+                !_pluginFinder.AuthorizedForUser(processor.PluginDescriptor, _workContext.CurrentCustomer))
                 throw new NopException("Facebook module cannot be loaded");
 
             var viewModel = new LoginModel();

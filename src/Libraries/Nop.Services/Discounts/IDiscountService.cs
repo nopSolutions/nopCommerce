@@ -10,6 +10,8 @@ namespace Nop.Services.Discounts
     /// </summary>
     public partial interface IDiscountService
     {
+        #region Discounts
+
         /// <summary>
         /// Delete discount
         /// </summary>
@@ -47,6 +49,18 @@ namespace Nop.Services.Discounts
         void UpdateDiscount(Discount discount);
 
         /// <summary>
+        /// Get discount by coupon code
+        /// </summary>
+        /// <param name="couponCode">CouponCode</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Discount</returns>
+        Discount GetDiscountByCouponCode(string couponCode, bool showHidden = false);
+
+        #endregion
+
+        #region Discount requirements
+
+        /// <summary>
         /// Delete discount requirement
         /// </summary>
         /// <param name="discountRequirement">Discount requirement</param>
@@ -62,17 +76,13 @@ namespace Nop.Services.Discounts
         /// <summary>
         /// Load all discount requirement rules
         /// </summary>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <returns>Discount requirement rules</returns>
-        IList<IDiscountRequirementRule> LoadAllDiscountRequirementRules();
+        IList<IDiscountRequirementRule> LoadAllDiscountRequirementRules(Customer customer = null);
 
+        #endregion
 
-        /// <summary>
-        /// Get discount by coupon code
-        /// </summary>
-        /// <param name="couponCode">CouponCode</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Discount</returns>
-        Discount GetDiscountByCouponCode(string couponCode, bool showHidden = false);
+        #region Validation
 
         /// <summary>
         /// Validate discount
@@ -90,6 +100,10 @@ namespace Nop.Services.Discounts
         /// <param name="couponCodeToValidate">Coupon code to validate</param>
         /// <returns>Discount validation result</returns>
         DiscountValidationResult ValidateDiscount(Discount discount, Customer customer, string couponCodeToValidate);
+
+        #endregion
+
+        #region Discount usage history
 
         /// <summary>
         /// Gets a discount usage history record
@@ -129,5 +143,6 @@ namespace Nop.Services.Discounts
         /// <param name="discountUsageHistory">Discount usage history record</param>
         void DeleteDiscountUsageHistory(DiscountUsageHistory discountUsageHistory);
 
+        #endregion
     }
 }

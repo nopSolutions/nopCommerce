@@ -30,7 +30,8 @@ namespace Nop.Services.Tests.Discounts
         private ILocalizationService _localizationService;
         private IDiscountService _discountService;
         private IStoreContext _storeContext;
-        
+        private IWorkContext _workContext;
+
         [SetUp]
         public new void SetUp()
         {
@@ -66,6 +67,7 @@ namespace Nop.Services.Tests.Discounts
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
 
             _storeContext = MockRepository.GenerateMock<IStoreContext>();
+            _workContext = null;
 
             var cacheManager = new NopNullCache();
             _discountRequirementRepo = MockRepository.GenerateMock<IRepository<DiscountRequirement>>();
@@ -75,7 +77,7 @@ namespace Nop.Services.Tests.Discounts
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
             _discountService = new DiscountService(cacheManager, _discountRepo, _discountRequirementRepo,
                 _discountUsageHistoryRepo, _storeContext, _genericAttributeService, 
-                _localizationService, pluginFinder, _eventPublisher);
+                _localizationService, pluginFinder, _eventPublisher, _workContext);
         }
 
         [Test]
