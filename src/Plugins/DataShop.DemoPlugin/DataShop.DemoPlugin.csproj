@@ -159,6 +159,12 @@
       <Private>False</Private>
       <Properties>SkipValidatePackageReferences=true</Properties>
     </ProjectReference>
+    <ProjectReference Include="..\..\Presentation\Nop.Web\Nop.Web.csproj">
+      <Project>{4f1f649c-1020-45be-a487-f416d9297ff3}</Project>
+      <Name>Nop.Web</Name>
+      <Private>False</Private>
+      <Properties>SkipValidatePackageReferences=true</Properties>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
@@ -181,6 +187,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\AdminProduct\Edit.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\_DownloadSample.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DemoItems\TestView.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -1,0 +1,13 @@
+﻿@model List<DemoItem>
+@using DataShop.DemoPlugin.Domain
+
+<div>
+    <ul>
+
+        @foreach (var item in Model)
+        {
+            <li>@item.ProductName</li>
+        }
+
+    </ul>
+</div>

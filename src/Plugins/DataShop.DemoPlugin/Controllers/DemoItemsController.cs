@@ -37,5 +37,12 @@ namespace DataShop.DemoPlugin.Controllers
             var items = DemoService.GetItems();
             return View(items);
         }
+
+        public ActionResult TestView()
+        {
+            var items = DemoService.GetItems();
+            return PartialView(items);
+        }
+
     }
 }
