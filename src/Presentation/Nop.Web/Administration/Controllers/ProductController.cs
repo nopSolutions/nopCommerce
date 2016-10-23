@@ -16,6 +16,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -89,6 +90,7 @@ namespace Nop.Admin.Controllers
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IDownloadService _downloadService;
         private readonly ISettingService _settingService;
+        private readonly TaxSettings _taxSettings;
         private readonly VendorSettings _vendorSettings;
 
         #endregion
@@ -136,6 +138,7 @@ namespace Nop.Admin.Controllers
             IProductAttributeParser productAttributeParser,
             IDownloadService downloadService,
             ISettingService settingService,
+            TaxSettings taxSettings,
             VendorSettings vendorSettings)
         {
             this._productService = productService;
@@ -179,6 +182,7 @@ namespace Nop.Admin.Controllers
             this._productAttributeParser = productAttributeParser;
             this._downloadService = downloadService;
             this._settingService = settingService;
+            this._taxSettings = taxSettings;
             this._vendorSettings = vendorSettings;
         }
 
@@ -544,62 +548,7 @@ namespace Nop.Admin.Controllers
             }
             return result.ToArray();
         }
-
-        [NonAction]
-        protected virtual void SaveProductTags(Product product, string[] productTags)
-        {
-            if (product == null)
-                throw new ArgumentNullException("product");
-
-            //product tags
-            var existingProductTags = product.ProductTags.ToList();
-            var productTagsToRemove = new List<ProductTag>();
-            foreach (var existingProductTag in existingProductTags)
-            {
-                bool found = false;
-                foreach (string newProductTag in productTags)
-                {
-                    if (existingProductTag.Name.Equals(newProductTag, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found)
-                {
-                    productTagsToRemove.Add(existingProductTag);
-                }
-            }
-            foreach (var productTag in productTagsToRemove)
-            {
-                product.ProductTags.Remove(productTag);
-                _productService.UpdateProduct(product);
-            }
-            foreach (string productTagName in productTags)
-            {
-                ProductTag productTag;
-                var productTag2 = _productTagService.GetProductTagByName(productTagName);
-                if (productTag2 == null)
-                {
-                    //add new product tag
-                    productTag = new ProductTag
-                    {
-                        Name = productTagName
-                    };
-                    _productTagService.InsertProductTag(productTag);
-                }
-                else
-                {
-                    productTag = productTag2;
-                }
-                if (!product.ProductTagExists(productTag.Id))
-                {
-                    product.ProductTags.Add(productTag);
-                    _productService.UpdateProduct(product);
-                }
-            }
-        }
-
+        
         [NonAction]
         protected virtual void PrepareProductModel(ProductModel model, Product product,
             bool setPredefinedValues, bool excludeProperties)
@@ -780,7 +729,7 @@ namespace Nop.Admin.Controllers
 
             //tax categories
             var taxCategories = _taxCategoryService.GetAllTaxCategories();
-            model.AvailableTaxCategories.Add(new SelectListItem { Text = "---", Value = "0" });
+            model.AvailableTaxCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Settings.Tax.TaxCategories.None"), Value = "0" });
             foreach (var tc in taxCategories)
                 model.AvailableTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString(), Selected = product != null && !setPredefinedValues && tc.Id == product.TaxCategoryId });
 
@@ -809,7 +758,7 @@ namespace Nop.Admin.Controllers
                 model.NotifyAdminForQuantityBelow = 1;
                 model.OrderMinimumQuantity = 1;
                 model.OrderMaximumQuantity = 10000;
-
+                model.TaxCategoryId = _taxSettings.DefaultTaxCategoryId;
                 model.UnlimitedDownloads = true;
                 model.IsShipEnabled = true;
                 model.AllowCustomerReviews = true;
@@ -1018,11 +967,7 @@ namespace Nop.Admin.Controllers
             gridModel.Data = products.Select(x =>
             {
                 var productModel = x.ToModel();
-                //little hack here:
-                //ensure that product full descriptions are not returned
-                //otherwise, we can get the following error if products have too long descriptions:
-                //"Error during serialization or deserialization using the JSON JavaScriptSerializer. The length of the string exceeds the value set on the maxJsonLength property. "
-                //also it improves performance
+                //little performance optimization: ensure that "FullDescription" is not returned
                 productModel.FullDescription = "";
 
                 //picture
@@ -1145,7 +1090,7 @@ namespace Nop.Admin.Controllers
                 //discounts
                 SaveDiscountMappings(product, model);
                 //tags
-                SaveProductTags(product, ParseProductTags(model.ProductTags));
+                _productTagService.UpdateProductTags(product, ParseProductTags(model.ProductTags));
                 //warehouses
                 SaveProductWarehouseInventory(product, model);
 
@@ -1268,7 +1213,7 @@ namespace Nop.Admin.Controllers
                 //locales
                 UpdateLocales(product, model);
                 //tags
-                SaveProductTags(product, ParseProductTags(model.ProductTags));
+                _productTagService.UpdateProductTags(product, ParseProductTags(model.ProductTags));
                 //warehouses
                 SaveProductWarehouseInventory(product, model);
                 //categories
@@ -2322,7 +2267,9 @@ namespace Nop.Admin.Controllers
                     var psaModel = new ProductSpecificationAttributeModel
                     {
                         Id = x.Id,
+                        AttributeTypeId = x.AttributeTypeId,
                         AttributeTypeName = x.AttributeType.GetLocalizedEnum(_localizationService, _workContext),
+                        AttributeId = x.SpecificationAttributeOption.SpecificationAttribute.Id,
                         AttributeName = x.SpecificationAttributeOption.SpecificationAttribute.Name,
                         AllowFiltering = x.AllowFiltering,
                         ShowOnProductPage = x.ShowOnProductPage,
@@ -2332,6 +2279,7 @@ namespace Nop.Admin.Controllers
                     {
                         case SpecificationAttributeType.Option:
                             psaModel.ValueRaw = HttpUtility.HtmlEncode(x.SpecificationAttributeOption.Name);
+                            psaModel.SpecificationAttributeOptionId = x.SpecificationAttributeOptionId;
                             break;
                         case SpecificationAttributeType.CustomText:
                             psaModel.ValueRaw = HttpUtility.HtmlEncode(x.CustomValue);
@@ -2382,9 +2330,15 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            //we do not allow editing these fields anymore (when we have distinct attribute types)
-            //psa.CustomValue = model.CustomValue;
-            //psa.AllowFiltering = model.AllowFiltering;
+            //we allow filtering and change option only for "Option" attribute type
+            if (model.AttributeTypeId == (int)SpecificationAttributeType.Option)
+            {
+                psa.AllowFiltering = model.AllowFiltering;
+                int specificationAttributeOptionId;
+                if (int.TryParse(model.ValueRaw, out specificationAttributeOptionId))
+                    psa.SpecificationAttributeOptionId = specificationAttributeOptionId;
+            }
+
             psa.ShowOnProductPage = model.ShowOnProductPage;
             psa.DisplayOrder = model.DisplayOrder;
             _specificationAttributeService.UpdateProductSpecificationAttribute(psa);
@@ -4552,7 +4506,7 @@ namespace Nop.Admin.Controllers
                 {
                     ProductId = product.Id,
                     AttributesXml = attributesXml,
-                    StockQuantity = 10000,
+                    StockQuantity = 0,
                     AllowOutOfStockOrders = false,
                     Sku = null,
                     ManufacturerPartNumber = null,

@@ -53,6 +53,7 @@ namespace Nop.Services.ExportImport
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IMeasureService _measureService;
         private readonly CatalogSettings _catalogSettings;
+        private readonly IProductTagService _productTagService;
 
         #endregion
 
@@ -76,7 +77,8 @@ namespace Nop.Services.ExportImport
             ITaxCategoryService taxCategoryService,
             IMeasureService measureService,
             IProductAttributeService productAttributeService,
-            CatalogSettings catalogSettings)
+            CatalogSettings catalogSettings,
+            IProductTagService productTagService)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -97,6 +99,7 @@ namespace Nop.Services.ExportImport
             this._measureService = measureService;
             this._productAttributeService = productAttributeService;
             this._catalogSettings = catalogSettings;
+            this._productTagService = productTagService;
         }
 
         #endregion
@@ -911,7 +914,8 @@ namespace Nop.Services.ExportImport
 
                         //category mappings
                         var categories = isNew || !allProductsCategoryIds.ContainsKey(product.Id) ? new int[0] : allProductsCategoryIds[product.Id];
-                        foreach (var categoryId in categoryNames.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => allCategories.First(c => c.Name == x.Trim()).Id))
+                        var importedCategories = categoryNames.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => allCategories.First(c => c.Name == x.Trim()).Id).ToList();
+                        foreach (var categoryId in importedCategories)
                         {
                             if (categories.Any(c => c == categoryId))
                                 continue;
@@ -925,6 +929,14 @@ namespace Nop.Services.ExportImport
                             };
                             _categoryService.InsertProductCategory(productCategory);
                         }
+
+                        //delete product categories
+                        var deletedProductCategories = categories.Where(categoryId => !importedCategories.Contains(categoryId))
+                                .Select(categoryId => product.ProductCategories.First(pc => pc.CategoryId == categoryId));
+                        foreach (var deletedProductCategory in deletedProductCategories)
+                        {
+                            _categoryService.DeleteProductCategory(deletedProductCategory);
+                        }
                     }
 
                     tempProperty = manager.GetProperty("Manufacturers");
@@ -934,7 +946,8 @@ namespace Nop.Services.ExportImport
 
                         //manufacturer mappings
                         var manufacturers = isNew || !allProductsManufacturerIds.ContainsKey(product.Id) ? new int[0] : allProductsManufacturerIds[product.Id];
-                        foreach (var manufacturerId in manufacturerNames.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => allManufacturers.First(m => m.Name == x.Trim()).Id))
+                        var importedManufacturers = manufacturerNames.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => allManufacturers.First(m => m.Name == x.Trim()).Id).ToList();
+                        foreach (var manufacturerId in importedManufacturers)
                         {
                             if (manufacturers.Any(c => c == manufacturerId))
                                 continue;
@@ -948,8 +961,25 @@ namespace Nop.Services.ExportImport
                             };
                             _manufacturerService.InsertProductManufacturer(productManufacturer);
                         }
+
+                        //delete product manufacturers
+                        var deletedProductsManufacturers = manufacturers.Where(manufacturerId => !importedManufacturers.Contains(manufacturerId))
+                                .Select(manufacturerId => product.ProductManufacturers.First(pc => pc.ManufacturerId == manufacturerId));
+                        foreach (var deletedProductManufacturer in deletedProductsManufacturers)
+                        {
+                            _manufacturerService.DeleteProductManufacturer(deletedProductManufacturer);
+                        }
                     }
-                    
+
+                    tempProperty = manager.GetProperty("ProductTags");
+                    if (tempProperty != null)
+                    {
+                        var productTags = tempProperty.StringValue.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
+
+                        //product tag mappings
+                        _productTagService.UpdateProductTags(product, productTags);
+                    }
+
                     var picture1 = manager.GetProperty("Picture1").Return(p => p.StringValue, String.Empty);
                     var picture2 = manager.GetProperty("Picture2").Return(p => p.StringValue, String.Empty);
                     var picture3 = manager.GetProperty("Picture3").Return(p => p.StringValue, String.Empty);

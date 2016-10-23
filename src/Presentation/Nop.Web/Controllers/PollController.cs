@@ -80,11 +80,9 @@ namespace Nop.Web.Controllers
             var cacheKey = string.Format(ModelCacheEventConsumer.POLL_BY_SYSTEMNAME__MODEL_KEY, systemKeyword, _workContext.WorkingLanguage.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
-                Poll poll = _pollService.GetPollBySystemKeyword(systemKeyword, _workContext.WorkingLanguage.Id);
-                if (poll == null ||
-                    !poll.Published ||
-                    (poll.StartDateUtc.HasValue && poll.StartDateUtc.Value > DateTime.UtcNow) ||
-                    (poll.EndDateUtc.HasValue && poll.EndDateUtc.Value < DateTime.UtcNow))
+                Poll poll = _pollService.GetPolls(languageId: _workContext.WorkingLanguage.Id,
+                    systemKeyword: systemKeyword).FirstOrDefault();
+                if (poll == null)
                     //we do not cache nulls. that's why let's return an empty record (ID = 0)
                     return new PollModel { Id = 0};
 

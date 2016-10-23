@@ -5,6 +5,7 @@ using Nop.Admin.Models.Tasks;
 using Nop.Core.Domain.Tasks;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.Kendoui;
@@ -20,20 +21,23 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
+        private readonly ICustomerActivityService _customerActivityService;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
         public ScheduleTaskController(IScheduleTaskService scheduleTaskService, 
             IPermissionService permissionService,
-            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService)
-		{
+            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
+            ICustomerActivityService customerActivityService)
+        {
             this._scheduleTaskService = scheduleTaskService;
             this._permissionService = permissionService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
-		}
+            this._customerActivityService = customerActivityService;
+        }
 
 		#endregion 
 
@@ -111,6 +115,9 @@ namespace Nop.Admin.Controllers
             scheduleTask.Enabled = model.Enabled;
             scheduleTask.StopOnError = model.StopOnError;
             _scheduleTaskService.UpdateTask(scheduleTask);
+
+            //activity log
+            _customerActivityService.InsertActivity("EditTask", _localizationService.GetResource("ActivityLog.EditTask"), scheduleTask.Id);
 
             return new NullJsonResult();
         }

@@ -1,4 +1,5 @@
-﻿@using Nop.Core.Domain.Customers
+﻿@using System.Globalization
+@using Nop.Core.Domain.Customers
 @using Nop.Web.Framework.UI;
 @using Nop.Core;
 @using Nop.Core.Domain
@@ -230,11 +231,15 @@
                     <b>nopCommerce version @NopVersion.CurrentVersion</b>
                 </div>
                 <div class="text-center">
-                    @(EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(DateTime.Now).ToString("f"))
+                    @{
+                        var dateTimeHelper = EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>();
+                        var workContext = EngineContext.Current.Resolve<IWorkContext>();
+                        var currentCulture = new CultureInfo(workContext.WorkingLanguage.LanguageCulture);
+                    }
+                    @dateTimeHelper.ConvertToUserTime(DateTime.Now).ToString("f", currentCulture)
                 </div>
             </div>
         </div>
-
         <script>
             var AdminLTEOptions = {
                 boxWidgetOptions: {
@@ -245,10 +250,8 @@
                 }
             };
         </script>
-
         @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
         @Html.NopScripts(this.Url, ResourceLocation.Foot)
-
         <a id="backTop" class="btn btn-back-top bg-teal"></a>
         <script>
             $(document).ready(function () {
@@ -261,4 +264,4 @@
             });
         </script>
     </body>
-    </html>
+</html>

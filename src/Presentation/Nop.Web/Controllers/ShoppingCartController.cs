@@ -248,7 +248,7 @@ namespace Nop.Web.Controllers
 
             model.IsEditable = isEditable;
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
-            model.ShowSku = _catalogSettings.ShowProductSku;
+            model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
             var checkoutAttributesXml = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
             model.CheckoutAttributeInfo = _checkoutAttributeFormatter.FormatAttributes(checkoutAttributesXml, _workContext.CurrentCustomer);
             bool minOrderSubtotalAmountOk = _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
@@ -697,7 +697,7 @@ namespace Nop.Web.Controllers
             model.CustomerGuid = customer.CustomerGuid;
             model.CustomerFullname = customer.GetFullName();
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
-            model.ShowSku = _catalogSettings.ShowProductSku;
+            model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
             
             //cart warnings
             var cartWarnings = _shoppingCartService.GetShoppingCartWarnings(cart, "", false);
@@ -1479,7 +1479,9 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            if (product.ProductAttributeMappings.Any())
+            //allow a product to be added to the cart when all attributes are with "read-only checkboxes" type
+            var productAttributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            if (productAttributes.Any(pam => pam.AttributeControlType != AttributeControlType.ReadonlyCheckboxes))
             {
                 //product has some attributes. let a customer see them
                 return Json(new
@@ -1487,6 +1489,21 @@ namespace Nop.Web.Controllers
                     redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() }),
                 });
             }
+
+            //creating XML for "read-only checkboxes" attributes
+            var attXml = productAttributes.Aggregate(string.Empty, (attributesXml, attribute) =>
+            {
+                var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
+                foreach (var selectedAttributeId in attributeValues
+                    .Where(v => v.IsPreSelected)
+                    .Select(v => v.Id)
+                    .ToList())
+                {
+                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                        attribute, selectedAttributeId.ToString());
+                }
+                return attributesXml;
+            });
 
             //get standard warnings without attribute validations
             //first, try to find existing shopping cart item
@@ -1517,6 +1534,7 @@ namespace Nop.Web.Controllers
                 product: product,
                 shoppingCartType: cartType,
                 storeId: _storeContext.CurrentStore.Id,
+                attributesXml: attXml,
                 quantity: quantity);
             if (addToCartWarnings.Any())
             {

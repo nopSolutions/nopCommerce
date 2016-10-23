@@ -7,6 +7,7 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
@@ -24,6 +25,7 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IPermissionService _permissionService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion
 
@@ -34,7 +36,8 @@ namespace Nop.Admin.Controllers
             ILocalizedEntityService localizedEntityService,
             ILocalizationService localizationService,
             IWorkContext workContext,
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            ICustomerActivityService customerActivityService)
         {
             this._customerAttributeService = customerAttributeService;
             this._languageService = languageService;
@@ -42,6 +45,7 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._permissionService = permissionService;
+            this._customerActivityService = customerActivityService;
         }
 
         #endregion
@@ -140,6 +144,10 @@ namespace Nop.Admin.Controllers
             {
                 var customerAttribute = model.ToEntity();
                 _customerAttributeService.InsertCustomerAttribute(customerAttribute);
+
+                //activity log
+                _customerActivityService.InsertActivity("AddNewCustomerAttribute", _localizationService.GetResource("ActivityLog.AddNewCustomerAttribute"), customerAttribute.Id);
+
                 //locales
                 UpdateAttributeLocales(customerAttribute, model);
 
@@ -194,6 +202,10 @@ namespace Nop.Admin.Controllers
             {
                 customerAttribute = model.ToEntity(customerAttribute);
                 _customerAttributeService.UpdateCustomerAttribute(customerAttribute);
+
+                //activity log
+                _customerActivityService.InsertActivity("EditCustomerAttribute", _localizationService.GetResource("ActivityLog.EditCustomerAttribute"), customerAttribute.Id);
+
                 //locales
                 UpdateAttributeLocales(customerAttribute, model);
 
@@ -221,6 +233,9 @@ namespace Nop.Admin.Controllers
 
             var customerAttribute = _customerAttributeService.GetCustomerAttributeById(id);
             _customerAttributeService.DeleteCustomerAttribute(customerAttribute);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteCustomerAttribute", _localizationService.GetResource("ActivityLog.DeleteCustomerAttribute"), customerAttribute.Id);
 
             SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAttributes.Deleted"));
             return RedirectToAction("List");
@@ -293,6 +308,10 @@ namespace Nop.Admin.Controllers
                 };
 
                 _customerAttributeService.InsertCustomerAttributeValue(cav);
+
+                //activity log
+                _customerActivityService.InsertActivity("AddNewCustomerAttributeValue", _localizationService.GetResource("ActivityLog.AddNewCustomerAttributeValue"), cav.Id);
+
                 UpdateValueLocales(cav, model);
 
                 ViewBag.RefreshPage = true;
@@ -351,6 +370,9 @@ namespace Nop.Admin.Controllers
                 cav.DisplayOrder = model.DisplayOrder;
                 _customerAttributeService.UpdateCustomerAttributeValue(cav);
 
+                //activity log
+                _customerActivityService.InsertActivity("EditCustomerAttributeValue", _localizationService.GetResource("ActivityLog.EditCustomerAttributeValue"), cav.Id);
+
                 UpdateValueLocales(cav, model);
 
                 ViewBag.RefreshPage = true;
@@ -374,6 +396,9 @@ namespace Nop.Admin.Controllers
             if (cav == null)
                 throw new ArgumentException("No customer attribute value found with the specified id");
             _customerAttributeService.DeleteCustomerAttributeValue(cav);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteCustomerAttributeValue", _localizationService.GetResource("ActivityLog.DeleteCustomerAttributeValue"), cav.Id);
 
             return new NullJsonResult();
         }

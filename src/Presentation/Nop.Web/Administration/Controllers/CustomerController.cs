@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
@@ -876,13 +877,6 @@ namespace Nop.Admin.Controllers
                 ErrorNotification(customerRolesError, false);
             }
 
-            // Ensure that valid email address is entered if Registered role is checked to avoid registered customers with empty email address
-            if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == SystemCustomerRoleNames.Registered) != null && !CommonHelper.IsValidEmail(model.Email))
-            {
-                ModelState.AddModelError("", "Valid Email is required for customer to be in 'Registered' role");
-                ErrorNotification("Valid Email is required for customer to be in 'Registered' role", false);
-            }
-
             if (ModelState.IsValid)
             {
                 var customer = new Customer
@@ -1073,14 +1067,7 @@ namespace Nop.Admin.Controllers
                 ModelState.AddModelError("", customerRolesError);
                 ErrorNotification(customerRolesError, false);
             }
-
-            // Ensure that valid email address is entered if Registered role is checked to avoid registered customers with empty email address
-            if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == SystemCustomerRoleNames.Registered) != null && !CommonHelper.IsValidEmail(model.Email))
-            {
-                ModelState.AddModelError("", "Valid Email is required for customer to be in 'Registered' role");
-                ErrorNotification("Valid Email is required for customer to be in 'Registered' role", false);
-            }
-
+            
             if (ModelState.IsValid)
             {
                 try
@@ -2046,6 +2033,8 @@ namespace Nop.Admin.Controllers
             var timeZone = _dateTimeHelper.CurrentTimeZone;
             var searchCustomerRoleIds = new[] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id };
 
+            var culture = new CultureInfo(_workContext.WorkingLanguage.LanguageCulture);
+
             switch (period)
             {
                 case "year":
@@ -2058,7 +2047,7 @@ namespace Nop.Admin.Controllers
                         {
                             result.Add(new
                             {
-                                date = searchYearDateUser.Date.ToString("Y"),
+                                date = searchYearDateUser.Date.ToString("Y", culture),
                                 value = _customerService.GetAllCustomers(
                                     createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone),
                                     createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser.AddMonths(1), timeZone),
@@ -2081,7 +2070,7 @@ namespace Nop.Admin.Controllers
                         {
                             result.Add(new
                             {
-                                date = searchMonthDateUser.Date.ToString("M"),
+                                date = searchMonthDateUser.Date.ToString("M", culture),
                                 value = _customerService.GetAllCustomers(
                                     createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone),
                                     createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser.AddDays(1), timeZone),
@@ -2105,7 +2094,7 @@ namespace Nop.Admin.Controllers
                         {
                             result.Add(new
                             {
-                                date = searchWeekDateUser.Date.ToString("d dddd"),
+                                date = searchWeekDateUser.Date.ToString("d dddd", culture),
                                 value = _customerService.GetAllCustomers(
                                     createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone),
                                     createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser.AddDays(1), timeZone),

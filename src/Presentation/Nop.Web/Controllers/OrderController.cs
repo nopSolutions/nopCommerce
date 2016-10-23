@@ -385,7 +385,7 @@ namespace Nop.Web.Controllers
 
 
             //purchased products
-            model.ShowSku = _catalogSettings.ShowProductSku;
+            model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
             var orderItems = order.OrderItems;
             foreach (var orderItem in orderItems)
             {
@@ -486,7 +486,7 @@ namespace Nop.Web.Controllers
             }
 
             //products in this shipment
-            model.ShowSku = _catalogSettings.ShowProductSku;
+            model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
             foreach (var shipmentItem in shipment.ShipmentItems)
             {
                 var orderItem = _orderService.GetOrderItemById(shipmentItem.OrderItemId);

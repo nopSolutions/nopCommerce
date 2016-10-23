@@ -11145,6 +11145,9 @@
             @return the color name
         </member>
         <!-- Badly formed XML comment ignored for member "T:iTextSharp.text.pdf.ColumnText" -->
+        <member name="F:iTextSharp.text.pdf.ColumnText.AR_NOVOWEL">
+            Eliminate the arabic vowels 
+        </member>
         <member name="F:iTextSharp.text.pdf.ColumnText.AR_COMPOSEDTASHKEEL">
             Compose the tashkeel in the ligatures. 
         </member>
@@ -11195,9 +11198,6 @@
         </member>
         <member name="F:iTextSharp.text.pdf.ColumnText.LINE_STATUS_NOLINE">
             The line cannot fit this column position. 
-        </member>
-        <member name="F:iTextSharp.text.pdf.ColumnText.AR_NOVOWEL">
-            Eliminate the arabic vowels 
         </member>
         <member name="F:iTextSharp.text.pdf.ColumnText.maxY">
             Upper bound of the column. 
@@ -13048,6 +13048,13 @@
             No signature validation is made, use the methods availabe for that in <CODE>AcroFields</CODE>.
             </p>
             @return gets the certification level for this document
+        </member>
+        <member name="M:iTextSharp.text.pdf.PdfReader.ComputeUserPassword">
+             Computes user password if standard encryption handler is used with Standard40, Standard128 or AES128 encryption algorithm.
+            
+             @return user password, or null if not a standard encryption handler was used,
+                     if standard encryption handler was used with AES256 encryption algorithm,
+                     or if ownerPasswordUsed wasn't use to open the document.
         </member>
         <member name="P:iTextSharp.text.pdf.PdfReader.SafeFile">
             Gets a new file instance of the original PDF
@@ -15828,6 +15835,12 @@
         <member name="M:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.#ctor">
             Creates a new text extraction renderer.
         </member>
+        <member name="M:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.#ctor(iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.ITextChunkLocationStrategy)">
+            Creates a new text extraction renderer, with a custom strategy for
+            creating new TextChunkLocation objects based on the input of the
+            TextRenderInfo.
+            @param strat the custom strategy
+        </member>
         <member name="M:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.BeginTextBlock">
             @see com.itextpdf.text.pdf.parser.RenderListener#beginTextBlock()
         </member>
@@ -15842,6 +15855,13 @@
             @param str
             @return true if the string ends with a space character, false if the string is empty or ends with a non-space character
         </member>
+        <member name="M:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.filterTextChunks(System.Collections.Generic.List{iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk},iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.ITextChunkFilter)">
+            Filters the provided list with the provided filter
+            @param textChunks a list of all TextChunks that this strategy found during processing
+            @param filter the filter to apply.  If null, filtering will be skipped.
+            @return the filtered list
+            @since 5.3.3
+        </member>
         <member name="M:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.IsChunkAtWordBoundary(iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk,iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk)">
             Determines if a space character should be inserted between a previous chunk and the current chunk.
             This method is exposed as a callback so subclasses can fine time the algorithm for determining whether a space should be inserted or not.
@@ -15851,13 +15871,6 @@
             @param chunk the new chunk being evaluated
             @param previousChunk the chunk that appeared immediately before the current chunk
             @return true if the two chunks represent different words (i.e. should have a space between them).  False otherwise.
-        </member>
-        <member name="M:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.filterTextChunks(System.Collections.Generic.List{iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk},iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.ITextChunkFilter)">
-            Filters the provided list with the provided filter
-            @param textChunks a list of all TextChunks that this strategy found during processing
-            @param filter the filter to apply.  If null, filtering will be skipped.
-            @return the filtered list
-            @since 5.3.3
         </member>
         <member name="M:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.GetResultantText(iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.ITextChunkFilter)">
             Gets text that meets the specified filter
@@ -15878,45 +15891,63 @@
             
             @see com.itextpdf.text.pdf.parser.RenderListener#renderText(com.itextpdf.text.pdf.parser.TextRenderInfo)
         </member>
+        <member name="M:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.CompareInts(System.Int32,System.Int32)">
+            
+             @param int1
+             @param int2
+             @return comparison of the two integers
+        </member>
         <member name="M:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.RenderImage(iTextSharp.text.pdf.parser.ImageRenderInfo)">
             no-op method - this renderer isn't interested in image events
             @see com.itextpdf.text.pdf.parser.RenderListener#renderImage(com.itextpdf.text.pdf.parser.ImageRenderInfo)
             @since 5.0.1
+        </member>
+        <member name="M:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.ITextChunkLocation.SameLine(iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.ITextChunkLocation)">
+            @param comparedLine the location to compare to
+            @return true is this location is on the the same line as the other
+        </member>
+        <member name="M:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.ITextChunkLocation.DistanceFromEndOf(iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.ITextChunkLocation)">
+            Computes the distance between the end of 'other' and the beginning of this chunk
+            in the direction of this chunk's orientation vector.  Note that it's a bad idea
+            to call this for chunks that aren't on the same line and orientation, but we don't
+            explicitly check for that condition for performance reasons.
+            @param other
+            @return the number of spaces between the end of 'other' and the beginning of this chunk
+        </member>
+        <member name="P:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.ITextChunkLocation.StartLocation">
+            the starting location of the chunk 
+        </member>
+        <member name="P:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.ITextChunkLocation.EndLocation">
+            the ending location of the chunk 
+        </member>
+        <member name="P:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.ITextChunkLocation.OrientationMagnitude">
+            the orientation as a scalar for quick sorting 
+        </member>
+        <member name="P:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.ITextChunkLocation.DistPerpendicular">
+            perpendicular distance to the orientation unit vector (i.e. the Y position in an unrotated coordinate system)
+            we round to the nearest integer to handle the fuzziness of comparing floats 
+        </member>
+        <member name="P:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.ITextChunkLocation.DistParallelStart">
+            distance of the start of the chunk parallel to the orientation unit vector (i.e. the X position in an unrotated coordinate system) 
+        </member>
+        <member name="P:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.ITextChunkLocation.DistParallelEnd">
+            distance of the end of the chunk parallel to the orientation unit vector (i.e. the X position in an unrotated coordinate system) 
+        </member>
+        <member name="P:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.ITextChunkLocation.CharSpaceWidth">
+            the width of a single space character in the font of the chunk 
+        </member>
+        <member name="F:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunkLocationDefaultImp.orientationVector">
+            unit vector in the orientation of the chunk 
+        </member>
+        <member name="M:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunkLocationDefaultImp.CompareTo(iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.ITextChunkLocation)">
+            Compares based on orientation, perpendicular distance, then parallel distance
+            @see java.lang.Comparable#compareTo(java.lang.Object)
         </member>
         <member name="T:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk">
             Represents a chunk of text, it's orientation, and location relative to the orientation vector
         </member>
         <member name="F:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk.text">
             the text of the chunk 
-        </member>
-        <member name="F:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk.startLocation">
-            the starting location of the chunk 
-        </member>
-        <member name="F:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk.endLocation">
-            the ending location of the chunk 
-        </member>
-        <member name="F:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk.orientationVector">
-            unit vector in the orientation of the chunk 
-        </member>
-        <member name="F:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk.orientationMagnitude">
-            the orientation as a scalar for quick sorting 
-        </member>
-        <member name="F:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk.distPerpendicular">
-            perpendicular distance to the orientation unit vector (i.e. the Y position in an unrotated coordinate system)
-            we round to the nearest integer to handle the fuzziness of comparing floats 
-        </member>
-        <member name="F:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk.distParallelStart">
-            distance of the start of the chunk parallel to the orientation unit vector (i.e. the X position in an unrotated coordinate system) 
-        </member>
-        <member name="F:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk.distParallelEnd">
-            distance of the end of the chunk parallel to the orientation unit vector (i.e. the X position in an unrotated coordinate system) 
-        </member>
-        <member name="F:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk.charSpaceWidth">
-            the width of a single space character in the font of the chunk 
-        </member>
-        <member name="M:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk.SameLine(iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk)">
-            @param as the location to compare to
-            @return true is this location is on the the same line as the other
         </member>
         <member name="M:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk.DistanceFromEndOf(iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk)">
             Computes the distance between the end of 'other' and the beginning of this chunk
@@ -15930,23 +15961,18 @@
             Compares based on orientation, perpendicular distance, then parallel distance
             @see java.lang.Comparable#compareTo(java.lang.Object)
         </member>
-        <member name="M:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk.CompareInts(System.Int32,System.Int32)">
-            
-             @param int1
-             @param int2
-             @return comparison of the two integers
-        </member>
-        <member name="P:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk.Text">
-            @return the text captured by this chunk
-        </member>
-        <member name="P:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk.CharSpaceWidth">
-            @return the width of a single space character as rendered by this chunk
+        <member name="M:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk.SameLine(iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk)">
+            @param as the location to compare to
+            @return true is this location is on the the same line as the other
         </member>
         <member name="P:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk.StartLocation">
             @return the start location of the text
         </member>
         <member name="P:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk.EndLocation">
             @return the end location of the text
+        </member>
+        <member name="P:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk.CharSpaceWidth">
+            @return the width of a single space character as rendered by this chunk
         </member>
         <member name="T:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.ITextChunkFilter">
             Specifies a filter for filtering {@link TextChunk} objects during text extraction 
@@ -16277,6 +16303,11 @@
             @return {@link java.util.Collection} containing all the registered operators strings
             @since 5.5.6
         </member>
+        <member name="P:iTextSharp.text.pdf.parser.PdfContentStreamProcessor.RenderListener">
+            Property for the RenderListener object maintained in this class.
+            Necessary for implementing custom ContentOperator implementations.
+            @return the renderListener
+        </member>
         <member name="T:iTextSharp.text.pdf.parser.PdfContentStreamProcessor.ResourceDictionary">
             A resource dictionary that allows stack-like behavior to support resource dictionary inheritance
         </member>
@@ -16597,10 +16628,21 @@
         <member name="F:iTextSharp.text.pdf.parser.PdfReaderContentParser.reader">
             the reader this parser will process 
         </member>
+        <!-- Badly formed XML comment ignored for member "M:iTextSharp.text.pdf.parser.PdfReaderContentParser.ProcessContent``1(System.Int32,``0,System.Collections.Generic.IDictionary{System.String,iTextSharp.text.pdf.parser.IContentOperator})" -->
         <!-- Badly formed XML comment ignored for member "M:iTextSharp.text.pdf.parser.PdfReaderContentParser.ProcessContent``1(System.Int32,``0)" -->
         <member name="T:iTextSharp.text.pdf.parser.PdfTextExtractor">
             Extracts text from a PDF file.
             @since   2.1.4
+        </member>
+        <member name="M:iTextSharp.text.pdf.parser.PdfTextExtractor.GetTextFromPage(iTextSharp.text.pdf.PdfReader,System.Int32,iTextSharp.text.pdf.parser.ITextExtractionStrategy,System.Collections.Generic.IDictionary{System.String,iTextSharp.text.pdf.parser.IContentOperator})">
+            Extract text from a specified page using an extraction strategy.
+            Also allows registration of custom ContentOperators
+            @param reader the reader to extract text from
+            @param pageNumber the page to extract text from
+            @param strategy the strategy to use for extracting text
+            @param additionalContentOperators an optional dictionary of custom IContentOperators for rendering instructions
+            @return the extracted text
+            @throws IOException if any operation fails while reading from the provided PdfReader
         </member>
         <member name="M:iTextSharp.text.pdf.parser.PdfTextExtractor.GetTextFromPage(iTextSharp.text.pdf.PdfReader,System.Int32,iTextSharp.text.pdf.parser.ITextExtractionStrategy)">
             Extract text from a specified page using an extraction strategy.
@@ -18574,6 +18616,11 @@
             @since 2.1.6
             @throws IllegalPdfSyntaxException (a runtime exception)
         </member>
+        <member name="P:iTextSharp.text.pdf.PdfContentByte.SuppressTagging">
+            [SUP-1395] If set, prevents iText from marking content and creating structure tags for items added to this content stream.
+            (By default, iText automatically marks content using BDC/EMC operators, and adds a structure tag for the new content
+            at the end of the page.)
+        </member>
         <member name="P:iTextSharp.text.pdf.PdfContentByte.InternalBuffer">
             Gets the internal buffer.
             @return the internal buffer
@@ -20256,6 +20303,12 @@
         <member name="M:iTextSharp.text.pdf.PdfEncryption.SetupByUserPad(System.Byte[],System.Byte[],System.Byte[],System.Int64)">
         </member>
         <member name="M:iTextSharp.text.pdf.PdfEncryption.SetupByOwnerPassword(System.Byte[],System.Byte[],System.Byte[],System.Byte[],System.Int64)">
+        </member>
+        <member name="M:iTextSharp.text.pdf.PdfEncryption.ComputeUserPassword(System.Byte[])">
+             Computes user password if standard encryption handler is used with Standard40, Standard128 or AES128 algorithm (Revision 2 - 4).
+            
+             @param ownerPassword owner password of the encrypted document.
+             @return user password, or null if revision 5 (AES256) or greater of standard encryption handler was used.
         </member>
         <member name="T:iTextSharp.text.pdf.PdfEncryptor">
             This class takes any PDF and returns exactly the same but
@@ -49074,6 +49127,10 @@
         <member name="F:iTextSharp.text.pdf.ArabicLigaturizer.DIGIT_TYPE_MASK">
             Bit mask for digit type options.
         </member>
+        <member name="F:iTextSharp.text.pdf.ArabicLigaturizer.reverseLigatureMapTable">
+            Some fonts do not implement ligaturized variations on Arabic characters
+            e.g. Simplified Arabic has got code point 0xFEED but not 0xFEEE
+        </member>
         <member name="M:iTextSharp.text.pdf.ArabicLigaturizer.IsRTL">
             Arabic is written from right to left.
             @return true
@@ -49801,6 +49858,88 @@
         <member name="M:iTextSharp.text.pdf.PdfStructTreeController.AttachStructTreeRootKids(iTextSharp.text.pdf.PdfObject)">
             Add kid to structureTreeRoot from structTreeRoot
         </member>
+        <member name="T:iTextSharp.text.pdf.security.AsymmetricAlgorithmSignature">
+             <summary>
+             This class allows you to sign with either an RSACryptoServiceProvider/DSACryptoServiceProvider from a X509Certificate2,
+             or from manually created RSACryptoServiceProvider/DSACryptoServiceProvider.
+             Depending on the certificate's CSP, sometimes you will not be able to sign with SHA-256/SHA-512 hash algorithm with 
+             RSACryptoServiceProvider taken directly from the certificate.
+             This class allows you to use a workaround in this case and sign with certificate's private key and SHA-256/SHA-512 anyway.
+             
+             An example of a workaround for CSP that does not support SHA-256/SHA-512:
+             <code>
+                        if (certificate.PrivateKey is RSACryptoServiceProvider)
+                        {                
+                            RSACryptoServiceProvider rsa = (RSACryptoServiceProvider)certificate.PrivateKey;
+            
+                            // Modified by J. Arturo
+                            // Workaround for SHA-256 and SHA-512
+            
+                            if (rsa.CspKeyContainerInfo.ProviderName == "Microsoft Strong Cryptographic Provider" ||
+                                            rsa.CspKeyContainerInfo.ProviderName == "Microsoft Enhanced Cryptographic Provider v1.0" ||
+                                            rsa.CspKeyContainerInfo.ProviderName == "Microsoft Base Cryptographic Provider v1.0")
+                            {
+                                string providerName = "Microsoft Enhanced RSA and AES Cryptographic Provider";
+                                int providerType = 24;
+            
+                                Type CspKeyContainerInfo_Type = typeof(CspKeyContainerInfo);
+            
+                                FieldInfo CspKeyContainerInfo_m_parameters = CspKeyContainerInfo_Type.GetField("m_parameters", BindingFlags.NonPublic | BindingFlags.Instance);
+                                CspParameters parameters = (CspParameters)CspKeyContainerInfo_m_parameters.GetValue(rsa.CspKeyContainerInfo);
+            
+                                var cspparams = new CspParameters(providerType, providerName, rsa.CspKeyContainerInfo.KeyContainerName);
+                                cspparams.Flags = parameters.Flags;
+            
+                                using (var rsaKey = new RSACryptoServiceProvider(cspparams))
+                                {
+                                    // use rsaKey now
+                                }
+                            }
+                            else
+                            {
+                                // Use rsa directly
+                            }
+                        }
+             </code>
+             
+             </summary>
+             <see cref="!:https://blogs.msdn.microsoft.com/shawnfa/2008/08/25/using-rsacryptoserviceprovider-for-rsa-sha256-signatures/"/>
+             <see cref="!:http://stackoverflow.com/questions/7444586/how-can-i-sign-a-file-using-rsa-and-sha256-with-net"/>
+             <see cref="!:http://stackoverflow.com/questions/5113498/can-rsacryptoserviceprovider-nets-rsa-use-sha256-for-encryption-not-signing"/>
+             <see cref="!:http://stackoverflow.com/questions/31553523/how-can-i-properly-verify-a-file-using-rsa-and-sha256-with-net"/>
+        </member>
+        <member name="T:iTextSharp.text.pdf.security.IExternalSignature">
+            Interface that needs to be implemented to do the actual signing.
+            For instance: you'll have to implement this interface if you want
+            to sign a PDF using a smart card.
+            @author Paulo Soares
+        </member>
+        <member name="M:iTextSharp.text.pdf.security.IExternalSignature.GetHashAlgorithm">
+            Returns the hash algorithm.
+            @return  the hash algorithm (e.g. "SHA-1", "SHA-256,...")
+        </member>
+        <member name="M:iTextSharp.text.pdf.security.IExternalSignature.GetEncryptionAlgorithm">
+            Returns the encryption algorithm used for signing.
+            @return the encryption algorithm ("RSA" or "DSA")
+        </member>
+        <member name="M:iTextSharp.text.pdf.security.IExternalSignature.Sign(System.Byte[])">
+            Signs it using the encryption algorithm in combination with
+            the digest algorithm.
+            @param message   the message you want to be hashed and signed
+            @return  a signed message digest
+            @throws GeneralSecurityException
+        </member>
+        <member name="F:iTextSharp.text.pdf.security.AsymmetricAlgorithmSignature.hashAlgorithm">
+            The hash algorithm. 
+        </member>
+        <member name="F:iTextSharp.text.pdf.security.AsymmetricAlgorithmSignature.encryptionAlgorithm">
+            The encryption algorithm (obtained from the private key) 
+        </member>
+        <member name="M:iTextSharp.text.pdf.security.AsymmetricAlgorithmSignature.GetEncryptionAlgorithm">
+            Returns the encryption algorithm used for signing.
+            @return the encryption algorithm ("RSA" or "DSA")
+            @see com.itextpdf.text.pdf.security.ExternalSignature#getEncryptionAlgorithm()
+        </member>
         <member name="T:iTextSharp.text.pdf.security.CertificateInfo">
             Class containing static methods that allow you to get information from
             an X509 Certificate: the issuer and the subject.
@@ -50231,27 +50370,6 @@
             PdfName.SUBFILTER will have to be set.
             @param signDic the signature dictionary
         </member>
-        <member name="T:iTextSharp.text.pdf.security.IExternalSignature">
-            Interface that needs to be implemented to do the actual signing.
-            For instance: you'll have to implement this interface if you want
-            to sign a PDF using a smart card.
-            @author Paulo Soares
-        </member>
-        <member name="M:iTextSharp.text.pdf.security.IExternalSignature.GetHashAlgorithm">
-            Returns the hash algorithm.
-            @return  the hash algorithm (e.g. "SHA-1", "SHA-256,...")
-        </member>
-        <member name="M:iTextSharp.text.pdf.security.IExternalSignature.GetEncryptionAlgorithm">
-            Returns the encryption algorithm used for signing.
-            @return the encryption algorithm ("RSA" or "DSA")
-        </member>
-        <member name="M:iTextSharp.text.pdf.security.IExternalSignature.Sign(System.Byte[])">
-            Signs it using the encryption algorithm in combination with
-            the digest algorithm.
-            @param message   the message you want to be hashed and signed
-            @return  a signed message digest
-            @throws GeneralSecurityException
-        </member>
         <member name="T:iTextSharp.text.pdf.security.IOcspClient">
             Interface for the OCSP Client.
             @since 2.1.6
@@ -50494,6 +50612,42 @@
             @param provider the provider or null
             @param estimatedSize the reserved size for the signature. It will be estimated if 0
             @param cades true to sign CAdES equivalent PAdES-BES, false to sign CMS
+            @throws DocumentException 
+            @throws IOException 
+            @throws GeneralSecurityException 
+            @throws NoSuchAlgorithmException 
+            @throws Exception 
+        </member>
+        <member name="M:iTextSharp.text.pdf.security.MakeSignature.SignDetached(iTextSharp.text.pdf.PdfSignatureAppearance,iTextSharp.text.pdf.security.IExternalSignature,System.Collections.Generic.ICollection{Org.BouncyCastle.X509.X509Certificate},System.Collections.Generic.ICollection{iTextSharp.text.pdf.security.ICrlClient},iTextSharp.text.pdf.security.IOcspClient,iTextSharp.text.pdf.security.ITSAClient,System.Int32,iTextSharp.text.pdf.security.CryptoStandard,iTextSharp.text.pdf.security.SignaturePolicyInfo)">
+            Signs the document using the detached mode, CMS or CAdES equivalent.
+            @param sap the PdfSignatureAppearance
+            @param externalSignature the interface providing the actual signing
+            @param chain the certificate chain
+            @param crlList the CRL list
+            @param ocspClient the OCSP client
+            @param tsaClient the Timestamp client
+            @param provider the provider or null
+            @param estimatedSize the reserved size for the signature. It will be estimated if 0
+            @param cades true to sign CAdES equivalent PAdES-BES, false to sign CMS
+            @param signaturePolicy the signature policy (for EPES signatures)
+            @throws DocumentException 
+            @throws IOException 
+            @throws GeneralSecurityException 
+            @throws NoSuchAlgorithmException 
+            @throws Exception 
+        </member>
+        <member name="M:iTextSharp.text.pdf.security.MakeSignature.SignDetached(iTextSharp.text.pdf.PdfSignatureAppearance,iTextSharp.text.pdf.security.IExternalSignature,System.Collections.Generic.ICollection{Org.BouncyCastle.X509.X509Certificate},System.Collections.Generic.ICollection{iTextSharp.text.pdf.security.ICrlClient},iTextSharp.text.pdf.security.IOcspClient,iTextSharp.text.pdf.security.ITSAClient,System.Int32,iTextSharp.text.pdf.security.CryptoStandard,Org.BouncyCastle.Asn1.Esf.SignaturePolicyIdentifier)">
+            Signs the document using the detached mode, CMS or CAdES equivalent.
+            @param sap the PdfSignatureAppearance
+            @param externalSignature the interface providing the actual signing
+            @param chain the certificate chain
+            @param crlList the CRL list
+            @param ocspClient the OCSP client
+            @param tsaClient the Timestamp client
+            @param provider the provider or null
+            @param estimatedSize the reserved size for the signature. It will be estimated if 0
+            @param cades true to sign CAdES equivalent PAdES-BES, false to sign CMS
+            @param signaturePolicy the signature policy (for EPES signatures)
             @throws DocumentException 
             @throws IOException 
             @throws GeneralSecurityException 
@@ -51024,6 +51178,15 @@
             Returns the encryption algorithm used for signing.
             @return the encryption algorithm ("RSA" or "DSA")
             @see com.itextpdf.text.pdf.security.ExternalSignature#getEncryptionAlgorithm()
+        </member>
+        <member name="T:iTextSharp.text.pdf.security.SignaturePolicyInfo">
+            Class that encapsulates the signature policy information
+            @author J. Arturo
+            
+            Sample:
+            
+                 SignaturePolicyInfo spi = new SignaturePolicyInfo("2.16.724.1.3.1.1.2.1.9", 
+                 "G7roucf600+f03r/o0bAOQ6WAs0=", "SHA-1", "https://sede.060.gob.es/politica_de_firma_anexo_1.pdf");
         </member>
         <member name="T:iTextSharp.text.pdf.security.SecurityIDs">
             A list of IDs that are used by the security classes

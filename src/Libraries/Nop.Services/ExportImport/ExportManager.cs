@@ -173,7 +173,7 @@ namespace Nop.Services.ExportImport
         protected virtual string GetCategories(Product product)
         {
             string categoryNames = null;
-            foreach (var pc in _categoryService.GetProductCategoriesByProductId(product.Id))
+            foreach (var pc in _categoryService.GetProductCategoriesByProductId(product.Id, true))
             {
                 categoryNames += pc.Category.Name;
                 categoryNames += ";";
@@ -189,12 +189,29 @@ namespace Nop.Services.ExportImport
         protected virtual string GetManufacturers(Product product)
         {
             string manufacturerNames = null;
-            foreach (var pm in _manufacturerService.GetProductManufacturersByProductId(product.Id))
+            foreach (var pm in _manufacturerService.GetProductManufacturersByProductId(product.Id, true))
             {
                 manufacturerNames += pm.Manufacturer.Name;
                 manufacturerNames += ";";
             }
             return manufacturerNames;
+        }
+
+        /// <summary>
+        /// Returns the list of product tag for a product separated by a ";"
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>List of product tag</returns>
+        protected virtual string GetProductTags(Product product)
+        {
+            string productTagNames = null;
+
+            foreach (var productTag in product.ProductTags)
+            {
+                productTagNames += productTag.Name;
+                productTagNames += ";";
+            }
+            return productTagNames;
         }
 
         /// <summary>
@@ -251,10 +268,12 @@ namespace Nop.Services.ExportImport
                     // uncomment this line if you want the XML written out to the outputDir
                     //xlPackage.DebugMode = true; 
 
-                    // get handle to the existing worksheet
+                    // get handles to the worksheets
                     var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(T).Name);
+                    var fWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductsFilters");
+                    fWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+                    
                     //create Headers and format them 
-
                     var manager = new PropertyManager<T>(properties.Where(p => !p.Ignore).ToArray());
                     manager.WriteCaption(worksheet, SetCaptionStyle);
 
@@ -262,7 +281,7 @@ namespace Nop.Services.ExportImport
                     foreach (var items in itemsToExport)
                     {
                         manager.CurrentObject = items;
-                        manager.WriteToXlsx(worksheet, row++);
+                        manager.WriteToXlsx(worksheet, row++, _catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities, fWorksheet: fWorksheet);
                     }
 
                     xlPackage.Save();
@@ -312,10 +331,14 @@ namespace Nop.Services.ExportImport
                     // uncomment this line if you want the XML written out to the outputDir
                     //xlPackage.DebugMode = true; 
 
-                    // get handle to the existing worksheet
+                    // get handles to the worksheets
                     var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(Product).Name);
-                    //create Headers and format them 
+                    var fpWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductsFilters");
+                    fpWorksheet.Hidden=eWorkSheetHidden.VeryHidden;
+                    var faWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductAttributesFilters");
+                    faWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
 
+                    //create Headers and format them 
                     var manager = new PropertyManager<Product>(properties.Where(p => !p.Ignore).ToArray());
                     manager.WriteCaption(worksheet, SetCaptionStyle);
 
@@ -323,7 +346,7 @@ namespace Nop.Services.ExportImport
                     foreach (var item in itemsToExport)
                     {
                         manager.CurrentObject = item;
-                        manager.WriteToXlsx(worksheet, row++);
+                        manager.WriteToXlsx(worksheet, row++, _catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities, fWorksheet: fpWorksheet);
 
                         var attributes = item.ProductAttributeMappings.SelectMany(pam => pam.ProductAttributeValues.Select(pav => new ExportProductAttribute
                         {
@@ -368,7 +391,7 @@ namespace Nop.Services.ExportImport
                         {
                             row++;
                             attributeManager.CurrentObject = exportProducAttribute;
-                            attributeManager.WriteToXlsx(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset);
+                            attributeManager.WriteToXlsx(worksheet, row, _catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities, ExportProductAttribute.ProducAttributeCellOffset, faWorksheet);
                             worksheet.Row(row).OutlineLevel = 1;
                             worksheet.Row(row).Collapsed = true;
                         }
@@ -811,6 +834,20 @@ namespace Nop.Services.ExportImport
                     xmlWriter.WriteEndElement();
                 }
 
+                if (!IgnoreExportPoductProperty(p => p.ProductTags))
+                {
+                    xmlWriter.WriteStartElement("ProductTags");
+                    var productTags = product.ProductTags;
+                    foreach (var productTag in productTags)
+                    {
+                        xmlWriter.WriteStartElement("ProductTag");
+                        xmlWriter.WriteString("Id", productTag.Id);
+                        xmlWriter.WriteString("Name", productTag.Name);
+                        xmlWriter.WriteEndElement();
+                    }
+                    xmlWriter.WriteEndElement();
+                }
+
                 xmlWriter.WriteEndElement();
             }
 
@@ -969,6 +1006,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("Height", p => p.Height, IgnoreExportPoductProperty(p => p.Dimensions)),
                 new PropertyByName<Product>("Categories", GetCategories),
                 new PropertyByName<Product>("Manufacturers", GetManufacturers, IgnoreExportPoductProperty(p => p.Manufacturers)),
+                new PropertyByName<Product>("ProductTags", GetProductTags, IgnoreExportPoductProperty(p => p.ProductTags)),
                 new PropertyByName<Product>("Picture1", p => GetPictures(p)[0]),
                 new PropertyByName<Product>("Picture2", p => GetPictures(p)[1]),
                 new PropertyByName<Product>("Picture3", p => GetPictures(p)[2])

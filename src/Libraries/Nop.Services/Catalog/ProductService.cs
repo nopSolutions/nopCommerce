@@ -176,6 +176,9 @@ namespace Nop.Services.Catalog
             product.Deleted = true;
             //delete product
             UpdateProduct(product);
+
+            //event notification
+            _eventPublisher.EntityDeleted(product);
         }
 
         /// <summary>
@@ -194,6 +197,12 @@ namespace Nop.Services.Catalog
 
             //delete product
             UpdateProducts(products);
+
+            foreach (var product in products)
+            {
+                //event notification
+                _eventPublisher.EntityDeleted(product);
+            }
         }
 
         /// <summary>

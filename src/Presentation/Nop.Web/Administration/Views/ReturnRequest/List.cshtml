@@ -64,7 +64,7 @@
                                     confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                     mode: "inline"
                                 },
-                                scrollable: false,
+                                scrollable: false,  
                                 columns: [
                                     {
                                         field: "CustomNumber",
@@ -74,7 +74,7 @@
                                         field: "ProductName",
                                         title: "@T("Admin.ReturnRequests.Fields.Product")",
                                         width: 200,
-                                        template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>'
+                                        template: '# if(ProductId > 0) {# <a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a> #} else {# order item is deleted #} #'
                                     }, {
                                         field: "Quantity",
                                         title: "@T("Admin.ReturnRequests.Fields.Quantity")",
@@ -88,7 +88,7 @@
                                         field: "OrderId",
                                         title: "@T("Admin.ReturnRequests.Fields.Order")",
                                         width: 200,
-                                        template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderId# - @T("Admin.Common.View")</a>'
+                                        template: '# if(OrderId > 0) {# <a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderId# - @T("Admin.Common.View")</a> #} else {# order item is deleted #} #'
                                     }, {
                                         field: "ReturnRequestStatusStr",
                                         title: "@T("Admin.ReturnRequests.Fields.Status")",

@@ -969,7 +969,13 @@
         </member>
         <member name="M:StackExchange.Redis.ConfigurationOptions.ToString">
             <summary>
+            Returns the effective configuration string for this configuration, including Redis credentials.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConfigurationOptions.ToString(System.Boolean)">
+            <summary>
             Returns the effective configuration string for this configuration
+            with the option to include or exclude the password from the string.
             </summary>
         </member>
         <member name="T:StackExchange.Redis.ConnectionCounters">

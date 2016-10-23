@@ -1,6 +1,6 @@
 ﻿nopCommerce
 ===========
-nopCommerce is the best open-source e-commerce shopping cart. nopCommerce is available for free. Today it's the best and most popular ASP.NET ecommerce software. It has been downloaded more than 1.5 million times!
+nopCommerce is the best open-source e-commerce shopping cart. nopCommerce is available for free. Today it's the best and most popular ASP.NET ecommerce software. It has been downloaded more than 1.8 million times!
 
 nopCommerce is a fully customizable shopping cart. It's stable and highly usable. nopCommerce is an open source ecommerce solution that is **ASP.NET (MVC)** based with a MS SQL 2008 (or higher) backend database. Our easy-to-use shopping cart solution is uniquely suited for merchants that have outgrown existing systems, and may be hosted with your current web host or our hosting partners. It has everything you need to get started in selling physical and digital goods over the internet.
 
@@ -23,7 +23,7 @@ Complete feature list: [http://www.nopcommerce.com/featurelist.aspx](http://www.
 
 Technology & System Requirements: [http://www.nopcommerce.com/technologysystemrequirements.aspx](http://www.nopcommerce.com/technologysystemrequirements.aspx)
 
-Documentation: [http://www.nopcommerce.com/documentation.asp](http://www.nopcommerce.com/documentation.aspx)
+Documentation: [http://docs.nopcommerce.com/display/nc/nopCommerce+Documentation](http://docs.nopcommerce.com/display/nc/nopCommerce+Documentation)
 
 Forums: [http://www.nopcommerce.com/boards/](http://www.nopcommerce.com/boards/)
 

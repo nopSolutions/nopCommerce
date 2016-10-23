@@ -11,6 +11,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
@@ -68,6 +69,7 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IProductTagService _productTagService;
         private readonly IOrderReportService _orderReportService;
+        private readonly IOrderService _orderService;
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
@@ -113,6 +115,7 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService,
             IProductTagService productTagService,
             IOrderReportService orderReportService,
+            IOrderService orderService,
             IAclService aclService,
             IStoreMappingService storeMappingService,
             IPermissionService permissionService,
@@ -154,6 +157,7 @@ namespace Nop.Web.Controllers
             this._workflowMessageService = workflowMessageService;
             this._productTagService = productTagService;
             this._orderReportService = orderReportService;
+            this._orderService = orderService;
             this._aclService = aclService;
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
@@ -214,7 +218,7 @@ namespace Nop.Web.Controllers
                 MetaTitle = product.GetLocalized(x => x.MetaTitle),
                 SeName = product.GetSeName(),
                 ProductType = product.ProductType,
-                ShowSku = _catalogSettings.ShowProductSku,
+                ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage,
                 Sku = product.Sku,
                 ShowManufacturerPartNumber = _catalogSettings.ShowManufacturerPartNumber,
                 FreeShippingNotificationEnabled = _catalogSettings.ShowFreeShippingNotification,
@@ -400,9 +404,7 @@ namespace Nop.Web.Controllers
                 var defaultPictureModel = new PictureModel
                 {
                     ImageUrl = _pictureService.GetPictureUrl(defaultPicture, defaultPictureSize, !isAssociatedProduct),
-                    FullSizeImageUrl = _pictureService.GetPictureUrl(defaultPicture, 0, !isAssociatedProduct),
-                    Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), model.Name),
-                    AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), model.Name),
+                    FullSizeImageUrl = _pictureService.GetPictureUrl(defaultPicture, 0, !isAssociatedProduct)
                 };
                 //"title" attribute
                 defaultPictureModel.Title = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.TitleAttribute)) ?
@@ -995,8 +997,15 @@ namespace Nop.Web.Controllers
             _recentlyViewedProductsService.AddProductToRecentlyViewedList(product.Id);
 
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                DisplayEditLink(Url.Action("Edit", "Product", new { id = product.Id, area = "Admin" }));
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) &&
+                _permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+            {
+                //a vendor should have access only to his products
+                if (_workContext.CurrentVendor == null || _workContext.CurrentVendor.Id == product.VendorId)
+                {
+                    DisplayEditLink(Url.Action("Edit", "Product", new { id = product.Id, area = "Admin" }));
+                }
+            }
 
             //activity log
             _customerActivityService.InsertActivity("PublicStore.ViewProduct", _localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name);
@@ -1258,6 +1267,11 @@ namespace Nop.Web.Controllers
             //only registered users can leave reviews
             if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
                 ModelState.AddModelError("", _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews"));
+
+            if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing &&
+                !_orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id, productId: productId, osIds: new List<int> { (int)OrderStatus.Complete }).Any())
+                    ModelState.AddModelError(string.Empty, _localizationService.GetResource("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
+            
             //default value
             model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
             return View(model);
@@ -1283,6 +1297,10 @@ namespace Nop.Web.Controllers
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews"));
             }
+
+            if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing && 
+                !_orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id, productId: productId, osIds: new List<int> { (int)OrderStatus.Complete }).Any())
+                    ModelState.AddModelError(string.Empty, _localizationService.GetResource("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
 
             if (ModelState.IsValid)
             {

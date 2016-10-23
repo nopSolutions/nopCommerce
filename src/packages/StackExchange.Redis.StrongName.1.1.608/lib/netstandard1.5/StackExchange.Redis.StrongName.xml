@@ -969,7 +969,13 @@
         </member>
         <member name="M:StackExchange.Redis.ConfigurationOptions.ToString">
             <summary>
+            Returns the effective configuration string for this configuration, including Redis credentials.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConfigurationOptions.ToString(System.Boolean)">
+            <summary>
             Returns the effective configuration string for this configuration
+            with the option to include or exclude the password from the string.
             </summary>
         </member>
         <member name="T:StackExchange.Redis.ConnectionCounters">
@@ -4785,11 +4791,6 @@
             Indicates a connection fault when communicating with redis
             </summary>
         </member>
-        <member name="M:StackExchange.Redis.RedisConnectionException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Serialization implementation; not intended for general usage
-            </summary>
-        </member>
         <member name="P:StackExchange.Redis.RedisConnectionException.FailureType">
             <summary>
             The type of connection failure
@@ -4800,7 +4801,7 @@
             Indicates an issue communicating with redis
             </summary>
         </member>
-        <member name="M:StackExchange.Redis.RedisException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+        <member name="M:StackExchange.Redis.RedisException.#ctor(System.String)">
             <summary>
             Deserialization constructor; not intended for general usage
             </summary>

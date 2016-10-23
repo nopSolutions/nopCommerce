@@ -186,7 +186,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<FulltextService>().As<IFulltextService>().InstancePerLifetimeScope();
             builder.RegisterType<MaintenanceService>().As<IMaintenanceService>().InstancePerLifetimeScope();
 
-
+            builder.RegisterType<CustomerAttributeFormatter>().As<ICustomerAttributeFormatter>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerAttributeParser>().As<ICustomerAttributeParser>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerAttributeService>().As<ICustomerAttributeService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerService>().As<ICustomerService>().InstancePerLifetimeScope();

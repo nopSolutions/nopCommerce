@@ -18,6 +18,7 @@ using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
@@ -46,9 +47,10 @@ namespace Nop.Admin.Controllers
         private readonly TaxSettings _taxSettings;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly WidgetSettings _widgetSettings;
-	    #endregion
+        private readonly ICustomerActivityService _customerActivityService;
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
         public PluginController(IPluginFinder pluginFinder,
             IOfficialFeedManager officialFeedManager,
@@ -62,8 +64,9 @@ namespace Nop.Admin.Controllers
             ShippingSettings shippingSettings,
             TaxSettings taxSettings, 
             ExternalAuthenticationSettings externalAuthenticationSettings, 
-            WidgetSettings widgetSettings)
-		{
+            WidgetSettings widgetSettings,
+            ICustomerActivityService customerActivityService)
+        {
             this._pluginFinder = pluginFinder;
             this._officialFeedManager = officialFeedManager;
             this._localizationService = localizationService;
@@ -77,7 +80,8 @@ namespace Nop.Admin.Controllers
             this._taxSettings = taxSettings;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._widgetSettings = widgetSettings;
-		}
+            this._customerActivityService = customerActivityService;
+        }
 
 		#endregion 
 
@@ -300,6 +304,10 @@ namespace Nop.Admin.Controllers
 
                 //install plugin
                 pluginDescriptor.Instance().Install();
+
+                //activity log
+                _customerActivityService.InsertActivity("InstallNewPlugin", _localizationService.GetResource("ActivityLog.InstallNewPlugin"), pluginDescriptor.FriendlyName);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Installed"));
 
                 //restart application
@@ -339,6 +347,10 @@ namespace Nop.Admin.Controllers
 
                 //uninstall plugin
                 pluginDescriptor.Instance().Uninstall();
+
+                //activity log
+                _customerActivityService.InsertActivity("UninstallPlugin", _localizationService.GetResource("ActivityLog.UninstallPlugin"), pluginDescriptor.FriendlyName);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Uninstalled"));
 
                 //restart application
@@ -564,6 +576,9 @@ namespace Nop.Admin.Controllers
                             }
                         }
                     }
+
+                    //activity log
+                    _customerActivityService.InsertActivity("EditPlugin", _localizationService.GetResource("ActivityLog.EditPlugin"), pluginDescriptor.FriendlyName);
                 }
 
                 ViewBag.RefreshPage = true;

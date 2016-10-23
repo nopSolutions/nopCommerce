@@ -4392,16 +4392,6 @@
             properties).
             </summary>
         </member>
-        <member name="P:Autofac.Core.DefaultPropertySelector.PreserveSetValueInstance">
-            <summary>
-            Gets an instance of DefaultPropertySelector that will preserve any values already set
-            </summary>
-        </member>
-        <member name="P:Autofac.Core.DefaultPropertySelector.OverwriteSetValueInstance">
-            <summary>
-            Gets an instance of DefaultPropertySelector that will cause values to be overwritten
-            </summary>
-        </member>
         <member name="M:Autofac.Core.DefaultPropertySelector.#ctor(System.Boolean)">
             <summary>
             Initializes a new instance of the <see cref="T:Autofac.Core.DefaultPropertySelector"/> class
@@ -4413,6 +4403,16 @@
             <summary>
             Gets or sets a value indicating whether the value should be set if the value is already
             set (ie non-null)
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.DefaultPropertySelector.OverwriteSetValueInstance">
+            <summary>
+            Gets an instance of DefaultPropertySelector that will cause values to be overwritten
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.DefaultPropertySelector.PreserveSetValueInstance">
+            <summary>
+            Gets an instance of DefaultPropertySelector that will preserve any values already set
             </summary>
         </member>
         <member name="M:Autofac.Core.DefaultPropertySelector.InjectProperty(System.Reflection.PropertyInfo,System.Object)">

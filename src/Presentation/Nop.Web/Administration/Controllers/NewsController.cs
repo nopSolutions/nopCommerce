@@ -8,6 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.News;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.News;
 using Nop.Services.Security;
 using Nop.Services.Seo;
@@ -31,10 +32,11 @@ namespace Nop.Admin.Controllers
         private readonly IUrlRecordService _urlRecordService;
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
-        
-		#endregion
+        private readonly ICustomerActivityService _customerActivityService;
 
-		#region Constructors
+        #endregion
+
+        #region Constructors
 
         public NewsController(INewsService newsService, 
             ILanguageService languageService,
@@ -43,7 +45,8 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService,
             IUrlRecordService urlRecordService,
             IStoreService storeService, 
-            IStoreMappingService storeMappingService)
+            IStoreMappingService storeMappingService,
+            ICustomerActivityService customerActivityService)
         {
             this._newsService = newsService;
             this._languageService = languageService;
@@ -53,7 +56,8 @@ namespace Nop.Admin.Controllers
             this._urlRecordService = urlRecordService;
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
-		}
+            this._customerActivityService = customerActivityService;
+        }
 
         #endregion
 
@@ -157,11 +161,7 @@ namespace Nop.Admin.Controllers
                 Data = news.Select(x =>
                 {
                     var m = x.ToModel();
-                    //little hack here:
-                    //ensure that descriptions are not returned
-                    //otherwise, we can get the following error if entities have too long descriptions:
-                    //"Error during serialization or deserialization using the JSON JavaScriptSerializer. The length of the string exceeds the value set on the maxJsonLength property. "
-                    //also it improves performance
+                    //little performance optimization: ensure that "Full" is not returned
                     m.Full = "";
                     if (x.StartDateUtc.HasValue)
                         m.StartDate = _dateTimeHelper.ConvertToUserTime(x.StartDateUtc.Value, DateTimeKind.Utc);
@@ -207,7 +207,10 @@ namespace Nop.Admin.Controllers
                 newsItem.EndDateUtc = model.EndDate;
                 newsItem.CreatedOnUtc = DateTime.UtcNow;
                 _newsService.InsertNews(newsItem);
-                
+
+                //activity log
+                _customerActivityService.InsertActivity("AddNewNews", _localizationService.GetResource("ActivityLog.AddNewNews"), newsItem.Id);
+
                 //search engine name
                 var seName = newsItem.ValidateSeName(model.SeName, model.Title, true);
                 _urlRecordService.SaveSlug(newsItem, seName, newsItem.LanguageId);
@@ -272,6 +275,9 @@ namespace Nop.Admin.Controllers
                 newsItem.EndDateUtc = model.EndDate;
                 _newsService.UpdateNews(newsItem);
 
+                //activity log
+                _customerActivityService.InsertActivity("EditNews", _localizationService.GetResource("ActivityLog.EditNews"), newsItem.Id);
+
                 //search engine name
                 var seName = newsItem.ValidateSeName(model.SeName, model.Title, true);
                 _urlRecordService.SaveSlug(newsItem, seName, newsItem.LanguageId);
@@ -309,6 +315,9 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             _newsService.DeleteNews(newsItem);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteNews", _localizationService.GetResource("ActivityLog.DeleteNews"), newsItem.Id);
 
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Deleted"));
             return RedirectToAction("List");
@@ -373,6 +382,10 @@ namespace Nop.Admin.Controllers
 
             var newsItem = comment.NewsItem;
             _newsService.DeleteNewsComment(comment);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteNewsComment", _localizationService.GetResource("ActivityLog.DeleteNewsComment"), id);
+
             //update totals
             newsItem.CommentCount = newsItem.NewsComments.Count;
             _newsService.UpdateNews(newsItem);
@@ -392,6 +405,13 @@ namespace Nop.Admin.Controllers
                 var news = _newsService.GetNewsByIds(comments.Select(p => p.NewsItemId).Distinct().ToArray());
 
                 _newsService.DeleteNewsComments(comments);
+
+                //activity log
+                foreach (var newsComment in comments)
+                {
+                    _customerActivityService.InsertActivity("DeleteNewsComment", _localizationService.GetResource("ActivityLog.DeleteNewsComment"), newsComment.Id);
+                }
+
                 //update totals
                 foreach (var newsItem in news)
                 {

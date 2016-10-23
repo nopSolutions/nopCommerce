@@ -50,36 +50,19 @@ namespace Nop.Services.Polls
 
             return _pollRepository.GetById(pollId);
         }
-
-        /// <summary>
-        /// Gets a poll
-        /// </summary>
-        /// <param name="systemKeyword">The poll system keyword</param>
-        /// <param name="languageId">Language identifier. 0 if you want to get all polls</param>
-        /// <returns>Poll</returns>
-        public virtual Poll GetPollBySystemKeyword(string systemKeyword, int languageId)
-        {
-            if (String.IsNullOrWhiteSpace(systemKeyword))
-                return null;
-
-            var query = from p in _pollRepository.Table
-                        where p.SystemKeyword == systemKeyword && p.LanguageId == languageId
-                        select p;
-            var poll = query.FirstOrDefault();
-            return poll;
-        }
         
         /// <summary>
         /// Gets polls
         /// </summary>
         /// <param name="languageId">Language identifier. 0 if you want to get all polls</param>
         /// <param name="loadShownOnHomePageOnly">Retrieve only shown on home page polls</param>
+        /// <param name="systemKeyword">The poll system keyword. Pass null if you want to get all polls</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Polls</returns>
         public virtual IPagedList<Poll> GetPolls(int languageId = 0, bool loadShownOnHomePageOnly = false,
-            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
+            string systemKeyword = null, int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             var query = _pollRepository.Table;
             if (!showHidden)
@@ -96,6 +79,10 @@ namespace Nop.Services.Polls
             if (languageId > 0)
             {
                 query = query.Where(p => p.LanguageId == languageId);
+            }
+            if (!String.IsNullOrEmpty(systemKeyword))
+            {
+                query = query.Where(p => p.SystemKeyword == systemKeyword);
             }
             query = query.OrderBy(p => p.DisplayOrder);
 

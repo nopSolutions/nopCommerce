@@ -10,6 +10,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Stores;
@@ -31,6 +32,7 @@ namespace Nop.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IPermissionService _permissionService;
 	    private readonly ICustomerService _customerService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         public CampaignController(ICampaignService campaignService,
             IDateTimeHelper dateTimeHelper, 
@@ -42,7 +44,8 @@ namespace Nop.Admin.Controllers
             IStoreContext storeContext,
             IStoreService storeService,
             IPermissionService permissionService, 
-            ICustomerService customerService)
+            ICustomerService customerService,
+            ICustomerActivityService customerActivityService)
 		{
             this._campaignService = campaignService;
             this._dateTimeHelper = dateTimeHelper;
@@ -55,6 +58,7 @@ namespace Nop.Admin.Controllers
             this._storeService = storeService;
             this._permissionService = permissionService;
             this._customerService = customerService;
+            this._customerActivityService = customerActivityService;
 		}
 
         [NonAction]
@@ -197,6 +201,9 @@ namespace Nop.Admin.Controllers
                     (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DontSendBeforeDate.Value) : null;
                 _campaignService.InsertCampaign(campaign);
 
+                //activity log
+                _customerActivityService.InsertActivity("AddNewCampaign", _localizationService.GetResource("ActivityLog.AddNewCampaign"), campaign.Id);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = campaign.Id }) : RedirectToAction("List");
             }
@@ -250,6 +257,9 @@ namespace Nop.Admin.Controllers
                 campaign.DontSendBeforeDateUtc = model.DontSendBeforeDate.HasValue ?
                     (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DontSendBeforeDate.Value) : null;
                 _campaignService.UpdateCampaign(campaign);
+
+                //activity log
+                _customerActivityService.InsertActivity("EditCampaign", _localizationService.GetResource("ActivityLog.EditCampaign"), campaign.Id);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = campaign.Id }) : RedirectToAction("List");
@@ -377,6 +387,10 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             _campaignService.DeleteCampaign(campaign);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteCampaign", _localizationService.GetResource("ActivityLog.DeleteCampaign"), campaign.Id);
+
 
             SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Deleted"));
 			return RedirectToAction("List");

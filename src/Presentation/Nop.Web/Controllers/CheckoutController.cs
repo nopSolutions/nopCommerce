@@ -144,12 +144,12 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected virtual bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool ignoreRewardPoints = false)
+        protected virtual bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool? useRewardPoints = null)
         {
             bool result = true;
 
             //check whether order total equals zero
-            decimal? shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart, ignoreRewardPoints);
+            decimal? shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart, useRewardPoints: useRewardPoints);
             if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
                 result = false;
             return result;
@@ -403,6 +403,9 @@ namespace Nop.Web.Controllers
                     model.DisplayRewardPoints = true;
                     model.RewardPointsAmount = _priceFormatter.FormatPrice(rewardPointsAmount, true, false);
                     model.RewardPointsBalance = rewardPointsBalance;
+
+                    //are points enough to pay for entire order? like if this option (to use them) was selected
+                    model.RewardPointsEnoughToPayForOrder = !IsPaymentWorkflowRequired(cart, true);
                 }
             }
 
@@ -1029,7 +1032,7 @@ namespace Nop.Web.Controllers
 
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
-            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, true);
+            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, false);
             if (!isPaymentWorkflowRequired)
             {
                 _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
@@ -1362,7 +1365,7 @@ namespace Nop.Web.Controllers
         {
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
-            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, true);
+            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, false);
             if (isPaymentWorkflowRequired)
             {
                 //filter by country
