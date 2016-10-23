@@ -1,0 +1,9 @@
+﻿Group: DataShop
+FriendlyName: DataShop Administration
+SystemName: DataShop.Admin
+Version: 1.0
+SupportedVersions: 3.90
+Author: Extended Code
+DisplayOrder: 1
+FileName: DataShop.Admin.dll
+Description: DataShop Administration Plugin

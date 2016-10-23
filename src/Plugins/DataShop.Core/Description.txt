@@ -1,0 +1,9 @@
+﻿Group: DataShop
+FriendlyName: DataShop Core
+SystemName: DataShop.Core
+Version: 1.0
+SupportedVersions: 3.90
+Author: Extended Code
+DisplayOrder: 1
+FileName: DataShop.Core.dll
+Description: DataShop Core Plugin
