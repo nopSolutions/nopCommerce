@@ -298,7 +298,7 @@ namespace Nop.Web.Controllers
             }
             feed.Items = items;
 
-            return new RssActionResult { Feed = feed };
+            return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
 
         public ActionResult ForumGroup(int id)
@@ -417,10 +417,10 @@ namespace Nop.Web.Controllers
 
                 feed.Items = items;
 
-                return new RssActionResult { Feed = feed };
+                return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
             }
 
-            return new RssActionResult { Feed = new SyndicationFeed() };
+            return new RssActionResult(new SyndicationFeed(), _webHelper.GetThisPageUrl(false));
         }
 
         [HttpPost]
