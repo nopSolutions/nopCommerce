@@ -22,6 +22,7 @@ using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
@@ -48,6 +49,7 @@ namespace Nop.Services.ExportImport
         private readonly IVendorService _vendorService;
         private readonly IProductTemplateService _productTemplateService;
         private readonly IShippingService _shippingService;
+        private readonly IDateRangeService _dateRangeService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IMeasureService _measureService;
         private readonly CatalogSettings _catalogSettings;
@@ -67,6 +69,7 @@ namespace Nop.Services.ExportImport
             IVendorService vendorService,
             IProductTemplateService productTemplateService,
             IShippingService shippingService,
+            IDateRangeService dateRangeService,
             ITaxCategoryService taxCategoryService,
             IMeasureService measureService,
             CatalogSettings catalogSettings)
@@ -82,6 +85,7 @@ namespace Nop.Services.ExportImport
             this._vendorService = vendorService;
             this._productTemplateService = productTemplateService;
             this._shippingService = shippingService;
+            this._dateRangeService = dateRangeService;
             this._taxCategoryService = taxCategoryService;
             this._measureService = measureService;
             this._catalogSettings = catalogSettings;
@@ -625,6 +629,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteString("TaxCategoryId", product.TaxCategoryId);
                 xmlWriter.WriteString("IsTelecommunicationsOrBroadcastingOrElectronicServices", product.IsTelecommunicationsOrBroadcastingOrElectronicServices, IgnoreExportPoductProperty(p => p.TelecommunicationsBroadcastingElectronicServices));
                 xmlWriter.WriteString("ManageInventoryMethodId", product.ManageInventoryMethodId);
+                xmlWriter.WriteString("ProductAvailabilityRangeId", product.ProductAvailabilityRangeId, IgnoreExportPoductProperty(p => p.ProductAvailabilityRange));
                 xmlWriter.WriteString("UseMultipleWarehouses", product.UseMultipleWarehouses, IgnoreExportPoductProperty(p => p.UseMultipleWarehouses));
                 xmlWriter.WriteString("WarehouseId", product.WarehouseId, IgnoreExportPoductProperty(p => p.Warehouse));
                 xmlWriter.WriteString("StockQuantity", product.StockQuantity);
@@ -938,7 +943,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("AdditionalShippingCharge", p => p.AdditionalShippingCharge, IgnoreExportPoductProperty(p => p.AdditionalShippingCharge)),
                 new PropertyByName<Product>("DeliveryDate", p => p.DeliveryDateId, IgnoreExportPoductProperty(p => p.DeliveryDate))
                 {
-                    DropDownElements = _shippingService.GetAllDeliveryDates().Select(dd => dd as BaseEntity).ToSelectList(p => (p as DeliveryDate).Return(dd => dd.Name, String.Empty)),
+                    DropDownElements = _dateRangeService.GetAllDeliveryDates().Select(dd => dd as BaseEntity).ToSelectList(p => (p as DeliveryDate).Return(dd => dd.Name, String.Empty)),
                     AllowBlank = true
                 },
                 new PropertyByName<Product>("IsTaxExempt", p => p.IsTaxExempt),
@@ -951,6 +956,11 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("ManageInventoryMethod", p => p.ManageInventoryMethodId)
                 {
                     DropDownElements = ManageInventoryMethod.DontManageStock.ToSelectList(useLocalization: false)
+                },
+                new PropertyByName<Product>("ProductAvailabilityRange", p => p.ProductAvailabilityRangeId, IgnoreExportPoductProperty(p => p.ProductAvailabilityRange))
+                {
+                    DropDownElements = _dateRangeService.GetAllProductAvailabilityRanges().Select(range => range as BaseEntity).ToSelectList(p => (p as ProductAvailabilityRange).Return(range => range.Name, String.Empty)),
+                    AllowBlank = true
                 },
                 new PropertyByName<Product>("UseMultipleWarehouses", p => p.UseMultipleWarehouses, IgnoreExportPoductProperty(p => p.UseMultipleWarehouses)),
                 new PropertyByName<Product>("WarehouseId", p => p.WarehouseId, IgnoreExportPoductProperty(p => p.Warehouse)),

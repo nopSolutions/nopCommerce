@@ -21,6 +21,7 @@ using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Date;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using OfficeOpenXml;
@@ -50,6 +51,7 @@ namespace Nop.Services.ExportImport
         private readonly IVendorService _vendorService;
         private readonly IProductTemplateService _productTemplateService;
         private readonly IShippingService _shippingService;
+        private readonly IDateRangeService _dateRangeService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IMeasureService _measureService;
         private readonly CatalogSettings _catalogSettings;
@@ -74,6 +76,7 @@ namespace Nop.Services.ExportImport
             IVendorService vendorService,
             IProductTemplateService productTemplateService,
             IShippingService shippingService,
+            IDateRangeService dateRangeService,
             ITaxCategoryService taxCategoryService,
             IMeasureService measureService,
             IProductAttributeService productAttributeService,
@@ -95,6 +98,7 @@ namespace Nop.Services.ExportImport
             this._vendorService = vendorService;
             this._productTemplateService = productTemplateService;
             this._shippingService = shippingService;
+            this._dateRangeService = dateRangeService;
             this._taxCategoryService = taxCategoryService;
             this._measureService = measureService;
             this._productAttributeService = productAttributeService;
@@ -366,7 +370,8 @@ namespace Nop.Services.ExportImport
 
                 manager.SetSelectList("Vendor", _vendorService.GetAllVendors(showHidden: true).Select(v => v as BaseEntity).ToSelectList(p => (p as Vendor).Return(v => v.Name, String.Empty)));
                 manager.SetSelectList("ProductTemplate", _productTemplateService.GetAllProductTemplates().Select(pt => pt as BaseEntity).ToSelectList(p => (p as ProductTemplate).Return(pt => pt.Name, String.Empty)));
-                manager.SetSelectList("DeliveryDate", _shippingService.GetAllDeliveryDates().Select(dd => dd as BaseEntity).ToSelectList(p => (p as DeliveryDate).Return(dd => dd.Name, String.Empty)));
+                manager.SetSelectList("DeliveryDate", _dateRangeService.GetAllDeliveryDates().Select(dd => dd as BaseEntity).ToSelectList(p => (p as DeliveryDate).Return(dd => dd.Name, String.Empty)));
+                manager.SetSelectList("ProductAvailabilityRange", _dateRangeService.GetAllProductAvailabilityRanges().Select(range => range as BaseEntity).ToSelectList(p => (p as ProductAvailabilityRange).Return(range => range.Name, String.Empty)));
                 manager.SetSelectList("TaxCategory", _taxCategoryService.GetAllTaxCategories().Select(tc => tc as BaseEntity).ToSelectList(p => (p as TaxCategory).Return(tc => tc.Name, String.Empty)));
                 manager.SetSelectList("BasepriceUnit", _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p =>(p as MeasureWeight).Return(mw => mw.Name, String.Empty)));
                 manager.SetSelectList("BasepriceBaseUnit", _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p => (p as MeasureWeight).Return(mw => mw.Name, String.Empty)));
@@ -756,6 +761,9 @@ namespace Nop.Services.ExportImport
                                 break;
                             case "ManageInventoryMethod":
                                 product.ManageInventoryMethodId = property.IntValue;
+                                break;
+                            case "ProductAvailabilityRange":
+                                product.ProductAvailabilityRangeId = property.IntValue;
                                 break;
                             case "UseMultipleWarehouses":
                                 product.UseMultipleWarehouses = property.BooleanValue;

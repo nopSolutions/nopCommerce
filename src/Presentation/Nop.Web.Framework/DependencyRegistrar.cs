@@ -44,6 +44,7 @@ using Nop.Services.Polls;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 using Nop.Services.Tasks;
 using Nop.Services.Tax;
@@ -288,6 +289,7 @@ namespace Nop.Web.Framework
 
             builder.RegisterType<ShipmentService>().As<IShipmentService>().InstancePerLifetimeScope();
             builder.RegisterType<ShippingService>().As<IShippingService>().InstancePerLifetimeScope();
+            builder.RegisterType<DateRangeService>().As<IDateRangeService>().InstancePerLifetimeScope();
 
             builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>().InstancePerLifetimeScope();
             builder.RegisterType<TaxService>().As<ITaxService>().InstancePerLifetimeScope();

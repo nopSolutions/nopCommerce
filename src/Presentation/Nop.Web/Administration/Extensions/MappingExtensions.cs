@@ -541,7 +541,26 @@ namespace Nop.Admin.Extensions
         }
 
         #endregion
-        
+
+        #region Product availability ranges
+
+        public static ProductAvailabilityRangeModel ToModel(this ProductAvailabilityRange entity)
+        {
+            return entity.MapTo<ProductAvailabilityRange, ProductAvailabilityRangeModel>();
+        }
+
+        public static ProductAvailabilityRange ToEntity(this ProductAvailabilityRangeModel model)
+        {
+            return model.MapTo<ProductAvailabilityRangeModel, ProductAvailabilityRange>();
+        }
+
+        public static ProductAvailabilityRange ToEntity(this ProductAvailabilityRangeModel model, ProductAvailabilityRange destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
         #region Payment methods
 
         public static PaymentMethodModel ToModel(this IPaymentMethod entity)

@@ -302,6 +302,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.SelectedManufacturerIds, mo => mo.Ignore())
                     .ForMember(dest => dest.SelectedDiscountIds, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableDeliveryDates, mo => mo.Ignore())
+                    .ForMember(dest => dest.AvailableProductAvailabilityRanges, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableWarehouses, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableBasepriceUnits, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableBasepriceBaseUnits, mo => mo.Ignore())
@@ -406,6 +407,11 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.Locales, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<DeliveryDateModel, DeliveryDate>();
+                //product availability ranges
+                cfg.CreateMap<ProductAvailabilityRange, ProductAvailabilityRangeModel>()
+                    .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                cfg.CreateMap<ProductAvailabilityRangeModel, ProductAvailabilityRange>();
                 //shipping rate computation methods
                 cfg.CreateMap<IShippingRateComputationMethod, ShippingRateComputationMethodModel>()
                     .ForMember(dest => dest.FriendlyName, mo => mo.MapFrom(src => src.PluginDescriptor.FriendlyName))

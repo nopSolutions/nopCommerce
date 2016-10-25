@@ -191,6 +191,11 @@ namespace Nop.Core.Domain.Catalog
         public bool TelecommunicationsBroadcastingElectronicServices { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether 'Product availability range' field is shown
+        /// </summary>
+        public bool ProductAvailabilityRange { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether 'Use multiple warehouses' field is shown
         /// </summary>
         public bool UseMultipleWarehouses { get; set; }

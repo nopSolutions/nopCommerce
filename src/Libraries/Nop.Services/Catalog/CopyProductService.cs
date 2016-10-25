@@ -180,6 +180,7 @@ namespace Nop.Services.Catalog
                 TaxCategoryId = product.TaxCategoryId,
                 IsTelecommunicationsOrBroadcastingOrElectronicServices = product.IsTelecommunicationsOrBroadcastingOrElectronicServices,
                 ManageInventoryMethod = product.ManageInventoryMethod,
+                ProductAvailabilityRangeId = product.ProductAvailabilityRangeId,
                 UseMultipleWarehouses = product.UseMultipleWarehouses,
                 WarehouseId = product.WarehouseId,
                 StockQuantity = product.StockQuantity,

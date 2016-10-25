@@ -2611,7 +2611,7 @@
     <Value>Delivery date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DeliveryDate.Hint">
-    <Value>Choose a delivery date which will be displayed in the public store. You can manage delivery dates by selecting Configuration > Shipping > Delivery dates.</Value>
+    <Value>Choose a delivery date which will be displayed in the public store. You can manage delivery dates by selecting Configuration > Shipping > Dates and ranges.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DeliveryDate.None">
     <Value>None</Value>
@@ -2855,6 +2855,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.MinStockQuantity.Hint">
     <Value>If you have enabled 'Manage Stock' you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ProductAvailabilityRange">
+    <Value>Product availability range</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ProductAvailabilityRange.Hint">
+    <Value>Choose the product availability range that indicates when the product is expected to be available when out of stock (e.g. Available in 10-14 days). You can manage availability ranges by selecting Configuration > Shipping > Dates and ranges.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ProductAvailabilityRange.None">
+    <Value>None</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.UseMultipleWarehouses">
     <Value>Multiple warehouses</Value>
@@ -6750,6 +6759,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ProductAttributes">
     <Value>Product attributes</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ProductAvailabilityRange">
+    <Value>Product availability range</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ProductCost">
     <Value>Product cost</Value>
   </LocaleResource>
@@ -7326,6 +7338,9 @@
   <LocaleResource Name="Admin.Configuration.Shipping">
     <Value>Shipping</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DatesAndRanges">
+    <Value>Dates and ranges</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates">
     <Value>Delivery dates</Value>
   </LocaleResource>
@@ -7358,6 +7373,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Fields.Name.Required">
     <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Hint">
+    <Value>List of delivery dates which will be available for choice in product details.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Updated">
     <Value>The delivery date has been updated successfully.</Value>
@@ -7436,6 +7454,45 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.PickupPoints">
     <Value>Pickup points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges">
+    <Value>Product availability ranges</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.Added">
+    <Value>The new product availability range has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.AddNew">
+    <Value>Add a new product availability range</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.BackToList">
+    <Value>back to product availability range list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.Deleted">
+    <Value>The product availability range has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.EditProductAvailabilityRangeDetails">
+    <Value>Edit product availability range details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.DisplayOrder.Hint">
+    <Value>The display order of this product availability range. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.Name.Hint">
+    <Value>Enter product availability range name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.Hint">
+    <Value>List of availability ranges which will be available for choice in product details.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.Updated">
+    <Value>The product availability range has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Providers">
     <Value>Shipping providers</Value>
@@ -14610,8 +14667,14 @@
   <LocaleResource Name="Products.Availability">
     <Value>Availability</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Availability.AvailabilityRange">
+    <Value>Available in {0}</Value>
+  </LocaleResource>
   <LocaleResource Name="Products.Availability.Backordering">
     <Value>Out of Stock - on backorder and will be dispatched once in stock.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Availability.BackorderingWithDate">
+    <Value>Out of stock - on backorder and will be dispatched once in stock ({0}).</Value>
   </LocaleResource>
   <LocaleResource Name="Products.Availability.InStock">
     <Value>In stock</Value>
@@ -15149,6 +15212,9 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.AssociatedAttributeWarning">
     <Value>{0}. {1}. {2}</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.AvailabilityRange">
+    <Value>Available in {0}</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.BuyingDisabled">
     <Value>Buying is disabled for this product</Value>

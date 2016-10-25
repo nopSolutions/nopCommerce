@@ -44,7 +44,6 @@ namespace Nop.Services.Shipping
         #region Fields
 
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
-        private readonly IRepository<DeliveryDate> _deliveryDateRepository;
         private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly ILogger _logger;
         private readonly IProductService _productService;
@@ -68,7 +67,6 @@ namespace Nop.Services.Shipping
         /// Ctor
         /// </summary>
         /// <param name="shippingMethodRepository">Shipping method repository</param>
-        /// <param name="deliveryDateRepository">Delivery date repository</param>
         /// <param name="warehouseRepository">Warehouse repository</param>
         /// <param name="logger">Logger</param>
         /// <param name="productService">Product service</param>
@@ -84,7 +82,6 @@ namespace Nop.Services.Shipping
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
         /// <param name="cacheManager">Cache manager</param>
         public ShippingService(IRepository<ShippingMethod> shippingMethodRepository,
-            IRepository<DeliveryDate> deliveryDateRepository,
             IRepository<Warehouse> warehouseRepository,
             ILogger logger,
             IProductService productService,
@@ -101,7 +98,6 @@ namespace Nop.Services.Shipping
             ICacheManager cacheManager)
         {
             this._shippingMethodRepository = shippingMethodRepository;
-            this._deliveryDateRepository = deliveryDateRepository;
             this._warehouseRepository = warehouseRepository;
             this._logger = logger;
             this._productService = productService;
@@ -254,81 +250,6 @@ namespace Nop.Services.Shipping
 
             //event notification
             _eventPublisher.EntityUpdated(shippingMethod);
-        }
-
-        #endregion
-
-        #region Delivery dates
-
-        /// <summary>
-        /// Deletes a delivery date
-        /// </summary>
-        /// <param name="deliveryDate">The delivery date</param>
-        public virtual void DeleteDeliveryDate(DeliveryDate deliveryDate)
-        {
-            if (deliveryDate == null)
-                throw new ArgumentNullException("deliveryDate");
-
-            _deliveryDateRepository.Delete(deliveryDate);
-
-            //event notification
-            _eventPublisher.EntityDeleted(deliveryDate);
-        }
-
-        /// <summary>
-        /// Gets a delivery date
-        /// </summary>
-        /// <param name="deliveryDateId">The delivery date identifier</param>
-        /// <returns>Delivery date</returns>
-        public virtual DeliveryDate GetDeliveryDateById(int deliveryDateId)
-        {
-            if (deliveryDateId == 0)
-                return null;
-
-            return _deliveryDateRepository.GetById(deliveryDateId);
-        }
-
-        /// <summary>
-        /// Gets all delivery dates
-        /// </summary>
-        /// <returns>Delivery dates</returns>
-        public virtual IList<DeliveryDate> GetAllDeliveryDates()
-        {
-            var query = from dd in _deliveryDateRepository.Table
-                        orderby dd.DisplayOrder
-                        select dd;
-            var deliveryDates = query.ToList();
-            return deliveryDates;
-        }
-
-        /// <summary>
-        /// Inserts a delivery date
-        /// </summary>
-        /// <param name="deliveryDate">Delivery date</param>
-        public virtual void InsertDeliveryDate(DeliveryDate deliveryDate)
-        {
-            if (deliveryDate == null)
-                throw new ArgumentNullException("deliveryDate");
-
-            _deliveryDateRepository.Insert(deliveryDate);
-
-            //event notification
-            _eventPublisher.EntityInserted(deliveryDate);
-        }
-
-        /// <summary>
-        /// Updates the delivery date
-        /// </summary>
-        /// <param name="deliveryDate">Delivery date</param>
-        public virtual void UpdateDeliveryDate(DeliveryDate deliveryDate)
-        {
-            if (deliveryDate == null)
-                throw new ArgumentNullException("deliveryDate");
-
-            _deliveryDateRepository.Update(deliveryDate);
-
-            //event notification
-            _eventPublisher.EntityUpdated(deliveryDate);
         }
 
         #endregion

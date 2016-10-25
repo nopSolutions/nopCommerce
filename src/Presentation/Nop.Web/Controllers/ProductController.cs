@@ -27,6 +27,7 @@ using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
@@ -77,6 +78,7 @@ namespace Nop.Web.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IShippingService _shippingService;
+        private readonly IDateRangeService _dateRangeService;
         private readonly IEventPublisher _eventPublisher;
         private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -122,6 +124,7 @@ namespace Nop.Web.Controllers
             IDownloadService downloadService,
             ICustomerActivityService customerActivityService,
             IProductAttributeParser productAttributeParser,
+            IDateRangeService dateRangeService,
             IShippingService shippingService,
             IEventPublisher eventPublisher,
             MediaSettings mediaSettings,
@@ -165,6 +168,7 @@ namespace Nop.Web.Controllers
             this._customerActivityService = customerActivityService;
             this._productAttributeParser = productAttributeParser;
             this._shippingService = shippingService;
+            this._dateRangeService = dateRangeService;
             this._eventPublisher = eventPublisher;
             this._mediaSettings = mediaSettings;
             this._catalogSettings = catalogSettings;
@@ -226,7 +230,7 @@ namespace Nop.Web.Controllers
                 ShowGtin = _catalogSettings.ShowGtin,
                 Gtin = product.Gtin,
                 ManageInventoryMethod = product.ManageInventoryMethod,
-                StockAvailability = product.FormatStockMessage("", _localizationService, _productAttributeParser),
+                StockAvailability = product.FormatStockMessage("", _localizationService, _productAttributeParser, _dateRangeService),
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
                 DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts
             };
@@ -244,7 +248,7 @@ namespace Nop.Web.Controllers
             {
                 model.IsFreeShipping = product.IsFreeShipping;
                 //delivery date
-                var deliveryDate = _shippingService.GetDeliveryDateById(product.DeliveryDateId);
+                var deliveryDate = _dateRangeService.GetDeliveryDateById(product.DeliveryDateId);
                 if (deliveryDate != null)
                 {
                     model.DeliveryDate = deliveryDate.GetLocalized(dd => dd.Name);

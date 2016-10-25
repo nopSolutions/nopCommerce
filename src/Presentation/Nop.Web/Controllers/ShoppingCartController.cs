@@ -31,6 +31,7 @@ using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Date;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;
 using Nop.Web.Framework.Controllers;
@@ -70,6 +71,7 @@ namespace Nop.Web.Controllers
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IShippingService _shippingService;
+        private readonly IDateRangeService _dateRangeService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly IPaymentService _paymentService;
@@ -118,7 +120,8 @@ namespace Nop.Web.Controllers
             IGiftCardService giftCardService,
             ICountryService countryService,
             IStateProvinceService stateProvinceService,
-            IShippingService shippingService, 
+            IShippingService shippingService,
+            IDateRangeService dateRangeService,
             IOrderTotalCalculationService orderTotalCalculationService,
             ICheckoutAttributeService checkoutAttributeService, 
             IPaymentService paymentService,
@@ -164,6 +167,7 @@ namespace Nop.Web.Controllers
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
             this._shippingService = shippingService;
+            this._dateRangeService = dateRangeService;
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._checkoutAttributeService = checkoutAttributeService;
             this._paymentService = paymentService;
@@ -1903,7 +1907,7 @@ namespace Nop.Web.Controllers
             }
 
             //stock
-            var stockAvailability = product.FormatStockMessage(attributeXml, _localizationService, _productAttributeParser);
+            var stockAvailability = product.FormatStockMessage(attributeXml, _localizationService, _productAttributeParser, _dateRangeService);
 
             //conditional attributes
             var enabledAttributeMappingIds = new List<int>();

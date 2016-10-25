@@ -31,6 +31,7 @@ using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
@@ -74,6 +75,7 @@ namespace Nop.Admin.Controllers
         private readonly IOrderService _orderService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IVendorService _vendorService;
+        private readonly IDateRangeService _dateRangeService;
         private readonly IShippingService _shippingService;
         private readonly IShipmentService _shipmentService;
         private readonly ICurrencyService _currencyService;
@@ -121,7 +123,8 @@ namespace Nop.Admin.Controllers
             IStoreService storeService,
             IOrderService orderService,
             IStoreMappingService storeMappingService,
-             IVendorService vendorService,
+            IVendorService vendorService,
+            IDateRangeService dateRangeService,
             IShippingService shippingService,
             IShipmentService shipmentService,
             ICurrencyService currencyService,
@@ -166,6 +169,7 @@ namespace Nop.Admin.Controllers
             this._orderService = orderService;
             this._storeMappingService = storeMappingService;
             this._vendorService = vendorService;
+            this._dateRangeService = dateRangeService;
             this._shippingService = shippingService;
             this._shipmentService = shipmentService;
             this._currencyService = currencyService;
@@ -665,13 +669,28 @@ namespace Nop.Admin.Controllers
                 Text = _localizationService.GetResource("Admin.Catalog.Products.Fields.DeliveryDate.None"),
                 Value = "0"
             });
-            var deliveryDates = _shippingService.GetAllDeliveryDates();
+            var deliveryDates = _dateRangeService.GetAllDeliveryDates();
             foreach (var deliveryDate in deliveryDates)
             {
                 model.AvailableDeliveryDates.Add(new SelectListItem
                 {
                     Text = deliveryDate.Name,
                     Value = deliveryDate.Id.ToString()
+                });
+            }
+
+            //product availability ranges
+            model.AvailableProductAvailabilityRanges.Add(new SelectListItem
+            {
+                Text = _localizationService.GetResource("Admin.Catalog.Products.Fields.ProductAvailabilityRange.None"),
+                Value = "0"
+            });
+            foreach (var range in _dateRangeService.GetAllProductAvailabilityRanges())
+            {
+                model.AvailableProductAvailabilityRanges.Add(new SelectListItem
+                {
+                    Text = range.Name,
+                    Value = range.Id.ToString()
                 });
             }
 

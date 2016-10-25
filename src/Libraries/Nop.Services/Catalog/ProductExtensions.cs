@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Shipping.Date;
 
 namespace Nop.Services.Catalog
 {
@@ -83,9 +84,10 @@ namespace Nop.Services.Catalog
         /// <param name="attributesXml">Selected product attributes in XML format (if specified)</param>
         /// <param name="localizationService">Localization service</param>
         /// <param name="productAttributeParser">Product attribute parser</param>
+        /// <param name="dateRangeService">Date range service</param>
         /// <returns>The stock message</returns>
         public static string FormatStockMessage(this Product product, string attributesXml,
-            ILocalizationService localizationService, IProductAttributeParser productAttributeParser)
+            ILocalizationService localizationService, IProductAttributeParser productAttributeParser, IDateRangeService dateRangeService)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -95,6 +97,9 @@ namespace Nop.Services.Catalog
 
             if (productAttributeParser == null)
                 throw new ArgumentNullException("productAttributeParser");
+
+            if (dateRangeService == null)
+                throw new ArgumentNullException("dateRangeService");
 
             string stockMessage = string.Empty;
 
@@ -119,16 +124,21 @@ namespace Nop.Services.Catalog
                         else
                         {
                             //out of stock
+                            var productAvailabilityRange = dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
                             switch (product.BackorderMode)
                             {
                                 case BackorderMode.NoBackorders:
-                                    stockMessage = localizationService.GetResource("Products.Availability.OutOfStock");
+                                    stockMessage = productAvailabilityRange == null ? localizationService.GetResource("Products.Availability.OutOfStock")
+                                        : string.Format(localizationService.GetResource("Products.Availability.AvailabilityRange"),
+                                            productAvailabilityRange.GetLocalized(range => range.Name));
                                     break;
                                 case BackorderMode.AllowQtyBelow0:
                                     stockMessage = localizationService.GetResource("Products.Availability.InStock");
                                     break;
                                 case BackorderMode.AllowQtyBelow0AndNotifyCustomer:
-                                    stockMessage = localizationService.GetResource("Products.Availability.Backordering");
+                                    stockMessage = productAvailabilityRange == null ? localizationService.GetResource("Products.Availability.Backordering")
+                                        : string.Format(localizationService.GetResource("Products.Availability.BackorderingWithDate"),
+                                            productAvailabilityRange.GetLocalized(range => range.Name));
                                     break;
                                 default:
                                     break;
@@ -164,7 +174,10 @@ namespace Nop.Services.Catalog
                             }
                             else
                             {
-                                stockMessage = localizationService.GetResource("Products.Availability.OutOfStock");
+                                var productAvailabilityRange = dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
+                                stockMessage = productAvailabilityRange == null ? localizationService.GetResource("Products.Availability.OutOfStock")
+                                    : string.Format(localizationService.GetResource("Products.Availability.AvailabilityRange"),
+                                        productAvailabilityRange.GetLocalized(range => range.Name));
                             }
                         }
                         else
@@ -172,7 +185,10 @@ namespace Nop.Services.Catalog
                             //no combination configured
                             if (product.AllowAddingOnlyExistingAttributeCombinations)
                             {
-                                stockMessage = localizationService.GetResource("Products.Availability.OutOfStock");
+                                var productAvailabilityRange = dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
+                                stockMessage = productAvailabilityRange == null ? localizationService.GetResource("Products.Availability.OutOfStock")
+                                    : string.Format(localizationService.GetResource("Products.Availability.AvailabilityRange"),
+                                        productAvailabilityRange.GetLocalized(range => range.Name));
                             }
                             else
                             {

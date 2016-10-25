@@ -256,6 +256,7 @@
     <Compile Include="Models\Settings\ReturnRequestReasonModel.cs" />
     <Compile Include="Models\Settings\SortOptionModel.cs" />
     <Compile Include="Models\Settings\VendorSettingsModel.cs" />
+    <Compile Include="Models\Shipping\ProductAvailabilityRangeModel.cs" />
     <Compile Include="Models\Shipping\PickupPointProviderModel.cs" />
     <Compile Include="Models\Shipping\WarehouseModel.cs" />
     <Compile Include="Models\Shipping\DeliveryDateModel.cs" />
@@ -374,6 +375,7 @@
     <Compile Include="Validators\Orders\ReturnRequestValidator.cs" />
     <Compile Include="Validators\Settings\ReturnRequestActionValidator.cs" />
     <Compile Include="Validators\Settings\ReturnRequestReasonValidator.cs" />
+    <Compile Include="Validators\Shipping\ProductAvailabilityRangeValidator.cs" />
     <Compile Include="Validators\Templates\TopicTemplateValidator.cs" />
     <Compile Include="Validators\Templates\ProductTemplateValidator.cs" />
     <Compile Include="Validators\Templates\ManufacturerTemplateValidator.cs" />
@@ -2349,7 +2351,7 @@
     <Content Include="Views\Shipping\EditDeliveryDate.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shipping\DeliveryDates.cshtml" />
+    <Content Include="Views\Shipping\DatesAndRanges.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shipping\_CreateOrUpdateDeliveryDate.cshtml" />
@@ -2488,6 +2490,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Roxy_Fileman\tmp\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shipping\EditProductAvailabilityRange.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shipping\CreateProductAvailabilityRange.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shipping\_CreateOrUpdateProductAvailabilityRange.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

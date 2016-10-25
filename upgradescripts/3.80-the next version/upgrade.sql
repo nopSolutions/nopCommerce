@@ -452,6 +452,75 @@ set @resources='
   <LocaleResource Name="Admin.System.Warnings.URL.Reserved">
     <Value>Entered page name already exists, so it will be replaced by ''{0}''</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.DeliveryDate.Hint">
+    <Value>Choose a delivery date which will be displayed in the public store. You can manage delivery dates by selecting Configuration > Shipping > Dates and ranges.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ProductAvailabilityRange">
+    <Value>Product availability range</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ProductAvailabilityRange.Hint">
+    <Value>Choose the product availability range that indicates when the product is expected to be available when out of stock (e.g. Available in 10-14 days). You can manage availability ranges by selecting Configuration > Shipping > Dates and ranges.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ProductAvailabilityRange.None">
+    <Value>None</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ProductAvailabilityRange">
+    <Value>Product availability range</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DatesAndRanges">
+    <Value>Dates and ranges</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Hint">
+    <Value>List of delivery dates which will be available for choice in product details.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges">
+    <Value>Product availability ranges</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.Added">
+    <Value>The new product availability range has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.AddNew">
+    <Value>Add a new product availability range</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.BackToList">
+    <Value>back to product availability range list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.Deleted">
+    <Value>The product availability range has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.EditProductAvailabilityRangeDetails">
+    <Value>Edit product availability range details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.DisplayOrder.Hint">
+    <Value>The display order of this product availability range. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.Name.Hint">
+    <Value>Enter product availability range name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.Hint">
+    <Value>List of availability ranges which will be available for choice in product details.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.Updated">
+    <Value>The product availability range has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Availability.AvailabilityRange">
+    <Value>Available in {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Availability.BackorderingWithDate">
+    <Value>Out of stock - on backorder and will be dispatched once in stock ({0}).</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.AvailabilityRange">
+    <Value>Available in {0}</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1137,4 +1206,35 @@ GO
 --new discount coupon code logic
 DELETE FROM [GenericAttribute]
 WHERE [KeyGroup] = 'Customer' and [Key] = 'DiscountCouponCode'
+GO
+
+--new table
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[ProductAvailabilityRange]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[ProductAvailabilityRange](
+		[Id] [int] IDENTITY(1,1) NOT NULL,
+		[Name] nvarchar(400) NOT NULL,
+		[DisplayOrder] int NOT NULL,
+	PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+	)
+END
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='ProductAvailabilityRangeId')
+BEGIN
+	ALTER TABLE [Product]
+	ADD [ProductAvailabilityRangeId] int NULL
+END
+GO
+
+UPDATE [Product]
+SET [ProductAvailabilityRangeId] = 0
+WHERE [ProductAvailabilityRangeId] IS NULL
+GO
+
+ALTER TABLE [Product] ALTER COLUMN [ProductAvailabilityRangeId] int NOT NULL
 GO

@@ -14,6 +14,7 @@ using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
+using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 
 namespace Nop.Services.Orders
@@ -40,6 +41,7 @@ namespace Nop.Services.Orders
         private readonly IEventPublisher _eventPublisher;
         private readonly IPermissionService _permissionService;
         private readonly IAclService _aclService;
+        private readonly IDateRangeService _dateRangeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IProductAttributeService _productAttributeService;
@@ -67,6 +69,7 @@ namespace Nop.Services.Orders
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="permissionService">Permission service</param>
         /// <param name="aclService">ACL service</param>
+        /// <param name="dateRangeService">Date range service</param>
         /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="productAttributeService">Product attribute service</param>
@@ -86,6 +89,7 @@ namespace Nop.Services.Orders
             IEventPublisher eventPublisher,
             IPermissionService permissionService, 
             IAclService aclService,
+            IDateRangeService dateRangeService,
             IStoreMappingService storeMappingService,
             IGenericAttributeService genericAttributeService,
             IProductAttributeService productAttributeService,
@@ -106,6 +110,7 @@ namespace Nop.Services.Orders
             this._eventPublisher = eventPublisher;
             this._permissionService = permissionService;
             this._aclService = aclService;
+            this._dateRangeService = dateRangeService;
             this._storeMappingService = storeMappingService;
             this._genericAttributeService = genericAttributeService;
             this._productAttributeService = productAttributeService;
@@ -389,7 +394,13 @@ namespace Nop.Services.Orders
                                 if (maximumQuantityCanBeAdded < quantity)
                                 {
                                     if (maximumQuantityCanBeAdded <= 0)
-                                        warnings.Add(_localizationService.GetResource("ShoppingCart.OutOfStock"));
+                                    {
+                                        var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
+                                        var warning = productAvailabilityRange == null ? _localizationService.GetResource("ShoppingCart.OutOfStock")
+                                            : string.Format(_localizationService.GetResource("ShoppingCart.AvailabilityRange"),
+                                                productAvailabilityRange.GetLocalized(range => range.Name));
+                                        warnings.Add(warning);
+                                    }
                                     else
                                         warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
                                 }
@@ -408,7 +419,11 @@ namespace Nop.Services.Orders
                                     int maximumQuantityCanBeAdded = combination.StockQuantity;
                                     if (maximumQuantityCanBeAdded <= 0)
                                     {
-                                        warnings.Add(_localizationService.GetResource("ShoppingCart.OutOfStock"));
+                                        var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
+                                        var warning = productAvailabilityRange == null ? _localizationService.GetResource("ShoppingCart.OutOfStock")
+                                            : string.Format(_localizationService.GetResource("ShoppingCart.AvailabilityRange"),
+                                                productAvailabilityRange.GetLocalized(range => range.Name));
+                                        warnings.Add(warning);
                                     }
                                     else
                                     {
@@ -422,7 +437,11 @@ namespace Nop.Services.Orders
                                 if (product.AllowAddingOnlyExistingAttributeCombinations)
                                 {
                                     //maybe, is it better  to display something like "No such product/combination" message?
-                                    warnings.Add(_localizationService.GetResource("ShoppingCart.OutOfStock"));
+                                    var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
+                                    var warning = productAvailabilityRange == null ? _localizationService.GetResource("ShoppingCart.OutOfStock")
+                                        : string.Format(_localizationService.GetResource("ShoppingCart.AvailabilityRange"),
+                                            productAvailabilityRange.GetLocalized(range => range.Name));
+                                    warnings.Add(warning);
                                 }
                             }
                         }

@@ -74,6 +74,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Poll> _pollRepository;
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly IRepository<DeliveryDate> _deliveryDateRepository;
+        private readonly IRepository<ProductAvailabilityRange> _productAvailabilityRangeRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
         private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
@@ -131,6 +132,7 @@ namespace Nop.Services.Installation
             IRepository<Poll> pollRepository,
             IRepository<ShippingMethod> shippingMethodRepository,
             IRepository<DeliveryDate> deliveryDateRepository,
+            IRepository<ProductAvailabilityRange> productAvailabilityRangeRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
             IRepository<ActivityLog> activityLogRepository,
             IRepository<ProductTag> productTagRepository,
@@ -184,6 +186,7 @@ namespace Nop.Services.Installation
             this._pollRepository = pollRepository;
             this._shippingMethodRepository = shippingMethodRepository;
             this._deliveryDateRepository = deliveryDateRepository;
+            this._productAvailabilityRangeRepository = productAvailabilityRangeRepository;
             this._activityLogTypeRepository = activityLogTypeRepository;
             this._activityLogRepository = activityLogRepository;
             this._productTagRepository = productTagRepository;
@@ -3989,6 +3992,29 @@ namespace Nop.Services.Installation
             _deliveryDateRepository.Insert(deliveryDates);
         }
 
+        protected virtual void InstallProductAvailabilityRanges()
+        {
+            var productAvailabilityRanges = new List<ProductAvailabilityRange>
+            {
+                new ProductAvailabilityRange
+                {
+                    Name = "2-4 days",
+                    DisplayOrder = 1
+                },
+                new ProductAvailabilityRange
+                {
+                    Name = "7-10 days",
+                    DisplayOrder = 2
+                },
+                new ProductAvailabilityRange
+                {
+                    Name = "2 week",
+                    DisplayOrder = 3
+                },
+            };
+            _productAvailabilityRangeRepository.Insert(productAvailabilityRanges);
+        }
+
         protected virtual void InstallCustomersAndUsers(string defaultUserEmail, string defaultUserPassword)
         {
             var crAdministrators = new CustomerRole
@@ -6830,6 +6856,11 @@ namespace Nop.Services.Installation
             if (deliveryDate == null)
                 throw new Exception("No default deliveryDate could be loaded");
 
+            //product availability range
+            var productAvailabilityRange = _productAvailabilityRangeRepository.Table.FirstOrDefault();
+            if (productAvailabilityRange == null)
+                throw new Exception("No default product availability range could be loaded");
+
             //default customer/user
             var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail);
             if (defaultCustomer == null)
@@ -9253,6 +9284,7 @@ namespace Nop.Services.Installation
                 Height = 7,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                ProductAvailabilityRangeId = productAvailabilityRange.Id,
                 StockQuantity = 0,
                 NotifyAdminForQuantityBelow = 1,
                 AllowBackInStockSubscriptions = false,
@@ -11929,6 +11961,7 @@ namespace Nop.Services.Installation
             InstallCountriesAndStates();
             InstallShippingMethods();
             InstallDeliveryDates();
+            InstallProductAvailabilityRanges();
             InstallCustomersAndUsers(defaultUserEmail, defaultUserPassword);
             InstallEmailAccounts();
             InstallMessageTemplates();
