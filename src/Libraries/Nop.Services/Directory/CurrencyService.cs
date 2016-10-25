@@ -302,17 +302,7 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException("sourceCurrencyCode");
 
             var primaryStoreCurrency = GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
-            if (primaryStoreCurrency == null)
-                throw new Exception("Primary store currency cannot be loaded");
-
-            decimal result = amount;
-            if (result != decimal.Zero && sourceCurrencyCode.Id != primaryStoreCurrency.Id)
-            {
-                decimal exchangeRate = sourceCurrencyCode.Rate;
-                if (exchangeRate == decimal.Zero)
-                    throw new NopException(string.Format("Exchange rate not found for currency [{0}]", sourceCurrencyCode.Name));
-                result = result / exchangeRate;
-            }
+            var result = ConvertCurrency(amount, sourceCurrencyCode, primaryStoreCurrency);
             return result;
         }
 

@@ -189,13 +189,22 @@ namespace Nop.Plugin.Shipping.CanadaPost
 
             var mailingScenario = new mailingscenario
             {
-                customernumber = _canadaPostSettings.CustomerNumber,
+                quotetype = mailingscenarioQuotetype.counter,
+                quotetypeSpecified = true,
                 originpostalcode = getShippingOptionRequest.ZipPostalCodeFrom,
                 destination = new mailingscenarioDestination
                 {
                     Item = destinationCountry
                 }
             };
+
+            //set contract customer properties
+            if (!string.IsNullOrEmpty(_canadaPostSettings.CustomerNumber))
+            {
+                mailingScenario.quotetype = mailingscenarioQuotetype.commercial;
+                mailingScenario.customernumber = _canadaPostSettings.CustomerNumber;
+                mailingScenario.contractid = !string.IsNullOrEmpty(_canadaPostSettings.ContractId) ? _canadaPostSettings.ContractId : null;
+            }
 
             //get original parcel characteristics
             decimal originalLength;
@@ -364,7 +373,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
         }
         
         /// <summary>
-        /// Install plugin
+        /// Install the plugin
         /// </summary>
         public override void Install()
         {
@@ -378,6 +387,8 @@ namespace Nop.Plugin.Shipping.CanadaPost
             //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.Api", "API key");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.Api.Hint", "Specify Canada Post API key.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.ContractId", "Contract ID");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.ContractId.Hint", "Specify contract identifier.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.CustomerNumber", "Customer number");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.CustomerNumber.Hint", "Specify customer number.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.UseSandbox", "Use Sandbox");
@@ -387,7 +398,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
         }
         
         /// <summary>
-        /// Uninstall plugin
+        /// Uninstall the plugin
         /// </summary>
         public override void Uninstall()
         {
@@ -397,6 +408,8 @@ namespace Nop.Plugin.Shipping.CanadaPost
             //locales
             this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.Api");
             this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.Api.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.ContractId");
+            this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.ContractId.Hint");
             this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.CustomerNumber");
             this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.CustomerNumber.Hint");
             this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.UseSandbox");

@@ -1,8 +1,6 @@
-using System;
-using System.Text;
-using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Payments;
-using PayPal.PayPalAPIInterfaceService.Model;
+using System.Collections.Generic;
+using System.Net;
+using PayPal.Api;
 
 namespace Nop.Plugin.Payments.PayPalDirect
 {
@@ -12,107 +10,26 @@ namespace Nop.Plugin.Payments.PayPalDirect
     public class PaypalHelper
     {
         /// <summary>
-        /// Gets a payment status
+        /// Get PayPal Api context 
         /// </summary>
-        /// <param name="paymentStatus">PayPal payment status</param>
-        /// <param name="pendingReason">PayPal pending reason</param>
-        /// <returns>Payment status</returns>
-        public static PaymentStatus GetPaymentStatus(string paymentStatus, string pendingReason)
+        /// <param name="paypalDirectPaymentSettings">PayPalDirectPayment settings</param>
+        /// <returns>ApiContext</returns>
+        public static APIContext GetApiContext(PayPalDirectPaymentSettings payPalDirectPaymentSettings)
         {
-            var result = PaymentStatus.Pending;
+            var mode = !payPalDirectPaymentSettings.UseSandbox ? "live"
+                : ServicePointManager.SecurityProtocol.HasFlag(SecurityProtocolType.Tls12) ? "security-test-sandbox" : "sandbox";
 
-            if (paymentStatus == null)
-                paymentStatus = string.Empty;
+            var config = new Dictionary<string, string>
+            {
+                { "clientId", payPalDirectPaymentSettings.ClientId },
+                { "clientSecret", payPalDirectPaymentSettings.ClientSecret },
+                { "mode", mode }
+            };
 
-            if (pendingReason == null)
-                pendingReason = string.Empty;
+            var accessToken = new OAuthTokenCredential(config).GetAccessToken();
+            var apiContext = new APIContext(accessToken) { Config = config };
 
-            switch (paymentStatus.ToLowerInvariant())
-            {
-                case "pending":
-                    switch (pendingReason.ToLowerInvariant())
-                    {
-                        case "authorization":
-                            result = PaymentStatus.Authorized;
-                            break;
-                        default:
-                            result = PaymentStatus.Pending;
-                            break;
-                    }
-                    break;
-                case "processed":
-                case "completed":
-                case "canceled_reversal":
-                    result = PaymentStatus.Paid;
-                    break;
-                case "denied":
-                case "expired":
-                case "failed":
-                case "voided":
-                    result = PaymentStatus.Voided;
-                    break;
-                case "refunded":
-                case "reversed":
-                    result = PaymentStatus.Refunded;
-                    break;
-                default:
-                    break;
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Checks response
-        /// </summary>
-        /// <param name="abstractResponse">response</param>
-        /// <param name="errorMsg">Error message if exists</param>
-        /// <returns>True - response OK; otherwise, false</returns>
-        public static bool CheckSuccess(AbstractResponseType abstractResponse, out string errorMsg)
-        {
-            bool success = false;
-            var sb = new StringBuilder();
-            switch (abstractResponse.Ack)
-            {
-                case AckCodeType.SUCCESS:
-                case AckCodeType.SUCCESSWITHWARNING:
-                    success = true;
-                    break;
-                default:
-                    break;
-            }
-            if (null != abstractResponse.Errors)
-            {
-                foreach (ErrorType errorType in abstractResponse.Errors)
-                {
-                    if (sb.Length <= 0)
-                    {
-                        sb.Append(Environment.NewLine);
-                    }
-                    sb.Append("LongMessage: ").Append(errorType.LongMessage).Append(Environment.NewLine);
-                    sb.Append("ShortMessage: ").Append(errorType.ShortMessage).Append(Environment.NewLine);
-                    sb.Append("ErrorCode: ").Append(errorType.ErrorCode).Append(Environment.NewLine);
-                }
-            }
-            errorMsg = sb.ToString();
-            return success;
-        }
-
-        /// <summary>
-        /// Get Paypal currency code
-        /// </summary>
-        /// <param name="currency">Currency</param>
-        /// <returns>Paypal currency code</returns>
-        public static CurrencyCodeType GetPaypalCurrency(Currency currency)
-        {
-            var currencyCodeType = CurrencyCodeType.USD;
-            try
-            {
-                currencyCodeType = (CurrencyCodeType)Enum.Parse(typeof(CurrencyCodeType), currency.CurrencyCode, true);
-            }
-            catch
-            {
-            }
-            return currencyCodeType;
+            return apiContext;
         }
     }
 }

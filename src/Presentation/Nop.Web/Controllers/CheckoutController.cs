@@ -144,12 +144,12 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected virtual bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool ignoreRewardPoints = false)
+        protected virtual bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool? useRewardPoints = null)
         {
             bool result = true;
 
             //check whether order total equals zero
-            decimal? shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart, ignoreRewardPoints);
+            decimal? shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart, useRewardPoints: useRewardPoints);
             if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
                 result = false;
             return result;
@@ -223,6 +223,7 @@ namespace Nop.Web.Controllers
                         model.PickupPoints = pickupPointsResponse.PickupPoints.Select(x =>
                         {
                             var country = _countryService.GetCountryByTwoLetterIsoCode(x.CountryCode);
+                            var state = _stateProvinceService.GetStateProvinceByAbbreviation(x.StateAbbreviation);
                             var pickupPointModel = new CheckoutPickupPointModel
                             {
                                 Id = x.Id,
@@ -231,6 +232,7 @@ namespace Nop.Web.Controllers
                                 ProviderSystemName = x.ProviderSystemName,
                                 Address = x.Address,
                                 City = x.City,
+                                StateName = state != null ? state.Name : string.Empty,
                                 CountryName = country != null ? country.Name : string.Empty,
                                 ZipPostalCode = x.ZipPostalCode,
                                 Latitude = x.Latitude,
@@ -401,6 +403,9 @@ namespace Nop.Web.Controllers
                     model.DisplayRewardPoints = true;
                     model.RewardPointsAmount = _priceFormatter.FormatPrice(rewardPointsAmount, true, false);
                     model.RewardPointsBalance = rewardPointsBalance;
+
+                    //are points enough to pay for entire order? like if this option (to use them) was selected
+                    model.RewardPointsEnoughToPayForOrder = !IsPaymentWorkflowRequired(cart, true);
                 }
             }
 
@@ -522,6 +527,24 @@ namespace Nop.Web.Controllers
                     || downloadableProductsRequireRegistration)
                 )
                 return new HttpUnauthorizedResult();
+
+            //if we have only "button" payment methods available (displayed onthe shopping cart page, not during checkout),
+            //then we should allow standard checkout
+            //all payment methods (do not filter by country here as it could be not specified yet)
+            var paymentMethods = _paymentService
+                .LoadActivePaymentMethods(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id)
+                .Where(pm => !pm.HidePaymentMethod(cart))
+                .ToList();
+            //payment methods displayed during checkout (not with "Button" type)
+            var nonButtonPaymentMethods = paymentMethods
+                .Where(pm => pm.PaymentMethodType != PaymentMethodType.Button)
+                .ToList();
+            //"button" payment methods(*displayed on the shopping cart page)
+            var buttonPaymentMethods = paymentMethods
+                .Where(pm => pm.PaymentMethodType == PaymentMethodType.Button)
+                .ToList();
+            if (!nonButtonPaymentMethods.Any() && buttonPaymentMethods.Any())
+                return RedirectToRoute("ShoppingCart");
 
             //reset checkout data
             _customerService.ResetCheckoutData(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
@@ -1009,7 +1032,7 @@ namespace Nop.Web.Controllers
 
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
-            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, true);
+            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, false);
             if (!isPaymentWorkflowRequired)
             {
                 _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
@@ -1342,7 +1365,7 @@ namespace Nop.Web.Controllers
         {
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
-            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, true);
+            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, false);
             if (isPaymentWorkflowRequired)
             {
                 //filter by country

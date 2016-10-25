@@ -298,7 +298,7 @@ namespace Nop.Web.Controllers
             }
             feed.Items = items;
 
-            return new RssActionResult { Feed = feed };
+            return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
 
         public ActionResult ForumGroup(int id)
@@ -417,10 +417,10 @@ namespace Nop.Web.Controllers
 
                 feed.Items = items;
 
-                return new RssActionResult { Feed = feed };
+                return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
             }
 
-            return new RssActionResult { Feed = new SyndicationFeed() };
+            return new RssActionResult(new SyndicationFeed(), _webHelper.GetThisPageUrl(false));
         }
 
         [HttpPost]
@@ -481,7 +481,7 @@ namespace Nop.Web.Controllers
                 //load posts
                 var posts = _forumService.GetAllPosts(forumTopic.Id, 0, string.Empty,
                     page - 1, _forumSettings.PostsPageSize);
-                //if not posts loaded, redirect to the first page
+                //if no posts loaded, redirect to the first page
                 if (!posts.Any() && page > 1)
                 {
                     return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName() });

@@ -345,5 +345,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether 'Specification attributes' tab is shown
         /// </summary>
         public bool SpecificationAttributes { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Manufacturers' field is shown
+        /// </summary>
+        public bool Manufacturers { get; set; }
     }
 }

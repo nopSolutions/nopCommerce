@@ -746,7 +746,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE [FullText_IsSupported]
+CREATE PROCEDURE [dbo].[FullText_IsSupported]
 AS
 BEGIN	
 	EXEC('
@@ -763,7 +763,7 @@ GO
 
 
 
-CREATE PROCEDURE [FullText_Enable]
+CREATE PROCEDURE [dbo].[FullText_Enable]
 AS
 BEGIN
 	--create catalog
@@ -795,7 +795,7 @@ GO
 
 
 
-CREATE PROCEDURE [FullText_Disable]
+CREATE PROCEDURE [dbo].[FullText_Disable]
 AS
 BEGIN
 	EXEC('
@@ -823,7 +823,7 @@ END
 GO
 
 
-CREATE PROCEDURE [LanguagePackImport]
+CREATE PROCEDURE [dbo].[LanguagePackImport]
 (
 	@LanguageId int,
 	@XmlPackage xml

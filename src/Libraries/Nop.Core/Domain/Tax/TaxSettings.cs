@@ -61,6 +61,11 @@ namespace Nop.Core.Domain.Tax
         public bool ForceTaxExclusionFromOrderSubtotal { get; set; }
 
         /// <summary>
+        /// Gets or sets a default tax category identifier for products
+        /// </summary>
+        public int DefaultTaxCategoryId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether shipping price is taxable
         /// </summary>
         public bool ShippingIsTaxable { get; set; }

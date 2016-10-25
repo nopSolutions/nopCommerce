@@ -148,6 +148,9 @@ namespace Nop.Services.Catalog
             category.Deleted = true;
             UpdateCategory(category);
 
+            //event notification
+            _eventPublisher.EntityDeleted(category);
+
             //reset a "Parent category" property of all child subcategories
             var subcategories = GetAllCategoriesByParentCategoryId(category.Id, true);
             foreach (var subcategory in subcategories)

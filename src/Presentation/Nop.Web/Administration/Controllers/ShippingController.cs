@@ -14,6 +14,7 @@ using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Web.Framework.Controllers;
@@ -38,10 +39,11 @@ namespace Nop.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IWebHelper _webHelper;
+        private readonly ICustomerActivityService _customerActivityService;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
         public ShippingController(IShippingService shippingService, 
             ShippingSettings shippingSettings,
@@ -54,8 +56,9 @@ namespace Nop.Admin.Controllers
              ILocalizedEntityService localizedEntityService,
             ILanguageService languageService,
             IPluginFinder pluginFinder,
-            IWebHelper webHelper)
-		{
+            IWebHelper webHelper,
+            ICustomerActivityService customerActivityService)
+        {
             this._shippingService = shippingService;
             this._shippingSettings = shippingSettings;
             this._settingService = settingService;
@@ -68,7 +71,8 @@ namespace Nop.Admin.Controllers
             this._languageService = languageService;
             this._pluginFinder = pluginFinder;
             this._webHelper = webHelper;
-		}
+            this._customerActivityService = customerActivityService;
+        }
 
 		#endregion 
         
@@ -618,6 +622,9 @@ namespace Nop.Admin.Controllers
                 };
 
                 _shippingService.InsertWarehouse(warehouse);
+                
+                //activity log
+                _customerActivityService.InsertActivity("AddNewWarehouse", _localizationService.GetResource("ActivityLog.AddNewWarehouse"), warehouse.Id);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Warehouses.Added"));
                 return continueEditing ? RedirectToAction("EditWarehouse", new { id = warehouse.Id }) : RedirectToAction("Warehouses");
@@ -716,6 +723,10 @@ namespace Nop.Admin.Controllers
                 warehouse.AddressId = address.Id;
 
                 _shippingService.UpdateWarehouse(warehouse);
+
+                //activity log
+                _customerActivityService.InsertActivity("EditWarehouse", _localizationService.GetResource("ActivityLog.EditWarehouse"), warehouse.Id);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Warehouses.Updated"));
                 return continueEditing ? RedirectToAction("EditWarehouse", warehouse.Id) : RedirectToAction("Warehouses");
             }
@@ -752,6 +763,9 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Warehouses");
 
             _shippingService.DeleteWarehouse(warehouse);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteWarehouse", _localizationService.GetResource("ActivityLog.DeleteWarehouse"), warehouse.Id);
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.warehouses.Deleted"));
             return RedirectToAction("Warehouses");

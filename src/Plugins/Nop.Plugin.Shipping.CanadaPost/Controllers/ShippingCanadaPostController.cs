@@ -38,6 +38,7 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
             var model = new CanadaPostShippingModel
             {
                 CustomerNumber = _canadaPostSettings.CustomerNumber,
+                ContractId = _canadaPostSettings.ContractId,
                 ApiKey = _canadaPostSettings.ApiKey,
                 UseSandbox = _canadaPostSettings.UseSandbox
             };
@@ -57,6 +58,7 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
 
             //save settings
             _canadaPostSettings.CustomerNumber = model.CustomerNumber;
+            _canadaPostSettings.ContractId = model.ContractId;
             _canadaPostSettings.ApiKey = model.ApiKey;
             _canadaPostSettings.UseSandbox = model.UseSandbox;
             _settingService.SaveSetting(_canadaPostSettings);

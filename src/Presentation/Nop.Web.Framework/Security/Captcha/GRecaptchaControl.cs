@@ -2,12 +2,14 @@
 using System.Web.Mvc;
 using System.Web.UI;
 using Nop.Core;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.Security.Captcha
 {
     public class GRecaptchaControl
     {
-        private const string RECAPTCHA_API_URL_VERSION1 = "http://www.google.com/recaptcha/api/challenge?k={0}";
+        private const string RECAPTCHA_API_URL_HTTP_VERSION1 = "http://www.google.com/recaptcha/api/challenge?k={0}";
+        private const string RECAPTCHA_API_URL_HTTPS_VERSION1 = "https://www.google.com/recaptcha/api/challenge?k={0}";
         private const string RECAPTCHA_API_URL_VERSION2 = "https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit";
 
         public string Id { get; set; }
@@ -34,8 +36,12 @@ namespace Nop.Web.Framework.Security.Captcha
                     string.Format("var RecaptchaOptions = {{ theme: '{0}', tabindex: 0 }}; ", Theme);
                 writer.Write(scriptCaptchaOptionsTag.ToString(TagRenderMode.Normal));
 
+                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                 var scriptLoadApiTag = new TagBuilder("script");
-                scriptLoadApiTag.Attributes.Add("src", string.Format(RECAPTCHA_API_URL_VERSION1, PublicKey));
+                var scriptSrc = webHelper.IsCurrentConnectionSecured() ? 
+                    string.Format(RECAPTCHA_API_URL_HTTPS_VERSION1, PublicKey) :
+                    string.Format(RECAPTCHA_API_URL_HTTP_VERSION1, PublicKey);
+                scriptLoadApiTag.Attributes.Add("src", scriptSrc);
                 writer.Write(scriptLoadApiTag.ToString(TagRenderMode.Normal));
             }
             else if (_version == ReCaptchaVersion.Version2)

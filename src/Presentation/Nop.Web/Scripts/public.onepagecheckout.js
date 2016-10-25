@@ -203,11 +203,11 @@ var Shipping = {
 
     togglePickUpInStore: function (pickupInStoreInput) {
         if (pickupInStoreInput.checked) {
-            $('#pickup-points-form').show()
+            $('#pickup-points-form').show();
             $('#shipping-addresses-form').hide();
         }
         else {
-            $('#pickup-points-form').hide()
+            $('#pickup-points-form').hide();
             $('#shipping-addresses-form').show();
         }
     },
@@ -327,6 +327,15 @@ var PaymentMethod = {
     init: function (form, saveUrl) {
         this.form = form;
         this.saveUrl = saveUrl;
+    },
+
+    toggleUseRewardPoints: function (useRewardPointsInput) {
+        if (useRewardPointsInput.checked) {
+            $('#payment-method-block').hide();
+        }
+        else {
+            $('#payment-method-block').show();
+        }
     },
 
     validate: function () {

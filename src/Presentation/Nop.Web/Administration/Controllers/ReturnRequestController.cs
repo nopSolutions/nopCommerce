@@ -65,7 +65,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected virtual bool PrepareReturnRequestModel(ReturnRequestModel model,
+        protected virtual void PrepareReturnRequestModel(ReturnRequestModel model,
             ReturnRequest returnRequest, bool excludeProperties)
         {
             if (model == null)
@@ -75,14 +75,14 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentNullException("returnRequest");
 
             var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
-            if (orderItem == null)
-                return false;
-
+            if (orderItem != null)
+            {
+                model.ProductId = orderItem.ProductId;
+                model.ProductName = orderItem.Product.Name;
+                model.OrderId = orderItem.OrderId;
+            }
             model.Id = returnRequest.Id;
             model.CustomNumber = returnRequest.CustomNumber;
-            model.ProductId = orderItem.ProductId;
-            model.ProductName = orderItem.Product.Name;
-            model.OrderId = orderItem.OrderId;
             model.CustomerId = returnRequest.CustomerId;
             var customer = returnRequest.Customer;
             model.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
@@ -97,8 +97,6 @@ namespace Nop.Admin.Controllers
                 model.StaffNotes = returnRequest.StaffNotes;
                 model.ReturnRequestStatusId = returnRequest.ReturnRequestStatusId;
             }
-            //model is successfully prepared
-            return true;
         }
 
         #endregion
@@ -130,8 +128,8 @@ namespace Nop.Admin.Controllers
             foreach (var rr in returnRequests)
             {
                 var m = new ReturnRequestModel();
-                if (PrepareReturnRequestModel(m, rr, false))
-                    returnRequestModels.Add(m);
+                PrepareReturnRequestModel(m, rr, false);
+                returnRequestModels.Add(m);
             }
             var gridModel = new DataSourceResult
             {
@@ -206,8 +204,13 @@ namespace Nop.Admin.Controllers
                 //No return request found with the specified id
                 return RedirectToAction("List");
 
-            //var customer = returnRequest.Customer;
             var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
+            if (orderItem == null)
+            {
+                ErrorNotification("Order item is deleted");
+                return RedirectToAction("Edit", new { id = returnRequest.Id });
+            }
+
             int queuedEmailId = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, _localizationSettings.DefaultAdminLanguageId);
             if (queuedEmailId > 0)
                 SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Notified"));

@@ -297,6 +297,10 @@ namespace Nop.Web.Models.Catalog
 
             //product picture ID (associated to this value)
             public int PictureId { get; set; }
+
+            public bool CustomerEntersQty { get; set; }
+
+            public int Quantity { get; set; }
         }
 
 		#endregion

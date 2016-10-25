@@ -248,7 +248,7 @@ namespace Nop.Web.Controllers
 
             model.IsEditable = isEditable;
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
-            model.ShowSku = _catalogSettings.ShowProductSku;
+            model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
             var checkoutAttributesXml = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
             model.CheckoutAttributeInfo = _checkoutAttributeFormatter.FormatAttributes(checkoutAttributesXml, _workContext.CurrentCustomer);
             bool minOrderSubtotalAmountOk = _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
@@ -475,6 +475,10 @@ namespace Nop.Web.Controllers
                     (!String.IsNullOrEmpty(cartItemModel.AttributeInfo) || sci.Product.IsGiftCard) &&
                     sci.Product.VisibleIndividually;
 
+                //disable removal?
+                //1. do other items require this one?
+                cartItemModel.DisableRemoval = cart.Any(item => item.Product.RequireOtherProducts && item.Product.ParseRequiredProductIds().Contains(sci.ProductId));
+
                 //allowed quantities
                 var allowedQuantities = sci.Product.ParseAllowedQuantities();
                 foreach (var qty in allowedQuantities)
@@ -566,14 +570,23 @@ namespace Nop.Web.Controllers
 
             #endregion
 
-            #region Button payment methods
+            #region Payment methods
 
+            //all payment methods (do not filter by country here as it could be not specified yet)
             var paymentMethods = _paymentService
                 .LoadActivePaymentMethods(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id)
-                .Where(pm => pm.PaymentMethodType == PaymentMethodType.Button)
                 .Where(pm => !pm.HidePaymentMethod(cart))
                 .ToList();
-            foreach (var pm in paymentMethods)
+            //payment methods displayed during checkout (not with "Button" type)
+            var nonButtonPaymentMethods = paymentMethods
+                .Where(pm => pm.PaymentMethodType != PaymentMethodType.Button)
+                .ToList();
+            //"button" payment methods(*displayed on the shopping cart page)
+            var buttonPaymentMethods = paymentMethods
+                .Where(pm => pm.PaymentMethodType == PaymentMethodType.Button)
+                .ToList();
+                
+            foreach (var pm in buttonPaymentMethods)
             {
                 if (cart.IsRecurring() && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
                     continue;
@@ -587,6 +600,9 @@ namespace Nop.Web.Controllers
                 model.ButtonPaymentMethodControllerNames.Add(controllerName);
                 model.ButtonPaymentMethodRouteValues.Add(routeValues);
             }
+
+            //hide "Checkout" button if we have only "Button" payment methods
+            model.HideCheckoutButton = !nonButtonPaymentMethods.Any() && model.ButtonPaymentMethodRouteValues.Any();
 
             #endregion
 
@@ -681,7 +697,7 @@ namespace Nop.Web.Controllers
             model.CustomerGuid = customer.CustomerGuid;
             model.CustomerFullname = customer.GetFullName();
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
-            model.ShowSku = _catalogSettings.ShowProductSku;
+            model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
             
             //cart warnings
             var cartWarnings = _shoppingCartService.GetShoppingCartWarnings(cart, "", false);
@@ -958,6 +974,8 @@ namespace Nop.Web.Controllers
                             model.SelectedShippingMethod = shippingOption.Name;
                     }
                 }
+                else
+                    model.HideShippingTotal = _shippingSettings.HideShippingTotal;
 
                 //payment method fee
                 var paymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
@@ -1221,10 +1239,12 @@ namespace Nop.Web.Controllers
                             var ctrlAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
+                                int quantity;
                                 int selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
                                     attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, selectedAttributeId.ToString());
+                                        attribute, selectedAttributeId.ToString(),
+                                        int.TryParse(form[string.Format("product_attribute_{0}_{1}_qty", attribute.Id, selectedAttributeId)], out quantity) && quantity > 1 ? (int?)quantity : null);
                             }
                         }
                         break;
@@ -1235,10 +1255,12 @@ namespace Nop.Web.Controllers
                             {
                                 foreach (var item in ctrlAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
+                                    int quantity;
                                     int selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
                                         attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
+                                            attribute, selectedAttributeId.ToString(),
+                                            int.TryParse(form[string.Format("product_attribute_{0}_{1}_qty", attribute.Id, item)], out quantity) && quantity > 1 ? (int?)quantity : null);
                                 }
                             }
                         }
@@ -1252,8 +1274,10 @@ namespace Nop.Web.Controllers
                                 .Select(v => v.Id)
                                 .ToList())
                             {
+                                int quantity;
                                 attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, selectedAttributeId.ToString());
+                                    attribute, selectedAttributeId.ToString(),
+                                    int.TryParse(form[string.Format("product_attribute_{0}_{1}_qty", attribute.Id, selectedAttributeId)], out quantity) && quantity > 1 ? (int?)quantity : null);
                             }
                         }
                         break;
@@ -1461,7 +1485,9 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            if (product.ProductAttributeMappings.Any())
+            //allow a product to be added to the cart when all attributes are with "read-only checkboxes" type
+            var productAttributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            if (productAttributes.Any(pam => pam.AttributeControlType != AttributeControlType.ReadonlyCheckboxes))
             {
                 //product has some attributes. let a customer see them
                 return Json(new
@@ -1469,6 +1495,21 @@ namespace Nop.Web.Controllers
                     redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() }),
                 });
             }
+
+            //creating XML for "read-only checkboxes" attributes
+            var attXml = productAttributes.Aggregate(string.Empty, (attributesXml, attribute) =>
+            {
+                var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
+                foreach (var selectedAttributeId in attributeValues
+                    .Where(v => v.IsPreSelected)
+                    .Select(v => v.Id)
+                    .ToList())
+                {
+                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                        attribute, selectedAttributeId.ToString());
+                }
+                return attributesXml;
+            });
 
             //get standard warnings without attribute validations
             //first, try to find existing shopping cart item
@@ -1499,6 +1540,7 @@ namespace Nop.Web.Controllers
                 product: product,
                 shoppingCartType: cartType,
                 storeId: _storeContext.CurrentStore.Id,
+                attributesXml: attXml,
                 quantity: quantity);
             if (addToCartWarnings.Any())
             {

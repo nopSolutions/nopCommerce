@@ -46,6 +46,7 @@ namespace Nop.Services.Tax
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="geoLookupService">GEO lookup service</param>
         /// <param name="countryService">Country service</param>
+        /// <param name="logger">Logger service</param>
         /// <param name="customerSettings">Customer settings</param>
         /// <param name="addressSettings">Address settings</param>
         public TaxService(IAddressService addressService,
@@ -130,6 +131,7 @@ namespace Nop.Services.Tax
         /// <param name="product">Product</param>
         /// <param name="taxCategoryId">Tax category identifier</param>
         /// <param name="customer">Customer</param>
+        /// <param name="price">Price</param>
         /// <returns>Package for tax calculation</returns>
         protected virtual CalculateTaxRequest CreateCalculateTaxRequest(Product product,
             int taxCategoryId, Customer customer, decimal price)

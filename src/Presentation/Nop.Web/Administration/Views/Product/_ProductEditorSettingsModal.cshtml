@@ -499,6 +499,15 @@
                                                 @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Stores)
                                             </div>
                                         </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Manufacturers)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Manufacturers)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Manufacturers)
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

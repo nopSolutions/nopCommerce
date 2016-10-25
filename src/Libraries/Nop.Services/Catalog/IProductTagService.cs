@@ -53,5 +53,12 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier</param>
         /// <returns>Number of products</returns>
         int GetProductCount(int productTagId, int storeId);
+
+        /// <summary>
+        /// Update product tags
+        /// </summary>
+        /// <param name="product">Product for update</param>
+        /// <param name="productTags">Product tags</param>
+        void UpdateProductTags(Product product, string[] productTags);
     }
 }

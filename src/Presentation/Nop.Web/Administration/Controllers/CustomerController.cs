@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
@@ -551,7 +552,6 @@ namespace Nop.Admin.Controllers
             }
 
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
-            model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
@@ -877,13 +877,6 @@ namespace Nop.Admin.Controllers
                 ErrorNotification(customerRolesError, false);
             }
 
-            // Ensure that valid email address is entered if Registered role is checked to avoid registered customers with empty email address
-            if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == SystemCustomerRoleNames.Registered) != null && !CommonHelper.IsValidEmail(model.Email))
-            {
-                ModelState.AddModelError("", "Valid Email is required for customer to be in 'Registered' role");
-                ErrorNotification("Valid Email is required for customer to be in 'Registered' role", false);
-            }
-
             if (ModelState.IsValid)
             {
                 var customer = new Customer
@@ -1074,14 +1067,7 @@ namespace Nop.Admin.Controllers
                 ModelState.AddModelError("", customerRolesError);
                 ErrorNotification(customerRolesError, false);
             }
-
-            // Ensure that valid email address is entered if Registered role is checked to avoid registered customers with empty email address
-            if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == SystemCustomerRoleNames.Registered) != null && !CommonHelper.IsValidEmail(model.Email))
-            {
-                ModelState.AddModelError("", "Valid Email is required for customer to be in 'Registered' role");
-                ErrorNotification("Valid Email is required for customer to be in 'Registered' role", false);
-            }
-
+            
             if (ModelState.IsValid)
             {
                 try
@@ -1106,7 +1092,7 @@ namespace Nop.Admin.Controllers
                     }
 
                     //username
-                    if (_customerSettings.UsernamesEnabled && _customerSettings.AllowUsersToChangeUsernames)
+                    if (_customerSettings.UsernamesEnabled)
                     {
                         if (!String.IsNullOrWhiteSpace(model.Username))
                         {
@@ -2047,6 +2033,8 @@ namespace Nop.Admin.Controllers
             var timeZone = _dateTimeHelper.CurrentTimeZone;
             var searchCustomerRoleIds = new[] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id };
 
+            var culture = new CultureInfo(_workContext.WorkingLanguage.LanguageCulture);
+
             switch (period)
             {
                 case "year":
@@ -2055,22 +2043,19 @@ namespace Nop.Admin.Controllers
                     var searchYearDateUser = new DateTime(yearAgoRoundedDt.Year, yearAgoRoundedDt.Month, 1);
                     if (!timeZone.IsInvalidTime(searchYearDateUser))
                     {
-                        DateTime searchYearDateUtc = _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone);
-
                         for (int i = 0; i <= 12; i++)
                         {
                             result.Add(new
                             {
-                                date = searchYearDateUser.Date.ToString("Y"),
+                                date = searchYearDateUser.Date.ToString("Y", culture),
                                 value = _customerService.GetAllCustomers(
-                                    createdFromUtc: searchYearDateUtc,
-                                    createdToUtc: searchYearDateUtc.AddMonths(1),
+                                    createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone),
+                                    createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser.AddMonths(1), timeZone),
                                     customerRoleIds: searchCustomerRoleIds,
                                     pageIndex: 0,
                                     pageSize: 1).TotalCount.ToString()
                             });
 
-                            searchYearDateUtc = searchYearDateUtc.AddMonths(1);
                             searchYearDateUser = searchYearDateUser.AddMonths(1);
                         }
                     }
@@ -2081,22 +2066,19 @@ namespace Nop.Admin.Controllers
                     var searchMonthDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-30).Month, nowDt.AddDays(-30).Day);
                     if (!timeZone.IsInvalidTime(searchMonthDateUser))
                     {
-                        DateTime searchMonthDateUtc = _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone);
-
                         for (int i = 0; i <= 30; i++)
                         {
                             result.Add(new
                             {
-                                date = searchMonthDateUser.Date.ToString("M"),
+                                date = searchMonthDateUser.Date.ToString("M", culture),
                                 value = _customerService.GetAllCustomers(
-                                    createdFromUtc: searchMonthDateUtc,
-                                    createdToUtc: searchMonthDateUtc.AddDays(1),
+                                    createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone),
+                                    createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser.AddDays(1), timeZone),
                                     customerRoleIds: searchCustomerRoleIds,
                                     pageIndex: 0,
                                     pageSize: 1).TotalCount.ToString()
                             });
 
-                            searchMonthDateUtc = searchMonthDateUtc.AddDays(1);
                             searchMonthDateUser = searchMonthDateUser.AddDays(1);
                         }
                     }
@@ -2108,22 +2090,19 @@ namespace Nop.Admin.Controllers
                     var searchWeekDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-7).Month, nowDt.AddDays(-7).Day);
                     if (!timeZone.IsInvalidTime(searchWeekDateUser))
                     {
-                        DateTime searchWeekDateUtc = _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone);
-
                         for (int i = 0; i <= 7; i++)
                         {
                             result.Add(new
                             {
-                                date = searchWeekDateUser.Date.ToString("d dddd"),
+                                date = searchWeekDateUser.Date.ToString("d dddd", culture),
                                 value = _customerService.GetAllCustomers(
-                                    createdFromUtc: searchWeekDateUtc,
-                                    createdToUtc: searchWeekDateUtc.AddDays(1),
+                                    createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone),
+                                    createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser.AddDays(1), timeZone),
                                     customerRoleIds: searchCustomerRoleIds,
                                     pageIndex: 0,
                                     pageSize: 1).TotalCount.ToString()
                             });
 
-                            searchWeekDateUtc = searchWeekDateUtc.AddDays(1);
                             searchWeekDateUser = searchWeekDateUser.AddDays(1);
                         }
                     }

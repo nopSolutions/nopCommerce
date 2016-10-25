@@ -221,7 +221,7 @@ namespace Nop.Web.Controllers
                                     DateTime.UtcNow);
 
             if (!_newsSettings.Enabled)
-                return new RssActionResult { Feed = feed };
+                return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
 
             var items = new List<SyndicationItem>();
             var newsItems = _newsService.GetAllNews(languageId, _storeContext.CurrentStore.Id);
@@ -231,7 +231,7 @@ namespace Nop.Web.Controllers
                 items.Add(new SyndicationItem(n.Title, n.Short, new Uri(newsUrl), String.Format("urn:store:{0}:news:blog:{1}", _storeContext.CurrentStore.Id, n.Id), n.CreatedOnUtc));
             }
             feed.Items = items;
-            return new RssActionResult { Feed = feed };
+            return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
 
         public ActionResult NewsItem(int newsItemId)

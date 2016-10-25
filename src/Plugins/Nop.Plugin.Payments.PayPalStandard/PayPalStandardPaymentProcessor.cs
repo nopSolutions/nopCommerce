@@ -165,35 +165,20 @@ namespace Nop.Plugin.Payments.PayPalStandard
             return success;
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
-        /// Process a payment
-        /// </summary>
-        /// <param name="processPaymentRequest">Payment info required for an order processing</param>
-        /// <returns>Process payment result</returns>
-        public ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
-        {
-            var result = new ProcessPaymentResult();
-            result.NewPaymentStatus = PaymentStatus.Pending;
-            return result;
-        }
-
-        /// <summary>
-        /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
+        /// Generate string (URL) for redirection
         /// </summary>
         /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
-        public void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
+        /// <param name="passProductNamesAndTotals">A value indicating whether to pass product names and totals</param>
+        private string GenerationRedirectionUrl(PostProcessPaymentRequest postProcessPaymentRequest, bool passProductNamesAndTotals)
         {
             var builder = new StringBuilder();
             builder.Append(GetPaypalUrl());
-            var cmd =_paypalStandardPaymentSettings.PassProductNamesAndTotals 
+            var cmd = passProductNamesAndTotals
                 ? "_cart"
-                :  "_xclick";
+                : "_xclick";
             builder.AppendFormat("?cmd={0}&business={1}", cmd, HttpUtility.UrlEncode(_paypalStandardPaymentSettings.BusinessEmail));
-            if (_paypalStandardPaymentSettings.PassProductNamesAndTotals)
+            if (passProductNamesAndTotals)
             {
                 builder.AppendFormat("&upload=1");
 
@@ -310,7 +295,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             string returnUrl = _webHelper.GetStoreLocation(false) + "Plugins/PaymentPayPalStandard/PDTHandler";
             string cancelReturnUrl = _webHelper.GetStoreLocation(false) + "Plugins/PaymentPayPalStandard/CancelOrder";
             builder.AppendFormat("&return={0}&cancel_return={1}", HttpUtility.UrlEncode(returnUrl), HttpUtility.UrlEncode(cancelReturnUrl));
-            
+
             //Instant Payment Notification (server to server message)
             if (_paypalStandardPaymentSettings.EnableIpn)
             {
@@ -350,7 +335,40 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 builder.AppendFormat("&country={0}", "");
             builder.AppendFormat("&zip={0}", HttpUtility.UrlEncode(postProcessPaymentRequest.Order.BillingAddress.ZipPostalCode));
             builder.AppendFormat("&email={0}", HttpUtility.UrlEncode(postProcessPaymentRequest.Order.BillingAddress.Email));
-            _httpContext.Response.Redirect(builder.ToString());
+
+            return builder.ToString();
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Process a payment
+        /// </summary>
+        /// <param name="processPaymentRequest">Payment info required for an order processing</param>
+        /// <returns>Process payment result</returns>
+        public ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
+        {
+            var result = new ProcessPaymentResult();
+            result.NewPaymentStatus = PaymentStatus.Pending;
+            return result;
+        }
+
+        /// <summary>
+        /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
+        /// </summary>
+        /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
+        public void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
+        {
+            var urlToRedirect = GenerationRedirectionUrl(postProcessPaymentRequest, _paypalStandardPaymentSettings.PassProductNamesAndTotals);
+            if (urlToRedirect == null)
+                throw new Exception("PayPal URL cannot be generated");
+            //ensure URL doesn't exceed 2K chars. Otherwise, customers can get "too long URL" exception
+            if (urlToRedirect.Length > 2048)
+                urlToRedirect = GenerationRedirectionUrl(postProcessPaymentRequest, false);
+
+            _httpContext.Response.Redirect(urlToRedirect);
         }
 
         /// <summary>

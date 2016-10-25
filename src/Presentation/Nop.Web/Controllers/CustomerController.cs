@@ -1548,7 +1548,7 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            _openAuthenticationService.DeletExternalAuthenticationRecord(ear);
+            _openAuthenticationService.DeleteExternalAuthenticationRecord(ear);
 
             return Json(new
             {
@@ -1766,6 +1766,9 @@ namespace Nop.Web.Controllers
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
+
+            if (_customerSettings.HideDownloadableProductsTab)
+                return RedirectToRoute("CustomerInfo");
 
             var customer = _workContext.CurrentCustomer;
 

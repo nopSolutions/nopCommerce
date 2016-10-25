@@ -433,6 +433,7 @@ namespace Nop.Services.Catalog
                         PriceAdjustment = productAttributeValue.PriceAdjustment,
                         WeightAdjustment = productAttributeValue.WeightAdjustment,
                         Cost = productAttributeValue.Cost,
+                        CustomerEntersQty = productAttributeValue.CustomerEntersQty,
                         Quantity = productAttributeValue.Quantity,
                         IsPreSelected = productAttributeValue.IsPreSelected,
                         DisplayOrder = productAttributeValue.DisplayOrder,

@@ -1,6 +1,6 @@
 ﻿nopCommerce
 ===========
-nopCommerce is the best open-source e-commerce shopping cart. nopCommerce is available for free. Today it's the best and most popular ASP.NET ecommerce software. It has been downloaded more than 1.5 million times!
+nopCommerce is the best open-source e-commerce shopping cart. nopCommerce is available for free. Today it's the best and most popular ASP.NET ecommerce software. It has been downloaded more than 1.8 million times!
 
 nopCommerce is a fully customizable shopping cart. It's stable and highly usable. nopCommerce is an open source ecommerce solution that is **ASP.NET (MVC)** based with a MS SQL 2008 (or higher) backend database. Our easy-to-use shopping cart solution is uniquely suited for merchants that have outgrown existing systems, and may be hosted with your current web host or our hosting partners. It has everything you need to get started in selling physical and digital goods over the internet.
 
@@ -23,7 +23,7 @@ Complete feature list: [http://www.nopcommerce.com/featurelist.aspx](http://www.
 
 Technology & System Requirements: [http://www.nopcommerce.com/technologysystemrequirements.aspx](http://www.nopcommerce.com/technologysystemrequirements.aspx)
 
-Documentation: [http://www.nopcommerce.com/documentation.asp](http://www.nopcommerce.com/documentation.aspx)
+Documentation: [http://docs.nopcommerce.com/display/nc/nopCommerce+Documentation](http://docs.nopcommerce.com/display/nc/nopCommerce+Documentation)
 
 Forums: [http://www.nopcommerce.com/boards/](http://www.nopcommerce.com/boards/)
 
@@ -31,8 +31,7 @@ Forums: [http://www.nopcommerce.com/boards/](http://www.nopcommerce.com/boards/)
 
 Browse our shopping cart demo store to get a feel for nopCommerce shopping cart. Browse through the store from the customer's perspective and place an order. You won't be billed for or receive any products – the demo store examples are there only to show the extensive functionality of the shopping cart. Get a better feel for it by going through the admin panel and make changes.
 
-##### Front End:
-[![ScreenShot](http://www.nopcommerce.com/images/demo/demo3.png)](http://demo.nopcommerce.com/)
 
-##### Admin area: 
-[![ScreenShot](http://www.nopcommerce.com/images/demo/demo4.png)](http://admin-demo.nopcommerce.com/)
+Front End | Admin area
+----|------
+[![ScreenShot](http://www.nopcommerce.com/images/demo/demo3.png)](http://demo.nopcommerce.com/) | [![ScreenShot](http://www.nopcommerce.com/images/demo/admindemo_500.png)](http://admin-demo.nopcommerce.com/)

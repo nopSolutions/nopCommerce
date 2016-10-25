@@ -208,5 +208,8 @@ namespace Nop.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.SpecificationAttributes")]
         public bool SpecificationAttributes { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.Manufacturers")]
+        public bool Manufacturers { get; set; }
     }
 }
