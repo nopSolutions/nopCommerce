@@ -354,7 +354,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 var newMessageTemplate = _messageTemplateService.CopyMessageTemplate(messageTemplate);
-                SuccessNotification("The message template has been copied successfully");
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Copied"));
                 return RedirectToAction("Edit", new { id = newMessageTemplate.Id });
             }
             catch (Exception exc)

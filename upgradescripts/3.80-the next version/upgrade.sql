@@ -416,6 +416,39 @@ set @resources='
   <LocaleResource Name="RewardPoints.ActivatedLater">
     <Value>The points will be activated on {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.PublishedCurrencyRequired">
+    <Value>At least one published currency is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.GuestsAndRegisteredRolesError">
+    <Value>The customer cannot be in both ''Guests'' and ''Registered'' customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AddCustomerToGuestsOrRegisteredRoleError">
+    <Value>Add the customer to ''Guests'' or ''Registered'' customer role</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ValidEmailRequiredRegisteredRole">
+    <Value>Valid Email is required for customer to be in ''Registered'' role</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.NonAdminNotImpersonateAsAdminError">
+    <Value>A non-admin user cannot impersonate as an administrator</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.PublishedLanguageRequired">
+    <Value>At least one published language is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderItem.DeleteAssociatedGiftCardRecordError">
+    <Value>This order item has an associated gift card record. Please delete it first</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.OrderItemDeleted">
+    <Value>Order item is deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaAppropriateKeysNotEnteredError">
+    <Value>Captcha is enabled but the appropriate keys are not entered</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Copied">
+    <Value>The message template has been copied successfully</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Copied">
+    <Value>The product has been copied successfully</Value>
+  </LocaleResource>  
 </Language>
 '
 

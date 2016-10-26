@@ -207,7 +207,7 @@ namespace Nop.Admin.Controllers
             var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
             if (orderItem == null)
             {
-                ErrorNotification("Order item is deleted");
+                ErrorNotification(_localizationService.GetResource("Admin.ReturnRequests.OrderItemDeleted"));
                 return RedirectToAction("Edit", new { id = returnRequest.Id });
             }
 
