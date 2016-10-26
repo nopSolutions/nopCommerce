@@ -387,7 +387,7 @@ set @resources='
     <Value>The email account that will be used to send this campaign.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Fields.AclCustomerRoles">
-    <Value>Customer roles</Value>
+    <Value>Limited to customer roles</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Fields.AclCustomerRoles.Hint">
     <Value>Choose one or several customer roles i.e. administrators, vendors, guests, who will be able to use this plugin. If you don''t need this option just leave this field empty.</Value>
