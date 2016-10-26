@@ -332,6 +332,7 @@ namespace Nop.Services.ExportImport
                         new PropertyByName<ExportProductAttribute>("PriceAdjustment"),
                         new PropertyByName<ExportProductAttribute>("WeightAdjustment"),
                         new PropertyByName<ExportProductAttribute>("Cost"),
+                        new PropertyByName<ExportProductAttribute>("CustomerEntersQty"),
                         new PropertyByName<ExportProductAttribute>("Quantity"),
                         new PropertyByName<ExportProductAttribute>("IsPreSelected"),
                         new PropertyByName<ExportProductAttribute>("DisplayOrder"),
