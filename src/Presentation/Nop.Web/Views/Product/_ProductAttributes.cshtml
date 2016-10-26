@@ -414,13 +414,19 @@
                             $('.price-value-@productId').text(data.price);
                         }
                         if (data.sku) {
-                            $('#sku-@productId').text(data.sku);
+                            $('#sku-@productId').text(data.sku).parent(".sku").show();
+                        } else {
+                            $('#sku-@productId').parent(".sku").hide();
                         }
                         if (data.mpn) {
-                            $('#mpn-@productId').text(data.mpn);
+                            $('#mpn-@productId').text(data.mpn).parent(".manufacturer-part-number").show();
+                        } else {
+                            $('#mpn-@productId').parent(".manufacturer-part-number").hide();
                         }
                         if (data.gtin) {
-                            $('#gtin-@productId').text(data.gtin);
+                            $('#gtin-@productId').text(data.gtin).parent(".gtin").show();
+                        } else {
+                            $('#gtin-@productId').parent(".gtin").hide();
                         }
                         if (data.stockAvailability) {
                             $('#stock-availability-value-@productId').text(data.stockAvailability);

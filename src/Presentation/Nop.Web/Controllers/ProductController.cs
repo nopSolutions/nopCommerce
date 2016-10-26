@@ -225,6 +225,7 @@ namespace Nop.Web.Controllers
                 ManufacturerPartNumber = product.ManufacturerPartNumber,
                 ShowGtin = _catalogSettings.ShowGtin,
                 Gtin = product.Gtin,
+                ManageInventoryMethod = product.ManageInventoryMethod,
                 StockAvailability = product.FormatStockMessage("", _localizationService, _productAttributeParser),
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
                 DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts
