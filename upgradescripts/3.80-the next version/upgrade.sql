@@ -1132,3 +1132,9 @@ BEGIN
 	VALUES (N'rewardpointssettings.activationdelayperiodid', N'0', 0)
 END
 GO
+
+
+--new discount coupon code logic
+DELETE FROM [GenericAttribute]
+WHERE [KeyGroup] = 'Customer' and [Key] = 'DiscountCouponCode'
+GO

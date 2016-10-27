@@ -1267,18 +1267,17 @@ namespace Nop.Services.Orders
                 var sci = fromCart[i];
                 DeleteShoppingCartItem(sci);
             }
-            
-            //migrate gift card and discount coupon codes
+
+            //copy discount and gift card coupon codes
             if (includeCouponCodes)
             {
                 //discount
-                var discountCouponCode  = fromCustomer.GetAttribute<string>(SystemCustomerAttributeNames.DiscountCouponCode);
-                if (!String.IsNullOrEmpty(discountCouponCode))
-                    _genericAttributeService.SaveAttribute(toCustomer, SystemCustomerAttributeNames.DiscountCouponCode, discountCouponCode);
-                
+                foreach (var code in fromCustomer.ParseAppliedDiscountCouponCodes())
+                    toCustomer.ApplyDiscountCouponCode(code);
+
                 //gift card
-                foreach (var gcCode in fromCustomer.ParseAppliedGiftCardCouponCodes())
-                    toCustomer.ApplyGiftCardCouponCode(gcCode);
+                foreach (var code in fromCustomer.ParseAppliedGiftCardCouponCodes())
+                    toCustomer.ApplyGiftCardCouponCode(code);
 
                 //save customer
                 _customerService.UpdateCustomer(toCustomer);

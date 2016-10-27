@@ -15,7 +15,6 @@ namespace Nop.Web.Models.ShoppingCart
         public string SubTotal { get; set; }
 
         public string SubTotalDiscount { get; set; }
-        public bool AllowRemovingSubTotalDiscount { get; set; }
 
         public string Shipping { get; set; }
         public bool RequiresShipping { get; set; }
@@ -33,7 +32,6 @@ namespace Nop.Web.Models.ShoppingCart
         public IList<GiftCard> GiftCards { get; set; }
 
         public string OrderTotalDiscount { get; set; }
-        public bool AllowRemovingOrderTotalDiscount { get; set; }
         public int RedeemedRewardPoints { get; set; }
         public string RedeemedRewardPointsAmount { get; set; }
 

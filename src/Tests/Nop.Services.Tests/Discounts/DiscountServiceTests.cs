@@ -76,7 +76,7 @@ namespace Nop.Services.Tests.Discounts
             _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
             _discountService = new DiscountService(cacheManager, _discountRepo, _discountRequirementRepo,
-                _discountUsageHistoryRepo, _storeContext, _genericAttributeService, 
+                _discountUsageHistoryRepo, _storeContext,
                 _localizationService, pluginFinder, _eventPublisher, _workContext);
         }
 

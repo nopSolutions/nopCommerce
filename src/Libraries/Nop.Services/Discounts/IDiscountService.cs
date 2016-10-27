@@ -101,6 +101,15 @@ namespace Nop.Services.Discounts
         /// <returns>Discount validation result</returns>
         DiscountValidationResult ValidateDiscount(Discount discount, Customer customer, string couponCodeToValidate);
 
+        /// <summary>
+        /// Validate discount
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="couponCodesToValidate">Coupon codes to validate</param>
+        /// <returns>Discount validation result</returns>
+        DiscountValidationResult ValidateDiscount(Discount discount, Customer customer, string[] couponCodesToValidate);
+
         #endregion
 
         #region Discount usage history

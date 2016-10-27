@@ -9,7 +9,7 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
-using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Discounts.Cache;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -54,7 +54,6 @@ namespace Nop.Services.Discounts
         private readonly IRepository<DiscountUsageHistory> _discountUsageHistoryRepository;
         private readonly ICacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
-        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IEventPublisher _eventPublisher;
@@ -72,16 +71,15 @@ namespace Nop.Services.Discounts
         /// <param name="discountRequirementRepository">Discount requirement repository</param>
         /// <param name="discountUsageHistoryRepository">Discount usage history repository</param>
         /// <param name="storeContext">Store context</param>
-        /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="localizationService">Localization service</param>
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="eventPublisher">Event published</param>
+        /// <param name="workContext">work context</param>
         public DiscountService(ICacheManager cacheManager,
             IRepository<Discount> discountRepository,
             IRepository<DiscountRequirement> discountRequirementRepository,
             IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
             IStoreContext storeContext,
-            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IPluginFinder pluginFinder,
             IEventPublisher eventPublisher,
@@ -92,7 +90,6 @@ namespace Nop.Services.Discounts
             this._discountRequirementRepository = discountRequirementRepository;
             this._discountUsageHistoryRepository = discountUsageHistoryRepository;
             this._storeContext = storeContext;
-            this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._pluginFinder = pluginFinder;
             this._eventPublisher = eventPublisher;
@@ -306,11 +303,11 @@ namespace Nop.Services.Discounts
             if (discount == null)
                 throw new ArgumentNullException("discount");
 
-            var couponCodeToValidate = "";
+            string[] couponCodesToValidate = null;
             if (customer != null)
-                couponCodeToValidate = customer.GetAttribute<string>(SystemCustomerAttributeNames.DiscountCouponCode, _genericAttributeService);
+                couponCodesToValidate = customer.ParseAppliedDiscountCouponCodes();
 
-            return ValidateDiscount(discount, customer, couponCodeToValidate);
+            return ValidateDiscount(discount, customer, couponCodesToValidate);
         }
 
         /// <summary>
@@ -320,7 +317,22 @@ namespace Nop.Services.Discounts
         /// <param name="customer">Customer</param>
         /// <param name="couponCodeToValidate">Coupon code to validate</param>
         /// <returns>Discount validation result</returns>
-        public virtual DiscountValidationResult ValidateDiscount(Discount discount, Customer customer, string couponCodeToValidate)
+        public virtual DiscountValidationResult ValidateDiscount(Discount discount, Customer customer,
+            string couponCodeToValidate)
+        {
+            var couponCodesToValidate = new string[1];
+            couponCodesToValidate[0] = couponCodeToValidate;
+            return ValidateDiscount(discount, customer, couponCodesToValidate);
+        }
+
+        /// <summary>
+        /// Validate discount
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="couponCodesToValidate">Coupon codes to validate</param>
+        /// <returns>Discount validation result</returns>
+        public virtual DiscountValidationResult ValidateDiscount(Discount discount, Customer customer, string[] couponCodesToValidate)
         {
             if (discount == null)
                 throw new ArgumentNullException("discount");
@@ -336,7 +348,11 @@ namespace Nop.Services.Discounts
             {
                 if (String.IsNullOrEmpty(discount.CouponCode))
                     return result;
-                if (!discount.CouponCode.Equals(couponCodeToValidate, StringComparison.InvariantCultureIgnoreCase))
+
+                if (couponCodesToValidate == null)
+                    return result;
+
+                if (!couponCodesToValidate.Any(x => x.Equals(discount.CouponCode, StringComparison.InvariantCultureIgnoreCase)))
                     return result;
             }
 
