@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using Nop.Core;
 using Nop.Core.Domain.Localization;
@@ -15,6 +16,15 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="localizedProperty">Localized property</param>
         void DeleteLocalizedProperty(LocalizedProperty localizedProperty);
+
+        /// <summary>
+        /// Get all localized properties for a particular entity
+        /// </summary>
+        /// <param name="entityId">Entity identifier</param>
+        /// <param name="localeKeyGroup">Locale key group</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <returns>The list of found localized properties</returns>
+        IList<LocalizedProperty> GetLocalizedPropertyByEntityId(int entityId, string localeKeyGroup, int languageId = 0);
 
         /// <summary>
         /// Gets a localized property
