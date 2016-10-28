@@ -2359,7 +2359,6 @@ namespace Nop.Web.Controllers
                     {
                         //valid
                         _workContext.CurrentCustomer.ApplyDiscountCouponCode(discountcouponcode);
-                        _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                         model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.Applied");
                         model.DiscountBox.IsApplied = true;
                     }
@@ -2425,7 +2424,6 @@ namespace Nop.Web.Controllers
                     if (isGiftCardValid)
                     {
                         _workContext.CurrentCustomer.ApplyGiftCardCouponCode(giftcardcouponcode);
-                        _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                         model.GiftCardBox.Message = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.Applied");
                         model.GiftCardBox.IsApplied = true;
                     }
@@ -2563,10 +2561,7 @@ namespace Nop.Web.Controllers
                     discountId = Convert.ToInt32(formValue.Substring("removediscount-".Length));
             var discount = _discountService.GetDiscountById(discountId);
             if (discount != null)
-            {
                 _workContext.CurrentCustomer.RemoveDiscountCouponCode(discount.CouponCode);
-                _customerService.UpdateCustomer(_workContext.CurrentCustomer);
-            }
 
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -2591,10 +2586,7 @@ namespace Nop.Web.Controllers
                     giftCardId = Convert.ToInt32(formValue.Substring("removegiftcard-".Length));
             var gc = _giftCardService.GetGiftCardById(giftCardId);
             if (gc != null)
-            {
                 _workContext.CurrentCustomer.RemoveGiftCardCouponCode(gc.GiftCardCouponCode);
-                _customerService.UpdateCustomer(_workContext.CurrentCustomer);
-            }
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
