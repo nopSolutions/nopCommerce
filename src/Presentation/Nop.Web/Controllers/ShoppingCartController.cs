@@ -261,7 +261,7 @@ namespace Nop.Web.Controllers
             model.TermsOfServiceOnOrderConfirmPage = _orderSettings.TermsOfServiceOnOrderConfirmPage;
             model.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoShoppingCart;
 
-            //gift card and gift card boxes
+            //discount and gift card boxes
             model.DiscountBox.Display= _shoppingCartSettings.ShowDiscountBox;
             var discountCouponCodes = _workContext.CurrentCustomer.ParseAppliedDiscountCouponCodes();
             foreach (var couponCode in discountCouponCodes)
