@@ -758,7 +758,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.AllowVendorsToEditInfo_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.NotifyStoreOwnerAboutVendorInformationChange_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
-                    .ForMember(dest => dest.MaximumProductNumber_OverrideForStore, mo => mo.Ignore());
+                    .ForMember(dest => dest.MaximumProductNumber_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.AllowVendorsToImportProducts_OverrideForStore, mo => mo.Ignore());
                 cfg.CreateMap<VendorSettingsModel, VendorSettings>()
                     .ForMember(dest => dest.DefaultVendorPageSizeOptions, mo => mo.Ignore());
                 cfg.CreateMap<ShippingSettings, ShippingSettingsModel>()

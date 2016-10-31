@@ -65,7 +65,7 @@
                     </li>
                 </ul>
             </div>
-            @if (!Model.IsLoggedInAsVendor)
+            @if (!Model.IsLoggedInAsVendor || Model.AllowVendorsToImportProducts)
             {
                 //a vendor cannot import products
                 <button type="button" name="importexcel" class="btn bg-olive" data-toggle="modal" data-target="#importexcel-window">

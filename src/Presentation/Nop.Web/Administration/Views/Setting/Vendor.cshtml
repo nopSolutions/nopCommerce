@@ -126,6 +126,16 @@
                                 @Html.ValidationMessageFor(model => model.MaximumProductNumber)
                             </div>
                         </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.AllowVendorsToImportProducts_OverrideForStore, model => model.AllowVendorsToImportProducts, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.AllowVendorsToImportProducts)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.AllowVendorsToImportProducts)
+                                @Html.ValidationMessageFor(model => model.AllowVendorsToImportProducts)
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

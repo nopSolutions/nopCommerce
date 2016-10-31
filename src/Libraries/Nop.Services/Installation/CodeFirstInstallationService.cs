@@ -6190,7 +6190,8 @@ namespace Nop.Services.Installation
                 AllowCustomersToApplyForVendorAccount = true,
                 AllowVendorsToEditInfo = false,
                 NotifyStoreOwnerAboutVendorInformationChange = true,
-                MaximumProductNumber = 3000
+                MaximumProductNumber = 3000,
+                AllowVendorsToImportProducts = true
             });
 
             var eaGeneral = _emailAccountRepository.Table.FirstOrDefault();

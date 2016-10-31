@@ -39,5 +39,9 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.MaximumProductNumber")]
         public int MaximumProductNumber { get; set; }
         public bool MaximumProductNumber_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.AllowVendorsToImportProducts")]
+        public bool AllowVendorsToImportProducts { get; set; }
+        public bool AllowVendorsToImportProducts_OverrideForStore { get; set; }
     }
 }

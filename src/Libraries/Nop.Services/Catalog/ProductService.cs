@@ -1218,19 +1218,25 @@ namespace Nop.Services.Catalog
             var product = query.FirstOrDefault();
             return product;
         }
-        
+
         /// <summary>
         /// Gets a products by SKU array
         /// </summary>
         /// <param name="skuArray">SKU array</param>
+        /// <param name="vendorId">Vendor ID; 0 to load all records</param>
         /// <returns>Products</returns>
-        public IList<Product> GetProductsBySku(string[] skuArray)
+        public IList<Product> GetProductsBySku(string[] skuArray, int vendorId = 0)
         {
             if (skuArray == null)
                 throw new ArgumentNullException("skuArray");
 
             var query = _productRepository.Table;
-            return query.Where(p => !p.Deleted && skuArray.Contains(p.Sku)).ToList();
+            query = query.Where(p => !p.Deleted && skuArray.Contains(p.Sku));
+
+            if (vendorId != 0)
+                query = query.Where(p => p.VendorId == vendorId);
+
+            return query.ToList();
         }
 
         /// <summary>

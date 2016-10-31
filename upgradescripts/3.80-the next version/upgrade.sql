@@ -452,6 +452,12 @@ set @resources='
   <LocaleResource Name="Admin.System.Warnings.URL.Reserved">
     <Value>Entered page name already exists, so it will be replaced by ''{0}''</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowVendorsToImportProducts">
+    <Value>Allow vendors to import products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowVendorsToImportProducts.Hint">
+    <Value>Check if vendors are allowed to import products.</Value>
+  </LocaleResource>  
 </Language>
 '
 
@@ -1132,3 +1138,11 @@ BEGIN
 	VALUES (N'rewardpointssettings.activationdelayperiodid', N'0', 0)
 END
 GO
+
+ --new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'vendorsettings.allowvendorstoimportproducts')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'vendorsettings.allowvendorstoimportproducts', N'True', 0)
+ END
+ GO
