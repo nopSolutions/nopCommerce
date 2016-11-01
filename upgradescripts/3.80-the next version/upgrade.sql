@@ -1760,6 +1760,42 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Order.ExportWithProducts.Hint">
     <Value>Check if orders should be exported with products.</Value>
   </LocaleResource> 
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Description">
+    <Value>Here you can set up requirements for the discount created to limit them to certain users categories depends on their customer roles, amount spent and so on. You can use single requirement type or make a group of requirements to use any of requirements simultaneously. Requirement group is a very useful feature for creating discount requirement templates. Once you created a requirement group and then use it every time you want this limitation to be counted. You can put one requirement group into another if needed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.DiscountRequirementType.AddGroup">
+    <Value>Add requirement group</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.DiscountRequirementType.Hint">
+    <Value>You can choose one of the following requirement types, or add a requirement group to use several requirement types simultaneously.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.GroupName">
+    <Value>Group name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.GroupName.Hint">
+    <Value>Specify name of the requirement group (e.g. "Permitted customer roles").</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RequirementGroup">
+    <Value>Add to group</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RequirementGroup.Hint">
+    <Value>Choose the group you want the requirement group you’re creating to be assigned to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RequirementGroup.None">
+    <Value>None</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RequirementGroup.Remove">
+    <Value>Remove requirement group</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RequirementGroup.Title">
+    <Value>Requirement group</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Discounts.RequirementInteractionType.And">
+    <Value>AND</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Discounts.RequirementInteractionType.Or">
+    <Value>OR</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -4325,4 +4361,44 @@ BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'ordersettings.exportwithproducts', N'True', 0)
 END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[DiscountRequirement]') and NAME='InteractionTypeId')
+BEGIN
+	ALTER TABLE [DiscountRequirement]
+	ADD [InteractionTypeId] int NULL
+END
+GO
+
+UPDATE [DiscountRequirement]
+SET [InteractionTypeId] = 0
+WHERE [InteractionTypeId] IS NULL
+GO
+
+ALTER TABLE [DiscountRequirement] ALTER COLUMN [InteractionTypeId] int NOT NULL
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[DiscountRequirement]') and NAME='ParentId')
+BEGIN
+	ALTER TABLE [DiscountRequirement]
+	ADD [ParentId] int NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[DiscountRequirement]') and NAME='IsGroup')
+BEGIN
+	ALTER TABLE [DiscountRequirement]
+	ADD [IsGroup] bit NULL
+END
+GO
+
+UPDATE [DiscountRequirement]
+SET [IsGroup] = 0
+WHERE [IsGroup] IS NULL
+GO
+
+ALTER TABLE [DiscountRequirement] ALTER COLUMN [IsGroup] bit NOT NULL
 GO

@@ -625,7 +625,9 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())
                     .ForMember(dest => dest.AddDiscountRequirement, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableDiscountRequirementRules, mo => mo.Ignore())
-                    .ForMember(dest => dest.DiscountRequirementMetaInfos, mo => mo.Ignore())
+                    .ForMember(dest => dest.AvailableRequirementGroups, mo => mo.Ignore())
+                    .ForMember(dest => dest.GroupName, mo => mo.Ignore())
+                    .ForMember(dest => dest.RequirementGroupId, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<DiscountModel, Discount>()
                     .ForMember(dest => dest.DiscountType, mo => mo.Ignore())

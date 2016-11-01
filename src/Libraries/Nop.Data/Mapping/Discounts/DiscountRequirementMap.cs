@@ -8,6 +8,9 @@ namespace Nop.Data.Mapping.Discounts
         {
             this.ToTable("DiscountRequirement");
             this.HasKey(dr => dr.Id);
+
+            this.Ignore(d => d.InteractionType);
+            this.HasMany(dr => dr.ChildRequirements).WithOptional().HasForeignKey(dr => dr.ParentId);
         }
     }
 }

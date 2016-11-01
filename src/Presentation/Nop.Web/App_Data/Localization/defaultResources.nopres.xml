@@ -11442,17 +11442,44 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.AddNew">
     <Value>Add a new discount requirement</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Description">
+    <Value>Here you can set up requirements for the discount created to limit them to certain users categories depends on their customer roles, amount spent and so on. You can use single requirement type or make a group of requirements to use any of requirements simultaneously. Requirement group is a very useful feature for creating discount requirement templates. Once you created a requirement group and then use it every time you want this limitation to be counted. You can put one requirement group into another if needed.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.DiscountRequirementType">
     <Value>Discount requirement type</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.DiscountRequirementType.AddGroup">
+    <Value>Add requirement group</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.DiscountRequirementType.Hint">
-    <Value>Choose discount requirement type and configure it below.</Value>
+    <Value>You can choose one of the following requirement types, or add a requirement group to use several requirement types simultaneously.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.DiscountRequirementType.Select">
     <Value>Select requirement type</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.FailedToSave">
     <Value>Failed to save requirement</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.GroupName">
+    <Value>Group name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.GroupName.Hint">
+    <Value>Specify name of the requirement group (e.g. "Permitted customer roles").</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RequirementGroup">
+    <Value>Add to group</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RequirementGroup.Hint">
+    <Value>Choose the group you want the requirement group you’re creating to be assigned to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RequirementGroup.None">
+    <Value>None</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RequirementGroup.Remove">
+    <Value>Remove requirement group</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RequirementGroup.Title">
+    <Value>Requirement group</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Remove">
     <Value>Remove requirement</Value>
@@ -13667,6 +13694,12 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Discounts.DiscountType.AssignedToSkus">
     <Value>Assigned to products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Discounts.RequirementInteractionType.And">
+    <Value>AND</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Discounts.RequirementInteractionType.Or">
+    <Value>OR</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Forums.EditorType.BBCodeEditor">
     <Value>BBCode editor</Value>

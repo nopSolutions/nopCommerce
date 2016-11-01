@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -82,8 +83,89 @@ namespace Nop.Services.Discounts
         [Serializable]
         public class DiscountRequirementForCaching
         {
+            public DiscountRequirementForCaching()
+            {
+                ChildRequirements = new List<DiscountRequirementForCaching>();
+            }
+
             public int Id { get; set; }
+            public bool IsGroup { get; set; }
+            public RequirementInteractionType InteractionType { get; set; }
             public string SystemName { get; set; }
+            public IList<DiscountRequirementForCaching> ChildRequirements { get; set; }
+        }
+
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Get requirements for caching
+        /// </summary>
+        /// <param name="requirements">Collection of discount requirement</param>
+        /// <returns>List of DiscountRequirementForCaching</returns>
+        protected IList<DiscountRequirementForCaching> GetReqirementsForCaching(IEnumerable<DiscountRequirement> requirements)
+        {
+            return requirements.Select(dr => new DiscountRequirementForCaching
+            {
+                Id = dr.Id,
+                IsGroup = dr.IsGroup,
+                SystemName = dr.DiscountRequirementRuleSystemName,
+                InteractionType = dr.InteractionType,
+                ChildRequirements = GetReqirementsForCaching(dr.ChildRequirements)
+            }).ToList();
+        }
+
+        /// <summary>
+        /// Get discount validation result
+        /// </summary>
+        /// <param name="requirements">Collection of discount requirement</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="errors">Errors</param>
+        /// <returns>True if result is valid; otherwise false</returns>
+        protected bool GetValidationResult(IEnumerable<DiscountRequirementForCaching> requirements, Customer customer, ref StringBuilder errors)
+        {
+            var result = true;
+
+            foreach (var requirement in requirements)
+            {
+                if (!requirement.IsGroup)
+                {
+                    var requirementRulePlugin = LoadDiscountRequirementRuleBySystemName(requirement.SystemName);
+                    if (requirementRulePlugin == null)
+                        continue;
+
+                    if (!_pluginFinder.AuthorizedForUser(requirementRulePlugin.PluginDescriptor, customer))
+                        continue;
+
+                    if (!_pluginFinder.AuthenticateStore(requirementRulePlugin.PluginDescriptor, _storeContext.CurrentStore.Id))
+                        continue;
+
+                    var ruleResult = requirementRulePlugin.CheckRequirement(new DiscountRequirementValidationRequest
+                    {
+                        DiscountRequirementId = requirement.Id,
+                        Customer = customer,
+                        Store = _storeContext.CurrentStore
+                    });
+                    if (!ruleResult.IsValid)
+                        errors.AppendLine(ruleResult.UserError);
+
+                    result = ruleResult.IsValid;
+                }
+                else
+                    result = GetValidationResult(requirement.ChildRequirements, customer, ref errors);
+
+                //if (requirement.InteractionType == RequirementInteractionType.Not)
+                //    result = !result;
+
+                if (!result && requirement.InteractionType == RequirementInteractionType.And)
+                    return result;
+
+                if (result && requirement.InteractionType == RequirementInteractionType.Or)
+                    return result;
+            }
+
+            return result;
         }
 
         #endregion
@@ -510,45 +592,15 @@ namespace Nop.Services.Discounts
 
             //discount requirements
             string key = string.Format(DiscountEventConsumer.DISCOUNT_REQUIREMENT_MODEL_KEY, discount.Id);
-            var requirements = _cacheManager.Get(key, () =>
-            {
-                var cachedRequirements = new List<DiscountRequirementForCaching>();
-                foreach (var dr in GetAllDiscountRequirements(discount.Id))
-                    cachedRequirements.Add(new DiscountRequirementForCaching
-                    {
-                        Id = dr.Id,
-                        SystemName = dr.DiscountRequirementRuleSystemName
-                    });
-                return cachedRequirements;
-            });
-            foreach (var req in requirements)
-            {
-                //load a plugin
-                var requirementRulePlugin = LoadDiscountRequirementRuleBySystemName(req.SystemName);
-                if (requirementRulePlugin == null)
-                    continue;
+            var requirements = _cacheManager.Get(key, () => GetReqirementsForCaching(GetAllDiscountRequirements(discount.Id).Where(x => !x.ParentId.HasValue)));
 
-                if (!_pluginFinder.AuthorizedForUser(requirementRulePlugin.PluginDescriptor, customer))
-                    continue;
+            var errors = new StringBuilder();
+            result.IsValid = GetValidationResult(requirements, customer, ref errors);
 
-                if (!_pluginFinder.AuthenticateStore(requirementRulePlugin.PluginDescriptor, _storeContext.CurrentStore.Id))
-                    continue;
+            //set errors if result is not valid
+            if (!result.IsValid)
+                result.UserError = errors.ToString();
 
-                var ruleRequest = new DiscountRequirementValidationRequest
-                {
-                    DiscountRequirementId = req.Id,
-                    Customer = customer,
-                    Store = _storeContext.CurrentStore
-                };
-                var ruleResult = requirementRulePlugin.CheckRequirement(ruleRequest);
-                if (!ruleResult.IsValid)
-                {
-                    result.UserError = ruleResult.UserError;
-                    return result;
-                }
-            }
-
-            result.IsValid = true;
             return result;
         }
 
