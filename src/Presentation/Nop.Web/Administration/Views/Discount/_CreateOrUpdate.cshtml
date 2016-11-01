@@ -148,6 +148,24 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Name)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Name)
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </div>
+                </div>
+                <div class="form-group" @(model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.VendorId):
+                    </div>
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(model => model.VendorId, model.AvailableVendors)
+                        @Html.ValidationMessageFor(model => model.VendorId)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.DiscountTypeId)
                     </div>
                     <div class="col-md-9">
@@ -435,32 +453,34 @@
                         <div class="form-group">
                             <div class="col-md-12">
                                 <button type="button"
-                                       id="deleterequirement{{= discountRequirementId }}"
-                                       onclick="deleteRequirement({{= discountRequirementId }})"
-                                       class="btn bg-red pull-right">@T("Admin.Promotions.Discounts.Requirements.Remove")</button>
+                                        id="deleterequirement{{= discountRequirementId }}"
+                                        onclick="deleteRequirement({{= discountRequirementId }})"
+                                        class="btn bg-red pull-right">
+                                    @T("Admin.Promotions.Discounts.Requirements.Remove")
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </script>
+                </script>
 
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    @T("Admin.Promotions.Discounts.Requirements.AddNew")
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.AddDiscountRequirement)
-                        </div>
-                        <div class="col-md-9">
-                            @Html.NopDropDownListFor(model => model.AddDiscountRequirement, Model.AvailableDiscountRequirementRules)
-                            @Html.ValidationMessageFor(model => model.AddDiscountRequirement)
-                        </div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        @T("Admin.Promotions.Discounts.Requirements.AddNew")
                     </div>
-                    <div id="addrequirementplaceholder"></div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.AddDiscountRequirement)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDropDownListFor(model => model.AddDiscountRequirement, Model.AvailableDiscountRequirementRules)
+                                @Html.ValidationMessageFor(model => model.AddDiscountRequirement)
+                            </div>
+                        </div>
+                        <div id="addrequirementplaceholder"></div>
+                    </div>
                 </div>
-            </div>
         }
         else
         {

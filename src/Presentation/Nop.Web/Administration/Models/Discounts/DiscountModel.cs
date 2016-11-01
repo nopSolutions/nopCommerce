@@ -83,7 +83,15 @@ namespace Nop.Admin.Models.Discounts
         public IList<SelectListItem> AvailableDiscountRequirementRules { get; set; }
 
         public IList<DiscountRequirementMetaInfo> DiscountRequirementMetaInfos { get; set; }
-        
+
+        [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
+        public int SearchVendorId { get; set; }
+
+        public IList<SelectListItem> AvailableVendors { get; set; }
+
+        public Boolean IsLoggedInAsVendor { get; set; }
+
+        public int VendorId { get; set; }
 
         #region Nested classes
 

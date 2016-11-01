@@ -157,6 +157,15 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new DiscountListModel();
+
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
+                model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
+
+            //a vendor should have access only to his discounts
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+
             model.AvailableDiscountTypes = DiscountType.AssignedToOrderTotal.ToSelectList(false).ToList();
             model.AvailableDiscountTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
@@ -168,6 +177,12 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
+
+            //a vendor should have access only to his discounts
+            if (_workContext.CurrentVendor != null)
+            {
+                model.SearchVendorId = _workContext.CurrentVendor.Id;
+            }
 
             DiscountType? discountType = null;
             if (model.SearchDiscountTypeId > 0)
@@ -211,6 +226,12 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
+
+            //a vendor should have access only to his discounts
+            if (_workContext.CurrentVendor != null)
+            {
+                model.VendorId = _workContext.CurrentVendor.Id;
+            }
 
             if (ModelState.IsValid)
             {
