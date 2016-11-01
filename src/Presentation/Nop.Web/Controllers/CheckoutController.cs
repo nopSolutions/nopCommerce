@@ -16,6 +16,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
@@ -333,7 +334,7 @@ namespace Nop.Web.Controllers
                                       };
 
                     //adjust rate
-                    List<Discount> appliedDiscounts;
+                    List<DiscountForCaching> appliedDiscounts;
                     var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(
                         shippingOption.Rate, cart, out appliedDiscounts);
 

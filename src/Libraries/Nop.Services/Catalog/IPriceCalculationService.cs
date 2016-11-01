@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
+using Nop.Services.Discounts;
 
 namespace Nop.Services.Catalog
 {
@@ -43,7 +43,7 @@ namespace Nop.Services.Catalog
             bool includeDiscounts,
             int quantity,
             out decimal discountAmount,
-            out List<Discount> appliedDiscounts);
+            out List<DiscountForCaching> appliedDiscounts);
         /// <summary>
         /// Gets the final price
         /// </summary>
@@ -65,7 +65,7 @@ namespace Nop.Services.Catalog
             DateTime? rentalStartDate,
             DateTime? rentalEndDate,
             out decimal discountAmount,
-            out List<Discount> appliedDiscounts);
+            out List<DiscountForCaching> appliedDiscounts);
 
 
 
@@ -88,7 +88,7 @@ namespace Nop.Services.Catalog
         decimal GetUnitPrice(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<Discount> appliedDiscounts);
+            out List<DiscountForCaching> appliedDiscounts);
         /// <summary>
         /// Gets the shopping cart unit price (one item)
         /// </summary>
@@ -113,7 +113,7 @@ namespace Nop.Services.Catalog
             DateTime? rentalStartDate, DateTime? rentalEndDate,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<Discount> appliedDiscounts);
+            out List<DiscountForCaching> appliedDiscounts);
         /// <summary>
         /// Gets the shopping cart item sub total
         /// </summary>
@@ -133,7 +133,7 @@ namespace Nop.Services.Catalog
         decimal GetSubTotal(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<Discount> appliedDiscounts);
+            out List<DiscountForCaching> appliedDiscounts);
 
         /// <summary>
         /// Gets the product cost (one item)

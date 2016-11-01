@@ -9,6 +9,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
@@ -28,6 +29,7 @@ namespace Nop.Services.Tests.Discounts
         private IEventPublisher _eventPublisher;
         private IGenericAttributeService _genericAttributeService;
         private ILocalizationService _localizationService;
+        private ICategoryService _categoryService;
         private IDiscountService _discountService;
         private IStoreContext _storeContext;
         private IWorkContext _workContext;
@@ -71,13 +73,16 @@ namespace Nop.Services.Tests.Discounts
 
             var cacheManager = new NopNullCache();
             _discountRequirementRepo = MockRepository.GenerateMock<IRepository<DiscountRequirement>>();
+            _discountRequirementRepo.Expect(x => x.Table).Return(new List<DiscountRequirement>().AsQueryable());
+
             _discountUsageHistoryRepo = MockRepository.GenerateMock<IRepository<DiscountUsageHistory>>();
             var pluginFinder = new PluginFinder();
             _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
+            _categoryService = MockRepository.GenerateMock<ICategoryService>();
             _discountService = new DiscountService(cacheManager, _discountRepo, _discountRequirementRepo,
                 _discountUsageHistoryRepo, _storeContext,
-                _localizationService, pluginFinder, _eventPublisher, _workContext);
+                _localizationService, _categoryService, pluginFinder, _eventPublisher, _workContext);
         }
 
         [Test]
@@ -127,27 +132,15 @@ namespace Nop.Services.Tests.Discounts
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 LastActivityDateUtc = new DateTime(2010, 01, 02)
             };
-
-            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer"))
-                .Return(new List<GenericAttribute>
-                            {
-                                new GenericAttribute
-                                    {
-                                        EntityId = customer.Id,
-                                        Key = SystemCustomerAttributeNames.DiscountCouponCode,
-                                        KeyGroup = "Customer",
-                                        Value = "CouponCode 1"
-                                    }
-                            });
+            
 
             //UNDONE: little workaround here
             //we have to register "nop_cache_static" cache manager (null manager) from DependencyRegistrar.cs
             //because DiscountService right now dynamically Resolve<ICacheManager>("nop_cache_static")
             //we cannot inject it because DiscountService already has "per-request" cache manager injected 
-            EngineContext.Initialize(false);
-            //EngineContext.Current.ContainerManager.Expect(x => x.Resolve<ICacheManager>("nop_cache_static")).Return(new NopNullCache());
+            //EngineContext.Initialize(false);
             
-            _discountService.ValidateDiscount(discount, customer).IsValid.ShouldEqual(true);
+            _discountService.ValidateDiscount(discount, customer, new [] { "CouponCode 1" }).IsValid.ShouldEqual(true);
         }
 
 
@@ -175,19 +168,7 @@ namespace Nop.Services.Tests.Discounts
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 LastActivityDateUtc = new DateTime(2010, 01, 02)
             };
-
-            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer"))
-                .Return(new List<GenericAttribute>
-                            {
-                                new GenericAttribute
-                                    {
-                                        EntityId = customer.Id,
-                                        Key = SystemCustomerAttributeNames.DiscountCouponCode,
-                                        KeyGroup = "Customer",
-                                        Value = "CouponCode 2"
-                                    }
-                            });
-            _discountService.ValidateDiscount(discount, customer).IsValid.ShouldEqual(false);
+            _discountService.ValidateDiscount(discount, customer, new[] { "CouponCode 2" }).IsValid.ShouldEqual(false);
         }
 
         [Test]
@@ -215,11 +196,10 @@ namespace Nop.Services.Tests.Discounts
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 LastActivityDateUtc = new DateTime(2010, 01, 02)
             };
-
-            _discountService.ValidateDiscount(discount, customer).IsValid.ShouldEqual(true);
+            _discountService.ValidateDiscount(discount, customer, null).IsValid.ShouldEqual(true);
 
             discount.StartDateUtc = DateTime.UtcNow.AddDays(1);
-            _discountService.ValidateDiscount(discount, customer).IsValid.ShouldEqual(false);
+            _discountService.ValidateDiscount(discount, customer, null).IsValid.ShouldEqual(false);
         }
     }
 }
