@@ -544,7 +544,7 @@ namespace Nop.Services.Discounts
                 if (requirementRulePlugin == null)
                     continue;
 
-                if (!_pluginFinder.AuthorizedForUser(requirementRulePlugin.PluginDescriptor, _workContext.CurrentCustomer))
+                if (!_pluginFinder.AuthorizedForUser(requirementRulePlugin.PluginDescriptor, customer))
                     continue;
 
                 if (!_pluginFinder.AuthenticateStore(requirementRulePlugin.PluginDescriptor, _storeContext.CurrentStore.Id))
