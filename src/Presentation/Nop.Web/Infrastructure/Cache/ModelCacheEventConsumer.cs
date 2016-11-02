@@ -349,6 +349,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string PRODUCT_MANUFACTURERS_MODEL_KEY = "Nop.pres.product.manufacturers-{0}-{1}-{2}-{3}";
         public const string PRODUCT_MANUFACTURERS_PATTERN_KEY = "Nop.pres.product.manufacturers";
+        public const string PRODUCT_MANUFACTURERS_PATTERN_KEY_BY_ID = "Nop.pres.product.manufacturers-{0}";
 
         /// <summary>
         /// Key for ProductSpecificationModel caching
@@ -867,17 +868,17 @@ namespace Nop.Web.Infrastructure.Cache
         //product manufacturers
         public void HandleEvent(EntityInserted<ProductManufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(string.Format(PRODUCT_MANUFACTURERS_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
             _cacheManager.RemoveByPattern(string.Format(MANUFACTURER_HAS_FEATURED_PRODUCTS_PATTERN_KEY_BY_ID, eventMessage.Entity.ManufacturerId));
         }
         public void HandleEvent(EntityUpdated<ProductManufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(string.Format(PRODUCT_MANUFACTURERS_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
             _cacheManager.RemoveByPattern(string.Format(MANUFACTURER_HAS_FEATURED_PRODUCTS_PATTERN_KEY_BY_ID, eventMessage.Entity.ManufacturerId));
         }
         public void HandleEvent(EntityDeleted<ProductManufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(string.Format(PRODUCT_MANUFACTURERS_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
             _cacheManager.RemoveByPattern(string.Format(MANUFACTURER_HAS_FEATURED_PRODUCTS_PATTERN_KEY_BY_ID, eventMessage.Entity.ManufacturerId));
         }
         
