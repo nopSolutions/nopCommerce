@@ -2080,13 +2080,6 @@ namespace Nop.Admin.Controllers
             if (picture == null)
                 throw new ArgumentException("No picture found with the specified id");
 
-            _productService.InsertProductPicture(new ProductPicture
-            {
-                PictureId = pictureId,
-                ProductId = productId,
-                DisplayOrder = displayOrder,
-            });
-
             _pictureService.UpdatePicture(picture.Id,
                 _pictureService.LoadPictureBinary(picture),
                 picture.MimeType,
@@ -2095,6 +2088,13 @@ namespace Nop.Admin.Controllers
                 overrideTitleAttribute);
 
             _pictureService.SetSeoFilename(pictureId, _pictureService.GetPictureSeName(product.Name));
+
+            _productService.InsertProductPicture(new ProductPicture
+            {
+                PictureId = pictureId,
+                ProductId = productId,
+                DisplayOrder = displayOrder,
+            });
 
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }
@@ -2165,9 +2165,6 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            productPicture.DisplayOrder = model.DisplayOrder;
-            _productService.UpdateProductPicture(productPicture);
-
             var picture = _pictureService.GetPictureById(productPicture.PictureId);
             if (picture == null)
                 throw new ArgumentException("No picture found with the specified id");
@@ -2178,6 +2175,9 @@ namespace Nop.Admin.Controllers
                 picture.SeoFilename,
                 model.OverrideAltAttribute,
                 model.OverrideTitleAttribute);
+
+            productPicture.DisplayOrder = model.DisplayOrder;
+            _productService.UpdateProductPicture(productPicture);
 
             return new NullJsonResult();
         }
