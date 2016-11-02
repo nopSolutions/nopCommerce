@@ -199,7 +199,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string MANUFACTURER_HAS_FEATURED_PRODUCTS_KEY = "Nop.pres.manufacturer.hasfeaturedproducts-{0}-{1}-{2}";
         public const string MANUFACTURER_HAS_FEATURED_PRODUCTS_PATTERN_KEY = "Nop.pres.manufacturer.hasfeaturedproducts";
-        public const string MANUFACTURER_HAS_FEATURED_PRODUCTS_PATTERN_KEY_BY_ID = "Nop.pres.manufacturer.hasfeaturedproducts-{0}";
+        public const string MANUFACTURER_HAS_FEATURED_PRODUCTS_PATTERN_KEY_BY_ID = "Nop.pres.manufacturer.hasfeaturedproducts-{0}-";
 
         /// <summary>
         /// Key for CategoryNavigationModel caching
@@ -244,7 +244,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string CATEGORY_HAS_FEATURED_PRODUCTS_KEY = "Nop.pres.category.hasfeaturedproducts-{0}-{1}-{2}";
         public const string CATEGORY_HAS_FEATURED_PRODUCTS_PATTERN_KEY = "Nop.pres.category.hasfeaturedproducts";
-        public const string CATEGORY_HAS_FEATURED_PRODUCTS_PATTERN_KEY_BY_ID = "Nop.pres.category.hasfeaturedproducts-{0}";
+        public const string CATEGORY_HAS_FEATURED_PRODUCTS_PATTERN_KEY_BY_ID = "Nop.pres.category.hasfeaturedproducts-{0}-";
 
         /// <summary>
         /// Key for caching of category breadcrumb
@@ -315,7 +315,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string PRODUCT_BREADCRUMB_MODEL_KEY = "Nop.pres.product.breadcrumb-{0}-{1}-{2}-{3}";
         public const string PRODUCT_BREADCRUMB_PATTERN_KEY = "Nop.pres.product.breadcrumb";
-        public const string PRODUCT_BREADCRUMB_PATTERN_KEY_BY_ID = "Nop.pres.product.breadcrumb-{0}";
+        public const string PRODUCT_BREADCRUMB_PATTERN_KEY_BY_ID = "Nop.pres.product.breadcrumb-{0}-";
 
         /// <summary>
         /// Key for ProductTagModel caching
@@ -349,7 +349,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string PRODUCT_MANUFACTURERS_MODEL_KEY = "Nop.pres.product.manufacturers-{0}-{1}-{2}-{3}";
         public const string PRODUCT_MANUFACTURERS_PATTERN_KEY = "Nop.pres.product.manufacturers";
-        public const string PRODUCT_MANUFACTURERS_PATTERN_KEY_BY_ID = "Nop.pres.product.manufacturers-{0}";
+        public const string PRODUCT_MANUFACTURERS_PATTERN_KEY_BY_ID = "Nop.pres.product.manufacturers-{0}-";
 
         /// <summary>
         /// Key for ProductSpecificationModel caching
@@ -360,7 +360,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string PRODUCT_SPECS_MODEL_KEY = "Nop.pres.product.specs-{0}-{1}";
         public const string PRODUCT_SPECS_PATTERN_KEY = "Nop.pres.product.specs";
-        public const string PRODUCT_SPECS_PATTERN_KEY_BY_ID = "Nop.pres.product.specs-{0}";
+        public const string PRODUCT_SPECS_PATTERN_KEY_BY_ID = "Nop.pres.product.specs-{0}-";
 
         /// <summary>
         /// Key for caching of a value indicating whether a product has product attributes
@@ -368,9 +368,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : product id
         /// </remarks>
-        public const string PRODUCT_HAS_PRODUCT_ATTRIBUTES_KEY = "Nop.pres.product.hasproductattributes-{0}";
+        public const string PRODUCT_HAS_PRODUCT_ATTRIBUTES_KEY = "Nop.pres.product.hasproductattributes-{0}-";
         public const string PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY = "Nop.pres.product.hasproductattributes";
-        public const string PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY_BY_ID = "Nop.pres.product.hasproductattributes-{0}";
+        public const string PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY_BY_ID = "Nop.pres.product.hasproductattributes-{0}-";
 
         /// <summary>
         /// Key for TopicModel caching
@@ -499,7 +499,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string PRODUCT_DEFAULTPICTURE_MODEL_KEY = "Nop.pres.product.detailspictures-{0}-{1}-{2}-{3}-{4}-{5}";
         public const string PRODUCT_DEFAULTPICTURE_PATTERN_KEY = "Nop.pres.product.detailspictures";
-        public const string PRODUCT_DEFAULTPICTURE_PATTERN_KEY_BY_ID = "Nop.pres.product.detailspictures-{0}";
+        public const string PRODUCT_DEFAULTPICTURE_PATTERN_KEY_BY_ID = "Nop.pres.product.detailspictures-{0}-";
 
         /// <summary>
         /// Key for product picture caching on the product details page
@@ -514,7 +514,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string PRODUCT_DETAILS_PICTURES_MODEL_KEY = "Nop.pres.product.picture-{0}-{1}-{2}-{3}-{4}-{5}";
         public const string PRODUCT_DETAILS_PICTURES_PATTERN_KEY = "Nop.pres.product.picture";
-        public const string PRODUCT_DETAILS_PICTURES_PATTERN_KEY_BY_ID = "Nop.pres.product.picture-{0}";
+        public const string PRODUCT_DETAILS_PICTURES_PATTERN_KEY_BY_ID = "Nop.pres.product.picture-{0}-";
 
         /// <summary>
         /// Key for product reviews caching
@@ -525,7 +525,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string PRODUCT_REVIEWS_MODEL_KEY = "Nop.pres.product.reviews-{0}-{1}";
         public const string PRODUCT_REVIEWS_PATTERN_KEY = "Nop.pres.product.reviews";
-        public const string PRODUCT_REVIEWS_PATTERN_KEY_BY_ID = "Nop.pres.product.reviews-{0}";
+        public const string PRODUCT_REVIEWS_PATTERN_KEY_BY_ID = "Nop.pres.product.reviews-{0}-";
 
         /// <summary>
         /// Key for product attribute picture caching on the product details page
@@ -562,7 +562,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string CATEGORY_PICTURE_MODEL_KEY = "Nop.pres.category.picture-{0}-{1}-{2}-{3}-{4}-{5}";
         public const string CATEGORY_PICTURE_PATTERN_KEY = "Nop.pres.category.picture";
-        public const string CATEGORY_PICTURE_PATTERN_KEY_BY_ID = "Nop.pres.category.picture-{0}";
+        public const string CATEGORY_PICTURE_PATTERN_KEY_BY_ID = "Nop.pres.category.picture-{0}-";
 
         /// <summary>
         /// Key for manufacturer picture caching
@@ -577,7 +577,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string MANUFACTURER_PICTURE_MODEL_KEY = "Nop.pres.manufacturer.picture-{0}-{1}-{2}-{3}-{4}-{5}";
         public const string MANUFACTURER_PICTURE_PATTERN_KEY = "Nop.pres.manufacturer.picture";
-        public const string MANUFACTURER_PICTURE_PATTERN_KEY_BY_ID = "Nop.pres.manufacturer.picture-{0}";
+        public const string MANUFACTURER_PICTURE_PATTERN_KEY_BY_ID = "Nop.pres.manufacturer.picture-{0}-";
 
         /// <summary>
         /// Key for vendor picture caching
@@ -592,7 +592,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string VENDOR_PICTURE_MODEL_KEY = "Nop.pres.vendor.picture-{0}-{1}-{2}-{3}-{4}-{5}";
         public const string VENDOR_PICTURE_PATTERN_KEY = "Nop.pres.vendor.picture";
-        public const string VENDOR_PICTURE_PATTERN_KEY_BY_ID = "Nop.pres.vendor.picture-{0}";
+        public const string VENDOR_PICTURE_PATTERN_KEY_BY_ID = "Nop.pres.vendor.picture-{0}-";
 
         /// <summary>
         /// Key for cart picture caching
