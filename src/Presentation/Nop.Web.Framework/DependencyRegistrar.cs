@@ -219,8 +219,10 @@ namespace Nop.Web.Framework
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<DiscountService>().As<IDiscountService>().InstancePerLifetimeScope();
-
+            //use static cache (between HTTP requests)
+            builder.RegisterType<DiscountService>().As<IDiscountService>()
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
+                .InstancePerLifetimeScope();
 
             //use static cache (between HTTP requests)
             builder.RegisterType<SettingService>().As<ISettingService>()

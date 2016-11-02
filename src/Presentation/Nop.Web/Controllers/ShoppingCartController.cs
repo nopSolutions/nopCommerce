@@ -537,7 +537,7 @@ namespace Nop.Web.Controllers
                 else
                 {
                     //sub total
-                    List<Discount> scDiscounts;
+                    List<DiscountForCaching> scDiscounts;
                     decimal shoppingCartItemDiscountBase;
                     decimal taxRate;
                     decimal shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci, true, out shoppingCartItemDiscountBase, out scDiscounts), out taxRate);
@@ -790,7 +790,7 @@ namespace Nop.Web.Controllers
                 else
                 {
                     //sub total
-                    List<Discount> scDiscounts;
+                    List<DiscountForCaching> scDiscounts;
                     decimal shoppingCartItemDiscountBase;
                     decimal taxRate;
                     decimal shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci, true, out shoppingCartItemDiscountBase, out scDiscounts), out taxRate);
@@ -862,7 +862,7 @@ namespace Nop.Web.Controllers
                 {
                     //subtotal
                     decimal orderSubTotalDiscountAmountBase;
-                    List<Discount> orderSubTotalAppliedDiscounts;
+                    List<DiscountForCaching> orderSubTotalAppliedDiscounts;
                     decimal subTotalWithoutDiscountBase;
                     decimal subTotalWithDiscountBase;
                     var subTotalIncludingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
@@ -951,7 +951,7 @@ namespace Nop.Web.Controllers
             {
                 //subtotal
                 decimal orderSubTotalDiscountAmountBase;
-                List<Discount> orderSubTotalAppliedDiscounts;
+                List<DiscountForCaching> orderSubTotalAppliedDiscounts;
                 decimal subTotalWithoutDiscountBase;
                 decimal subTotalWithDiscountBase;
                 var subTotalIncludingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
@@ -1039,7 +1039,7 @@ namespace Nop.Web.Controllers
 
                 //total
                 decimal orderTotalDiscountAmountBase;
-                List<Discount> orderTotalAppliedDiscounts;
+                List<DiscountForCaching> orderTotalAppliedDiscounts;
                 List<AppliedGiftCard> appliedGiftCards;
                 int redeemedRewardPoints;
                 decimal redeemedRewardPointsAmount;
@@ -1892,7 +1892,7 @@ namespace Nop.Web.Controllers
             if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices) && !product.CustomerEntersPrice)
             {
                 //we do not calculate price of "customer enters price" option is enabled
-                List<Discount> scDiscounts;
+                List<DiscountForCaching> scDiscounts;
                 decimal discountAmount;
                 decimal finalPrice = _priceCalculationService.GetUnitPrice(product,
                     _workContext.CurrentCustomer,
@@ -2358,7 +2358,7 @@ namespace Nop.Web.Controllers
                 var discount = _discountService.GetDiscountByCouponCode(discountcouponcode, true);
                 if (discount != null && discount.RequiresCouponCode)
                 {
-                    var validationResult = _discountService.ValidateDiscount(discount, _workContext.CurrentCustomer, discountcouponcode);
+                    var validationResult = _discountService.ValidateDiscount(discount, _workContext.CurrentCustomer, new[] { discountcouponcode });
                     if (validationResult.IsValid)
                     {
                         //valid
@@ -2493,7 +2493,7 @@ namespace Nop.Web.Controllers
 
                             };
                             //calculate discounted and taxed rate
-                            List<Discount> appliedDiscounts = null;
+                            List<DiscountForCaching> appliedDiscounts = null;
                             decimal shippingTotal = _orderTotalCalculationService.AdjustShippingRate(shippingOption.Rate,
                                 cart, out appliedDiscounts);
 

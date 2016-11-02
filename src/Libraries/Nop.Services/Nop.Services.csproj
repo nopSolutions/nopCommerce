@@ -206,6 +206,7 @@
     <Compile Include="Catalog\ProductAttributeParser.cs" />
     <Compile Include="Customers\CustomerAttributeFormatter.cs" />
     <Compile Include="Customers\ICustomerAttributeFormatter.cs" />
+    <Compile Include="Discounts\DiscountForCaching.cs" />
     <Compile Include="ExportImport\Extensions.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Cms\IWidgetService.cs" />
@@ -241,7 +242,7 @@
     <Compile Include="Customers\ICustomerAttributeService.cs" />
     <Compile Include="Customers\CustomerAttributeService.cs" />
     <Compile Include="Customers\CustomerAttributeExtensions.cs" />
-    <Compile Include="Discounts\Cache\DiscountRequirementEventConsumer.cs" />
+    <Compile Include="Discounts\Cache\DiscountEventConsumer.cs" />
     <Compile Include="Discounts\DiscountRequirementValidationResult.cs" />
     <Compile Include="Discounts\DiscountValidationResult.cs" />
     <Compile Include="ExportImport\ExportProductAttribute.cs" />

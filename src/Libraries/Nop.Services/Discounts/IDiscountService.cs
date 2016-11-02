@@ -58,7 +58,46 @@ namespace Nop.Services.Discounts
 
         #endregion
 
+        #region Discounts (caching)
+
+        /// <summary>
+        /// Gets all discounts (cachable models)
+        /// </summary>
+        /// <param name="discountType">Discount type; null to load all discount</param>
+        /// <param name="couponCode">Coupon code to find (exact match)</param>
+        /// <param name="discountName">Discount name</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Discounts</returns>
+        IList<DiscountForCaching> GetAllDiscountsForCaching(DiscountType? discountType,
+            string couponCode = "", string discountName = "", bool showHidden = false);
+        
+        /// <summary>
+        /// Get category identifiers to which a discount is applied
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Category identifiers</returns>
+        IList<int> GetAppliedCategoryIds(DiscountForCaching discount, Customer customer);
+
+        /// <summary>
+        /// Get manufacturer identifiers to which a discount is applied
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Manufacturer identifiers</returns>
+        IList<int> GetAppliedManufacturerIds(DiscountForCaching discount, Customer customer);
+
+        #endregion
+
+
         #region Discount requirements
+
+        /// <summary>
+        /// Get all discount requirements
+        /// </summary>
+        /// <param name="discountId">Discont identifier</param>
+        /// <returns>Requirements</returns>
+        IList<DiscountRequirement> GetAllDiscountRequirements(int discountId = 0);
 
         /// <summary>
         /// Delete discount requirement
@@ -97,9 +136,17 @@ namespace Nop.Services.Discounts
         /// </summary>
         /// <param name="discount">Discount</param>
         /// <param name="customer">Customer</param>
-        /// <param name="couponCodeToValidate">Coupon code to validate</param>
+        /// <param name="couponCodesToValidate">Coupon codes to validate</param>
         /// <returns>Discount validation result</returns>
-        DiscountValidationResult ValidateDiscount(Discount discount, Customer customer, string couponCodeToValidate);
+        DiscountValidationResult ValidateDiscount(Discount discount, Customer customer, string[] couponCodesToValidate);
+
+        /// <summary>
+        /// Validate discount
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Discount validation result</returns>
+        DiscountValidationResult ValidateDiscount(DiscountForCaching discount, Customer customer);
 
         /// <summary>
         /// Validate discount
@@ -108,7 +155,7 @@ namespace Nop.Services.Discounts
         /// <param name="customer">Customer</param>
         /// <param name="couponCodesToValidate">Coupon codes to validate</param>
         /// <returns>Discount validation result</returns>
-        DiscountValidationResult ValidateDiscount(Discount discount, Customer customer, string[] couponCodesToValidate);
+        DiscountValidationResult ValidateDiscount(DiscountForCaching discount, Customer customer, string[] couponCodesToValidate);
 
         #endregion
 
