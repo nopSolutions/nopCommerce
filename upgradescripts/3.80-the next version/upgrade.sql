@@ -44,7 +44,7 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTags.Placeholder">
     <Value>Enter tags ...</Value>
   </LocaleResource>
-  <LocaleResource Name=" Admin.Catalog.Categories.Fields.Parent.None">
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.Parent.None">
     <Value>[None]</Value>
   </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.HideShippingTotal">
