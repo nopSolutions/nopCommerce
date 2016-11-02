@@ -9,7 +9,7 @@ using Nop.Services.Events;
 namespace Nop.Services.Discounts.Cache
 {
     /// <summary>
-    /// Cache event consumer (used for caching of discount requirements)
+    /// Cache event consumer (used for caching of discounts)
     /// </summary>
     public partial class DiscountEventConsumer :
         //discounts

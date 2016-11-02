@@ -128,7 +128,7 @@ namespace Nop.Services.Catalog
                 if (discountCategoryIds.Any())
                 {
                     //load identifier of categories of this product
-                    var cacheKey = string.Format(PriceCacheEventConsumer.DISCOUNT_PRODUCT_CATEGORY_IDS_MODEL_KEY,
+                    var cacheKey = string.Format(PriceCacheEventConsumer.PRODUCT_CATEGORY_IDS_MODEL_KEY,
                         product.Id,
                         string.Join(",", customer.GetCustomerRoleIds()),
                         _storeContext.CurrentStore.Id);
@@ -175,7 +175,7 @@ namespace Nop.Services.Catalog
                 if (discountManufacturerIds.Any())
                 {
                     //load identifier of manufacturers of this product
-                    var cacheKey = string.Format(PriceCacheEventConsumer.DISCOUNT_PRODUCT_MANUFACTURER_IDS_MODEL_KEY,
+                    var cacheKey = string.Format(PriceCacheEventConsumer.PRODUCT_MANUFACTURER_IDS_MODEL_KEY,
                         product.Id,
                         string.Join(",", customer.GetCustomerRoleIds()),
                         _storeContext.CurrentStore.Id);

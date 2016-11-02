@@ -109,7 +109,7 @@ namespace Nop.Services.Discounts
         }
 
         /// <summary>
-        /// Map a discount to the same class for cahcing
+        /// Map a discount to the same class for caching
         /// </summary>
         /// <param name="discount">Discount</param>
         /// <returns>Result</returns>
