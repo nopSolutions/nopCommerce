@@ -521,6 +521,21 @@ set @resources='
   <LocaleResource Name="ShoppingCart.AvailabilityRange">
     <Value>Available in {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Payment.CheckMoneyOrder.PaymentMethodDescription">
+    <Value>Pay by cheque or money order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Manual.PaymentMethodDescription">
+    <Value>Pay by credit / debit card</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.PaymentMethodDescription">
+    <Value>Pay by credit / debit card</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.PaymentMethodDescription">
+    <Value>You will be redirected to PayPal site to complete the payment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payment.PurchaseOrder.PaymentMethodDescription">
+    <Value>Pay by purchase order (PO) number</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1237,4 +1252,12 @@ WHERE [ProductAvailabilityRangeId] IS NULL
 GO
 
 ALTER TABLE [Product] ALTER COLUMN [ProductAvailabilityRangeId] int NOT NULL
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'paymentsettings.showpaymentmethoddescriptions')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'paymentsettings.showpaymentmethoddescriptions', N'True', 0)
+END
 GO

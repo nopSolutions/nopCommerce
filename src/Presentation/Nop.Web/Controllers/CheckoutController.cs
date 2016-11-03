@@ -423,6 +423,7 @@ namespace Nop.Web.Controllers
                 var pmModel = new CheckoutPaymentMethodModel.PaymentMethodModel
                 {
                     Name = pm.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id),
+                    Description = _paymentSettings.ShowPaymentMethodDescriptions ? pm.PaymentMethodDescription : string.Empty,
                     PaymentMethodSystemName = pm.PluginDescriptor.SystemName,
                     LogoUrl = pm.PluginDescriptor.GetLogoUrl(_webHelper)
                 };

@@ -30,6 +30,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         private readonly CurrencySettings _currencySettings;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
+        private readonly ILocalizationService _localizationService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ISettingService _settingService;
         private readonly IStoreContext _storeContext;
@@ -42,6 +43,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         public PayPalDirectPaymentProcessor(CurrencySettings currencySettings,
             ICurrencyService currencyService,
             ICustomerService customerService,
+            ILocalizationService localizationService,
             IOrderTotalCalculationService orderTotalCalculationService,
             ISettingService settingService, 
             IStoreContext storeContext,
@@ -50,6 +52,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             this._currencySettings = currencySettings;
             this._currencyService = currencyService;
             this._customerService = customerService;
+            this._localizationService = localizationService;
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._settingService = settingService;
             this._storeContext = storeContext;
@@ -772,6 +775,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.UseSandbox.Hint", "Check to enable Sandbox (testing environment).");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.WebhookId", "Webhook ID");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.WebhookId.Hint", "Specify webhook ID.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.PaymentMethodDescription", "Pay by credit / debit card");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.WebhookCreate", "Get webhook ID");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.WebhookError", "Webhook was not created (see details in the log)");
 
@@ -813,6 +817,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.UseSandbox.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.WebhookId");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.WebhookId.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.PaymentMethodDescription");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.WebhookCreate");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.WebhookError");
 
@@ -877,6 +882,16 @@ namespace Nop.Plugin.Payments.PayPalDirect
         public bool SkipPaymentInfo
         {
             get { return false; }
+        }
+
+        /// <summary>
+        /// Gets a payment method description that will be displayed on checkout pages in the public store
+        /// </summary>
+        public string PaymentMethodDescription
+        {
+            //return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
+            //for example, for a redirection payment method, description may be like this: "You will be redirected to PayPal site to complete the payment"
+            get { return _localizationService.GetResource("Plugins.Payments.PayPalDirect.PaymentMethodDescription"); }
         }
 
         #endregion

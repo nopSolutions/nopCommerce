@@ -1,7 +1,7 @@
 ﻿Group: Payment methods
 FriendlyName: Credit Card
 SystemName: Payments.Manual
-Version: 1.22
+Version: 1.3
 SupportedVersions: 3.90
 Author: nopCommerce team
 DisplayOrder: 1
