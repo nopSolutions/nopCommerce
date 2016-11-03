@@ -6,6 +6,9 @@
   <LocaleResource Name="Account.AccountActivation.Activated">
     <Value>Your account has been activated</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.AccountActivation.AlreadyActivated">
+    <Value>Your account already has been activated</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Administration">
     <Value>Administration</Value>
   </LocaleResource>
@@ -536,6 +539,9 @@
   </LocaleResource>
   <LocaleResource Name="Account.PasswordRecovery.OldPassword.Required">
     <Value>Old password is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.PasswordRecovery.PasswordAlreadyHasBeenChanged">
+    <Value>Your password already has been changed. For changing it once more, you need to again recover the password.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.PasswordRecovery.PasswordHasBeenChanged">
     <Value>Your password has been changed</Value>
@@ -13841,6 +13847,9 @@
   </LocaleResource>
   <LocaleResource Name="Newsletter.ResultActivated">
     <Value>Your subscription has been activated.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Newsletter.ResultAlreadyDeactivated">
+    <Value>Your subscription already has been deactivated.</Value>
   </LocaleResource>
   <LocaleResource Name="Newsletter.ResultDeactivated">
     <Value>Your subscription has been deactivated.</Value>

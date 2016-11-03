@@ -809,6 +809,15 @@ namespace Nop.Web.Controllers
             if (customer == null)
                 return RedirectToRoute("HomePage");
 
+            if (string.IsNullOrEmpty(customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken)))
+            {
+                return View(new PasswordRecoveryConfirmModel
+                {
+                    DisablePasswordChanging = true,
+                    Result = _localizationService.GetResource("Account.PasswordRecovery.PasswordAlreadyHasBeenChanged")
+                });
+            }
+
             var model = new PasswordRecoveryConfirmModel();
 
             //validate token
@@ -1212,8 +1221,8 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             var cToken = customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken);
-            if (String.IsNullOrEmpty(cToken))
-                return RedirectToRoute("HomePage");
+            if (string.IsNullOrEmpty(cToken))
+                return View(new AccountActivationModel { Result = _localizationService.GetResource("Account.AccountActivation.AlreadyActivated") });
 
             if (!cToken.Equals(token, StringComparison.InvariantCultureIgnoreCase))
                 return RedirectToRoute("HomePage");
