@@ -270,17 +270,14 @@ namespace Nop.Web.Controllers
             var discountCouponCodes = _workContext.CurrentCustomer.ParseAppliedDiscountCouponCodes();
             foreach (var couponCode in discountCouponCodes)
             {
-                var discount = _discountService.GetDiscountByCouponCode(couponCode);
-                if (discount != null &&
-                    discount.RequiresCouponCode &&
-                    _discountService.ValidateDiscount(discount, _workContext.CurrentCustomer).IsValid)
+                var discount = _discountService.GetAllDiscountsForCaching(couponCode: couponCode)
+                    .FirstOrDefault(d => d.RequiresCouponCode && _discountService.ValidateDiscount(d, _workContext.CurrentCustomer).IsValid);
+
+                model.DiscountBox.AppliedDiscountsWithCodes.Add(new ShoppingCartModel.DiscountBoxModel.DiscountInfoModel()
                 {
-                    model.DiscountBox.AppliedDiscountsWithCodes.Add(new ShoppingCartModel.DiscountBoxModel.DiscountInfoModel()
-                    {
-                        Id = discount.Id,
-                        CouponCode = discount.CouponCode
-                    });
-                }
+                    Id = discount.Id,
+                    CouponCode = discount.CouponCode
+                });
             }
             model.GiftCardBox.Display = _shoppingCartSettings.ShowGiftCardBox;
 
@@ -2355,11 +2352,29 @@ namespace Nop.Web.Controllers
             if (!String.IsNullOrWhiteSpace(discountcouponcode))
             {
                 //we find even hidden records here. this way we can display a user-friendly message if it's expired
-                var discount = _discountService.GetDiscountByCouponCode(discountcouponcode, true);
-                if (discount != null && discount.RequiresCouponCode)
+                var discounts = _discountService.GetAllDiscountsForCaching(couponCode: discountcouponcode, showHidden: true)
+                    .Where(d => d.RequiresCouponCode)
+                    .ToList();
+                if (discounts.Any())
                 {
-                    var validationResult = _discountService.ValidateDiscount(discount, _workContext.CurrentCustomer, new[] { discountcouponcode });
-                    if (validationResult.IsValid)
+                    string userError = "";
+                    bool anyValidDiscount = false;
+                    foreach (var discount in discounts)
+                    {
+                        var validationResult = _discountService.ValidateDiscount(discount, _workContext.CurrentCustomer, new[] { discountcouponcode });
+                        if (validationResult.IsValid)
+                        {
+                            anyValidDiscount = true;
+                            break;
+                        }
+                        else
+                        {
+                            if (!String.IsNullOrEmpty(validationResult.UserError))
+                                userError = validationResult.UserError;
+                        }
+                    }
+
+                    if (anyValidDiscount)
                     {
                         //valid
                         _workContext.CurrentCustomer.ApplyDiscountCouponCode(discountcouponcode);
@@ -2368,10 +2383,10 @@ namespace Nop.Web.Controllers
                     }
                     else
                     {
-                        if (!String.IsNullOrEmpty(validationResult.UserError))
+                        if (!String.IsNullOrEmpty(userError))
                         {
                             //some user error
-                            model.DiscountBox.Message = validationResult.UserError;
+                            model.DiscountBox.Message = userError;
                             model.DiscountBox.IsApplied = false;
                         }
                         else

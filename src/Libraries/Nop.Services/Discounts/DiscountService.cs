@@ -129,7 +129,7 @@ namespace Nop.Services.Discounts
         /// <param name="discountName">Discount name</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Discounts</returns>
-        public virtual IList<Discount> GetAllDiscounts(DiscountType? discountType,
+        public virtual IList<Discount> GetAllDiscounts(DiscountType? discountType = null,
             string couponCode = "", string discountName = "", bool showHidden = false)
         {
             var query = _discountRepository.Table;
@@ -191,22 +191,7 @@ namespace Nop.Services.Discounts
             //event notification
             _eventPublisher.EntityUpdated(discount);
         }
-
-        /// <summary>
-        /// Get discount by coupon code
-        /// </summary>
-        /// <param name="couponCode">Coupon code</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Discount</returns>
-        public virtual Discount GetDiscountByCouponCode(string couponCode, bool showHidden = false)
-        {
-            if (String.IsNullOrWhiteSpace(couponCode))
-                return null;
-
-            var discount = GetAllDiscounts(null, couponCode, null, showHidden).FirstOrDefault();
-            return discount;
-        }
-
+        
         #endregion
 
         #region Discounts (caching)
@@ -219,7 +204,7 @@ namespace Nop.Services.Discounts
         /// <param name="discountName">Discount name</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Discounts</returns>
-        public virtual IList<DiscountForCaching> GetAllDiscountsForCaching(DiscountType? discountType,
+        public virtual IList<DiscountForCaching> GetAllDiscountsForCaching(DiscountType? discountType = null,
             string couponCode = "", string discountName = "", bool showHidden = false)
         {
             //we cache discounts between requests. Otherwise, they will be loaded for almost each HTTP request

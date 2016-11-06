@@ -33,7 +33,7 @@ namespace Nop.Services.Discounts
         /// <param name="discountName">Discount name</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Discounts</returns>
-        IList<Discount> GetAllDiscounts(DiscountType? discountType,
+        IList<Discount> GetAllDiscounts(DiscountType? discountType = null,
             string couponCode = "", string discountName = "", bool showHidden = false);
 
         /// <summary>
@@ -48,14 +48,6 @@ namespace Nop.Services.Discounts
         /// <param name="discount">Discount</param>
         void UpdateDiscount(Discount discount);
 
-        /// <summary>
-        /// Get discount by coupon code
-        /// </summary>
-        /// <param name="couponCode">CouponCode</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Discount</returns>
-        Discount GetDiscountByCouponCode(string couponCode, bool showHidden = false);
-
         #endregion
 
         #region Discounts (caching)
@@ -68,7 +60,7 @@ namespace Nop.Services.Discounts
         /// <param name="discountName">Discount name</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Discounts</returns>
-        IList<DiscountForCaching> GetAllDiscountsForCaching(DiscountType? discountType,
+        IList<DiscountForCaching> GetAllDiscountsForCaching(DiscountType? discountType = null,
             string couponCode = "", string discountName = "", bool showHidden = false);
         
         /// <summary>
