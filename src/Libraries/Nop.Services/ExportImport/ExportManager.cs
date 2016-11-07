@@ -22,7 +22,6 @@ using Nop.Services.ExportImport.Help;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Seo;
-using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
@@ -49,7 +48,6 @@ namespace Nop.Services.ExportImport
         private readonly ProductEditorSettings _productEditorSettings;
         private readonly IVendorService _vendorService;
         private readonly IProductTemplateService _productTemplateService;
-        private readonly IShippingService _shippingService;
         private readonly IDateRangeService _dateRangeService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IMeasureService _measureService;
@@ -71,7 +69,6 @@ namespace Nop.Services.ExportImport
             ProductEditorSettings productEditorSettings,
             IVendorService vendorService,
             IProductTemplateService productTemplateService,
-            IShippingService shippingService,
             IDateRangeService dateRangeService,
             ITaxCategoryService taxCategoryService,
             IMeasureService measureService,
@@ -89,7 +86,6 @@ namespace Nop.Services.ExportImport
             this._productEditorSettings = productEditorSettings;
             this._vendorService = vendorService;
             this._productTemplateService = productTemplateService;
-            this._shippingService = shippingService;
             this._dateRangeService = dateRangeService;
             this._taxCategoryService = taxCategoryService;
             this._measureService = measureService;

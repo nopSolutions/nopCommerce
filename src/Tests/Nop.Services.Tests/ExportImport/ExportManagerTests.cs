@@ -15,7 +15,6 @@ using Nop.Services.Directory;
 using Nop.Services.ExportImport;
 using Nop.Services.Media;
 using Nop.Services.Messages;
-using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
@@ -24,7 +23,6 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using Nop.Services.Common;
 using Nop.Services.Customers;
-using Nop.Services.Shipping.Date;
 
 namespace Nop.Services.Tests.ExportImport
 {
@@ -42,7 +40,6 @@ namespace Nop.Services.Tests.ExportImport
         private IWorkContext _workContext;
         private IVendorService _vendorService;
         private IProductTemplateService _productTemplateService;
-        private IShippingService _shippingService;
         private IDateRangeService _dateRangeService;
         private ITaxCategoryService _taxCategoryService;
         private IMeasureService _measureService;
@@ -63,7 +60,6 @@ namespace Nop.Services.Tests.ExportImport
             _workContext = MockRepository.GenerateMock<IWorkContext>();
             _vendorService = MockRepository.GenerateMock<IVendorService>();
             _productTemplateService = MockRepository.GenerateMock<IProductTemplateService>();
-            _shippingService = MockRepository.GenerateMock<IShippingService>();
             _dateRangeService = MockRepository.GenerateMock<IDateRangeService>();
             _taxCategoryService = MockRepository.GenerateMock<ITaxCategoryService>();
             _measureService = MockRepository.GenerateMock<IMeasureService>();
@@ -76,8 +72,8 @@ namespace Nop.Services.Tests.ExportImport
                 _manufacturerService, _productAttributeService,
                 _pictureService, _newsLetterSubscriptionService,
                 _storeService, _workContext, _productEditorSettings,
-                _vendorService, _productTemplateService, _shippingService,
-                _dateRangeService, _taxCategoryService, _measureService, _catalogSettings,
+                _vendorService, _productTemplateService, _dateRangeService,
+                _taxCategoryService, _measureService, _catalogSettings,
                  _genericAttributeService, _customerAttributeFormatter);
         }
 
