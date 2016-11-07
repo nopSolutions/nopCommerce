@@ -27,6 +27,26 @@
              <seealso cref="T:Autofac.IContainer"/>
              <see cref="T:Autofac.RegistrationExtensions"/>
         </member>
+        <member name="M:Autofac.ContainerBuilder.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.ContainerBuilder"/> class.
+            </summary>
+        </member>
+        <member name="M:Autofac.ContainerBuilder.#ctor(System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.ContainerBuilder"/> class.
+            </summary>
+            <param name="properties">The properties used during component registration.</param>
+        </member>
+        <member name="P:Autofac.ContainerBuilder.Properties">
+            <summary>
+            Gets the set of properties used during component registration.
+            </summary>
+            <value>
+            An <see cref="T:System.Collections.Generic.IDictionary`2"/> that can be used to share
+            context across registrations.
+            </value>
+        </member>
         <member name="M:Autofac.ContainerBuilder.RegisterCallback(System.Action{Autofac.Core.IComponentRegistry})">
             <summary>
             Register a callback that will be invoked when the container is configured.
@@ -3424,10 +3444,11 @@
             Standard container implementation.
             </summary>
         </member>
-        <member name="M:Autofac.Core.Container.#ctor">
+        <member name="M:Autofac.Core.Container.#ctor(System.Collections.Generic.IDictionary{System.String,System.Object})">
             <summary>
             Initializes a new instance of the <see cref="T:Autofac.Core.Container"/> class.
             </summary>
+            <param name="properties">The properties used during component registration.</param>
         </member>
         <member name="M:Autofac.Core.Container.BeginLifetimeScope">
             <summary>
@@ -3451,7 +3472,7 @@
             will be disposed along with it.
             </summary>
             <param name="configurationAction">Action on a <see cref="T:Autofac.ContainerBuilder"/>
-            that adds component registations visible only in the new scope.</param>
+            that adds component registrations visible only in the new scope.</param>
             <returns>A new lifetime scope.</returns>
         </member>
         <member name="M:Autofac.Core.Container.BeginLifetimeScope(System.Object,System.Action{Autofac.ContainerBuilder})">
@@ -3462,7 +3483,7 @@
             </summary>
             <param name="tag">The tag applied to the <see cref="T:Autofac.ILifetimeScope"/>.</param>
             <param name="configurationAction">Action on a <see cref="T:Autofac.ContainerBuilder"/>
-            that adds component registations visible only in the new scope.</param>
+            that adds component registrations visible only in the new scope.</param>
             <returns>A new lifetime scope.</returns>
         </member>
         <member name="P:Autofac.Core.Container.Disposer">
@@ -3785,6 +3806,15 @@
             <summary>
             Provides component registrations according to the services they provide.
             </summary>
+        </member>
+        <member name="P:Autofac.Core.IComponentRegistry.Properties">
+            <summary>
+            Gets the set of properties used during component registration.
+            </summary>
+            <value>
+            An <see cref="T:System.Collections.Generic.IDictionary`2"/> that can be used to share
+            context across registrations.
+            </value>
         </member>
         <member name="M:Autofac.Core.IComponentRegistry.TryGetRegistration(Autofac.Core.Service,Autofac.Core.IComponentRegistration@)">
             <summary>
@@ -5429,6 +5459,26 @@
             Keeps track of the status of registered services.
             </summary>
         </member>
+        <member name="M:Autofac.Core.Registration.ComponentRegistry.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Core.Registration.ComponentRegistry"/> class.
+            </summary>
+        </member>
+        <member name="M:Autofac.Core.Registration.ComponentRegistry.#ctor(System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Core.Registration.ComponentRegistry"/> class.
+            </summary>
+            <param name="properties">The properties used during component registration.</param>
+        </member>
+        <member name="P:Autofac.Core.Registration.ComponentRegistry.Properties">
+            <summary>
+            Gets the set of properties used during component registration.
+            </summary>
+            <value>
+            An <see cref="T:System.Collections.Generic.IDictionary`2"/> that can be used to share
+            context across registrations.
+            </value>
+        </member>
         <member name="M:Autofac.Core.Registration.ComponentRegistry.Dispose(System.Boolean)">
             <summary>
             Releases unmanaged and - optionally - managed resources
@@ -5517,6 +5567,15 @@
             <remarks>
             Safe for concurrent access by multiple readers. Write operations are single-threaded.
             </remarks>
+        </member>
+        <member name="P:Autofac.Core.Registration.CopyOnWriteRegistry.Properties">
+            <summary>
+            Gets or sets the set of properties used during component registration.
+            </summary>
+            <value>
+            An <see cref="T:System.Collections.Generic.IDictionary`2"/> that can be used to share
+            context across registrations.
+            </value>
         </member>
         <member name="T:Autofac.Core.Registration.ExternalRegistrySource">
             <summary>
@@ -6977,6 +7036,244 @@
         <member name="P:Autofac.Util.EnforceResources.NotDelegate">
             <summary>
               Looks up a localized string similar to Type {0} is not a delegate type..
+            </summary>
+        </member>
+        <member name="T:Autofac.Util.FallbackDictionary`2">
+            <summary>
+            Dictionary used to allow local property get/set and fall back to parent values.
+            </summary>
+        </member>
+        <member name="F:Autofac.Util.FallbackDictionary`2._localValues">
+            <summary>
+            Storage for local values set in the dictionary.
+            </summary>
+        </member>
+        <member name="M:Autofac.Util.FallbackDictionary`2.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Util.FallbackDictionary`2"/> class
+            with an empty parent.
+            </summary>
+        </member>
+        <member name="M:Autofac.Util.FallbackDictionary`2.#ctor(System.Collections.Generic.IDictionary{`0,`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Util.FallbackDictionary`2"/> class
+            with a specified parent.
+            </summary>
+            <param name="parent">
+            The parent dictionary to which values should fall back when not present in the current dictionary.
+            </param>
+        </member>
+        <member name="P:Autofac.Util.FallbackDictionary`2.Count">
+            <summary>
+            Gets the number of elements contained in the dictionary.
+            </summary>
+            <value>
+            The number of elements contained in this collection plus the parent collection, minus overlapping key counts.
+            </value>
+        </member>
+        <member name="P:Autofac.Util.FallbackDictionary`2.IsReadOnly">
+            <summary>
+            Gets a value indicating whether this collection is read-only.
+            </summary>
+            <value>
+            Always returns <see langword="false" />.
+            </value>
+        </member>
+        <member name="P:Autofac.Util.FallbackDictionary`2.Keys">
+            <summary>
+            Gets an <see cref="T:System.Collections.Generic.ICollection`1"/> containing the keys of the dictionary.
+            </summary>
+            <value>
+            An <see cref="T:System.Collections.Generic.ICollection`1"/> containing the keys of the dictionary without duplicates.
+            </value>
+            <remarks>
+            The order of the keys in the returned <see cref="T:System.Collections.Generic.ICollection`1"/> is unspecified,
+            but it is guaranteed to be the same order as the corresponding values in the <see cref="T:System.Collections.Generic.ICollection`1"/>
+            returned by the <see cref="P:Autofac.Util.FallbackDictionary`2.Values"/> property.
+            </remarks>
+        </member>
+        <member name="P:Autofac.Util.FallbackDictionary`2.Parent">
+            <summary>
+            Gets the parent dictionary.
+            </summary>
+            <value>
+            The parent dictionary to which values should fall back when not present in the current dictionary.
+            </value>
+        </member>
+        <member name="P:Autofac.Util.FallbackDictionary`2.Values">
+            <summary>
+            Gets an <see cref="T:System.Collections.Generic.ICollection`1"/> containing the values of the dictionary.
+            </summary>
+            <value>
+            An <see cref="T:System.Collections.Generic.ICollection`1"/> containing the values of the dictionary with overrides taken into account.
+            </value>
+            <remarks>
+            The order of the keys in the returned <see cref="T:System.Collections.Generic.ICollection`1"/> is unspecified,
+            but it is guaranteed to be the same order as the corresponding keys in the <see cref="T:System.Collections.Generic.ICollection`1"/>
+            returned by the <see cref="P:Autofac.Util.FallbackDictionary`2.Keys"/> property.
+            </remarks>
+        </member>
+        <member name="P:Autofac.Util.FallbackDictionary`2.Item(`0)">
+            <summary>
+            Gets or sets the <typeparamref name="TValue"/> with the specified key.
+            </summary>
+            <value>
+            The <typeparamref name="TValue"/>.
+            </value>
+            <param name="key">The key.</param>
+            <remarks>
+            <para>
+            Changes made to this dictionary do not affect the parent.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Autofac.Util.FallbackDictionary`2.Add(System.Collections.Generic.KeyValuePair{`0,`1})">
+            <summary>
+            Adds an item to the dictionary.
+            </summary>
+            <param name="item">The object to add to the dictionary.</param>
+            <remarks>
+            <para>
+            Changes made to this dictionary do not affect the parent.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Autofac.Util.FallbackDictionary`2.Add(`0,`1)">
+            <summary>
+            Adds an element with the provided key and value to the dictionary.
+            </summary>
+            <param name="key">The object to use as the key of the element to add.</param>
+            <param name="value">The object to use as the value of the element to add.</param>
+            <remarks>
+            <para>
+            Changes made to this dictionary do not affect the parent.
+            </para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="key" /> is <see langword="null" />.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+            Thrown if an element with the same key is already present in the local or parent dictionary.
+            </exception>
+        </member>
+        <member name="M:Autofac.Util.FallbackDictionary`2.Clear">
+            <summary>
+            Removes all items from the dictionary. Does not clear parent entries, only local overrides.
+            </summary>
+        </member>
+        <member name="M:Autofac.Util.FallbackDictionary`2.Contains(System.Collections.Generic.KeyValuePair{`0,`1})">
+            <summary>
+            Determines whether the dictionary contains a specific value.
+            </summary>
+            <param name="item">The object to locate in the dictionary.</param>
+            <returns>
+            <see langword="true" /> if <paramref name="item" /> is found in the dictionary; otherwise, <see langword="false" />.
+            </returns>
+        </member>
+        <member name="M:Autofac.Util.FallbackDictionary`2.ContainsKey(`0)">
+            <summary>
+            Determines whether the dictionary contains an element with the specified key.
+            </summary>
+            <param name="key">The key to locate in the dictionary.</param>
+            <returns>
+            <see langword="true" /> if the dictionary or its parent contains an element with the key; otherwise, <see langword="false" />.
+            </returns>
+        </member>
+        <member name="M:Autofac.Util.FallbackDictionary`2.CopyTo(System.Collections.Generic.KeyValuePair{`0,`1}[],System.Int32)">
+            <summary>
+            Copies the elements of the dictionary to an <see cref="T:System.Array" />, starting at a particular <see cref="T:System.Array" /> index.
+            </summary>
+            <param name="array">
+            The one-dimensional <see cref="T:System.Array" /> that is the destination of the elements copied from
+            the dictionary. The <see cref="T:System.Array" /> must have zero-based indexing.
+            </param>
+            <param name="arrayIndex">
+            The zero-based index in <paramref name="array" /> at which copying begins.
+            </param>
+        </member>
+        <member name="M:Autofac.Util.FallbackDictionary`2.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the collection.
+            </summary>
+            <returns>
+            An enumerator that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="M:Autofac.Util.FallbackDictionary`2.Remove(System.Collections.Generic.KeyValuePair{`0,`1})">
+            <summary>
+            Removes the first occurrence of a specific object from the dictionary.
+            </summary>
+            <param name="item">The object to remove from the dictionary.</param>
+            <returns>
+            <see langword="true" /> if <paramref name="item" /> was successfully removed from the dictionary; otherwise, <see langword="false" />.
+            This method also returns <see langword="false" /> if <paramref name="item" /> is not found in the original dictionary.
+            </returns>
+            <remarks>
+            <para>
+            Changes made to this dictionary do not affect the parent.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Autofac.Util.FallbackDictionary`2.Remove(`0)">
+            <summary>
+            Removes the element with the specified key from the dictionary.
+            </summary>
+            <param name="key">The key of the element to remove.</param>
+            <returns>
+            <see langword="true" /> if the element is successfully removed; otherwise, <see langword="false" />.
+            This method also returns <see langword="false" /> if <paramref name="key" /> was not found in the original dictionary.
+            </returns>
+            <remarks>
+            <para>
+            Changes made to this dictionary do not affect the parent.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Autofac.Util.FallbackDictionary`2.TryGetValue(`0,`1@)">
+            <summary>
+            Gets the value associated with the specified key.
+            </summary>
+            <param name="key">The key whose value to get.</param>
+            <param name="value">When this method returns, the value associated with the specified key, if the key is found; otherwise, the default value for the type of the <paramref name="value" /> parameter. This parameter is passed uninitialized.</param>
+            <returns>
+            <see langword="true" /> if the dictionary or parent contains an element with the specified key; otherwise, <see langword="false" />.
+            </returns>
+        </member>
+        <member name="M:Autofac.Util.FallbackDictionary`2.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>
+            An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="M:Autofac.Util.FallbackDictionary`2.OrderedKeys">
+            <summary>
+            Gets the list of correctly ordered unique keys from the local and parent dictionaries.
+            </summary>
+            <returns>
+            An <see cref="T:System.Collections.Generic.IEnumerable`1"/> with the unique set of all keys.
+            </returns>
+        </member>
+        <member name="T:Autofac.Util.FallbackDictionaryResources">
+            <summary>
+               A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Util.FallbackDictionaryResources.ResourceManager">
+            <summary>
+               Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Util.FallbackDictionaryResources.Culture">
+            <summary>
+               Overrides the current thread's CurrentUICulture property for all
+               resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Util.FallbackDictionaryResources.DuplicateItem">
+            <summary>
+               Looks up a localized string similar to Item has already been added with key &apos;{0}&apos;..
             </summary>
         </member>
         <member name="T:Autofac.Util.ReflectionExtensions">
