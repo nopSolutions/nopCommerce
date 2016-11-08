@@ -394,9 +394,8 @@ namespace Nop.Plugin.Payments.PayPalDirect
             try
             {
                 var apiContext = PaypalHelper.GetApiContext(_paypalDirectPaymentSettings);
-                var capture = PayPal.Api.Capture.Get(apiContext, refundPaymentRequest.Order.CaptureTransactionId);
                 var currency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
-                var refund = new Refund
+                var refundRequest = new RefundRequest
                 {
                     amount = new Amount
                     {
@@ -404,9 +403,8 @@ namespace Nop.Plugin.Payments.PayPalDirect
                         currency = currency != null ? currency.CurrencyCode : null
                     }
                 };
-                capture.Refund(apiContext, refund);
-                capture = PayPal.Api.Capture.Get(apiContext, refundPaymentRequest.Order.CaptureTransactionId);
-
+                PayPal.Api.Capture.Refund(apiContext, refundPaymentRequest.Order.CaptureTransactionId, refundRequest);
+                var capture = PayPal.Api.Capture.Get(apiContext, refundPaymentRequest.Order.CaptureTransactionId);
                 result.NewPaymentStatus = GetPaymentStatus(capture.state);
             }
             catch (PayPal.PayPalException exc)

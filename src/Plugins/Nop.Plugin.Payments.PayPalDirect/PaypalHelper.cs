@@ -16,8 +16,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         /// <returns>ApiContext</returns>
         public static APIContext GetApiContext(PayPalDirectPaymentSettings payPalDirectPaymentSettings)
         {
-            var mode = !payPalDirectPaymentSettings.UseSandbox ? "live"
-                : ServicePointManager.SecurityProtocol.HasFlag(SecurityProtocolType.Tls12) ? "security-test-sandbox" : "sandbox";
+            var mode = payPalDirectPaymentSettings.UseSandbox ? "sandbox" : "live";
 
             var config = new Dictionary<string, string>
             {
