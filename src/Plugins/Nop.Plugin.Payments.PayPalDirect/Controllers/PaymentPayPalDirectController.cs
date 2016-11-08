@@ -314,10 +314,11 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
 
                 var webhook = JsonFormatter.ConvertFromJson<WebhookEvent>(requestBody);
 
-                //recurring payment
                 if (webhook.resource_type.ToLowerInvariant().Equals("sale"))
                 {
                     var sale = JsonFormatter.ConvertFromJson<Sale>(webhook.resource.ToString());
+
+                    //recurring payment
                     if (!string.IsNullOrEmpty(sale.billing_agreement_id))
                     {
                         //get agreement
@@ -363,6 +364,38 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                                 else
                                     _logger.Error(string.Format("PayPal error: Sale is {0} for the order #{1}", sale.state, initialOrder.Id));
                         }
+                    }
+                    else
+                    //standard payment
+                    {
+                        var order = _orderService.GetOrderByGuid(new Guid(sale.invoice_number));
+                        if (order != null)
+                        {
+                            if (sale.state.ToLowerInvariant().Equals("completed"))
+                            {
+                                if (_orderProcessingService.CanMarkOrderAsPaid(order))
+                                {
+                                    order.CaptureTransactionId = sale.id;
+                                    order.CaptureTransactionResult = sale.state;
+                                    _orderService.UpdateOrder(order);
+                                    _orderProcessingService.MarkOrderAsPaid(order);
+                                }
+                            }
+                            if (sale.state.ToLowerInvariant().Equals("denied"))
+                            {
+                                var reason = string.Format("Payment is denied. {0}", sale.fmf_details != null ?
+                                    string.Format("Based on fraud filter: {1}. {2}", sale.fmf_details.name, sale.fmf_details.description) : string.Empty);
+                                order.OrderNotes.Add(new OrderNote
+                                {
+                                    Note = reason,
+                                    DisplayToCustomer = false,
+                                    CreatedOnUtc = DateTime.UtcNow
+                                });
+                                _logger.Error(string.Format("PayPal error: {0}", reason));
+                            }
+                        }
+                        else
+                            _logger.Error(string.Format("PayPal error: Order with guid {0} was not found", sale.invoice_number));
                     }
                 }
 

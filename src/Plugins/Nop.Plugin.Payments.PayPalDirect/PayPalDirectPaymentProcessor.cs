@@ -258,9 +258,18 @@ namespace Nop.Plugin.Payments.PayPalDirect
                         var authorization = payment.transactions[0].related_resources[0].authorization;
                         if (authorization != null)
                         {
+                            if (authorization.fmf_details != null)
+                            {
+                                result.AuthorizationTransactionResult = string.Format("Authorization is {0}. Based on fraud filter: {1}. {2}",
+                                    authorization.fmf_details.filter_type, authorization.fmf_details.name, authorization.fmf_details.description);
+                                result.NewPaymentStatus = GetPaymentStatus(Authorization.Get(apiContext, authorization.id).state);
+                            }
+                            else
+                            {
+                                result.AuthorizationTransactionResult = authorization.state;
+                                result.NewPaymentStatus = GetPaymentStatus(authorization.state);
+                            }
                             result.AuthorizationTransactionId = authorization.id;
-                            result.AuthorizationTransactionResult = authorization.state;
-                            result.NewPaymentStatus = GetPaymentStatus(authorization.state);
                         }
                     }
                     else
@@ -268,10 +277,20 @@ namespace Nop.Plugin.Payments.PayPalDirect
                         var sale = payment.transactions[0].related_resources[0].sale;
                         if (sale != null)
                         {
+                            if (sale.fmf_details != null)
+                            {
+                                result.CaptureTransactionResult = string.Format("Sale is {0}. Based on fraud filter: {1}. {2}",
+                                    sale.fmf_details.filter_type, sale.fmf_details.name, sale.fmf_details.description);
+                                result.NewPaymentStatus = GetPaymentStatus(Sale.Get(apiContext, sale.id).state);
+                            }
+                            else
+                            {
+                                result.CaptureTransactionResult = sale.state;
+                                result.NewPaymentStatus = GetPaymentStatus(sale.state);
+                            }
                             result.CaptureTransactionId = sale.id;
-                            result.CaptureTransactionResult = sale.state;
                             result.AvsResult = sale.processor_response != null ? sale.processor_response.avs_code : string.Empty;
-                            result.NewPaymentStatus = GetPaymentStatus(sale.state);
+
                         }
                     }
                 else
