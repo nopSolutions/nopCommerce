@@ -9197,7 +9197,10 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.NonAdminNotImpersonateAsAdminError">
     <Value>A non-admin user cannot impersonate as an administrator</Value>
-  </LocaleResource>  
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.NobodyCanImpersonateAsGuestError">
+    <Value>Nobody can impersonate as a guest user</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Orders">
     <Value>Orders</Value>
   </LocaleResource>

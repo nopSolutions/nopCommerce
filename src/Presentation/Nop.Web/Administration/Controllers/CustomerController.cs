@@ -1453,6 +1453,13 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Edit", customer.Id);
             }
 
+            //ensure that nobody can impersonate as a guest
+            if (customer.IsGuest())
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.NobodyCanImpersonateAsGuestError"));
+                return RedirectToAction("Edit", customer.Id);
+            }
+
             //activity log
             _customerActivityService.InsertActivity("Impersonation.Started", 
                 _localizationService.GetResource("ActivityLog.Impersonation.Started.StoreOwner"), customer.Email, customer.Id);
