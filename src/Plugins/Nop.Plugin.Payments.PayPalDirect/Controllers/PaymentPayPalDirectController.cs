@@ -384,7 +384,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                             if (sale.state.ToLowerInvariant().Equals("denied"))
                             {
                                 var reason = string.Format("Payment is denied. {0}", sale.fmf_details != null ?
-                                    string.Format("Based on fraud filter: {1}. {2}", sale.fmf_details.name, sale.fmf_details.description) : string.Empty);
+                                    string.Format("Based on fraud filter: {0}. {1}", sale.fmf_details.name, sale.fmf_details.description) : string.Empty);
                                 order.OrderNotes.Add(new OrderNote
                                 {
                                     Note = reason,
