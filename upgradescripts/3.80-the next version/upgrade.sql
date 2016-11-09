@@ -1270,3 +1270,169 @@ BEGIN
 	VALUES (N'paymentsettings.showpaymentmethoddescriptions', N'True', 0)
 END
 GO
+
+
+--ensure that dbo is added to existing stored procedures
+IF EXISTS (
+		SELECT *
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[FullText_IsSupported]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
+DROP PROCEDURE [FullText_IsSupported]
+GO
+CREATE PROCEDURE [dbo].[FullText_IsSupported]
+AS
+BEGIN	
+	EXEC('
+	SELECT CASE SERVERPROPERTY(''IsFullTextInstalled'')
+	WHEN 1 THEN 
+		CASE DatabaseProperty (DB_NAME(DB_ID()), ''IsFulltextEnabled'')
+		WHEN 1 THEN 1
+		ELSE 0
+		END
+	ELSE 0
+	END')
+END
+GO
+
+
+IF EXISTS (
+		SELECT *
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[FullText_Enable]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
+DROP PROCEDURE [FullText_Enable]
+GO
+CREATE PROCEDURE [dbo].[FullText_Enable]
+AS
+BEGIN
+	--create catalog
+	EXEC('
+	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_catalogs WHERE [name] = ''nopCommerceFullTextCatalog'')
+		CREATE FULLTEXT CATALOG [nopCommerceFullTextCatalog] AS DEFAULT')
+	
+	--create indexes
+	DECLARE @create_index_text nvarchar(4000)
+	SET @create_index_text = '
+	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[Product]''))
+		CREATE FULLTEXT INDEX ON [Product]([Name], [ShortDescription], [FullDescription])
+		KEY INDEX [' + dbo.[nop_getprimarykey_indexname] ('Product') +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
+	EXEC(@create_index_text)
+	
+	SET @create_index_text = '
+	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[LocalizedProperty]''))
+		CREATE FULLTEXT INDEX ON [LocalizedProperty]([LocaleValue])
+		KEY INDEX [' + dbo.[nop_getprimarykey_indexname] ('LocalizedProperty') +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
+	EXEC(@create_index_text)
+
+	SET @create_index_text = '
+	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[ProductTag]''))
+		CREATE FULLTEXT INDEX ON [ProductTag]([Name])
+		KEY INDEX [' + dbo.[nop_getprimarykey_indexname] ('ProductTag') +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
+	EXEC(@create_index_text)
+END
+GO
+
+
+
+IF EXISTS (
+		SELECT *
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[FullText_Disable]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
+DROP PROCEDURE [FullText_Disable]
+GO
+CREATE PROCEDURE [dbo].[FullText_Disable]
+AS
+BEGIN
+	EXEC('
+	--drop indexes
+	IF EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[Product]''))
+		DROP FULLTEXT INDEX ON [Product]
+	')
+
+	EXEC('
+	IF EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[LocalizedProperty]''))
+		DROP FULLTEXT INDEX ON [LocalizedProperty]
+	')
+
+	EXEC('
+	IF EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[ProductTag]''))
+		DROP FULLTEXT INDEX ON [ProductTag]
+	')
+
+	--drop catalog
+	EXEC('
+	IF EXISTS (SELECT 1 FROM sys.fulltext_catalogs WHERE [name] = ''nopCommerceFullTextCatalog'')
+		DROP FULLTEXT CATALOG [nopCommerceFullTextCatalog]
+	')
+END
+GO
+
+
+
+
+IF EXISTS (
+		SELECT *
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[LanguagePackImport]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
+DROP PROCEDURE [LanguagePackImport]
+GO
+CREATE PROCEDURE [dbo].[LanguagePackImport]
+(
+	@LanguageId int,
+	@XmlPackage xml
+)
+AS
+BEGIN
+	IF EXISTS(SELECT * FROM [Language] WHERE [Id] = @LanguageId)
+	BEGIN
+		CREATE TABLE #LocaleStringResourceTmp
+			(
+				[LanguageId] [int] NOT NULL,
+				[ResourceName] [nvarchar](200) NOT NULL,
+				[ResourceValue] [nvarchar](MAX) NOT NULL
+			)
+
+		INSERT INTO #LocaleStringResourceTmp (LanguageID, ResourceName, ResourceValue)
+		SELECT	@LanguageId, nref.value('@Name', 'nvarchar(200)'), nref.value('Value[1]', 'nvarchar(MAX)')
+		FROM	@XmlPackage.nodes('//Language/LocaleResource') AS R(nref)
+
+		DECLARE @ResourceName nvarchar(200)
+		DECLARE @ResourceValue nvarchar(MAX)
+		DECLARE cur_localeresource CURSOR FOR
+		SELECT LanguageID, ResourceName, ResourceValue
+		FROM #LocaleStringResourceTmp
+		OPEN cur_localeresource
+		FETCH NEXT FROM cur_localeresource INTO @LanguageId, @ResourceName, @ResourceValue
+		WHILE @@FETCH_STATUS = 0
+		BEGIN
+			IF (EXISTS (SELECT 1 FROM [LocaleStringResource] WHERE LanguageID=@LanguageId AND ResourceName=@ResourceName))
+			BEGIN
+				UPDATE [LocaleStringResource]
+				SET [ResourceValue]=@ResourceValue
+				WHERE LanguageID=@LanguageId AND ResourceName=@ResourceName
+			END
+			ELSE 
+			BEGIN
+				INSERT INTO [LocaleStringResource]
+				(
+					[LanguageId],
+					[ResourceName],
+					[ResourceValue]
+				)
+				VALUES
+				(
+					@LanguageId,
+					@ResourceName,
+					@ResourceValue
+				)
+			END
+			
+			
+			FETCH NEXT FROM cur_localeresource INTO @LanguageId, @ResourceName, @ResourceValue
+			END
+		CLOSE cur_localeresource
+		DEALLOCATE cur_localeresource
+
+		DROP TABLE #LocaleStringResourceTmp
+	END
+END
+GO
