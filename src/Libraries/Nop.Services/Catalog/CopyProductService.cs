@@ -204,9 +204,6 @@ namespace Nop.Services.Catalog
                 Price = product.Price,
                 OldPrice = product.OldPrice,
                 ProductCost = product.ProductCost,
-                SpecialPrice = product.SpecialPrice,
-                SpecialPriceStartDateTimeUtc = product.SpecialPriceStartDateTimeUtc,
-                SpecialPriceEndDateTimeUtc = product.SpecialPriceEndDateTimeUtc,
                 CustomerEntersPrice = product.CustomerEntersPrice,
                 MinimumCustomerEnteredPrice = product.MinimumCustomerEnteredPrice,
                 MaximumCustomerEnteredPrice = product.MaximumCustomerEnteredPrice,
@@ -537,7 +534,9 @@ namespace Nop.Services.Catalog
                         StoreId = tierPrice.StoreId,
                         CustomerRoleId = tierPrice.CustomerRoleId,
                         Quantity = tierPrice.Quantity,
-                        Price = tierPrice.Price
+                        Price = tierPrice.Price,
+                        StartDateTimeUtc = tierPrice.StartDateTimeUtc,
+                        EndDateTimeUtc = tierPrice.EndDateTimeUtc
                     });
             }
 

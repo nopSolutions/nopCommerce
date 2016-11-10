@@ -862,15 +862,6 @@ namespace Nop.Services.ExportImport
                             case "ProductCost":
                                 product.ProductCost = property.DecimalValue;
                                 break;
-                            case "SpecialPrice":
-                                product.SpecialPrice = property.DecimalValueNullable;
-                                break;
-                            case "SpecialPriceStartDateTimeUtc":
-                                product.SpecialPriceStartDateTimeUtc = property.DateTimeNullable;
-                                break;
-                            case "SpecialPriceEndDateTimeUtc":
-                                product.SpecialPriceEndDateTimeUtc = property.DateTimeNullable;
-                                break;
                             case "CustomerEntersPrice":
                                 product.CustomerEntersPrice = property.BooleanValue;
                                 break;

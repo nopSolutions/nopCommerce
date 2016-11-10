@@ -93,9 +93,6 @@ namespace Nop.Data.Tests.Catalog
                 Price = 21.1M,
                 OldPrice = 22.1M,
                 ProductCost = 23.1M,
-                SpecialPrice = 32.1M,
-                SpecialPriceStartDateTimeUtc = new DateTime(2010, 01, 05),
-                SpecialPriceEndDateTimeUtc = new DateTime(2010, 01, 06),
                 CustomerEntersPrice = true,
                 MinimumCustomerEnteredPrice = 24.1M,
                 MaximumCustomerEnteredPrice = 25.1M,
@@ -203,9 +200,6 @@ namespace Nop.Data.Tests.Catalog
             fromDb.Price.ShouldEqual(21.1M);
             fromDb.OldPrice.ShouldEqual(22.1M);
             fromDb.ProductCost.ShouldEqual(23.1M);
-            fromDb.SpecialPrice.ShouldEqual(32.1M);
-            fromDb.SpecialPriceStartDateTimeUtc.ShouldEqual(new DateTime(2010, 01, 05));
-            fromDb.SpecialPriceEndDateTimeUtc.ShouldEqual(new DateTime(2010, 01, 06));
             fromDb.CustomerEntersPrice.ShouldEqual(true);
             fromDb.MinimumCustomerEnteredPrice.ShouldEqual(24.1M);
             fromDb.MaximumCustomerEnteredPrice.ShouldEqual(25.1M);

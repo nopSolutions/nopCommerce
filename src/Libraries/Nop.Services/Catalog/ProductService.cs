@@ -800,42 +800,12 @@ namespace Nop.Services.Catalog
                 if (priceMin.HasValue)
                 {
                     //min price
-                    query = query.Where(p =>
-                                        //special price (specified price and valid date range)
-                                        ((p.SpecialPrice.HasValue &&
-                                          ((!p.SpecialPriceStartDateTimeUtc.HasValue ||
-                                            p.SpecialPriceStartDateTimeUtc.Value < nowUtc) &&
-                                           (!p.SpecialPriceEndDateTimeUtc.HasValue ||
-                                            p.SpecialPriceEndDateTimeUtc.Value > nowUtc))) &&
-                                         (p.SpecialPrice >= priceMin.Value))
-                                        ||
-                                        //regular price (price isn't specified or date range isn't valid)
-                                        ((!p.SpecialPrice.HasValue ||
-                                          ((p.SpecialPriceStartDateTimeUtc.HasValue &&
-                                            p.SpecialPriceStartDateTimeUtc.Value > nowUtc) ||
-                                           (p.SpecialPriceEndDateTimeUtc.HasValue &&
-                                            p.SpecialPriceEndDateTimeUtc.Value < nowUtc))) &&
-                                         (p.Price >= priceMin.Value)));
+                    query = query.Where(p => p.Price >= priceMin.Value);
                 }
                 if (priceMax.HasValue)
                 {
                     //max price
-                    query = query.Where(p =>
-                                        //special price (specified price and valid date range)
-                                        ((p.SpecialPrice.HasValue &&
-                                          ((!p.SpecialPriceStartDateTimeUtc.HasValue ||
-                                            p.SpecialPriceStartDateTimeUtc.Value < nowUtc) &&
-                                           (!p.SpecialPriceEndDateTimeUtc.HasValue ||
-                                            p.SpecialPriceEndDateTimeUtc.Value > nowUtc))) &&
-                                         (p.SpecialPrice <= priceMax.Value))
-                                        ||
-                                        //regular price (price isn't specified or date range isn't valid)
-                                        ((!p.SpecialPrice.HasValue ||
-                                          ((p.SpecialPriceStartDateTimeUtc.HasValue &&
-                                            p.SpecialPriceStartDateTimeUtc.Value > nowUtc) ||
-                                           (p.SpecialPriceEndDateTimeUtc.HasValue &&
-                                            p.SpecialPriceEndDateTimeUtc.Value < nowUtc))) &&
-                                         (p.Price <= priceMax.Value)));
+                    query = query.Where(p => p.Price <= priceMax.Value);
                 }
                 if (!showHidden)
                 {

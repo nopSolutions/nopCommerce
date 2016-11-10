@@ -514,42 +514,14 @@ BEGIN
 	IF @PriceMin is not null
 	BEGIN
 		SET @sql = @sql + '
-		AND (
-				(
-					--special price (specified price and valid date range)
-					(p.SpecialPrice IS NOT NULL AND (getutcdate() BETWEEN isnull(p.SpecialPriceStartDateTimeUtc, ''1/1/1900'') AND isnull(p.SpecialPriceEndDateTimeUtc, ''1/1/2999'')))
-					AND
-					(p.SpecialPrice >= ' + CAST(@PriceMin AS nvarchar(max)) + ')
-				)
-				OR 
-				(
-					--regular price (price isnt specified or date range isnt valid)
-					(p.SpecialPrice IS NULL OR (getutcdate() NOT BETWEEN isnull(p.SpecialPriceStartDateTimeUtc, ''1/1/1900'') AND isnull(p.SpecialPriceEndDateTimeUtc, ''1/1/2999'')))
-					AND
-					(p.Price >= ' + CAST(@PriceMin AS nvarchar(max)) + ')
-				)
-			)'
+		AND (p.Price >= ' + CAST(@PriceMin AS nvarchar(max)) + ')'
 	END
 	
 	--max price
 	IF @PriceMax is not null
 	BEGIN
 		SET @sql = @sql + '
-		AND (
-				(
-					--special price (specified price and valid date range)
-					(p.SpecialPrice IS NOT NULL AND (getutcdate() BETWEEN isnull(p.SpecialPriceStartDateTimeUtc, ''1/1/1900'') AND isnull(p.SpecialPriceEndDateTimeUtc, ''1/1/2999'')))
-					AND
-					(p.SpecialPrice <= ' + CAST(@PriceMax AS nvarchar(max)) + ')
-				)
-				OR 
-				(
-					--regular price (price isnt specified or date range isnt valid)
-					(p.SpecialPrice IS NULL OR (getutcdate() NOT BETWEEN isnull(p.SpecialPriceStartDateTimeUtc, ''1/1/1900'') AND isnull(p.SpecialPriceEndDateTimeUtc, ''1/1/2999'')))
-					AND
-					(p.Price <= ' + CAST(@PriceMax AS nvarchar(max)) + ')
-				)
-			)'
+		AND (p.Price <= ' + CAST(@PriceMax AS nvarchar(max)) + ')'
 	END
 	
 	--show hidden and ACL

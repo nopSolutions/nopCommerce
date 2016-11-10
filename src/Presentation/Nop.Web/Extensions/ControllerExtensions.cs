@@ -268,17 +268,14 @@ namespace Nop.Web.Extensions
                                             var tierPrices = new List<TierPrice>();
                                             if (product.HasTierPrices)
                                             {
-                                                tierPrices.AddRange(product.TierPrices
-                                                    .OrderBy(tp => tp.Quantity)
-                                                    .ToList()
+                                                tierPrices.AddRange(product.TierPrices.OrderBy(tp => tp.Quantity)
                                                     .FilterByStore(storeContext.CurrentStore.Id)
                                                     .FilterForCustomer(workContext.CurrentCustomer)
+                                                    .FilterByDate()
                                                     .RemoveDuplicatedQuantities());
                                             }
-                                            //When there is just one tier (with  qty 1), 
-                                            //there are no actual savings in the list.
-                                            bool displayFromMessage = tierPrices.Any() &&
-                                                !(tierPrices.Count == 1 && tierPrices[0].Quantity <= 1);
+                                            //When there is just one tier price (with  qty 1), there are no actual savings in the list.
+                                            var displayFromMessage = tierPrices.Any() && !(tierPrices.Count == 1 && tierPrices[0].Quantity <= 1);
                                             if (displayFromMessage)
                                             {
                                                 priceModel.OldPrice = null;

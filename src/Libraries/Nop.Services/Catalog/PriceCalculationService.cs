@@ -229,43 +229,6 @@ namespace Nop.Services.Catalog
 
             return allowedDiscounts;
         }
-        
-        /// <summary>
-        /// Gets a tier price
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="customer">Customer</param>
-        /// <param name="quantity">Quantity</param>
-        /// <returns>Price</returns>
-        protected virtual decimal? GetMinimumTierPrice(Product product, Customer customer, int quantity)
-        {
-            if (!product.HasTierPrices)
-                return decimal.Zero;
-
-            var tierPrices = product.TierPrices
-                .OrderBy(tp => tp.Quantity)
-                .ToList()
-                .FilterByStore(_storeContext.CurrentStore.Id)
-                .FilterForCustomer(customer)
-                .RemoveDuplicatedQuantities();
-
-            int previousQty = 1;
-            decimal? previousPrice = null;
-            foreach (var tierPrice in tierPrices)
-            {
-                //check quantity
-                if (quantity < tierPrice.Quantity)
-                    continue;
-                if (tierPrice.Quantity < previousQty)
-                    continue;
-
-                //save new price
-                previousPrice = tierPrice.Price;
-                previousQty = tierPrice.Quantity;
-            }
-            
-            return previousPrice;
-        }
 
         /// <summary>
         /// Gets discount amount
@@ -429,18 +392,8 @@ namespace Nop.Services.Catalog
                 //initial price
                 decimal price = overriddenProductPrice.HasValue ? overriddenProductPrice.Value : product.Price;
 
-                //special price
-                var specialPrice = product.GetSpecialPrice();
-                if (specialPrice.HasValue)
-                    price = specialPrice.Value;
-
                 //tier prices
-                if (product.HasTierPrices)
-                {
-                    decimal? tierPrice = GetMinimumTierPrice(product, customer, quantity);
-                    if (tierPrice.HasValue)
-                        price = Math.Min(price, tierPrice.Value);
-                }
+                price = product.GetAppropriateTierPrice(customer, _storeContext.CurrentStore.Id, quantity) ?? price;
 
                 //additional charge
                 price = price + additionalCharge;

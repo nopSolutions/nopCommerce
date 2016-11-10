@@ -99,16 +99,32 @@ namespace Nop.Services.Tests.Catalog
 
             //add tier prices
             product.TierPrices.Add(new TierPrice
-                {
-                    Price = 10,
-                    Quantity = 2,
-                    Product = product
-                });
+            {
+                Price = 10,
+                Quantity = 2,
+                Product = product
+            });
+            product.TierPrices.Add(new TierPrice
+            {
+                Price = 9,
+                Quantity = 5,
+                Product = product,
+                StartDateTimeUtc = new DateTime(2010, 01, 03)
+            });
             product.TierPrices.Add(new TierPrice
             {
                 Price = 8,
                 Quantity = 5,
-                Product = product
+                Product = product,
+                StartDateTimeUtc = new DateTime(2017, 01, 03)
+            });
+            product.TierPrices.Add(new TierPrice
+            {
+                Price = 5,
+                Quantity = 10,
+                Product = product,
+                StartDateTimeUtc = new DateTime(2010, 01, 03),
+                EndDateTimeUtc = new DateTime(2012, 01, 03)
             });
             //set HasTierPrices property
             product.HasTierPrices = true;
@@ -119,7 +135,8 @@ namespace Nop.Services.Tests.Catalog
             _priceCalcService.GetFinalPrice(product, customer, 0, false, 1).ShouldEqual(12.34M);
             _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).ShouldEqual(10);
             _priceCalcService.GetFinalPrice(product, customer, 0, false, 3).ShouldEqual(10);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 5).ShouldEqual(8);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 5).ShouldEqual(9);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 10).ShouldEqual(9);
         }
 
         [Test]
@@ -242,39 +259,6 @@ namespace Nop.Services.Tests.Catalog
             _discountService.Expect(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers)).Return(new List<DiscountForCaching>());
 
             _priceCalcService.GetFinalPrice(product, customer, 0, true, 1).ShouldEqual(9.34M);
-        }
-
-        [Test]
-        public void Can_get_final_product_price_with_special_price()
-        {
-            var product = new Product
-            {
-                Id = 1,
-                Name = "Product name 1",
-                Price = 12.34M,
-                SpecialPrice = 10.01M,
-                SpecialPriceStartDateTimeUtc = DateTime.UtcNow.AddDays(-1),
-                SpecialPriceEndDateTimeUtc= DateTime.UtcNow.AddDays(1),
-                CustomerEntersPrice = false,
-                Published = true,
-            };
-
-            _discountService.Expect(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToCategories)).Return(new List<DiscountForCaching>());
-            _discountService.Expect(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers)).Return(new List<DiscountForCaching>());
-
-            //customer
-            var customer = new Customer();
-            //valid dates
-            _priceCalcService.GetFinalPrice(product, customer, 0, true, 1).ShouldEqual(10.01M);
-            
-            //invalid date
-            product.SpecialPriceStartDateTimeUtc = DateTime.UtcNow.AddDays(1);
-            _priceCalcService.GetFinalPrice(product, customer, 0, true, 1).ShouldEqual(12.34M);
-
-            //no dates
-            product.SpecialPriceStartDateTimeUtc = null;
-            product.SpecialPriceEndDateTimeUtc = null;
-            _priceCalcService.GetFinalPrice(product, customer, 0, true, 1).ShouldEqual(10.01M);
         }
 
         [Test]
