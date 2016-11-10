@@ -743,6 +743,10 @@ span.grid-report-item.red {
     display: none !important;
 }
 
+.advanced-settings-mode .basic-setting {
+    display: none !important;
+}
+
 .onoffswitch {
     position: relative;
     width: 130px;

@@ -1,9 +1,0 @@
-﻿Group: Shipping rate computation
-FriendlyName: Fixed Rate Shipping
-SystemName: Shipping.FixedRate
-Version: 1.19
-SupportedVersions: 3.90
-Author: nopCommerce team
-DisplayOrder: 1
-FileName: Nop.Plugin.Shipping.FixedRateShipping.dll
-Description: This plugin offers shipping rates with fixed fee
