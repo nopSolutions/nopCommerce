@@ -74,7 +74,6 @@ namespace Nop.Web.Controllers
         private readonly IPageHeadBuilder _pageHeadBuilder;
         private readonly IPictureService _pictureService;
 
-        private readonly CustomerSettings _customerSettings;
         private readonly TaxSettings _taxSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
@@ -151,8 +150,6 @@ namespace Nop.Web.Controllers
             this._pageHeadBuilder = pageHeadBuilder;
             this._pictureService = pictureService;
 
-
-            this._customerSettings = customerSettings;
             this._taxSettings = taxSettings;
             this._catalogSettings = catalogSettings;
             this._storeInformationSettings = storeInformationSettings;
