@@ -13,6 +13,13 @@
 
 <div class="content">
     <div class="form-horizontal">
+        <div class="row">
+            <div class="col-md-12 clearfix">
+                <div class="pull-left">
+                    @Html.Action("Mode", "Setting", new { modeName = "checkoutattribute-advanced-mode" })
+                </div>
+            </div>
+        </div>
         <div id="checkoutattribute-edit" class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Catalog.Attributes.CheckoutAttributes.Info"), true)
@@ -111,7 +118,7 @@
                             @Html.ValidationMessageFor(model => model.Locales[item].Name)
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group advanced-setting">
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Locales[item].TextPrompt)
                         </div>
@@ -133,7 +140,7 @@
                             @Html.ValidationMessageFor(model => model.Name)
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group advanced-setting">
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.TextPrompt)
                         </div>
@@ -153,7 +160,7 @@
                         @Html.ValidationMessageFor(model => model.IsRequired)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.ShippableProductRequired)
                     </div>
@@ -162,7 +169,7 @@
                         @Html.ValidationMessageFor(model => model.ShippableProductRequired)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IsTaxExempt)
                     </div>
@@ -171,7 +178,7 @@
                         @Html.ValidationMessageFor(model => model.IsTaxExempt)
                     </div>
                 </div>
-                <div class="form-group" id="pnlTaxCategory">
+                <div class="form-group advanced-setting" id="pnlTaxCategory">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.TaxCategoryId)
                     </div>
@@ -204,7 +211,7 @@
                         @Html.ValidationMessageFor(model => model.DisplayOrder)
                     </div>
                 </div>
-                <div class="form-group" id="pnlValidationMinLength">
+                <div class="form-group advanced-setting" id="pnlValidationMinLength">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.ValidationMinLength)
                     </div>
@@ -213,7 +220,7 @@
                         @Html.ValidationMessageFor(model => model.ValidationMinLength)
                     </div>
                 </div>
-                <div class="form-group" id="pnlValidationMaxLength">
+                <div class="form-group advanced-setting" id="pnlValidationMaxLength">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.ValidationMaxLength)
                     </div>
@@ -222,7 +229,7 @@
                         @Html.ValidationMessageFor(model => model.ValidationMaxLength)
                     </div>
                 </div>
-                <div class="form-group" id="pnlValidationFileAllowedExtensions">
+                <div class="form-group advanced-setting" id="pnlValidationFileAllowedExtensions">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.ValidationFileAllowedExtensions)
                     </div>
@@ -231,7 +238,7 @@
                         @Html.ValidationMessageFor(model => model.ValidationFileAllowedExtensions)
                     </div>
                 </div>
-                <div class="form-group" id="pnlValidationFileMaximumSize">
+                <div class="form-group advanced-setting" id="pnlValidationFileMaximumSize">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.ValidationFileMaximumSize)
                     </div>
@@ -240,7 +247,7 @@
                         @Html.ValidationMessageFor(model => model.ValidationFileMaximumSize)
                     </div>
                 </div>
-                <div class="form-group" id="pnlDefaultValue">
+                <div class="form-group advanced-setting" id="pnlDefaultValue">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.DefaultValue)
                     </div>
@@ -249,7 +256,7 @@
                         @Html.ValidationMessageFor(model => model.DefaultValue)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.SelectedStoreIds)
                     </div>
