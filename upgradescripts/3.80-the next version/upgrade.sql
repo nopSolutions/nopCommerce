@@ -746,6 +746,9 @@ set @resources='
   <LocaleResource Name="ShoppingCart.ItemYouSave">
     <Value>You save: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.MaximumDiscountedQty">
+    <Value>Discounted qty: {0}</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -1217,8 +1217,9 @@ namespace Nop.Services.Orders
                         decimal taxRate;
                         List<DiscountForCaching> scDiscounts;
                         decimal discountAmount;
+                        int? maximumDiscountQty;
                         var scUnitPrice = _priceCalculationService.GetUnitPrice(sc);
-                        var scSubTotal = _priceCalculationService.GetSubTotal(sc, true, out discountAmount, out scDiscounts);
+                        var scSubTotal = _priceCalculationService.GetSubTotal(sc, true, out discountAmount, out scDiscounts, out maximumDiscountQty);
                         var scUnitPriceInclTax = _taxService.GetProductPrice(sc.Product, scUnitPrice, true, details.Customer, out taxRate);
                         var scUnitPriceExclTax = _taxService.GetProductPrice(sc.Product, scUnitPrice, false, details.Customer, out taxRate);
                         var scSubTotalInclTax = _taxService.GetProductPrice(sc.Product, scSubTotal, true, details.Customer, out taxRate);

@@ -453,7 +453,7 @@ label, label + * {
 	white-space: nowrap;
     color: #444;
 }
-.cart td.subtotal .discount {
+.cart td.subtotal .discount, .cart td.subtotal .discount-additional-info {
     font-style: italic;
     color: #4ab2f1;
 }

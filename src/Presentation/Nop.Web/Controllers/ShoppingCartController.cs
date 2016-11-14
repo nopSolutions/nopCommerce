@@ -535,11 +535,13 @@ namespace Nop.Web.Controllers
                 {
                     //sub total
                     List<DiscountForCaching> scDiscounts;
+                    int? maximumDiscountQty;
                     decimal shoppingCartItemDiscountBase;
                     decimal taxRate;
-                    decimal shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci, true, out shoppingCartItemDiscountBase, out scDiscounts), out taxRate);
+                    decimal shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci, true, out shoppingCartItemDiscountBase, out scDiscounts, out maximumDiscountQty), out taxRate);
                     decimal shoppingCartItemSubTotalWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartItemSubTotalWithDiscountBase, _workContext.WorkingCurrency);
                     cartItemModel.SubTotal = _priceFormatter.FormatPrice(shoppingCartItemSubTotalWithDiscount);
+                    cartItemModel.MaximumDiscountedQty = maximumDiscountQty;
 
                     //display an applied discount amount
                     if (shoppingCartItemDiscountBase > decimal.Zero)
@@ -788,11 +790,13 @@ namespace Nop.Web.Controllers
                 {
                     //sub total
                     List<DiscountForCaching> scDiscounts;
+                    int? maximumDiscountQty;
                     decimal shoppingCartItemDiscountBase;
                     decimal taxRate;
-                    decimal shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci, true, out shoppingCartItemDiscountBase, out scDiscounts), out taxRate);
+                    decimal shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci, true, out shoppingCartItemDiscountBase, out scDiscounts, out maximumDiscountQty), out taxRate);
                     decimal shoppingCartItemSubTotalWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartItemSubTotalWithDiscountBase, _workContext.WorkingCurrency);
                     cartItemModel.SubTotal = _priceFormatter.FormatPrice(shoppingCartItemSubTotalWithDiscount);
+                    cartItemModel.MaximumDiscountedQty = maximumDiscountQty;
 
                     //display an applied discount amount
                     if (shoppingCartItemDiscountBase > decimal.Zero)

@@ -129,11 +129,13 @@ namespace Nop.Services.Catalog
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
         /// <param name="discountAmount">Applied discount amount</param>
         /// <param name="appliedDiscounts">Applied discounts</param>
+        /// <param name="maximumDiscountQty">Maximum discounted qty. Return not nullable value if discount cannot be applied to ALL items</param>
         /// <returns>Shopping cart item sub total</returns>
         decimal GetSubTotal(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<DiscountForCaching> appliedDiscounts);
+            out List<DiscountForCaching> appliedDiscounts,
+            out int? maximumDiscountQty);
 
         /// <summary>
         /// Gets the product cost (one item)

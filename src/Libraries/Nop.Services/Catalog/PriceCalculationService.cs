@@ -643,7 +643,8 @@ namespace Nop.Services.Catalog
         {
             decimal discountAmount;
             List<DiscountForCaching> appliedDiscounts;
-            return GetSubTotal(shoppingCartItem, includeDiscounts, out discountAmount, out appliedDiscounts);
+            int? maximumDiscountQty;
+            return GetSubTotal(shoppingCartItem, includeDiscounts, out discountAmount, out appliedDiscounts, out maximumDiscountQty);
         }
         /// <summary>
         /// Gets the shopping cart item sub total
@@ -652,16 +653,19 @@ namespace Nop.Services.Catalog
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
         /// <param name="discountAmount">Applied discount amount</param>
         /// <param name="appliedDiscounts">Applied discounts</param>
+        /// <param name="maximumDiscountQty">Maximum discounted qty. Return not nullable value if discount cannot be applied to ALL items</param>
         /// <returns>Shopping cart item sub total</returns>
         public virtual decimal GetSubTotal(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<DiscountForCaching> appliedDiscounts)
+            out List<DiscountForCaching> appliedDiscounts,
+            out int? maximumDiscountQty)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
 
             decimal subTotal;
+            maximumDiscountQty = null;
 
             //unit price
             var unitPrice = GetUnitPrice(shoppingCartItem, includeDiscounts,
@@ -679,6 +683,7 @@ namespace Nop.Services.Catalog
                     oneAndOnlyDiscount.MaximumDiscountedQuantity.HasValue &&
                     shoppingCartItem.Quantity > oneAndOnlyDiscount.MaximumDiscountedQuantity.Value)
                 {
+                    maximumDiscountQty = oneAndOnlyDiscount.MaximumDiscountedQuantity.Value;
                     //we cannot apply discount for all shopping cart items
                     var discountedQuantity = oneAndOnlyDiscount.MaximumDiscountedQuantity.Value;
                     var discountedSubTotal = unitPrice * discountedQuantity;
