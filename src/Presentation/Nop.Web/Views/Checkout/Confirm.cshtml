@@ -56,10 +56,8 @@
                         </div>
                         <div class="terms-of-service">
                             <input id="termsofservice" type="checkbox" name="termsofservice"/>
-                            <label for="termsofservice">
-                                @T("Checkout.TermsOfService.IAccept")
-                                <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
-                            </label>
+                            <label for="termsofservice">@T("Checkout.TermsOfService.IAccept")</label>
+                            <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
                             <script>
                                 $(document).ready(function() {
                                     $('#read-terms').on('click', function(e) {
