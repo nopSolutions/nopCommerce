@@ -737,6 +737,12 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Formula.Value">
     <Value>[additional fixed cost] + ([order total weight] - [lower weight limit]) * [rate per weight unit] + [order subtotal] * [charge percentage]</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowVendorsToImportProducts">
+    <Value>Allow vendors to import products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowVendorsToImportProducts.Hint">
+    <Value>Check if vendors are allowed to import products.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1647,3 +1653,11 @@ UPDATE [Setting]
 SET [Name] = N'shippingratecomputationmethod.fixedorbyweight.rate.shippingmethodid' + SUBSTRING(name, 62, len(name))
 WHERE [Name] like N'shippingratecomputationmethod.fixedrate.rate.shippingmethodid%'
 GO
+
+ --new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'vendorsettings.allowvendorstoimportproducts')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'vendorsettings.allowvendorstoimportproducts', N'True', 0)
+ END
+ GO

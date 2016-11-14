@@ -901,6 +901,7 @@ namespace Nop.Admin.Controllers
             var model = new ProductListModel();
             //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            model.AllowVendorsToImportProducts = _vendorSettings.AllowVendorsToImportProducts;
 
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -2762,9 +2763,9 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
-
-            //a vendor cannot import products
-            if (_workContext.CurrentVendor != null)
+            
+            if (_workContext.CurrentVendor != null && !_vendorSettings.AllowVendorsToImportProducts)
+                //a vendor can not import products
                 return AccessDeniedView();
 
             try

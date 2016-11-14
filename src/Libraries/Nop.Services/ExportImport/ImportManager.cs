@@ -16,6 +16,7 @@ using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.ExportImport.Help;
+using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Security;
@@ -56,6 +57,9 @@ namespace Nop.Services.ExportImport
         private readonly IMeasureService _measureService;
         private readonly CatalogSettings _catalogSettings;
         private readonly IProductTagService _productTagService;
+        private readonly IWorkContext _workContext;
+        private readonly ILocalizationService _localizationService;
+        private readonly VendorSettings _vendorSettings;
 
         #endregion
 
@@ -81,7 +85,10 @@ namespace Nop.Services.ExportImport
             IMeasureService measureService,
             IProductAttributeService productAttributeService,
             CatalogSettings catalogSettings,
-            IProductTagService productTagService)
+            IProductTagService productTagService,
+            IWorkContext workContext,
+            ILocalizationService localizationService,
+            VendorSettings vendorSettings)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -104,6 +111,9 @@ namespace Nop.Services.ExportImport
             this._productAttributeService = productAttributeService;
             this._catalogSettings = catalogSettings;
             this._productTagService = productTagService;
+            this._workContext = workContext;
+            this._localizationService = localizationService;
+            this._vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -351,7 +361,7 @@ namespace Nop.Services.ExportImport
 
                 var tempProperty = manager.GetProperty("Categories");
                 var categoryCellNum = tempProperty.Return(p => p.PropertyOrderPosition, -1);
-
+                
                 tempProperty = manager.GetProperty("SKU");
                 var skuCellNum = tempProperty.Return(p => p.PropertyOrderPosition, -1);
 
@@ -378,7 +388,9 @@ namespace Nop.Services.ExportImport
 
                 var allAttributeIds = new List<int>();
                 var attributeIdCellNum = managerProductAttribute.GetProperty("AttributeId").PropertyOrderPosition + ExportProductAttribute.ProducAttributeCellOffset;
-                
+
+                var countProductsInFile = 0;
+
                 //find end of data
                 while (true)
                 {
@@ -444,6 +456,9 @@ namespace Nop.Services.ExportImport
                             allManufacturersNames.AddRange(manufacturerIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()));
                     }
 
+                    //counting the number of products
+                    countProductsInFile += 1;
+
                     endRow++;
                 }
 
@@ -469,7 +484,16 @@ namespace Nop.Services.ExportImport
                 }
 
                 //performance optimization, load all products by SKU in one SQL request
-                var allProductsBySku = _productService.GetProductsBySku(allSku.ToArray());
+                var allProductsBySku = _productService.GetProductsBySku(allSku.ToArray(), _workContext.CurrentVendor.Return(v=>v.Id, 0));
+
+                //validate maximum number of products per vendor
+                if (_vendorSettings.MaximumProductNumber > 0 &&
+                    _workContext.CurrentVendor != null)
+                {
+                    var newProductsCount = countProductsInFile - allProductsBySku.Count;
+                    if(_productService.GetNumberOfProductsByVendorId(_workContext.CurrentVendor.Id) + newProductsCount > _vendorSettings.MaximumProductNumber)
+                        throw new ArgumentException(string.Format(_localizationService.GetResource("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
+                }
 
                 //performance optimization, load all categories IDs for products in one SQL request
                 var allProductsCategoryIds = _categoryService.GetProductCategoryIds(allProductsBySku.Select(p => p.Id).ToArray());
@@ -637,13 +661,17 @@ namespace Nop.Services.ExportImport
                                 product.FullDescription = property.StringValue;
                                 break;
                             case "Vendor":
-                                product.VendorId = property.IntValue;
+                                //vendor can't change this field
+                                if (_workContext.CurrentVendor == null)
+                                    product.VendorId = property.IntValue;
                                 break;
                             case "ProductTemplate":
                                 product.ProductTemplateId = property.IntValue;
                                 break;
                             case "ShowOnHomePage":
-                                product.ShowOnHomePage = property.BooleanValue;
+                                //vendor can't change this field
+                                if (_workContext.CurrentVendor == null)
+                                    product.ShowOnHomePage = property.BooleanValue;
                                 break;
                             case "MetaKeywords":
                                 product.MetaKeywords = property.StringValue;
@@ -899,6 +927,10 @@ namespace Nop.Services.ExportImport
                     if (isNew && properties.All(p => p.PropertyName != "Published"))
                         product.Published = true;
 
+                    //sets the current vendor for the new product
+                    if (isNew && _workContext.CurrentVendor != null)
+                        product.VendorId = _workContext.CurrentVendor.Id;
+                    
                     product.UpdatedOnUtc = DateTime.UtcNow;
 
                     if (isNew)
