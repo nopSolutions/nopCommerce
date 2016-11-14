@@ -743,6 +743,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowVendorsToImportProducts.Hint">
     <Value>Check if vendors are allowed to import products.</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.ItemYouSave">
+    <Value>You save: {0}</Value>
+  </LocaleResource>
 </Language>
 '
 

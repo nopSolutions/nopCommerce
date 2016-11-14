@@ -15340,7 +15340,7 @@
     <Value>Total</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.ItemYouSave">
-    <Value>You save</Value>
+    <Value>You save: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.MaximumQuantity">
     <Value>The maximum quantity allowed for purchase is {0}.</Value>
