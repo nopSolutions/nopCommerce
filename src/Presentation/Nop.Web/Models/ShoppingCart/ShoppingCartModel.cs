@@ -49,7 +49,9 @@ namespace Nop.Web.Models.ShoppingCart
         public IList<string> ButtonPaymentMethodControllerNames { get; set; }
         public IList<RouteValueDictionary> ButtonPaymentMethodRouteValues { get; set; }
 
-		#region Nested Classes
+        public bool HideCheckoutButton { get; set; }
+
+        #region Nested Classes
 
         public partial class ShoppingCartItemModel : BaseNopEntityModel
         {
@@ -85,6 +87,8 @@ namespace Nop.Web.Models.ShoppingCart
             public string RentalInfo { get; set; }
 
             public bool AllowItemEditing { get; set; }
+
+            public bool DisableRemoval { get; set; }
 
             public IList<string> Warnings { get; set; }
 
@@ -142,10 +146,20 @@ namespace Nop.Web.Models.ShoppingCart
 
         public partial class DiscountBoxModel: BaseNopModel
         {
+            public DiscountBoxModel()
+            {
+                AppliedDiscountsWithCodes = new List<DiscountInfoModel>();
+            }
+
+            public List<DiscountInfoModel> AppliedDiscountsWithCodes { get; set; }
             public bool Display { get; set; }
             public string Message { get; set; }
-            public string CurrentCode { get; set; }
             public bool IsApplied { get; set; }
+
+            public class DiscountInfoModel : BaseNopEntityModel
+            {
+                public string CouponCode { get; set; }
+            }
         }
 
         public partial class GiftCardBoxModel : BaseNopModel

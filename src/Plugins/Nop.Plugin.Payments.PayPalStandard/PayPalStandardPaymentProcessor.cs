@@ -29,34 +29,42 @@ namespace Nop.Plugin.Payments.PayPalStandard
     {
         #region Fields
 
-        private readonly PayPalStandardPaymentSettings _paypalStandardPaymentSettings;
-        private readonly ISettingService _settingService;
-        private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
-        private readonly IWebHelper _webHelper;
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly ITaxService _taxService;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly HttpContextBase _httpContext;
+        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
+        private readonly ICurrencyService _currencyService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly ISettingService _settingService;
+        private readonly ITaxService _taxService;
+        private readonly IWebHelper _webHelper;
+        private readonly PayPalStandardPaymentSettings _paypalStandardPaymentSettings;
+
         #endregion
 
         #region Ctor
 
-        public PayPalStandardPaymentProcessor(PayPalStandardPaymentSettings paypalStandardPaymentSettings,
-            ISettingService settingService, ICurrencyService currencyService,
-            CurrencySettings currencySettings, IWebHelper webHelper,
-            ICheckoutAttributeParser checkoutAttributeParser, ITaxService taxService, 
-            IOrderTotalCalculationService orderTotalCalculationService, HttpContextBase httpContext)
+        public PayPalStandardPaymentProcessor(CurrencySettings currencySettings,
+            HttpContextBase httpContext,
+            ICheckoutAttributeParser checkoutAttributeParser,
+            ICurrencyService currencyService,           
+            ILocalizationService localizationService,
+            IOrderTotalCalculationService orderTotalCalculationService,
+            ISettingService settingService,
+            ITaxService taxService,
+            IWebHelper webHelper,
+            PayPalStandardPaymentSettings paypalStandardPaymentSettings)
         {
-            this._paypalStandardPaymentSettings = paypalStandardPaymentSettings;
-            this._settingService = settingService;
-            this._currencyService = currencyService;
             this._currencySettings = currencySettings;
-            this._webHelper = webHelper;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._taxService = taxService;
-            this._orderTotalCalculationService = orderTotalCalculationService;
             this._httpContext = httpContext;
+            this._checkoutAttributeParser = checkoutAttributeParser;
+            this._currencyService = currencyService;
+            this._localizationService = localizationService;
+            this._orderTotalCalculationService = orderTotalCalculationService;
+            this._settingService = settingService;
+            this._taxService = taxService;
+            this._webHelper = webHelper;
+            this._paypalStandardPaymentSettings = paypalStandardPaymentSettings;
         }
 
         #endregion
@@ -165,35 +173,20 @@ namespace Nop.Plugin.Payments.PayPalStandard
             return success;
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
-        /// Process a payment
-        /// </summary>
-        /// <param name="processPaymentRequest">Payment info required for an order processing</param>
-        /// <returns>Process payment result</returns>
-        public ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
-        {
-            var result = new ProcessPaymentResult();
-            result.NewPaymentStatus = PaymentStatus.Pending;
-            return result;
-        }
-
-        /// <summary>
-        /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
+        /// Generate string (URL) for redirection
         /// </summary>
         /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
-        public void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
+        /// <param name="passProductNamesAndTotals">A value indicating whether to pass product names and totals</param>
+        private string GenerationRedirectionUrl(PostProcessPaymentRequest postProcessPaymentRequest, bool passProductNamesAndTotals)
         {
             var builder = new StringBuilder();
             builder.Append(GetPaypalUrl());
-            var cmd =_paypalStandardPaymentSettings.PassProductNamesAndTotals 
+            var cmd = passProductNamesAndTotals
                 ? "_cart"
-                :  "_xclick";
+                : "_xclick";
             builder.AppendFormat("?cmd={0}&business={1}", cmd, HttpUtility.UrlEncode(_paypalStandardPaymentSettings.BusinessEmail));
-            if (_paypalStandardPaymentSettings.PassProductNamesAndTotals)
+            if (passProductNamesAndTotals)
             {
                 builder.AppendFormat("&upload=1");
 
@@ -310,7 +303,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             string returnUrl = _webHelper.GetStoreLocation(false) + "Plugins/PaymentPayPalStandard/PDTHandler";
             string cancelReturnUrl = _webHelper.GetStoreLocation(false) + "Plugins/PaymentPayPalStandard/CancelOrder";
             builder.AppendFormat("&return={0}&cancel_return={1}", HttpUtility.UrlEncode(returnUrl), HttpUtility.UrlEncode(cancelReturnUrl));
-            
+
             //Instant Payment Notification (server to server message)
             if (_paypalStandardPaymentSettings.EnableIpn)
             {
@@ -350,7 +343,40 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 builder.AppendFormat("&country={0}", "");
             builder.AppendFormat("&zip={0}", HttpUtility.UrlEncode(postProcessPaymentRequest.Order.BillingAddress.ZipPostalCode));
             builder.AppendFormat("&email={0}", HttpUtility.UrlEncode(postProcessPaymentRequest.Order.BillingAddress.Email));
-            _httpContext.Response.Redirect(builder.ToString());
+
+            return builder.ToString();
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Process a payment
+        /// </summary>
+        /// <param name="processPaymentRequest">Payment info required for an order processing</param>
+        /// <returns>Process payment result</returns>
+        public ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
+        {
+            var result = new ProcessPaymentResult();
+            result.NewPaymentStatus = PaymentStatus.Pending;
+            return result;
+        }
+
+        /// <summary>
+        /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
+        /// </summary>
+        /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
+        public void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
+        {
+            var urlToRedirect = GenerationRedirectionUrl(postProcessPaymentRequest, _paypalStandardPaymentSettings.PassProductNamesAndTotals);
+            if (urlToRedirect == null)
+                throw new Exception("PayPal URL cannot be generated");
+            //ensure URL doesn't exceed 2K chars. Otherwise, customers can get "too long URL" exception
+            if (urlToRedirect.Length > 2048)
+                urlToRedirect = GenerationRedirectionUrl(postProcessPaymentRequest, false);
+
+            _httpContext.Response.Redirect(urlToRedirect);
         }
 
         /// <summary>
@@ -482,11 +508,18 @@ namespace Nop.Plugin.Payments.PayPalStandard
             routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.PayPalStandard.Controllers" }, { "area", null } };
         }
 
+        /// <summary>
+        /// Get type of controller
+        /// </summary>
+        /// <returns>Type</returns>
         public Type GetControllerType()
         {
             return typeof(PaymentPayPalStandardController);
         }
 
+        /// <summary>
+        /// Install the plugin
+        /// </summary>
         public override void Install()
         {
             //settings
@@ -502,65 +535,70 @@ namespace Nop.Plugin.Payments.PayPalStandard
             _settingService.SaveSetting(settings);
 
             //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.RedirectionTip", "You will be redirected to PayPal site to complete the order.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.UseSandbox", "Use Sandbox");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.UseSandbox.Hint", "Check to enable Sandbox (testing environment).");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.BusinessEmail", "Business Email");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.BusinessEmail.Hint", "Specify your PayPal business email.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PDTToken", "PDT Identity Token");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PDTToken.Hint", "Specify PDT identity token");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal", "PDT. Validate order total");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal.Hint", "Check if PDT handler should validate order totals.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AdditionalFee", "Additional fee");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AdditionalFeePercentage", "Additional fee. Use percentage");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals", "Pass product names and order totals to PayPal");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals.Hint", "Check if product names and order totals should be passed to PayPal.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AddressOverride", "Address override");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AddressOverride.Hint", "For people who already have PayPal accounts and whom you already prompted for a shipping address before they choose to pay with PayPal, you can use the entered address instead of the address the person has stored with PayPal.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.BusinessEmail", "Business Email");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.BusinessEmail.Hint", "Specify your PayPal business email.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.EnableIpn", "Enable IPN (Instant Payment Notification)");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.EnableIpn.Hint", "Check if IPN is enabled.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.EnableIpn.Hint2", "Leave blank to use the default IPN handler URL.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.IpnUrl", "IPN Handler");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.IpnUrl.Hint", "Specify IPN Handler.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AddressOverride", "Address override");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AddressOverride.Hint", "For people who already have PayPal accounts and whom you already prompted for a shipping address before they choose to pay with PayPal, you can use the entered address instead of the address the person has stored with PayPal.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals", "Pass product names and order totals to PayPal");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals.Hint", "Check if product names and order totals should be passed to PayPal.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PDTToken", "PDT Identity Token");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PDTToken.Hint", "Specify PDT identity token");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal", "PDT. Validate order total");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal.Hint", "Check if PDT handler should validate order totals.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.RedirectionTip", "You will be redirected to PayPal site to complete the order.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage", "Return to order details page");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage.Hint", "Enable if a customer should be redirected to the order details page when he clicks \"return to store\" link on PayPal site WITHOUT completing a payment");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.UseSandbox", "Use Sandbox");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.UseSandbox.Hint", "Check to enable Sandbox (testing environment).");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.PaymentMethodDescription", "You will be redirected to PayPal site to complete the payment");
 
             base.Install();
         }
-        
+
+        /// <summary>
+        /// Uninstall the plugin
+        /// </summary>
         public override void Uninstall()
         {
             //settings
             _settingService.DeleteSetting<PayPalStandardPaymentSettings>();
 
             //locales
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.RedirectionTip");
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.UseSandbox");
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.UseSandbox.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.BusinessEmail");
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.BusinessEmail.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PDTToken");
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PDTToken.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal");
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AdditionalFee");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AdditionalFee.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AdditionalFeePercentage");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AdditionalFeePercentage.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals");
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AddressOverride");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AddressOverride.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.BusinessEmail");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.BusinessEmail.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.EnableIpn");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.EnableIpn.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.EnableIpn.Hint2");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.IpnUrl");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.IpnUrl.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AddressOverride");
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AddressOverride.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PDTToken");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PDTToken.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.RedirectionTip");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage.Hint");
-            
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.UseSandbox");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.UseSandbox.Hint");         
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.PaymentMethodDescription");
+
             base.Uninstall();
         }
 
@@ -573,10 +611,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// </summary>
         public bool SupportCapture
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
         }
 
         /// <summary>
@@ -584,10 +619,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// </summary>
         public bool SupportPartiallyRefund
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
         }
 
         /// <summary>
@@ -595,10 +627,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// </summary>
         public bool SupportRefund
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
         }
 
         /// <summary>
@@ -606,10 +635,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// </summary>
         public bool SupportVoid
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
         }
 
         /// <summary>
@@ -617,10 +643,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// </summary>
         public RecurringPaymentType RecurringPaymentType
         {
-            get
-            {
-                return RecurringPaymentType.NotSupported;
-            }
+            get { return RecurringPaymentType.NotSupported; }
         }
 
         /// <summary>
@@ -628,10 +651,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// </summary>
         public PaymentMethodType PaymentMethodType
         {
-            get
-            {
-                return PaymentMethodType.Redirection;
-            }
+            get { return PaymentMethodType.Redirection; }
         }
 
         /// <summary>
@@ -639,10 +659,17 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// </summary>
         public bool SkipPaymentInfo
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
+        }
+
+        /// <summary>
+        /// Gets a payment method description that will be displayed on checkout pages in the public store
+        /// </summary>
+        public string PaymentMethodDescription
+        {
+            //return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
+            //for example, for a redirection payment method, description may be like this: "You will be redirected to PayPal site to complete the payment"
+            get { return _localizationService.GetResource("Plugins.Payments.PayPalStandard.PaymentMethodDescription"); }
         }
 
         #endregion

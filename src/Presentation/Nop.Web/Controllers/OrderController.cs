@@ -385,7 +385,7 @@ namespace Nop.Web.Controllers
 
 
             //purchased products
-            model.ShowSku = _catalogSettings.ShowProductSku;
+            model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
             var orderItems = order.OrderItems;
             foreach (var orderItem in orderItems)
             {
@@ -486,7 +486,7 @@ namespace Nop.Web.Controllers
             }
 
             //products in this shipment
-            model.ShowSku = _catalogSettings.ShowProductSku;
+            model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
             foreach (var shipmentItem in shipment.ShipmentItems)
             {
                 var orderItem = _orderService.GetOrderItemById(shipmentItem.OrderItemId);
@@ -585,16 +585,20 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
             var pageSize = _rewardPointsSettings.PageSize;
             var model = new CustomerRewardPointsModel();
-            var list = _rewardPointService.GetRewardPointsHistory(customer.Id, pageIndex: --page ?? 0, pageSize: pageSize);
+            var list = _rewardPointService.GetRewardPointsHistory(customer.Id, showNotActivated: true, pageIndex: --page ?? 0, pageSize: pageSize);
 
-            model.RewardPoints = list.Select(rph => 
-                new CustomerRewardPointsModel.RewardPointsHistoryModel
+            model.RewardPoints = list.Select(rph =>
+            {
+                var activatingDate = _dateTimeHelper.ConvertToUserTime(rph.CreatedOnUtc, DateTimeKind.Utc);
+                return new CustomerRewardPointsModel.RewardPointsHistoryModel
                 {
                     Points = rph.Points,
-                    PointsBalance = rph.PointsBalance,
+                    PointsBalance = rph.PointsBalance.HasValue ? rph.PointsBalance.ToString()
+                        : string.Format(_localizationService.GetResource("RewardPoints.ActivatedLater"), activatingDate),
                     Message = rph.Message,
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(rph.CreatedOnUtc, DateTimeKind.Utc)
-                }).ToList();
+                    CreatedOn = activatingDate
+                };
+            }).ToList();
 
             model.PagerModel = new PagerModel
             {

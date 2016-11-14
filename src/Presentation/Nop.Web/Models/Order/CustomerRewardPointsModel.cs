@@ -28,7 +28,7 @@ namespace Nop.Web.Models.Order
             public int Points { get; set; }
 
             [NopResourceDisplayName("RewardPoints.Fields.PointsBalance")]
-            public int PointsBalance { get; set; }
+            public string PointsBalance { get; set; }
 
             [NopResourceDisplayName("RewardPoints.Fields.Message")]
             public string Message { get; set; }

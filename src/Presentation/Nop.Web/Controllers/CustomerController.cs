@@ -428,8 +428,7 @@ namespace Nop.Web.Controllers
 
             //external authentication
             model.NumberOfExternalAuthenticationProviders = _openAuthenticationService
-                .LoadActiveExternalAuthenticationMethods(_storeContext.CurrentStore.Id)
-                .Count;
+                .LoadActiveExternalAuthenticationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id).Count;
             foreach (var ear in _openAuthenticationService.GetExternalIdentifiersFor(customer))
             {
                 var authMethod = _openAuthenticationService.LoadExternalAuthenticationMethodBySystemName(ear.ProviderSystemName);
@@ -809,6 +808,15 @@ namespace Nop.Web.Controllers
             var customer = _customerService.GetCustomerByEmail(email);
             if (customer == null)
                 return RedirectToRoute("HomePage");
+
+            if (string.IsNullOrEmpty(customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken)))
+            {
+                return View(new PasswordRecoveryConfirmModel
+                {
+                    DisablePasswordChanging = true,
+                    Result = _localizationService.GetResource("Account.PasswordRecovery.PasswordAlreadyHasBeenChanged")
+                });
+            }
 
             var model = new PasswordRecoveryConfirmModel();
 
@@ -1213,8 +1221,8 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             var cToken = customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken);
-            if (String.IsNullOrEmpty(cToken))
-                return RedirectToRoute("HomePage");
+            if (string.IsNullOrEmpty(cToken))
+                return View(new AccountActivationModel { Result = _localizationService.GetResource("Account.AccountActivation.AlreadyActivated") });
 
             if (!cToken.Equals(token, StringComparison.InvariantCultureIgnoreCase))
                 return RedirectToRoute("HomePage");
@@ -1548,7 +1556,7 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            _openAuthenticationService.DeletExternalAuthenticationRecord(ear);
+            _openAuthenticationService.DeleteExternalAuthenticationRecord(ear);
 
             return Json(new
             {
@@ -1766,6 +1774,9 @@ namespace Nop.Web.Controllers
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
+
+            if (_customerSettings.HideDownloadableProductsTab)
+                return RedirectToRoute("CustomerInfo");
 
             var customer = _workContext.CurrentCustomer;
 

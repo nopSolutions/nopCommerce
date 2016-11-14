@@ -21,6 +21,7 @@ using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Date;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using OfficeOpenXml;
@@ -50,9 +51,11 @@ namespace Nop.Services.ExportImport
         private readonly IVendorService _vendorService;
         private readonly IProductTemplateService _productTemplateService;
         private readonly IShippingService _shippingService;
+        private readonly IDateRangeService _dateRangeService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IMeasureService _measureService;
         private readonly CatalogSettings _catalogSettings;
+        private readonly IProductTagService _productTagService;
 
         #endregion
 
@@ -73,10 +76,12 @@ namespace Nop.Services.ExportImport
             IVendorService vendorService,
             IProductTemplateService productTemplateService,
             IShippingService shippingService,
+            IDateRangeService dateRangeService,
             ITaxCategoryService taxCategoryService,
             IMeasureService measureService,
             IProductAttributeService productAttributeService,
-            CatalogSettings catalogSettings)
+            CatalogSettings catalogSettings,
+            IProductTagService productTagService)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -93,10 +98,12 @@ namespace Nop.Services.ExportImport
             this._vendorService = vendorService;
             this._productTemplateService = productTemplateService;
             this._shippingService = shippingService;
+            this._dateRangeService = dateRangeService;
             this._taxCategoryService = taxCategoryService;
             this._measureService = measureService;
             this._productAttributeService = productAttributeService;
             this._catalogSettings = catalogSettings;
+            this._productTagService = productTagService;
         }
 
         #endregion
@@ -329,6 +336,7 @@ namespace Nop.Services.ExportImport
                         new PropertyByName<ExportProductAttribute>("PriceAdjustment"),
                         new PropertyByName<ExportProductAttribute>("WeightAdjustment"),
                         new PropertyByName<ExportProductAttribute>("Cost"),
+                        new PropertyByName<ExportProductAttribute>("CustomerEntersQty"),
                         new PropertyByName<ExportProductAttribute>("Quantity"),
                         new PropertyByName<ExportProductAttribute>("IsPreSelected"),
                         new PropertyByName<ExportProductAttribute>("DisplayOrder"),
@@ -362,7 +370,8 @@ namespace Nop.Services.ExportImport
 
                 manager.SetSelectList("Vendor", _vendorService.GetAllVendors(showHidden: true).Select(v => v as BaseEntity).ToSelectList(p => (p as Vendor).Return(v => v.Name, String.Empty)));
                 manager.SetSelectList("ProductTemplate", _productTemplateService.GetAllProductTemplates().Select(pt => pt as BaseEntity).ToSelectList(p => (p as ProductTemplate).Return(pt => pt.Name, String.Empty)));
-                manager.SetSelectList("DeliveryDate", _shippingService.GetAllDeliveryDates().Select(dd => dd as BaseEntity).ToSelectList(p => (p as DeliveryDate).Return(dd => dd.Name, String.Empty)));
+                manager.SetSelectList("DeliveryDate", _dateRangeService.GetAllDeliveryDates().Select(dd => dd as BaseEntity).ToSelectList(p => (p as DeliveryDate).Return(dd => dd.Name, String.Empty)));
+                manager.SetSelectList("ProductAvailabilityRange", _dateRangeService.GetAllProductAvailabilityRanges().Select(range => range as BaseEntity).ToSelectList(p => (p as ProductAvailabilityRange).Return(range => range.Name, String.Empty)));
                 manager.SetSelectList("TaxCategory", _taxCategoryService.GetAllTaxCategories().Select(tc => tc as BaseEntity).ToSelectList(p => (p as TaxCategory).Return(tc => tc.Name, String.Empty)));
                 manager.SetSelectList("BasepriceUnit", _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p =>(p as MeasureWeight).Return(mw => mw.Name, String.Empty)));
                 manager.SetSelectList("BasepriceBaseUnit", _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p => (p as MeasureWeight).Return(mw => mw.Name, String.Empty)));
@@ -503,6 +512,7 @@ namespace Nop.Services.ExportImport
                             var priceAdjustment = managerProductAttribute.GetProperty("PriceAdjustment").DecimalValue;
                             var weightAdjustment = managerProductAttribute.GetProperty("WeightAdjustment").DecimalValue;
                             var cost = managerProductAttribute.GetProperty("Cost").DecimalValue;
+                            var customerEntersQty = managerProductAttribute.GetProperty("CustomerEntersQty").BooleanValue;
                             var quantity = managerProductAttribute.GetProperty("Quantity").IntValue;
                             var isPreSelected = managerProductAttribute.GetProperty("IsPreSelected").BooleanValue;
                             var displayOrder = managerProductAttribute.GetProperty("DisplayOrder").IntValue;
@@ -564,6 +574,7 @@ namespace Nop.Services.ExportImport
                                     DisplayOrder = displayOrder,
                                     ColorSquaresRgb = colorSquaresRgb,
                                     ImageSquaresPictureId = imageSquaresPictureId,
+                                    CustomerEntersQty = customerEntersQty,
                                     Quantity = quantity,
                                     PictureId = pictureId
                                 };
@@ -580,6 +591,7 @@ namespace Nop.Services.ExportImport
                                 pav.PriceAdjustment = priceAdjustment;
                                 pav.WeightAdjustment = weightAdjustment;
                                 pav.Cost = cost;
+                                pav.CustomerEntersQty = customerEntersQty;
                                 pav.Quantity = quantity;
                                 pav.IsPreSelected = isPreSelected;
                                 pav.DisplayOrder = displayOrder;
@@ -750,6 +762,9 @@ namespace Nop.Services.ExportImport
                             case "ManageInventoryMethod":
                                 product.ManageInventoryMethodId = property.IntValue;
                                 break;
+                            case "ProductAvailabilityRange":
+                                product.ProductAvailabilityRangeId = property.IntValue;
+                                break;
                             case "UseMultipleWarehouses":
                                 product.UseMultipleWarehouses = property.BooleanValue;
                                 break;
@@ -876,9 +891,13 @@ namespace Nop.Services.ExportImport
                         }
                     }
 
-                    //set default product type id
+                    //set some default default values if not specified
                     if (isNew && properties.All(p => p.PropertyName != "ProductTypeId"))
                         product.ProductType = ProductType.SimpleProduct;
+                    if (isNew && properties.All(p => p.PropertyName != "VisibleIndividually"))
+                        product.VisibleIndividually = true;
+                    if (isNew && properties.All(p => p.PropertyName != "Published"))
+                        product.Published = true;
 
                     product.UpdatedOnUtc = DateTime.UtcNow;
 
@@ -907,7 +926,8 @@ namespace Nop.Services.ExportImport
 
                         //category mappings
                         var categories = isNew || !allProductsCategoryIds.ContainsKey(product.Id) ? new int[0] : allProductsCategoryIds[product.Id];
-                        foreach (var categoryId in categoryNames.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => allCategories.First(c => c.Name == x.Trim()).Id))
+                        var importedCategories = categoryNames.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => allCategories.First(c => c.Name == x.Trim()).Id).ToList();
+                        foreach (var categoryId in importedCategories)
                         {
                             if (categories.Any(c => c == categoryId))
                                 continue;
@@ -921,6 +941,14 @@ namespace Nop.Services.ExportImport
                             };
                             _categoryService.InsertProductCategory(productCategory);
                         }
+
+                        //delete product categories
+                        var deletedProductCategories = categories.Where(categoryId => !importedCategories.Contains(categoryId))
+                                .Select(categoryId => product.ProductCategories.First(pc => pc.CategoryId == categoryId));
+                        foreach (var deletedProductCategory in deletedProductCategories)
+                        {
+                            _categoryService.DeleteProductCategory(deletedProductCategory);
+                        }
                     }
 
                     tempProperty = manager.GetProperty("Manufacturers");
@@ -930,7 +958,8 @@ namespace Nop.Services.ExportImport
 
                         //manufacturer mappings
                         var manufacturers = isNew || !allProductsManufacturerIds.ContainsKey(product.Id) ? new int[0] : allProductsManufacturerIds[product.Id];
-                        foreach (var manufacturerId in manufacturerNames.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => allManufacturers.First(m => m.Name == x.Trim()).Id))
+                        var importedManufacturers = manufacturerNames.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => allManufacturers.First(m => m.Name == x.Trim()).Id).ToList();
+                        foreach (var manufacturerId in importedManufacturers)
                         {
                             if (manufacturers.Any(c => c == manufacturerId))
                                 continue;
@@ -944,8 +973,25 @@ namespace Nop.Services.ExportImport
                             };
                             _manufacturerService.InsertProductManufacturer(productManufacturer);
                         }
+
+                        //delete product manufacturers
+                        var deletedProductsManufacturers = manufacturers.Where(manufacturerId => !importedManufacturers.Contains(manufacturerId))
+                                .Select(manufacturerId => product.ProductManufacturers.First(pc => pc.ManufacturerId == manufacturerId));
+                        foreach (var deletedProductManufacturer in deletedProductsManufacturers)
+                        {
+                            _manufacturerService.DeleteProductManufacturer(deletedProductManufacturer);
+                        }
                     }
-                    
+
+                    tempProperty = manager.GetProperty("ProductTags");
+                    if (tempProperty != null)
+                    {
+                        var productTags = tempProperty.StringValue.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
+
+                        //product tag mappings
+                        _productTagService.UpdateProductTags(product, productTags);
+                    }
+
                     var picture1 = manager.GetProperty("Picture1").Return(p => p.StringValue, String.Empty);
                     var picture2 = manager.GetProperty("Picture2").Return(p => p.StringValue, String.Empty);
                     var picture3 = manager.GetProperty("Picture3").Return(p => p.StringValue, String.Empty);

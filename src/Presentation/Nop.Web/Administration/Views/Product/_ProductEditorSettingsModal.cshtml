@@ -528,6 +528,15 @@
                                     <div class="panel-body">
                                         <div class="form-group">
                                             <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.ProductAvailabilityRange)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.ProductAvailabilityRange)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.ProductAvailabilityRange)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
                                                 @Html.NopLabelFor(model => model.ProductEditorSettingsModel.UseMultipleWarehouses)
                                             </div>
                                             <div class="col-md-2">

@@ -116,6 +116,9 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.TelecommunicationsBroadcastingElectronicServices")]
         public bool TelecommunicationsBroadcastingElectronicServices { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.ProductAvailabilityRange")]
+        public bool ProductAvailabilityRange { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.UseMultipleWarehouses")]
         public bool UseMultipleWarehouses { get; set; }
 

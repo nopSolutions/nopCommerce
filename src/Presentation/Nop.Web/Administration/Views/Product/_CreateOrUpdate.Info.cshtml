@@ -240,6 +240,7 @@
     function toggleManageStock() {
         var selectedManageInventoryMethodId = $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").val();
         if (selectedManageInventoryMethodId == @(((int) ManageInventoryMethod.DontManageStock).ToString())) {
+            $('#pnlProductAvailabilityRange').hide();
             $('#pnlUseMultipleWarehouses').hide();
         $('#pnlWarehouse').show();
         $('#pnlMultipleWarehouses').hide();
@@ -280,12 +281,20 @@
         if (selectedBackorderModeId == @(((int) BackorderMode.NoBackorders).ToString())) {
             //no backorders
             $('#pnlAllowBackInStockSubscriptions').show();
-    } else {
+            $('#pnlProductAvailabilityRange').show();
+    } else if (selectedBackorderModeId == @(((int) BackorderMode.AllowQtyBelow0AndNotifyCustomer).ToString())){
     //backorders are enabled
-                $('#pnlAllowBackInStockSubscriptions').hide();
+        $('#pnlAllowBackInStockSubscriptions').hide();
+        $('#pnlProductAvailabilityRange').show();
+    }
+    else if (selectedBackorderModeId == @(((int) BackorderMode.AllowQtyBelow0).ToString())){
+        //backorders are enabled
+        $('#pnlAllowBackInStockSubscriptions').hide();
+        $('#pnlProductAvailabilityRange').hide();
     }
     $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
     } else {
+        $('#pnlProductAvailabilityRange').show();
         $('#pnlUseMultipleWarehouses').hide();
         $('#pnlWarehouse').show();
         $('#pnlMultipleWarehouses').hide();
@@ -344,7 +353,7 @@
                 source: initialProductTags
             },
             delimiter: ',',
-            placeholder: 'Enter tags ...'
+            placeholder: '@T("Admin.Catalog.Products.Fields.ProductTags.Placeholder")'
         });
     });
 
@@ -1647,6 +1656,15 @@
                         <div class="@rightColumnClass">
                             @Html.NopEditorFor(model => model.AllowBackInStockSubscriptions)
                             @Html.ValidationMessageFor(model => model.AllowBackInStockSubscriptions)
+                        </div>
+                    </div>
+                    <div class="form-group @(Model.ProductEditorSettingsModel.ProductAvailabilityRange ? null : "advanced-setting")" id="pnlProductAvailabilityRange">
+                        <div class="@leftColumnClass">
+                            @Html.NopLabelFor(model => model.ProductAvailabilityRangeId)
+                        </div>
+                        <div class="@rightColumnClass">
+                            @Html.NopDropDownListFor(model => model.ProductAvailabilityRangeId, Model.AvailableProductAvailabilityRanges)
+                            @Html.ValidationMessageFor(model => model.ProductAvailabilityRangeId)
                         </div>
                     </div>
                     <div class="form-group @(Model.ProductEditorSettingsModel.MinimumCartQuantity ? null : "advanced-setting")">

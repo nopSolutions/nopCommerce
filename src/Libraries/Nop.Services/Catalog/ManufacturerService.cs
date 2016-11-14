@@ -125,6 +125,9 @@ namespace Nop.Services.Catalog
             
             manufacturer.Deleted = true;
             UpdateManufacturer(manufacturer);
+
+            //event notification
+            _eventPublisher.EntityDeleted(manufacturer);
         }
 
         /// <summary>

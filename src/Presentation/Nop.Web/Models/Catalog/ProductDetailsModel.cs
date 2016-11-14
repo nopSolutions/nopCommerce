@@ -71,6 +71,8 @@ namespace Nop.Web.Models.Catalog
         public DateTime? RentalStartDate { get; set; }
         public DateTime? RentalEndDate { get; set; }
 
+        public ManageInventoryMethod ManageInventoryMethod { get; set; }
+
         public string StockAvailability { get; set; }
 
         public bool DisplayBackInStockSubscription { get; set; }
@@ -297,6 +299,10 @@ namespace Nop.Web.Models.Catalog
 
             //product picture ID (associated to this value)
             public int PictureId { get; set; }
+
+            public bool CustomerEntersQty { get; set; }
+
+            public int Quantity { get; set; }
         }
 
 		#endregion

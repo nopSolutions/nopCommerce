@@ -68,6 +68,7 @@
     <Compile Include="Mapping\Forums\ForumPostVoteMap.cs" />
     <Compile Include="Mapping\Orders\ReturnRequestReason.cs" />
     <Compile Include="Mapping\Orders\ReturnRequestAction.cs" />
+    <Compile Include="Mapping\Shipping\ProductAvailabilityRangeMap.cs" />
     <Compile Include="Mapping\Topics\TopicTemplateMap.cs" />
     <Compile Include="Mapping\Vendors\VendorNoteMap.cs" />
     <Compile Include="QueryableExtensions.cs" />

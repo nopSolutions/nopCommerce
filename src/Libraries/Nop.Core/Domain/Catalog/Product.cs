@@ -266,6 +266,10 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public int ManageInventoryMethodId { get; set; }
         /// <summary>
+        /// Gets or sets a product availability range identifier
+        /// </summary>
+        public int ProductAvailabilityRangeId { get; set; }
+        /// <summary>
         /// Gets or sets a value indicating whether multiple warehouses are used for this product
         /// </summary>
         public bool UseMultipleWarehouses { get; set; }

@@ -24,5 +24,10 @@ namespace Nop.Core.Domain.Payments
         /// Gets or sets a value indicating whether we should bypass 'select payment method' page if we have only one payment method
         /// </summary>
         public bool BypassPaymentMethodSelectionIfOnlyOne { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show payment method descriptions on checkout pages in the public store
+        /// </summary>
+        public bool ShowPaymentMethodDescriptions { get; set; }
     }
 }

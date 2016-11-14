@@ -16,6 +16,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -30,6 +31,7 @@ using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
@@ -73,6 +75,7 @@ namespace Nop.Admin.Controllers
         private readonly IOrderService _orderService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IVendorService _vendorService;
+        private readonly IDateRangeService _dateRangeService;
         private readonly IShippingService _shippingService;
         private readonly IShipmentService _shipmentService;
         private readonly ICurrencyService _currencyService;
@@ -89,6 +92,7 @@ namespace Nop.Admin.Controllers
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IDownloadService _downloadService;
         private readonly ISettingService _settingService;
+        private readonly TaxSettings _taxSettings;
         private readonly VendorSettings _vendorSettings;
 
         #endregion
@@ -119,7 +123,8 @@ namespace Nop.Admin.Controllers
             IStoreService storeService,
             IOrderService orderService,
             IStoreMappingService storeMappingService,
-             IVendorService vendorService,
+            IVendorService vendorService,
+            IDateRangeService dateRangeService,
             IShippingService shippingService,
             IShipmentService shipmentService,
             ICurrencyService currencyService,
@@ -136,6 +141,7 @@ namespace Nop.Admin.Controllers
             IProductAttributeParser productAttributeParser,
             IDownloadService downloadService,
             ISettingService settingService,
+            TaxSettings taxSettings,
             VendorSettings vendorSettings)
         {
             this._productService = productService;
@@ -163,6 +169,7 @@ namespace Nop.Admin.Controllers
             this._orderService = orderService;
             this._storeMappingService = storeMappingService;
             this._vendorService = vendorService;
+            this._dateRangeService = dateRangeService;
             this._shippingService = shippingService;
             this._shipmentService = shipmentService;
             this._currencyService = currencyService;
@@ -179,6 +186,7 @@ namespace Nop.Admin.Controllers
             this._productAttributeParser = productAttributeParser;
             this._downloadService = downloadService;
             this._settingService = settingService;
+            this._taxSettings = taxSettings;
             this._vendorSettings = vendorSettings;
         }
 
@@ -544,62 +552,7 @@ namespace Nop.Admin.Controllers
             }
             return result.ToArray();
         }
-
-        [NonAction]
-        protected virtual void SaveProductTags(Product product, string[] productTags)
-        {
-            if (product == null)
-                throw new ArgumentNullException("product");
-
-            //product tags
-            var existingProductTags = product.ProductTags.ToList();
-            var productTagsToRemove = new List<ProductTag>();
-            foreach (var existingProductTag in existingProductTags)
-            {
-                bool found = false;
-                foreach (string newProductTag in productTags)
-                {
-                    if (existingProductTag.Name.Equals(newProductTag, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found)
-                {
-                    productTagsToRemove.Add(existingProductTag);
-                }
-            }
-            foreach (var productTag in productTagsToRemove)
-            {
-                product.ProductTags.Remove(productTag);
-                _productService.UpdateProduct(product);
-            }
-            foreach (string productTagName in productTags)
-            {
-                ProductTag productTag;
-                var productTag2 = _productTagService.GetProductTagByName(productTagName);
-                if (productTag2 == null)
-                {
-                    //add new product tag
-                    productTag = new ProductTag
-                    {
-                        Name = productTagName
-                    };
-                    _productTagService.InsertProductTag(productTag);
-                }
-                else
-                {
-                    productTag = productTag2;
-                }
-                if (!product.ProductTagExists(productTag.Id))
-                {
-                    product.ProductTags.Add(productTag);
-                    _productService.UpdateProduct(product);
-                }
-            }
-        }
-
+        
         [NonAction]
         protected virtual void PrepareProductModel(ProductModel model, Product product,
             bool setPredefinedValues, bool excludeProperties)
@@ -716,13 +669,28 @@ namespace Nop.Admin.Controllers
                 Text = _localizationService.GetResource("Admin.Catalog.Products.Fields.DeliveryDate.None"),
                 Value = "0"
             });
-            var deliveryDates = _shippingService.GetAllDeliveryDates();
+            var deliveryDates = _dateRangeService.GetAllDeliveryDates();
             foreach (var deliveryDate in deliveryDates)
             {
                 model.AvailableDeliveryDates.Add(new SelectListItem
                 {
                     Text = deliveryDate.Name,
                     Value = deliveryDate.Id.ToString()
+                });
+            }
+
+            //product availability ranges
+            model.AvailableProductAvailabilityRanges.Add(new SelectListItem
+            {
+                Text = _localizationService.GetResource("Admin.Catalog.Products.Fields.ProductAvailabilityRange.None"),
+                Value = "0"
+            });
+            foreach (var range in _dateRangeService.GetAllProductAvailabilityRanges())
+            {
+                model.AvailableProductAvailabilityRanges.Add(new SelectListItem
+                {
+                    Text = range.Name,
+                    Value = range.Id.ToString()
                 });
             }
 
@@ -780,7 +748,7 @@ namespace Nop.Admin.Controllers
 
             //tax categories
             var taxCategories = _taxCategoryService.GetAllTaxCategories();
-            model.AvailableTaxCategories.Add(new SelectListItem { Text = "---", Value = "0" });
+            model.AvailableTaxCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Settings.Tax.TaxCategories.None"), Value = "0" });
             foreach (var tc in taxCategories)
                 model.AvailableTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString(), Selected = product != null && !setPredefinedValues && tc.Id == product.TaxCategoryId });
 
@@ -809,7 +777,7 @@ namespace Nop.Admin.Controllers
                 model.NotifyAdminForQuantityBelow = 1;
                 model.OrderMinimumQuantity = 1;
                 model.OrderMaximumQuantity = 10000;
-
+                model.TaxCategoryId = _taxSettings.DefaultTaxCategoryId;
                 model.UnlimitedDownloads = true;
                 model.IsShipEnabled = true;
                 model.AllowCustomerReviews = true;
@@ -1018,11 +986,7 @@ namespace Nop.Admin.Controllers
             gridModel.Data = products.Select(x =>
             {
                 var productModel = x.ToModel();
-                //little hack here:
-                //ensure that product full descriptions are not returned
-                //otherwise, we can get the following error if products have too long descriptions:
-                //"Error during serialization or deserialization using the JSON JavaScriptSerializer. The length of the string exceeds the value set on the maxJsonLength property. "
-                //also it improves performance
+                //little performance optimization: ensure that "FullDescription" is not returned
                 productModel.FullDescription = "";
 
                 //picture
@@ -1145,7 +1109,7 @@ namespace Nop.Admin.Controllers
                 //discounts
                 SaveDiscountMappings(product, model);
                 //tags
-                SaveProductTags(product, ParseProductTags(model.ProductTags));
+                _productTagService.UpdateProductTags(product, ParseProductTags(model.ProductTags));
                 //warehouses
                 SaveProductWarehouseInventory(product, model);
 
@@ -1268,7 +1232,7 @@ namespace Nop.Admin.Controllers
                 //locales
                 UpdateLocales(product, model);
                 //tags
-                SaveProductTags(product, ParseProductTags(model.ProductTags));
+                _productTagService.UpdateProductTags(product, ParseProductTags(model.ProductTags));
                 //warehouses
                 SaveProductWarehouseInventory(product, model);
                 //categories
@@ -1392,7 +1356,7 @@ namespace Nop.Admin.Controllers
 
                 var newProduct = _copyProductService.CopyProduct(originalProduct,
                     copyModel.Name, copyModel.Published, copyModel.CopyImages);
-                SuccessNotification("The product has been copied successfully");
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Copied"));
                 return RedirectToAction("Edit", new { id = newProduct.Id });
             }
             catch (Exception exc)
@@ -2116,13 +2080,6 @@ namespace Nop.Admin.Controllers
             if (picture == null)
                 throw new ArgumentException("No picture found with the specified id");
 
-            _productService.InsertProductPicture(new ProductPicture
-            {
-                PictureId = pictureId,
-                ProductId = productId,
-                DisplayOrder = displayOrder,
-            });
-
             _pictureService.UpdatePicture(picture.Id,
                 _pictureService.LoadPictureBinary(picture),
                 picture.MimeType,
@@ -2131,6 +2088,13 @@ namespace Nop.Admin.Controllers
                 overrideTitleAttribute);
 
             _pictureService.SetSeoFilename(pictureId, _pictureService.GetPictureSeName(product.Name));
+
+            _productService.InsertProductPicture(new ProductPicture
+            {
+                PictureId = pictureId,
+                ProductId = productId,
+                DisplayOrder = displayOrder,
+            });
 
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }
@@ -2201,9 +2165,6 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            productPicture.DisplayOrder = model.DisplayOrder;
-            _productService.UpdateProductPicture(productPicture);
-
             var picture = _pictureService.GetPictureById(productPicture.PictureId);
             if (picture == null)
                 throw new ArgumentException("No picture found with the specified id");
@@ -2214,6 +2175,9 @@ namespace Nop.Admin.Controllers
                 picture.SeoFilename,
                 model.OverrideAltAttribute,
                 model.OverrideTitleAttribute);
+
+            productPicture.DisplayOrder = model.DisplayOrder;
+            _productService.UpdateProductPicture(productPicture);
 
             return new NullJsonResult();
         }
@@ -2322,7 +2286,9 @@ namespace Nop.Admin.Controllers
                     var psaModel = new ProductSpecificationAttributeModel
                     {
                         Id = x.Id,
+                        AttributeTypeId = x.AttributeTypeId,
                         AttributeTypeName = x.AttributeType.GetLocalizedEnum(_localizationService, _workContext),
+                        AttributeId = x.SpecificationAttributeOption.SpecificationAttribute.Id,
                         AttributeName = x.SpecificationAttributeOption.SpecificationAttribute.Name,
                         AllowFiltering = x.AllowFiltering,
                         ShowOnProductPage = x.ShowOnProductPage,
@@ -2332,6 +2298,7 @@ namespace Nop.Admin.Controllers
                     {
                         case SpecificationAttributeType.Option:
                             psaModel.ValueRaw = HttpUtility.HtmlEncode(x.SpecificationAttributeOption.Name);
+                            psaModel.SpecificationAttributeOptionId = x.SpecificationAttributeOptionId;
                             break;
                         case SpecificationAttributeType.CustomText:
                             psaModel.ValueRaw = HttpUtility.HtmlEncode(x.CustomValue);
@@ -2382,9 +2349,15 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            //we do not allow editing these fields anymore (when we have distinct attribute types)
-            //psa.CustomValue = model.CustomValue;
-            //psa.AllowFiltering = model.AllowFiltering;
+            //we allow filtering and change option only for "Option" attribute type
+            if (model.AttributeTypeId == (int)SpecificationAttributeType.Option)
+            {
+                psa.AllowFiltering = model.AllowFiltering;
+                int specificationAttributeOptionId;
+                if (int.TryParse(model.ValueRaw, out specificationAttributeOptionId))
+                    psa.SpecificationAttributeOptionId = specificationAttributeOptionId;
+            }
+
             psa.ShowOnProductPage = model.ShowOnProductPage;
             psa.DisplayOrder = model.DisplayOrder;
             _specificationAttributeService.UpdateProductSpecificationAttribute(psa);
@@ -3770,6 +3743,7 @@ namespace Nop.Admin.Controllers
                         WeightAdjustment = x.WeightAdjustment,
                         WeightAdjustmentStr = x.AttributeValueType == AttributeValueType.Simple ? x.WeightAdjustment.ToString("G29") : "",
                         Cost = x.Cost,
+                        CustomerEntersQty = x.CustomerEntersQty,
                         Quantity = x.Quantity,
                         IsPreSelected = x.IsPreSelected,
                         DisplayOrder = x.DisplayOrder,
@@ -3885,7 +3859,8 @@ namespace Nop.Admin.Controllers
                     PriceAdjustment = model.PriceAdjustment,
                     WeightAdjustment = model.WeightAdjustment,
                     Cost = model.Cost,
-                    Quantity = model.Quantity,
+                    CustomerEntersQty = model.CustomerEntersQty,
+                    Quantity = model.CustomerEntersQty ? 1 : model.Quantity,
                     IsPreSelected = model.IsPreSelected,
                     DisplayOrder = model.DisplayOrder,
                     PictureId = model.PictureId,
@@ -3957,6 +3932,7 @@ namespace Nop.Admin.Controllers
                 PriceAdjustment = pav.PriceAdjustment,
                 WeightAdjustment = pav.WeightAdjustment,
                 Cost = pav.Cost,
+                CustomerEntersQty = pav.CustomerEntersQty,
                 Quantity = pav.Quantity,
                 IsPreSelected = pav.IsPreSelected,
                 DisplayOrder = pav.DisplayOrder,
@@ -4037,7 +4013,8 @@ namespace Nop.Admin.Controllers
                 pav.PriceAdjustment = model.PriceAdjustment;
                 pav.WeightAdjustment = model.WeightAdjustment;
                 pav.Cost = model.Cost;
-                pav.Quantity = model.Quantity;
+                pav.CustomerEntersQty = model.CustomerEntersQty;
+                pav.Quantity = model.CustomerEntersQty ? 1 : model.Quantity;
                 pav.IsPreSelected = model.IsPreSelected;
                 pav.DisplayOrder = model.DisplayOrder;
                 pav.PictureId = model.PictureId;
@@ -4552,7 +4529,7 @@ namespace Nop.Admin.Controllers
                 {
                     ProductId = product.Id,
                     AttributesXml = attributesXml,
-                    StockQuantity = 10000,
+                    StockQuantity = 0,
                     AllowOutOfStockOrders = false,
                     Sku = null,
                     ManufacturerPartNumber = null,

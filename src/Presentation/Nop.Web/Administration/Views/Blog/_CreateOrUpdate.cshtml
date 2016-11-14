@@ -77,7 +77,7 @@
                     source: initialBlogTags
                 },
                 delimiter: ',',
-                placeholder: 'Enter tags ...'
+                placeholder: '@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Tags.Placeholder")'
             });
         });
     </script>
@@ -231,6 +231,18 @@
                         @Html.ValidationMessageFor(model => model.SeName)
                     </div>
                 </div>
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#@Html.FieldIdFor(model => model.SeName)').on('input propertychange paste', function () {
+                            var parameters = {
+                                entityId: '@Model.Id',
+                                entityName: 'BlogPost',
+                                seName: $(this).val()
+                            };
+                            warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.FieldNameFor(model => model.SeName)', parameters);
+                        });
+                    });
+                </script>
             </div>
         </div>
     </div>

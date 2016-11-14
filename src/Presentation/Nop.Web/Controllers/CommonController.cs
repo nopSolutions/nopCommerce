@@ -74,7 +74,6 @@ namespace Nop.Web.Controllers
         private readonly IPageHeadBuilder _pageHeadBuilder;
         private readonly IPictureService _pictureService;
 
-        private readonly CustomerSettings _customerSettings;
         private readonly TaxSettings _taxSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
@@ -151,8 +150,6 @@ namespace Nop.Web.Controllers
             this._pageHeadBuilder = pageHeadBuilder;
             this._pictureService = pictureService;
 
-
-            this._customerSettings = customerSettings;
             this._taxSettings = taxSettings;
             this._catalogSettings = catalogSettings;
             this._storeInformationSettings = storeInformationSettings;
@@ -421,7 +418,7 @@ namespace Nop.Web.Controllers
             var model = new HeaderLinksModel
             {
                 IsAuthenticated = customer.IsRegistered(),
-                CustomerEmailUsername = customer.IsRegistered() ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
+                CustomerName = customer.IsRegistered() ? customer.FormatUserName() : "",
                 ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
                 AllowPrivateMessages = customer.IsRegistered() && _forumSettings.AllowPrivateMessages,
@@ -452,7 +449,7 @@ namespace Nop.Web.Controllers
 
             var model = new AdminHeaderLinksModel
             {
-                ImpersonatedCustomerEmailUsername = customer.IsRegistered() ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
+                ImpersonatedCustomerName = customer.IsRegistered() ? customer.FormatUserName() : "",
                 IsCustomerImpersonated = _workContext.OriginalCustomerIfImpersonated != null,
                 DisplayAdminLink = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel),
                 EditPageUrl = _pageHeadBuilder.GetEditPageUrl()
@@ -924,6 +921,7 @@ namespace Nop.Web.Controllers
 
                 var disallowPaths = new List<string>
                 {
+                    "/admin",
                     "/bin/",
                     "/content/files/",
                     "/content/files/exportimport/",
@@ -1030,7 +1028,7 @@ namespace Nop.Web.Controllers
                     {
                         foreach (var path in localizableDisallowPaths)
                         {
-                            sb.AppendFormat("Disallow: {0}{1}", language.UniqueSeoCode, path);
+                            sb.AppendFormat("Disallow: /{0}{1}", language.UniqueSeoCode, path);
                             sb.Append(newLine);
                         }
                     }

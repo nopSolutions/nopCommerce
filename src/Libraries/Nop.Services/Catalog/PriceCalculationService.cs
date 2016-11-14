@@ -68,11 +68,12 @@ namespace Nop.Services.Catalog
         {
             public ProductPriceForCaching()
             {
-                AppliedDiscountIds = new List<int>();
+                this.AppliedDiscounts = new List<DiscountForCaching>();
             }
+
             public decimal Price { get; set; }
             public decimal AppliedDiscountAmount { get; set; }
-            public List<int> AppliedDiscountIds { get; set; }
+            public List<DiscountForCaching> AppliedDiscounts { get; set; }
         }
         #endregion
 
@@ -84,21 +85,20 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
         /// <returns>Discounts</returns>
-        protected virtual IList<Discount> GetAllowedDiscountsAppliedToProduct(Product product, Customer customer)
+        protected virtual IList<DiscountForCaching> GetAllowedDiscountsAppliedToProduct(Product product, Customer customer)
         {
-            var allowedDiscounts = new List<Discount>();
+            var allowedDiscounts = new List<DiscountForCaching>();
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
             if (product.HasDiscountsApplied)
             {
-                //we use this property ("HasDiscountsApplied") for performance optimziation to avoid unnecessary database calls
+                //we use this property ("HasDiscountsApplied") for performance optimization to avoid unnecessary database calls
                 foreach (var discount in product.AppliedDiscounts)
                 {
                     if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                        discount.DiscountType == DiscountType.AssignedToSkus &&
-                        !allowedDiscounts.ContainsDiscount(discount))
-                        allowedDiscounts.Add(discount);
+                        discount.DiscountType == DiscountType.AssignedToSkus)
+                        allowedDiscounts.Add(discount.MapDiscount());
                 }
             }
 
@@ -111,63 +111,41 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
         /// <returns>Discounts</returns>
-        protected virtual IList<Discount> GetAllowedDiscountsAppliedToCategories(Product product, Customer customer)
+        protected virtual IList<DiscountForCaching> GetAllowedDiscountsAppliedToCategories(Product product, Customer customer)
         {
-            var allowedDiscounts = new List<Discount>();
+            var allowedDiscounts = new List<DiscountForCaching>();
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
-            foreach (var discount in _discountService.GetAllDiscounts(DiscountType.AssignedToCategories))
+            //load cached discount models (performance optimization)
+            foreach (var discount in _discountService.GetAllDiscountsForCaching(DiscountType.AssignedToCategories))
             {
                 //load identifier of categories with this discount applied to
-                var cacheKey = string.Format(PriceCacheEventConsumer.DISCOUNT_CATEGORY_IDS_MODEL_KEY,
-                    discount.Id,
-                    string.Join(",", customer.GetCustomerRoleIds()),
-                    _storeContext.CurrentStore.Id);
-                var appliedToCategoryIds = _cacheManager.Get(cacheKey, () =>
-                {
-                    var categoryIds = new List<int>();
-                    foreach (var category in discount.AppliedToCategories)
-                    {
-                        if (!categoryIds.Contains(category.Id))
-                            categoryIds.Add(category.Id);
-                        if (discount.AppliedToSubCategories)
-                        {
-                            //include subcategories
-                            foreach (var childCategoryId in _categoryService
-                                .GetAllCategoriesByParentCategoryId(category.Id, false, true)
-                                .Select(x => x.Id))
-                            {
-                                if (!categoryIds.Contains(childCategoryId))
-                                    categoryIds.Add(childCategoryId);
-                            }
-                        }
-                    }
-                    return categoryIds;
-                });
+                var discountCategoryIds = _discountService.GetAppliedCategoryIds(discount, customer);
 
                 //compare with categories of this product
-                if (appliedToCategoryIds.Any())
+                var productCategoryIds = new List<int>();
+                if (discountCategoryIds.Any())
                 {
-                    //load identifier of categories with this discount applied to
-                    var cacheKey2 = string.Format(PriceCacheEventConsumer.DISCOUNT_PRODUCT_CATEGORY_IDS_MODEL_KEY,
+                    //load identifier of categories of this product
+                    var cacheKey = string.Format(PriceCacheEventConsumer.PRODUCT_CATEGORY_IDS_MODEL_KEY,
                         product.Id,
                         string.Join(",", customer.GetCustomerRoleIds()),
                         _storeContext.CurrentStore.Id);
-                    var categoryIds = _cacheManager.Get(cacheKey2, () =>
+                    productCategoryIds = _cacheManager.Get(cacheKey, () =>
                         _categoryService
                         .GetProductCategoriesByProductId(product.Id)
                         .Select(x => x.CategoryId)
                         .ToList());
-                    foreach (var id in categoryIds)
+                }
+
+                foreach (var categoryId in productCategoryIds)
+                {
+                    if (discountCategoryIds.Contains(categoryId))
                     {
-                        if (appliedToCategoryIds.Contains(id))
-                        {
-                            if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                                discount.DiscountType == DiscountType.AssignedToCategories &&
-                                !allowedDiscounts.ContainsDiscount(discount))
-                                allowedDiscounts.Add(discount);
-                        }
+                        if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                            !allowedDiscounts.ContainsDiscount(discount))
+                            allowedDiscounts.Add(discount);
                     }
                 }
             }
@@ -181,44 +159,40 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
         /// <returns>Discounts</returns>
-        protected virtual IList<Discount> GetAllowedDiscountsAppliedToManufacturers(Product product, Customer customer)
+        protected virtual IList<DiscountForCaching> GetAllowedDiscountsAppliedToManufacturers(Product product, Customer customer)
         {
-            var allowedDiscounts = new List<Discount>();
+            var allowedDiscounts = new List<DiscountForCaching>();
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
-            foreach (var discount in _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers))
+            foreach (var discount in _discountService.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers))
             {
-                //load identifier of categories with this discount applied to
-                var cacheKey = string.Format(PriceCacheEventConsumer.DISCOUNT_MANUFACTURER_IDS_MODEL_KEY,
-                    discount.Id,
-                    string.Join(",", customer.GetCustomerRoleIds()),
-                    _storeContext.CurrentStore.Id);
-                var appliedToManufacturerIds = _cacheManager.Get(cacheKey,
-                    () => discount.AppliedToManufacturers.Select(x => x.Id).ToList());
+                //load identifier of manufacturers with this discount applied to
+                var discountManufacturerIds = _discountService.GetAppliedManufacturerIds(discount, customer);
 
                 //compare with manufacturers of this product
-                if (appliedToManufacturerIds.Any())
+                var productManufacturerIds = new List<int>();
+                if (discountManufacturerIds.Any())
                 {
-                    //load identifier of categories with this discount applied to
-                    var cacheKey2 = string.Format(PriceCacheEventConsumer.DISCOUNT_PRODUCT_MANUFACTURER_IDS_MODEL_KEY,
+                    //load identifier of manufacturers of this product
+                    var cacheKey = string.Format(PriceCacheEventConsumer.PRODUCT_MANUFACTURER_IDS_MODEL_KEY,
                         product.Id,
                         string.Join(",", customer.GetCustomerRoleIds()),
                         _storeContext.CurrentStore.Id);
-                    var manufacturerIds = _cacheManager.Get(cacheKey2, () =>
+                    productManufacturerIds = _cacheManager.Get(cacheKey, () =>
                         _manufacturerService
                         .GetProductManufacturersByProductId(product.Id)
                         .Select(x => x.ManufacturerId)
                         .ToList());
-                    foreach (var id in manufacturerIds)
+                }
+
+                foreach (var manufacturerId in productManufacturerIds)
+                {
+                    if (discountManufacturerIds.Contains(manufacturerId))
                     {
-                        if (appliedToManufacturerIds.Contains(id))
-                        {
-                            if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                                discount.DiscountType == DiscountType.AssignedToManufacturers &&
-                                !allowedDiscounts.ContainsDiscount(discount))
-                                allowedDiscounts.Add(discount);
-                        }
+                        if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                            !allowedDiscounts.ContainsDiscount(discount))
+                            allowedDiscounts.Add(discount);
                     }
                 }
             }
@@ -232,9 +206,9 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
         /// <returns>Discounts</returns>
-        protected virtual IList<Discount> GetAllowedDiscounts(Product product, Customer customer)
+        protected virtual IList<DiscountForCaching> GetAllowedDiscounts(Product product, Customer customer)
         {
-            var allowedDiscounts = new List<Discount>();
+            var allowedDiscounts = new List<DiscountForCaching>();
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
@@ -304,7 +278,7 @@ namespace Nop.Services.Catalog
         protected virtual decimal GetDiscountAmount(Product product,
             Customer customer,
             decimal productPriceWithoutDiscount,
-            out List<Discount> appliedDiscounts)
+            out List<DiscountForCaching> appliedDiscounts)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -350,7 +324,7 @@ namespace Nop.Services.Catalog
             int quantity = 1)
         {
             decimal discountAmount;
-            List<Discount> appliedDiscounts;
+            List<DiscountForCaching> appliedDiscounts;
             return GetFinalPrice(product, customer, additionalCharge, includeDiscounts,
                 quantity, out discountAmount, out appliedDiscounts);
         }
@@ -371,7 +345,7 @@ namespace Nop.Services.Catalog
             bool includeDiscounts,
             int quantity,
             out decimal discountAmount,
-            out List<Discount> appliedDiscounts)
+            out List<DiscountForCaching> appliedDiscounts)
         {
             return GetFinalPrice(product, customer,
                 additionalCharge, includeDiscounts, quantity,
@@ -399,7 +373,7 @@ namespace Nop.Services.Catalog
             DateTime? rentalStartDate,
             DateTime? rentalEndDate,
             out decimal discountAmount,
-            out List<Discount> appliedDiscounts)
+            out List<DiscountForCaching> appliedDiscounts)
         {
             return GetFinalPrice(product, customer, null, additionalCharge, includeDiscounts, quantity,
                 rentalStartDate, rentalEndDate, out discountAmount, out appliedDiscounts);
@@ -427,13 +401,13 @@ namespace Nop.Services.Catalog
             DateTime? rentalStartDate,
             DateTime? rentalEndDate,
             out decimal discountAmount,
-            out List<Discount> appliedDiscounts)
+            out List<DiscountForCaching> appliedDiscounts)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
             discountAmount = decimal.Zero;
-            appliedDiscounts = new List<Discount>();
+            appliedDiscounts = new List<DiscountForCaching>();
 
             var cacheKey = string.Format(PriceCacheEventConsumer.PRODUCT_PRICE_MODEL_KEY,
                 product.Id,
@@ -479,13 +453,13 @@ namespace Nop.Services.Catalog
                 if (includeDiscounts)
                 {
                     //discount
-                    List<Discount> tmpAppliedDiscounts;
+                    List<DiscountForCaching> tmpAppliedDiscounts;
                     decimal tmpDiscountAmount = GetDiscountAmount(product, customer, price, out tmpAppliedDiscounts);
                     price = price - tmpDiscountAmount;
 
                     if (tmpAppliedDiscounts != null)
                     {
-                        result.AppliedDiscountIds = tmpAppliedDiscounts.Select(x=>x.Id).ToList();
+                        result.AppliedDiscounts = tmpAppliedDiscounts;
                         result.AppliedDiscountAmount = tmpDiscountAmount;
                     }
                 }
@@ -499,17 +473,9 @@ namespace Nop.Services.Catalog
 
             if (includeDiscounts)
             {
-                //Discount instance cannnot be cached between requests (when "catalogSettings.CacheProductPrices" is "true)
-                //This is limitation of Entity Framework
-                //That's why we load it here after working with cache
-                foreach (var appliedDiscountId in cachedPrice.AppliedDiscountIds)
+                if (cachedPrice.AppliedDiscounts.Any())
                 {
-                    var appliedDiscount = _discountService.GetDiscountById(appliedDiscountId);
-                    if (appliedDiscount != null)
-                        appliedDiscounts.Add(appliedDiscount);
-                }
-                if (appliedDiscounts.Any())
-                {
+                    appliedDiscounts.AddRange(cachedPrice.AppliedDiscounts);
                     discountAmount = cachedPrice.AppliedDiscountAmount;
                 }
             }
@@ -529,7 +495,7 @@ namespace Nop.Services.Catalog
             bool includeDiscounts = true)
         {
             decimal discountAmount;
-            List<Discount> appliedDiscounts;
+            List<DiscountForCaching> appliedDiscounts;
             return GetUnitPrice(shoppingCartItem, includeDiscounts,
                 out discountAmount, out appliedDiscounts);
         }
@@ -544,7 +510,7 @@ namespace Nop.Services.Catalog
         public virtual decimal GetUnitPrice(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<Discount> appliedDiscounts)
+            out List<DiscountForCaching> appliedDiscounts)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
@@ -585,7 +551,7 @@ namespace Nop.Services.Catalog
             DateTime? rentalStartDate, DateTime? rentalEndDate,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<Discount> appliedDiscounts)
+            out List<DiscountForCaching> appliedDiscounts)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -594,7 +560,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("customer");
 
             discountAmount = decimal.Zero;
-            appliedDiscounts = new List<Discount>();
+            appliedDiscounts = new List<DiscountForCaching>();
 
             decimal finalPrice;
 
@@ -676,7 +642,7 @@ namespace Nop.Services.Catalog
             bool includeDiscounts = true)
         {
             decimal discountAmount;
-            List<Discount> appliedDiscounts;
+            List<DiscountForCaching> appliedDiscounts;
             return GetSubTotal(shoppingCartItem, includeDiscounts, out discountAmount, out appliedDiscounts);
         }
         /// <summary>
@@ -690,7 +656,7 @@ namespace Nop.Services.Catalog
         public virtual decimal GetSubTotal(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<Discount> appliedDiscounts)
+            out List<DiscountForCaching> appliedDiscounts)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
@@ -705,7 +671,7 @@ namespace Nop.Services.Catalog
             if (appliedDiscounts.Any())
             {
                 //we can properly use "MaximumDiscountedQuantity" property only for one discount (not cumulative ones)
-                Discount oneAndOnlyDiscount = null;
+                DiscountForCaching oneAndOnlyDiscount = null;
                 if (appliedDiscounts.Count == 1)
                     oneAndOnlyDiscount = appliedDiscounts.First();
 

@@ -44,7 +44,6 @@ namespace Nop.Services.Shipping
         #region Fields
 
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
-        private readonly IRepository<DeliveryDate> _deliveryDateRepository;
         private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly ILogger _logger;
         private readonly IProductService _productService;
@@ -68,7 +67,6 @@ namespace Nop.Services.Shipping
         /// Ctor
         /// </summary>
         /// <param name="shippingMethodRepository">Shipping method repository</param>
-        /// <param name="deliveryDateRepository">Delivery date repository</param>
         /// <param name="warehouseRepository">Warehouse repository</param>
         /// <param name="logger">Logger</param>
         /// <param name="productService">Product service</param>
@@ -84,7 +82,6 @@ namespace Nop.Services.Shipping
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
         /// <param name="cacheManager">Cache manager</param>
         public ShippingService(IRepository<ShippingMethod> shippingMethodRepository,
-            IRepository<DeliveryDate> deliveryDateRepository,
             IRepository<Warehouse> warehouseRepository,
             ILogger logger,
             IProductService productService,
@@ -101,7 +98,6 @@ namespace Nop.Services.Shipping
             ICacheManager cacheManager)
         {
             this._shippingMethodRepository = shippingMethodRepository;
-            this._deliveryDateRepository = deliveryDateRepository;
             this._warehouseRepository = warehouseRepository;
             this._logger = logger;
             this._productService = productService;
@@ -119,7 +115,7 @@ namespace Nop.Services.Shipping
         }
 
         #endregion
-        
+
         #region Methods
 
         #region Shipping rate computation methods
@@ -127,13 +123,14 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Load active shipping rate computation methods
         /// </summary>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Shipping rate computation methods</returns>
-        public virtual IList<IShippingRateComputationMethod> LoadActiveShippingRateComputationMethods(int storeId = 0)
+        public virtual IList<IShippingRateComputationMethod> LoadActiveShippingRateComputationMethods(Customer customer = null, int storeId = 0)
         {
-            return LoadAllShippingRateComputationMethods(storeId)
-                   .Where(provider => _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Contains(provider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase))
-                   .ToList();
+            return LoadAllShippingRateComputationMethods(customer, storeId)
+                .Where(provider => _shippingSettings.ActiveShippingRateComputationMethodSystemNames
+                    .Contains(provider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase)).ToList();
         }
 
         /// <summary>
@@ -153,11 +150,12 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Load all shipping rate computation methods
         /// </summary>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Shipping rate computation methods</returns>
-        public virtual IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods(int storeId = 0)
+        public virtual IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods(Customer customer = null, int storeId = 0)
         {
-            return _pluginFinder.GetPlugins<IShippingRateComputationMethod>(storeId: storeId).ToList();
+            return _pluginFinder.GetPlugins<IShippingRateComputationMethod>(customer: customer, storeId: storeId).ToList();
         }
 
         #endregion
@@ -256,81 +254,6 @@ namespace Nop.Services.Shipping
 
         #endregion
 
-        #region Delivery dates
-
-        /// <summary>
-        /// Deletes a delivery date
-        /// </summary>
-        /// <param name="deliveryDate">The delivery date</param>
-        public virtual void DeleteDeliveryDate(DeliveryDate deliveryDate)
-        {
-            if (deliveryDate == null)
-                throw new ArgumentNullException("deliveryDate");
-
-            _deliveryDateRepository.Delete(deliveryDate);
-
-            //event notification
-            _eventPublisher.EntityDeleted(deliveryDate);
-        }
-
-        /// <summary>
-        /// Gets a delivery date
-        /// </summary>
-        /// <param name="deliveryDateId">The delivery date identifier</param>
-        /// <returns>Delivery date</returns>
-        public virtual DeliveryDate GetDeliveryDateById(int deliveryDateId)
-        {
-            if (deliveryDateId == 0)
-                return null;
-
-            return _deliveryDateRepository.GetById(deliveryDateId);
-        }
-
-        /// <summary>
-        /// Gets all delivery dates
-        /// </summary>
-        /// <returns>Delivery dates</returns>
-        public virtual IList<DeliveryDate> GetAllDeliveryDates()
-        {
-            var query = from dd in _deliveryDateRepository.Table
-                        orderby dd.DisplayOrder
-                        select dd;
-            var deliveryDates = query.ToList();
-            return deliveryDates;
-        }
-
-        /// <summary>
-        /// Inserts a delivery date
-        /// </summary>
-        /// <param name="deliveryDate">Delivery date</param>
-        public virtual void InsertDeliveryDate(DeliveryDate deliveryDate)
-        {
-            if (deliveryDate == null)
-                throw new ArgumentNullException("deliveryDate");
-
-            _deliveryDateRepository.Insert(deliveryDate);
-
-            //event notification
-            _eventPublisher.EntityInserted(deliveryDate);
-        }
-
-        /// <summary>
-        /// Updates the delivery date
-        /// </summary>
-        /// <param name="deliveryDate">Delivery date</param>
-        public virtual void UpdateDeliveryDate(DeliveryDate deliveryDate)
-        {
-            if (deliveryDate == null)
-                throw new ArgumentNullException("deliveryDate");
-
-            _deliveryDateRepository.Update(deliveryDate);
-
-            //event notification
-            _eventPublisher.EntityUpdated(deliveryDate);
-        }
-
-        #endregion
-
         #region Warehouses
 
         /// <summary>
@@ -421,12 +344,13 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Load active pickup point providers
         /// </summary>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Pickup point providers</returns>
-        public virtual IList<IPickupPointProvider> LoadActivePickupPointProviders(int storeId = 0)
+        public virtual IList<IPickupPointProvider> LoadActivePickupPointProviders(Customer customer = null, int storeId = 0)
         {
-            return LoadAllPickupPointProviders(storeId).Where(provider =>
-                _shippingSettings.ActivePickupPointProviderSystemNames.Contains(provider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase)).ToList();
+            return LoadAllPickupPointProviders(customer, storeId).Where(provider => _shippingSettings.ActivePickupPointProviderSystemNames
+                .Contains(provider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase)).ToList();
         }
 
         /// <summary>
@@ -446,11 +370,12 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Load all pickup point providers
         /// </summary>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Pickup point providers</returns>
-        public virtual IList<IPickupPointProvider> LoadAllPickupPointProviders(int storeId = 0)
+        public virtual IList<IPickupPointProvider> LoadAllPickupPointProviders(Customer customer = null, int storeId = 0)
         {
-            return _pluginFinder.GetPlugins<IPickupPointProvider>(storeId: storeId).ToList();
+            return _pluginFinder.GetPlugins<IPickupPointProvider>(customer: customer, storeId: storeId).ToList();
         }
 
         #endregion
@@ -838,11 +763,12 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <param name="shippingAddress">Shipping address</param>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <param name="allowedShippingRateComputationMethodSystemName">Filter by shipping rate computation method identifier; null to load shipping options of all shipping rate computation methods</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Shipping options</returns>
         public virtual GetShippingOptionResponse GetShippingOptions(IList<ShoppingCartItem> cart,
-            Address shippingAddress, string allowedShippingRateComputationMethodSystemName = "", 
+            Address shippingAddress, Customer customer = null, string allowedShippingRateComputationMethodSystemName = "", 
             int storeId = 0)
         {
             if (cart == null)
@@ -855,7 +781,7 @@ namespace Nop.Services.Shipping
             var shippingOptionRequests = CreateShippingOptionRequests(cart, shippingAddress, storeId, out shippingFromMultipleLocations);
             result.ShippingFromMultipleLocations = shippingFromMultipleLocations;
 
-            var shippingRateComputationMethods = LoadActiveShippingRateComputationMethods(storeId);
+            var shippingRateComputationMethods = LoadActiveShippingRateComputationMethods(customer, storeId);
             //filter by system name
             if (!String.IsNullOrWhiteSpace(allowedShippingRateComputationMethodSystemName))
             {
@@ -950,13 +876,14 @@ namespace Nop.Services.Shipping
         /// Gets available pickup points
         /// </summary>
         /// <param name="address">Address</param>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <param name="providerSystemName">Filter by provider identifier; null to load pickup points of all providers</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Pickup points</returns>
-        public virtual GetPickupPointsResponse GetPickupPoints(Address address, string providerSystemName = null, int storeId = 0)
+        public virtual GetPickupPointsResponse GetPickupPoints(Address address, Customer customer = null, string providerSystemName = null, int storeId = 0)
         {
             var result = new GetPickupPointsResponse();
-            var pickupPointsProviders = LoadActivePickupPointProviders(storeId);
+            var pickupPointsProviders = LoadActivePickupPointProviders(customer, storeId);
             if (!string.IsNullOrEmpty(providerSystemName))
                 pickupPointsProviders = pickupPointsProviders
                     .Where(x => x.PluginDescriptor.SystemName.Equals(providerSystemName, StringComparison.InvariantCultureIgnoreCase)).ToList();

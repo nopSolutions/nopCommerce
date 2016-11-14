@@ -11,6 +11,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
@@ -26,6 +27,7 @@ using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
@@ -68,6 +70,7 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IProductTagService _productTagService;
         private readonly IOrderReportService _orderReportService;
+        private readonly IOrderService _orderService;
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
@@ -75,6 +78,7 @@ namespace Nop.Web.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IShippingService _shippingService;
+        private readonly IDateRangeService _dateRangeService;
         private readonly IEventPublisher _eventPublisher;
         private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -113,12 +117,14 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService,
             IProductTagService productTagService,
             IOrderReportService orderReportService,
+            IOrderService orderService,
             IAclService aclService,
             IStoreMappingService storeMappingService,
             IPermissionService permissionService,
             IDownloadService downloadService,
             ICustomerActivityService customerActivityService,
             IProductAttributeParser productAttributeParser,
+            IDateRangeService dateRangeService,
             IShippingService shippingService,
             IEventPublisher eventPublisher,
             MediaSettings mediaSettings,
@@ -154,6 +160,7 @@ namespace Nop.Web.Controllers
             this._workflowMessageService = workflowMessageService;
             this._productTagService = productTagService;
             this._orderReportService = orderReportService;
+            this._orderService = orderService;
             this._aclService = aclService;
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
@@ -161,6 +168,7 @@ namespace Nop.Web.Controllers
             this._customerActivityService = customerActivityService;
             this._productAttributeParser = productAttributeParser;
             this._shippingService = shippingService;
+            this._dateRangeService = dateRangeService;
             this._eventPublisher = eventPublisher;
             this._mediaSettings = mediaSettings;
             this._catalogSettings = catalogSettings;
@@ -214,14 +222,15 @@ namespace Nop.Web.Controllers
                 MetaTitle = product.GetLocalized(x => x.MetaTitle),
                 SeName = product.GetSeName(),
                 ProductType = product.ProductType,
-                ShowSku = _catalogSettings.ShowProductSku,
+                ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage,
                 Sku = product.Sku,
                 ShowManufacturerPartNumber = _catalogSettings.ShowManufacturerPartNumber,
                 FreeShippingNotificationEnabled = _catalogSettings.ShowFreeShippingNotification,
                 ManufacturerPartNumber = product.ManufacturerPartNumber,
                 ShowGtin = _catalogSettings.ShowGtin,
                 Gtin = product.Gtin,
-                StockAvailability = product.FormatStockMessage("", _localizationService, _productAttributeParser),
+                ManageInventoryMethod = product.ManageInventoryMethod,
+                StockAvailability = product.FormatStockMessage("", _localizationService, _productAttributeParser, _dateRangeService),
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
                 DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts
             };
@@ -239,7 +248,7 @@ namespace Nop.Web.Controllers
             {
                 model.IsFreeShipping = product.IsFreeShipping;
                 //delivery date
-                var deliveryDate = _shippingService.GetDeliveryDateById(product.DeliveryDateId);
+                var deliveryDate = _dateRangeService.GetDeliveryDateById(product.DeliveryDateId);
                 if (deliveryDate != null)
                 {
                     model.DeliveryDate = deliveryDate.GetLocalized(dd => dd.Name);
@@ -400,9 +409,7 @@ namespace Nop.Web.Controllers
                 var defaultPictureModel = new PictureModel
                 {
                     ImageUrl = _pictureService.GetPictureUrl(defaultPicture, defaultPictureSize, !isAssociatedProduct),
-                    FullSizeImageUrl = _pictureService.GetPictureUrl(defaultPicture, 0, !isAssociatedProduct),
-                    Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), model.Name),
-                    AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), model.Name),
+                    FullSizeImageUrl = _pictureService.GetPictureUrl(defaultPicture, 0, !isAssociatedProduct)
                 };
                 //"title" attribute
                 defaultPictureModel.Title = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.TitleAttribute)) ?
@@ -660,7 +667,9 @@ namespace Nop.Web.Controllers
                             Id = attributeValue.Id,
                             Name = attributeValue.GetLocalized(x => x.Name),
                             ColorSquaresRgb = attributeValue.ColorSquaresRgb, //used with "Color squares" attribute type
-                            IsPreSelected = attributeValue.IsPreSelected
+                            IsPreSelected = attributeValue.IsPreSelected,
+                            CustomerEntersQty = attributeValue.CustomerEntersQty,
+                            Quantity = attributeValue.Quantity
                         };
                         attributeModel.Values.Add(valueModel);
 
@@ -729,14 +738,31 @@ namespace Nop.Web.Controllers
                                     foreach (var attributeValue in selectedValues)
                                         foreach (var item in attributeModel.Values)
                                             if (attributeValue.Id == item.Id)
+                                            {
                                                 item.IsPreSelected = true;
+                                                
+                                                //set customer entered quantity
+                                                if (attributeValue.CustomerEntersQty)
+                                                    item.Quantity = attributeValue.Quantity;
+                                            }
                                 }
                             }
                             break;
                         case AttributeControlType.ReadonlyCheckboxes:
                             {
-                                //do nothing
                                 //values are already pre-set
+
+                                //set customer entered quantity
+                                if (!string.IsNullOrEmpty(updatecartitem.AttributesXml))
+                                {
+                                    foreach (var attributeValue in _productAttributeParser.ParseProductAttributeValues(updatecartitem.AttributesXml)
+                                        .Where(value => value.CustomerEntersQty))
+                                    {
+                                        var item = attributeModel.Values.FirstOrDefault(value => value.Id == attributeValue.Id);
+                                        if (item != null)
+                                            item.Quantity = attributeValue.Quantity;
+                                    }
+                                }
                             }
                             break;
                         case AttributeControlType.TextBox:
@@ -943,25 +969,18 @@ namespace Nop.Web.Controllers
             if (product == null || product.Deleted)
                 return InvokeHttp404();
 
-            //published?
-            if (!_catalogSettings.AllowViewUnpublishedProductPage)
-            {
-                //Check whether the current user has a "Manage catalog" permission
-                //It allows him to preview a product before publishing
-                if (!product.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                    return InvokeHttp404();
-            }
-
-            //ACL (access control list)
-            if (!_aclService.Authorize(product))
-                return InvokeHttp404();
-
-            //Store mapping
-            if (!_storeMappingService.Authorize(product))
-                return InvokeHttp404();
-
-            //availability dates
-            if (!product.IsAvailable())
+            var notAvailable =
+                //published?
+                (!product.Published && !_catalogSettings.AllowViewUnpublishedProductPage) ||
+                //ACL (access control list) 
+                !_aclService.Authorize(product) ||
+                //Store mapping
+                !_storeMappingService.Authorize(product) ||
+                //availability dates
+                !product.IsAvailable();
+            //Check whether the current user has a "Manage products" permission (usually a store owner)
+            //We should allows him (her) to use "Preview" functionality
+            if (notAvailable && !_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return InvokeHttp404();
 
             //visible individually?
@@ -1002,8 +1021,15 @@ namespace Nop.Web.Controllers
             _recentlyViewedProductsService.AddProductToRecentlyViewedList(product.Id);
 
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                DisplayEditLink(Url.Action("Edit", "Product", new { id = product.Id, area = "Admin" }));
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) &&
+                _permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+            {
+                //a vendor should have access only to his products
+                if (_workContext.CurrentVendor == null || _workContext.CurrentVendor.Id == product.VendorId)
+                {
+                    DisplayEditLink(Url.Action("Edit", "Product", new { id = product.Id, area = "Admin" }));
+                }
+            }
 
             //activity log
             _customerActivityService.InsertActivity("PublicStore.ViewProduct", _localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name);
@@ -1170,7 +1196,7 @@ namespace Nop.Web.Controllers
                                     DateTime.UtcNow);
 
             if (!_catalogSettings.NewProductsEnabled)
-                return new RssActionResult { Feed = feed };
+                return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
 
             var items = new List<SyndicationItem>();
 
@@ -1197,7 +1223,7 @@ namespace Nop.Web.Controllers
 
             }
             feed.Items = items;
-            return new RssActionResult { Feed = feed };
+            return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
 
         #endregion
@@ -1265,6 +1291,11 @@ namespace Nop.Web.Controllers
             //only registered users can leave reviews
             if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
                 ModelState.AddModelError("", _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews"));
+
+            if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing &&
+                !_orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id, productId: productId, osIds: new List<int> { (int)OrderStatus.Complete }).Any())
+                    ModelState.AddModelError(string.Empty, _localizationService.GetResource("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
+            
             //default value
             model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
             return View(model);
@@ -1290,6 +1321,10 @@ namespace Nop.Web.Controllers
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews"));
             }
+
+            if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing && 
+                !_orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id, productId: productId, osIds: new List<int> { (int)OrderStatus.Complete }).Any())
+                    ModelState.AddModelError(string.Empty, _localizationService.GetResource("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
 
             if (ModelState.IsValid)
             {

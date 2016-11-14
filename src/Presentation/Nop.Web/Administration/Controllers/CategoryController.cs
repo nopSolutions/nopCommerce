@@ -159,7 +159,7 @@ namespace Nop.Admin.Controllers
 
             model.AvailableCategories.Add(new SelectListItem
             {
-                Text = "[None]",
+                Text = _localizationService.GetResource("Admin.Catalog.Categories.Fields.Parent.None"),
                 Value = "0"
             });
             var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);

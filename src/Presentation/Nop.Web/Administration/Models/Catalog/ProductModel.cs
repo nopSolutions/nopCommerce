@@ -29,6 +29,7 @@ namespace Nop.Admin.Models.Catalog
             AvailableProductTemplates = new List<SelectListItem>();
             AvailableTaxCategories = new List<SelectListItem>();
             AvailableDeliveryDates = new List<SelectListItem>();
+            AvailableProductAvailabilityRanges = new List<SelectListItem>();
             AvailableWarehouses = new List<SelectListItem>();
             AvailableProductAttributes = new List<SelectListItem>();
 
@@ -231,6 +232,10 @@ namespace Nop.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ManageInventoryMethod")]
         public int ManageInventoryMethodId { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductAvailabilityRange")]
+        public int ProductAvailabilityRangeId { get; set; }
+        public IList<SelectListItem> AvailableProductAvailabilityRanges { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.UseMultipleWarehouses")]
         public bool UseMultipleWarehouses { get; set; }
@@ -834,6 +839,9 @@ namespace Nop.Admin.Models.Catalog
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Cost")]
             public decimal Cost { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.CustomerEntersQty")]
+            public bool CustomerEntersQty { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Quantity")]
             public int Quantity { get; set; }

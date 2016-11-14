@@ -19,6 +19,7 @@ using Nop.Core.Plugins;
 using Nop.Plugin.Shipping.UPS.Domain;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
+using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
@@ -88,7 +89,7 @@ namespace Nop.Plugin.Shipping.UPS
 
         private string CreateRequest(string accessKey, string username, string password,
             GetShippingOptionRequest getShippingOptionRequest, UPSCustomerClassification customerClassification,
-            UPSPickupType pickupType, UPSPackagingType packagingType)
+            UPSPickupType pickupType, UPSPackagingType packagingType, bool saturdayDelivery)
         {
             string zipPostalCodeFrom = getShippingOptionRequest.ZipPostalCodeFrom;
             string zipPostalCodeTo = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
@@ -109,7 +110,6 @@ namespace Nop.Plugin.Shipping.UPS
             sb.Append("<CustomerContext>Bare Bones Rate Request</CustomerContext>");
             sb.Append("<XpciVersion>1.0001</XpciVersion>");
             sb.Append("</TransactionReference>");
-            sb.Append("<RequestAction>Rate</RequestAction>");
             sb.Append("<RequestOption>Shop</RequestOption>");
             sb.Append("</Request>");
             if (String.Equals(countryCodeFrom, "US", StringComparison.InvariantCultureIgnoreCase))
@@ -145,12 +145,20 @@ namespace Nop.Plugin.Shipping.UPS
             sb.Append("<Code>03</Code>");
             sb.Append("</Service>");
 
+            //saturday delivery flag
+            if (saturdayDelivery)
+            {
+                sb.Append("<ShipmentServiceOptions>");
+                sb.Append("<SaturdayDelivery></SaturdayDelivery>");
+                sb.Append("</ShipmentServiceOptions>");
+            }
+
             string currencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
 
             //get subTotalWithoutDiscountBase, for use as insured value (when Settings.InsurePackage)
             //(note: prior versions used "with discount", but "without discount" better reflects true value to insure.)
             decimal orderSubTotalDiscountAmount;
-            List<Discount> orderSubTotalAppliedDiscounts;
+            List<DiscountForCaching> orderSubTotalAppliedDiscounts;
             decimal subTotalWithoutDiscountBase;
             decimal subTotalWithDiscountBase;
             //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal
@@ -614,7 +622,7 @@ namespace Nop.Plugin.Shipping.UPS
             return Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureWeight(quantity, usedMeasureWeighht)));
         }
 
-        private IEnumerable<ShippingOption> ParseResponse(string response, ref string error)
+        private IEnumerable<ShippingOption> ParseResponse(string response, bool saturdayDelivery, ref string error)
         {
             var shippingOptions = new List<ShippingOption>();
 
@@ -685,7 +693,7 @@ namespace Nop.Plugin.Shipping.UPS
                         string serviceId = String.Format("[{0}]", serviceCode);
 
                         // Go to the next rate if the service ID is not in the list of services to offer
-                        if (!String.IsNullOrEmpty(carrierServicesOffered) && !carrierServicesOffered.Contains(serviceId))
+                        if (!saturdayDelivery && !String.IsNullOrEmpty(carrierServicesOffered) && !carrierServicesOffered.Contains(serviceId))
                         {
                             continue;
                         }
@@ -747,7 +755,7 @@ namespace Nop.Plugin.Shipping.UPS
             try
             {
                 string requestString = CreateRequest(_upsSettings.AccessKey, _upsSettings.Username, _upsSettings.Password, getShippingOptionRequest,
-                    _upsSettings.CustomerClassification, _upsSettings.PickupType, _upsSettings.PackagingType);
+                    _upsSettings.CustomerClassification, _upsSettings.PickupType, _upsSettings.PackagingType, false);
                 if (_upsSettings.Tracing)
                     _traceMessages.AppendLine("Request:").AppendLine(requestString);
 
@@ -756,7 +764,7 @@ namespace Nop.Plugin.Shipping.UPS
                     _traceMessages.AppendLine("Response:").AppendLine(responseXml);
 
                 string error = "";
-                var shippingOptions = ParseResponse(responseXml, ref error);
+                var shippingOptions = ParseResponse(responseXml, false, ref error);
                 if (String.IsNullOrEmpty(error))
                 {
                     foreach (var shippingOption in shippingOptions)
@@ -771,6 +779,37 @@ namespace Nop.Plugin.Shipping.UPS
                 {
                     response.AddError(error);
                 }
+
+                //saturday delivery
+                if (_upsSettings.CarrierServicesOffered.Contains("[sa]"))
+                {
+                    requestString = CreateRequest(_upsSettings.AccessKey, _upsSettings.Username, _upsSettings.Password, getShippingOptionRequest,
+                        _upsSettings.CustomerClassification, _upsSettings.PickupType, _upsSettings.PackagingType, true);
+                    if (_upsSettings.Tracing)
+                        _traceMessages.AppendLine("Request:").AppendLine(requestString);
+
+                    responseXml = DoRequest(_upsSettings.Url, requestString);
+                    if (_upsSettings.Tracing)
+                        _traceMessages.AppendLine("Response:").AppendLine(responseXml);
+
+                    error = string.Empty;
+                    var saturdayDeliveryShippingOptions = ParseResponse(responseXml, true, ref error);
+                    if (string.IsNullOrEmpty(error))
+                    {
+                        foreach (var shippingOption in saturdayDeliveryShippingOptions)
+                        {
+                            shippingOption.Name = string.Format("{0}{1} - Saturday Delivery",
+                                shippingOption.Name.ToLower().StartsWith("ups") ? string.Empty : "UPS ", shippingOption.Name);
+                            shippingOption.Rate += _upsSettings.AdditionalHandlingCharge;
+                            response.ShippingOptions.Add(shippingOption);
+                        }
+                    }
+                    else
+                        response.AddError(error);
+                }
+
+                if (response.ShippingOptions.Any())
+                    response.Errors.Clear();
             }
             finally
             {

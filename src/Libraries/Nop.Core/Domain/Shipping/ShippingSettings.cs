@@ -77,10 +77,16 @@ namespace Nop.Core.Domain.Shipping
         /// A value indicating whether customers should see shipment events on their order details pages
         /// </summary>
         public bool DisplayShipmentEventsToCustomers { get; set; }
+
         /// <summary>
         /// A value indicating whether store owner should see shipment events on the shipment details pages
         /// </summary>
         public bool DisplayShipmentEventsToStoreOwner { get; set; }
+
+        /// <summary>
+        /// A value indicating whether should hide "Shipping total" label if shipping not required
+        /// </summary>
+        public bool HideShippingTotal { get; set; }
 
         /// <summary>
         /// Gets or sets shipping origin address

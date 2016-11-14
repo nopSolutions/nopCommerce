@@ -1819,9 +1819,12 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            //a vendor does not have access to this functionality
+            //a vendor should have access only to his products
+            var vendorId = 0;
             if (_workContext.CurrentVendor != null)
-                return RedirectToAction("Edit", "Order", new { id = orderId });
+            {
+                vendorId = _workContext.CurrentVendor.Id;
+            }
 
             var order = _orderService.GetOrderById(orderId);
             var orders = new List<Order>();
@@ -1829,7 +1832,7 @@ namespace Nop.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
+                _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id, vendorId);
                 bytes = stream.ToArray();
             }
             return File(bytes, MimeTypes.ApplicationPdf, string.Format("order_{0}.pdf", order.Id));
@@ -1882,7 +1885,7 @@ namespace Nop.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
+                _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id, model.VendorId);
                 bytes = stream.ToArray();
             }
             return File(bytes, MimeTypes.ApplicationPdf, "orders.pdf");
@@ -1905,11 +1908,13 @@ namespace Nop.Admin.Controllers
             }
 
             //a vendor should have access only to his products
+            var vendorId = 0;
             if (_workContext.CurrentVendor != null)
             {
                 orders = orders.Where(HasAccessToOrder).ToList();
+                vendorId = _workContext.CurrentVendor.Id;
             }
-
+            
             //ensure that we at least one order selected
             if (!orders.Any())
             {
@@ -1920,7 +1925,7 @@ namespace Nop.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
+                _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id, vendorId);
                 bytes = stream.ToArray();
             }
             return File(bytes, MimeTypes.ApplicationPdf, "orders.pdf");
@@ -2238,7 +2243,7 @@ namespace Nop.Admin.Controllers
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
 
-                ErrorNotification("This order item has an associated gift card record. Please delete it first.", false);
+                ErrorNotification(_localizationService.GetResource("Admin.Orders.OrderItem.DeleteAssociatedGiftCardRecordError"), false);
 
                 //selected tab
                 SaveSelectedTabName(persistForTheNextRequest: false);
@@ -4192,6 +4197,8 @@ namespace Nop.Admin.Controllers
             var nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
             var timeZone = _dateTimeHelper.CurrentTimeZone;
 
+            var culture = new CultureInfo(_workContext.WorkingLanguage.LanguageCulture);
+
             switch (period)
             {
                 case "year":
@@ -4200,21 +4207,18 @@ namespace Nop.Admin.Controllers
                     var searchYearDateUser = new DateTime(yearAgoRoundedDt.Year, yearAgoRoundedDt.Month, 1);
                     if (!timeZone.IsInvalidTime(searchYearDateUser))
                     {
-                        DateTime searchYearDateUtc = _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone);
-
                         for (int i = 0; i <= 12; i++)
                         {
                             result.Add(new
                             {
-                                date = searchYearDateUser.Date.ToString("Y"),
+                                date = searchYearDateUser.Date.ToString("Y", culture),
                                 value = _orderService.SearchOrders(
-                                    createdFromUtc: searchYearDateUtc,
-                                    createdToUtc: searchYearDateUtc.AddMonths(1),
+                                    createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone),
+                                    createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser.AddMonths(1), timeZone),
                                     pageIndex: 0,
                                     pageSize: 1).TotalCount.ToString()
                             });
 
-                            searchYearDateUtc = searchYearDateUtc.AddMonths(1);
                             searchYearDateUser = searchYearDateUser.AddMonths(1);
                         }
                     }
@@ -4225,21 +4229,18 @@ namespace Nop.Admin.Controllers
                     var searchMonthDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-30).Month, nowDt.AddDays(-30).Day);
                     if (!timeZone.IsInvalidTime(searchMonthDateUser))
                     {
-                        DateTime searchMonthDateUtc = _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone);
-
                         for (int i = 0; i <= 30; i++)
                         {
                             result.Add(new
                             {
-                                date = searchMonthDateUser.Date.ToString("M"),
+                                date = searchMonthDateUser.Date.ToString("M", culture),
                                 value = _orderService.SearchOrders(
-                                    createdFromUtc: searchMonthDateUtc,
-                                    createdToUtc: searchMonthDateUtc.AddDays(1),
+                                    createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone),
+                                    createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser.AddDays(1), timeZone),
                                     pageIndex: 0,
                                     pageSize: 1).TotalCount.ToString()
                             });
 
-                            searchMonthDateUtc = searchMonthDateUtc.AddDays(1);
                             searchMonthDateUser = searchMonthDateUser.AddDays(1);
                         }
                     }
@@ -4251,21 +4252,18 @@ namespace Nop.Admin.Controllers
                     var searchWeekDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-7).Month, nowDt.AddDays(-7).Day);
                     if (!timeZone.IsInvalidTime(searchWeekDateUser))
                     {
-                        DateTime searchWeekDateUtc = _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone);
-
                         for (int i = 0; i <= 7; i++)
                         {
                             result.Add(new
                             {
-                                date = searchWeekDateUser.Date.ToString("d dddd"),
+                                date = searchWeekDateUser.Date.ToString("d dddd", culture),
                                 value = _orderService.SearchOrders(
-                                    createdFromUtc: searchWeekDateUtc,
-                                    createdToUtc: searchWeekDateUtc.AddDays(1),
+                                    createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone),
+                                    createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser.AddDays(1), timeZone),
                                     pageIndex: 0,
                                     pageSize: 1).TotalCount.ToString()
                             });
 
-                            searchWeekDateUtc = searchWeekDateUtc.AddDays(1);
                             searchWeekDateUser = searchWeekDateUser.AddDays(1);
                         }
                     }

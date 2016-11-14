@@ -9,6 +9,7 @@ using Nop.Core;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework;
@@ -29,25 +30,28 @@ namespace Nop.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
+        private readonly ICustomerActivityService _customerActivityService;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
-		public LanguageController(ILanguageService languageService,
+        public LanguageController(ILanguageService languageService,
             ILocalizationService localizationService,
             ICurrencyService currencyService,
             IStoreService storeService, 
             IStoreMappingService storeMappingService,
-            IPermissionService permissionService)
-		{
+            IPermissionService permissionService,
+            ICustomerActivityService customerActivityService)
+        {
 			this._localizationService = localizationService;
             this._languageService = languageService;
             this._currencyService = currencyService;
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
-		}
+            this._customerActivityService = customerActivityService;
+        }
 
 		#endregion 
 
@@ -197,6 +201,9 @@ namespace Nop.Admin.Controllers
                 var language = model.ToEntity();
                 _languageService.InsertLanguage(language);
 
+                //activity log
+                _customerActivityService.InsertActivity("AddNewLanguage", _localizationService.GetResource("ActivityLog.AddNewLanguage"), language.Id);
+
                 //Stores
                 SaveStoreMappings(language, model);
 
@@ -266,13 +273,16 @@ namespace Nop.Admin.Controllers
                 if (allLanguages.Count == 1 && allLanguages[0].Id == language.Id &&
                     !model.Published)
                 {
-                    ErrorNotification("At least one published language is required.");
+                    ErrorNotification(_localizationService.GetResource("Admin.Configuration.Languages.PublishedLanguageRequired"));
                     return RedirectToAction("Edit", new { id = language.Id });
                 }
 
                 //update
                 language = model.ToEntity(language);
                 _languageService.UpdateLanguage(language);
+
+                //activity log
+                _customerActivityService.InsertActivity("EditLanguage", _localizationService.GetResource("ActivityLog.EditLanguage"), language.Id);
 
                 //Stores
                 SaveStoreMappings(language, model);
@@ -316,12 +326,15 @@ namespace Nop.Admin.Controllers
             var allLanguages = _languageService.GetAllLanguages();
             if (allLanguages.Count == 1 && allLanguages[0].Id == language.Id)
             {
-                ErrorNotification("At least one published language is required.");
+                ErrorNotification(_localizationService.GetResource("Admin.Configuration.Languages.PublishedLanguageRequired"));
                 return RedirectToAction("Edit", new { id = language.Id });
             }
             
             //delete
             _languageService.DeleteLanguage(language);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteLanguage", _localizationService.GetResource("ActivityLog.DeleteLanguage"), language.Id);
 
             //notification
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Deleted"));

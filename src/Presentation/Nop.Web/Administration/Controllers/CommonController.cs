@@ -821,6 +821,23 @@ namespace Nop.Admin.Controllers
             return PartialView();
         }
 
+        //action displaying notification (warning) to a store owner that entered SE URL already exists
+        [ValidateInput(false)]
+        public ActionResult UrlReservedWarning(string entityId, string entityName, string seName)
+        {
+            if (string.IsNullOrEmpty(seName))
+                return Json(new { Result = string.Empty }, JsonRequestBehavior.AllowGet);
+
+            int parsedEntityId;
+            int.TryParse(entityId, out parsedEntityId);
+            var validatedSeName = SeoExtensions.ValidateSeName(parsedEntityId, entityName, seName, null, false);
+
+            if (seName.Equals(validatedSeName, StringComparison.InvariantCultureIgnoreCase))
+                return Json(new { Result = string.Empty }, JsonRequestBehavior.AllowGet);
+
+            return Json(new { Result = string.Format(_localizationService.GetResource("Admin.System.Warnings.URL.Reserved"), validatedSeName) }, JsonRequestBehavior.AllowGet);
+        }
+
         #endregion
     }
 }

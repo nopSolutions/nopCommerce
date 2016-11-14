@@ -74,6 +74,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Poll> _pollRepository;
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly IRepository<DeliveryDate> _deliveryDateRepository;
+        private readonly IRepository<ProductAvailabilityRange> _productAvailabilityRangeRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
         private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
@@ -131,6 +132,7 @@ namespace Nop.Services.Installation
             IRepository<Poll> pollRepository,
             IRepository<ShippingMethod> shippingMethodRepository,
             IRepository<DeliveryDate> deliveryDateRepository,
+            IRepository<ProductAvailabilityRange> productAvailabilityRangeRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
             IRepository<ActivityLog> activityLogRepository,
             IRepository<ProductTag> productTagRepository,
@@ -184,6 +186,7 @@ namespace Nop.Services.Installation
             this._pollRepository = pollRepository;
             this._shippingMethodRepository = shippingMethodRepository;
             this._deliveryDateRepository = deliveryDateRepository;
+            this._productAvailabilityRangeRepository = productAvailabilityRangeRepository;
             this._activityLogTypeRepository = activityLogTypeRepository;
             this._activityLogRepository = activityLogRepository;
             this._productTagRepository = productTagRepository;
@@ -3989,6 +3992,29 @@ namespace Nop.Services.Installation
             _deliveryDateRepository.Insert(deliveryDates);
         }
 
+        protected virtual void InstallProductAvailabilityRanges()
+        {
+            var productAvailabilityRanges = new List<ProductAvailabilityRange>
+            {
+                new ProductAvailabilityRange
+                {
+                    Name = "2-4 days",
+                    DisplayOrder = 1
+                },
+                new ProductAvailabilityRange
+                {
+                    Name = "7-10 days",
+                    DisplayOrder = 2
+                },
+                new ProductAvailabilityRange
+                {
+                    Name = "2 week",
+                    DisplayOrder = 3
+                },
+            };
+            _productAvailabilityRangeRepository.Insert(productAvailabilityRanges);
+        }
+
         protected virtual void InstallCustomersAndUsers(string defaultUserEmail, string defaultUserPassword)
         {
             var crAdministrators = new CustomerRole
@@ -4366,7 +4392,7 @@ namespace Nop.Services.Installation
                 ShippingStatus = ShippingStatus.NotYetShipped,
                 ShippingMethod = "Ground",
                 PickUpInStore = false,
-                ShippingRateComputationMethodSystemName = "Shipping.FixedRate",
+                ShippingRateComputationMethodSystemName = "Shipping.FixedOrByWeight",
                 CustomValuesXml = string.Empty,
                 VatNumber = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow
@@ -4530,7 +4556,7 @@ namespace Nop.Services.Installation
                 ShippingStatus = ShippingStatus.NotYetShipped,
                 ShippingMethod = "Next Day Air",
                 PickUpInStore = false,
-                ShippingRateComputationMethodSystemName = "Shipping.FixedRate",
+                ShippingRateComputationMethodSystemName = "Shipping.FixedOrByWeight",
                 CustomValuesXml = string.Empty,
                 VatNumber = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow
@@ -4997,7 +5023,7 @@ namespace Nop.Services.Installation
                 ShippingStatus = ShippingStatus.Delivered,
                 ShippingMethod = "Ground",
                 PickUpInStore = false,
-                ShippingRateComputationMethodSystemName = "Shipping.FixedRate",
+                ShippingRateComputationMethodSystemName = "Shipping.FixedOrByWeight",
                 CustomValuesXml = string.Empty,
                 VatNumber = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow
@@ -5768,7 +5794,8 @@ namespace Nop.Services.Installation
                 AllowViewUnpublishedProductPage = true,
                 DisplayDiscontinuedMessageForUnpublishedProducts = true,
                 PublishBackProductWhenCancellingOrders = false,
-                ShowProductSku = false,
+                ShowSkuOnProductDetailsPage = true,
+                ShowSkuOnCatalogPages = false,
                 ShowManufacturerPartNumber = false,
                 ShowGtin = false,
                 ShowFreeShippingNotification = true,
@@ -5784,6 +5811,7 @@ namespace Nop.Services.Installation
                 ProductReviewsMustBeApproved = false,
                 DefaultProductRatingValue = 5,
                 AllowAnonymousUsersToReviewProduct = false,
+                ProductReviewPossibleOnlyAfterPurchasing = false,
                 NotifyStoreOwnerAboutNewProductReviews = false,
                 EmailAFriendEnabled = true,
                 AllowAnonymousUsersToEmailAFriend = false,
@@ -5832,7 +5860,8 @@ namespace Nop.Services.Installation
                 DefaultManufacturerPageSize = 6,
                 ShowProductReviewsTabOnAccountPage = true,
                 ProductReviewsPageSizeOnAccountPage = 10,
-                ExportImportProductAttributes = true
+                ExportImportProductAttributes = true,
+                ExportImportUseDropdownlistsForAssociatedEntities = true
             });
 
             settingService.SaveSetting(new LocalizationSettings
@@ -5962,6 +5991,8 @@ namespace Nop.Services.Installation
                 PointsForPurchases_Amount = 10,
                 PointsForPurchases_Points = 1,
                 PointsForPurchases_Awarded = OrderStatus.Complete,
+                ActivationDelay = 0,
+                ActivationDelayPeriodId = 0,
                 PointsForPurchases_Canceled = OrderStatus.Cancelled,
                 DisplayHowMuchWillBeEarned = true,
                 PointsAccumulatedForAllStores = true,
@@ -6012,7 +6043,7 @@ namespace Nop.Services.Installation
                 RoundPricesDuringCalculation = true,
                 GroupTierPricesForDistinctShoppingCartItems = false,
                 AllowCartItemEditing = true,
-                RenderAssociatedAttributeValueQuantity = false
+                RenderAssociatedAttributeValueQuantity = true
             });
 
             settingService.SaveSetting(new OrderSettings
@@ -6052,9 +6083,9 @@ namespace Nop.Services.Installation
 
             settingService.SaveSetting(new ShippingSettings
             {
-                ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedRate" },
+                ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedOrByWeight" },
                 ActivePickupPointProviderSystemNames = new List<string> { "Pickup.PickupInStore" },
-                ShipToSameAddress = false,
+                ShipToSameAddress = true,
                 AllowPickUpInStore = true,
                 DisplayPickupPointsOnMap = false,
                 UseWarehouseLocation = false,
@@ -6065,6 +6096,7 @@ namespace Nop.Services.Installation
                 EstimateShippingEnabled = true,
                 DisplayShipmentEventsToCustomers = false,
                 DisplayShipmentEventsToStoreOwner = false,
+                HideShippingTotal = false,
                 ReturnValidOptionsIfThereAreAny = true,
                 BypassShippingMethodSelectionIfOnlyOne = false,
                 UseCubeRootMethod = true
@@ -6081,6 +6113,7 @@ namespace Nop.Services.Installation
                     },
                 AllowRePostingPayments = true,
                 BypassPaymentMethodSelectionIfOnlyOne = true,
+                ShowPaymentMethodDescriptions = true
             });
 
             settingService.SaveSetting(new TaxSettings
@@ -6094,6 +6127,7 @@ namespace Nop.Services.Installation
                 PricesIncludeTax = false,
                 AllowCustomersToSelectTaxDisplayType = false,
                 ForceTaxExclusionFromOrderSubtotal = false,
+                DefaultTaxCategoryId = 0,
                 HideZeroTax = false,
                 HideTaxInOrderSummary = false,
                 ShippingIsTaxable = false,
@@ -6108,7 +6142,7 @@ namespace Nop.Services.Installation
                 EuVatUseWebService = false,
                 EuVatAssumeValid = false,
                 EuVatEmailAdminWhenNewVatSubmitted = false,
-                LogErrors = true
+                LogErrors = false
             });
 
             settingService.SaveSetting(new DateTimeSettings
@@ -6822,6 +6856,11 @@ namespace Nop.Services.Installation
             var deliveryDate = _deliveryDateRepository.Table.FirstOrDefault();
             if (deliveryDate == null)
                 throw new Exception("No default deliveryDate could be loaded");
+
+            //product availability range
+            var productAvailabilityRange = _productAvailabilityRangeRepository.Table.FirstOrDefault();
+            if (productAvailabilityRange == null)
+                throw new Exception("No default product availability range could be loaded");
 
             //default customer/user
             var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail);
@@ -9246,6 +9285,7 @@ namespace Nop.Services.Installation
                 Height = 7,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                ProductAvailabilityRangeId = productAvailabilityRange.Id,
                 StockQuantity = 0,
                 NotifyAdminForQuantityBelow = 1,
                 AllowBackInStockSubscriptions = false,
@@ -10816,418 +10856,802 @@ namespace Nop.Services.Installation
         protected virtual void InstallActivityLogTypes()
         {
             var activityLogTypes = new List<ActivityLogType>
-                                      {
-                                          //admin area activities
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewCategory",
-                                                  Enabled = true,
-                                                  Name = "Add a new category"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewCheckoutAttribute",
-                                                  Enabled = true,
-                                                  Name = "Add a new checkout attribute"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewCustomer",
-                                                  Enabled = true,
-                                                  Name = "Add a new customer"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewCustomerRole",
-                                                  Enabled = true,
-                                                  Name = "Add a new customer role"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewDiscount",
-                                                  Enabled = true,
-                                                  Name = "Add a new discount"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewGiftCard",
-                                                  Enabled = true,
-                                                  Name = "Add a new gift card"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewManufacturer",
-                                                  Enabled = true,
-                                                  Name = "Add a new manufacturer"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewProduct",
-                                                  Enabled = true,
-                                                  Name = "Add a new product"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewProductAttribute",
-                                                  Enabled = true,
-                                                  Name = "Add a new product attribute"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewSetting",
-                                                  Enabled = true,
-                                                  Name = "Add a new setting"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewSpecAttribute",
-                                                  Enabled = true,
-                                                  Name = "Add a new specification attribute"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewTopic",
-                                                  Enabled = true,
-                                                  Name = "Add a new topic"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewWidget",
-                                                  Enabled = true,
-                                                  Name = "Add a new widget"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteActivityLog",
-                                                  Enabled = true,
-                                                  Name = "Delete activity log"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteCategory",
-                                                  Enabled = true,
-                                                  Name = "Delete category"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteCheckoutAttribute",
-                                                  Enabled = true,
-                                                  Name = "Delete a checkout attribute"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteCustomer",
-                                                  Enabled = true,
-                                                  Name = "Delete a customer"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteCustomerRole",
-                                                  Enabled = true,
-                                                  Name = "Delete a customer role"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteDiscount",
-                                                  Enabled = true,
-                                                  Name = "Delete a discount"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteGiftCard",
-                                                  Enabled = true,
-                                                  Name = "Delete a gift card"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteManufacturer",
-                                                  Enabled = true,
-                                                  Name = "Delete a manufacturer"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteOrder",
-                                                  Enabled = true,
-                                                  Name = "Delete an order"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteProduct",
-                                                  Enabled = true,
-                                                  Name = "Delete a product"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteProductAttribute",
-                                                  Enabled = true,
-                                                  Name = "Delete a product attribute"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteReturnRequest",
-                                                  Enabled = true,
-                                                  Name = "Delete a return request"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteSetting",
-                                                  Enabled = true,
-                                                  Name = "Delete a setting"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteSpecAttribute",
-                                                  Enabled = true,
-                                                  Name = "Delete a specification attribute"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteTopic",
-                                                  Enabled = true,
-                                                  Name = "Delete a topic"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteWidget",
-                                                  Enabled = true,
-                                                  Name = "Delete a widget"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditActivityLogTypes",
-                                                  Enabled = true,
-                                                  Name = "Edit activity log types"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditCategory",
-                                                  Enabled = true,
-                                                  Name = "Edit category"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditCheckoutAttribute",
-                                                  Enabled = true,
-                                                  Name = "Edit a checkout attribute"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditCustomer",
-                                                  Enabled = true,
-                                                  Name = "Edit a customer"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditCustomerRole",
-                                                  Enabled = true,
-                                                  Name = "Edit a customer role"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditDiscount",
-                                                  Enabled = true,
-                                                  Name = "Edit a discount"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditGiftCard",
-                                                  Enabled = true,
-                                                  Name = "Edit a gift card"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditManufacturer",
-                                                  Enabled = true,
-                                                  Name = "Edit a manufacturer"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditOrder",
-                                                  Enabled = true,
-                                                  Name = "Edit an order"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditProduct",
-                                                  Enabled = true,
-                                                  Name = "Edit a product"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditProductAttribute",
-                                                  Enabled = true,
-                                                  Name = "Edit a product attribute"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditPromotionProviders",
-                                                  Enabled = true,
-                                                  Name = "Edit promotion providers"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditReturnRequest",
-                                                  Enabled = true,
-                                                  Name = "Edit a return request"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditSettings",
-                                                  Enabled = true,
-                                                  Name = "Edit setting(s)"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditSpecAttribute",
-                                                  Enabled = true,
-                                                  Name = "Edit a specification attribute"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditTopic",
-                                                  Enabled = true,
-                                                  Name = "Edit a topic"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditWidget",
-                                                  Enabled = true,
-                                                  Name = "Edit a widget"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "Impersonation.Started",
-                                                  Enabled = true,
-                                                  Name = "Customer impersonation session. Started"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "Impersonation.Finished",
-                                                  Enabled = true,
-                                                  Name = "Customer impersonation session. Finished"
-                                              },
-                                              //public store activities
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.ViewCategory",
-                                                  Enabled = false,
-                                                  Name = "Public store. View a category"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.ViewManufacturer",
-                                                  Enabled = false,
-                                                  Name = "Public store. View a manufacturer"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.ViewProduct",
-                                                  Enabled = false,
-                                                  Name = "Public store. View a product"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.PlaceOrder",
-                                                  Enabled = false,
-                                                  Name = "Public store. Place an order"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.SendPM",
-                                                  Enabled = false,
-                                                  Name = "Public store. Send PM"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.ContactUs",
-                                                  Enabled = false,
-                                                  Name = "Public store. Use contact us form"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.AddToCompareList",
-                                                  Enabled = false,
-                                                  Name = "Public store. Add to compare list"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.AddToShoppingCart",
-                                                  Enabled = false,
-                                                  Name = "Public store. Add to shopping cart"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.AddToWishlist",
-                                                  Enabled = false,
-                                                  Name = "Public store. Add to wishlist"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.Login",
-                                                  Enabled = false,
-                                                  Name = "Public store. Login"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.Logout",
-                                                  Enabled = false,
-                                                  Name = "Public store. Logout"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.AddProductReview",
-                                                  Enabled = false,
-                                                  Name = "Public store. Add product review"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.AddNewsComment",
-                                                  Enabled = false,
-                                                  Name = "Public store. Add news comment"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.AddBlogComment",
-                                                  Enabled = false,
-                                                  Name = "Public store. Add blog comment"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.AddForumTopic",
-                                                  Enabled = false,
-                                                  Name = "Public store. Add forum topic"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.EditForumTopic",
-                                                  Enabled = false,
-                                                  Name = "Public store. Edit forum topic"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.DeleteForumTopic",
-                                                  Enabled = false,
-                                                  Name = "Public store. Delete forum topic"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.AddForumPost",
-                                                  Enabled = false,
-                                                  Name = "Public store. Add forum post"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.EditForumPost",
-                                                  Enabled = false,
-                                                  Name = "Public store. Edit forum post"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.DeleteForumPost",
-                                                  Enabled = false,
-                                                  Name = "Public store. Delete forum post"
-                                              },
-                                      };
+            {
+                //admin area activities
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewAddressAttribute",
+                    Enabled = true,
+                    Name = "Add a new address attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewAddressAttributeValue",
+                    Enabled = true,
+                    Name = "Add a new address attribute value"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewAffiliate",
+                    Enabled = true,
+                    Name = "Add a new affiliate"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewBlogPost",
+                    Enabled = true,
+                    Name = "Add a new blog post"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewCampaign",
+                    Enabled = true,
+                    Name = "Add a new campaign"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewCategory",
+                    Enabled = true,
+                    Name = "Add a new category"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewCheckoutAttribute",
+                    Enabled = true,
+                    Name = "Add a new checkout attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewCountry",
+                    Enabled = true,
+                    Name = "Add a new country"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewCurrency",
+                    Enabled = true,
+                    Name = "Add a new currency"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewCustomer",
+                    Enabled = true,
+                    Name = "Add a new customer"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewCustomerAttribute",
+                    Enabled = true,
+                    Name = "Add a new customer attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewCustomerAttributeValue",
+                    Enabled = true,
+                    Name = "Add a new customer attribute value"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewCustomerRole",
+                    Enabled = true,
+                    Name = "Add a new customer role"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewDiscount",
+                    Enabled = true,
+                    Name = "Add a new discount"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewEmailAccount",
+                    Enabled = true,
+                    Name = "Add a new email account"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewGiftCard",
+                    Enabled = true,
+                    Name = "Add a new gift card"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewLanguage",
+                    Enabled = true,
+                    Name = "Add a new language"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewManufacturer",
+                    Enabled = true,
+                    Name = "Add a new manufacturer"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewMeasureDimension",
+                    Enabled = true,
+                    Name = "Add a new measure dimension"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewMeasureWeight",
+                    Enabled = true,
+                    Name = "Add a new measure weight"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewNews",
+                    Enabled = true,
+                    Name = "Add a new news"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewProduct",
+                    Enabled = true,
+                    Name = "Add a new product"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewProductAttribute",
+                    Enabled = true,
+                    Name = "Add a new product attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewSetting",
+                    Enabled = true,
+                    Name = "Add a new setting"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewSpecAttribute",
+                    Enabled = true,
+                    Name = "Add a new specification attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewStateProvince",
+                    Enabled = true,
+                    Name = "Add a new state or province"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewStore",
+                    Enabled = true,
+                    Name = "Add a new store"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewTopic",
+                    Enabled = true,
+                    Name = "Add a new topic"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewVendor",
+                    Enabled = true,
+                    Name = "Add a new vendor"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewWarehouse",
+                    Enabled = true,
+                    Name = "Add a new warehouse"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewWidget",
+                    Enabled = true,
+                    Name = "Add a new widget"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteActivityLog",
+                    Enabled = true,
+                    Name = "Delete activity log"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteAddressAttribute",
+                    Enabled = true,
+                    Name = "Delete an address attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteAddressAttributeValue",
+                    Enabled = true,
+                    Name = "Delete an address attribute value"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteAffiliate",
+                    Enabled = true,
+                    Name = "Delete an affiliate"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteBlogPost",
+                    Enabled = true,
+                    Name = "Delete a blog post"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteBlogPostComment",
+                    Enabled = true,
+                    Name = "Delete a blog post comment"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteCampaign",
+                    Enabled = true,
+                    Name = "Delete a campaign"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteCategory",
+                    Enabled = true,
+                    Name = "Delete category"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteCheckoutAttribute",
+                    Enabled = true,
+                    Name = "Delete a checkout attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteCountry",
+                    Enabled = true,
+                    Name = "Delete a country"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteCurrency",
+                    Enabled = true,
+                    Name = "Delete a currency"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteCustomer",
+                    Enabled = true,
+                    Name = "Delete a customer"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteCustomerAttribute",
+                    Enabled = true,
+                    Name = "Delete a customer attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteCustomerAttributeValue",
+                    Enabled = true,
+                    Name = "Delete a customer attribute value"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteCustomerRole",
+                    Enabled = true,
+                    Name = "Delete a customer role"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteDiscount",
+                    Enabled = true,
+                    Name = "Delete a discount"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteEmailAccount",
+                    Enabled = true,
+                    Name = "Delete an email account"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteGiftCard",
+                    Enabled = true,
+                    Name = "Delete a gift card"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteLanguage",
+                    Enabled = true,
+                    Name = "Delete a language"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteManufacturer",
+                    Enabled = true,
+                    Name = "Delete a manufacturer"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteMeasureDimension",
+                    Enabled = true,
+                    Name = "Delete a measure dimension"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteMeasureWeight",
+                    Enabled = true,
+                    Name = "Delete a measure weight"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteMessageTemplate",
+                    Enabled = true,
+                    Name = "Delete a message template"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteNews",
+                    Enabled = true,
+                    Name = "Delete a news"
+                },
+                 new ActivityLogType
+                {
+                    SystemKeyword = "DeleteNewsComment",
+                    Enabled = true,
+                    Name = "Delete a news comment"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteOrder",
+                    Enabled = true,
+                    Name = "Delete an order"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteProduct",
+                    Enabled = true,
+                    Name = "Delete a product"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteProductAttribute",
+                    Enabled = true,
+                    Name = "Delete a product attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteProductReview",
+                    Enabled = true,
+                    Name = "Delete a product review"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteReturnRequest",
+                    Enabled = true,
+                    Name = "Delete a return request"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteSetting",
+                    Enabled = true,
+                    Name = "Delete a setting"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteSpecAttribute",
+                    Enabled = true,
+                    Name = "Delete a specification attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteStateProvince",
+                    Enabled = true,
+                    Name = "Delete a state or province"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteStore",
+                    Enabled = true,
+                    Name = "Delete a store"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteTopic",
+                    Enabled = true,
+                    Name = "Delete a topic"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteVendor",
+                    Enabled = true,
+                    Name = "Delete a vendor"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteWarehouse",
+                    Enabled = true,
+                    Name = "Delete a warehouse"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteWidget",
+                    Enabled = true,
+                    Name = "Delete a widget"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditActivityLogTypes",
+                    Enabled = true,
+                    Name = "Edit activity log types"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditAddressAttribute",
+                    Enabled = true,
+                    Name = "Edit an address attribute"
+                },
+                 new ActivityLogType
+                {
+                    SystemKeyword = "EditAddressAttributeValue",
+                    Enabled = true,
+                    Name = "Edit an address attribute value"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditAffiliate",
+                    Enabled = true,
+                    Name = "Edit an affiliate"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditBlogPost",
+                    Enabled = true,
+                    Name = "Edit a blog post"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditCampaign",
+                    Enabled = true,
+                    Name = "Edit a campaign"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditCategory",
+                    Enabled = true,
+                    Name = "Edit category"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditCheckoutAttribute",
+                    Enabled = true,
+                    Name = "Edit a checkout attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditCountry",
+                    Enabled = true,
+                    Name = "Edit a country"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditCurrency",
+                    Enabled = true,
+                    Name = "Edit a currency"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditCustomer",
+                    Enabled = true,
+                    Name = "Edit a customer"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditCustomerAttribute",
+                    Enabled = true,
+                    Name = "Edit a customer attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditCustomerAttributeValue",
+                    Enabled = true,
+                    Name = "Edit a customer attribute value"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditCustomerRole",
+                    Enabled = true,
+                    Name = "Edit a customer role"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditDiscount",
+                    Enabled = true,
+                    Name = "Edit a discount"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditEmailAccount",
+                    Enabled = true,
+                    Name = "Edit an email account"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditGiftCard",
+                    Enabled = true,
+                    Name = "Edit a gift card"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditLanguage",
+                    Enabled = true,
+                    Name = "Edit a language"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditManufacturer",
+                    Enabled = true,
+                    Name = "Edit a manufacturer"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditMeasureDimension",
+                    Enabled = true,
+                    Name = "Edit a measure dimension"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditMeasureWeight",
+                    Enabled = true,
+                    Name = "Edit a measure weight"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditMessageTemplate",
+                    Enabled = true,
+                    Name = "Edit a message template"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditNews",
+                    Enabled = true,
+                    Name = "Edit a news"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditOrder",
+                    Enabled = true,
+                    Name = "Edit an order"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditPlugin",
+                    Enabled = true,
+                    Name = "Edit a plugin"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditProduct",
+                    Enabled = true,
+                    Name = "Edit a product"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditProductAttribute",
+                    Enabled = true,
+                    Name = "Edit a product attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditProductReview",
+                    Enabled = true,
+                    Name = "Edit a product review"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditPromotionProviders",
+                    Enabled = true,
+                    Name = "Edit promotion providers"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditReturnRequest",
+                    Enabled = true,
+                    Name = "Edit a return request"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditSettings",
+                    Enabled = true,
+                    Name = "Edit setting(s)"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditStateProvince",
+                    Enabled = true,
+                    Name = "Edit a state or province"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditStore",
+                    Enabled = true,
+                    Name = "Edit a store"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditTask",
+                    Enabled = true,
+                    Name = "Edit a task"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditSpecAttribute",
+                    Enabled = true,
+                    Name = "Edit a specification attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditVendor",
+                    Enabled = true,
+                    Name = "Edit a vendor"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditWarehouse",
+                    Enabled = true,
+                    Name = "Edit a warehouse"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditTopic",
+                    Enabled = true,
+                    Name = "Edit a topic"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditWidget",
+                    Enabled = true,
+                    Name = "Edit a widget"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "Impersonation.Started",
+                    Enabled = true,
+                    Name = "Customer impersonation session. Started"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "Impersonation.Finished",
+                    Enabled = true,
+                    Name = "Customer impersonation session. Finished"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "InstallNewPlugin",
+                    Enabled = true,
+                    Name = "Install a new plugin"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "UninstallPlugin",
+                    Enabled = true,
+                    Name = "Uninstall a plugin"
+                },
+                //public store activities
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.ViewCategory",
+                    Enabled = false,
+                    Name = "Public store. View a category"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.ViewManufacturer",
+                    Enabled = false,
+                    Name = "Public store. View a manufacturer"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.ViewProduct",
+                    Enabled = false,
+                    Name = "Public store. View a product"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.PlaceOrder",
+                    Enabled = false,
+                    Name = "Public store. Place an order"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.SendPM",
+                    Enabled = false,
+                    Name = "Public store. Send PM"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.ContactUs",
+                    Enabled = false,
+                    Name = "Public store. Use contact us form"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.AddToCompareList",
+                    Enabled = false,
+                    Name = "Public store. Add to compare list"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.AddToShoppingCart",
+                    Enabled = false,
+                    Name = "Public store. Add to shopping cart"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.AddToWishlist",
+                    Enabled = false,
+                    Name = "Public store. Add to wishlist"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.Login",
+                    Enabled = false,
+                    Name = "Public store. Login"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.Logout",
+                    Enabled = false,
+                    Name = "Public store. Logout"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.AddProductReview",
+                    Enabled = false,
+                    Name = "Public store. Add product review"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.AddNewsComment",
+                    Enabled = false,
+                    Name = "Public store. Add news comment"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.AddBlogComment",
+                    Enabled = false,
+                    Name = "Public store. Add blog comment"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.AddForumTopic",
+                    Enabled = false,
+                    Name = "Public store. Add forum topic"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.EditForumTopic",
+                    Enabled = false,
+                    Name = "Public store. Edit forum topic"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.DeleteForumTopic",
+                    Enabled = false,
+                    Name = "Public store. Delete forum topic"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.AddForumPost",
+                    Enabled = false,
+                    Name = "Public store. Add forum post"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.EditForumPost",
+                    Enabled = false,
+                    Name = "Public store. Edit forum post"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.DeleteForumPost",
+                    Enabled = false,
+                    Name = "Public store. Delete forum post"
+                }
+            };
             _activityLogTypeRepository.Insert(activityLogTypes);
         }
 
@@ -11538,6 +11962,7 @@ namespace Nop.Services.Installation
             InstallCountriesAndStates();
             InstallShippingMethods();
             InstallDeliveryDates();
+            InstallProductAvailabilityRanges();
             InstallCustomersAndUsers(defaultUserEmail, defaultUserPassword);
             InstallEmailAccounts();
             InstallMessageTemplates();

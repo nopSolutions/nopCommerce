@@ -40,6 +40,11 @@ namespace Nop.Core.Domain.Shipping
         public string City { get; set; }
 
         /// <summary>
+        /// Gets or sets a state abbreviation
+        /// </summary>
+        public string StateAbbreviation { get; set; }
+
+        /// <summary>
         /// Gets or sets a two-letter ISO country code
         /// </summary>
         public string CountryCode { get; set; }

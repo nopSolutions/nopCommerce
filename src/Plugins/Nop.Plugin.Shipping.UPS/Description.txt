@@ -1,8 +1,8 @@
 ﻿Group: Shipping rate computation
 FriendlyName: UPS (United Parcel Service)
 SystemName: Shipping.UPS
-Version: 1.20
-SupportedVersions: 3.80
+Version: 1.21
+SupportedVersions: 3.90
 Author: nopCommerce team
 DisplayOrder: 1
 FileName: Nop.Plugin.Shipping.UPS.dll

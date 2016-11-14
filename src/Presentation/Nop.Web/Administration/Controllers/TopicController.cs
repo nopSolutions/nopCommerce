@@ -245,10 +245,7 @@ namespace Nop.Admin.Controllers
             var topicModels = _topicService.GetAllTopics(model.SearchStoreId, true, true)
                 .Select(x =>x.ToModel())
                 .ToList();
-            //little hack here:
-            //we don't have paging supported for topic list page
-            //now ensure that topic bodies are not returned. otherwise, we can get the following error:
-            //"Error during serialization or deserialization using the JSON JavaScriptSerializer. The length of the string exceeds the value set on the maxJsonLength property. "
+            //little performance optimization: ensure that "Body" is not returned
             foreach (var topic in topicModels)
             {
                 topic.Body = "";

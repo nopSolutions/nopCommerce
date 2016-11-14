@@ -9,6 +9,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
@@ -26,6 +27,7 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IStoreService _storeService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion Fields
 
@@ -36,7 +38,8 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService, 
             IPermissionService permissionService,
             IEventPublisher eventPublisher,
-            IStoreService storeService)
+            IStoreService storeService,
+            ICustomerActivityService customerActivityService)
         {
             this._productService = productService;
             this._dateTimeHelper = dateTimeHelper;
@@ -44,6 +47,7 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
             this._eventPublisher = eventPublisher;
             _storeService = storeService;
+            this._customerActivityService = customerActivityService;
         }
 
         #endregion
@@ -164,7 +168,10 @@ namespace Nop.Admin.Controllers
                 productReview.ReviewText = model.ReviewText;
                 productReview.IsApproved = model.IsApproved;
                 _productService.UpdateProduct(productReview.Product);
-                
+
+                //activity log
+                _customerActivityService.InsertActivity("EditProductReview", _localizationService.GetResource("ActivityLog.EditProductReview"), productReview.Id);
+
                 //update product totals
                 _productService.UpdateProductReviewTotals(productReview.Product);
 
@@ -192,6 +199,10 @@ namespace Nop.Admin.Controllers
 
             var product = productReview.Product;
             _productService.DeleteProductReview(productReview);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteProductReview", _localizationService.GetResource("ActivityLog.DeleteProductReview"), productReview.Id);
+
             //update product totals
             _productService.UpdateProductReviewTotals(product);
 

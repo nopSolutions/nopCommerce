@@ -1456,6 +1456,9 @@ label, label + * {
 .item-box .product-title a:hover {
 	color: #248ece;
 }
+.item-box .sku {
+    margin: -3px 0px 15px;
+}
 .item-box .product-rating-box {
     display: inline-block;
 	margin: 0 0 10px;
@@ -2125,6 +2128,12 @@ label, label + * {
 	width: 280px;
 	text-align: center;
 	color: #444;
+}
+
+.attributes .qty-box {
+	width: 48px;
+    height: 32px;
+    text-align: center;
 }
 
 .ui-datepicker {
@@ -5271,7 +5280,7 @@ pre {
     height: 40px;
 }
 .item-box .product-title {
-    min-height: 42px;
+    min-height: 21px;
     margin: 0 0 5px;
 }
 

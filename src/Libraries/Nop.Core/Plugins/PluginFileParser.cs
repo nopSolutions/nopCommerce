@@ -128,6 +128,17 @@ namespace Nop.Core.Plugins
                             }
                         }
                         break;
+                    case "LimitedToCustomerRoles":
+                        {
+                            //parse list of customer role IDs
+                            foreach (var id in value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()))
+                            {
+                                int roleId;
+                                if (int.TryParse(id, out roleId))
+                                    descriptor.LimitedToCustomerRoles.Add(roleId);
+                            }
+                        }
+                        break;
                     case "Description":
                             descriptor.Description = value;
                         break;
@@ -168,10 +179,10 @@ namespace Nop.Core.Plugins
             keyValues.Add(new KeyValuePair<string, string>("Description", plugin.Description));            
 
             if (plugin.LimitedToStores.Any())
-            {
-                var storeList = string.Join(",", plugin.LimitedToStores);
-                keyValues.Add(new KeyValuePair<string, string>("LimitedToStores", storeList));
-            }
+                keyValues.Add(new KeyValuePair<string, string>("LimitedToStores", string.Join(",", plugin.LimitedToStores)));
+
+            if (plugin.LimitedToCustomerRoles.Any())
+                keyValues.Add(new KeyValuePair<string, string>("LimitedToCustomerRoles", string.Join(",", plugin.LimitedToCustomerRoles)));
 
             var sb = new StringBuilder();
             for (int i = 0; i < keyValues.Count; i++)

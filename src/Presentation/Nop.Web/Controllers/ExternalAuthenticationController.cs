@@ -13,16 +13,19 @@ namespace Nop.Web.Controllers
 
         private readonly IOpenAuthenticationService _openAuthenticationService;
         private readonly IStoreContext _storeContext;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
-		#region Constructors
+        #region Ctor
 
         public ExternalAuthenticationController(IOpenAuthenticationService openAuthenticationService,
-            IStoreContext storeContext)
+            IStoreContext storeContext,
+            IWorkContext workContext)
         {
             this._openAuthenticationService = openAuthenticationService;
             this._storeContext = storeContext;
+            this._workContext = workContext;
         }
 
         #endregion
@@ -46,7 +49,7 @@ namespace Nop.Web.Controllers
             var model = new List<ExternalAuthenticationMethodModel>();
 
             foreach (var eam in _openAuthenticationService
-                .LoadActiveExternalAuthenticationMethods(_storeContext.CurrentStore.Id))
+                .LoadActiveExternalAuthenticationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id))
             {
                 var eamModel = new ExternalAuthenticationMethodModel();
 
