@@ -2597,7 +2597,8 @@ namespace Nop.Services.Orders
 
                     //update order info
                     order.RefundedAmount = totalAmountRefunded;
-                    order.PaymentStatus = result.NewPaymentStatus;
+                    //mark payment status as 'Refunded' if the order total amount is fully refunded
+                    order.PaymentStatus = order.OrderTotal == totalAmountRefunded && result.NewPaymentStatus == PaymentStatus.PartiallyRefunded ? PaymentStatus.Refunded : result.NewPaymentStatus;
                     _orderService.UpdateOrder(order);
 
 
@@ -2724,8 +2725,8 @@ namespace Nop.Services.Orders
 
             //update order info
             order.RefundedAmount = totalAmountRefunded;
-            //if (order.OrderTotal == totalAmountRefunded), then set order.PaymentStatus = PaymentStatus.Refunded;
-            order.PaymentStatus = PaymentStatus.PartiallyRefunded;
+            //mark payment status as 'Refunded' if the order total amount is fully refunded
+            order.PaymentStatus = order.OrderTotal == totalAmountRefunded ? PaymentStatus.Refunded : PaymentStatus.PartiallyRefunded;
             _orderService.UpdateOrder(order);
 
             //add a note
