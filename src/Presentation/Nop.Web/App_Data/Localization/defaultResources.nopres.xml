@@ -6399,6 +6399,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.AutoUpdateOrderTotalsOnEditingOrder.Hint">
     <Value>Check to automatically update order totals on editing an order in admin area. IMPORANT: currently this functionality is in BETA testing status.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterDeletingOrder">
+    <Value>Deactivate gift cards after deleting of an order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterDeletingOrder.Hint">
+    <Value>Check to deactivate related gift cards when an order is deleted.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.DisableBillingAddressCheckoutStep">
     <Value>Disable "Billing address" step</Value>
   </LocaleResource>

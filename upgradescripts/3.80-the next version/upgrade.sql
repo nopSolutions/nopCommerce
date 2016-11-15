@@ -806,6 +806,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.Store.Hint">
     <Value>Option to limit this tier price to a certain store. If you have multiple stores, choose one from the list.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterDeletingOrder">
+    <Value>Deactivate gift cards after deleting of an order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterDeletingOrder.Hint">
+    <Value>Check to deactivate related gift cards when an order is deleted.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2409,5 +2415,13 @@ BEGIN
 		[pi].IndexId
 	
 	DROP TABLE #PageIndex
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.deactivategiftcardsafterdeletingorder')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'ordersettings.deactivategiftcardsafterdeletingorder', N'False', 0)
 END
 GO

@@ -108,6 +108,11 @@ namespace Nop.Core.Domain.Orders
         public int GiftCards_Deactivated_OrderStatusId { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to deactivate related gift cards after deleting the order
+        /// </summary>
+        public bool DeactivateGiftCardsAfterDeletingOrder { get; set; }
+
+        /// <summary>
         /// Gets or sets an order placement interval in seconds (prevent 2 orders being placed within an X seconds time frame).
         /// </summary>
         public int MinimumOrderPlacementInterval { get; set; }

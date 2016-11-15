@@ -1577,6 +1577,10 @@ namespace Nop.Services.Orders
 
             }
 
+            //deactivate gift cards
+            if (_orderSettings.DeactivateGiftCardsAfterDeletingOrder)
+                SetActivatedValueForPurchasedGiftCards(order, false);
+
             //add a note
             order.OrderNotes.Add(new OrderNote
             {

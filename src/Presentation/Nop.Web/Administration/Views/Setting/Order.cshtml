@@ -261,6 +261,15 @@
                         @Html.ValidationMessageFor(model => model.GiftCards_Deactivated_OrderStatusId)
                     </div>
                 </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.DeactivateGiftCardsAfterDeletingOrder)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.DeactivateGiftCardsAfterDeletingOrder)
+                        @Html.ValidationMessageFor(model => model.DeactivateGiftCardsAfterDeletingOrder)
+                    </div>
+                </div>
             </div>
         </div>
     </div>

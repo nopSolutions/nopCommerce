@@ -98,7 +98,10 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.GiftCards_Deactivated")]
         public int GiftCards_Deactivated_OrderStatusId { get; set; }
         public IList<SelectListItem> GiftCards_Deactivated_OrderStatuses { get; set; }
-        
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterDeletingOrder")]
+        public bool DeactivateGiftCardsAfterDeletingOrder { get; set; }
+
         public string PrimaryStoreCurrencyCode { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.OrderIdent")]
