@@ -44,7 +44,7 @@ namespace Nop.Web
 
         protected void Application_Start()
         {
-            // Most of the API providers require TLS 1.2 nowadys
+            //most of API providers require TLS 1.2 nowadays
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             //disable "X-AspNetMvc-Version" header name
