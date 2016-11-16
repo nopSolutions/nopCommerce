@@ -6399,6 +6399,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.AutoUpdateOrderTotalsOnEditingOrder.Hint">
     <Value>Check to automatically update order totals on editing an order in admin area. IMPORANT: currently this functionality is in BETA testing status.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CompleteOrderWhenDelivered">
+    <Value>Complete order when delivered</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CompleteOrderWhenDelivered.Hint">
+    <Value>Check if an order status should be set to "Complete" only when its shipping status is "Delivered". Otherwise, "Shipped" status will be enough.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterDeletingOrder">
     <Value>Deactivate gift cards after deleting of an order</Value>
   </LocaleResource>

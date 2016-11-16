@@ -270,6 +270,15 @@
                         @Html.ValidationMessageFor(model => model.DeactivateGiftCardsAfterDeletingOrder)
                     </div>
                 </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CompleteOrderWhenDelivered)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CompleteOrderWhenDelivered)
+                        @Html.ValidationMessageFor(model => model.CompleteOrderWhenDelivered)
+                    </div>
+                </div>
             </div>
         </div>
     </div>

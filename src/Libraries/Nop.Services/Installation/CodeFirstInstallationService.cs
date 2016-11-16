@@ -6068,7 +6068,8 @@ namespace Nop.Services.Installation
                 ReturnRequestsEnabled = true,
                 NumberOfDaysReturnRequestAvailable = 365,
                 MinimumOrderPlacementInterval = 30,
-                DeactivateGiftCardsAfterDeletingOrder = false
+                DeactivateGiftCardsAfterDeletingOrder = false,
+                CompleteOrderWhenDelivered = true
             });
 
             settingService.SaveSetting(new SecuritySettings

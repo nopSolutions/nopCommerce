@@ -102,6 +102,9 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterDeletingOrder")]
         public bool DeactivateGiftCardsAfterDeletingOrder { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.CompleteOrderWhenDelivered")]
+        public bool CompleteOrderWhenDelivered { get; set; }
+
         public string PrimaryStoreCurrencyCode { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.OrderIdent")]

@@ -812,6 +812,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterDeletingOrder.Hint">
     <Value>Check to deactivate related gift cards when an order is deleted.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CompleteOrderWhenDelivered">
+    <Value>Complete order when delivered</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CompleteOrderWhenDelivered.Hint">
+    <Value>Check if an order status should be set to "Complete" only when its shipping status is "Delivered". Otherwise, "Shipped" status will be enough.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2423,5 +2429,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.deactivate
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'ordersettings.deactivategiftcardsafterdeletingorder', N'False', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.completeorderwhendelivered')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'ordersettings.completeorderwhendelivered', N'True', 0)
 END
 GO

@@ -1126,12 +1126,33 @@ namespace Nop.Services.Orders
                 }
             }
 
+            //is order complete?
             if (order.OrderStatus != OrderStatus.Cancelled &&
                 order.OrderStatus != OrderStatus.Complete)
             {
                 if (order.PaymentStatus == PaymentStatus.Paid)
                 {
-                    if (order.ShippingStatus == ShippingStatus.ShippingNotRequired || order.ShippingStatus == ShippingStatus.Delivered)
+                    var completed = false;
+                    if (order.ShippingStatus == ShippingStatus.ShippingNotRequired)
+                    {
+                        //shipping is not required
+                        completed = true;
+                    }
+                    else
+                    {
+                        //shipping is required
+                        if (_orderSettings.CompleteOrderWhenDelivered)
+                        {
+                            completed = order.ShippingStatus == ShippingStatus.Delivered;
+                        }
+                        else
+                        {
+                            completed = order.ShippingStatus == ShippingStatus.Shipped ||
+                                        order.ShippingStatus == ShippingStatus.Delivered;
+                        }
+                    }
+
+                    if (completed)
                     {
                         SetOrderStatus(order, OrderStatus.Complete, true);
                     }
