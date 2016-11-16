@@ -15,7 +15,7 @@ namespace Nop.Core.Domain.Orders
         public decimal MinOrderSubtotalAmount { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether 'inimum order subtotal amount' option
+        /// Gets or sets a value indicating whether 'Minimum order subtotal amount' option
         /// should be evaluated over 'X' value including tax or not
         /// </summary>
         public bool MinOrderSubtotalAmountIncludingTax { get; set; }
