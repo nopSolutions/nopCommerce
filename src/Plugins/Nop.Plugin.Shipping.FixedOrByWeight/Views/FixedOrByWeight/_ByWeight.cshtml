@@ -1,8 +1,10 @@
 ﻿@{
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
 }
 @using Nop.Core.Infrastructure
+@using Nop.Services.Stores
 @using Nop.Web.Framework
 @model Nop.Plugin.Shipping.FixedOrByWeight.Models.ConfigurationModel
 
@@ -75,6 +77,7 @@
                                     columns: [
                                         {
                                             field: "StoreName",
+                                            hidden: @(stores.Count > 1 ? "false" : "true"),
                                             title: "@T("Plugins.Shipping.FixedOrByWeight.Fields.Store")",
                                             width: 200
                                         }, {
