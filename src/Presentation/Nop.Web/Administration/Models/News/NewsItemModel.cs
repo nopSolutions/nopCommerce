@@ -76,8 +76,8 @@ namespace Nop.Admin.Models.News
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Published")]
         public bool Published { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Comments")]
-        public int Comments { get; set; }
+        public int ApprovedComments { get; set; }
+        public int NotApprovedComments { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }

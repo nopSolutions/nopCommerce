@@ -110,11 +110,11 @@ namespace Nop.Web.Factories
             model.AllowComments = blogPost.AllowComments;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogPost.StartDateUtc ?? blogPost.CreatedOnUtc, DateTimeKind.Utc);
             model.Tags = blogPost.ParseTags().ToList();
-            model.NumberOfComments = blogPost.CommentCount;
+            model.NumberOfComments = _blogService.GetBlogCommentsCount(blogPost, true);
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage;
             if (prepareComments)
             {
-                var blogComments = blogPost.BlogComments.OrderBy(pr => pr.CreatedOnUtc);
+                var blogComments = blogPost.BlogComments.Where(comment => comment.IsApproved).OrderBy(comment => comment.CreatedOnUtc);
                 foreach (var bc in blogComments)
                 {
                     var commentModel = PrepareBlogPostCommentModel(bc);

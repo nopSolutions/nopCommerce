@@ -184,11 +184,10 @@ namespace Nop.Web.Controllers
                     BlogPostId = blogPost.Id,
                     CustomerId = _workContext.CurrentCustomer.Id,
                     CommentText = model.AddNewComment.CommentText,
+                    IsApproved = !_blogSettings.BlogCommentsMustBeApproved,
                     CreatedOnUtc = DateTime.UtcNow,
                 };
                 blogPost.BlogComments.Add(comment);
-                //update totals
-                blogPost.CommentCount = blogPost.BlogComments.Count;
                 _blogService.UpdateBlogPost(blogPost);
 
                 //notify a store owner
@@ -200,7 +199,9 @@ namespace Nop.Web.Controllers
 
                 //The text boxes should be cleared after a comment has been posted
                 //That' why we reload the page
-                TempData["nop.blog.addcomment.result"] = _localizationService.GetResource("Blog.Comments.SuccessfullyAdded");
+                TempData["nop.blog.addcomment.result"] = comment.IsApproved
+                    ? _localizationService.GetResource("Blog.Comments.SuccessfullyAdded")
+                    : _localizationService.GetResource("Blog.Comments.SeeAfterApproving");
                 return RedirectToRoute("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
             }
 

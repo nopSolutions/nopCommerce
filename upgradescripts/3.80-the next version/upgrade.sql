@@ -821,7 +821,37 @@ set @resources='
   <LocaleResource Name="ReturnRequests.Title">
     <Value><![CDATA[Return item(s) from <a href="{0}">order #{1}</a>]]></Value>
   </LocaleResource>
- </Language>
+  <LocaleResource Name="ActivityLog.EditNewsComment">
+    <Value>Edited a news comment (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.News.NewsCommentsMustBeApproved">
+    <Value>News comments must be approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.News.NewsCommentsMustBeApproved.Hint">
+    <Value>Check if news comments must be approved by administrator.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.Fields.IsApproved">
+    <Value>Is approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="News.Comments.SeeAfterApproving">
+    <Value>News comment is successfully added. You will see it after approving by a store administrator.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditBlogComment">
+    <Value>Edited a blog comment (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.BlogCommentsMustBeApproved">
+    <Value>Blog comments must be approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.BlogCommentsMustBeApproved.Hint">
+    <Value>Check if blog comments must be approved by administrator.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.Fields.IsApproved">
+    <Value>Is approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="Blog.Comments.SeeAfterApproving">
+    <Value>Blog comment is successfully added. You will see it after approving by a store administrator.</Value>
+  </LocaleResource>
+</Language>
 '
 
 CREATE TABLE #LocaleStringResourceTmp
@@ -2440,5 +2470,83 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.completeor
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'ordersettings.completeorderwhendelivered', N'True', 0)
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[NewsComment]') and NAME='IsApproved')
+BEGIN
+	ALTER TABLE [NewsComment]
+	ADD [IsApproved] bit NULL
+END
+GO
+
+UPDATE [NewsComment]
+SET [IsApproved] = 1
+WHERE [IsApproved] IS NULL
+GO
+
+ALTER TABLE [NewsComment] ALTER COLUMN [IsApproved] bit NOT NULL
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'EditNewsComment')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'EditNewsComment', N'Edited a news comment', N'true')
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'newssettings.newscommentsmustbeapproved')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'newssettings.newscommentsmustbeapproved', N'False', 0)
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[BlogComment]') and NAME='IsApproved')
+BEGIN
+	ALTER TABLE [BlogComment]
+	ADD [IsApproved] bit NULL
+END
+GO
+
+UPDATE [BlogComment]
+SET [IsApproved] = 1
+WHERE [IsApproved] IS NULL
+GO
+
+ALTER TABLE [BlogComment] ALTER COLUMN [IsApproved] bit NOT NULL
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'EditBlogComment')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'EditBlogComment', N'Edited a blog comment', N'true')
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'blogsettings.blogcommentsmustbeapproved')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'blogsettings.blogcommentsmustbeapproved', N'False', 0)
+END
+GO
+
+--drop column
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[News]') and NAME='CommentCount')
+BEGIN
+	ALTER TABLE [News] DROP COLUMN [CommentCount]
+END
+GO
+
+--drop column
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[BlogPost]') and NAME='CommentCount')
+BEGIN
+	ALTER TABLE [BlogPost] DROP COLUMN [CommentCount]
 END
 GO

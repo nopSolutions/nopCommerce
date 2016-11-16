@@ -177,13 +177,11 @@ namespace Nop.Web.Controllers
                     CustomerId = _workContext.CurrentCustomer.Id,
                     CommentTitle = model.AddNewComment.CommentTitle,
                     CommentText = model.AddNewComment.CommentText,
+                    IsApproved = !_newsSettings.NewsCommentsMustBeApproved,
                     CreatedOnUtc = DateTime.UtcNow,
                 };
                 newsItem.NewsComments.Add(comment);
-                //update totals
-                newsItem.CommentCount = newsItem.NewsComments.Count;
                 _newsService.UpdateNews(newsItem);
-
 
                 //notify a store owner;
                 if (_newsSettings.NotifyAboutNewNewsComments)
@@ -194,7 +192,10 @@ namespace Nop.Web.Controllers
 
                 //The text boxes should be cleared after a comment has been posted
                 //That' why we reload the page
-                TempData["nop.news.addcomment.result"] = _localizationService.GetResource("News.Comments.SuccessfullyAdded");
+                TempData["nop.news.addcomment.result"] = comment.IsApproved 
+                    ? _localizationService.GetResource("News.Comments.SuccessfullyAdded")
+                    : _localizationService.GetResource("News.Comments.SeeAfterApproving");
+
                 return RedirectToRoute("NewsItem", new { SeName = newsItem.GetSeName(newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
             }
 

@@ -513,7 +513,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                 //blogs
                 cfg.CreateMap<BlogPost, BlogPostModel>()
                     .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName(src.LanguageId, true, false)))
-                    .ForMember(dest => dest.Comments, mo => mo.Ignore())
+                    .ForMember(dest => dest.ApprovedComments, mo => mo.Ignore())
+                    .ForMember(dest => dest.NotApprovedComments, mo => mo.Ignore())
                     .ForMember(dest => dest.StartDate, mo => mo.Ignore())
                     .ForMember(dest => dest.EndDate, mo => mo.Ignore())
                     .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
@@ -524,7 +525,6 @@ namespace Nop.Admin.Infrastructure.Mapper
                 cfg.CreateMap<BlogPostModel, BlogPost>()
                     .ForMember(dest => dest.BlogComments, mo => mo.Ignore())
                     .ForMember(dest => dest.Language, mo => mo.Ignore())
-                    .ForMember(dest => dest.CommentCount, mo => mo.Ignore())
                     .ForMember(dest => dest.StartDateUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.EndDateUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
@@ -532,7 +532,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                 //news
                 cfg.CreateMap<NewsItem, NewsItemModel>()
                     .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName(src.LanguageId, true, false)))
-                    .ForMember(dest => dest.Comments, mo => mo.Ignore())
+                    .ForMember(dest => dest.ApprovedComments, mo => mo.Ignore())
+                    .ForMember(dest => dest.NotApprovedComments, mo => mo.Ignore())
                     .ForMember(dest => dest.StartDate, mo => mo.Ignore())
                     .ForMember(dest => dest.EndDate, mo => mo.Ignore())
                     .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
@@ -543,7 +544,6 @@ namespace Nop.Admin.Infrastructure.Mapper
                 cfg.CreateMap<NewsItemModel, NewsItem>()
                     .ForMember(dest => dest.NewsComments, mo => mo.Ignore())
                     .ForMember(dest => dest.Language, mo => mo.Ignore())
-                    .ForMember(dest => dest.CommentCount, mo => mo.Ignore())
                     .ForMember(dest => dest.StartDateUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.EndDateUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
@@ -704,6 +704,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.MainPageNewsCount_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.NewsArchivePageSize_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.ShowHeaderRssUrl_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.NewsCommentsMustBeApproved_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<NewsSettingsModel, NewsSettings>();
                 cfg.CreateMap<ForumSettings, ForumSettingsModel>()
@@ -752,6 +753,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.NotifyAboutNewBlogComments_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.NumberOfTags_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.ShowHeaderRssUrl_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.BlogCommentsMustBeApproved_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<BlogSettingsModel, BlogSettings>();
                 cfg.CreateMap<VendorSettings, VendorSettingsModel>()

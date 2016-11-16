@@ -6161,6 +6161,7 @@ namespace Nop.Services.Installation
                 NotifyAboutNewBlogComments = false,
                 NumberOfTags = 15,
                 ShowHeaderRssUrl = false,
+                BlogCommentsMustBeApproved = false
             });
             settingService.SaveSetting(new NewsSettings
             {
@@ -6171,6 +6172,7 @@ namespace Nop.Services.Installation
                 MainPageNewsCount = 3,
                 NewsArchivePageSize = 10,
                 ShowHeaderRssUrl = false,
+                NewsCommentsMustBeApproved = false
             });
 
             settingService.SaveSetting(new ForumSettings
@@ -10741,11 +10743,9 @@ namespace Nop.Services.Installation
                     BlogPostId = blogPost.Id,
                     CustomerId = defaultCustomer.Id,
                     CommentText = "This is a sample comment for this blog post",
+                    IsApproved = true,
                     CreatedOnUtc = DateTime.UtcNow
                 });
-                //update totals
-                blogPost.CommentCount = blogPost.BlogComments.Count;
-
             }
             _blogPostRepository.Update(blogPosts);
         }
@@ -10814,11 +10814,9 @@ namespace Nop.Services.Installation
                     CustomerId = defaultCustomer.Id,
                     CommentTitle = "Sample comment title",
                     CommentText = "This is a sample comment...",
+                    IsApproved = true,
                     CreatedOnUtc = DateTime.UtcNow
                 });
-                //update totals
-                newsItem.CommentCount = newsItem.NewsComments.Count;
-
             }
             _newsItemRepository.Update(news);
         }

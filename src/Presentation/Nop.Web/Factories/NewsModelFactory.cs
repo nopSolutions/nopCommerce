@@ -110,11 +110,11 @@ namespace Nop.Web.Factories
             model.Full = newsItem.Full;
             model.AllowComments = newsItem.AllowComments;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsItem.StartDateUtc ?? newsItem.CreatedOnUtc, DateTimeKind.Utc);
-            model.NumberOfComments = newsItem.CommentCount;
+            model.NumberOfComments = _newsService.GetNewsCommentsCount(newsItem, true);
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage;
             if (prepareComments)
             {
-                var newsComments = newsItem.NewsComments.OrderBy(pr => pr.CreatedOnUtc);
+                var newsComments = newsItem.NewsComments.Where(comment => comment.IsApproved).OrderBy(comment => comment.CreatedOnUtc);
                 foreach (var nc in newsComments)
                 {
                     var commentModel = PrepareNewsCommentModel(nc);

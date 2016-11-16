@@ -30,17 +30,6 @@
                 <div class="panel-body">
                     <div id="comments-grid"></div>
 
-                    @{
-                        string readUrl = "";
-                        if (filterByBlogPostId.HasValue)
-                        {
-                            readUrl = Url.Action("Comments", "Blog", new {filterByBlogPostId = filterByBlogPostId.Value});
-                        }
-                        else
-                        {
-                            readUrl = Url.Action("Comments", "Blog");
-                        }
-                    }
                     <script>
                         $(document).ready(function() {
                             $("#comments-grid").kendoGrid({
@@ -48,7 +37,13 @@
                                     type: "json",
                                     transport: {
                                         read: {
-                                            url: "@readUrl",
+                                            url: "@Url.Action("Comments", "Blog", new { filterByBlogPostId = filterByBlogPostId.HasValue ? filterByBlogPostId : null })",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        update: {
+                                            url: "@Html.Raw(Url.Action("CommentUpdate", "Blog"))",
                                             type: "POST",
                                             dataType: "json",
                                             data: addAntiForgeryToken
@@ -67,11 +62,19 @@
                                         model: {
                                             id: "Id",
                                             fields: {
-                                                //do not implicitly specify all fields
-                                                //we do it only for fields which implicitly require it
-                                                //otherwise, they'll be formatted wrong way
-                                                CreatedOn: { type: "date" }
+                                                Id: { editable: false, type: "number" },
+                                                BlogPostTitle: { editable: false, type: "string" },
+                                                CustomerInfo: { editable: false, type: "string" },
+                                                CustomerId: { editable: false, type: "number" },
+                                                Comment: { editable: false, type: "string" },                                              
+                                                IsApproved: { editable: true, type: "boolean" },
+                                                CreatedOn: { editable: false, type: "date" }
                                             }
+                                        }
+                                    },
+                                    requestEnd: function(e) {
+                                        if (e.type == "update") {
+                                            this.read();
                                         }
                                     },
                                     error: function(e) {
@@ -103,10 +106,6 @@
                                         template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
                                         width: 50
                                     }, {
-                                        field: "Id",
-                                        title: "ID",
-                                        width: 50
-                                    }, {
                                         field: "BlogPostTitle",
                                         title: "@T("Admin.ContentManagement.Blog.Comments.Fields.BlogPost")",
                                         width: 200,
@@ -121,15 +120,33 @@
                                         title: "@T("Admin.ContentManagement.Blog.Comments.Fields.Comment")",
                                         encoded: false
                                     }, {
+                                        field: "IsApproved",
+                                        title: "@T("Admin.ContentManagement.Blog.Comments.Fields.IsApproved")",
+                                        width: 100,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '# if(IsApproved) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                    }, {
                                         field: "CreatedOn",
                                         title: "@T("Admin.ContentManagement.Blog.Comments.Fields.CreatedOn")",
                                         width: 200,
                                         type: "date",
                                         format: "{0:G}"
                                     }, {
-                                        command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
-                                        title: "@T("Admin.Common.Delete")",
-                                        width: 100
+                                        command: [
+                                            {
+                                                name: "edit",
+                                                text: {
+                                                    edit: "@T("Admin.Common.Edit")",
+                                                    update: "@T("Admin.Common.Update")",
+                                                    cancel: "@T("Admin.Common.Cancel")"
+                                                }
+                                            }, {
+                                                name: "destroy",
+                                                text: "@T("Admin.Common.Delete")"
+                                            }
+                                        ],
+                                        width: 200
                                     }
                                 ]
                             });

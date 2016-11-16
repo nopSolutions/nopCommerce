@@ -34,5 +34,10 @@ namespace Nop.Core.Domain.Blogs
         /// Enable the blog RSS feed link in customers browser address bar
         /// </summary>
         public bool ShowHeaderRssUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether blog comments must be approved
+        /// </summary>
+        public bool BlogCommentsMustBeApproved { get; set; }
     }
 }

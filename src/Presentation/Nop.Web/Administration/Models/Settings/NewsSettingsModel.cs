@@ -36,5 +36,9 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.News.ShowHeaderRSSUrl")]
         public bool ShowHeaderRssUrl { get; set; }
         public bool ShowHeaderRssUrl_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.News.NewsCommentsMustBeApproved")]
+        public bool NewsCommentsMustBeApproved { get; set; }
+        public bool NewsCommentsMustBeApproved_OverrideForStore { get; set; }
     }
 }

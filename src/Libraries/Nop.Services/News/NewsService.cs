@@ -44,6 +44,8 @@ namespace Nop.Services.News
 
         #region Methods
 
+        #region News
+
         /// <summary>
         /// Deletes a news
         /// </summary>
@@ -159,7 +161,11 @@ namespace Nop.Services.News
             //event notification
             _eventPublisher.EntityUpdated(news);
         }
-        
+
+        #endregion
+
+        #region News comments
+
         /// <summary>
         /// Gets all comments
         /// </summary>
@@ -214,6 +220,22 @@ namespace Nop.Services.News
         }
 
         /// <summary>
+        /// Get the count of news comments
+        /// </summary>
+        /// <param name="newsItem">News item</param>
+        /// <param name="isApproved">A value indicating whether to count only approved or not approved comments; pass null to get number of all comments</param>
+        /// <returns>Number of news comments</returns>
+        public virtual int GetNewsCommentsCount(NewsItem newsItem, bool? isApproved = null)
+        {
+            var query = _newsCommentRepository.Table.Where(comment => comment.NewsItemId == newsItem.Id);
+
+            if (isApproved.HasValue)
+                query = query.Where(comment => comment.IsApproved == isApproved.Value);
+
+            return query.Count();
+        }
+
+        /// <summary>
         /// Deletes a news comment
         /// </summary>
         /// <param name="newsComment">News comment</param>
@@ -236,6 +258,9 @@ namespace Nop.Services.News
 
             _newsCommentRepository.Delete(newsComments);
         }
+        
+        #endregion
+
         #endregion
     }
 }

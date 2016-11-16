@@ -160,7 +160,9 @@ namespace Nop.Admin.Controllers
                         m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     m.LanguageName = x.Language.Name;
-                    m.Comments = x.CommentCount;
+                    m.ApprovedComments = _blogService.GetBlogCommentsCount(x, true);
+                    m.NotApprovedComments = _blogService.GetBlogCommentsCount(x, false);
+
                     return m;
                 }),
                 Total = blogPosts.TotalCount
@@ -351,11 +353,32 @@ namespace Nop.Admin.Controllers
                     commentModel.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc);
                     commentModel.Comment = Core.Html.HtmlHelper.FormatText(blogComment.CommentText, false, true, false, false, false, false);
+                    commentModel.IsApproved = blogComment.IsApproved;
+
                     return commentModel;
                 }),
                 Total = comments.Count,
             };
             return Json(gridModel);
+        }
+
+        [HttpPost]
+        public ActionResult CommentUpdate(BlogCommentModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+                return AccessDeniedView();
+
+            var comment = _blogService.GetBlogCommentById(model.Id);
+            if (comment == null)
+                throw new ArgumentException("No comment found with the specified id");
+
+            comment.IsApproved = model.IsApproved;
+            _blogService.UpdateBlogPost(comment.BlogPost);
+
+            //activity log
+            _customerActivityService.InsertActivity("EditBlogComment", _localizationService.GetResource("ActivityLog.EditBlogComment"), model.Id);
+
+            return new NullJsonResult();
         }
 
         public ActionResult CommentDelete(int id)
@@ -372,10 +395,6 @@ namespace Nop.Admin.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("DeleteBlogPostComment", _localizationService.GetResource("ActivityLog.DeleteBlogPostComment"), blogPost.Id);
-            
-            //update totals
-            blogPost.CommentCount = blogPost.BlogComments.Count;
-            _blogService.UpdateBlogPost(blogPost);
 
             return new NullJsonResult();
         }
@@ -396,12 +415,6 @@ namespace Nop.Admin.Controllers
                 foreach (var blogComment in comments)
                 {
                     _customerActivityService.InsertActivity("DeleteBlogPostComment", _localizationService.GetResource("ActivityLog.DeleteBlogPostComment"), blogComment.Id);
-                }
-                //update totals
-                foreach (var blogPost in blogPosts)
-                {
-                    blogPost.CommentCount = blogPost.BlogComments.Count;
-                    _blogService.UpdateBlogPost(blogPost);
                 }
             }
 

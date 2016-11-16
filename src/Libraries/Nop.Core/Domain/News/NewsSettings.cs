@@ -39,5 +39,10 @@ namespace Nop.Core.Domain.News
         /// Enable the news RSS feed link in customers browser address bar
         /// </summary>
         public bool ShowHeaderRssUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether news comments must be approved
+        /// </summary>
+        public bool NewsCommentsMustBeApproved { get; set; }
     }
 }
