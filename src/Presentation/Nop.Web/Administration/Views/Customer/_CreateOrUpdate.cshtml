@@ -1,6 +1,7 @@
-﻿@model CustomerModel
+﻿@using Nop.Core.Domain.Orders;
+@using Nop.Services.Stores
+@model CustomerModel
 
-@using Nop.Core.Domain.Orders;
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 
@@ -583,6 +584,7 @@
 {
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
 
     <div class="panel-group">
         <div class="panel panel-default">
@@ -652,8 +654,9 @@
                                 field: "ShippingStatus",
                                 title: "@T("Admin.Customers.Customers.Orders.ShippingStatus")",
                                 width: 200
-                            }, {
+                            },{
                                 field: "StoreName",
+                                hidden: @(stores.Count > 1 ? "false" : "true"),
                                 title: "@T("Admin.Customers.Customers.Orders.Store")",
                                 width: 200
                             }, {
@@ -774,6 +777,8 @@
 
 @helper TabCurrentShoppingCart()
 {
+    var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
+
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -837,6 +842,7 @@
                                 width:200
                             },{
                                 field: "Store",
+                                hidden: @(stores.Count > 1 ? "false" : "true"),
                                 title: "@T("Admin.CurrentCarts.Store")",
                                 width:200
                             },{
@@ -856,6 +862,8 @@
 
 @helper TabCurrentWishlist()
 {
+    var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
+
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -919,6 +927,7 @@
                                 width:200
                             },{
                                 field: "Store",
+                                hidden: @(stores.Count > 1 ? "false" : "true"),
                                 title: "@T("Admin.CurrentCarts.Store")",
                                 width:200
                             },{
@@ -1031,6 +1040,7 @@
 {
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
 
     <div class="panel-group">
         <div class="panel panel-default">
@@ -1076,6 +1086,7 @@
                             scrollable: false,
                             columns: [{
                                 field: "StoreName",
+                                hidden: @(stores.Count > 1 ? "false" : "true"),
                                 title: "@T("Admin.Customers.Customers.BackInStockSubscriptions.Store")",
                                 width: 200,
                             }, {

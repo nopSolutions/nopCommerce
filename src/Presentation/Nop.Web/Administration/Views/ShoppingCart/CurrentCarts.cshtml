@@ -1,6 +1,8 @@
-﻿@{
+﻿@using Nop.Services.Stores
+@{
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
 
     //page title
     ViewBag.Title = T("Admin.CurrentCarts").Text;
@@ -130,6 +132,7 @@
                                         width: 150
                                     },{
                                         field: "Store",
+                                        hidden: @(stores.Count > 1 ? "false" : "true"),
                                         title: "@T("Admin.CurrentCarts.Store")",
                                         width: 150
                                     },{
