@@ -65,6 +65,32 @@ namespace Nop.Web.Factories
 
         #region Methods
 
+        public virtual BlogCommentModel PrepareBlogPostCommentModel(BlogComment blogComment)
+        {
+            if (blogComment == null)
+                throw new ArgumentNullException("blogComment");
+
+            var model = new BlogCommentModel
+            {
+                Id = blogComment.Id,
+                CustomerId = blogComment.CustomerId,
+                CustomerName = blogComment.Customer.FormatUserName(),
+                CommentText = blogComment.CommentText,
+                CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc),
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && blogComment.Customer != null && !blogComment.Customer.IsGuest()
+            };
+            if (_customerSettings.AllowCustomersToUploadAvatars)
+            {
+                model.CustomerAvatarUrl = _pictureService.GetPictureUrl(
+                    blogComment.Customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                    _mediaSettings.AvatarPictureSize,
+                    _customerSettings.DefaultAvatarEnabled,
+                    defaultPictureType: PictureType.Avatar);
+            }
+
+            return model;
+        }
+
         public virtual void PrepareBlogPostModel(BlogPostModel model, BlogPost blogPost, bool prepareComments)
         {
             if (model == null)
@@ -91,23 +117,7 @@ namespace Nop.Web.Factories
                 var blogComments = blogPost.BlogComments.OrderBy(pr => pr.CreatedOnUtc);
                 foreach (var bc in blogComments)
                 {
-                    var commentModel = new BlogCommentModel
-                    {
-                        Id = bc.Id,
-                        CustomerId = bc.CustomerId,
-                        CustomerName = bc.Customer.FormatUserName(),
-                        CommentText = bc.CommentText,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(bc.CreatedOnUtc, DateTimeKind.Utc),
-                        AllowViewingProfiles = _customerSettings.AllowViewingProfiles && bc.Customer != null && !bc.Customer.IsGuest(),
-                    };
-                    if (_customerSettings.AllowCustomersToUploadAvatars)
-                    {
-                        commentModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                            bc.Customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
-                            _mediaSettings.AvatarPictureSize,
-                            _customerSettings.DefaultAvatarEnabled,
-                            defaultPictureType: PictureType.Avatar);
-                    }
+                    var commentModel = PrepareBlogPostCommentModel(bc);
                     model.Comments.Add(commentModel);
                 }
             }
