@@ -269,6 +269,8 @@
     <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Extensions\ControllerExtensions.cs" />
     <Compile Include="Extensions\MappingExtensions.cs" />
+    <Compile Include="Factories\IForumModelFactory.cs" />
+    <Compile Include="Factories\ForumModelFactory.cs" />
     <Compile Include="Factories\IBlogModelFactory.cs" />
     <Compile Include="Factories\BlogModelFactory.cs" />
     <Compile Include="Global.asax.cs">

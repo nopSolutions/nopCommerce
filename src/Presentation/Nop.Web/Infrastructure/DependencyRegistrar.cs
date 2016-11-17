@@ -52,6 +52,8 @@ namespace Nop.Web.Infrastructure
             builder.RegisterType<BlogModelFactory>().As<IBlogModelFactory>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();
+            builder.RegisterType<ForumModelFactory>().As<IForumModelFactory>()
+                .InstancePerLifetimeScope();
         }
 
         /// <summary>
