@@ -4,10 +4,11 @@
 @using Nop.Services.Catalog;
 @using System.Text;
 @using Nop.Services
-@using Nop.Services.Customers
 @using Nop.Services.Stores
 
 @{
+    var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
+
     //resources for product tags input
     Html.AppendCssFileParts("~/Administration/Content/tagEditor/jquery.tag-editor.css");
     Html.AppendScriptParts("~/Administration/Scripts/tagEditor/jquery.tag-editor.min.js");
@@ -1164,7 +1165,7 @@
                                     columns: [
                                         {
                                             field: "StoreId",
-                                            hidden: @(Model.AvailableStores.SelectionIsNotPossible() ? "true" : "false"),
+                                            hidden: @(stores.Count > 1 ? "false" : "true"),
                                             title: "@T("Admin.Catalog.Products.TierPrices.Fields.Store")",
                                             template: "#:Store#"
                                         }, {

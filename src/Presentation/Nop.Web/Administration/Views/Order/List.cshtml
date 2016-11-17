@@ -1,8 +1,10 @@
-﻿@model OrderListModel
+﻿@using Nop.Services.Stores
+@model OrderListModel
 
 @{
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
 
     //page title
     ViewBag.Title = T("Admin.Orders").Text;
@@ -363,6 +365,7 @@
                                         },
                                         {
                                             field: "StoreName",
+                                            hidden: @(stores.Count > 1 ? "false" : "true"),
                                             title: "@T("Admin.Orders.Fields.Store")",
                                             width: 100
                                         }, {
