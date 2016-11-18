@@ -283,7 +283,8 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="quantityToChange">Quantity to increase or descrease</param>
         /// <param name="attributesXml">Attributes in XML format</param>
-        void AdjustInventory(Product product, int quantityToChange, string attributesXml = "");
+        /// <param name="message">Message for the stock quantity history</param>
+        void AdjustInventory(Product product, int quantityToChange, string attributesXml = "", string message = "");
 
         /// <summary>
         /// Reserve the given quantity in the warehouses.
@@ -305,7 +306,8 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="quantity">Quantity, must be negative</param>
-        void BookReservedInventory(Product product, int warehouseId, int quantity);
+        /// <param name="message">Message for the stock quantity history</param>
+        void BookReservedInventory(Product product, int warehouseId, int quantity, string message = "");
 
         /// <summary>
         /// Reverse booked inventory (if acceptable)
@@ -313,7 +315,8 @@ namespace Nop.Services.Catalog
         /// <param name="product">product</param>
         /// <param name="shipmentItem">Shipment item</param>
         /// <returns>Quantity reversed</returns>
-        int ReverseBookedInventory(Product product, ShipmentItem shipmentItem);
+        /// <param name="message">Message for the stock quantity history</param>
+        int ReverseBookedInventory(Product product, ShipmentItem shipmentItem, string message = "");
 
         #endregion
 
@@ -526,6 +529,34 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="pwi">ProductWarehouseInventory</param>
         void DeleteProductWarehouseInventory(ProductWarehouseInventory pwi);
+
+        #endregion
+
+        #region Stock quantity history
+
+        /// <summary>
+        /// Add stock quantity change entry
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="quantityAdjustment">Quantity adjustment</param>
+        /// <param name="stockQuantity">Current stock quantity</param>
+        /// <param name="warehouseId">Warehouse identifier</param>
+        /// <param name="message">Message</param>
+        /// <param name="combinationId">Product attribute combination identifier</param>
+        void AddStockQuantityHistoryEntry(Product product, int quantityAdjustment, int stockQuantity,
+            int warehouseId = 0, string message = "", int? combinationId = null);
+
+        /// <summary>
+        /// Get the history of the product stock quantity changes
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="warehouseId">Warehouse identifier; pass 0 to load all entries</param>
+        /// <param name="combinationId">Product attribute combination identifier; pass 0 to load all entries</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>List of stock quantity change entries</returns>
+        IPagedList<StockQuantityHistory> GetStockQuantityHistory(Product product, int warehouseId = 0, int combinationId = 0,
+            int pageIndex = 0, int pageSize = int.MaxValue);
 
         #endregion
     }

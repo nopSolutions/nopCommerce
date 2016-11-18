@@ -758,7 +758,15 @@
                                                 @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.SpecificationAttributes)
                                             </div>
                                         </div>
-
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.StockQuantityHistory)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.StockQuantityHistory)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.StockQuantityHistory)
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

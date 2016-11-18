@@ -1314,7 +1314,8 @@ namespace Nop.Services.Orders
                         }
 
                         //inventory
-                        _productService.AdjustInventory(sc.Product, -sc.Quantity, sc.AttributesXml);
+                        _productService.AdjustInventory(sc.Product, -sc.Quantity, sc.AttributesXml,
+                            string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.PlaceOrder"), order.Id));
                     }
 
                     //clear shopping cart
@@ -1587,13 +1588,16 @@ namespace Nop.Services.Orders
                         if (orderItem == null)
                             continue;
 
-                        _productService.ReverseBookedInventory(orderItem.Product, shipmentItem);
+                        _productService.ReverseBookedInventory(orderItem.Product, shipmentItem,
+                            string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.DeleteOrder"), order.Id));
                     }
                 }
+
                 //Adjust inventory
                 foreach (var orderItem in order.OrderItems)
                 {
-                    _productService.AdjustInventory(orderItem.Product, orderItem.Quantity, orderItem.AttributesXml);
+                    _productService.AdjustInventory(orderItem.Product, orderItem.Quantity, orderItem.AttributesXml,
+                        string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.DeleteOrder"), order.Id));
                 }
 
             }
@@ -1773,7 +1777,8 @@ namespace Nop.Services.Orders
                         }
 
                         //inventory
-                        _productService.AdjustInventory(orderItem.Product, -orderItem.Quantity, orderItem.AttributesXml);
+                        _productService.AdjustInventory(orderItem.Product, -orderItem.Quantity, orderItem.AttributesXml,
+                            string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.PlaceOrder"), order.Id));
                     }
 
                     //notifications
@@ -1951,7 +1956,8 @@ namespace Nop.Services.Orders
             foreach (var item in shipment.ShipmentItems)
             {
                 var orderItem = _orderService.GetOrderItemById(item.OrderItemId);
-                _productService.BookReservedInventory(orderItem.Product, item.WarehouseId, -item.Quantity);
+                _productService.BookReservedInventory(orderItem.Product, item.WarehouseId, -item.Quantity,
+                    string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.Ship"), shipment.OrderId));
             }
 
             //check whether we have more items to ship
@@ -2116,13 +2122,15 @@ namespace Nop.Services.Orders
                     if (orderItem == null)
                         continue;
 
-                    _productService.ReverseBookedInventory(orderItem.Product, shipmentItem);
+                    _productService.ReverseBookedInventory(orderItem.Product, shipmentItem,
+                        string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CancelOrder"), order.Id));
                 }
             }
             //Adjust inventory
             foreach (var orderItem in order.OrderItems)
             {
-                _productService.AdjustInventory(orderItem.Product, orderItem.Quantity, orderItem.AttributesXml);
+                _productService.AdjustInventory(orderItem.Product, orderItem.Quantity, orderItem.AttributesXml,
+                    string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CancelOrder"), order.Id));
             }
 
             _eventPublisher.Publish(new OrderCancelledEvent(order));

@@ -205,5 +205,8 @@ namespace Nop.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.Manufacturers")]
         public bool Manufacturers { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.StockQuantityHistory")]
+        public bool StockQuantityHistory { get; set; }
     }
 }

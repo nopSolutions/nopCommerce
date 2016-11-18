@@ -851,6 +851,81 @@ set @resources='
   <LocaleResource Name="Blog.Comments.SeeAfterApproving">
     <Value>Blog comment is successfully added. You will see it after approving by a store administrator.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.StockQuantityHistory">
+    <Value>Stock quantity history</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.StockQuantityHistory.Hint">
+    <Value>Here you can see a history of the product stock quantity changes.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.StockQuantityHistory.Fields.Combination">
+    <Value>Attribute combination</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.StockQuantityHistory.Fields.CreatedOn">
+    <Value>Created On</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.StockQuantityHistory.Fields.Message">
+    <Value>Message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.StockQuantityHistory.Fields.StockQuantity">
+    <Value>Stock quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.StockQuantityHistory.Fields.QuantityAdjustment">
+    <Value>Quantity adjustment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.StockQuantityHistory.Fields.Warehouse">
+    <Value>Warehouse</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.StockQuantityHistory">
+    <Value>Stock quantity history</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.CancelOrder">
+    <Value>The stock quantity has been increased by canceling the order #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.Combination.Edit">
+    <Value>The stock quantity of combination has been edited</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.CopyProduct">
+    <Value>The stock quantity has been edited by copying the product #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.DeleteOrder">
+    <Value>The stock quantity has been increased by deleting the order #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.DeleteOrderItem">
+    <Value>The stock quantity has been increased by deleting an order item from the order #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.DeleteShipment">
+    <Value>The stock quantity has been increased by deleting a shipment from the order #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.Edit">
+    <Value>The stock quantity has been edited</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.MultipleWarehouses">
+    <Value>Multiple warehouses.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.EditOrder">
+    <Value>The stock quantity has been changed by editing the order #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.ImportProduct.Edit">
+    <Value>The stock quantity has been changed by importing product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.ImportProduct.EditWarehouse">
+    <Value>Products have been moved {0} {1} by importing product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.EditWarehouse">
+    <Value>Products have been moved {0} {1}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.EditWarehouse.New">
+    <Value>to the {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.EditWarehouse.Old">
+    <Value>from the {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.PlaceOrder">
+    <Value>The stock quantity has been reduced by placing the order #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.Ship">
+    <Value>The stock quantity has been reduced when an order item of the order #{0} was shipped</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2558,3 +2633,95 @@ GO
 	VALUES (N'NewReturnRequest.CustomerNotification', NULL, N'%Store.Name%. New return request.', N'<p><a href="%Store.URL%">%Store.Name%</a> <br /><br />Hello %Customer.FullName%!<br /> You have just submitted a new return request. Details are below:<br />Request ID: %ReturnRequest.CustomNumber%<br />Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%<br />Reason for return: %ReturnRequest.Reason%<br />Requested action: %ReturnRequest.RequestedAction%<br />Customer comments:<br />%ReturnRequest.CustomerComment%</p>', 1, 0, 0, 0, 0)
  END
  GO
+
+ --new table
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[StockQuantityHistory]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[StockQuantityHistory]
+    (
+		[Id] int IDENTITY(1,1) NOT NULL,
+        [ProductId] int NOT NULL,
+        [CombinationId] int NULL,
+        [WarehouseId] int NULL,
+		[QuantityAdjustment] int NOT NULL,
+        [StockQuantity] int NOT NULL,
+        [Message] NVARCHAR (MAX) NULL,
+		[CreatedOnUtc] datetime NOT NULL
+		PRIMARY KEY CLUSTERED 
+		(
+			[Id] ASC
+		) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+	)
+END
+GO
+
+IF EXISTS (SELECT 1 FROM sys.objects WHERE name = 'StockQuantityHistory_Product' AND parent_object_id = Object_id('StockQuantityHistory') AND Objectproperty(object_id, N'IsForeignKey') = 1)
+BEGIN
+    ALTER TABLE [dbo].StockQuantityHistory
+    DROP CONSTRAINT StockQuantityHistory_Product
+END
+GO
+
+ALTER TABLE [dbo].[StockQuantityHistory] WITH CHECK ADD CONSTRAINT [StockQuantityHistory_Product] FOREIGN KEY([ProductId])
+REFERENCES [dbo].[Product] ([Id])
+ON DELETE CASCADE
+GO
+
+--initial stock quantity history
+DECLARE cur_initialhistory CURSOR FOR
+SELECT [Product].Id, NULL, [Product].WarehouseId, [Product].StockQuantity, NULL
+FROM [Product]
+UNION ALL
+SELECT [ProductAttributeCombination].ProductId, [ProductAttributeCombination].Id, NULL, [ProductAttributeCombination].StockQuantity, NULL
+FROM [ProductAttributeCombination]
+UNION ALL
+SELECT [ProductWarehouseInventory].ProductId, NULL, [ProductWarehouseInventory].WarehouseId, [ProductWarehouseInventory].StockQuantity, [ProductWarehouseInventory].Id
+FROM [ProductWarehouseInventory]
+
+DECLARE @productId int
+DECLARE @combinationId int
+DECLARE @warehouseId int
+DECLARE @quantity int
+DECLARE @warehouseInventoryId int
+
+OPEN cur_initialhistory
+FETCH NEXT FROM cur_initialhistory INTO @productId, @combinationId, @warehouseId, @quantity, @warehouseInventoryId
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    IF @warehouseId = 0
+    BEGIN
+        SET @warehouseId = NULL;
+    END
+    
+    DECLARE @message nvarchar(200)
+    SET @message = 'Initialization of history table (original quantity set) during upgrade from a previous version'
+    IF @warehouseInventoryId IS NOT NULL
+    BEGIN
+        SET @message = 'Multiple warehouses. ' + @message;
+    END
+
+	IF (@quantity IS NOT NULL AND @quantity <> 0 AND 
+        NOT EXISTS (SELECT 1 FROM [StockQuantityHistory] WHERE ProductId = @productId AND 
+            (CombinationId = @combinationId OR (CombinationId IS NULL AND @combinationId IS NULL)) AND (WarehouseId = @warehouseId OR (WarehouseId IS NULL AND @warehouseId IS NULL))))
+	BEGIN
+		INSERT INTO [StockQuantityHistory]
+		    ([ProductId], [CombinationId], [WarehouseId], [QuantityAdjustment], [StockQuantity], [Message], [CreatedOnUtc])
+		VALUES
+		    (@productId, @combinationId, @warehouseId, @quantity, @quantity, @message, GETUTCDATE())
+	END
+
+	FETCH NEXT FROM cur_initialhistory INTO @productId, @combinationId, @warehouseId, @quantity, @warehouseInventoryId
+END
+
+CLOSE cur_initialhistory
+DEALLOCATE cur_initialhistory
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'producteditorsettings.stockquantityhistory')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'producteditorsettings.stockquantityhistory', N'False', 0)
+END
+GO

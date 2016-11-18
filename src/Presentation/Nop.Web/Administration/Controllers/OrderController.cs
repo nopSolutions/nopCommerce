@@ -2161,13 +2161,15 @@ namespace Nop.Admin.Controllers
                 }
 
                 //adjust inventory
-                _productService.AdjustInventory(orderItem.Product, qtyDifference, orderItem.AttributesXml);
+                _productService.AdjustInventory(orderItem.Product, qtyDifference, orderItem.AttributesXml,
+                    string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.EditOrder"), order.Id));
 
             }
             else
             {
                 //adjust inventory
-                _productService.AdjustInventory(orderItem.Product, orderItem.Quantity, orderItem.AttributesXml);
+                _productService.AdjustInventory(orderItem.Product, orderItem.Quantity, orderItem.AttributesXml,
+                    string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.DeleteOrderItem"), order.Id));
 
                 //delete item
                 _orderService.DeleteOrderItem(orderItem);
@@ -2254,7 +2256,8 @@ namespace Nop.Admin.Controllers
             else
             {
                 //adjust inventory
-                _productService.AdjustInventory(orderItem.Product, orderItem.Quantity, orderItem.AttributesXml);
+                _productService.AdjustInventory(orderItem.Product, orderItem.Quantity, orderItem.AttributesXml,
+                    string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.DeleteOrderItem"), order.Id));
 
                 //delete item
                 _orderService.DeleteOrderItem(orderItem);
@@ -2670,7 +2673,8 @@ namespace Nop.Admin.Controllers
                 _orderService.UpdateOrder(order);
 
                 //adjust inventory
-                _productService.AdjustInventory(orderItem.Product, -orderItem.Quantity, orderItem.AttributesXml);
+                _productService.AdjustInventory(orderItem.Product, -orderItem.Quantity, orderItem.AttributesXml,
+                    string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.EditOrder"), order.Id));
 
                 //update order totals
                 var updateOrderParameters = new UpdateOrderParameters
@@ -3312,7 +3316,8 @@ namespace Nop.Admin.Controllers
                 if (orderItem == null)
                     continue;
 
-                _productService.ReverseBookedInventory(orderItem.Product, shipmentItem);
+                _productService.ReverseBookedInventory(orderItem.Product, shipmentItem,
+                    string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.DeleteShipment"), shipment.OrderId));
             }
 
             var orderId = shipment.OrderId;

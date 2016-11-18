@@ -96,6 +96,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Shipment> _shipmentRepository;
         private readonly IRepository<SearchTerm> _searchTermRepository;
         private readonly IRepository<ShipmentItem> _shipmentItemRepository;
+        private readonly IRepository<StockQuantityHistory> _stockQuantityHistoryRepository;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
 
@@ -154,6 +155,7 @@ namespace Nop.Services.Installation
             IRepository<Shipment> shipmentRepository,
             IRepository<ShipmentItem> shipmentItemRepository,
             IRepository<SearchTerm> searchTermRepository,
+            IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
             IGenericAttributeService genericAttributeService,
             IWebHelper webHelper)
         {
@@ -208,6 +210,7 @@ namespace Nop.Services.Installation
             this._shipmentRepository = shipmentRepository;
             this._shipmentItemRepository = shipmentItemRepository;
             this._searchTermRepository = searchTermRepository;
+            this._stockQuantityHistoryRepository = stockQuantityHistoryRepository;
             this._genericAttributeService = genericAttributeService;
             this._webHelper = webHelper;
         }
@@ -10578,6 +10581,8 @@ namespace Nop.Services.Installation
 
             #endregion
 
+            #region  Reviews
+
             //reviews
             var random = new Random();
             foreach (var product in allProducts)
@@ -10610,6 +10615,26 @@ namespace Nop.Services.Installation
 
             }
             _productRepository.Update(allProducts);
+
+            #endregion
+
+            #region Stock quantity history
+
+            foreach (var product in allProducts)
+            {
+                if (product.StockQuantity > 0)
+                    _stockQuantityHistoryRepository.Insert(new StockQuantityHistory
+                    {
+                        ProductId = product.Id,
+                        WarehouseId = product.WarehouseId > 0 ? (int?)product.WarehouseId : null,
+                        QuantityAdjustment = product.StockQuantity,
+                        StockQuantity = product.StockQuantity,
+                        Message = "The stock quantity has been edited",
+                        CreatedOnUtc = DateTime.UtcNow
+                    });
+            }
+
+            #endregion
         }
 
         protected virtual void InstallForums()

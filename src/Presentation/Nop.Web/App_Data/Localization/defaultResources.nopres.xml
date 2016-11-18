@@ -3663,6 +3663,30 @@
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Hint">
     <Value>Specification attributes are product features i.e, screen size, number of USB-ports, visible on product details page. Specification attributes can be used for filtering products on the category details page.  Unlike product attributes, specification attributes are used for information purposes only.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.StockQuantityHistory">
+    <Value>Stock quantity history</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.StockQuantityHistory.Hint">
+    <Value>Here you can see a history of the product stock quantity changes.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.StockQuantityHistory.Fields.Combination">
+    <Value>Attribute combination</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.StockQuantityHistory.Fields.CreatedOn">
+    <Value>Created On</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.StockQuantityHistory.Fields.Message">
+    <Value>Message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.StockQuantityHistory.Fields.StockQuantity">
+    <Value>Stock quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.StockQuantityHistory.Fields.QuantityAdjustment">
+    <Value>Quantity adjustment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.StockQuantityHistory.Fields.Warehouse">
+    <Value>Warehouse</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.TierPrices">
     <Value>Tier prices</Value>
   </LocaleResource>
@@ -6848,6 +6872,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.SpecificationAttributes">
     <Value>Specification attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.StockQuantityHistory">
+    <Value>Stock quantity history</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Stores">
     <Value>Stores</Value>
@@ -11513,6 +11540,54 @@
   </LocaleResource>
   <LocaleResource Name="Admin.SearchTermReport.Keyword">
     <Value>Keyword</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.CancelOrder">
+    <Value>The stock quantity has been increased by canceling the order #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.Combination.Edit">
+    <Value>The stock quantity of combination has been edited</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.CopyProduct">
+    <Value>The stock quantity has been edited by copying the product #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.DeleteOrder">
+    <Value>The stock quantity has been increased by deleting the order #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.DeleteOrderItem">
+    <Value>The stock quantity has been increased by deleting an order item from the order #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.DeleteShipment">
+    <Value>The stock quantity has been increased by deleting a shipment from the order #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.Edit">
+    <Value>The stock quantity has been edited</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.MultipleWarehouses">
+    <Value>Multiple warehouses.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.EditOrder">
+    <Value>The stock quantity has been changed by editing the order #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.ImportProduct.Edit">
+    <Value>The stock quantity has been changed by importing product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.ImportProduct.EditWarehouse">
+    <Value>Products have been moved {0} {1} by importing product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.EditWarehouse">
+    <Value>Products have been moved {0} {1}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.EditWarehouse.New">
+    <Value>to the {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.EditWarehouse.Old">
+    <Value>from the {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.PlaceOrder">
+    <Value>The stock quantity has been reduced by placing the order #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StockQuantityHistory.Messages.Ship">
+    <Value>The stock quantity has been reduced when an order item of the order #{0} was shipped</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System">
     <Value>System</Value>

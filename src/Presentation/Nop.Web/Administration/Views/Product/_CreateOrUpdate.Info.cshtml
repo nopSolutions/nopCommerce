@@ -69,30 +69,33 @@
     }
 
     function toggleProductType() {
+        var simpleProductId = "@((int)ProductType.SimpleProduct)";
+        var groupedProductId = "@((int)ProductType.GroupedProduct)";
+
         var selectedProductTypeId = $("#@Html.FieldIdFor(model => model.ProductTypeId)").val();
-        if (!selectedProductTypeId || selectedProductTypeId == @(((int) ProductType.SimpleProduct).ToString())) {
+        if (!selectedProductTypeId || selectedProductTypeId == simpleProductId) {
             $('#group-prices').show();
-        $('#tier-prices').show();
-        $('#group-required-other-products').show();
-        $('#group-giftcard').show();
-        $('#group-downloads').show();
-        $('#group-recurring').show();
-        $('#group-rental').show();
-        $('#group-shipping').show();
-        $('#group-inventory').show();
-        $('#group-associated-products').hide();
-    } else if (selectedProductTypeId == @(((int) ProductType.GroupedProduct).ToString())) {
-        $('#group-prices').hide();
-        $('#tier-prices').hide();
-        $('#group-required-other-products').hide();
-        $('#group-giftcard').hide();
-        $('#group-downloads').hide();
-        $('#group-recurring').hide();
-        $('#group-rental').hide();
-        $('#group-shipping').hide();
-        $('#group-inventory').hide();
-        $('#group-associated-products').show();
-    }
+            $('#tier-prices').show();
+            $('#group-required-other-products').show();
+            $('#group-giftcard').show();
+            $('#group-downloads').show();
+            $('#group-recurring').show();
+            $('#group-rental').show();
+            $('#group-shipping').show();
+            $('#group-inventory').show();
+            $('#group-associated-products').hide();
+        } else if (selectedProductTypeId == groupedProductId) {
+            $('#group-prices').hide();
+            $('#tier-prices').hide();
+            $('#group-required-other-products').hide();
+            $('#group-giftcard').hide();
+            $('#group-downloads').hide();
+            $('#group-recurring').hide();
+            $('#group-rental').hide();
+            $('#group-shipping').hide();
+            $('#group-inventory').hide();
+            $('#group-associated-products').show();
+        }
     }
 
     function togglePreOrder() {
@@ -239,80 +242,95 @@
     }
 
     function toggleManageStock() {
+        var dontManageStockId = "@((int)ManageInventoryMethod.DontManageStock)";
+        var manageStockId = "@((int)ManageInventoryMethod.ManageStock)";
+        var noBackordersId = "@((int)BackorderMode.NoBackorders)";
+        var allowQtyBelow0Id = "@((int)BackorderMode.AllowQtyBelow0)";
+        var allowQtyBelow0AndNotifyCustomerId = "@((int)BackorderMode.AllowQtyBelow0AndNotifyCustomer)";
+
         var selectedManageInventoryMethodId = $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").val();
-        if (selectedManageInventoryMethodId == @(((int) ManageInventoryMethod.DontManageStock).ToString())) {
+        if (selectedManageInventoryMethodId == dontManageStockId) {
             $('#pnlProductAvailabilityRange').hide();
             $('#pnlUseMultipleWarehouses').hide();
-        $('#pnlWarehouse').show();
-        $('#pnlMultipleWarehouses').hide();
-        $('#pnlStockQuantity').hide();
-        $('#pnlDisplayStockAvailability').hide();
-        $('#pnlDisplayStockQuantity').hide();
-        $('#pnlMinStockQuantity').hide();
-        $('#pnlLowStockActivity').hide();
-        $('#pnlNotifyForQuantityBelow').hide();
-        $('#pnlAllowBackInStockSubscriptions').hide();
-        $('#pnlBackorders').hide();
-        $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
-    } else if (selectedManageInventoryMethodId == @(((int) ManageInventoryMethod.ManageStock).ToString())) {
-        $('#pnlUseMultipleWarehouses').show();
-
-        if ($('#@Html.FieldIdFor(model => model.UseMultipleWarehouses)').is(':checked')) {
-            $('#pnlWarehouse').hide();
-            $('#pnlMultipleWarehouses').show();
-            $('#pnlStockQuantity').hide();
-        } else {
             $('#pnlWarehouse').show();
             $('#pnlMultipleWarehouses').hide();
-            $('#pnlStockQuantity').show();
-        }
-
-        $('#pnlDisplayStockAvailability').show();
-        if ($('#@Html.FieldIdFor(model => model.DisplayStockAvailability)').is(':checked')) {
-            $('#pnlDisplayStockQuantity').show();
-        } else {
+            $('#pnlStockQuantity').hide();
+            $('#pnlDisplayStockAvailability').hide();
             $('#pnlDisplayStockQuantity').hide();
-        }
+            $('#pnlMinStockQuantity').hide();
+            $('#pnlLowStockActivity').hide();
+            $('#pnlNotifyForQuantityBelow').hide();
+            $('#pnlAllowBackInStockSubscriptions').hide();
+            $('#pnlBackorders').hide();
+            $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
 
-        $('#pnlMinStockQuantity').show();
-        $('#pnlLowStockActivity').show();
-        $('#pnlNotifyForQuantityBelow').show();
-        $('#pnlBackorders').show();
-        var selectedBackorderModeId = $("#@Html.FieldIdFor(model => model.BackorderModeId)").val();
-        if (selectedBackorderModeId == @(((int) BackorderMode.NoBackorders).ToString())) {
-            //no backorders
-            $('#pnlAllowBackInStockSubscriptions').show();
+            $('[data-tab-name=tab-stock-quantity-history]').hide();
+        } else if (selectedManageInventoryMethodId == manageStockId) {
+            $('#pnlUseMultipleWarehouses').show();
+
+            if ($('#@Html.FieldIdFor(model => model.UseMultipleWarehouses)').is(':checked')) {
+                $('#pnlWarehouse').hide();
+                $('#pnlMultipleWarehouses').show();
+                $('#pnlStockQuantity').hide();
+            } else {
+                $('#pnlWarehouse').show();
+                $('#pnlMultipleWarehouses').hide();
+                $('#pnlStockQuantity').show();
+            }
+
+            $('#pnlDisplayStockAvailability').show();
+            if ($('#@Html.FieldIdFor(model => model.DisplayStockAvailability)').is(':checked')) {
+                $('#pnlDisplayStockQuantity').show();
+            } else {
+                $('#pnlDisplayStockQuantity').hide();
+            }
+
+            $('#pnlMinStockQuantity').show();
+            $('#pnlLowStockActivity').show();
+            $('#pnlNotifyForQuantityBelow').show();
+            $('#pnlBackorders').show();
+
+            var selectedBackorderModeId = $("#@Html.FieldIdFor(model => model.BackorderModeId)").val();
+            if (selectedBackorderModeId == noBackordersId) {
+                //no backorders
+                $('#pnlAllowBackInStockSubscriptions').show();
+                $('#pnlProductAvailabilityRange').show();
+            } else if (selectedBackorderModeId == allowQtyBelow0AndNotifyCustomerId) {
+                //backorders are enabled
+                $('#pnlAllowBackInStockSubscriptions').hide();
+                $('#pnlProductAvailabilityRange').show();
+            }
+            else if (selectedBackorderModeId == allowQtyBelow0Id) {
+                //backorders are enabled
+                $('#pnlAllowBackInStockSubscriptions').hide();
+                $('#pnlProductAvailabilityRange').hide();
+            }
+
+            $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
+
+            $('[data-tab-name=tab-stock-quantity-history]').show();
+        } else {
             $('#pnlProductAvailabilityRange').show();
-    } else if (selectedBackorderModeId == @(((int) BackorderMode.AllowQtyBelow0AndNotifyCustomer).ToString())){
-    //backorders are enabled
-        $('#pnlAllowBackInStockSubscriptions').hide();
-        $('#pnlProductAvailabilityRange').show();
-    }
-    else if (selectedBackorderModeId == @(((int) BackorderMode.AllowQtyBelow0).ToString())){
-        //backorders are enabled
-        $('#pnlAllowBackInStockSubscriptions').hide();
-        $('#pnlProductAvailabilityRange').hide();
-    }
-    $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
-    } else {
-        $('#pnlProductAvailabilityRange').show();
-        $('#pnlUseMultipleWarehouses').hide();
-        $('#pnlWarehouse').show();
-        $('#pnlMultipleWarehouses').hide();
-        $('#pnlStockQuantity').hide();
-        $('#pnlDisplayStockAvailability').show();
-        if ($('#@Html.FieldIdFor(model => model.DisplayStockAvailability)').is(':checked')) {
-            $('#pnlDisplayStockQuantity').show();
-        } else {
-            $('#pnlDisplayStockQuantity').hide();
+            $('#pnlUseMultipleWarehouses').hide();
+            $('#pnlWarehouse').show();
+            $('#pnlMultipleWarehouses').hide();
+            $('#pnlStockQuantity').hide();
+            $('#pnlDisplayStockAvailability').show();
+
+            if ($('#@Html.FieldIdFor(model => model.DisplayStockAvailability)').is(':checked')) {
+                $('#pnlDisplayStockQuantity').show();
+            } else {
+                $('#pnlDisplayStockQuantity').hide();
+            }
+            $('#pnlMinStockQuantity').hide();
+            $('#pnlLowStockActivity').hide();
+            $('#pnlNotifyForQuantityBelow').hide();
+            $('#pnlAllowBackInStockSubscriptions').hide();
+            $('#pnlBackorders').hide();
+            $('#pnlAllowAddingOnlyExistingAttributeCombinations').show();
+
+            $('[data-tab-name=tab-stock-quantity-history]').show();
         }
-        $('#pnlMinStockQuantity').hide();
-        $('#pnlLowStockActivity').hide();
-        $('#pnlNotifyForQuantityBelow').hide();
-        $('#pnlAllowBackInStockSubscriptions').hide();
-        $('#pnlBackorders').hide();
-        $('#pnlAllowAddingOnlyExistingAttributeCombinations').show();
-    }
     }
 
     function toggleMarkAsNew() {

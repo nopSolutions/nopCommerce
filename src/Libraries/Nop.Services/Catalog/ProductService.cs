@@ -55,9 +55,11 @@ namespace Nop.Services.Catalog
         private readonly IRepository<ProductReview> _productReviewRepository;
         private readonly IRepository<ProductWarehouseInventory> _productWarehouseInventoryRepository;
         private readonly IRepository<SpecificationAttributeOption> _specificationAttributeOptionRepository;
+        private readonly IRepository<StockQuantityHistory> _stockQuantityHistoryRepository;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ILanguageService _languageService;
+        private readonly ILocalizationService _localizationService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
@@ -88,11 +90,13 @@ namespace Nop.Services.Catalog
         /// <param name="productPictureRepository">Product picture repository</param>
         /// <param name="productSpecificationAttributeRepository">Product specification attribute repository</param>
         /// <param name="productReviewRepository">Product review repository</param>
-        /// <param name="specificationAttributeOptionRepository">Specification attribute option repository</param>
         /// <param name="productWarehouseInventoryRepository">Product warehouse inventory repository</param>
+        /// <param name="specificationAttributeOptionRepository">Specification attribute option repository</param>
+        /// <param name="stockQuantityHistoryRepository">Stock quantity history repository</param>
         /// <param name="productAttributeService">Product attribute service</param>
         /// <param name="productAttributeParser">Product attribute parser service</param>
         /// <param name="languageService">Language service</param>
+        /// <param name="localizationService">Localization service</param>
         /// <param name="workflowMessageService">Workflow message service</param>
         /// <param name="dataProvider">Data provider</param>
         /// <param name="dbContext">Database Context</param>
@@ -116,9 +120,11 @@ namespace Nop.Services.Catalog
             IRepository<ProductReview>  productReviewRepository,
             IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository,
             IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository,
+            IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
             ILanguageService languageService,
+            ILocalizationService localizationService,
             IWorkflowMessageService workflowMessageService,
             IDataProvider dataProvider, 
             IDbContext dbContext,
@@ -143,9 +149,11 @@ namespace Nop.Services.Catalog
             this._productReviewRepository = productReviewRepository;
             this._productWarehouseInventoryRepository = productWarehouseInventoryRepository;
             this._specificationAttributeOptionRepository = specificationAttributeOptionRepository;
+            this._stockQuantityHistoryRepository = stockQuantityHistoryRepository;
             this._productAttributeService = productAttributeService;
             this._productAttributeParser = productAttributeParser;
             this._languageService = languageService;
+            this._localizationService = localizationService;
             this._workflowMessageService = workflowMessageService;
             this._dataProvider = dataProvider;
             this._dbContext = dbContext;
@@ -1257,7 +1265,8 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="quantityToChange">Quantity to increase or descrease</param>
         /// <param name="attributesXml">Attributes in XML format</param>
-        public virtual void AdjustInventory(Product product, int quantityToChange, string attributesXml = "")
+        /// <param name="message">Message for the stock quantity history</param>
+        public virtual void AdjustInventory(Product product, int quantityToChange, string attributesXml = "", string message = "")
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -1285,6 +1294,9 @@ namespace Nop.Services.Catalog
                     //simple inventory management
                     product.StockQuantity += quantityToChange;
                     UpdateProduct(product);
+
+                    //quantity change history
+                    AddStockQuantityHistoryEntry(product, quantityToChange, product.StockQuantity, product.WarehouseId, message);
                 }
 
                 //qty is reduced. check if minimum stock quantity is reached
@@ -1343,6 +1355,9 @@ namespace Nop.Services.Catalog
                     combination.StockQuantity += quantityToChange;
                     _productAttributeService.UpdateProductAttributeCombination(combination);
 
+                    //quantity change history
+                    AddStockQuantityHistoryEntry(product, quantityToChange, combination.StockQuantity, message: message, combinationId: combination.Id);
+
                     //send email notification
                     if (quantityToChange < 0 && combination.StockQuantity < combination.NotifyAdminForQuantityBelow)
                     {
@@ -1362,7 +1377,7 @@ namespace Nop.Services.Catalog
                     var associatedProduct = GetProductById(attributeValue.AssociatedProductId);
                     if (associatedProduct != null)
                     {
-                        AdjustInventory(associatedProduct, quantityToChange * attributeValue.Quantity);
+                        AdjustInventory(associatedProduct, quantityToChange * attributeValue.Quantity, message);
                     }
                 }
             }
@@ -1477,7 +1492,8 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="quantity">Quantity, must be negative</param>
-        public virtual void BookReservedInventory(Product product, int warehouseId, int quantity)
+        /// <param name="message">Message for the stock quantity history</param>
+        public virtual void BookReservedInventory(Product product, int warehouseId, int quantity, string message = "")
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -1499,6 +1515,9 @@ namespace Nop.Services.Catalog
             pwi.StockQuantity += quantity;
             UpdateProduct(product);
 
+            //quantity change history
+            AddStockQuantityHistoryEntry(product, quantity, pwi.StockQuantity, warehouseId, message);
+
             //TODO add support for bundled products (AttributesXml)
         }
 
@@ -1507,8 +1526,9 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">product</param>
         /// <param name="shipmentItem">Shipment item</param>
+        /// <param name="message">Message for the stock quantity history</param>
         /// <returns>Quantity reversed</returns>
-        public virtual int ReverseBookedInventory(Product product, ShipmentItem shipmentItem)
+        public virtual int ReverseBookedInventory(Product product, ShipmentItem shipmentItem, string message = "")
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -1537,6 +1557,9 @@ namespace Nop.Services.Catalog
             pwi.StockQuantity += qty;
             pwi.ReservedQuantity += qty;
             UpdateProduct(product);
+
+            //quantity change history
+            AddStockQuantityHistoryEntry(product, qty, pwi.StockQuantity, shipmentItem.WarehouseId, message);
 
             //TODO add support for bundled products (AttributesXml)
 
@@ -2044,6 +2067,73 @@ namespace Nop.Services.Catalog
             _productWarehouseInventoryRepository.Delete(pwi);
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+        }
+
+        #endregion
+
+        #region Stock quantity history
+
+        /// <summary>
+        /// Add stock quantity change entry
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="quantityAdjustment">Quantity adjustment</param>
+        /// <param name="stockQuantity">Current stock quantity</param>
+        /// <param name="warehouseId">Warehouse identifier</param>
+        /// <param name="message">Message</param>
+        /// <param name="combinationId">Product attribute combination identifier</param>
+        public virtual void AddStockQuantityHistoryEntry(Product product, int quantityAdjustment, int stockQuantity,
+            int warehouseId = 0, string message = "", int? combinationId = null)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (quantityAdjustment == 0)
+                return;
+
+            var historyEntry = new StockQuantityHistory
+            {
+                ProductId = product.Id,
+                CombinationId = combinationId,
+                WarehouseId = warehouseId > 0 ? (int?)warehouseId : null,
+                QuantityAdjustment = quantityAdjustment,
+                StockQuantity = stockQuantity,
+                Message = message,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+
+            _stockQuantityHistoryRepository.Insert(historyEntry);
+
+            //event notification
+            _eventPublisher.EntityInserted(historyEntry);
+        }
+
+        /// <summary>
+        /// Get the history of the product stock quantity changes
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="warehouseId">Warehouse identifier; pass 0 to load all entries</param>
+        /// <param name="combinationId">Product attribute combination identifier; pass 0 to load all entries</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>List of stock quantity change entries</returns>
+        public virtual IPagedList<StockQuantityHistory> GetStockQuantityHistory(Product product, int warehouseId = 0, int combinationId = 0,
+            int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            var query = _stockQuantityHistoryRepository.Table.Where(historyEntry => historyEntry.ProductId == product.Id);
+
+            if (warehouseId > 0)
+                query = query.Where(historyEntry => historyEntry.WarehouseId == warehouseId);
+
+            if (combinationId > 0)
+                query = query.Where(historyEntry => historyEntry.CombinationId == combinationId);
+
+            query = query.OrderByDescending(historyEntry => historyEntry.CreatedOnUtc).ThenByDescending(historyEntry => historyEntry.Id);
+
+            return new PagedList<StockQuantityHistory>(query, pageIndex, pageSize);
         }
 
         #endregion

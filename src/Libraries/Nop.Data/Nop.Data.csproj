@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Mapping\Catalog\PredefinedProductAttributeValueMap.cs" />
+    <Compile Include="Mapping\Catalog\StockQuantityHistoryMap.cs" />
     <Compile Include="Mapping\Common\AddressAttributeMap.cs" />
     <Compile Include="Mapping\Common\AddressAttributeValueMap.cs" />
     <Compile Include="Mapping\Forums\ForumPostVoteMap.cs" />

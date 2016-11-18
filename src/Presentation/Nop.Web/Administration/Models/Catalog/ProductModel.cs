@@ -23,6 +23,7 @@ namespace Nop.Admin.Models.Catalog
             AddSpecificationAttributeModel = new AddProductSpecificationAttributeModel();
             ProductWarehouseInventoryModels = new List<ProductWarehouseInventoryModel>();
             ProductEditorSettingsModel = new ProductEditorSettingsModel();
+            StockQuantityHistory = new StockQuantityHistoryModel();
 
             AvailableBasepriceUnits = new List<SelectListItem>();
             AvailableBasepriceBaseUnits = new List<SelectListItem>();
@@ -441,6 +442,9 @@ namespace Nop.Admin.Models.Catalog
 
         //editor settings
         public ProductEditorSettingsModel ProductEditorSettingsModel { get; set; }
+
+        //stock quantity history
+        public StockQuantityHistoryModel StockQuantityHistory { get; set; }
 
         #region Nested classes
 
@@ -946,6 +950,38 @@ namespace Nop.Admin.Models.Catalog
             public int NotifyAdminForQuantityBelow { get; set; }
 
         }
+
+        #region Stock quantity history
+
+        public partial class StockQuantityHistoryModel : BaseNopEntityModel
+        {
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchWarehouse")]
+            public int SearchWarehouseId { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.StockQuantityHistory.Fields.Warehouse")]
+            [AllowHtml]
+            public string WarehouseName { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.StockQuantityHistory.Fields.Combination")]
+            [AllowHtml]
+            public string AttributeCombination { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.StockQuantityHistory.Fields.QuantityAdjustment")]
+            public int QuantityAdjustment { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.StockQuantityHistory.Fields.StockQuantity")]
+            public int StockQuantity { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.StockQuantityHistory.Fields.Message")]
+            [AllowHtml]
+            public string Message { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.StockQuantityHistory.Fields.CreatedOn")]
+            [UIHint("DecimalNullable")]
+            public DateTime CreatedOn { get; set; }
+        }
+
+        #endregion
 
         #endregion
     }

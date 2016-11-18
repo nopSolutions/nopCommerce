@@ -635,6 +635,10 @@ namespace Nop.Services.ExportImport
 
                     product = product ?? new Product();
 
+                    //some of previous values
+                    var previousStockQuantity = product.StockQuantity;
+                    var previousWarehouseId = product.WarehouseId;
+
                     if (isNew)
                         product.CreatedOnUtc = DateTime.UtcNow;
 
@@ -931,6 +935,37 @@ namespace Nop.Services.ExportImport
                     else
                     {
                         _productService.UpdateProduct(product);
+                    }
+
+                    //quantity change history
+                    if (isNew || previousWarehouseId == product.WarehouseId)
+                    {
+                        _productService.AddStockQuantityHistoryEntry(product, product.StockQuantity - previousStockQuantity, product.StockQuantity,
+                            product.WarehouseId, _localizationService.GetResource("Admin.StockQuantityHistory.Messages.ImportProduct.Edit"));
+                    }
+                    //warehouse is changed 
+                    else
+                    {
+                        //compose a message
+                        var oldWarehouseMessage = string.Empty;
+                        if (previousWarehouseId > 0)
+                        {
+                            var oldWarehouse = _shippingService.GetWarehouseById(previousWarehouseId);
+                            if (oldWarehouse != null)
+                                oldWarehouseMessage = string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.EditWarehouse.Old"), oldWarehouse.Name);
+                        }
+                        var newWarehouseMessage = string.Empty;
+                        if (product.WarehouseId > 0)
+                        {
+                            var newWarehouse = _shippingService.GetWarehouseById(product.WarehouseId);
+                            if (newWarehouse != null)
+                                newWarehouseMessage = string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.EditWarehouse.New"), newWarehouse.Name);
+                        }
+                        var message = string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.ImportProduct.EditWarehouse"), oldWarehouseMessage, newWarehouseMessage);
+
+                        //record history
+                        _productService.AddStockQuantityHistoryEntry(product, -previousStockQuantity, 0, previousWarehouseId, message);
+                        _productService.AddStockQuantityHistoryEntry(product, product.StockQuantity, product.StockQuantity, product.WarehouseId, message);
                     }
 
                     tempProperty = manager.GetProperty("SeName");
