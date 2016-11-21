@@ -817,7 +817,7 @@ namespace Nop.Services.ExportImport
                             case "NotifyAdminForQuantityBelow":
                                 product.NotifyAdminForQuantityBelow = property.IntValue;
                                 break;
-                            case "BackorderModeId":
+                            case "BackorderMode":
                                 product.BackorderModeId = property.IntValue;
                                 break;
                             case "AllowBackInStockSubscriptions":
@@ -911,7 +911,7 @@ namespace Nop.Services.ExportImport
                     }
 
                     //set some default default values if not specified
-                    if (isNew && properties.All(p => p.PropertyName != "ProductTypeId"))
+                    if (isNew && properties.All(p => p.PropertyName != "ProductType"))
                         product.ProductType = ProductType.SimpleProduct;
                     if (isNew && properties.All(p => p.PropertyName != "VisibleIndividually"))
                         product.VisibleIndividually = true;
