@@ -15043,7 +15043,7 @@
     <Value>Your return request has been submitted successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="ReturnRequests.Title">
-    <Value>Return item(s) from order #{0}</Value>
+    <Value><![CDATA[Return item(s) from <a href="{0}">order #{1}</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="ReturnRequests.WhyReturning">
     <Value>Why are you returning these items?</Value>

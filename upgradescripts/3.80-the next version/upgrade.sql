@@ -818,7 +818,10 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Order.CompleteOrderWhenDelivered.Hint">
     <Value>Check if an order status should be set to "Complete" only when its shipping status is "Delivered". Otherwise, "Shipped" status will be enough.</Value>
   </LocaleResource>
-</Language>
+  <LocaleResource Name="ReturnRequests.Title">
+    <Value><![CDATA[Return item(s) from <a href="{0}">order #{1}</a>]]></Value>
+  </LocaleResource>
+ </Language>
 '
 
 CREATE TABLE #LocaleStringResourceTmp

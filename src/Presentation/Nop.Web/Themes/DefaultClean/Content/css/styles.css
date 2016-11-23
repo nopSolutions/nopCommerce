@@ -2827,6 +2827,9 @@ label, label + * {
 .return-request-page .button-1:hover {
 	background-color: #248ece;
 }
+.return-request-page h1 a {
+    color: #4ab2f1;
+}
 .registration-page .message-error,
 .login-page .message-error,
 .account-page .message-error {
