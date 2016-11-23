@@ -20,6 +20,7 @@ ul, ol {
 }
 .alert {
     margin-bottom: 0;
+    border-radius: 0 0 3px 3px;
 }
 .alert-success {
     border-color: #02A91E;
