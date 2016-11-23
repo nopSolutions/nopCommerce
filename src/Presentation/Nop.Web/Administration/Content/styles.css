@@ -318,6 +318,44 @@ td.k-state-focused.k-state-selected {
     border-color: #DEDEDE;
     background-color: #FFFFFF;
 }
+.form-horizontal .form-group .k-dropdown{
+    cursor: default;
+    width: 100% !important;
+    height: 32px;
+}
+.form-horizontal .form-group .k-dropdown .k-dropdown-wrap {
+    background: #fff;
+    box-shadow: none;
+    padding: 0 8px;
+    border: 1px solid #d2d6de;
+    border-radius: 0;
+}
+.form-horizontal .form-group .k-dropdown .k-dropdown-wrap .k-select{
+    width: 20px;
+}
+.form-horizontal .form-group .k-dropdown .k-dropdown-wrap.k-state-border-down {
+    border-color: #3c8dbc !important;
+}
+.form-horizontal .form-group .k-dropdown .k-dropdown-wrap .k-input {
+    height: 32px;
+    line-height: 32px;
+    display: block;
+    padding: 0;
+}
+.form-horizontal .form-group .k-dropdown .k-dropdown-wrap .k-input .image{
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.k-animation-container .k-list-container{
+    border: 1px solid #3c8dbc !important;
+    box-shadow: none;
+}
+.k-animation-container .image{
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: middle;
+}
 .k-popup .k-list .k-item.k-state-hover {
     background: #3c8dbc;
     border-color: #367fa9;
