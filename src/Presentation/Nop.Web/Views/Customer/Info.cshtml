@@ -136,7 +136,7 @@
                         {
                         <div class="inputs">
                             @Html.LabelFor(model => model.Username, new { }, ":")
-                            @Model.Username
+                            <span class="readonly-username">@Model.Username</span>
                         </div>
                         }
                     }

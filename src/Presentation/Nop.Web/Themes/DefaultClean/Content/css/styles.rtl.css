@@ -2865,6 +2865,7 @@ label, label + * {
 	font-size: 16px;
 	color: #4cb17c;
 }
+.customer-info-page .readonly-username,
 .customer-info-page .vat-status {
     margin: 0 5px;
     font-size: 14px;
