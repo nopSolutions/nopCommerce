@@ -2,7 +2,7 @@
 @using Nop.Services.Common
 @{
     const string panelId = "order-incomplete-report-box";
-    const string hidePanelAttributeName = "ideOrderIncompleteReportPanel";
+    const string hidePanelAttributeName = "HideOrderIncompleteReportPanel";
     var hidePanel = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
 }
 
