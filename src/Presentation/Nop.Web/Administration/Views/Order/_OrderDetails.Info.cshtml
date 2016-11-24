@@ -101,18 +101,17 @@
                                     @T("Admin.Orders.Fields.OrderStatus.Change")
                                 </button>
                                 <div id="pnlChangeOrderStatus" style="margin-top: 3px;">
-                                    <div>
-                                        <em>@T("Admin.Orders.Fields.OrderStatus.Change.ForAdvancedUsers")</em>
-                                    </div>
                                     @Html.NopDropDownListFor(model => model.OrderStatusId, ((OrderStatus)Model.OrderStatusId).ToSelectList())
                                     <button type="submit" name="btnSaveOrderStatus" id="btnSaveOrderStatus" class="btn btn-primary" style="margin-left: 3px">
                                         @T("Admin.Common.Save")
                                     </button>
                                     @Html.ActionConfirmation("btnSaveOrderStatus")
-
                                     <button type="submit" name="btnCancelOrderStatus" onclick="toggleChangeOrderStatus(false);return false;" id="btnCancelOrderStatus" class="btn bg-teal" style="margin-left: 3px">
                                         @T("Admin.Common.Cancel")
                                     </button>
+                                    <div class="input-group-btn-hint">
+                                        <em>@T("Admin.Orders.Fields.OrderStatus.Change.ForAdvancedUsers")</em>
+                                    </div>
                                 </div>
                             </div>
                         </div>

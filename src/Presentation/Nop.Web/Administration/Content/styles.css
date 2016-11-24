@@ -558,6 +558,11 @@ td.k-state-focused.k-state-selected {
 .dropdown-toggle.bg-purple {
     border-left: 1px solid #AA89CE;
 }
+.input-group .input-group-btn .input-group-btn-hint{
+    font-size: 14px;
+    white-space: normal;
+    max-width: 330px;
+}
 .input-group.input-group-short .input-group-btn {
     width: auto;
 }
