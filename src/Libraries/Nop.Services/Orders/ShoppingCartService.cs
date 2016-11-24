@@ -46,6 +46,7 @@ namespace Nop.Services.Orders
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly CustomerSettings _customerSettings;
 
         #endregion
 
@@ -74,6 +75,7 @@ namespace Nop.Services.Orders
         /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="productAttributeService">Product attribute service</param>
         /// <param name="dateTimeHelper">Datetime helper</param>
+        /// <param name="customerSettings">Customer Settings</param>
         public ShoppingCartService(IRepository<ShoppingCartItem> sciRepository,
             IWorkContext workContext, 
             IStoreContext storeContext,
@@ -93,7 +95,8 @@ namespace Nop.Services.Orders
             IStoreMappingService storeMappingService,
             IGenericAttributeService genericAttributeService,
             IProductAttributeService productAttributeService,
-            IDateTimeHelper dateTimeHelper)
+            IDateTimeHelper dateTimeHelper,
+            CustomerSettings customerSettings)
         {
             this._sciRepository = sciRepository;
             this._workContext = workContext;
@@ -115,6 +118,7 @@ namespace Nop.Services.Orders
             this._genericAttributeService = genericAttributeService;
             this._productAttributeService = productAttributeService;
             this._dateTimeHelper = dateTimeHelper;
+            this._customerSettings = customerSettings;
         }
 
         #endregion
@@ -1271,6 +1275,9 @@ namespace Nop.Services.Orders
 
             if (fromCustomer.Id == toCustomer.Id)
                 return; //the same customer
+
+            if ((_customerSettings.UsernamesEnabled ? fromCustomer.Username : fromCustomer.Email) != null)
+                return; //only allow cart migrations from a 'GUEST' account
 
             //shopping cart items
             var fromCart = fromCustomer.ShoppingCartItems.ToList();

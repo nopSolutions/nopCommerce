@@ -629,6 +629,10 @@ namespace Nop.Web.Controllers
         [PublicStoreAllowNavigation(true)]
         public ActionResult Login(bool? checkoutAsGuest)
         {
+            //user already logged in
+            if (HttpContext.User.Identity.IsAuthenticated)
+                return RedirectToRoute("HomePage");
+
             var model = new LoginModel();
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             model.CheckoutAsGuest = checkoutAsGuest.GetValueOrDefault();
