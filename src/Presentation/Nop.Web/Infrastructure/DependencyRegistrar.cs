@@ -59,6 +59,8 @@ namespace Nop.Web.Infrastructure
                 .InstancePerLifetimeScope();
             builder.RegisterType<OrderModelFactory>().As<IOrderModelFactory>()
                 .InstancePerLifetimeScope();
+            builder.RegisterType<ProfileModelFactory>().As<IProfileModelFactory>()
+                .InstancePerLifetimeScope();
         }
 
         /// <summary>
