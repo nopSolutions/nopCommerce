@@ -409,6 +409,9 @@ namespace Nop.Web.Controllers
                 }
             }
 
+            var selectedShippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(
+                SystemCustomerAttributeNames.SelectedShippingOption, _storeContext.CurrentStore.Id);
+
             //filter by country
             var paymentMethods = _paymentService
                 .LoadActivePaymentMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id, filterByCountryId)
@@ -419,6 +422,13 @@ namespace Nop.Web.Controllers
             {
                 if (cart.IsRecurring() && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
                     continue;
+
+                //Shipping plugin can add limit payment (by system name) to hide other payments
+                if (selectedShippingOption != null && selectedShippingOption.LimitPaymentList.Count > 0)
+                {
+                    if (!selectedShippingOption.LimitPaymentList.Contains(pm.PluginDescriptor.SystemName))
+                        continue;
+                }
 
                 var pmModel = new CheckoutPaymentMethodModel.PaymentMethodModel
                 {
