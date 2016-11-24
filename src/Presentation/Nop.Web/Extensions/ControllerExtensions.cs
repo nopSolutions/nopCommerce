@@ -252,10 +252,14 @@ namespace Nop.Web.Extensions
                                         else
                                         {
                                             //prices
+                                            var minPossiblePrice = priceCalculationService.GetFinalPrice(product, workContext.CurrentCustomer);
 
-                                            //calculate for the maximum quantity (in case if we have tier prices)
-                                            decimal minPossiblePrice = priceCalculationService.GetFinalPrice(product,
-                                                workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue);
+                                            if (product.HasTierPrices)
+                                            {
+                                                //calculate price for the maximum quantity if we have tier prices, and choose minimal
+                                                minPossiblePrice = Math.Min(minPossiblePrice, 
+                                                    priceCalculationService.GetFinalPrice(product, workContext.CurrentCustomer, quantity: int.MaxValue));
+                                            }
 
                                             decimal taxRate;
                                             decimal oldPriceBase = taxService.GetProductPrice(product, product.OldPrice, out taxRate);

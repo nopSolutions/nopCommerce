@@ -16,14 +16,14 @@ namespace Nop.Services.Catalog
     public static class ProductExtensions
     {
         /// <summary>
-        /// Gets an appropriate tier price
+        /// Gets a preferred tier price
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="quantity">Quantity</param>
         /// <returns>Price</returns>
-        public static decimal? GetAppropriateTierPrice(this Product product, Customer customer, int storeId, int quantity)
+        public static decimal? GetPreferredTierPrice(this Product product, Customer customer, int storeId, int quantity)
         {
             if (!product.HasTierPrices)
                 return null;
