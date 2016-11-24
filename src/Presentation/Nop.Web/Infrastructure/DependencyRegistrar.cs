@@ -37,16 +37,14 @@ namespace Nop.Web.Infrastructure
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
             builder.RegisterType<ProductController>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
-            builder.RegisterType<ReturnRequestController>()
-                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
             builder.RegisterType<ShoppingCartController>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
             builder.RegisterType<TopicController>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
             builder.RegisterType<WidgetController>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
-            
-            //factories
+
+            //factories (we cache presentation models between requests)
             builder.RegisterType<BlogModelFactory>().As<IBlogModelFactory>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();
@@ -60,6 +58,9 @@ namespace Nop.Web.Infrastructure
             builder.RegisterType<OrderModelFactory>().As<IOrderModelFactory>()
                 .InstancePerLifetimeScope();
             builder.RegisterType<ProfileModelFactory>().As<IProfileModelFactory>()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<ReturnRequestModelFactory>().As<IReturnRequestModelFactory>()
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();
         }
 

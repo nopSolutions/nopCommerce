@@ -281,6 +281,8 @@
     <Compile Include="Factories\OrderModelFactory.cs" />
     <Compile Include="Factories\IProfileModelFactory.cs" />
     <Compile Include="Factories\ProfileModelFactory.cs" />
+    <Compile Include="Factories\IReturnRequestModelFactory.cs" />
+    <Compile Include="Factories\ReturnRequestModelFactory.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
