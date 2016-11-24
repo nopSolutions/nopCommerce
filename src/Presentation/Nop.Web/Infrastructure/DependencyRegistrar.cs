@@ -57,6 +57,8 @@ namespace Nop.Web.Infrastructure
                 .InstancePerLifetimeScope();
             builder.RegisterType<ExternalAuthenticationModelFactory>().As<IExternalAuthenticationModelFactory>()
                 .InstancePerLifetimeScope();
+            builder.RegisterType<OrderModelFactory>().As<IOrderModelFactory>()
+                .InstancePerLifetimeScope();
         }
 
         /// <summary>

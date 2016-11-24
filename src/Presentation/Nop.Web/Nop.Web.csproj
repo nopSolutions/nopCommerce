@@ -277,6 +277,8 @@
     <Compile Include="Factories\ForumModelFactory.cs" />
     <Compile Include="Factories\IBlogModelFactory.cs" />
     <Compile Include="Factories\BlogModelFactory.cs" />
+    <Compile Include="Factories\IOrderModelFactory.cs" />
+    <Compile Include="Factories\OrderModelFactory.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
