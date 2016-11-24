@@ -239,7 +239,15 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
         int SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, OrderItem orderItem, int languageId);
-        
+
+        /// <summary>
+        /// Sends 'New Return Request' message to a customer
+        /// </summary>
+        /// <param name="returnRequest">Return request</param>
+        /// <param name="orderItem">Order item</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendNewReturnRequestCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, int languageId);
 
         /// <summary>
         /// Sends 'Return Request status changed' message to a customer

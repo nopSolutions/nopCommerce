@@ -259,8 +259,10 @@ namespace Nop.Web.Controllers
                     //set return request custom number
                     rr.CustomNumber = _customNumberFormatter.GenerateReturnRequestCustomNumber(rr);
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
-                    //notify store owner here (email)
+                    //notify store owner
                     _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, orderItem, _localizationSettings.DefaultAdminLanguageId);
+                    //notify customer
+                    _workflowMessageService.SendNewReturnRequestCustomerNotification(rr, orderItem, _localizationSettings.DefaultAdminLanguageId);
 
                     count++;
                 }
