@@ -55,6 +55,8 @@ namespace Nop.Web.Infrastructure
             builder.RegisterType<CountryModelFactory>().As<ICountryModelFactory>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();
+            builder.RegisterType<ExternalAuthenticationModelFactory>().As<IExternalAuthenticationModelFactory>()
+                .InstancePerLifetimeScope();
         }
 
         /// <summary>
