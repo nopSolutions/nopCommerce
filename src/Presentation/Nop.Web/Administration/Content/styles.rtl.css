@@ -115,6 +115,7 @@ ul.common-list {
 .dropdown-menu button {
     border: none;
     padding: 3px 20px;
+    text-align: right;
 }
 .dropdown-menu li:hover {
     background: rgba(0,0,0,0.1);
