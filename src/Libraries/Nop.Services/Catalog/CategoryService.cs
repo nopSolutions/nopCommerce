@@ -602,7 +602,40 @@ namespace Nop.Services.Catalog
                 .Select(p => new {p.ProductId, p.CategoryId}).ToList()
                 .GroupBy(a => a.ProductId)
                 .ToDictionary(items => items.Key, items => items.Select(a => a.CategoryId).ToArray());
-        } 
+        }
+
+        /// <summary>
+        /// Get categories for navigation tree
+        /// </summary>
+        /// <param name="CategoryId">Category ID of category navigated to</param>
+        /// <returns>Categories list</returns>
+        public virtual IList<Category> GetCategoryTree(int CategoryId)
+        {
+            List<Category> tree = new List<Category>();
+            if (CategoryId != 0)
+            {
+                var currentcategory = GetCategoryById(CategoryId);
+
+                int parentid = currentcategory.ParentCategoryId;
+
+                while (parentid != 0)
+                {
+                    var children = GetAllCategoriesByParentCategoryId(parentid);
+                    if (children.Count > 0)
+                    {
+                        tree.AddRange(children);
+                        var parentcategory = GetCategoryById(children[0].ParentCategoryId);
+                        parentid = parentcategory.ParentCategoryId;
+                    }
+                    else break;
+                }
+            }
+            tree.AddRange(GetAllCategoriesByParentCategoryId(0));
+            return tree;
+        }
+
+
+
         #endregion
     }
 }
