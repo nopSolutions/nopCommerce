@@ -63,6 +63,8 @@ namespace Nop.Web.Infrastructure
             builder.RegisterType<ReturnRequestModelFactory>().As<IReturnRequestModelFactory>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();
+            builder.RegisterType<PrivateMessagesModelFactory>().As<IPrivateMessagesModelFactory>()
+                .InstancePerLifetimeScope();
         }
 
         /// <summary>
