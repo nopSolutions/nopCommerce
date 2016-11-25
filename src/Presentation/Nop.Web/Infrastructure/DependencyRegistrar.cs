@@ -29,8 +29,6 @@ namespace Nop.Web.Infrastructure
             //we cache presentation models between requests
             builder.RegisterType<CatalogController>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
-            builder.RegisterType<NewsController>()
-                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
             builder.RegisterType<ProductController>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
             builder.RegisterType<ShoppingCartController>()
@@ -53,6 +51,10 @@ namespace Nop.Web.Infrastructure
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<ExternalAuthenticationModelFactory>().As<IExternalAuthenticationModelFactory>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<NewsModelFactory>().As<INewsModelFactory>()
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<NewsletterModelFactory>().As<INewsletterModelFactory>()

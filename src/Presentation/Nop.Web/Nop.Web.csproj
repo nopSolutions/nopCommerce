@@ -280,6 +280,8 @@
     <Compile Include="Factories\BlogModelFactory.cs" />
     <Compile Include="Factories\IOrderModelFactory.cs" />
     <Compile Include="Factories\INewsletterModelFactory.cs" />
+    <Compile Include="Factories\INewsModelFactory.cs" />
+    <Compile Include="Factories\NewsModelFactory.cs" />
     <Compile Include="Factories\NewsletterModelFactory.cs" />
     <Compile Include="Factories\OrderModelFactory.cs" />
     <Compile Include="Factories\IProfileModelFactory.cs" />
