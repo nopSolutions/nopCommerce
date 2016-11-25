@@ -63,6 +63,8 @@ namespace Nop.Web.Infrastructure
                 .InstancePerLifetimeScope();
             builder.RegisterType<PrivateMessagesModelFactory>().As<IPrivateMessagesModelFactory>()
                 .InstancePerLifetimeScope();
+            builder.RegisterType<VendorModelFactory>().As<IVendorModelFactory>()
+                .InstancePerLifetimeScope();
             builder.RegisterType<WidgetModelFactory>().As<IWidgetModelFactory>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();
