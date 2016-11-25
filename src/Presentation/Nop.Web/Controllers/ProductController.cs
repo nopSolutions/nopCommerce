@@ -32,6 +32,7 @@ using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using Nop.Web.Extensions;
+using Nop.Web.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
@@ -47,6 +48,7 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
+        private readonly ICatalogModelFactory _catalogModelFactory;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
@@ -94,7 +96,8 @@ namespace Nop.Web.Controllers
 
         #region Constructors
 
-        public ProductController(ICategoryService categoryService,
+        public ProductController(ICatalogModelFactory catalogModelFactory,
+            ICategoryService categoryService,
             IManufacturerService manufacturerService,
             IProductService productService,
             IVendorService vendorService,
@@ -137,6 +140,7 @@ namespace Nop.Web.Controllers
             SeoSettings seoSettings,
             ICacheManager cacheManager)
         {
+            this._catalogModelFactory = catalogModelFactory;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._productService = productService;
@@ -191,12 +195,7 @@ namespace Nop.Web.Controllers
             int? productThumbPictureSize = null, bool prepareSpecificationAttributes = false,
             bool forceRedirectionAfterAddingToCart = false)
         {
-            return this.PrepareProductOverviewModels(_workContext,
-                _storeContext, _categoryService, _productService, _specificationAttributeService,
-                _priceCalculationService, _priceFormatter, _permissionService,
-                _localizationService, _taxService, _currencyService,
-                _pictureService, _measureService, _webHelper, _cacheManager,
-                _catalogSettings, _mediaSettings, products,
+            return _catalogModelFactory.PrepareProductOverviewModels(products,
                 preparePriceModel, preparePictureModel,
                 productThumbPictureSize, prepareSpecificationAttributes,
                 forceRedirectionAfterAddingToCart);
@@ -823,18 +822,14 @@ namespace Nop.Web.Controllers
             //do not prepare this model for the associated products. any it's not used
             if (!isAssociatedProduct)
             {
-                model.ProductSpecifications = this.PrepareProductSpecificationModel(_workContext,
-                    _specificationAttributeService,
-                    _cacheManager,
-                    product);
+                model.ProductSpecifications = _catalogModelFactory.PrepareProductSpecificationModel(product);
             }
 
             #endregion
 
             #region Product review overview
 
-            model.ProductReviewOverview = this.PrepareProductReviewOverviewModel(_storeContext, _catalogSettings,
-                _cacheManager, product);
+            model.ProductReviewOverview = _catalogModelFactory.PrepareProductReviewOverviewModel(product);
 
             #endregion
 

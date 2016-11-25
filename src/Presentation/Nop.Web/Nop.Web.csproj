@@ -267,8 +267,9 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Extensions\AttributeParserHelper.cs" />
     <Compile Include="Extensions\HtmlExtensions.cs" />
-    <Compile Include="Extensions\ControllerExtensions.cs" />
     <Compile Include="Extensions\MappingExtensions.cs" />
+    <Compile Include="Factories\ICatalogModelFactory.cs" />
+    <Compile Include="Factories\CatalogModelFactory.cs" />
     <Compile Include="Factories\ICommonModelFactory.cs" />
     <Compile Include="Factories\IExternalAuthenticationModelFactory.cs" />
     <Compile Include="Factories\ExternalAuthenticationModelFactory.cs" />

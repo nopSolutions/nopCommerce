@@ -27,8 +27,6 @@ namespace Nop.Web.Infrastructure
             builder.RegisterType<InstallationLocalizationService>().As<IInstallationLocalizationService>().InstancePerLifetimeScope();
 
             //we cache presentation models between requests
-            builder.RegisterType<CatalogController>()
-                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
             builder.RegisterType<ProductController>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
             builder.RegisterType<ShoppingCartController>()
@@ -36,6 +34,10 @@ namespace Nop.Web.Infrastructure
 
             //factories (we cache presentation models between requests)
             builder.RegisterType<BlogModelFactory>().As<IBlogModelFactory>()
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<CatalogModelFactory>().As<ICatalogModelFactory>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();
 
