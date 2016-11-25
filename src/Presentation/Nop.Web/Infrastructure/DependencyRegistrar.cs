@@ -29,8 +29,6 @@ namespace Nop.Web.Infrastructure
             //we cache presentation models between requests
             builder.RegisterType<CatalogController>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
-            builder.RegisterType<CommonController>()
-                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
             builder.RegisterType<NewsController>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
             builder.RegisterType<PollController>()
@@ -46,6 +44,9 @@ namespace Nop.Web.Infrastructure
 
             //factories (we cache presentation models between requests)
             builder.RegisterType<BlogModelFactory>().As<IBlogModelFactory>()
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
+                .InstancePerLifetimeScope();
+            builder.RegisterType<CommonModelFactory>().As<ICommonModelFactory>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();
             builder.RegisterType<ForumModelFactory>().As<IForumModelFactory>()

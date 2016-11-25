@@ -269,6 +269,7 @@
     <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Extensions\ControllerExtensions.cs" />
     <Compile Include="Extensions\MappingExtensions.cs" />
+    <Compile Include="Factories\ICommonModelFactory.cs" />
     <Compile Include="Factories\IExternalAuthenticationModelFactory.cs" />
     <Compile Include="Factories\ExternalAuthenticationModelFactory.cs" />
     <Compile Include="Factories\ICountryModelFactory.cs" />
@@ -288,6 +289,7 @@
     </Compile>
     <Compile Include="Infrastructure\Cache\ModelCacheEventConsumer.cs" />
     <Compile Include="Infrastructure\BackwardCompatibility2XRouteProvider.cs" />
+    <Compile Include="Factories\CommonModelFactory.cs" />
     <Compile Include="Infrastructure\GenericUrlRouteProvider.cs" />
     <Compile Include="Infrastructure\Installation\IInstallationLocalizationService.cs" />
     <Compile Include="Infrastructure\Installation\InstallationLanguage.cs" />
