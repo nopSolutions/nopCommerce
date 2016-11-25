@@ -282,6 +282,8 @@
     <Compile Include="Factories\OrderModelFactory.cs" />
     <Compile Include="Factories\IProfileModelFactory.cs" />
     <Compile Include="Factories\IPrivateMessagesModelFactory.cs" />
+    <Compile Include="Factories\IPollModelFactory.cs" />
+    <Compile Include="Factories\PollModelFactory.cs" />
     <Compile Include="Factories\PrivateMessagesModelFactory.cs" />
     <Compile Include="Factories\ProfileModelFactory.cs" />
     <Compile Include="Factories\IReturnRequestModelFactory.cs" />

@@ -31,8 +31,6 @@ namespace Nop.Web.Infrastructure
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
             builder.RegisterType<NewsController>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
-            builder.RegisterType<PollController>()
-                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
             builder.RegisterType<ProductController>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
             builder.RegisterType<ShoppingCartController>()
@@ -54,12 +52,15 @@ namespace Nop.Web.Infrastructure
                 .InstancePerLifetimeScope();
             builder.RegisterType<OrderModelFactory>().As<IOrderModelFactory>()
                 .InstancePerLifetimeScope();
+            builder.RegisterType<PollModelFactory>().As<IPollModelFactory>()
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
+                .InstancePerLifetimeScope();
+            builder.RegisterType<PrivateMessagesModelFactory>().As<IPrivateMessagesModelFactory>()
+                .InstancePerLifetimeScope();
             builder.RegisterType<ProfileModelFactory>().As<IProfileModelFactory>()
                 .InstancePerLifetimeScope();
             builder.RegisterType<ReturnRequestModelFactory>().As<IReturnRequestModelFactory>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
-                .InstancePerLifetimeScope();
-            builder.RegisterType<PrivateMessagesModelFactory>().As<IPrivateMessagesModelFactory>()
                 .InstancePerLifetimeScope();
             builder.RegisterType<TopicModelFactory>().As<ITopicModelFactory>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
