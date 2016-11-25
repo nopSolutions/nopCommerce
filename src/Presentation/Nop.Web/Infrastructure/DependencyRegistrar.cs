@@ -40,33 +40,48 @@ namespace Nop.Web.Infrastructure
             builder.RegisterType<BlogModelFactory>().As<IBlogModelFactory>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();
+
             builder.RegisterType<CommonModelFactory>().As<ICommonModelFactory>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();
-            builder.RegisterType<ForumModelFactory>().As<IForumModelFactory>()
-                .InstancePerLifetimeScope();
+
             builder.RegisterType<CountryModelFactory>().As<ICountryModelFactory>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();
+
+            builder.RegisterType<ForumModelFactory>().As<IForumModelFactory>()
+                .InstancePerLifetimeScope();
+
             builder.RegisterType<ExternalAuthenticationModelFactory>().As<IExternalAuthenticationModelFactory>()
                 .InstancePerLifetimeScope();
+
+            builder.RegisterType<NewsletterModelFactory>().As<INewsletterModelFactory>()
+                .InstancePerLifetimeScope();
+
             builder.RegisterType<OrderModelFactory>().As<IOrderModelFactory>()
                 .InstancePerLifetimeScope();
+
             builder.RegisterType<PollModelFactory>().As<IPollModelFactory>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();
+
             builder.RegisterType<PrivateMessagesModelFactory>().As<IPrivateMessagesModelFactory>()
                 .InstancePerLifetimeScope();
+
             builder.RegisterType<ProfileModelFactory>().As<IProfileModelFactory>()
                 .InstancePerLifetimeScope();
+
             builder.RegisterType<ReturnRequestModelFactory>().As<IReturnRequestModelFactory>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();
+
             builder.RegisterType<TopicModelFactory>().As<ITopicModelFactory>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();
+
             builder.RegisterType<VendorModelFactory>().As<IVendorModelFactory>()
                 .InstancePerLifetimeScope();
+
             builder.RegisterType<WidgetModelFactory>().As<IWidgetModelFactory>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();
