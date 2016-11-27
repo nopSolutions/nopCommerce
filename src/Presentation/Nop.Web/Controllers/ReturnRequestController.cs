@@ -16,6 +16,7 @@ using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Seo;
+using Nop.Web.Factories;
 using Nop.Web.Framework.Security;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Order;
@@ -24,8 +25,9 @@ namespace Nop.Web.Controllers
 {
     public partial class ReturnRequestController : BasePublicController
     {
-		#region Fields
+        #region Fields
 
+        private readonly IReturnRequestModelFactory _returnRequestModelFactory;
         private readonly IReturnRequestService _returnRequestService;
         private readonly IOrderService _orderService;
         private readonly IWorkContext _workContext;
@@ -45,7 +47,8 @@ namespace Nop.Web.Controllers
 
         #region Constructors
 
-        public ReturnRequestController(IReturnRequestService returnRequestService,
+        public ReturnRequestController(IReturnRequestModelFactory returnRequestModelFactory,
+            IReturnRequestService returnRequestService,
             IOrderService orderService, 
             IWorkContext workContext, 
             IStoreContext storeContext,
@@ -60,6 +63,7 @@ namespace Nop.Web.Controllers
             ICacheManager cacheManager, 
             ICustomNumberFormatter customNumberFormatter)
         {
+            this._returnRequestModelFactory = returnRequestModelFactory;
             this._returnRequestService = returnRequestService;
             this._orderService = orderService;
             this._workContext = workContext;
@@ -78,82 +82,6 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Utilities
-
-        [NonAction]
-        protected virtual SubmitReturnRequestModel PrepareReturnRequestModel(SubmitReturnRequestModel model, Order order)
-        {
-            if (order == null)
-                throw new ArgumentNullException("order");
-
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.OrderId = order.Id;
-
-            //return reasons
-            model.AvailableReturnReasons = _cacheManager.Get(string.Format(ModelCacheEventConsumer.RETURNREQUESTREASONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
-                () =>
-                {
-                    var reasons = new List<SubmitReturnRequestModel.ReturnRequestReasonModel>();
-                    foreach (var rrr in _returnRequestService.GetAllReturnRequestReasons())
-                        reasons.Add(new SubmitReturnRequestModel.ReturnRequestReasonModel()
-                        {
-                            Id = rrr.Id,
-                            Name = rrr.GetLocalized(x => x.Name)
-                        });
-                    return reasons;
-                });
-
-            //return actions
-            model.AvailableReturnActions = _cacheManager.Get(string.Format(ModelCacheEventConsumer.RETURNREQUESTACTIONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
-                () =>
-                {
-                    var actions = new List<SubmitReturnRequestModel.ReturnRequestActionModel>();
-                    foreach (var rra in _returnRequestService.GetAllReturnRequestActions())
-                        actions.Add(new SubmitReturnRequestModel.ReturnRequestActionModel()
-                        {
-                            Id = rra.Id,
-                            Name = rra.GetLocalized(x => x.Name)
-                        });
-                    return actions;
-                });
-
-            //returnable products
-            var orderItems = order.OrderItems.Where(oi => !oi.Product.NotReturnable);
-            foreach (var orderItem in orderItems)
-            {
-                var orderItemModel = new SubmitReturnRequestModel.OrderItemModel
-                {
-                    Id = orderItem.Id,
-                    ProductId = orderItem.Product.Id,
-                    ProductName = orderItem.Product.GetLocalized(x => x.Name),
-                    ProductSeName = orderItem.Product.GetSeName(),
-                    AttributeInfo = orderItem.AttributeDescription,
-                    Quantity = orderItem.Quantity
-                };
-                model.Items.Add(orderItemModel);
-
-                //unit price
-                if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
-                {
-                    //including tax
-                    var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
-                    orderItemModel.UnitPrice = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, true);
-                }
-                else
-                {
-                    //excluding tax
-                    var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
-                    orderItemModel.UnitPrice = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, false);
-                }
-            }
-
-            return model;
-        }
-
-        #endregion
-        
         #region Methods
 
         [NopHttpsRequirement(SslRequirement.Yes)]
@@ -162,35 +90,7 @@ namespace Nop.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
-            var model = new CustomerReturnRequestsModel();
-
-            var returnRequests = _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id, 
-                _workContext.CurrentCustomer.Id);
-            foreach (var returnRequest in returnRequests)
-            {
-                var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
-                if (orderItem != null)
-                {
-                    var product = orderItem.Product;
-
-                    var itemModel = new CustomerReturnRequestsModel.ReturnRequestModel
-                    {
-                        Id = returnRequest.Id,
-                        CustomNumber = returnRequest.CustomNumber,
-                        ReturnRequestStatus = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext),
-                        ProductId = product.Id,
-                        ProductName = product.GetLocalized(x => x.Name),
-                        ProductSeName = product.GetSeName(),
-                        Quantity = returnRequest.Quantity,
-                        ReturnAction = returnRequest.RequestedAction,
-                        ReturnReason = returnRequest.ReasonForReturn,
-                        Comments = returnRequest.CustomerComments,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc),
-                    };
-                    model.Items.Add(itemModel);
-                }
-            }
-
+            var model = _returnRequestModelFactory.PrepareCustomerReturnRequestsModel();
             return View(model);
         }
 
@@ -205,7 +105,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             var model = new SubmitReturnRequestModel();
-            model = PrepareReturnRequestModel(model, order);
+            model = _returnRequestModelFactory.PrepareSubmitReturnRequestModel(model, order);
             return View(model);
         }
 
@@ -266,7 +166,7 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            model = PrepareReturnRequestModel(model, order);
+            model = _returnRequestModelFactory.PrepareSubmitReturnRequestModel(model, order);
             if (count > 0)
                 model.Result = _localizationService.GetResource("ReturnRequests.Submitted");
             else

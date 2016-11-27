@@ -5,12 +5,14 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
+using Nop.Web.Factories;
 using Nop.Web.Models.Newsletter;
 
 namespace Nop.Web.Controllers
 {
     public partial class NewsletterController : BasePublicController
     {
+        private readonly INewsletterModelFactory _newsletterModelFactory;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
@@ -19,13 +21,15 @@ namespace Nop.Web.Controllers
 
         private readonly CustomerSettings _customerSettings;
 
-        public NewsletterController(ILocalizationService localizationService,
+        public NewsletterController(INewsletterModelFactory newsletterModelFactory,
+            ILocalizationService localizationService,
             IWorkContext workContext,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IWorkflowMessageService workflowMessageService,
             IStoreContext storeContext,
             CustomerSettings customerSettings)
         {
+            this._newsletterModelFactory = newsletterModelFactory;
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
@@ -40,10 +44,7 @@ namespace Nop.Web.Controllers
             if (_customerSettings.HideNewsletterBlock)
                 return Content("");
 
-            var model = new NewsletterBoxModel()
-            {
-                AllowToUnsubscribe = _customerSettings.NewsletterBlockAllowToUnsubscribe
-            };
+            var model = _newsletterModelFactory.PrepareNewsletterBoxModel();
             return PartialView(model);
         }
 
@@ -115,9 +116,7 @@ namespace Nop.Web.Controllers
         {
             var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuid(token);
             if (subscription == null)
-                return View(new SubscriptionActivationModel { Result = _localizationService.GetResource("Newsletter.ResultAlreadyDeactivated") });
-
-            var model = new SubscriptionActivationModel();
+                return RedirectToRoute("HomePage");
 
             if (active)
             {
@@ -127,10 +126,7 @@ namespace Nop.Web.Controllers
             else
                 _newsLetterSubscriptionService.DeleteNewsLetterSubscription(subscription);
 
-            model.Result = active 
-                ?  _localizationService.GetResource("Newsletter.ResultActivated")
-                : _localizationService.GetResource("Newsletter.ResultDeactivated");
-
+            var model = _newsletterModelFactory.PrepareSubscriptionActivationModel(active);
             return View(model);
         }
     }

@@ -3,48 +3,39 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
-using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
-using Nop.Services.Stores;
-using Nop.Services.Tax;
 using Nop.Web.Extensions;
+using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 using Nop.Web.Models.Checkout;
-using Nop.Web.Models.Common;
 
 namespace Nop.Web.Controllers
 {
     [NopHttpsRequirement(SslRequirement.Yes)]
     public partial class CheckoutController : BasePublicController
     {
-		#region Fields
+        #region Fields
 
+        private readonly ICheckoutModelFactory _checkoutModelFactory;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly ILocalizationService _localizationService;
-        private readonly ITaxService _taxService;
-        private readonly ICurrencyService _currencyService;
-        private readonly IPriceFormatter _priceFormatter;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -54,14 +45,12 @@ namespace Nop.Web.Controllers
         private readonly IPaymentService _paymentService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
-        private readonly IRewardPointService _rewardPointService;
         private readonly ILogger _logger;
         private readonly IOrderService _orderService;
         private readonly IWebHelper _webHelper;
         private readonly HttpContextBase _httpContext; 
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
 
         private readonly OrderSettings _orderSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
@@ -74,14 +63,11 @@ namespace Nop.Web.Controllers
 
 		#region Ctor
 
-        public CheckoutController(IWorkContext workContext,
+        public CheckoutController(ICheckoutModelFactory checkoutModelFactory,
+            IWorkContext workContext,
             IStoreContext storeContext,
-            IStoreMappingService storeMappingService,
             IShoppingCartService shoppingCartService, 
             ILocalizationService localizationService, 
-            ITaxService taxService, 
-            ICurrencyService currencyService, 
-            IPriceFormatter priceFormatter, 
             IOrderProcessingService orderProcessingService,
             ICustomerService customerService, 
             IGenericAttributeService genericAttributeService,
@@ -91,14 +77,12 @@ namespace Nop.Web.Controllers
             IPaymentService paymentService,
             IPluginFinder pluginFinder,
             IOrderTotalCalculationService orderTotalCalculationService,
-            IRewardPointService rewardPointService,
             ILogger logger,
             IOrderService orderService,
             IWebHelper webHelper,
             HttpContextBase httpContext,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
-            IAddressAttributeFormatter addressAttributeFormatter,
             OrderSettings orderSettings, 
             RewardPointsSettings rewardPointsSettings,
             PaymentSettings paymentSettings,
@@ -106,14 +90,11 @@ namespace Nop.Web.Controllers
             AddressSettings addressSettings,
             CustomerSettings customerSettings)
         {
+            this._checkoutModelFactory = checkoutModelFactory;
             this._workContext = workContext;
             this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
             this._shoppingCartService = shoppingCartService;
             this._localizationService = localizationService;
-            this._taxService = taxService;
-            this._currencyService = currencyService;
-            this._priceFormatter = priceFormatter;
             this._orderProcessingService = orderProcessingService;
             this._customerService = customerService;
             this._genericAttributeService = genericAttributeService;
@@ -123,14 +104,12 @@ namespace Nop.Web.Controllers
             this._paymentService = paymentService;
             this._pluginFinder = pluginFinder;
             this._orderTotalCalculationService = orderTotalCalculationService;
-            this._rewardPointService = rewardPointService;
             this._logger = logger;
             this._orderService = orderService;
             this._webHelper = webHelper;
             this._httpContext = httpContext;
             this._addressAttributeParser = addressAttributeParser;
             this._addressAttributeService = addressAttributeService;
-            this._addressAttributeFormatter = addressAttributeFormatter;
 
             this._orderSettings = orderSettings;
             this._rewardPointsSettings = rewardPointsSettings;
@@ -144,352 +123,6 @@ namespace Nop.Web.Controllers
 
         #region Utilities
 
-        [NonAction]
-        protected virtual bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool? useRewardPoints = null)
-        {
-            bool result = true;
-
-            //check whether order total equals zero
-            decimal? shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart, useRewardPoints: useRewardPoints);
-            if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
-                result = false;
-            return result;
-        }
-
-        [NonAction]
-        protected virtual CheckoutBillingAddressModel PrepareBillingAddressModel(IList<ShoppingCartItem> cart,
-            int? selectedCountryId = null,
-            bool prePopulateNewAddressWithCustomerFields = false,
-            string overrideAttributesXml = "")
-        {
-            var model = new CheckoutBillingAddressModel();
-            model.ShipToSameAddressAllowed = _shippingSettings.ShipToSameAddress && cart.RequiresShipping();
-            model.ShipToSameAddress = true;
-
-            //existing addresses
-            var addresses = _workContext.CurrentCustomer.Addresses
-                .Where(a => a.Country == null || 
-                    (//published
-                    a.Country.Published && 
-                    //allow billing
-                    a.Country.AllowsBilling && 
-                    //enabled for the current store
-                    _storeMappingService.Authorize(a.Country)))
-                .ToList();
-            foreach (var address in addresses)
-            {
-                var addressModel = new AddressModel();
-                addressModel.PrepareModel(
-                    address: address, 
-                    excludeProperties: false, 
-                    addressSettings: _addressSettings,
-                    addressAttributeFormatter: _addressAttributeFormatter);
-                model.ExistingAddresses.Add(addressModel);
-            }
-
-            //new address
-            model.NewAddress.CountryId = selectedCountryId;
-            model.NewAddress.PrepareModel(address: 
-                null,
-                excludeProperties: false,
-                addressSettings: _addressSettings,
-                localizationService: _localizationService,
-                stateProvinceService: _stateProvinceService,
-                addressAttributeService: _addressAttributeService,
-                addressAttributeParser: _addressAttributeParser,
-                loadCountries: () => _countryService.GetAllCountriesForBilling(_workContext.WorkingLanguage.Id),
-                prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
-                customer: _workContext.CurrentCustomer,
-                overrideAttributesXml: overrideAttributesXml);
-            return model;
-        }
-
-        [NonAction]
-        protected virtual CheckoutShippingAddressModel PrepareShippingAddressModel(int? selectedCountryId = null,
-            bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
-        {
-            var model = new CheckoutShippingAddressModel();
-
-            //allow pickup in store?
-            model.AllowPickUpInStore = _shippingSettings.AllowPickUpInStore;
-            if (model.AllowPickUpInStore)
-            {
-                model.DisplayPickupPointsOnMap = _shippingSettings.DisplayPickupPointsOnMap;
-                model.GoogleMapsApiKey = _shippingSettings.GoogleMapsApiKey;
-                var pickupPointProviders = _shippingService.LoadActivePickupPointProviders(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
-                if (pickupPointProviders.Any())
-                {
-                    var pickupPointsResponse = _shippingService.GetPickupPoints(_workContext.CurrentCustomer.BillingAddress,
-                        _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
-                    if (pickupPointsResponse.Success)
-                        model.PickupPoints = pickupPointsResponse.PickupPoints.Select(x =>
-                        {
-                            var country = _countryService.GetCountryByTwoLetterIsoCode(x.CountryCode);
-                            var state = _stateProvinceService.GetStateProvinceByAbbreviation(x.StateAbbreviation);
-                            var pickupPointModel = new CheckoutPickupPointModel
-                            {
-                                Id = x.Id,
-                                Name = x.Name,
-                                Description = x.Description,
-                                ProviderSystemName = x.ProviderSystemName,
-                                Address = x.Address,
-                                City = x.City,
-                                StateName = state != null ? state.Name : string.Empty,
-                                CountryName = country != null ? country.Name : string.Empty,
-                                ZipPostalCode = x.ZipPostalCode,
-                                Latitude = x.Latitude,
-                                Longitude = x.Longitude,
-                                OpeningHours = x.OpeningHours
-                            };
-                            if (x.PickupFee > 0)
-                            {
-                                var amount = _taxService.GetShippingPrice(x.PickupFee, _workContext.CurrentCustomer);
-                                amount = _currencyService.ConvertFromPrimaryStoreCurrency(amount, _workContext.WorkingCurrency);
-                                pickupPointModel.PickupFee = _priceFormatter.FormatShippingPrice(amount, true);
-                            }
-
-                            return pickupPointModel;
-                        }).ToList();
-                    else
-                        foreach (var error in pickupPointsResponse.Errors)
-                            model.Warnings.Add(error);
-                }
-
-                //only available pickup points
-                if (!_shippingService.LoadActiveShippingRateComputationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id).Any())
-                {
-                    if (!pickupPointProviders.Any())
-                    {
-                        model.Warnings.Add(_localizationService.GetResource("Checkout.ShippingIsNotAllowed"));
-                        model.Warnings.Add(_localizationService.GetResource("Checkout.PickupPoints.NotAvailable"));
-                    }
-                    model.PickUpInStoreOnly = true;
-                    model.PickUpInStore = true;
-                    return model;
-                }
-            }
-            
-            //existing addresses
-            var addresses = _workContext.CurrentCustomer.Addresses
-                .Where(a => a.Country == null || 
-                    (//published
-                    a.Country.Published &&
-                    //allow shipping
-                    a.Country.AllowsShipping &&
-                    //enabled for the current store
-                    _storeMappingService.Authorize(a.Country)))
-                .ToList();
-            foreach (var address in addresses)
-            {
-                var addressModel = new AddressModel();
-                addressModel.PrepareModel(
-                    address: address,
-                    excludeProperties: false,
-                    addressSettings: _addressSettings,
-                    addressAttributeFormatter: _addressAttributeFormatter);
-                model.ExistingAddresses.Add(addressModel);
-            }
-
-            //new address
-            model.NewAddress.CountryId = selectedCountryId;
-            model.NewAddress.PrepareModel(
-                address: null,
-                excludeProperties: false,
-                addressSettings: _addressSettings,
-                localizationService: _localizationService,
-                stateProvinceService: _stateProvinceService,
-                addressAttributeService: _addressAttributeService,
-                addressAttributeParser: _addressAttributeParser,
-                loadCountries: () => _countryService.GetAllCountriesForShipping(_workContext.WorkingLanguage.Id),
-                prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
-                customer: _workContext.CurrentCustomer,
-                overrideAttributesXml: overrideAttributesXml);
-
-            return model;
-        }
-
-        [NonAction]
-        protected virtual CheckoutShippingMethodModel PrepareShippingMethodModel(IList<ShoppingCartItem> cart, Address shippingAddress)
-        {
-            var model = new CheckoutShippingMethodModel();
-
-            var getShippingOptionResponse = _shippingService.GetShippingOptions(cart, shippingAddress, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
-            if (getShippingOptionResponse.Success)
-            {
-                //performance optimization. cache returned shipping options.
-                //we'll use them later (after a customer has selected an option).
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                                                       SystemCustomerAttributeNames.OfferedShippingOptions,
-                                                       getShippingOptionResponse.ShippingOptions,
-                                                       _storeContext.CurrentStore.Id);
-
-                foreach (var shippingOption in getShippingOptionResponse.ShippingOptions)
-                {
-                    var soModel = new CheckoutShippingMethodModel.ShippingMethodModel
-                                      {
-                                          Name = shippingOption.Name,
-                                          Description = shippingOption.Description,
-                                          ShippingRateComputationMethodSystemName = shippingOption.ShippingRateComputationMethodSystemName,
-                                          ShippingOption = shippingOption,
-                                      };
-
-                    //adjust rate
-                    List<DiscountForCaching> appliedDiscounts;
-                    var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(
-                        shippingOption.Rate, cart, out appliedDiscounts);
-
-                    decimal rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
-                    decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
-                    soModel.Fee = _priceFormatter.FormatShippingPrice(rate, true);
-
-                    model.ShippingMethods.Add(soModel);
-                }
-
-                //find a selected (previously) shipping method
-                var selectedShippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(
-                        SystemCustomerAttributeNames.SelectedShippingOption, _storeContext.CurrentStore.Id);
-                if (selectedShippingOption != null)
-                {
-                    var shippingOptionToSelect = model.ShippingMethods.ToList()
-                        .Find( so =>
-                            !String.IsNullOrEmpty(so.Name) &&
-                            so.Name.Equals(selectedShippingOption.Name, StringComparison.InvariantCultureIgnoreCase) &&
-                            !String.IsNullOrEmpty(so.ShippingRateComputationMethodSystemName) &&
-                            so.ShippingRateComputationMethodSystemName.Equals(selectedShippingOption.ShippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase));
-                    if (shippingOptionToSelect != null)
-                    {
-                        shippingOptionToSelect.Selected = true;
-                    }
-                }
-                //if no option has been selected, let's do it for the first one
-                if (model.ShippingMethods.FirstOrDefault(so => so.Selected) == null)
-                {
-                    var shippingOptionToSelect = model.ShippingMethods.FirstOrDefault();
-                    if (shippingOptionToSelect != null)
-                    {
-                        shippingOptionToSelect.Selected = true;
-                    }
-                }
-
-                //notify about shipping from multiple locations
-                if (_shippingSettings.NotifyCustomerAboutShippingFromMultipleLocations)
-                {
-                    model.NotifyCustomerAboutShippingFromMultipleLocations = getShippingOptionResponse.ShippingFromMultipleLocations;
-                }
-            }
-            else
-            {
-                foreach (var error in getShippingOptionResponse.Errors)
-                    model.Warnings.Add(error);
-            }
-
-            return model;
-        }
-
-        [NonAction]
-        protected virtual CheckoutPaymentMethodModel PreparePaymentMethodModel(IList<ShoppingCartItem> cart, int filterByCountryId)
-        {
-            var model = new CheckoutPaymentMethodModel();
-
-            //reward points
-            if (_rewardPointsSettings.Enabled && !cart.IsRecurring())
-            {
-                int rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
-                decimal rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
-                decimal rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
-                if (rewardPointsAmount > decimal.Zero && 
-                    _orderTotalCalculationService.CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
-                {
-                    model.DisplayRewardPoints = true;
-                    model.RewardPointsAmount = _priceFormatter.FormatPrice(rewardPointsAmount, true, false);
-                    model.RewardPointsBalance = rewardPointsBalance;
-
-                    //are points enough to pay for entire order? like if this option (to use them) was selected
-                    model.RewardPointsEnoughToPayForOrder = !IsPaymentWorkflowRequired(cart, true);
-                }
-            }
-
-            //filter by country
-            var paymentMethods = _paymentService
-                .LoadActivePaymentMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id, filterByCountryId)
-                .Where(pm => pm.PaymentMethodType == PaymentMethodType.Standard || pm.PaymentMethodType == PaymentMethodType.Redirection)
-                .Where(pm => !pm.HidePaymentMethod(cart))
-                .ToList();
-            foreach (var pm in paymentMethods)
-            {
-                if (cart.IsRecurring() && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
-                    continue;
-
-                var pmModel = new CheckoutPaymentMethodModel.PaymentMethodModel
-                {
-                    Name = pm.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id),
-                    Description = _paymentSettings.ShowPaymentMethodDescriptions ? pm.PaymentMethodDescription : string.Empty,
-                    PaymentMethodSystemName = pm.PluginDescriptor.SystemName,
-                    LogoUrl = pm.PluginDescriptor.GetLogoUrl(_webHelper)
-                };
-                //payment method additional fee
-                decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, pm.PluginDescriptor.SystemName);
-                decimal rateBase = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, _workContext.CurrentCustomer);
-                decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
-                if (rate > decimal.Zero)
-                    pmModel.Fee = _priceFormatter.FormatPaymentMethodAdditionalFee(rate, true);
-
-                model.PaymentMethods.Add(pmModel);
-            }
-            
-            //find a selected (previously) payment method
-            var selectedPaymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
-                SystemCustomerAttributeNames.SelectedPaymentMethod,
-                _genericAttributeService, _storeContext.CurrentStore.Id);
-            if (!String.IsNullOrEmpty(selectedPaymentMethodSystemName))
-            {
-                var paymentMethodToSelect = model.PaymentMethods.ToList()
-                    .Find(pm => pm.PaymentMethodSystemName.Equals(selectedPaymentMethodSystemName, StringComparison.InvariantCultureIgnoreCase));
-                if (paymentMethodToSelect != null)
-                    paymentMethodToSelect.Selected = true;
-            }
-            //if no option has been selected, let's do it for the first one
-            if (model.PaymentMethods.FirstOrDefault(so => so.Selected) == null)
-            {
-                var paymentMethodToSelect = model.PaymentMethods.FirstOrDefault();
-                if (paymentMethodToSelect != null)
-                    paymentMethodToSelect.Selected = true;
-            }
-
-            return model;
-        }
-
-        [NonAction]
-        protected virtual CheckoutPaymentInfoModel PreparePaymentInfoModel(IPaymentMethod paymentMethod)
-        {
-            var model = new CheckoutPaymentInfoModel();
-            string actionName;
-            string controllerName;
-            RouteValueDictionary routeValues;
-            paymentMethod.GetPaymentInfoRoute(out actionName, out controllerName, out routeValues);
-            model.PaymentInfoActionName = actionName;
-            model.PaymentInfoControllerName = controllerName;
-            model.PaymentInfoRouteValues = routeValues;
-            model.DisplayOrderTotals = _orderSettings.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab;
-            return model;
-        }
-
-        [NonAction]
-        protected virtual CheckoutConfirmModel PrepareConfirmOrderModel(IList<ShoppingCartItem> cart)
-        {
-            var model = new CheckoutConfirmModel();
-            //terms of service
-            model.TermsOfServiceOnOrderConfirmPage = _orderSettings.TermsOfServiceOnOrderConfirmPage;
-            //min order amount validation
-            bool minOrderTotalAmountOk = _orderProcessingService.ValidateMinOrderTotalAmount(cart);
-            if (!minOrderTotalAmountOk)
-            {
-                decimal minOrderTotalAmount = _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderTotalAmount, _workContext.WorkingCurrency);
-                model.MinOrderTotalWarning = string.Format(_localizationService.GetResource("Checkout.MinOrderTotalAmount"), _priceFormatter.FormatPrice(minOrderTotalAmount, true, false));
-            }
-            return model;
-        }
-        
         [NonAction]
         protected virtual bool IsMinimumOrderPlacementIntervalValid(Customer customer)
         {
@@ -608,12 +241,7 @@ namespace Nop.Web.Controllers
             }
 
             //model
-            var model = new CheckoutCompletedModel
-            {
-                OrderId = order.Id,
-                OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled
-            };
-
+            var model = _checkoutModelFactory.PrepareCheckoutCompletedModel(order);
             return View(model);
         }
 
@@ -638,7 +266,7 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             //model
-            var model = PrepareBillingAddressModel(cart, prePopulateNewAddressWithCustomerFields: true);
+            var model = _checkoutModelFactory.PrepareBillingAddressModel(cart, prePopulateNewAddressWithCustomerFields: true);
 
             //check whether "billing address" step is enabled
             if (_orderSettings.DisableBillingAddressCheckoutStep)
@@ -755,7 +383,7 @@ namespace Nop.Web.Controllers
 
 
             //If we got this far, something failed, redisplay form
-            model = PrepareBillingAddressModel(cart,
+            model = _checkoutModelFactory.PrepareBillingAddressModel(cart,
                 selectedCountryId: model.NewAddress.CountryId,
                 overrideAttributesXml: customAttributes);
             return View(model);
@@ -785,8 +413,7 @@ namespace Nop.Web.Controllers
             }
 
             //model
-            var model = PrepareShippingAddressModel(prePopulateNewAddressWithCustomerFields: true);
-
+            var model = _checkoutModelFactory.PrepareShippingAddressModel(prePopulateNewAddressWithCustomerFields: true);
             return View(model);
         }
 
@@ -905,7 +532,7 @@ namespace Nop.Web.Controllers
 
 
             //If we got this far, something failed, redisplay form
-            model = PrepareShippingAddressModel(
+            model = _checkoutModelFactory.PrepareShippingAddressModel(
                 selectedCountryId: model.NewAddress.CountryId,
                 overrideAttributesXml: customAttributes);
             return View(model);
@@ -934,7 +561,7 @@ namespace Nop.Web.Controllers
                 }
             
             //model
-            var model = PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
+            var model = _checkoutModelFactory.PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
 
             if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
                 model.ShippingMethods.Count == 1)
@@ -1031,7 +658,7 @@ namespace Nop.Web.Controllers
 
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
-            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, false);
+            bool isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart, false);
             if (!isPaymentWorkflowRequired)
             {
                 _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
@@ -1049,7 +676,7 @@ namespace Nop.Web.Controllers
             }
 
             //model
-            var paymentMethodModel = PreparePaymentMethodModel(cart, filterByCountryId);
+            var paymentMethodModel = _checkoutModelFactory.PreparePaymentMethodModel(cart, filterByCountryId);
 
             if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
                 paymentMethodModel.PaymentMethods.Count == 1 && !paymentMethodModel.DisplayRewardPoints)
@@ -1095,7 +722,7 @@ namespace Nop.Web.Controllers
             }
 
             //Check whether payment workflow is required
-            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
+            bool isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart);
             if (!isPaymentWorkflowRequired)
             {
                 _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
@@ -1137,7 +764,7 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             //Check whether payment workflow is required
-            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
+            bool isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart);
             if (!isPaymentWorkflowRequired)
             {
                 return RedirectToRoute("CheckoutConfirm");
@@ -1163,7 +790,7 @@ namespace Nop.Web.Controllers
             }
 
             //model
-            var model = PreparePaymentInfoModel(paymentMethod);
+            var model = _checkoutModelFactory.PreparePaymentInfoModel(paymentMethod);
             return View(model);
         }
 
@@ -1187,7 +814,7 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             //Check whether payment workflow is required
-            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
+            bool isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart);
             if (!isPaymentWorkflowRequired)
             {
                 return RedirectToRoute("CheckoutConfirm");
@@ -1220,7 +847,7 @@ namespace Nop.Web.Controllers
 
             //If we got this far, something failed, redisplay form
             //model
-            var model = PreparePaymentInfoModel(paymentMethod);
+            var model = _checkoutModelFactory.PreparePaymentInfoModel(paymentMethod);
             return View(model);
         }
         
@@ -1241,7 +868,7 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             //model
-            var model = PrepareConfirmOrderModel(cart);
+            var model = _checkoutModelFactory.PrepareConfirmOrderModel(cart);
             return View(model);
         }
 
@@ -1265,14 +892,14 @@ namespace Nop.Web.Controllers
 
 
             //model
-            var model = PrepareConfirmOrderModel(cart);
+            var model = _checkoutModelFactory.PrepareConfirmOrderModel(cart);
             try
             {
                 var processPaymentRequest = _httpContext.Session["OrderPaymentInfo"] as ProcessPaymentRequest;
                 if (processPaymentRequest == null)
                 {
                     //Check whether payment workflow is required
-                    if (IsPaymentWorkflowRequired(cart))
+                    if (_orderProcessingService.IsPaymentWorkflowRequired(cart))
                         return RedirectToRoute("CheckoutPaymentInfo");
                     
                     processPaymentRequest = new ProcessPaymentRequest();
@@ -1323,7 +950,7 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult CheckoutProgress(CheckoutProgressStep step)
         {
-            var model = new CheckoutProgressModel {CheckoutProgressStep = step};
+            var model = _checkoutModelFactory.PrepareCheckoutProgressModel(step);
             return PartialView(model);
         }
 
@@ -1334,7 +961,7 @@ namespace Nop.Web.Controllers
         [NonAction]
         protected JsonResult OpcLoadStepAfterShippingAddress(List<ShoppingCartItem> cart)
         {
-            var shippingMethodModel = PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
+            var shippingMethodModel = _checkoutModelFactory.PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
             if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
                 shippingMethodModel.ShippingMethods.Count == 1)
             {
@@ -1365,7 +992,7 @@ namespace Nop.Web.Controllers
         {
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
-            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, false);
+            bool isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart, false);
             if (isPaymentWorkflowRequired)
             {
                 //filter by country
@@ -1378,7 +1005,7 @@ namespace Nop.Web.Controllers
                 }
 
                 //payment is required
-                var paymentMethodModel = PreparePaymentMethodModel(cart, filterByCountryId);
+                var paymentMethodModel = _checkoutModelFactory.PreparePaymentMethodModel(cart, filterByCountryId);
 
                 if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
                     paymentMethodModel.PaymentMethods.Count == 1 && !paymentMethodModel.DisplayRewardPoints)
@@ -1417,7 +1044,7 @@ namespace Nop.Web.Controllers
             _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
                 SystemCustomerAttributeNames.SelectedPaymentMethod, null, _storeContext.CurrentStore.Id);
 
-            var confirmOrderModel = PrepareConfirmOrderModel(cart);
+            var confirmOrderModel = _checkoutModelFactory.PrepareConfirmOrderModel(cart);
             return Json(new
             {
                 update_section = new UpdateSectionJsonModel
@@ -1439,7 +1066,7 @@ namespace Nop.Web.Controllers
                 //session save
                 _httpContext.Session["OrderPaymentInfo"] = paymentInfo;
 
-                var confirmOrderModel = PrepareConfirmOrderModel(cart);
+                var confirmOrderModel = _checkoutModelFactory.PrepareConfirmOrderModel(cart);
                 return Json(new
                 {
                     update_section = new UpdateSectionJsonModel
@@ -1453,7 +1080,7 @@ namespace Nop.Web.Controllers
 
 
             //return payment info page
-            var paymenInfoModel = PreparePaymentInfoModel(paymentMethod);
+            var paymenInfoModel = _checkoutModelFactory.PreparePaymentInfoModel(paymentMethod);
             return Json(new
             {
                 update_section = new UpdateSectionJsonModel
@@ -1472,6 +1099,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
+
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
@@ -1481,11 +1109,7 @@ namespace Nop.Web.Controllers
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                 return new HttpUnauthorizedResult();
 
-            var model = new OnePageCheckoutModel
-            {
-                ShippingRequired = cart.RequiresShipping(),
-                DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep
-            };
+            var model = _checkoutModelFactory.PrepareOnePageCheckoutModel(cart);
             return View(model);
         }
 
@@ -1498,7 +1122,7 @@ namespace Nop.Web.Controllers
                 .ToList();
 
 
-            var billingAddressModel = PrepareBillingAddressModel(cart, prePopulateNewAddressWithCustomerFields: true);
+            var billingAddressModel = _checkoutModelFactory.PrepareBillingAddressModel(cart, prePopulateNewAddressWithCustomerFields: true);
             return PartialView("OpcBillingAddress", billingAddressModel);
         }
 
@@ -1553,7 +1177,7 @@ namespace Nop.Web.Controllers
                     if (!ModelState.IsValid)
                     {
                         //model is not valid. redisplay the form with errors
-                        var billingAddressModel = PrepareBillingAddressModel(cart,
+                        var billingAddressModel = _checkoutModelFactory.PrepareBillingAddressModel(cart,
                             selectedCountryId: model.NewAddress.CountryId,
                             overrideAttributesXml: customAttributes);
                         billingAddressModel.NewAddressPreselected = true;
@@ -1616,7 +1240,7 @@ namespace Nop.Web.Controllers
                     else
                     {
                         //do not ship to the same address
-                        var shippingAddressModel = PrepareShippingAddressModel(prePopulateNewAddressWithCustomerFields: true);
+                        var shippingAddressModel = _checkoutModelFactory.PrepareShippingAddressModel(prePopulateNewAddressWithCustomerFields: true);
 
                         return Json(new
                         {
@@ -1737,7 +1361,7 @@ namespace Nop.Web.Controllers
                     if (!ModelState.IsValid)
                     {
                         //model is not valid. redisplay the form with errors
-                        var shippingAddressModel = PrepareShippingAddressModel(
+                        var shippingAddressModel = _checkoutModelFactory.PrepareShippingAddressModel(
                             selectedCountryId: model.NewAddress.CountryId,
                             overrideAttributesXml: customAttributes);
                         shippingAddressModel.NewAddressPreselected = true;
@@ -1895,14 +1519,14 @@ namespace Nop.Web.Controllers
                 }
 
                 //Check whether payment workflow is required
-                bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
+                bool isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart);
                 if (!isPaymentWorkflowRequired)
                 {
                     //payment is not required
                     _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
                         SystemCustomerAttributeNames.SelectedPaymentMethod, null, _storeContext.CurrentStore.Id);
 
-                    var confirmOrderModel = PrepareConfirmOrderModel(cart);
+                    var confirmOrderModel = _checkoutModelFactory.PrepareConfirmOrderModel(cart);
                     return Json(new
                     {
                         update_section = new UpdateSectionJsonModel
@@ -1975,7 +1599,7 @@ namespace Nop.Web.Controllers
                     //session save
                     _httpContext.Session["OrderPaymentInfo"] = paymentInfo;
 
-                    var confirmOrderModel = PrepareConfirmOrderModel(cart);
+                    var confirmOrderModel = _checkoutModelFactory.PrepareConfirmOrderModel(cart);
                     return Json(new
                     {
                         update_section = new UpdateSectionJsonModel
@@ -1988,7 +1612,7 @@ namespace Nop.Web.Controllers
                 }
 
                 //If we got this far, something failed, redisplay form
-                var paymenInfoModel = PreparePaymentInfoModel(paymentMethod);
+                var paymenInfoModel = _checkoutModelFactory.PreparePaymentInfoModel(paymentMethod);
                 return Json(new
                 {
                     update_section = new UpdateSectionJsonModel
@@ -2033,7 +1657,7 @@ namespace Nop.Web.Controllers
                 if (processPaymentRequest == null)
                 {
                     //Check whether payment workflow is required
-                    if (IsPaymentWorkflowRequired(cart))
+                    if (_orderProcessingService.IsPaymentWorkflowRequired(cart))
                     {
                         throw new Exception("Payment information is not entered");
                     }

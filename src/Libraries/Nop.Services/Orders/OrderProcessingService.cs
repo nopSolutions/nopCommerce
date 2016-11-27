@@ -3049,6 +3049,26 @@ namespace Nop.Services.Orders
             return true;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether payment workflow is required
+        /// </summary>
+        /// <param name="cart">Shopping cart</param>
+        /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
+        /// <returns>true - OK; false - minimum order total amount is not reached</returns>
+        public virtual bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool? useRewardPoints = null)
+        {
+            if (cart == null)
+                throw new ArgumentNullException("cart");
+
+            bool result = true;
+
+            //check whether order total equals zero
+            decimal? shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart, useRewardPoints: useRewardPoints);
+            if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
+                result = false;
+            return result;
+        }
+
         #endregion
     }
 }
