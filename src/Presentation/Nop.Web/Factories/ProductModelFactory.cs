@@ -947,7 +947,7 @@ namespace Nop.Web.Factories
             return model;
         }
 
-        protected virtual IList<ManufacturerModel> PrepareProductManufacturerModels(Product product)
+        protected virtual IList<ManufacturerBriefInfoModel> PrepareProductManufacturerModels(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -957,9 +957,19 @@ namespace Nop.Web.Factories
                      _workContext.WorkingLanguage.Id,
                      string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                      _storeContext.CurrentStore.Id);
-            var model = _cacheManager.Get(manufacturersCacheKey, () =>
-                _manufacturerService.GetProductManufacturersByProductId(product.Id)
-                    .Select(x => x.Manufacturer.ToModel())
+            var model = _cacheManager.Get(manufacturersCacheKey,
+                () => _manufacturerService.GetProductManufacturersByProductId(product.Id)
+                    .Select(pm =>
+                    {
+                        var manufacturer = pm.Manufacturer;
+                        var modelMan = new ManufacturerBriefInfoModel
+                        {
+                            Id = manufacturer.Id,
+                            Name = manufacturer.GetLocalized(x => x.Name),
+                            SeName = manufacturer.GetSeName()
+                        };
+                        return modelMan;
+                    })
                     .ToList()
                 );
 

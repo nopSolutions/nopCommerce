@@ -444,13 +444,23 @@ namespace Nop.Web.Factories
                 if (_commonSettings.SitemapIncludeCategories)
                 {
                     var categories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
-                    model.Categories = categories.Select(x => x.ToModel()).ToList();
+                    model.Categories = categories.Select(category => new CategorySimpleModel
+                    {
+                        Id = category.Id,
+                        Name = category.GetLocalized(x => x.Name),
+                        SeName = category.GetSeName(),
+                    }).ToList();
                 }
                 //manufacturers
                 if (_commonSettings.SitemapIncludeManufacturers)
                 {
                     var manufacturers = _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id);
-                    model.Manufacturers = manufacturers.Select(x => x.ToModel()).ToList();
+                    model.Manufacturers = manufacturers.Select(category => new ManufacturerBriefInfoModel
+                    {
+                        Id = category.Id,
+                        Name = category.GetLocalized(x => x.Name),
+                        SeName = category.GetSeName(),
+                    }).ToList();
                 }
                 //products
                 if (_commonSettings.SitemapIncludeProducts)

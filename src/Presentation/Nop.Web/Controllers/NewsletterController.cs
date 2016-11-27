@@ -118,8 +118,6 @@ namespace Nop.Web.Controllers
             if (subscription == null)
                 return RedirectToRoute("HomePage");
 
-            var model = new SubscriptionActivationModel();
-
             if (active)
             {
                 subscription.Active = true;
@@ -128,10 +126,7 @@ namespace Nop.Web.Controllers
             else
                 _newsLetterSubscriptionService.DeleteNewsLetterSubscription(subscription);
 
-            model.Result = active
-                ? _localizationService.GetResource("Newsletter.ResultActivated")
-                : _localizationService.GetResource("Newsletter.ResultDeactivated");
-
+            var model = _newsletterModelFactory.PrepareSubscriptionActivationModel(active);
             return View(model);
         }
     }

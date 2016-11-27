@@ -24,7 +24,7 @@ namespace Nop.Web.Models.Catalog
             Breadcrumb = new ProductBreadcrumbModel();
             ProductTags = new List<ProductTagModel>();
             ProductSpecifications= new List<ProductSpecificationModel>();
-            ProductManufacturers = new List<ManufacturerModel>();
+            ProductManufacturers = new List<ManufacturerBriefInfoModel>();
             ProductReviewOverview = new ProductReviewOverviewModel();
             TierPrices = new List<TierPriceModel>();
         }
@@ -93,7 +93,7 @@ namespace Nop.Web.Models.Catalog
 
         public IList<ProductSpecificationModel> ProductSpecifications { get; set; }
 
-        public IList<ManufacturerModel> ProductManufacturers { get; set; }
+        public IList<ManufacturerBriefInfoModel> ProductManufacturers { get; set; }
 
         public ProductReviewOverviewModel ProductReviewOverview { get; set; }
 

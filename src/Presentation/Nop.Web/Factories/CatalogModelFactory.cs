@@ -382,8 +382,16 @@ namespace Nop.Web.Factories
             if (category == null)
                 throw new ArgumentNullException("category");
 
-            var model = category.ToModel();
-            
+            var model = new CategoryModel
+            {
+                Id = category.Id,
+                Name = category.GetLocalized(x => x.Name),
+                Description = category.GetLocalized(x => x.Description),
+                MetaKeywords = category.GetLocalized(x => x.MetaKeywords),
+                MetaDescription = category.GetLocalized(x => x.MetaDescription),
+                MetaTitle = category.GetLocalized(x => x.MetaTitle),
+                SeName = category.GetSeName(),
+            };
 
             //sorting
             PrepareSortingOptions(model.PagingFilteringContext, command);
@@ -651,15 +659,24 @@ namespace Nop.Web.Factories
 
             var model = _cacheManager.Get(categoriesCacheKey, () =>
                 _categoryService.GetAllCategoriesDisplayedOnHomePage()
-                .Select(x =>
+                .Select(category =>
                 {
-                    var catModel = x.ToModel();
+                    var catModel = new CategoryModel
+                    {
+                        Id = category.Id,
+                        Name = category.GetLocalized(x => x.Name),
+                        Description = category.GetLocalized(x => x.Description),
+                        MetaKeywords = category.GetLocalized(x => x.MetaKeywords),
+                        MetaDescription = category.GetLocalized(x => x.MetaDescription),
+                        MetaTitle = category.GetLocalized(x => x.MetaTitle),
+                        SeName = category.GetSeName(),
+                    };
 
                     //prepare picture model
-                    var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+                    var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, category.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                     catModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
                     {
-                        var picture = _pictureService.GetPictureById(x.PictureId);
+                        var picture = _pictureService.GetPictureById(category.PictureId);
                         var pictureModel = new PictureModel
                         {
                             FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
@@ -687,7 +704,16 @@ namespace Nop.Web.Factories
             if (manufacturer == null)
                 throw new ArgumentNullException("manufacturer");
 
-            var model = manufacturer.ToModel();
+            var model = new ManufacturerModel
+            {
+                Id = manufacturer.Id,
+                Name = manufacturer.GetLocalized(x => x.Name),
+                Description = manufacturer.GetLocalized(x => x.Description),
+                MetaKeywords = manufacturer.GetLocalized(x => x.MetaKeywords),
+                MetaDescription = manufacturer.GetLocalized(x => x.MetaDescription),
+                MetaTitle = manufacturer.GetLocalized(x => x.MetaTitle),
+                SeName = manufacturer.GetSeName(),
+            };
 
 
 
@@ -800,8 +826,17 @@ namespace Nop.Web.Factories
             var manufacturers = _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id);
             foreach (var manufacturer in manufacturers)
             {
-                var modelMan = manufacturer.ToModel();
-                
+                var modelMan = new ManufacturerModel
+                {
+                    Id = manufacturer.Id,
+                    Name = manufacturer.GetLocalized(x => x.Name),
+                    Description = manufacturer.GetLocalized(x => x.Description),
+                    MetaKeywords = manufacturer.GetLocalized(x => x.MetaKeywords),
+                    MetaDescription = manufacturer.GetLocalized(x => x.MetaDescription),
+                    MetaTitle = manufacturer.GetLocalized(x => x.MetaTitle),
+                    SeName = manufacturer.GetSeName(),
+                };
+
                 //prepare picture model
                 int pictureSize = _mediaSettings.ManufacturerThumbPictureSize;
                 var manufacturerPictureCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_PICTURE_MODEL_KEY, manufacturer.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
