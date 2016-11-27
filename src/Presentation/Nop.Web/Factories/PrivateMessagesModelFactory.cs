@@ -89,28 +89,12 @@ namespace Nop.Web.Factories
 
             var pageSize = _forumSettings.PrivateMessagesPageSize;
 
+            var messages = new List<PrivateMessageModel>();
+
             var list = _forumService.GetAllPrivateMessages(_storeContext.CurrentStore.Id,
                 0, _workContext.CurrentCustomer.Id, null, null, false, string.Empty, page, pageSize);
-
-            var inbox = new List<PrivateMessageModel>();
-
             foreach (var pm in list)
-            {
-                inbox.Add(new PrivateMessageModel
-                {
-                    Id = pm.Id,
-                    FromCustomerId = pm.FromCustomer.Id,
-                    CustomerFromName = pm.FromCustomer.FormatUserName(),
-                    AllowViewingFromProfile = _customerSettings.AllowViewingProfiles && pm.FromCustomer != null && !pm.FromCustomer.IsGuest(),
-                    ToCustomerId = pm.ToCustomer.Id,
-                    CustomerToName = pm.ToCustomer.FormatUserName(),
-                    AllowViewingToProfile = _customerSettings.AllowViewingProfiles && pm.ToCustomer != null && !pm.ToCustomer.IsGuest(),
-                    Subject = pm.Subject,
-                    Message = pm.Text,
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime( pm.CreatedOnUtc, DateTimeKind.Utc),
-                    IsRead = pm.IsRead,
-                });
-            }
+                messages.Add(PreparePrivateMessageModel(pm));
 
             var pagerModel = new PagerModel
             {
@@ -125,7 +109,7 @@ namespace Nop.Web.Factories
 
             var model = new PrivateMessageListModel
             {
-                Messages = inbox,
+                Messages = messages,
                 PagerModel = pagerModel
             };
 
@@ -141,28 +125,12 @@ namespace Nop.Web.Factories
 
             var pageSize = _forumSettings.PrivateMessagesPageSize;
 
-            var list = _forumService.GetAllPrivateMessages(_storeContext.CurrentStore.Id, 
+            var messages = new List<PrivateMessageModel>();
+
+            var list = _forumService.GetAllPrivateMessages(_storeContext.CurrentStore.Id,
                 _workContext.CurrentCustomer.Id, 0, null, false, null, string.Empty, page, pageSize);
-
-            var sentItems = new List<PrivateMessageModel>();
-
             foreach (var pm in list)
-            {
-                sentItems.Add(new PrivateMessageModel
-                {
-                    Id = pm.Id,
-                    FromCustomerId = pm.FromCustomer.Id,
-                    CustomerFromName = pm.FromCustomer.FormatUserName(),
-                    AllowViewingFromProfile = _customerSettings.AllowViewingProfiles && pm.FromCustomer != null && !pm.FromCustomer.IsGuest(),
-                    ToCustomerId = pm.ToCustomer.Id,
-                    CustomerToName = pm.ToCustomer.FormatUserName(),
-                    AllowViewingToProfile = _customerSettings.AllowViewingProfiles && pm.ToCustomer != null && !pm.ToCustomer.IsGuest(),
-                    Subject = pm.Subject,
-                    Message = pm.Text,
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(pm.CreatedOnUtc, DateTimeKind.Utc),
-                    IsRead = pm.IsRead,
-                });
-            }
+                messages.Add(PreparePrivateMessageModel(pm));
 
             var pagerModel = new PagerModel
             {
@@ -177,7 +145,7 @@ namespace Nop.Web.Factories
 
             var model = new PrivateMessageListModel
             {
-                Messages = sentItems,
+                Messages = messages,
                 PagerModel = pagerModel
             };
 

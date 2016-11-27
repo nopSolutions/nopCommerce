@@ -177,9 +177,11 @@ namespace Nop.Web.Controllers
             _customerActivityService.InsertActivity("PublicStore.ViewProduct", _localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name);
 
             //model
-            var model = _productModelFactory.PrepareProductDetailsPageModel(product, updatecartitem, false);
+            var model = _productModelFactory.PrepareProductDetailsModel(product, updatecartitem, false);
+            //template
+            var productTemplateViewPath = _productModelFactory.PrepareProductTemplateViewPath(product);
 
-            return View(model.ProductTemplateViewPath, model);
+            return View(productTemplateViewPath, model);
         }
 
         [ChildActionOnly]

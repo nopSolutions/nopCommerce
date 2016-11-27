@@ -223,7 +223,7 @@ namespace Nop.Web.Factories
             model.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoShoppingCart;
 
             //discount and gift card boxes
-            model.DiscountBox.Display= _shoppingCartSettings.ShowDiscountBox;
+            model.DiscountBox.Display = _shoppingCartSettings.ShowDiscountBox;
             var discountCouponCodes = _workContext.CurrentCustomer.ParseAppliedDiscountCouponCodes();
             foreach (var couponCode in discountCouponCodes)
             {
