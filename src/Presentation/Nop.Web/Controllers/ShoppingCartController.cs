@@ -1234,7 +1234,7 @@ namespace Nop.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
-            _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
+            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
             return View(model);
         }
 
@@ -1246,7 +1246,7 @@ namespace Nop.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
-            _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart, 
+            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart, 
                 isEditable: false, 
                 prepareEstimateShippingIfEnabled: false,
                 prepareAndDisplayOrderReviewData: prepareAndDisplayOrderReviewData.GetValueOrDefault());
@@ -1303,7 +1303,7 @@ namespace Nop.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
-            _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
+            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
             //update current warnings
             foreach (var kvp in innerWarnings)
             {
@@ -1356,7 +1356,7 @@ namespace Nop.Web.Controllers
             {
                 //something wrong, redisplay the page with warnings
                 var model = new ShoppingCartModel();
-                _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart, validateCheckoutAttributes: true);
+                model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart, validateCheckoutAttributes: true);
                 return View(model);
             }
 
@@ -1457,7 +1457,7 @@ namespace Nop.Web.Controllers
                 model.DiscountBox.IsApplied = false;
             }
 
-            _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
+            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
             return View(model);
         }
 
@@ -1510,7 +1510,7 @@ namespace Nop.Web.Controllers
                 model.GiftCardBox.IsApplied = false;
             }
 
-            _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
+            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
             return View(model);
         }
 
@@ -1564,7 +1564,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
+            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
             return View(model);
         }
 
@@ -1588,7 +1588,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
+            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
             return View(model);
         }
 
@@ -1625,7 +1625,7 @@ namespace Nop.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new WishlistModel();
-            _shoppingCartModelFactory.PrepareWishlistModel(model, cart, !customerGuid.HasValue);
+            model = _shoppingCartModelFactory.PrepareWishlistModel(model, cart, !customerGuid.HasValue);
             return View(model);
         }
 
@@ -1680,7 +1680,7 @@ namespace Nop.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new WishlistModel();
-            _shoppingCartModelFactory.PrepareWishlistModel(model, cart);
+            model = _shoppingCartModelFactory.PrepareWishlistModel(model, cart);
             //update current warnings
             foreach (var kvp in innerWarnings)
             {
@@ -1773,7 +1773,7 @@ namespace Nop.Web.Controllers
                     .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
                 var model = new WishlistModel();
-                _shoppingCartModelFactory.PrepareWishlistModel(model, cart, !customerGuid.HasValue);
+                model = _shoppingCartModelFactory.PrepareWishlistModel(model, cart, !customerGuid.HasValue);
                 return View(model);
             }
         }

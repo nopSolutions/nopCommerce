@@ -525,7 +525,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
 
             var model = new RegisterModel();
-            _customerModelFactory.PrepareCustomerRegisterModel(model, false, setDefaultValues: true);
+            model = _customerModelFactory.PrepareRegisterModel(model, false, setDefaultValues: true);
 
             return View(model);
         }
@@ -758,7 +758,7 @@ namespace Nop.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            _customerModelFactory.PrepareCustomerRegisterModel(model, true, customerAttributesXml);
+            model = _customerModelFactory.PrepareRegisterModel(model, true, customerAttributesXml);
             return View(model);
         }
 
@@ -859,7 +859,7 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             var model = new CustomerInfoModel();
-            _customerModelFactory.PrepareCustomerInfoModel(model, _workContext.CurrentCustomer, false);
+            model =_customerModelFactory.PrepareCustomerInfoModel(model, _workContext.CurrentCustomer, false);
 
             return View(model);
         }
@@ -1010,7 +1010,7 @@ namespace Nop.Web.Controllers
 
 
             //If we got this far, something failed, redisplay form
-            _customerModelFactory.PrepareCustomerInfoModel(model, customer, true, customerAttributesXml);
+            model = _customerModelFactory.PrepareCustomerInfoModel(model, customer, true, customerAttributesXml);
             return View(model);
         }
 

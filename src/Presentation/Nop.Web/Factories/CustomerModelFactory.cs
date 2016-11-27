@@ -230,7 +230,7 @@ namespace Nop.Web.Factories
             return result;
         }
         
-        public virtual void PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer, 
+        public virtual CustomerInfoModel PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer, 
             bool excludeProperties, string overrideCustomCustomerAttributesXml = "")
         {
             if (model == null)
@@ -372,9 +372,11 @@ namespace Nop.Web.Factories
             //custom customer attributes
             var customAttributes = PrepareCustomCustomerAttributes(customer, overrideCustomCustomerAttributesXml);
             customAttributes.ForEach(model.CustomerAttributes.Add);
+
+            return model;
         }
 
-        public virtual void PrepareCustomerRegisterModel(RegisterModel model, bool excludeProperties, 
+        public virtual RegisterModel PrepareRegisterModel(RegisterModel model, bool excludeProperties, 
             string overrideCustomCustomerAttributesXml = "", bool setDefaultValues = false)
         {
             if (model == null)
@@ -465,6 +467,8 @@ namespace Nop.Web.Factories
             //custom customer attributes
             var customAttributes = PrepareCustomCustomerAttributes(_workContext.CurrentCustomer, overrideCustomCustomerAttributesXml);
             customAttributes.ForEach(model.CustomerAttributes.Add);
+
+            return model;
         }
 
         public virtual LoginModel PrepareLoginModel(bool? checkoutAsGuest)

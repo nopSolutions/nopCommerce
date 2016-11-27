@@ -9,13 +9,13 @@ namespace Nop.Web.Factories
     {
         PictureModel PrepareCartItemPictureModel(ShoppingCartItem sci, int pictureSize,bool showDefaultPicture, string productName);
 
-        void PrepareShoppingCartModel(ShoppingCartModel model,
+        ShoppingCartModel PrepareShoppingCartModel(ShoppingCartModel model,
             IList<ShoppingCartItem> cart, bool isEditable = true,
             bool validateCheckoutAttributes = false,
             bool prepareEstimateShippingIfEnabled = true, bool setEstimateShippingDefaultAddress = true,
             bool prepareAndDisplayOrderReviewData = false);
 
-        void PrepareWishlistModel(WishlistModel model, IList<ShoppingCartItem> cart, bool isEditable = true);
+        WishlistModel PrepareWishlistModel(WishlistModel model, IList<ShoppingCartItem> cart, bool isEditable = true);
 
         MiniShoppingCartModel PrepareMiniShoppingCartModel();
 
