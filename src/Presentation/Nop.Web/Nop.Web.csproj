@@ -290,6 +290,8 @@
     <Compile Include="Factories\IPollModelFactory.cs" />
     <Compile Include="Factories\PollModelFactory.cs" />
     <Compile Include="Factories\PrivateMessagesModelFactory.cs" />
+    <Compile Include="Factories\IProductModelFactory.cs" />
+    <Compile Include="Factories\ProductModelFactory.cs" />
     <Compile Include="Factories\ProfileModelFactory.cs" />
     <Compile Include="Factories\IReturnRequestModelFactory.cs" />
     <Compile Include="Factories\ReturnRequestModelFactory.cs" />
