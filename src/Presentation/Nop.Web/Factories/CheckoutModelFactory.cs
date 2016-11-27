@@ -112,22 +112,7 @@ namespace Nop.Web.Factories
         }
 
         #endregion
-
-        #region Utilities
-
-        protected virtual bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool? useRewardPoints = null)
-        {
-            bool result = true;
-
-            //check whether order total equals zero
-            decimal? shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart, useRewardPoints: useRewardPoints);
-            if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
-                result = false;
-            return result;
-        }
-
-        #endregion
-
+        
         #region Methods
 
         public virtual CheckoutBillingAddressModel PrepareBillingAddressModel(IList<ShoppingCartItem> cart,
@@ -375,7 +360,7 @@ namespace Nop.Web.Factories
                     model.RewardPointsBalance = rewardPointsBalance;
 
                     //are points enough to pay for entire order? like if this option (to use them) was selected
-                    model.RewardPointsEnoughToPayForOrder = !IsPaymentWorkflowRequired(cart, true);
+                    model.RewardPointsEnoughToPayForOrder = !_orderProcessingService.IsPaymentWorkflowRequired(cart, true);
                 }
             }
 

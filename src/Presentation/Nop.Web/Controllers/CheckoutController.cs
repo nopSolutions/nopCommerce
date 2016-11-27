@@ -124,18 +124,6 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected virtual bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool? useRewardPoints = null)
-        {
-            bool result = true;
-
-            //check whether order total equals zero
-            decimal? shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart, useRewardPoints: useRewardPoints);
-            if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
-                result = false;
-            return result;
-        }
-
-        [NonAction]
         protected virtual bool IsMinimumOrderPlacementIntervalValid(Customer customer)
         {
             //prevent 2 orders being placed within an X seconds time frame
@@ -670,7 +658,7 @@ namespace Nop.Web.Controllers
 
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
-            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, false);
+            bool isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart, false);
             if (!isPaymentWorkflowRequired)
             {
                 _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
@@ -734,7 +722,7 @@ namespace Nop.Web.Controllers
             }
 
             //Check whether payment workflow is required
-            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
+            bool isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart);
             if (!isPaymentWorkflowRequired)
             {
                 _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
@@ -776,7 +764,7 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             //Check whether payment workflow is required
-            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
+            bool isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart);
             if (!isPaymentWorkflowRequired)
             {
                 return RedirectToRoute("CheckoutConfirm");
@@ -826,7 +814,7 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             //Check whether payment workflow is required
-            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
+            bool isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart);
             if (!isPaymentWorkflowRequired)
             {
                 return RedirectToRoute("CheckoutConfirm");
@@ -911,7 +899,7 @@ namespace Nop.Web.Controllers
                 if (processPaymentRequest == null)
                 {
                     //Check whether payment workflow is required
-                    if (IsPaymentWorkflowRequired(cart))
+                    if (_orderProcessingService.IsPaymentWorkflowRequired(cart))
                         return RedirectToRoute("CheckoutPaymentInfo");
                     
                     processPaymentRequest = new ProcessPaymentRequest();
@@ -1004,7 +992,7 @@ namespace Nop.Web.Controllers
         {
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
-            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, false);
+            bool isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart, false);
             if (isPaymentWorkflowRequired)
             {
                 //filter by country
@@ -1531,7 +1519,7 @@ namespace Nop.Web.Controllers
                 }
 
                 //Check whether payment workflow is required
-                bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
+                bool isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart);
                 if (!isPaymentWorkflowRequired)
                 {
                     //payment is not required
@@ -1669,7 +1657,7 @@ namespace Nop.Web.Controllers
                 if (processPaymentRequest == null)
                 {
                     //Check whether payment workflow is required
-                    if (IsPaymentWorkflowRequired(cart))
+                    if (_orderProcessingService.IsPaymentWorkflowRequired(cart))
                     {
                         throw new Exception("Payment information is not entered");
                     }

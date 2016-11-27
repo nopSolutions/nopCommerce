@@ -63,7 +63,6 @@ namespace Nop.Web.Factories
             return model;
         }
         
-
         public virtual VendorInfoModel PrepareVendorInfoModel(VendorInfoModel model, bool excludeProperties)
         {
             if (model == null)

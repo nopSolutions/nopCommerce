@@ -33,7 +33,6 @@ namespace Nop.Web.Controllers
         #region Fields
 
         private readonly IProductModelFactory _productModelFactory;
-        private readonly ICatalogModelFactory _catalogModelFactory;
         private readonly IProductService _productService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
@@ -60,7 +59,6 @@ namespace Nop.Web.Controllers
         #region Constructors
 
         public ProductController(IProductModelFactory productModelFactory,
-            ICatalogModelFactory catalogModelFactory,
             IProductService productService,
             IWorkContext workContext,
             IStoreContext storeContext,
@@ -83,7 +81,6 @@ namespace Nop.Web.Controllers
             ICacheManager cacheManager)
         {
             this._productModelFactory = productModelFactory;
-            this._catalogModelFactory = catalogModelFactory;
             this._productService = productService;
             this._workContext = workContext;
             this._storeContext = storeContext;
@@ -204,7 +201,7 @@ namespace Nop.Web.Controllers
             if (!products.Any())
                 return Content("");
 
-            var model = _catalogModelFactory.PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+            var model = _productModelFactory.PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
             return PartialView(model);
         }
 
@@ -231,7 +228,7 @@ namespace Nop.Web.Controllers
             if (!products.Any())
                 return Content("");
 
-            var model = _catalogModelFactory.PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+            var model = _productModelFactory.PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
             return PartialView(model);
         }
 
@@ -257,7 +254,7 @@ namespace Nop.Web.Controllers
             //We know that the entire shopping cart page is not refresh
             //even if "ShoppingCartSettings.DisplayCartAfterAddingProduct" setting  is enabled.
             //That's why we force page refresh (redirect) in this case
-            var model = _catalogModelFactory.PrepareProductOverviewModels(products,
+            var model = _productModelFactory.PrepareProductOverviewModels(products,
                 productThumbPictureSize: productThumbPictureSize, forceRedirectionAfterAddingToCart: true)
                 .ToList();
 
@@ -277,7 +274,7 @@ namespace Nop.Web.Controllers
             var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
 
             var model = new List<ProductOverviewModel>();
-            model.AddRange(_catalogModelFactory.PrepareProductOverviewModels(products));
+            model.AddRange(_productModelFactory.PrepareProductOverviewModels(products));
 
             return View(model);
         }
@@ -301,7 +298,7 @@ namespace Nop.Web.Controllers
 
             //prepare model
             var model = new List<ProductOverviewModel>();
-            model.AddRange(_catalogModelFactory.PrepareProductOverviewModels(products,
+            model.AddRange(_productModelFactory.PrepareProductOverviewModels(products,
                 preparePriceModel.GetValueOrDefault(),
                 preparePictureModel,
                 productThumbPictureSize));
@@ -327,7 +324,7 @@ namespace Nop.Web.Controllers
                 pageSize: _catalogSettings.NewProductsNumber);
 
             var model = new List<ProductOverviewModel>();
-            model.AddRange(_catalogModelFactory.PrepareProductOverviewModels(products));
+            model.AddRange(_productModelFactory.PrepareProductOverviewModels(products));
 
             return View(model);
         }
@@ -401,7 +398,7 @@ namespace Nop.Web.Controllers
                 return Content("");
 
             //prepare model
-            var model = _catalogModelFactory.PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+            var model = _productModelFactory.PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
             return PartialView(model);
         }
 
@@ -417,7 +414,7 @@ namespace Nop.Web.Controllers
             if (!products.Any())
                 return Content("");
 
-            var model = _catalogModelFactory.PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+            var model = _productModelFactory.PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
             return PartialView(model);
         }
 
@@ -732,7 +729,7 @@ namespace Nop.Web.Controllers
             products = products.Where(p => p.IsAvailable()).ToList();
 
             //prepare model
-            _catalogModelFactory.PrepareProductOverviewModels(products, prepareSpecificationAttributes: true)
+            _productModelFactory.PrepareProductOverviewModels(products, prepareSpecificationAttributes: true)
                 .ToList()
                 .ForEach(model.Products.Add);
             return View(model);

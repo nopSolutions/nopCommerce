@@ -7,19 +7,6 @@ namespace Nop.Web.Factories
 {
     public partial interface ICatalogModelFactory
     {
-        #region Products
-
-        ProductReviewOverviewModel PrepareProductReviewOverviewModel(Product product);
-
-        IEnumerable<ProductOverviewModel> PrepareProductOverviewModels(IEnumerable<Product> products,
-            bool preparePriceModel = true, bool preparePictureModel = true,
-            int? productThumbPictureSize = null, bool prepareSpecificationAttributes = false,
-            bool forceRedirectionAfterAddingToCart = false);
-
-        IList<ProductSpecificationModel> PrepareProductSpecificationModel(Product product);
-
-        #endregion
-
         #region Categories
 
         CategoryModel PrepareCategoryModel(Category category, CatalogPagingFilteringModel command);

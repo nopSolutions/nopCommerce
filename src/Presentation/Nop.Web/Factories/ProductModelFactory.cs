@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -35,8 +37,8 @@ namespace Nop.Web.Factories
     public partial class ProductModelFactory : IProductModelFactory
     {
         #region Fields
-
-        private readonly ICatalogModelFactory _catalogModelFactory;
+        
+        private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
@@ -73,7 +75,7 @@ namespace Nop.Web.Factories
 
         #region Constructors
 
-        public ProductModelFactory(ICatalogModelFactory catalogModelFactory,
+        public ProductModelFactory(ISpecificationAttributeService specificationAttributeService,
             ICategoryService categoryService,
             IManufacturerService manufacturerService,
             IProductService productService,
@@ -106,7 +108,7 @@ namespace Nop.Web.Factories
             SeoSettings seoSettings,
             ICacheManager cacheManager)
         {
-            this._catalogModelFactory = catalogModelFactory;
+            this._specificationAttributeService = specificationAttributeService;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._productService = productService;
@@ -143,6 +145,342 @@ namespace Nop.Web.Factories
         #endregion
 
         #region Methods
+
+        public virtual IEnumerable<ProductOverviewModel> PrepareProductOverviewModels(IEnumerable<Product> products,
+            bool preparePriceModel = true, bool preparePictureModel = true,
+            int? productThumbPictureSize = null, bool prepareSpecificationAttributes = false,
+            bool forceRedirectionAfterAddingToCart = false)
+        {
+            if (products == null)
+                throw new ArgumentNullException("products");
+
+            var models = new List<ProductOverviewModel>();
+            foreach (var product in products)
+            {
+                var model = new ProductOverviewModel
+                {
+                    Id = product.Id,
+                    Name = product.GetLocalized(x => x.Name),
+                    ShortDescription = product.GetLocalized(x => x.ShortDescription),
+                    FullDescription = product.GetLocalized(x => x.FullDescription),
+                    SeName = product.GetSeName(),
+                    Sku = product.Sku,
+                    ProductType = product.ProductType,
+                    MarkAsNew = product.MarkAsNew &&
+                        (!product.MarkAsNewStartDateTimeUtc.HasValue || product.MarkAsNewStartDateTimeUtc.Value < DateTime.UtcNow) &&
+                        (!product.MarkAsNewEndDateTimeUtc.HasValue || product.MarkAsNewEndDateTimeUtc.Value > DateTime.UtcNow)
+                };
+                //price
+                if (preparePriceModel)
+                {
+                    #region Prepare product price
+
+                    var priceModel = new ProductOverviewModel.ProductPriceModel
+                    {
+                        ForceRedirectionAfterAddingToCart = forceRedirectionAfterAddingToCart
+                    };
+
+                    switch (product.ProductType)
+                    {
+                        case ProductType.GroupedProduct:
+                            {
+                                #region Grouped product
+
+                                var associatedProducts = _productService.GetAssociatedProducts(product.Id, _storeContext.CurrentStore.Id);
+
+                                //add to cart button (ignore "DisableBuyButton" property for grouped products)
+                                priceModel.DisableBuyButton = !_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart) ||
+                                    !_permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+
+                                //add to wishlist button (ignore "DisableWishlistButton" property for grouped products)
+                                priceModel.DisableWishlistButton = !_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) ||
+                                    !_permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+
+                                //compare products
+                                priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
+                                switch (associatedProducts.Count)
+                                {
+                                    case 0:
+                                        {
+                                            //no associated products
+                                        }
+                                        break;
+                                    default:
+                                        {
+                                            //we have at least one associated product
+                                            //compare products
+                                            priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
+                                            //priceModel.AvailableForPreOrder = false;
+
+                                            if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+                                            {
+                                                //find a minimum possible price
+                                                decimal? minPossiblePrice = null;
+                                                Product minPriceProduct = null;
+                                                foreach (var associatedProduct in associatedProducts)
+                                                {
+                                                    //calculate for the maximum quantity (in case if we have tier prices)
+                                                    var tmpPrice = _priceCalculationService.GetFinalPrice(associatedProduct,
+                                                        _workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue);
+                                                    if (!minPossiblePrice.HasValue || tmpPrice < minPossiblePrice.Value)
+                                                    {
+                                                        minPriceProduct = associatedProduct;
+                                                        minPossiblePrice = tmpPrice;
+                                                    }
+                                                }
+                                                if (minPriceProduct != null && !minPriceProduct.CustomerEntersPrice)
+                                                {
+                                                    if (minPriceProduct.CallForPrice)
+                                                    {
+                                                        priceModel.OldPrice = null;
+                                                        priceModel.Price = _localizationService.GetResource("Products.CallForPrice");
+                                                    }
+                                                    else if (minPossiblePrice.HasValue)
+                                                    {
+                                                        //calculate prices
+                                                        decimal taxRate;
+                                                        decimal finalPriceBase = _taxService.GetProductPrice(minPriceProduct, minPossiblePrice.Value, out taxRate);
+                                                        decimal finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
+
+                                                        priceModel.OldPrice = null;
+                                                        priceModel.Price = String.Format(_localizationService.GetResource("Products.PriceRangeFrom"), _priceFormatter.FormatPrice(finalPrice));
+                                                        priceModel.PriceValue = finalPrice;
+
+                                                        //PAngV baseprice (used in Germany)
+                                                        priceModel.BasePricePAngV = product.FormatBasePrice(finalPrice,
+                                                            _localizationService, _measureService, _currencyService, _workContext, _priceFormatter);
+                                                    }
+                                                    else
+                                                    {
+                                                        //Actually it's not possible (we presume that minimalPrice always has a value)
+                                                        //We never should get here
+                                                        Debug.WriteLine("Cannot calculate minPrice for product #{0}", product.Id);
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                //hide prices
+                                                priceModel.OldPrice = null;
+                                                priceModel.Price = null;
+                                            }
+                                        }
+                                        break;
+                                }
+
+                                #endregion
+                            }
+                            break;
+                        case ProductType.SimpleProduct:
+                        default:
+                            {
+                                #region Simple product
+
+                                //add to cart button
+                                priceModel.DisableBuyButton = product.DisableBuyButton ||
+                                    !_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart) ||
+                                    !_permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+
+                                //add to wishlist button
+                                priceModel.DisableWishlistButton = product.DisableWishlistButton ||
+                                    !_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) ||
+                                    !_permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+                                //compare products
+                                priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
+
+                                //rental
+                                priceModel.IsRental = product.IsRental;
+
+                                //pre-order
+                                if (product.AvailableForPreOrder)
+                                {
+                                    priceModel.AvailableForPreOrder = !product.PreOrderAvailabilityStartDateTimeUtc.HasValue ||
+                                        product.PreOrderAvailabilityStartDateTimeUtc.Value >= DateTime.UtcNow;
+                                    priceModel.PreOrderAvailabilityStartDateTimeUtc = product.PreOrderAvailabilityStartDateTimeUtc;
+                                }
+
+                                //prices
+                                if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+                                {
+                                    if (!product.CustomerEntersPrice)
+                                    {
+                                        if (product.CallForPrice)
+                                        {
+                                            //call for price
+                                            priceModel.OldPrice = null;
+                                            priceModel.Price = _localizationService.GetResource("Products.CallForPrice");
+                                        }
+                                        else
+                                        {
+                                            //prices
+
+                                            //calculate for the maximum quantity (in case if we have tier prices)
+                                            decimal minPossiblePrice = _priceCalculationService.GetFinalPrice(product,
+                                                _workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue);
+
+                                            decimal taxRate;
+                                            decimal oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out taxRate);
+                                            decimal finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
+
+                                            decimal oldPrice = _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
+                                            decimal finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
+
+                                            //do we have tier prices configured?
+                                            var tierPrices = new List<TierPrice>();
+                                            if (product.HasTierPrices)
+                                            {
+                                                tierPrices.AddRange(product.TierPrices.OrderBy(tp => tp.Quantity)
+                                                    .FilterByStore(_storeContext.CurrentStore.Id)
+                                                    .FilterForCustomer(_workContext.CurrentCustomer)
+                                                    .FilterByDate()
+                                                    .RemoveDuplicatedQuantities());
+                                            }
+                                            //When there is just one tier price (with  qty 1), there are no actual savings in the list.
+                                            var displayFromMessage = tierPrices.Any() && !(tierPrices.Count == 1 && tierPrices[0].Quantity <= 1);
+                                            if (displayFromMessage)
+                                            {
+                                                priceModel.OldPrice = null;
+                                                priceModel.Price = String.Format(_localizationService.GetResource("Products.PriceRangeFrom"), _priceFormatter.FormatPrice(finalPrice));
+                                                priceModel.PriceValue = finalPrice;
+                                            }
+                                            else
+                                            {
+                                                if (finalPriceBase != oldPriceBase && oldPriceBase != decimal.Zero)
+                                                {
+                                                    priceModel.OldPrice = _priceFormatter.FormatPrice(oldPrice);
+                                                    priceModel.Price = _priceFormatter.FormatPrice(finalPrice);
+                                                    priceModel.PriceValue = finalPrice;
+                                                }
+                                                else
+                                                {
+                                                    priceModel.OldPrice = null;
+                                                    priceModel.Price = _priceFormatter.FormatPrice(finalPrice);
+                                                    priceModel.PriceValue = finalPrice;
+                                                }
+                                            }
+                                            if (product.IsRental)
+                                            {
+                                                //rental product
+                                                priceModel.OldPrice = _priceFormatter.FormatRentalProductPeriod(product, priceModel.OldPrice);
+                                                priceModel.Price = _priceFormatter.FormatRentalProductPeriod(product, priceModel.Price);
+                                            }
+
+
+                                            //property for German market
+                                            //we display tax/shipping info only with "shipping enabled" for this product
+                                            //we also ensure this it's not free shipping
+                                            priceModel.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoProductBoxes
+                                                && product.IsShipEnabled &&
+                                                !product.IsFreeShipping;
+
+
+                                            //PAngV baseprice (used in Germany)
+                                            priceModel.BasePricePAngV = product.FormatBasePrice(finalPrice,
+                                                _localizationService, _measureService, _currencyService, _workContext, _priceFormatter);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    //hide prices
+                                    priceModel.OldPrice = null;
+                                    priceModel.Price = null;
+                                }
+
+                                #endregion
+                            }
+                            break;
+                    }
+
+                    model.ProductPrice = priceModel;
+
+                    #endregion
+                }
+
+                //picture
+                if (preparePictureModel)
+                {
+                    #region Prepare product picture
+
+                    //If a size has been set in the view, we use it in priority
+                    int pictureSize = productThumbPictureSize.HasValue ? productThumbPictureSize.Value : _mediaSettings.ProductThumbPictureSize;
+                    //prepare picture model
+                    var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+                    model.DefaultPictureModel = _cacheManager.Get(defaultProductPictureCacheKey, () =>
+                    {
+                        var picture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
+                        var pictureModel = new PictureModel
+                        {
+                            ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture)
+                        };
+                        //"title" attribute
+                        pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
+                            picture.TitleAttribute :
+                            string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name);
+                        //"alt" attribute
+                        pictureModel.AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute)) ?
+                            picture.AltAttribute :
+                            string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name);
+
+                        return pictureModel;
+                    });
+
+                    #endregion
+                }
+
+                //specs
+                if (prepareSpecificationAttributes)
+                {
+                    model.SpecificationAttributeModels = PrepareProductSpecificationModel(product);
+                }
+
+                //reviews
+                model.ReviewOverviewModel = PrepareProductReviewOverviewModel(product);
+
+                models.Add(model);
+            }
+            return models;
+        }
+
+        public virtual IList<ProductSpecificationModel> PrepareProductSpecificationModel(Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SPECS_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id);
+            return _cacheManager.Get(cacheKey, () =>
+                _specificationAttributeService.GetProductSpecificationAttributes(product.Id, 0, null, true)
+                .Select(psa =>
+                {
+                    var m = new ProductSpecificationModel
+                    {
+                        SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttributeId,
+                        SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(x => x.Name),
+                        ColorSquaresRgb = psa.SpecificationAttributeOption.ColorSquaresRgb
+                    };
+
+                    switch (psa.AttributeType)
+                    {
+                        case SpecificationAttributeType.Option:
+                            m.ValueRaw = HttpUtility.HtmlEncode(psa.SpecificationAttributeOption.GetLocalized(x => x.Name));
+                            break;
+                        case SpecificationAttributeType.CustomText:
+                            m.ValueRaw = HttpUtility.HtmlEncode(psa.CustomValue);
+                            break;
+                        case SpecificationAttributeType.CustomHtmlText:
+                            m.ValueRaw = psa.CustomValue;
+                            break;
+                        case SpecificationAttributeType.Hyperlink:
+                            m.ValueRaw = string.Format("<a href='{0}' target='_blank'>{0}</a>", psa.CustomValue);
+                            break;
+                        default:
+                            break;
+                    }
+                    return m;
+                }).ToList()
+            );
+        }
 
         public virtual ProductDetailsModel PrepareProductDetailsPageModel(Product product,
             ShoppingCartItem updatecartitem = null, bool isAssociatedProduct = false)
@@ -764,14 +1102,14 @@ namespace Nop.Web.Factories
             //do not prepare this model for the associated products. any it's not used
             if (!isAssociatedProduct)
             {
-                model.ProductSpecifications = _catalogModelFactory.PrepareProductSpecificationModel(product);
+                model.ProductSpecifications = PrepareProductSpecificationModel(product);
             }
 
             #endregion
 
             #region Product review overview
 
-            model.ProductReviewOverview = _catalogModelFactory.PrepareProductReviewOverviewModel(product);
+            model.ProductReviewOverview = PrepareProductReviewOverviewModel(product);
 
             #endregion
 
@@ -849,6 +1187,43 @@ namespace Nop.Web.Factories
             #endregion
 
             return model;
+        }
+
+        public virtual ProductReviewOverviewModel PrepareProductReviewOverviewModel(Product product)
+        {
+            ProductReviewOverviewModel productReview;
+
+            if (_catalogSettings.ShowProductReviewsPerStore)
+            {
+                string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_REVIEWS_MODEL_KEY, product.Id, _storeContext.CurrentStore.Id);
+
+                productReview = _cacheManager.Get(cacheKey, () =>
+                {
+                    return new ProductReviewOverviewModel
+                    {
+                        RatingSum = product.ProductReviews
+                                .Where(pr => pr.IsApproved && pr.StoreId == _storeContext.CurrentStore.Id)
+                                .Sum(pr => pr.Rating),
+                        TotalReviews = product
+                                .ProductReviews
+                                .Count(pr => pr.IsApproved && pr.StoreId == _storeContext.CurrentStore.Id)
+                    };
+                });
+            }
+            else
+            {
+                productReview = new ProductReviewOverviewModel()
+                {
+                    RatingSum = product.ApprovedRatingSum,
+                    TotalReviews = product.ApprovedTotalReviews
+                };
+            }
+            if (productReview != null)
+            {
+                productReview.ProductId = product.Id;
+                productReview.AllowCustomerReviews = product.AllowCustomerReviews;
+            }
+            return productReview;
         }
 
         public virtual ProductReviewsModel PrepareProductReviewsModel(ProductReviewsModel model, Product product)

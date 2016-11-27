@@ -230,7 +230,8 @@ namespace Nop.Web.Factories
             return result;
         }
         
-        public virtual void PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer, bool excludeProperties, string overrideCustomCustomerAttributesXml = "")
+        public virtual void PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer, 
+            bool excludeProperties, string overrideCustomCustomerAttributesXml = "")
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -373,7 +374,8 @@ namespace Nop.Web.Factories
             customAttributes.ForEach(model.CustomerAttributes.Add);
         }
 
-        public virtual void PrepareCustomerRegisterModel(RegisterModel model, bool excludeProperties, string overrideCustomCustomerAttributesXml = "")
+        public virtual void PrepareCustomerRegisterModel(RegisterModel model, bool excludeProperties, 
+            string overrideCustomCustomerAttributesXml = "", bool setDefaultValues = false)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -412,6 +414,11 @@ namespace Nop.Web.Factories
             model.HoneypotEnabled = _securitySettings.HoneypotEnabled;
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnRegistrationPage;
             model.EnteringEmailTwice = _customerSettings.EnteringEmailTwice;
+            if (setDefaultValues)
+            {
+                //enable newsletter by default
+                model.Newsletter = _customerSettings.NewsletterTickedByDefault;
+            }
 
             //countries and states
             if (_customerSettings.CountryEnabled)

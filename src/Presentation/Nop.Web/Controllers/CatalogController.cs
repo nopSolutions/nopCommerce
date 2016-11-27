@@ -24,6 +24,7 @@ namespace Nop.Web.Controllers
         #region Fields
 
         private readonly ICatalogModelFactory _catalogModelFactory;
+        private readonly IProductModelFactory _productModelFactory;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
@@ -47,6 +48,7 @@ namespace Nop.Web.Controllers
         #region Constructors
 
         public CatalogController(ICatalogModelFactory catalogModelFactory,
+            IProductModelFactory productModelFactory,
             ICategoryService categoryService, 
             IManufacturerService manufacturerService,
             IProductService productService, 
@@ -66,6 +68,7 @@ namespace Nop.Web.Controllers
             VendorSettings vendorSettings)
         {
             this._catalogModelFactory = catalogModelFactory;
+            this._productModelFactory = productModelFactory;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._productService = productService;
@@ -351,7 +354,7 @@ namespace Nop.Web.Controllers
                 visibleIndividuallyOnly: true,
                 pageSize: productNumber);
 
-            var models =  _catalogModelFactory.PrepareProductOverviewModels(products, false, _catalogSettings.ShowProductImagesInSearchAutoComplete, _mediaSettings.AutoCompleteSearchThumbPictureSize).ToList();
+            var models =  _productModelFactory.PrepareProductOverviewModels(products, false, _catalogSettings.ShowProductImagesInSearchAutoComplete, _mediaSettings.AutoCompleteSearchThumbPictureSize).ToList();
             var result = (from p in models
                           select new
                           {

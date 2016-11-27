@@ -525,9 +525,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
 
             var model = new RegisterModel();
-            _customerModelFactory.PrepareCustomerRegisterModel(model, false);
-            //enable newsletter by default
-            model.Newsletter = _customerSettings.NewsletterTickedByDefault;
+            _customerModelFactory.PrepareCustomerRegisterModel(model, false, setDefaultValues: true);
 
             return View(model);
         }

@@ -10,9 +10,11 @@ namespace Nop.Web.Factories
     {
         IList<CustomerAttributeModel> PrepareCustomCustomerAttributes(Customer customer, string overrideAttributesXml = "");
 
-        void PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer, bool excludeProperties, string overrideCustomCustomerAttributesXml = "");
+        void PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer, 
+            bool excludeProperties, string overrideCustomCustomerAttributesXml = "");
 
-        void PrepareCustomerRegisterModel(RegisterModel model, bool excludeProperties, string overrideCustomCustomerAttributesXml = "");
+        void PrepareCustomerRegisterModel(RegisterModel model, bool excludeProperties, 
+            string overrideCustomCustomerAttributesXml = "", bool setDefaultValues = false);
 
         LoginModel PrepareLoginModel(bool? checkoutAsGuest);
 

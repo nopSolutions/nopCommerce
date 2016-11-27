@@ -1,6 +1,4 @@
-﻿using System;
-using Nop.Core.Domain.Customers;
-using Nop.Services.Localization;
+﻿using Nop.Core.Domain.Customers;
 using Nop.Web.Models.Newsletter;
 
 namespace Nop.Web.Factories

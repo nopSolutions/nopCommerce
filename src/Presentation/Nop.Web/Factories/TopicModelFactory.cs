@@ -84,7 +84,7 @@ namespace Nop.Web.Factories
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
-            var cacheModel = _cacheManager.Get(cacheKey, () =>
+            var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 var topic = _topicService.GetTopicById(topicId);
                 if (topic == null)
@@ -100,7 +100,7 @@ namespace Nop.Web.Factories
                 return PrepareTopicModel(topic);
             });
 
-            return cacheModel;
+            return cachedModel;
         }
 
         public virtual TopicModel PrepareTopicModelBySystemName(string systemName)
@@ -110,7 +110,7 @@ namespace Nop.Web.Factories
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
-            var cacheModel = _cacheManager.Get(cacheKey, () =>
+            var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 //load by store
                 var topic = _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
@@ -124,7 +124,7 @@ namespace Nop.Web.Factories
                 return PrepareTopicModel(topic);
             });
 
-            return cacheModel;
+            return cachedModel;
         }
 
         public virtual string PrepareTemplateViewPath(int topicTemplateId)
