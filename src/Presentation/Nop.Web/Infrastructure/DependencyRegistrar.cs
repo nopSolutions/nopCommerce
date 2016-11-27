@@ -47,6 +47,9 @@ namespace Nop.Web.Infrastructure
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();
 
+            builder.RegisterType<CheckoutModelFactory>().As<ICheckoutModelFactory>()
+                .InstancePerLifetimeScope();
+
             builder.RegisterType<CommonModelFactory>().As<ICommonModelFactory>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();

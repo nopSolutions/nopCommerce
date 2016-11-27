@@ -268,6 +268,8 @@
     <Compile Include="Extensions\AttributeParserHelper.cs" />
     <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Extensions\MappingExtensions.cs" />
+    <Compile Include="Factories\ICheckoutModelFactory.cs" />
+    <Compile Include="Factories\CheckoutModelFactory.cs" />
     <Compile Include="Factories\ICustomerModelFactory.cs" />
     <Compile Include="Factories\CustomerModelFactory.cs" />
     <Compile Include="Factories\ICatalogModelFactory.cs" />
