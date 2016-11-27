@@ -35,6 +35,7 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly DateTimeSettings _dateTimeSettings;
         private readonly TaxSettings _taxSettings;
@@ -57,7 +58,6 @@ namespace Nop.Web.Factories
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IOpenAuthenticationService _openAuthenticationService;
         private readonly IDownloadService _downloadService;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IReturnRequestService _returnRequestService;
 
         private readonly MediaSettings _mediaSettings;
@@ -71,7 +71,8 @@ namespace Nop.Web.Factories
 
         #region Ctor
 
-        public CustomerModelFactory(IDateTimeHelper dateTimeHelper,
+        public CustomerModelFactory(IAddressModelFactory addressModelFactory, 
+            IDateTimeHelper dateTimeHelper,
             DateTimeSettings dateTimeSettings, 
             TaxSettings taxSettings,
             ILocalizationService localizationService,
@@ -93,7 +94,6 @@ namespace Nop.Web.Factories
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IOpenAuthenticationService openAuthenticationService,
             IDownloadService downloadService,
-            IAddressAttributeFormatter addressAttributeFormatter,
             IReturnRequestService returnRequestService,
             MediaSettings mediaSettings,
             CaptchaSettings captchaSettings,
@@ -102,6 +102,7 @@ namespace Nop.Web.Factories
             CatalogSettings catalogSettings, 
             VendorSettings vendorSettings)
         {
+            this._addressModelFactory = addressModelFactory;
             this._dateTimeHelper = dateTimeHelper;
             this._dateTimeSettings = dateTimeSettings;
             this._taxSettings = taxSettings;
@@ -124,7 +125,6 @@ namespace Nop.Web.Factories
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._openAuthenticationService = openAuthenticationService;
             this._downloadService = downloadService;
-            this._addressAttributeFormatter = addressAttributeFormatter;
             this._returnRequestService = returnRequestService;
             this._mediaSettings = mediaSettings;
             this._captchaSettings = captchaSettings;
@@ -653,13 +653,10 @@ namespace Nop.Web.Factories
             foreach (var address in addresses)
             {
                 var addressModel = new AddressModel();
-                addressModel.PrepareModel(
+                _addressModelFactory.PrepareAddressModel(addressModel,
                     address: address,
                     excludeProperties: false,
                     addressSettings: _addressSettings,
-                    localizationService: _localizationService,
-                    stateProvinceService: _stateProvinceService,
-                    addressAttributeFormatter: _addressAttributeFormatter,
                     loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id));
                 model.Addresses.Add(addressModel);
             }

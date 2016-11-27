@@ -39,8 +39,9 @@ namespace Nop.Web.Factories
 {
     public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
     {
-		#region Fields
-        
+        #region Fields
+
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly IShoppingCartService _shoppingCartService;
@@ -67,7 +68,6 @@ namespace Nop.Web.Factories
         private readonly ICacheManager _cacheManager;
         private readonly IWebHelper _webHelper;
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly HttpContextBase _httpContext;
 
         private readonly MediaSettings _mediaSettings;
@@ -85,7 +85,8 @@ namespace Nop.Web.Factories
 
 		#region Ctor
 
-        public ShoppingCartModelFactory(IStoreContext storeContext,
+        public ShoppingCartModelFactory(IAddressModelFactory addressModelFactory, 
+            IStoreContext storeContext,
             IWorkContext workContext,
             IShoppingCartService shoppingCartService, 
             IPictureService pictureService,
@@ -110,7 +111,6 @@ namespace Nop.Web.Factories
             ICacheManager cacheManager,
             IWebHelper webHelper, 
             IGenericAttributeService genericAttributeService,
-            IAddressAttributeFormatter addressAttributeFormatter,
             HttpContextBase httpContext,
             MediaSettings mediaSettings,
             ShoppingCartSettings shoppingCartSettings,
@@ -123,6 +123,7 @@ namespace Nop.Web.Factories
             RewardPointsSettings rewardPointsSettings,
             CustomerSettings customerSettings)
         {
+            this._addressModelFactory = addressModelFactory;
             this._workContext = workContext;
             this._storeContext = storeContext;
             this._shoppingCartService = shoppingCartService;
@@ -149,7 +150,6 @@ namespace Nop.Web.Factories
             this._cacheManager = cacheManager;
             this._webHelper = webHelper;
             this._genericAttributeService = genericAttributeService;
-            this._addressAttributeFormatter = addressAttributeFormatter;
             this._httpContext = httpContext;
 
             this._mediaSettings = mediaSettings;
@@ -645,11 +645,12 @@ namespace Nop.Web.Factories
             //billing info
             var billingAddress = _workContext.CurrentCustomer.BillingAddress;
             if (billingAddress != null)
-                model.BillingAddress.PrepareModel(
-                    address: billingAddress,
-                    excludeProperties: false,
-                    addressSettings: _addressSettings,
-                    addressAttributeFormatter: _addressAttributeFormatter);
+            {
+                _addressModelFactory.PrepareAddressModel(model.BillingAddress,
+                        address: billingAddress,
+                        excludeProperties: false,
+                        addressSettings: _addressSettings);
+            }
 
             //shipping info
             if (cart.RequiresShipping())
@@ -664,11 +665,10 @@ namespace Nop.Web.Factories
                 {
                     if (_workContext.CurrentCustomer.ShippingAddress != null)
                     {
-                        model.ShippingAddress.PrepareModel(
+                        _addressModelFactory.PrepareAddressModel(model.ShippingAddress,
                             address: _workContext.CurrentCustomer.ShippingAddress,
                             excludeProperties: false,
-                            addressSettings: _addressSettings,
-                            addressAttributeFormatter: _addressAttributeFormatter);
+                            addressSettings: _addressSettings);
                     }
                 }
                 else
@@ -684,9 +684,7 @@ namespace Nop.Web.Factories
                 }
 
                 //selected shipping method
-                var shippingOption =
-                    _workContext.CurrentCustomer.GetAttribute<ShippingOption>(
-                        SystemCustomerAttributeNames.SelectedShippingOption, _storeContext.CurrentStore.Id);
+                var shippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, _storeContext.CurrentStore.Id);
                 if (shippingOption != null)
                     model.ShippingMethod = shippingOption.Name;
             }

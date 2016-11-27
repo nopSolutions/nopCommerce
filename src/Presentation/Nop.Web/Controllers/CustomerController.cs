@@ -39,6 +39,8 @@ namespace Nop.Web.Controllers
     public partial class CustomerController : BasePublicController
     {
         #region Fields
+
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly ICustomerModelFactory _customerModelFactory;
         private readonly IAuthenticationService _authenticationService;
         private readonly DateTimeSettings _dateTimeSettings;
@@ -57,7 +59,6 @@ namespace Nop.Web.Controllers
         private readonly ForumSettings _forumSettings;
         private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
-        private readonly IStateProvinceService _stateProvinceService;
         private readonly IOrderService _orderService;
         private readonly IPictureService _pictureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
@@ -79,7 +80,8 @@ namespace Nop.Web.Controllers
 
         #region Ctor
 
-        public CustomerController(ICustomerModelFactory customerModelFactory,
+        public CustomerController(IAddressModelFactory addressModelFactory,
+            ICustomerModelFactory customerModelFactory,
             IAuthenticationService authenticationService,
             DateTimeSettings dateTimeSettings, 
             TaxSettings taxSettings,
@@ -97,7 +99,6 @@ namespace Nop.Web.Controllers
             ForumSettings forumSettings,
             IAddressService addressService,
             ICountryService countryService,
-            IStateProvinceService stateProvinceService,
             IOrderService orderService,
             IPictureService pictureService, 
             INewsLetterSubscriptionService newsLetterSubscriptionService,
@@ -114,6 +115,7 @@ namespace Nop.Web.Controllers
             CaptchaSettings captchaSettings,
             StoreInformationSettings storeInformationSettings)
         {
+            this._addressModelFactory = addressModelFactory;
             this._customerModelFactory = customerModelFactory;
             this._authenticationService = authenticationService;
             this._dateTimeSettings = dateTimeSettings;
@@ -132,7 +134,6 @@ namespace Nop.Web.Controllers
             this._forumSettings = forumSettings;
             this._addressService = addressService;
             this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
             this._orderService = orderService;
             this._pictureService = pictureService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
@@ -1089,14 +1090,10 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             var model = new CustomerAddressEditModel();
-            model.Address.PrepareModel(
+            _addressModelFactory.PrepareAddressModel(model.Address,
                 address: null,
                 excludeProperties: false,
                 addressSettings:_addressSettings,
-                localizationService:_localizationService,
-                stateProvinceService: _stateProvinceService,
-                addressAttributeService: _addressAttributeService,
-                addressAttributeParser: _addressAttributeParser,
                 loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id));
 
             return View(model);
@@ -1137,14 +1134,10 @@ namespace Nop.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model.Address.PrepareModel(
+            _addressModelFactory.PrepareAddressModel(model.Address, 
                 address: null,
                 excludeProperties: true,
                 addressSettings:_addressSettings,
-                localizationService:_localizationService,
-                stateProvinceService: _stateProvinceService,
-                addressAttributeService: _addressAttributeService,
-                addressAttributeParser: _addressAttributeParser,
                 loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id),
                 overrideAttributesXml: customAttributes);
 
@@ -1165,13 +1158,10 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CustomerAddresses");
 
             var model = new CustomerAddressEditModel();
-            model.Address.PrepareModel(address: address,
+            _addressModelFactory.PrepareAddressModel(model.Address,
+                address: address,
                 excludeProperties: false,
                 addressSettings: _addressSettings,
-                localizationService: _localizationService,
-                stateProvinceService: _stateProvinceService,
-                addressAttributeService: _addressAttributeService,
-                addressAttributeParser: _addressAttributeParser,
                 loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id));
 
             return View(model);
@@ -1210,14 +1200,10 @@ namespace Nop.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model.Address.PrepareModel(
+            _addressModelFactory.PrepareAddressModel(model.Address,
                 address: address,
                 excludeProperties: true,
                 addressSettings: _addressSettings,
-                localizationService: _localizationService,
-                stateProvinceService: _stateProvinceService,
-                addressAttributeService: _addressAttributeService,
-                addressAttributeParser: _addressAttributeParser,
                 loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id),
                 overrideAttributesXml: customAttributes);
             return View(model);

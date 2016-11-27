@@ -39,6 +39,9 @@ namespace Nop.Web.Infrastructure
 
 
             //factories (we cache presentation models between HTTP requests)
+            builder.RegisterType<AddressModelFactory>().As<IAddressModelFactory>()
+                .InstancePerLifetimeScope();
+
             builder.RegisterType<BlogModelFactory>().As<IBlogModelFactory>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();

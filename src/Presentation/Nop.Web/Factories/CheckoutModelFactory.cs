@@ -27,8 +27,9 @@ namespace Nop.Web.Factories
 {
     public partial class CheckoutModelFactory : ICheckoutModelFactory
     {
-		#region Fields
+        #region Fields
 
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
@@ -45,9 +46,6 @@ namespace Nop.Web.Factories
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IRewardPointService _rewardPointService;
         private readonly IWebHelper _webHelper;
-        private readonly IAddressAttributeParser _addressAttributeParser;
-        private readonly IAddressAttributeService _addressAttributeService;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
 
         private readonly OrderSettings _orderSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
@@ -59,7 +57,8 @@ namespace Nop.Web.Factories
 
 		#region Ctor
 
-        public CheckoutModelFactory(IWorkContext workContext,
+        public CheckoutModelFactory(IAddressModelFactory addressModelFactory, 
+            IWorkContext workContext,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
             ILocalizationService localizationService, 
@@ -75,15 +74,13 @@ namespace Nop.Web.Factories
             IOrderTotalCalculationService orderTotalCalculationService,
             IRewardPointService rewardPointService,
             IWebHelper webHelper,
-            IAddressAttributeParser addressAttributeParser,
-            IAddressAttributeService addressAttributeService,
-            IAddressAttributeFormatter addressAttributeFormatter,
             OrderSettings orderSettings, 
             RewardPointsSettings rewardPointsSettings,
             PaymentSettings paymentSettings,
             ShippingSettings shippingSettings,
             AddressSettings addressSettings)
         {
+            this._addressModelFactory = addressModelFactory;
             this._workContext = workContext;
             this._storeContext = storeContext;
             this._storeMappingService = storeMappingService;
@@ -100,9 +97,6 @@ namespace Nop.Web.Factories
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._rewardPointService = rewardPointService;
             this._webHelper = webHelper;
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeService = addressAttributeService;
-            this._addressAttributeFormatter = addressAttributeFormatter;
 
             this._orderSettings = orderSettings;
             this._rewardPointsSettings = rewardPointsSettings;
@@ -137,24 +131,19 @@ namespace Nop.Web.Factories
             foreach (var address in addresses)
             {
                 var addressModel = new AddressModel();
-                addressModel.PrepareModel(
+                _addressModelFactory.PrepareAddressModel(addressModel,
                     address: address, 
                     excludeProperties: false, 
-                    addressSettings: _addressSettings,
-                    addressAttributeFormatter: _addressAttributeFormatter);
+                    addressSettings: _addressSettings);
                 model.ExistingAddresses.Add(addressModel);
             }
 
             //new address
             model.NewAddress.CountryId = selectedCountryId;
-            model.NewAddress.PrepareModel(address: 
-                null,
+            _addressModelFactory.PrepareAddressModel(model.NewAddress,
+                address: null,
                 excludeProperties: false,
                 addressSettings: _addressSettings,
-                localizationService: _localizationService,
-                stateProvinceService: _stateProvinceService,
-                addressAttributeService: _addressAttributeService,
-                addressAttributeParser: _addressAttributeParser,
                 loadCountries: () => _countryService.GetAllCountriesForBilling(_workContext.WorkingLanguage.Id),
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
                 customer: _workContext.CurrentCustomer,
@@ -239,24 +228,19 @@ namespace Nop.Web.Factories
             foreach (var address in addresses)
             {
                 var addressModel = new AddressModel();
-                addressModel.PrepareModel(
+                _addressModelFactory.PrepareAddressModel(addressModel,
                     address: address,
                     excludeProperties: false,
-                    addressSettings: _addressSettings,
-                    addressAttributeFormatter: _addressAttributeFormatter);
+                    addressSettings: _addressSettings);
                 model.ExistingAddresses.Add(addressModel);
             }
 
             //new address
             model.NewAddress.CountryId = selectedCountryId;
-            model.NewAddress.PrepareModel(
+            _addressModelFactory.PrepareAddressModel(model.NewAddress,
                 address: null,
                 excludeProperties: false,
                 addressSettings: _addressSettings,
-                localizationService: _localizationService,
-                stateProvinceService: _stateProvinceService,
-                addressAttributeService: _addressAttributeService,
-                addressAttributeParser: _addressAttributeParser,
                 loadCountries: () => _countryService.GetAllCountriesForShipping(_workContext.WorkingLanguage.Id),
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
                 customer: _workContext.CurrentCustomer,

@@ -26,8 +26,9 @@ namespace Nop.Web.Factories
 {
     public partial class OrderModelFactory : IOrderModelFactory
     {
-		#region Fields
+        #region Fields
 
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly IOrderService _orderService;
         private readonly IWorkContext _workContext;
         private readonly ICurrencyService _currencyService;
@@ -40,7 +41,6 @@ namespace Nop.Web.Factories
         private readonly ICountryService _countryService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IDownloadService _downloadService;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IStoreContext _storeContext;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IRewardPointService _rewardPointService;
@@ -57,7 +57,8 @@ namespace Nop.Web.Factories
 
 		#region Constructors
 
-        public OrderModelFactory(IOrderService orderService,
+        public OrderModelFactory(IAddressModelFactory addressModelFactory, 
+            IOrderService orderService,
             IWorkContext workContext,
             ICurrencyService currencyService,
             IPriceFormatter priceFormatter,
@@ -69,7 +70,6 @@ namespace Nop.Web.Factories
             ICountryService countryService, 
             IProductAttributeParser productAttributeParser,
             IDownloadService downloadService,
-            IAddressAttributeFormatter addressAttributeFormatter,
             IStoreContext storeContext,
             IOrderTotalCalculationService orderTotalCalculationService,
             IRewardPointService rewardPointService,
@@ -81,6 +81,7 @@ namespace Nop.Web.Factories
             RewardPointsSettings rewardPointsSettings,
             PdfSettings pdfSettings)
         {
+            this._addressModelFactory = addressModelFactory;
             this._orderService = orderService;
             this._workContext = workContext;
             this._currencyService = currencyService;
@@ -93,7 +94,6 @@ namespace Nop.Web.Factories
             this._countryService = countryService;
             this._productAttributeParser = productAttributeParser;
             this._downloadService = downloadService;
-            this._addressAttributeFormatter = addressAttributeFormatter;
             this._storeContext = storeContext;
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._rewardPointService = rewardPointService;
@@ -177,11 +177,10 @@ namespace Nop.Web.Factories
                 model.PickUpInStore = order.PickUpInStore;
                 if (!order.PickUpInStore)
                 {
-                    model.ShippingAddress.PrepareModel(
+                    _addressModelFactory.PrepareAddressModel(model.ShippingAddress,
                         address: order.ShippingAddress,
                         excludeProperties: false,
-                        addressSettings: _addressSettings,
-                        addressAttributeFormatter: _addressAttributeFormatter);
+                        addressSettings: _addressSettings);
                 }
                 else
                     if (order.PickupAddress != null)
@@ -214,11 +213,10 @@ namespace Nop.Web.Factories
 
 
             //billing info
-            model.BillingAddress.PrepareModel(
+            _addressModelFactory.PrepareAddressModel(model.BillingAddress,
                 address: order.BillingAddress,
                 excludeProperties: false,
-                addressSettings: _addressSettings,
-                addressAttributeFormatter: _addressAttributeFormatter);
+                addressSettings: _addressSettings);
 
             //VAT number
             model.VatNumber = order.VatNumber;
