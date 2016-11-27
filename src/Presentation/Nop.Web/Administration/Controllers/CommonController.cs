@@ -115,6 +115,52 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
+        #region Utitlies
+
+        private bool IsDebugAssembly(Assembly assembly)
+        {
+            var attribs = assembly.GetCustomAttributes(typeof(System.Diagnostics.DebuggableAttribute), false);
+
+            if (attribs.Length > 0)
+            {
+                var attr = attribs[0] as System.Diagnostics.DebuggableAttribute;
+                if (attr != null)
+                {
+                    return attr.IsJITOptimizerDisabled;
+                }
+            }
+
+            return false;
+        }
+
+        private DateTime GetBuildDate(Assembly assembly, TimeZoneInfo target = null)
+        {
+            var filePath = assembly.Location;
+
+            const int cPeHeaderOffset = 60;
+            const int cLinkerTimestampOffset = 8;
+
+            var buffer = new byte[2048];
+
+            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                stream.Read(buffer, 0, 2048);
+            }
+
+            var offset = BitConverter.ToInt32(buffer, cPeHeaderOffset);
+            var secondsSince1970 = BitConverter.ToInt32(buffer, offset + cLinkerTimestampOffset);
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+            var linkTimeUtc = epoch.AddSeconds(secondsSince1970);
+
+            var tz = target ?? TimeZoneInfo.Local;
+            var localTime = TimeZoneInfo.ConvertTimeFromUtc(linkTimeUtc, tz);
+
+            return localTime;
+        }
+
+        #endregion
+
         #region Methods
 
         public ActionResult SystemInfo()
@@ -160,60 +206,24 @@ namespace Nop.Admin.Controllers
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                var canGetLocation = trustLevel >= AspNetHostingPermissionLevel.High && !assembly.IsDynamic;
-
-                model.LoadedAssemblies.Add(new SystemInfoModel.LoadedAssembly
+                var loadedAssembly = new SystemInfoModel.LoadedAssembly
                 {
                     FullName = assembly.FullName,
-                    Location = canGetLocation ? assembly.Location : null,
-                    IsDebug = IsDebugAssembly(assembly),
-                    BuildDate = canGetLocation ? (DateTime?) GetBuildDate(assembly, TimeZoneInfo.Local) : null
-                });
+                   
+                };
+                //ensure no exception is thrown
+                try
+                {
+                    var canGetLocation = trustLevel >= AspNetHostingPermissionLevel.High && !assembly.IsDynamic;
+                    loadedAssembly.Location = canGetLocation ? assembly.Location : null;
+                    loadedAssembly.IsDebug = IsDebugAssembly(assembly);
+                    loadedAssembly.BuildDate = canGetLocation ? (DateTime?)GetBuildDate(assembly, TimeZoneInfo.Local) : null;
+                }
+                catch (Exception) { }
+                model.LoadedAssemblies.Add(loadedAssembly);
             }
 
             return View(model);
-        }
-
-        private bool IsDebugAssembly(Assembly assembly)
-        {
-            var attribs = assembly.GetCustomAttributes(typeof(System.Diagnostics.DebuggableAttribute), false);
-
-            if (attribs.Length > 0)
-            {
-                var attr = attribs[0] as System.Diagnostics.DebuggableAttribute;
-                if (attr != null)
-                {
-                    return attr.IsJITOptimizerDisabled;
-                }
-            }
-
-            return false;
-        }
-
-        private DateTime GetBuildDate(Assembly assembly, TimeZoneInfo target = null)
-        {
-            var filePath = assembly.Location;
-
-            const int cPeHeaderOffset = 60;
-            const int cLinkerTimestampOffset = 8;
-
-            var buffer = new byte[2048];
-
-            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                stream.Read(buffer, 0, 2048);
-            }
-
-            var offset = BitConverter.ToInt32(buffer, cPeHeaderOffset);
-            var secondsSince1970 = BitConverter.ToInt32(buffer, offset + cLinkerTimestampOffset);
-            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
-            var linkTimeUtc = epoch.AddSeconds(secondsSince1970);
-
-            var tz = target ?? TimeZoneInfo.Local;
-            var localTime = TimeZoneInfo.ConvertTimeFromUtc(linkTimeUtc, tz);
-
-            return localTime;
         }
 
         public ActionResult Warnings()
