@@ -489,6 +489,7 @@
     <Content Include="Content\files\ExportImport\Index.htm" />
     <Content Include="Content\files\Index.htm" />
     <Content Include="Content\Images\default-image.png" />
+    <Content Include="Content\install\images\logo.png" />
     <Content Include="Content\jquery-ui-themes\smoothness\images\animated-overlay.gif" />
     <Content Include="Content\jquery-ui-themes\smoothness\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\jquery-ui-themes\smoothness\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -918,16 +919,6 @@
     <Content Include="Content\Images\default-image.gif" />
     <Content Include="Content\install\images\install-synchronizing.gif" />
     <Content Include="Content\Images\uploaded\placeholder.txt" />
-    <Content Include="Content\install\images\bg.gif" />
-    <Content Include="Content\install\images\bodybg.gif" />
-    <Content Include="Content\install\images\bottom.gif" />
-    <Content Include="Content\install\images\bottomleft.gif" />
-    <Content Include="Content\install\images\bottomright.gif" />
-    <Content Include="Content\install\images\left.gif" />
-    <Content Include="Content\install\images\right.gif" />
-    <Content Include="Content\install\images\top.gif" />
-    <Content Include="Content\install\images\topleft.gif" />
-    <Content Include="Content\install\images\topright.gif" />
     <Content Include="Content\install\style.css" />
     <Content Include="Content\install\style.rtl.css" />
     <Content Include="Content\Images\Thumbs\placeholder.txt" />

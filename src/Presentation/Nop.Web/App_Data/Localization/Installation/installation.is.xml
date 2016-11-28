@@ -47,6 +47,9 @@
   <LocaleResource Name="DatabaseCreationError">
     <Value>Villa kom upp við að búa til gagnagrunn: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Gagnagrunnur</Value>
+  </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Upplýsingar um gagnagrunn</Value>
   </LocaleResource>
