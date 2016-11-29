@@ -245,6 +245,9 @@ namespace Nop.Services.News
                 throw new ArgumentNullException("newsComment");
 
             _newsCommentRepository.Delete(newsComment);
+
+            //event notification
+            _eventPublisher.EntityDeleted(newsComment);
         }
 
         /// <summary>
@@ -256,7 +259,10 @@ namespace Nop.Services.News
             if (newsComments == null)
                 throw new ArgumentNullException("newsComments");
 
-            _newsCommentRepository.Delete(newsComments);
+            foreach (var newsComment in newsComments)
+            {
+                DeleteNewsComment(newsComment);
+            }
         }
         
         #endregion

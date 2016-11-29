@@ -110,8 +110,12 @@ namespace Nop.Web.Factories
             model.Full = newsItem.Full;
             model.AllowComments = newsItem.AllowComments;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsItem.StartDateUtc ?? newsItem.CreatedOnUtc, DateTimeKind.Utc);
-            model.NumberOfComments = _newsService.GetNewsCommentsCount(newsItem, true);
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage;
+
+            //number of news comments
+            var cacheKey = string.Format(ModelCacheEventConsumer.NEWS_COMMENTS_NUMBER_KEY, newsItem.Id, true);
+            model.NumberOfComments = _cacheManager.Get(cacheKey, () => _newsService.GetNewsCommentsCount(newsItem, true));
+
             if (prepareComments)
             {
                 var newsComments = newsItem.NewsComments.Where(comment => comment.IsApproved).OrderBy(comment => comment.CreatedOnUtc);

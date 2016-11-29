@@ -317,6 +317,9 @@ namespace Nop.Services.Blogs
                 throw new ArgumentNullException("blogComment");
 
             _blogCommentRepository.Delete(blogComment);
+
+            //event notification
+            _eventPublisher.EntityDeleted(blogComment);
         }
 
         /// <summary>
@@ -328,7 +331,10 @@ namespace Nop.Services.Blogs
             if (blogComments == null)
                 throw new ArgumentNullException("blogComments");
 
-            _blogCommentRepository.Delete(blogComments);
+            foreach (var blogComment in blogComments)
+            {
+                DeleteBlogComment(blogComment);
+            }
         }
 
         #endregion

@@ -105,10 +105,14 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityInserted<BlogPost>>,
         IConsumer<EntityUpdated<BlogPost>>,
         IConsumer<EntityDeleted<BlogPost>>,
+        //blog comments
+        IConsumer<EntityDeleted<BlogComment>>,
         //news items
         IConsumer<EntityInserted<NewsItem>>,
         IConsumer<EntityUpdated<NewsItem>>,
         IConsumer<EntityDeleted<NewsItem>>,
+        //news comments
+        IConsumer<EntityDeleted<NewsComment>>,
         //states/province
         IConsumer<EntityInserted<StateProvince>>,
         IConsumer<EntityUpdated<StateProvince>>,
@@ -644,6 +648,15 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string BLOG_MONTHS_MODEL_KEY = "Nop.pres.blog.months-{0}-{1}";
         public const string BLOG_PATTERN_KEY = "Nop.pres.blog";
+        /// <summary>
+        /// Key for number of blog comments
+        /// </summary>
+        /// <remarks>
+        /// {0} : blog post ID
+        /// {1} : are only approved comments?
+        /// </remarks>
+        public const string BLOG_COMMENTS_NUMBER_KEY = "Nop.pres.blog.comments.number-{0}-{1}";
+        public const string BLOG_COMMENTS_PATTERN_KEY = "Nop.pres.blog.comments";
 
         /// <summary>
         /// Key for home page news
@@ -654,6 +667,15 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string HOMEPAGE_NEWSMODEL_KEY = "Nop.pres.news.homepage-{0}-{1}";
         public const string NEWS_PATTERN_KEY = "Nop.pres.news";
+        /// <summary>
+        /// Key for number of news comments
+        /// </summary>
+        /// <remarks>
+        /// {0} : news item ID
+        /// {1} : are only approved comments?
+        /// </remarks>
+        public const string NEWS_COMMENTS_NUMBER_KEY = "Nop.pres.news.comments.number-{0}-{1}";
+        public const string NEWS_COMMENTS_PATTERN_KEY = "Nop.pres.news.comments";
         
         /// <summary>
         /// Key for states by country id
@@ -1181,6 +1203,12 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY);
         }
 
+        //Blog comments
+        public void HandleEvent(EntityDeleted<BlogComment> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(BLOG_COMMENTS_PATTERN_KEY);
+        }
+
         //News items
         public void HandleEvent(EntityInserted<NewsItem> eventMessage)
         {
@@ -1193,6 +1221,11 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityDeleted<NewsItem> eventMessage)
         {
             _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
+        }
+        //News comments
+        public void HandleEvent(EntityDeleted<NewsComment> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(NEWS_COMMENTS_PATTERN_KEY);
         }
 
         //State/province
