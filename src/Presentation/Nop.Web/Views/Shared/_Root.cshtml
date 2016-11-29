@@ -1,4 +1,6 @@
-﻿@{
+﻿@using Nop.Core;
+
+@{
     Layout = "~/Views/Shared/_Root.Head.cshtml";
 }
 @Html.Widget("body_start_html_tag_after")
@@ -12,9 +14,11 @@
     <script type="text/javascript">
         AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
     </script>
-    <div class="header-menu">
-        @Html.Action("TopMenu", "Catalog")
+    @if (SessionWrapper.GetObject(SessionKeyNames.CURRENT_VENDOR) != null) {
+    <div class="header-menu">        
+        @Html.Action("TopMenu", "Catalog")   
     </div>
+    }
     <div class="master-wrapper-content">
         @Html.Widget("content_before")
 

@@ -240,6 +240,7 @@
     <Compile Include="Controllers\BasePublicController.cs" />
     <Compile Include="Controllers\BoardsController.cs" />
     <Compile Include="Controllers\BackInStockSubscriptionController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\CatalogController.cs" />
     <Compile Include="Controllers\CheckoutController.cs" />
@@ -247,6 +248,7 @@
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Controllers\BackwardCompatibility1XController.cs" />
     <Compile Include="Controllers\BackwardCompatibility2XController.cs" />
+    <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Controllers\VendorController.cs" />
     <Compile Include="Controllers\ReturnRequestController.cs" />
     <Compile Include="Controllers\KeepAliveController.cs" />
@@ -264,7 +266,6 @@
     <Compile Include="Controllers\ShoppingCartController.cs" />
     <Compile Include="Controllers\CountryController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Extensions\AttributeParserHelper.cs" />
     <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Extensions\ControllerExtensions.cs" />
@@ -274,6 +275,7 @@
     </Compile>
     <Compile Include="Infrastructure\Cache\ModelCacheEventConsumer.cs" />
     <Compile Include="Infrastructure\BackwardCompatibility2XRouteProvider.cs" />
+    <Compile Include="Infrastructure\VendorGenericUrlRouteProvider.cs" />
     <Compile Include="Infrastructure\GenericUrlRouteProvider.cs" />
     <Compile Include="Infrastructure\Installation\IInstallationLocalizationService.cs" />
     <Compile Include="Infrastructure\Installation\InstallationLanguage.cs" />

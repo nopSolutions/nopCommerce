@@ -81,9 +81,11 @@ namespace Nop.Web.Framework.Seo
             if (data != null && DataSettingsHelper.DatabaseIsInstalled())
             {
                 var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
+                var store = data.Values["vendor_name"] as string;
                 var slug = data.Values["generic_se_name"] as string;
                 //performance optimization.
                 //we load a cached verion here. it reduces number of SQL requests for each page load
+                var urlRecordVendor = urlRecordService.GetBySlugCached(store);
                 var urlRecord = urlRecordService.GetBySlugCached(slug);
                 //comment the line above and uncomment the line below in order to disable this performance "workaround"
                 //var urlRecord = urlRecordService.GetBySlug(slug);
@@ -103,7 +105,7 @@ namespace Nop.Web.Framework.Seo
                     return data;
                 }
                 //ensure that URL record is active
-                if (!urlRecord.IsActive)
+                if (!urlRecord.IsActive || (urlRecordVendor != null && !urlRecordVendor.IsActive))
                 {
                     //URL record is not active. let's find the latest one
                     var activeSlug = urlRecordService.GetActiveSlug(urlRecord.EntityId, urlRecord.EntityName, urlRecord.LanguageId);
@@ -149,6 +151,15 @@ namespace Nop.Web.Framework.Seo
                     return null;
                 }
 
+                // ensure that products and categories come with a store
+                var entityName = urlRecord.EntityName.ToLowerInvariant();
+                if ((/*entityName == "product" || */entityName== "category") && urlRecordVendor == null)
+                {
+                    data.Values["controller"] = "Common";
+                    data.Values["action"] = "PageNotFound";
+                    return data;
+                }
+
                 //process URL
                 switch (urlRecord.EntityName.ToLowerInvariant())
                 {
@@ -166,6 +177,8 @@ namespace Nop.Web.Framework.Seo
                             data.Values["action"] = "Category";
                             data.Values["categoryid"] = urlRecord.EntityId;
                             data.Values["SeName"] = urlRecord.Slug;
+                            data.Values["VendorName"] = urlRecordVendor.Slug;
+                            data.Values["vendorId"] = urlRecordVendor.EntityId;
                         }
                         break;
                     case "manufacturer":
@@ -182,6 +195,7 @@ namespace Nop.Web.Framework.Seo
                             data.Values["action"] = "Vendor";
                             data.Values["vendorid"] = urlRecord.EntityId;
                             data.Values["SeName"] = urlRecord.Slug;
+                            data.Values["VendorName"] = urlRecord.Slug;
                         }
                         break;
                     case "newsitem":

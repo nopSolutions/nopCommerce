@@ -21,10 +21,10 @@ namespace Nop.Web.Infrastructure
                                      new { controller = "Product", action = "ProductDetails" },
                                      new[] {"Nop.Web.Controllers"});
 
-            routes.MapLocalizedRoute("Category",
-                            "{SeName}",
-                            new { controller = "Catalog", action = "Category" },
-                            new[] { "Nop.Web.Controllers" });
+            //routes.MapLocalizedRoute("Category",
+            //                "{SeName}",
+            //                new { controller = "Catalog", action = "Category" },
+            //                new[] { "Nop.Web.Controllers" });
 
             routes.MapLocalizedRoute("Manufacturer",
                             "{SeName}",

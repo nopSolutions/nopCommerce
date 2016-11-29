@@ -16,6 +16,10 @@ namespace Nop.Web.Infrastructure
                             "",
                             new { controller = "Home", action = "Index" },
                             new[] { "Nop.Web.Controllers" });
+            //routes.MapLocalizedRoute("HomePageStore",
+            //                "{Store}",
+            //                new { controller = "Home", action = "Index", Store = UrlParameter.Optional },
+            //                new[] { "Nop.Web.Controllers" });
 
             //widgets
             //we have this route for performance optimization because named routes are MUCH faster than usual Html.Action(...)

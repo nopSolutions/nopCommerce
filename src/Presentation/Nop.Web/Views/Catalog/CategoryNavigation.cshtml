@@ -1,5 +1,6 @@
 ﻿@model CategoryNavigationModel
 @using Nop.Web.Models.Catalog;
+@using Nop.Core;
 
 @functions{
     public bool BreadCrumbContainsCurrentCategoryId(CategorySimpleModel category)
@@ -31,7 +32,7 @@
         liClass += " last";
     }
     <li class="@liClass">
-        <a href="@Url.RouteUrl("Category", new { SeName = category.SeName })">@category.Name
+        <a href="@Url.RouteUrl("Category", new { VendorName = VendorLite.GetVendorNameFromSession(SessionWrapper.GetObject(SessionKeyNames.CURRENT_VENDOR)), SeName = category.SeName })">@category.Name
             @if (category.NumberOfProducts.HasValue)
             {
                 <text> </text>@T("Categories.TotalProducts", category.NumberOfProducts.Value)

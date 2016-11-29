@@ -415,7 +415,7 @@ namespace Nop.Web.Controllers
         #region Categories
         
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult Category(int categoryId, CatalogPagingFilteringModel command)
+        public ActionResult Category(int vendorId, int categoryId, CatalogPagingFilteringModel command)
         {
             var category = _categoryService.GetCategoryById(categoryId);
             if (category == null || category.Deleted)
@@ -432,6 +432,8 @@ namespace Nop.Web.Controllers
             //We should allows him (her) to use "Preview" functionality
             if (notAvailable && !_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return InvokeHttp404();
+
+            SessionWrapper.SetObject(SessionKeyNames.CURRENT_VENDOR, new VendorLite { Id = vendorId, Name = RouteData.Values["VendorName"].ToString() });
 
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
@@ -555,7 +557,8 @@ namespace Nop.Web.Controllers
                        categoryIds: new List<int> { category.Id },
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
-                       featuredProducts: true);
+                       featuredProducts: true,
+                       vendorId: vendorId);
                     hasFeaturedProductsCache = featuredProducts.TotalCount > 0;
                     _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
                 }
@@ -567,7 +570,8 @@ namespace Nop.Web.Controllers
                        categoryIds: new List<int> { category.Id },
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
-                       featuredProducts: true);
+                       featuredProducts: true,
+                       vendorId: vendorId);
                 }
                 if (featuredProducts != null)
                 {
@@ -597,7 +601,8 @@ namespace Nop.Web.Controllers
                 filteredSpecs: alreadyFilteredSpecOptionIds,
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
-                pageSize: command.PageSize);
+                pageSize: command.PageSize,
+                vendorId: vendorId);
             model.Products = PrepareProductOverviewModels(products).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
@@ -975,6 +980,8 @@ namespace Nop.Web.Controllers
             if (!vendor.Active)
                 return InvokeHttp404();
 
+            SessionWrapper.SetObject(SessionKeyNames.CURRENT_VENDOR, new VendorLite { Id = vendorId, Name = RouteData.Values["VendorName"].ToString() });
+
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                 SystemCustomerAttributeNames.LastContinueShoppingPage,
@@ -1029,8 +1036,8 @@ namespace Nop.Web.Controllers
         public ActionResult VendorAll()
         {
             //we don't allow viewing of vendors if "vendors" block is hidden
-            if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
-                return RedirectToRoute("HomePage");
+            //if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
+            //    return RedirectToRoute("HomePage");
 
             var model = new List<VendorModel>();
             var vendors = _vendorService.GetAllVendors();

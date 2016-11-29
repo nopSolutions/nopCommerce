@@ -1,4 +1,4 @@
-﻿@{
+﻿@*@{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
     //page class
@@ -19,5 +19,44 @@
         @Html.Widget("home_page_before_poll")
         @Html.Action("HomePagePolls", "Poll")
         @Html.Widget("home_page_bottom")
+    </div>
+</div>*@
+
+@model IList<VendorModel>
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Vendors").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-vendor-list-page");
+}
+@using Nop.Web.Models.Catalog;
+<div class="page vendor-list-page">
+    <div class="page-title">
+        <h1>@T("Homepage.Title")</h1>
+    </div>
+    <div class="page-body">
+        <div class="vendor-grid">
+            <div class="item-grid">
+                @foreach (var item in Model)
+                {
+                    <div class="item-box">
+                        <div class="vendor-item">
+                            <h2 class="title">
+                                <a href="@Url.RouteUrl("Vendor", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                    @item.Name
+                                </a>
+                            </h2>
+                            <div class="picture">
+                                <a href="@Url.RouteUrl("Vendor", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                    <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
 </div>
