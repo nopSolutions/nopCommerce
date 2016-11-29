@@ -367,13 +367,13 @@ namespace Nop.Plugin.Shipping.USPS
                         totalPackages = 1;
 
                     int pounds2 = pounds / totalPackages;
-                    //we don't use ounces
-                    int ounces2 = ounces / totalPackages;
-                    int height2 = height / totalPackages;
-                    int width2 = width / totalPackages;
-                    int length2 = length / totalPackages;
                     if (pounds2 < 1)
                         pounds2 = 1;
+                    //we don't use ounces
+                    int ounces2 = ounces / totalPackages;
+                    //int height2 = height / totalPackages;
+                    //int width2 = width / totalPackages;
+                    //int length2 = length / totalPackages;
                     //if (height2 < 1)
                     //    height2 = 1; // Why assign a 1 if it is assigned below 12? Perhaps this is a mistake.
                     //if (width2 < 1)
@@ -382,9 +382,9 @@ namespace Nop.Plugin.Shipping.USPS
                     //    length2 = 1; // Similarly
 
                     //little hack here for international requests (uncomment the code above when fixed)
-                    length2 = 12;
-                    width2 = 12;
-                    height2 = 12;
+                    var length2 = 12;
+                    var width2 = 12;
+                    var height2 = 12;
                     var packageSize2 = GetPackageSize(length2, height2, width2);
                     int girth2 = height2 + height2 + width2 + width2;
 

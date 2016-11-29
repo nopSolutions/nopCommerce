@@ -17,7 +17,8 @@ namespace Nop.Web.Models.Catalog
         {
             double factor = (weight - mean);
 
-            if (factor != 0 && stdDev != 0) factor /= stdDev;
+            if (factor != 0 && stdDev != 0)
+                factor /= stdDev;
 
             return (factor > 2) ? 150 :
                 (factor > 1) ? 120 :
@@ -39,6 +40,8 @@ namespace Nop.Web.Models.Catalog
                 count++;
             }
 
+            if (count == 0)
+                return 0;
             return sum / count;
         }
 
@@ -55,6 +58,8 @@ namespace Nop.Web.Models.Catalog
                 count++;
             }
 
+            if (count == 0)
+                return 0;
             return Math.Sqrt(sumOfDiffSquares / count);
         }
 
