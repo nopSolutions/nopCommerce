@@ -79,7 +79,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
                 foreach (string service in UPSServices.Services)
                 {
                     string serviceId = UPSServices.GetServiceId(service);
-                    if (!String.IsNullOrEmpty(serviceId) && !String.IsNullOrEmpty(carrierServicesOfferedDomestic))
+                    if (!String.IsNullOrEmpty(serviceId))
                     {
                         // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs
                         if (carrierServicesOfferedDomestic.Contains(String.Format("[{0}]", serviceId)))

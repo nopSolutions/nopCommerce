@@ -73,25 +73,19 @@ namespace Nop.Web
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
             ModelValidatorProviders.Providers.Add(new FluentValidationModelValidatorProvider(new NopValidatorFactory()));
 
-            //start scheduled tasks
             if (databaseInstalled)
             {
+                //start scheduled tasks
                 TaskManager.Instance.Initialize();
                 TaskManager.Instance.Start();
-            }
 
-            //miniprofiler
-            if (databaseInstalled)
-            {
+                //miniprofiler
                 if (EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
                 {
                     GlobalFilters.Filters.Add(new ProfilingActionFilter());
                 }
-            }
 
-            //log application start
-            if (databaseInstalled)
-            {
+                //log application start
                 try
                 {
                     //log

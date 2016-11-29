@@ -374,14 +374,14 @@ namespace Nop.Plugin.Shipping.USPS
                     int length2 = length / totalPackages;
                     if (pounds2 < 1)
                         pounds2 = 1;
-                    if (height2 < 1)
-                        height2 = 1; // Why assign a 1 if it is assigned below 12? Perhaps this is a mistake.
-                    if (width2 < 1)
-                        width2 = 1; // Similarly
-                    if (length2 < 1)
-                        length2 = 1; // Similarly
+                    //if (height2 < 1)
+                    //    height2 = 1; // Why assign a 1 if it is assigned below 12? Perhaps this is a mistake.
+                    //if (width2 < 1)
+                    //    width2 = 1; // Similarly
+                    //if (length2 < 1)
+                    //    length2 = 1; // Similarly
 
-                    //little hack here for international requests
+                    //little hack here for international requests (uncomment the code above when fixed)
                     length2 = 12;
                     width2 = 12;
                     height2 = 12;

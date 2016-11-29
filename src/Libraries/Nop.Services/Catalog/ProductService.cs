@@ -1049,9 +1049,7 @@ namespace Nop.Services.Catalog
             if (!showHidden)
             {
                 query = query.Where(x => x.Published);
-            }
-            if (!showHidden)
-            {
+            
                 //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
                 //That's why we pass the date value
                 var nowUtc = DateTime.UtcNow;
