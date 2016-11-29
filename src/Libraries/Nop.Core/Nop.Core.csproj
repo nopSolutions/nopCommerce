@@ -124,6 +124,8 @@
     <Compile Include="Domain\Orders\OrderByCountryReportLine.cs" />
     <Compile Include="Domain\Orders\ReturnRequestReason.cs" />
     <Compile Include="Domain\Orders\ReturnRequestAction.cs" />
+    <Compile Include="Domain\Security\EncryptionFormat.cs" />
+    <Compile Include="Domain\Security\HashFormat.cs" />
     <Compile Include="Domain\Seo\WwwRequirement.cs" />
     <Compile Include="Domain\Shipping\ProductAvailabilityRange.cs" />
     <Compile Include="Domain\Shipping\Events.cs" />

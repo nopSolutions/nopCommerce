@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Security;
+using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
@@ -23,6 +25,8 @@ namespace Nop.Services.Customers
         private readonly ILocalizationService _localizationService;
         private readonly IStoreService _storeService;
         private readonly IRewardPointService _rewardPointService;
+        private readonly ISettingService _settingService;
+        private readonly IStoreContext _storeContext;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly CustomerSettings _customerSettings;
 
@@ -39,6 +43,8 @@ namespace Nop.Services.Customers
         /// <param name="localizationService">Localization service</param>
         /// <param name="storeService">Store service</param>
         /// <param name="rewardPointService">Reward points service</param>
+        /// <param name="settingService">Settings service</param>
+        /// <param name="storeContext">Store context</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="customerSettings">Customer settings</param>
         public CustomerRegistrationService(ICustomerService customerService, 
@@ -47,6 +53,8 @@ namespace Nop.Services.Customers
             ILocalizationService localizationService,
             IStoreService storeService,
             IRewardPointService rewardPointService,
+            ISettingService settingService,
+            IStoreContext storeContext,
             RewardPointsSettings rewardPointsSettings,
             CustomerSettings customerSettings)
         {
@@ -56,6 +64,8 @@ namespace Nop.Services.Customers
             this._localizationService = localizationService;
             this._storeService = storeService;
             this._rewardPointService = rewardPointService;
+            this._settingService = settingService;
+            this._storeContext = storeContext;
             this._rewardPointsSettings = rewardPointsSettings;
             this._customerSettings = customerSettings;
         }
@@ -183,6 +193,8 @@ namespace Nop.Services.Customers
             request.Customer.Email = request.Email;
             request.Customer.PasswordFormat = request.PasswordFormat;
 
+            var securitySettings = _settingService.LoadSetting<SecuritySettings>(_storeContext.CurrentStore.Id);
+
             switch (request.PasswordFormat)
             {
                 case PasswordFormat.Clear:
@@ -197,7 +209,7 @@ namespace Nop.Services.Customers
                     break;
                 case PasswordFormat.Hashed:
                     {
-                        string saltKey = _encryptionService.CreateSaltKey(5);
+                        string saltKey = _encryptionService.CreateSaltKey(securitySettings.SaltKeySize);
                         request.Customer.PasswordSalt = saltKey;
                         request.Customer.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey, _customerSettings.HashedPasswordFormat);
                     }
@@ -291,6 +303,8 @@ namespace Nop.Services.Customers
                 requestIsValid = true;
 
 
+            var securitySettings = _settingService.LoadSetting<SecuritySettings>(_storeContext.CurrentStore.Id);
+
             //at this point request is valid
             if (requestIsValid)
             {
@@ -308,7 +322,7 @@ namespace Nop.Services.Customers
                         break;
                     case PasswordFormat.Hashed:
                         {
-                            string saltKey = _encryptionService.CreateSaltKey(5);
+                            string saltKey = _encryptionService.CreateSaltKey(securitySettings.SaltKeySize);
                             customer.PasswordSalt = saltKey;
                             customer.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey, _customerSettings.HashedPasswordFormat);
                         }

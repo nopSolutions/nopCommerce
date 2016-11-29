@@ -99,6 +99,9 @@ namespace Nop.Services.Installation
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
 
+        private HashFormat _hashFormat;
+        private EncryptionFormat _encryptionFormat;
+
         #endregion
 
         #region Ctor
@@ -5882,7 +5885,7 @@ namespace Nop.Services.Installation
                 CheckUsernameAvailabilityEnabled = false,
                 AllowUsersToChangeUsernames = false,
                 DefaultPasswordFormat = PasswordFormat.Hashed,
-                HashedPasswordFormat = "SHA1",
+                HashedPasswordFormat = _hashFormat.ToString(),
                 PasswordMinLength = 6,
                 PasswordRecoveryLinkDaysValid = 7,
                 UserRegistrationType = UserRegistrationType.Standard,
@@ -6075,12 +6078,14 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new SecuritySettings
             {
                 ForceSslForAllPages = false,
-                EncryptionKey = CommonHelper.GenerateRandomDigitCode(16),
+                EncryptionKey = CommonHelper.GenerateRandomAlphaNumericCode(32),
                 AdminAreaAllowedIpAddresses = null,
                 EnableXsrfProtectionForAdminArea = true,
                 EnableXsrfProtectionForPublicStore = true,
                 HoneypotEnabled = false,
-                HoneypotInputName = "hpinput"
+                HoneypotInputName = "hpinput",
+                SaltKeySize = 16,
+                EncryptionFormat = _encryptionFormat
             });
 
             settingService.SaveSetting(new ShippingSettings
@@ -11954,9 +11959,11 @@ namespace Nop.Services.Installation
 
         #region Methods
 
-        public virtual void InstallData(string defaultUserEmail,
-            string defaultUserPassword, bool installSampleData = true)
+        public virtual void InstallData(string defaultUserEmail, string defaultUserPassword, HashFormat hashFormat, EncryptionFormat encryptionFormat, bool installSampleData = true)
         {
+            _hashFormat = hashFormat;
+            _encryptionFormat = encryptionFormat;
+
             InstallStores();
             InstallMeasures();
             InstallTaxCategories();

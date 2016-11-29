@@ -81,6 +81,20 @@ namespace Nop.Core
         }
 
         /// <summary>
+        /// Generate random alpha numeric code
+        /// </summary>
+        /// <param name="length">Length (should be divisible by 2)</param>
+        /// <returns>Result string</returns>
+        public static string GenerateRandomAlphaNumericCode(int length) {
+            length = length - (length % 2);
+            using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider()) {
+                byte[] data = new byte[length];
+                rng.GetBytes(data);
+                return BitConverter.ToString(data, 0).Replace("-", "");
+            }
+        }
+
+        /// <summary>
         /// Returns an random interger number within a specified rage
         /// </summary>
         /// <param name="min">Minimum number</param>

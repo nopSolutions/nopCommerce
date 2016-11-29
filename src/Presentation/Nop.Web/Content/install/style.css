@@ -8,6 +8,7 @@
 .header-text{font-size:18px;color:#ff5a00;text-align:center;padding-bottom:10px;}
 .content{padding-top:10px;margin:auto;width:629px;text-align:center;font-family:Arial;font-size:12px;}
 .textbox{width:150px;}
+select{width:150px;}
 .title{font-weight:700;}
 .log{width:600px;height:90px;margin:0 auto;}
 .container-installer{margin:auto;}

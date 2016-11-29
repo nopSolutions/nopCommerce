@@ -137,4 +137,10 @@
   <LocaleResource Name="WindowsAuthentication">
     <Value>Use integrated Windows authentication</Value>
   </LocaleResource>
+  <LocaleResource Name="EncryptionAlgorithm">
+    <Value>Use encryption algorithm</Value>
+  </LocaleResource>
+  <LocaleResource Name="HashAlgorithm">
+    <Value>Use hash algorithm</Value>
+  </LocaleResource>
 </Language>

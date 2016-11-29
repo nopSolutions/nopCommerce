@@ -24,7 +24,14 @@ namespace Nop.Web.Models.Install
         [NoTrim]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
-
+        /// <summary>
+        /// *TODO* Name me
+        /// </summary>
+        public int EncryptionAlgorithm { get; set; }
+        /// <summary>
+        /// *TODO* Name me
+        /// </summary>
+        public int HashAlgorithm { get; set; }
 
         [AllowHtml]
         public string DatabaseConnectionString { get; set; }
