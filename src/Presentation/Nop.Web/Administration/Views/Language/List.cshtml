@@ -26,7 +26,7 @@
                     <div id="languages-grid"></div>
 
                     <script>
-                        $(document).ready(function() {
+                        $(document).ready(function () {
                             $("#languages-grid").kendoGrid({
                                 dataSource: {
                                     type: "json",
@@ -43,7 +43,7 @@
                                         total: "Total",
                                         errors: "Errors"
                                     },
-                                    error: function(e) {
+                                    error: function (e) {
                                         display_kendoui_grid_error(e);
                                         // Cancel the changes
                                         this.cancelChanges();
@@ -92,8 +92,10 @@
                                     field: "Id",
                                     title: "@T("Admin.Common.Edit")",
                                     width: 100,
-                                    template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-                                    }
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                                }
                                 ]
                             });
                         });

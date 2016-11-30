@@ -109,8 +109,9 @@
                                             field: "Id",
                                             title: "@T("Admin.Common.Edit")",
                                             width: 100,
-                                            template:
-                                                "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.RouteUrl("Plugin.Shipping.FixedOrByWeight.EditRateByWeighPopup")?id=#=Id#&btnId=btnRefresh&formId=shipping-byweight-form', 800, 800, true); return false;\" class='btn btn-default' />"
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                            template: "<button onclick=\"javascript:OpenWindow('@Url.RouteUrl("Plugin.Shipping.FixedOrByWeight.EditRateByWeighPopup")?id=#=Id#&btnId=btnRefresh&formId=shipping-byweight-form', 800, 800, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
                                         }, {
                                             command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                             title: "@T("Admin.Common.Delete")",

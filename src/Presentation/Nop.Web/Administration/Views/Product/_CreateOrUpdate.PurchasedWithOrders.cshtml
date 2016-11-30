@@ -89,7 +89,9 @@
                                 field: "Id",
                                 title: "@T("Admin.Common.View")",
                                 width: 200,
-                                template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
                             }
                         ]
                     });

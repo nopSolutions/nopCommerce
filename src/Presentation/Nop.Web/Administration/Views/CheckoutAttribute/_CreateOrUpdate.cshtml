@@ -380,10 +380,14 @@
                                 },{
                                     field: "Id",
                                     title: "@T("Admin.Common.Edit")",
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
                                     width: 100,
-                                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/CheckoutAttribute/ValueEditPopup/")#=Id#?btnId=btnRefresh&formId=checkoutattribute-form', 800, 500, true); return false;\" class='btn btn-default' />"
+                                    template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/CheckoutAttribute/ValueEditPopup/")#=Id#?btnId=btnRefresh&formId=checkoutattribute-form', 800, 500, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
                                 }, {
                                     command: {name: "destroy", text: "@T("Admin.Common.Delete")"},
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
                                     title: "@T("Admin.Common.Delete")",
                                     width: 100
                                 }]

@@ -81,8 +81,10 @@
                     }, {
                         field: "Count",
                         title: "@T("Admin.SalesReport.Incomplete.Count")",
-                        width: 150,
-                        template: '#=Count# - <a href="#=ViewLink#">@T("Admin.SalesReport.Incomplete.View")</a>'
+                        width: 100,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '<a class="btn btn-xs btn-default" href="#=ViewLink#"><i class="fa fa-eye"></i>#=Count# - @T("Admin.SalesReport.Incomplete.View")</a>'
                     }]
                 });
             });

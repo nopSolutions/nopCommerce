@@ -137,7 +137,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                }
+                                                }
                             </div>
                             <div class="col-md-7">
                                 @if (Model.CompanyEnabled)
@@ -186,7 +186,7 @@
                                         @Html.NopLabelFor(model => model.SearchCustomerRoleIds)
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.EditorFor(model => model.SearchCustomerRoleIds, new {SelectList = Model.AvailableCustomerRoles})
+                                        @Html.EditorFor(model => model.SearchCustomerRoleIds, new { SelectList = Model.AvailableCustomerRoles })
                                         <script>
                                             $(document).ready(function() {
                                                 var rolesIdsInput = $('#@Html.FieldIdFor(model => model.SearchCustomerRoleIds)').data("kendoMultiSelect");
@@ -197,13 +197,13 @@
                                                 @if (Model.AvailableCustomerRoles.Count == 0)
                                                 {
                                                     <text>
-                                                        rolesIdsInput.setOptions({
-                                                            enable: false,
-                                                            placeholder: '@T("Admin.Catalog.Products.CustomerRoles.NoCustomerRolesAvailable")'
-                                                        });
-                                                        rolesIdsInput._placeholder();
-                                                        rolesIdsInput._enable();
-                                                    </text>
+                                                rolesIdsInput.setOptions({
+                                                    enable: false,
+                                                    placeholder: '@T("Admin.Catalog.Products.CustomerRoles.NoCustomerRolesAvailable")'
+                                                });
+                                                rolesIdsInput._placeholder();
+                                                rolesIdsInput._enable();
+                                                </text>
                                                 }
                                             });
                                         </script>
@@ -344,7 +344,9 @@
                                             field: "Id",
                                             title: "@T("Admin.Common.Edit")",
                                             width: 50,
-                                            template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                            template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
                                         }
                                     ]
                                 });

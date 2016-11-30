@@ -57,8 +57,8 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-6 col-md-offset-6">
-                                                <button type="submit" name="delete-guests" class="btn bg-red">
-                                                    <i class="fa fa-trash-o"></i>
+                                                <button type="submit" name="delete-guests" class="btn btn-default">
+                                                    <i class="fa fa-trash"></i>
                                                     @T("Admin.Common.Delete")
                                                 </button>
                                             </div>
@@ -93,8 +93,8 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-6 col-md-offset-6">
-                                                <button type="submit" name="delete-abondoned-carts" class="btn bg-red">
-                                                    <i class="fa fa-trash-o"></i>
+                                                <button type="submit" name="delete-abondoned-carts" class="btn btn-default">
+                                                    <i class="fa fa-trash"></i>
                                                     @T("Admin.Common.Delete")
                                                 </button>
                                             </div>
@@ -137,8 +137,8 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-6 col-md-offset-6">
-                                                <button type="submit" name="delete-exported-files" class="btn bg-red">
-                                                    <i class="fa fa-trash-o"></i>
+                                                <button type="submit" name="delete-exported-files" class="btn btn-default">
+                                                    <i class="fa fa-trash"></i>
                                                     @T("Admin.Common.Delete")
                                                 </button>
                                             </div>
@@ -242,17 +242,26 @@
                                     title: "@T("Admin.System.Maintenance.BackupDatabase.FileSize")"
                                 }, {
                                     field: "Link",
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    width: 150,
                                     title: "@T("Admin.System.Maintenance.BackupDatabase.Download")",
-                                    template: '<a href="#=Link#">@T("Admin.System.Maintenance.BackupDatabase.Download")</a>'
+                                    template: '<a class="btn btn-default" href="#=Link#"><i class="fa fa-download"></i>@T("Admin.System.Maintenance.BackupDatabase.Download")</a>'
                                 }, {
                                     field: "Name",
                                     title: "@T("Admin.System.Maintenance.BackupDatabase.Restore")",
-                                    template: '<button type="submit" class="btn bg-green" onclick="submitBackupAction(\'#=Name#\',\'restore-backup\')">@T("Admin.System.Maintenance.BackupDatabase.Restore")</button>'
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    width: 150,
+                                    template: '<button type="submit" class="btn btn-default" onclick="submitBackupAction(\'#=Name#\',\'restore-backup\')"><i class="fa fa-database"></i>@T("Admin.System.Maintenance.BackupDatabase.Restore")</button>'
                                 },
                                 {
                                     field: "Name",
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    width: 150,
                                     title: "@T("Admin.System.Maintenance.BackupDatabase.Delete")",
-                                    template: '<button type="submit" class="btn bg-red" onclick="submitBackupAction(\'#=Name#\',\'delete-backup\')">@T("Admin.System.Maintenance.BackupDatabase.Delete")</button>'
+                                    template: '<button type="submit" class="btn btn-default" onclick="submitBackupAction(\'#=Name#\',\'delete-backup\')"><i class="fa fa-trash"></i>@T("Admin.System.Maintenance.BackupDatabase.Delete")</button>'
                                 }
                             ]
                         });

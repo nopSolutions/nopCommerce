@@ -259,11 +259,15 @@
                                 }, {
                                     field: "Id",
                                     title: "@T("Admin.Common.Edit")",
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
                                     width: 100,
-                                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Country/StateEditPopup/")#=Id#?btnId=btnRefresh&formId=country-form', 800, 450, true); return false;\" class='btn btn-default' />"
+                                    template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Country/StateEditPopup/")#=Id#?btnId=btnRefresh&formId=country-form', 800, 450, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
                                 }, {
                                     command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                     title: "@T("Admin.Common.Delete")",
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
                                     width: 100
                                 }]
                             });

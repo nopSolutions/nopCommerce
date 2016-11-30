@@ -541,7 +541,9 @@
                                         field: "ProductId",
                                         title: "@T("Admin.Common.View")",
                                         width: 150,
-                                        template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
                                     }, {
                                         command: [
                                             {
@@ -653,7 +655,9 @@
                                         field: "CategoryId",
                                         title: "@T("Admin.Common.View")",
                                         width: 150,
-                                        template: '<a href="@Url.Content("~/Admin/Category/Edit/")#=CategoryId#">@T("Admin.Common.View")</a>'
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Category/Edit/")#=CategoryId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
                                     }, {
                                         command: [
                                             {
@@ -765,7 +769,9 @@
                                         field: "ManufacturerId",
                                         title: "@T("Admin.Common.View")",
                                         width: 150,
-                                        template: '<a href="@Url.Content("~/Admin/Manufacturer/Edit/")#=ManufacturerId#">@T("Admin.Common.View")</a>'
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Manufacturer/Edit/")#=ManufacturerId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
                                     }, {
                                         command: [
                                             {
@@ -882,7 +888,9 @@
                                 field: "OrderId",
                                 title: "@T("Admin.Promotions.Discounts.History.Order")",
                                 width: 200,
-                                template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderId# - @T("Admin.Common.View")</a>'
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#"><i class="fa fa-eye"></i>#=OrderId# - @T("Admin.Common.View")</a>'
                             }, {
                                 field: "OrderTotal",
                                 title: "@T("Admin.Promotions.Discounts.History.OrderTotal")",
