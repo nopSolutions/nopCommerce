@@ -2550,3 +2550,11 @@ BEGIN
 	ALTER TABLE [BlogPost] DROP COLUMN [CommentCount]
 END
 GO
+
+-- new message template
+ IF NOT EXISTS (SELECT 1 FROM [dbo].[MessageTemplate] WHERE [Name] = N'NewReturnRequest.CustomerNotification')
+ BEGIN
+	INSERT [dbo].[MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [AttachedDownloadId], [EmailAccountId], [LimitedToStores], [DelayPeriodId]) 
+	VALUES (N'NewReturnRequest.CustomerNotification', NULL, N'%Store.Name%. New return request.', N'<p><a href="%Store.URL%">%Store.Name%</a> <br /><br />Hello %Customer.FullName%!<br /> You have just submitted a new return request. Details are below:<br />Request ID: %ReturnRequest.CustomNumber%<br />Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%<br />Reason for return: %ReturnRequest.Reason%<br />Requested action: %ReturnRequest.RequestedAction%<br />Customer comments:<br />%ReturnRequest.CustomerComment%</p>', 1, 0, 0, 0, 0)
+ END
+ GO

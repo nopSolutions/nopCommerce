@@ -1096,6 +1096,48 @@ namespace Nop.Services.Messages
         }
 
         /// <summary>
+        /// Sends 'New Return Request' message to a customer
+        /// </summary>
+        /// <param name="returnRequest">Return request</param>
+        /// <param name="orderItem">Order item</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendNewReturnRequestCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, int languageId)
+        {
+            if (returnRequest == null)
+                throw new ArgumentNullException("returnRequest");
+
+            var store = _storeService.GetStoreById(orderItem.Order.StoreId) ?? _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = GetActiveMessageTemplate("NewReturnRequest.CustomerNotification", store.Id);
+            if (messageTemplate == null)
+                return 0;
+            
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            //tokens
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(tokens, returnRequest.Customer);
+            _messageTokenProvider.AddReturnRequestTokens(tokens, returnRequest, orderItem);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var toEmail = returnRequest.Customer.IsGuest() ?
+                orderItem.Order.BillingAddress.Email :
+                returnRequest.Customer.Email;
+            var toName = returnRequest.Customer.IsGuest() ?
+                orderItem.Order.BillingAddress.FirstName :
+                returnRequest.Customer.GetFullName();
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, tokens,
+                toEmail, toName);
+        }
+
+        /// <summary>
         /// Sends 'Return Request status changed' message to a customer
         /// </summary>
         /// <param name="returnRequest">Return request</param>
