@@ -568,20 +568,18 @@ namespace Nop.Admin.Controllers
                     model.AssociatedToProductId = product.ParentGroupedProductId;
                     model.AssociatedToProductName = parentGroupedProduct.Name;
                 }
+
+                model.CreatedOn = _dateTimeHelper.ConvertToUserTime(product.CreatedOnUtc, DateTimeKind.Utc);
+                model.UpdatedOn = _dateTimeHelper.ConvertToUserTime(product.UpdatedOnUtc, DateTimeKind.Utc);
             }
 
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
             model.BaseDimensionIn = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId).Name;
-            if (product != null)
-            {
-                model.CreatedOn = _dateTimeHelper.ConvertToUserTime(product.CreatedOnUtc, DateTimeKind.Utc);
-                model.UpdatedOn = _dateTimeHelper.ConvertToUserTime(product.UpdatedOnUtc, DateTimeKind.Utc);
-            }
-
+            
             //little performance hack here
             //there's no need to load attributes when creating a new product
-            //anyway they're not used (you need to save a product before you map add them)
+            //anyway they're not used (you need to save a product before you map them)
             if (product != null)
             {
                 //product attributes

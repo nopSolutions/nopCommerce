@@ -101,14 +101,14 @@
                                 });
 
                                 //wire up checkboxes.
-                                $('#activityLogType-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function(e) {
+                                $('#activityLogType-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
                                     updateMasterCheckbox();
                                 });
                             });
 
                             function updateMasterCheckbox() {
-                                var numChkBoxes = $('#activityLogType-grid input[type=checkbox][id!=mastercheckbox]').length;
-                                var numChkBoxesChecked = $('#activityLogType-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
+                                var numChkBoxes = $('#activityLogType-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
+                                var numChkBoxesChecked = $('#activityLogType-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
                                 $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
                             }
                         </script>

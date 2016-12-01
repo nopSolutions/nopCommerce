@@ -323,7 +323,7 @@
                             });
 
                             //wire up checkboxes.
-                            $('#productreviews-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function(e) {
+                            $('#productreviews-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
                                 var $check = $(this);
                                 if ($check.is(":checked") == true) {
                                     var checked = jQuery.inArray($check.val(), selectedIds);
@@ -358,7 +358,7 @@
 
                         function onDataBound(e) {
 
-                            $('#productreviews-grid input[type=checkbox][id!=mastercheckbox]').each(function() {
+                            $('#productreviews-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function() {
                                 var currentId = $(this).val();
                                 var checked = jQuery.inArray(currentId, selectedIds);
                                 //set checked based on if current checkbox's value is in selectedIds.
@@ -369,8 +369,8 @@
                         }
 
                         function updateMasterCheckbox() {
-                            var numChkBoxes = $('#productreviews-grid input[type=checkbox][id!=mastercheckbox]').length;
-                            var numChkBoxesChecked = $('#productreviews-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
+                            var numChkBoxes = $('#productreviews-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
+                            var numChkBoxesChecked = $('#productreviews-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
                             $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
                         }
 

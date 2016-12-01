@@ -56,7 +56,7 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
                 foreach (string service in services.Services)
                 {
                     string serviceId = FedexServices.GetServiceId(service);
-                    if (!String.IsNullOrEmpty(serviceId) && !String.IsNullOrEmpty(carrierServicesOfferedDomestic))
+                    if (!String.IsNullOrEmpty(serviceId))
                     {
                         if (carrierServicesOfferedDomestic.Contains(serviceId))
                             model.CarrierServicesOffered.Add(service);

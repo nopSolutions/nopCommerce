@@ -232,10 +232,6 @@ namespace Nop.Web.Controllers
             if (vendor == null || vendor.Deleted || !vendor.Active)
                 return InvokeHttp404();
 
-            //Vendor is active?
-            if (!vendor.Active)
-                return InvokeHttp404();
-
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                 SystemCustomerAttributeNames.LastContinueShoppingPage,
