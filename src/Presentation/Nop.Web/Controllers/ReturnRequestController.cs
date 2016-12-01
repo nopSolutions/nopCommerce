@@ -262,7 +262,7 @@ namespace Nop.Web.Controllers
                     //notify store owner
                     _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, orderItem, _localizationSettings.DefaultAdminLanguageId);
                     //notify customer
-                    _workflowMessageService.SendNewReturnRequestCustomerNotification(rr, orderItem, _localizationSettings.DefaultAdminLanguageId);
+                    _workflowMessageService.SendNewReturnRequestCustomerNotification(rr, orderItem, order.CustomerLanguageId);
 
                     count++;
                 }
