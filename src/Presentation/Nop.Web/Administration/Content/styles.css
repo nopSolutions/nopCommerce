@@ -635,14 +635,41 @@ table td .form-group {
     margin-bottom: 0;
     margin-top: 2px;
 }
-.table-bordered > thead {
-    border-bottom: none;
+.table-bordered {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-color: #c5c5c5;
+    border-left: none;
 }
 .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th,
 .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td,
 .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
-    border: 1px solid #E0E0E0;
-    border-top: 1px solid #E0E0E0 !important;
+    border-color: #c5c5c5;
+    border-style: solid;
+    border-width: 0 0 0 1px;
+}
+.table-bordered > thead > tr > th, .table-bordered > tbody > tr > th,
+.table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td {
+    text-align: left;
+    overflow: hidden;
+    border-style: solid;
+    border-width: 0 0 1px 1px;
+    padding: .5em .6em .4em .6em;
+    font-weight: normal;
+    white-space: normal;
+    text-overflow: ellipsis;
+    background-image: none,-webkit-linear-gradient(top,rgba(255,255,255,.6) 0,rgba(255,255,255,.0) 100%);
+    background-image: none,-moz-linear-gradient(top,rgba(255,255,255,.6) 0,rgba(255,255,255,.0) 100%);
+    background-image: none,-o-linear-gradient(top,rgba(255,255,255,.6) 0,rgba(255,255,255,.0) 100%);
+    background-image: none,linear-gradient(to bottom,rgba(255,255,255,.6) 0,rgba(255,255,255,.0) 100%);
+    background-position: 50% 50%;
+    background-color: #e3e3e3;
+}
+.table-bordered tr:nth-child(even) {
+    background-color: #f5f5f5;
+}
+.table-bordered tr:hover td{
+    background-color: #e3e3e3;
 }
 
 /* QQ */
