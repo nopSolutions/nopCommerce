@@ -1250,7 +1250,6 @@ namespace Nop.Services.ExportImport
         /// <summary>
         /// Export customer list to XLSX
         /// </summary>
-        /// <param name="stream">Stream</param>
         /// <param name="customers">Customers</param>
         public virtual byte[] ExportCustomersToXlsx(IList<Customer> customers)
         {

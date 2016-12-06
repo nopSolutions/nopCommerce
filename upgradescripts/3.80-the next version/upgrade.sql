@@ -2725,3 +2725,20 @@ BEGIN
 	VALUES (N'producteditorsettings.stockquantityhistory', N'False', 0)
 END
 GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='RequireReLogin')
+BEGIN
+	ALTER TABLE [Customer]
+	ADD [RequireReLogin] bit NULL
+END
+GO
+
+UPDATE [Customer]
+SET [RequireReLogin] = 0
+WHERE [RequireReLogin] IS NULL
+GO
+
+ALTER TABLE [Customer] ALTER COLUMN [RequireReLogin] bit NOT NULL
+GO

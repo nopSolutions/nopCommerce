@@ -91,6 +91,11 @@ namespace Nop.Core.Domain.Customers
         public bool HasShoppingCartItems { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the customer is required to re-login
+        /// </summary>
+        public bool RequireReLogin { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the customer is active
         /// </summary>
         public bool Active { get; set; }

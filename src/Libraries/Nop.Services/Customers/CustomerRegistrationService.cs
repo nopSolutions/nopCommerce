@@ -104,9 +104,11 @@ namespace Nop.Services.Customers
             if (!isValid)
                 return CustomerLoginResults.WrongPassword;
 
-            //save last login date
+            //update login details
+            customer.RequireReLogin = false;
             customer.LastLoginDateUtc = DateTime.UtcNow;
             _customerService.UpdateCustomer(customer);
+
             return CustomerLoginResults.Successful;
         }
 
