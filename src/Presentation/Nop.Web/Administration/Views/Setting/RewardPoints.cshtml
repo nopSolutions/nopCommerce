@@ -106,16 +106,6 @@
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_Awarded_OverrideForStore, model => model.PointsForPurchases_Awarded, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.PointsForPurchases_Awarded)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopDropDownListFor(model => model.PointsForPurchases_Awarded, ((OrderStatus) Model.PointsForPurchases_Awarded).ToSelectList())
-                                @Html.ValidationMessageFor(model => model.PointsForPurchases_Awarded)
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
                                 @Html.NopLabelFor(model => model.ActivatePointsImmediately)
                             </div>
                             <div class="col-md-9">
@@ -139,16 +129,6 @@
                                         @Html.ValidationMessageFor(model => model.ActivationDelayPeriodId)
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_Canceled_OverrideForStore, model => model.PointsForPurchases_Canceled, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.PointsForPurchases_Canceled)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopDropDownListFor(model => model.PointsForPurchases_Canceled, ((OrderStatus) Model.PointsForPurchases_Canceled).ToSelectList())
-                                @Html.ValidationMessageFor(model => model.PointsForPurchases_Canceled)
                             </div>
                         </div>
                         <div class="form-group advanced-setting">

@@ -6972,15 +6972,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Amount.Hint">
     <Value>Specify number of points awarded for purchases.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Awarded">
-    <Value>Awarded order status</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Awarded.Hint">
-    <Value>Points are awarded when the order status is...</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Awarded.Pending">
-    <Value>Order status could not be set to Pending</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ActivatePointsImmediately">
     <Value>Activate points immediately</Value>
   </LocaleResource>
@@ -6992,15 +6983,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ActivationDelay.Hint">
     <Value>Specify how many days (hours) must elapse before earned points become active. Points earned by purchase cannot be redeemed until activated. For example, you may set the days before the points become available to 7. In this case, the points earned will be available for spending 7 days after the order gets chosen awarded status.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Canceled">
-    <Value>Canceled order status</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Canceled.Hint">
-    <Value>Points are canceled when the order status is...</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Canceled.Pending">
-    <Value>Order status could not be set to Pending</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForRegistration">
     <Value>Points for registration</Value>

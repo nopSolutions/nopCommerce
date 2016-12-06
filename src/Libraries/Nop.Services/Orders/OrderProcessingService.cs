@@ -935,11 +935,11 @@ namespace Nop.Services.Orders
             }
 
             //reward points
-            if (_rewardPointsSettings.PointsForPurchases_Awarded == order.OrderStatus)
+            if (order.OrderStatus == OrderStatus.Complete)
             {
                 AwardRewardPoints(order);
             }
-            if (_rewardPointsSettings.PointsForPurchases_Canceled == order.OrderStatus)
+            if (order.OrderStatus == OrderStatus.Cancelled)
             {
                 ReduceRewardPoints(order);
             }

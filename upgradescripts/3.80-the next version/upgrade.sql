@@ -932,6 +932,24 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Copy.SKU.New">
     <Value>{0}-copy</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Awarded">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Awarded.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Awarded.Pending">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Canceled">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Canceled.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Canceled.Pending">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2747,4 +2765,15 @@ WHERE [RequireReLogin] IS NULL
 GO
 
 ALTER TABLE [Customer] ALTER COLUMN [RequireReLogin] bit NOT NULL
+GO
+
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [name] = N'rewardpointssettings.PointsForPurchases_Awarded'
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [name] = N'rewardpointssettings.PointsForPurchases_Canceled'
 GO

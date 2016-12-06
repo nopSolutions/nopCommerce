@@ -1,11 +1,8 @@
-﻿using FluentValidation.Attributes;
-using Nop.Admin.Validators.Settings;
-using Nop.Web.Framework;
+﻿using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Settings
 {
-    [Validator(typeof(RewardPointsSettingsValidator))]
     public partial class RewardPointsSettingsModel : BaseNopModel
     {
         public int ActiveStoreScopeConfiguration { get; set; }
@@ -32,10 +29,6 @@ namespace Nop.Admin.Models.Settings
         public int PointsForPurchases_Points { get; set; }
         public bool PointsForPurchases_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Awarded")]
-        public int PointsForPurchases_Awarded { get; set; }
-        public bool PointsForPurchases_Awarded_OverrideForStore { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.ActivatePointsImmediately")]
         public bool ActivatePointsImmediately { get; set; }
 
@@ -43,10 +36,6 @@ namespace Nop.Admin.Models.Settings
         public int ActivationDelay { get; set; }
         public bool ActivationDelay_OverrideForStore { get; set; }
         public int ActivationDelayPeriodId { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Canceled")]
-        public int PointsForPurchases_Canceled { get; set; }
-        public bool PointsForPurchases_Canceled_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.DisplayHowMuchWillBeEarned")]
         public bool DisplayHowMuchWillBeEarned { get; set; }
