@@ -5,9 +5,9 @@ using System;
 namespace Nop.Services.Infrastructure
 {
     /// <summary>
-    /// Azure websites machine name provider
+    /// Windows Azure Web Apps machine name provider
     /// </summary>
-    public class AzureWebsitesMachineNameProvider : IMachineNameProvider
+    public class AzureWebAppsMachineNameProvider : IMachineNameProvider
     {
         /// <summary>
         /// Returns the name of the machine (instance) running the application.

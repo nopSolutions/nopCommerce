@@ -140,9 +140,9 @@ namespace Nop.Web.Framework
             }
             builder.RegisterType<PerRequestCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_per_request").InstancePerLifetimeScope();
 
-            if (config.RunOnAzureWebsites)
+            if (config.RunOnAzureWebApps)
             {
-                builder.RegisterType<AzureWebsitesMachineNameProvider>().As<IMachineNameProvider>().SingleInstance();
+                builder.RegisterType<AzureWebAppsMachineNameProvider>().As<IMachineNameProvider>().SingleInstance();
             }
             else
             {

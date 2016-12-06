@@ -35,7 +35,7 @@ namespace Nop.Core.Configuration
             
             var webFarmsNode = section.SelectSingleNode("WebFarms");
             config.MultipleInstancesEnabled = GetBool(webFarmsNode, "MultipleInstancesEnabled");
-            config.RunOnAzureWebsites = GetBool(webFarmsNode, "RunOnAzureWebsites");
+            config.RunOnAzureWebApps = GetBool(webFarmsNode, "RunOnAzureWebApps");
 
             var azureBlobStorageNode = section.SelectSingleNode("AzureBlobStorage");
             config.AzureBlobStorageConnectionString = GetString(azureBlobStorageNode, "ConnectionString");
@@ -106,9 +106,9 @@ namespace Nop.Core.Configuration
         public bool MultipleInstancesEnabled { get; private set; }
 
         /// <summary>
-        /// A value indicating whether the site is run on Windows Azure Websites
+        /// A value indicating whether the site is run on Windows Azure Web Apps
         /// </summary>
-        public bool RunOnAzureWebsites { get; private set; }
+        public bool RunOnAzureWebApps { get; private set; }
 
         /// <summary>
         /// Connection string for Azure BLOB storage
