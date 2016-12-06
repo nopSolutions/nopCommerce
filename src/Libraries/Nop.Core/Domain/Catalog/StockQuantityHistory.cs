@@ -1,5 +1,4 @@
 using System;
-using Nop.Core.Domain.Shipping;
 
 namespace Nop.Core.Domain.Catalog
 {

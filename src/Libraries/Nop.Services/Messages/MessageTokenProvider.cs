@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using Nop.Core;
+using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -34,7 +35,6 @@ using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
 using Nop.Services.Stores;
-using Nop.Core.Domain;
 
 namespace Nop.Services.Messages
 {

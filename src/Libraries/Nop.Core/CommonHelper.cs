@@ -2,17 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
+using System.Web.Hosting;
 using Nop.Core.ComponentModel;
 using Nop.Core.Domain.Shipping;
-using System.Linq;
-using System.Web.Hosting;
-using System.IO;
-using System.Net;
 
 namespace Nop.Core
 {

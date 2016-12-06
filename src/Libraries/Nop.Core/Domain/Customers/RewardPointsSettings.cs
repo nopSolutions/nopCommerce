@@ -1,5 +1,4 @@
 ﻿using Nop.Core.Configuration;
-using Nop.Core.Domain.Orders;
 
 namespace Nop.Core.Domain.Customers
 {
