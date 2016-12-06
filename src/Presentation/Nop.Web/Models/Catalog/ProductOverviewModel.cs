@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Models.Media;
+using Nop.Services.Seo;
+using Nop.Core.Infrastructure;
+using Nop.Core;
 
 namespace Nop.Web.Models.Catalog
 {
     public partial class ProductOverviewModel : BaseNopEntityModel
     {
+        private IUrlRecordService urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
         public ProductOverviewModel()
         {
             ProductPrice = new ProductPriceModel();
@@ -35,6 +39,15 @@ namespace Nop.Web.Models.Catalog
         public IList<ProductSpecificationModel> SpecificationAttributeModels { get; set; }
         //price
         public ProductReviewOverviewModel ReviewOverviewModel { get; set; }
+        public int VendorId { get; set; }
+
+        public string VendorUrlName
+        {
+            get
+            {
+                return urlRecordService.GetByVendorEntityId(VendorId).Slug;
+            }
+        }
 
 		#region Nested Classes
 

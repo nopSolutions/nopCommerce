@@ -14,7 +14,15 @@ namespace Nop.Web.Models.Catalog
 
         public string SeName { get; set; }
 
+        /// <summary>
+        /// Param for dispaying of products amount
+        /// </summary>
         public int? NumberOfProducts { get; set; }
+
+        /// <summary>
+        /// Amount of products per category
+        /// </summary>
+        public int? ProductsCount { get; set; }
 
         public bool IncludeInTopMenu { get; set; }
 

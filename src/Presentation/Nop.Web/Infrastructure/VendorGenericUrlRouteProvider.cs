@@ -16,10 +16,10 @@ namespace Nop.Web.Infrastructure
                                        new[] {"Nop.Web.Controllers"});
 
             //define this routes to use in UI views (in case if you want to customize some of them later)
-            //routes.MapLocalizedRoute("Product",
-            //                         "{Store}/{SeName}",
-            //                         new { controller = "Product", action = "ProductDetails" },
-            //                         new[] {"Nop.Web.Controllers"});
+            routes.MapLocalizedRoute("Product",
+                                     "{VendorName}/{SeName}",
+                                     new { controller = "Product", action = "ProductDetails" },
+                                     new[] { "Nop.Web.Controllers" });
 
             routes.MapLocalizedRoute("Category",
                             "{VendorName}/{SeName}",

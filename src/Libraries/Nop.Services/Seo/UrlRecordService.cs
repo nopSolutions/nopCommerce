@@ -236,6 +236,22 @@ namespace Nop.Services.Seo
         }
 
         /// <summary>
+        /// Find URL record by Entity Id
+        /// </summary>
+        /// <param name="id">Entity Id</param>
+        /// <returns>Found URL record</returns>
+        public virtual UrlRecord GetByVendorEntityId(int id)
+        {
+            var query = from ur in _urlRecordRepository.Table
+                        where ur.EntityId == id && ur.EntityName == "Vendor"
+                        //first, try to find an active record
+                        orderby ur.IsActive descending, ur.Id
+                        select ur;
+            var urlRecord = query.FirstOrDefault();
+            return urlRecord;
+        }
+
+        /// <summary>
         /// Find URL record (cached version).
         /// This method works absolutely the same way as "GetBySlug" one but caches the results.
         /// Hence, it's used only for performance optimization in public store

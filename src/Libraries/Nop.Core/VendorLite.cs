@@ -19,5 +19,14 @@ namespace Nop.Core
             }
             return (sessionObj as VendorLite).Name;
         }
+
+        public static int GetVendorIdFromSession(object sessionObj)
+        {
+            if (sessionObj == null)
+            {
+                return -1;
+            }
+            return (sessionObj as VendorLite).Id;
+        }
     }
 }

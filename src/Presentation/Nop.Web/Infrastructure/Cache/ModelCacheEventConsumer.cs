@@ -207,7 +207,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : language id
         /// {1} : comma separated list of customer roles
-        /// {2} : current store ID
+        /// {2} : current vendor ID
         /// </remarks>
         public const string CATEGORY_NAVIGATION_MODEL_KEY = "Nop.pres.category.navigation-{0}-{1}-{2}";
         public const string CATEGORY_NAVIGATION_PATTERN_KEY = "Nop.pres.category.navigation";
@@ -218,7 +218,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : language id
         /// {1} : comma separated list of customer roles
-        /// {2} : current store ID
+        /// {2} : current vendor ID
         /// </remarks>
         public const string CATEGORY_MENU_MODEL_KEY = "Nop.pres.category.menu-{0}-{1}-{2}";
         public const string CATEGORY_MENU_PATTERN_KEY = "Nop.pres.category.menu";
@@ -228,11 +228,22 @@ namespace Nop.Web.Infrastructure.Cache
         /// </summary>
         /// <remarks>
         /// {0} : comma separated list of customer roles
-        /// {1} : current store ID
+        /// {1} : current vendor ID
         /// {2} : category ID
         /// </remarks>
         public const string CATEGORY_NUMBER_OF_PRODUCTS_MODEL_KEY = "Nop.pres.category.numberofproducts-{0}-{1}-{2}";
         public const string CATEGORY_NUMBER_OF_PRODUCTS_PATTERN_KEY = "Nop.pres.category.numberofproducts";
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : comma separated list of customer roles
+        /// {1} : current vendor ID
+        /// {2} : category ID
+        /// </remarks>
+        public const string CATEGORY_PRODUCTS_NUMBER_MODEL_KEY = "Nop.pres.category.productsnumber-{0}-{1}-{2}";
+        public const string CATEGORY_PRODUCTS_NUMBER_PATTERN_KEY = "Nop.pres.category.productsnumber";
 
         /// <summary>
         /// Key for caching of a value indicating whether a category has featured products

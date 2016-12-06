@@ -362,14 +362,14 @@ namespace Nop.Web.Controllers
                     Name = category.GetLocalized(x => x.Name),
                     SeName = category.GetSeName(),
                     IncludeInTopMenu = category.IncludeInTopMenu
-                };
+                };                
 
                 //number of products in each category
                 if (_catalogSettings.ShowCategoryProductNumber)
                 {
                     string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NUMBER_OF_PRODUCTS_MODEL_KEY,
                         string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
-                        _storeContext.CurrentStore.Id, 
+                        CurrentVendorId, 
                         category.Id);
                     categoryModel.NumberOfProducts = _cacheManager.Get(cacheKey, () =>
                     {
@@ -378,9 +378,25 @@ namespace Nop.Web.Controllers
                         //include subcategories
                         if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
                             categoryIds.AddRange(GetChildCategoryIds(category.Id));
-                        return _productService.GetNumberOfProductsInCategory(categoryIds, _storeContext.CurrentStore.Id);
+                        return _productService.GetNumberOfProductsInCategory(VendorLite.GetVendorIdFromSession(SessionWrapper.GetObject(SessionKeyNames.CURRENT_VENDOR)), categoryIds, _storeContext.CurrentStore.Id);
                     });
                 }
+
+                // set products count per category including sub-categories                
+                string cacheKeyForProductsCount = string.Format(ModelCacheEventConsumer.CATEGORY_PRODUCTS_NUMBER_MODEL_KEY,
+                        string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                        CurrentVendorId,
+                        category.Id);
+                categoryModel.ProductsCount = _cacheManager.Get(cacheKeyForProductsCount, () =>
+                {
+                    var categoryIds = new List<int>();
+                    categoryIds.Add(category.Id);
+                    //include subcategories
+                    categoryIds.AddRange(GetChildCategoryIds(category.Id));
+                    return _productService.GetNumberOfProductsInCategory(CurrentVendorId, categoryIds, _storeContext.CurrentStore.Id);
+                });
+
+
 
                 if (loadSubCategories)
                 {
@@ -655,11 +671,10 @@ namespace Nop.Web.Controllers
                 if (productCategories.Any())
                     activeCategoryId = productCategories[0].CategoryId;
             }
-
             string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, 
                 _workContext.WorkingLanguage.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
-                _storeContext.CurrentStore.Id);
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                CurrentVendorId);
             var cachedModel = _cacheManager.Get(cacheKey, () => PrepareCategorySimpleModels(0).ToList());
 
             var model = new CategoryNavigationModel
@@ -677,8 +692,8 @@ namespace Nop.Web.Controllers
             //categories
             string categoryCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_MENU_MODEL_KEY,
                 _workContext.WorkingLanguage.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
-                _storeContext.CurrentStore.Id);
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                CurrentVendorId);
             var cachedCategoriesModel = _cacheManager.Get(categoryCacheKey, () => PrepareCategorySimpleModels(0));
 
             //top menu topics
@@ -1510,5 +1525,13 @@ namespace Nop.Web.Controllers
         }
 
         #endregion
+
+        private int CurrentVendorId
+        {
+            get
+            {
+                return VendorLite.GetVendorIdFromSession(SessionWrapper.GetObject(SessionKeyNames.CURRENT_VENDOR));
+            }
+        }
     }
 }

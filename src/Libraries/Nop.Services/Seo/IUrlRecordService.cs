@@ -89,5 +89,7 @@ namespace Nop.Services.Seo
         /// <param name="slug">Slug</param>
         /// <param name="languageId">Language ID</param>
         void SaveSlug<T>(T entity, string slug, int languageId) where T : BaseEntity, ISlugSupported;
+
+        UrlRecord GetByVendorEntityId(int id);
     }
 }

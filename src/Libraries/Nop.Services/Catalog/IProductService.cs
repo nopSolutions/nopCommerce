@@ -70,7 +70,7 @@ namespace Nop.Services.Catalog
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <returns>Number of products</returns>
-        int GetNumberOfProductsInCategory(IList<int> categoryIds = null, int storeId = 0);
+        int GetNumberOfProductsInCategory(int vendorId, IList<int> categoryIds = null, int storeId = 0);
 
         /// <summary>
         /// Search products

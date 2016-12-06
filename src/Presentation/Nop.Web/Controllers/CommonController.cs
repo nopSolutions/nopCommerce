@@ -757,6 +757,7 @@ namespace Nop.Web.Controllers
                         ShortDescription = product.GetLocalized(x => x.ShortDescription),
                         FullDescription = product.GetLocalized(x => x.FullDescription),
                         SeName = product.GetSeName(),
+                        VendorId = product.VendorId
                     }).ToList();
                 }
 

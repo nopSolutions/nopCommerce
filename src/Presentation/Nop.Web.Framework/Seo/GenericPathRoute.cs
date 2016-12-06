@@ -153,7 +153,7 @@ namespace Nop.Web.Framework.Seo
 
                 // ensure that products and categories come with a store
                 var entityName = urlRecord.EntityName.ToLowerInvariant();
-                if ((/*entityName == "product" || */entityName== "category") && urlRecordVendor == null)
+                if ((entityName == "product" || entityName== "category") && urlRecordVendor == null)
                 {
                     data.Values["controller"] = "Common";
                     data.Values["action"] = "PageNotFound";
@@ -169,6 +169,8 @@ namespace Nop.Web.Framework.Seo
                             data.Values["action"] = "ProductDetails";
                             data.Values["productid"] = urlRecord.EntityId;
                             data.Values["SeName"] = urlRecord.Slug;
+                            data.Values["vendorId"] = urlRecordVendor.EntityId;
+                            data.Values["VendorName"] = urlRecordVendor.Slug;
                         }
                         break;
                     case "category":

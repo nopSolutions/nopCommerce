@@ -961,11 +961,16 @@ namespace Nop.Web.Controllers
         #region Product details page
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult ProductDetails(int productId, int updatecartitemid = 0)
+        public ActionResult ProductDetails(int vendorId, int productId, int updatecartitemid = 0)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted)
                 return InvokeHttp404();
+
+            if (vendorId != product.VendorId)
+                return InvokeHttp404();
+
+            SessionWrapper.SetObject(SessionKeyNames.CURRENT_VENDOR, new VendorLite { Id = vendorId, Name = RouteData.Values["VendorName"].ToString() });
 
             var notAvailable =
                 //published?
