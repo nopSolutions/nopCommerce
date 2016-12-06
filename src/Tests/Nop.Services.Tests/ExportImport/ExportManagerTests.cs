@@ -11,6 +11,8 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
+using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.ExportImport;
 using Nop.Services.Media;
@@ -21,8 +23,6 @@ using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Nop.Services.Common;
-using Nop.Services.Customers;
 
 namespace Nop.Services.Tests.ExportImport
 {
