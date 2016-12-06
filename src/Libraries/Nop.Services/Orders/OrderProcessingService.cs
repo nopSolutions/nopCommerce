@@ -945,15 +945,13 @@ namespace Nop.Services.Orders
             }
 
             //gift cards activation
-            if (_orderSettings.GiftCards_Activated_OrderStatusId > 0 &&
-               _orderSettings.GiftCards_Activated_OrderStatusId == (int)order.OrderStatus)
+            if (_orderSettings.ActivateGiftCardsAfterCompletingOrder && order.OrderStatus == OrderStatus.Complete)
             {
                 SetActivatedValueForPurchasedGiftCards(order, true);
             }
 
             //gift cards deactivation
-            if (_orderSettings.GiftCards_Deactivated_OrderStatusId > 0 &&
-               _orderSettings.GiftCards_Deactivated_OrderStatusId == (int)order.OrderStatus)
+            if (_orderSettings.DeactivateGiftCardsAfterCancellingOrder && order.OrderStatus == OrderStatus.Cancelled)
             {
                 SetActivatedValueForPurchasedGiftCards(order, false);
             }

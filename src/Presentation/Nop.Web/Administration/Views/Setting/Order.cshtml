@@ -245,20 +245,20 @@
                 </div>
                 <div class="form-group advanced-setting">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.GiftCards_Activated_OrderStatusId)
+                        @Html.NopLabelFor(model => model.ActivateGiftCardsAfterCompletingOrder)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopDropDownListFor(model => model.GiftCards_Activated_OrderStatusId, Model.GiftCards_Activated_OrderStatuses)
-                        @Html.ValidationMessageFor(model => model.GiftCards_Activated_OrderStatusId)
+                        @Html.NopEditorFor(model => model.ActivateGiftCardsAfterCompletingOrder)
+                        @Html.ValidationMessageFor(model => model.ActivateGiftCardsAfterCompletingOrder)
                     </div>
                 </div>
                 <div class="form-group advanced-setting">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.GiftCards_Deactivated_OrderStatusId)
+                        @Html.NopLabelFor(model => model.DeactivateGiftCardsAfterCancellingOrder)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopDropDownListFor(model => model.GiftCards_Deactivated_OrderStatusId, Model.GiftCards_Deactivated_OrderStatuses)
-                        @Html.ValidationMessageFor(model => model.GiftCards_Deactivated_OrderStatusId)
+                        @Html.NopEditorFor(model => model.DeactivateGiftCardsAfterCancellingOrder)
+                        @Html.ValidationMessageFor(model => model.DeactivateGiftCardsAfterCancellingOrder)
                     </div>
                 </div>
                 <div class="form-group advanced-setting">

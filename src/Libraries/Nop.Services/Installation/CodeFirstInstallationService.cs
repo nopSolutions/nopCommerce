@@ -6077,6 +6077,8 @@ namespace Nop.Services.Installation
                 ReturnRequestsEnabled = true,
                 NumberOfDaysReturnRequestAvailable = 365,
                 MinimumOrderPlacementInterval = 30,
+                ActivateGiftCardsAfterCompletingOrder = false,
+                DeactivateGiftCardsAfterCancellingOrder = false,
                 DeactivateGiftCardsAfterDeletingOrder = false,
                 CompleteOrderWhenDelivered = true
             });

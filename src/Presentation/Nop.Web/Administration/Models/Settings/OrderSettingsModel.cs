@@ -1,13 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
-using FluentValidation.Attributes;
-using Nop.Admin.Validators.Settings;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Settings
 {
-    [Validator(typeof(OrderSettingsValidator))]
     public partial class OrderSettingsModel : BaseNopModel
     {
         public OrderSettingsModel()
@@ -99,6 +96,10 @@ namespace Nop.Admin.Models.Settings
         public int GiftCards_Deactivated_OrderStatusId { get; set; }
         public IList<SelectListItem> GiftCards_Deactivated_OrderStatuses { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.ActivateGiftCardsAfterCompletingOrder")]
+        public bool ActivateGiftCardsAfterCompletingOrder { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancellingOrder")]
+        public bool DeactivateGiftCardsAfterCancellingOrder { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterDeletingOrder")]
         public bool DeactivateGiftCardsAfterDeletingOrder { get; set; }
 

@@ -91,13 +91,13 @@ namespace Nop.Core.Domain.Orders
         public int NumberOfDaysReturnRequestAvailable { get; set; }
 
         /// <summary>
-        ///  Gift cards are activated when the order status is
+        /// Gets or sets a value indicating whether to activate related gift cards after completing the order
         /// </summary>
-        public int GiftCards_Activated_OrderStatusId { get; set; }
+        public bool ActivateGiftCardsAfterCompletingOrder { get; set; }
         /// <summary>
-        ///  Gift cards are deactivated when the order status is
+        /// Gets or sets a value indicating whether to deactivate related gift cards after cancelling the order
         /// </summary>
-        public int GiftCards_Deactivated_OrderStatusId { get; set; }
+        public bool DeactivateGiftCardsAfterCancellingOrder { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether to deactivate related gift cards after deleting the order
         /// </summary>

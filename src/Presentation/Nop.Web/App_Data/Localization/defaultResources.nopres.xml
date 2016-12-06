@@ -6417,6 +6417,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order">
     <Value>Order settings</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ActivateGiftCardsAfterCompletingOrder">
+    <Value>Activate gift cards after completing of an order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ActivateGiftCardsAfterCompletingOrder.Hint">
+    <Value>Check to activate related gift cards when an order is completed.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.AnonymousCheckoutAllowed">
     <Value>Anonymous checkout allowed</Value>
   </LocaleResource>
@@ -6453,6 +6459,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.CompleteOrderWhenDelivered.Hint">
     <Value>Check if an order status should be set to "Complete" only when its shipping status is "Delivered". Otherwise, "Shipped" status will be enough.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancellingOrder">
+    <Value>Deactivate gift cards after cancelling of an order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancellingOrder.Hint">
+    <Value>Check to deactivate related gift cards when an order is cancelled.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterDeletingOrder">
     <Value>Deactivate gift cards after deleting of an order</Value>
   </LocaleResource>
@@ -6470,24 +6482,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.DisableOrderCompletedPage.Hint">
     <Value>When disabled, customers will be automatically redirected to the order details page.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Activated">
-    <Value>Gift card activation order status</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Activated.Hint">
-    <Value>Gift cards are activated when the order status is...</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Activated.Pending">
-    <Value>Order status could not be set to Pending</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Deactivated">
-    <Value>Gift card deactivation order status</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Deactivated.Hint">
-    <Value>Gift cards are deactivated when the order status is...</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Deactivated.Pending">
-    <Value>Order status could not be set to Pending</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.IsReOrderAllowed">
     <Value>Is re-order allowed</Value>

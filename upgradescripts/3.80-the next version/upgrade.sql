@@ -950,6 +950,36 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Canceled.Pending">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancellingOrder">
+    <Value>Deactivate gift cards after cancelling of an order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancellingOrder.Hint">
+    <Value>Check to deactivate related gift cards when an order is cancelled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ActivateGiftCardsAfterCompletingOrder">
+    <Value>Activate gift cards after completing of an order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ActivateGiftCardsAfterCompletingOrder.Hint">
+    <Value>Check to activate related gift cards when an order is completed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Deactivated">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Deactivated.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Deactivated.Pending">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Activated">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Activated.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Activated.Pending">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2776,4 +2806,30 @@ GO
 --delete setting
 DELETE FROM [Setting]
 WHERE [name] = N'rewardpointssettings.PointsForPurchases_Canceled'
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [name] = N'ordersettings.GiftCards_Activated_OrderStatusId'
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [name] = N'ordersettings.GiftCards_Deactivated_OrderStatusId'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.activategiftcardsaftercompletingorder')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'ordersettings.activategiftcardsaftercompletingorder', N'False', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.deactivategiftcardsaftercancellingorder')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'ordersettings.deactivategiftcardsaftercancellingorder', N'False', 0)
+END
 GO

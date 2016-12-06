@@ -398,7 +398,6 @@
     <Compile Include="Validators\Plugins\PluginValidator.cs" />
     <Compile Include="Validators\Polls\PollAnswerValidator.cs" />
     <Compile Include="Validators\Polls\PollValidator.cs" />
-    <Compile Include="Validators\Settings\OrderSettingsValidator.cs" />
     <Compile Include="Validators\Settings\SettingValidator.cs" />
     <Compile Include="Validators\Topics\TopicValidator.cs" />
     <Compile Include="Validators\News\NewsItemValidator.cs" />
