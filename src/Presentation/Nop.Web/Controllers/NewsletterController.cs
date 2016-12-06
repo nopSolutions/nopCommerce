@@ -6,6 +6,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Web.Factories;
+using Nop.Web.Framework;
 using Nop.Web.Models.Newsletter;
 
 namespace Nop.Web.Controllers
@@ -48,6 +49,8 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
+        //available even when a store is closed
+        [StoreClosed(true)]
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult SubscribeNewsletter(string email, bool subscribe)
@@ -112,6 +115,8 @@ namespace Nop.Web.Controllers
             });
         }
 
+        //available even when a store is closed
+        [StoreClosed(true)]
         public ActionResult SubscriptionActivation(Guid token, bool active)
         {
             var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuid(token);
