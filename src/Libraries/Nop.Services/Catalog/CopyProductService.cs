@@ -130,6 +130,9 @@ namespace Nop.Services.Catalog
                 }
             }
 
+            var newSku = !String.IsNullOrWhiteSpace(product.Sku)
+                ? string.Format(_localizationService.GetResource("Admin.Catalog.Products.Copy.SKU.New"), product.Sku) :
+                product.Sku;
             // product
             var productCopy = new Product
             {
@@ -148,7 +151,7 @@ namespace Nop.Services.Catalog
                 MetaTitle = product.MetaTitle,
                 AllowCustomerReviews = product.AllowCustomerReviews,
                 LimitedToStores = product.LimitedToStores,
-                Sku = product.Sku,
+                Sku = newSku,
                 ManufacturerPartNumber = product.ManufacturerPartNumber,
                 Gtin = product.Gtin,
                 IsGiftCard = product.IsGiftCard,

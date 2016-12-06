@@ -926,6 +926,12 @@ set @resources='
   <LocaleResource Name="Admin.StockQuantityHistory.Messages.Ship">
     <Value>The stock quantity has been reduced when an order item of the order #{0} was shipped</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Copy.Name.New">
+    <Value>{0} - copy</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Copy.SKU.New">
+    <Value>{0}-copy</Value>
+  </LocaleResource>
 </Language>
 '
 

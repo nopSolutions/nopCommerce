@@ -628,7 +628,7 @@ namespace Nop.Admin.Controllers
             if (product != null)
             {
                 model.CopyProductModel.Id = product.Id;
-                model.CopyProductModel.Name = "Copy of " + product.Name;
+                model.CopyProductModel.Name = string.Format(_localizationService.GetResource("Admin.Catalog.Products.Copy.Name.New"), product.Name);
                 model.CopyProductModel.Published = true;
                 model.CopyProductModel.CopyImages = true;
             }

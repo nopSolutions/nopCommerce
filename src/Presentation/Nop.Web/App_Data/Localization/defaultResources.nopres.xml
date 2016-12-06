@@ -2457,6 +2457,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Copy.Name">
     <Value>New product name</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Copy.Name.New">
+    <Value>{0} - copy</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Copy.Name.Hint">
     <Value>The name of the new product.</Value>
   </LocaleResource>
@@ -2465,6 +2468,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Copy.Published.Hint">
     <Value>Check to mark a product as published.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Copy.SKU.New">
+    <Value>{0}-copy</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.CrossSells">
     <Value>Cross-sells</Value>
