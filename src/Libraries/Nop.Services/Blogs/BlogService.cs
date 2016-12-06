@@ -82,7 +82,7 @@ namespace Nop.Services.Blogs
         public virtual IList<BlogPost> GetBlogPostsByIds(int[] blogPostIds)
         {
             var query = _blogPostRepository.Table;
-            return query.Where(p => blogPostIds.Contains(p.Id)).ToList();
+            return query.Where(bp => blogPostIds.Contains(bp.Id)).ToList();
         }
 
         /// <summary>
