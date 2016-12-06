@@ -19,7 +19,6 @@ using Nop.Web.Framework;
 using Nop.Web.Models.Boards;
 using Nop.Web.Models.Common;
 
-
 namespace Nop.Web.Factories
 {
     public partial class ForumModelFactory : IForumModelFactory

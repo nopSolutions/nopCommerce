@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Core;
@@ -7,7 +6,6 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -15,10 +13,8 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
-using Nop.Services.Seo;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Security;
-using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Order;
 
 namespace Nop.Web.Controllers

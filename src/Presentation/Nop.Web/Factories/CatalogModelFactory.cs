@@ -23,7 +23,6 @@ using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
-using Nop.Web.Extensions;
 using Nop.Web.Framework.Events;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;

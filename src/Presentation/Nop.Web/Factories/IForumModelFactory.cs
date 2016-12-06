@@ -1,7 +1,6 @@
 ﻿using Nop.Core.Domain.Forums;
 using Nop.Web.Models.Boards;
 
-
 namespace Nop.Web.Factories
 {
     public partial interface IForumModelFactory

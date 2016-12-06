@@ -19,7 +19,6 @@ using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
-using Nop.Web.Extensions;
 using Nop.Web.Models.Checkout;
 using Nop.Web.Models.Common;
 

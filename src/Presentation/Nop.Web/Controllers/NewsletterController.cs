@@ -7,7 +7,6 @@ using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
-using Nop.Web.Models.Newsletter;
 
 namespace Nop.Web.Controllers
 {

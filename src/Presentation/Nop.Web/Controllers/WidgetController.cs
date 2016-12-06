@@ -1,10 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
-using System.Web.Routing;
 using Nop.Web.Factories;
-using Nop.Web.Infrastructure.Cache;
-using Nop.Web.Models.Cms;
 
 namespace Nop.Web.Controllers
 {

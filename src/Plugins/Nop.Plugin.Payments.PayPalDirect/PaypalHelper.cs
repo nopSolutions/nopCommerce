@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Net;
 using PayPal.Api;
 
 namespace Nop.Plugin.Payments.PayPalDirect

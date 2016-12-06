@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Nop.Admin.Infrastructure.Mapper;
 using Nop.Admin.Models.Blogs;
 using Nop.Admin.Models.Catalog;
 using Nop.Admin.Models.Cms;
