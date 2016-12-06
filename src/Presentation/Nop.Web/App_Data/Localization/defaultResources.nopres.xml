@@ -1374,12 +1374,6 @@
   <LocaleResource Name="Admin.Affiliates.Fields.FriendlyUrlName.Hint">
     <Value>A friendly name for generated affiliate URL (by default affiliate ID is used). It's more friendly for marketing purposes. Leave empty to use affiliate identifier.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Affiliates.Fields.ID">
-    <Value>Affiliate identifier</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Affiliates.Fields.ID.Hint">
-    <Value>Affiliate's unique identifier.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Affiliates.Fields.URL">
     <Value>Affiliate URL</Value>
   </LocaleResource>

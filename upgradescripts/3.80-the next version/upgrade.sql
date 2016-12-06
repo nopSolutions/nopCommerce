@@ -980,6 +980,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Activated.Pending">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Fields.ID">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Fields.ID.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
