@@ -20,6 +20,8 @@ namespace Nop.Web.Factories
 
         PasswordRecoveryModel PreparePasswordRecoveryModel();
 
+        PasswordRecoveryConfirmModel PreparePasswordRecoveryConfirmModel();
+
         RegisterResultModel PrepareRegisterResultModel(int resultId);
 
         CustomerNavigationModel PrepareCustomerNavigationModel(int selectedTabId = 0);

@@ -486,6 +486,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        public virtual PasswordRecoveryConfirmModel PreparePasswordRecoveryConfirmModel()
+        {
+            var model = new PasswordRecoveryConfirmModel();
+            return model;
+        }
+
         public virtual RegisterResultModel PrepareRegisterResultModel(int resultId)
         {
             var resultText = "";

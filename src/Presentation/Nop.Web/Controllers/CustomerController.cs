@@ -444,7 +444,7 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            var model = new PasswordRecoveryConfirmModel();
+            var model = _customerModelFactory.PreparePasswordRecoveryConfirmModel();
 
             //validate token
             if (!customer.IsPasswordRecoveryTokenValid(token))
@@ -479,6 +479,7 @@ namespace Nop.Web.Controllers
             {
                 model.DisablePasswordChanging = true;
                 model.Result = _localizationService.GetResource("Account.PasswordRecovery.WrongToken");
+                return View(model);
             }
 
             //validate token expiration date
