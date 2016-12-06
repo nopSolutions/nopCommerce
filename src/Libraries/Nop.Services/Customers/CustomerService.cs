@@ -378,7 +378,7 @@ namespace Nop.Services.Customers
                 return new List<Customer>();
 
             var query = from c in _customerRepository.Table
-                        where customerIds.Contains(c.Id)
+                        where customerIds.Contains(c.Id) && !c.Deleted
                         select c;
             var customers = query.ToList();
             //sort by passed identifiers

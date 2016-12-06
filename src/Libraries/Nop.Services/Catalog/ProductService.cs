@@ -254,7 +254,7 @@ namespace Nop.Services.Catalog
                 return new List<Product>();
 
             var query = from p in _productRepository.Table
-                        where productIds.Contains(p.Id)
+                        where productIds.Contains(p.Id) && !p.Deleted
                         select p;
             var products = query.ToList();
             //sort by passed identifiers
