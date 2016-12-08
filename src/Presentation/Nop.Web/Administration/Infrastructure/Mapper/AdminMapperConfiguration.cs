@@ -308,6 +308,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.AvailableBasepriceBaseUnits, mo => mo.Ignore())
                     .ForMember(dest => dest.LastStockQuantity, mo => mo.Ignore())
                     .ForMember(dest => dest.ProductEditorSettingsModel, mo => mo.Ignore())
+                    .ForMember(dest => dest.StockQuantityHistory, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<ProductModel, Product>()
                     .ForMember(dest => dest.ProductTags, mo => mo.Ignore())
