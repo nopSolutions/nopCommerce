@@ -887,8 +887,6 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<RewardPointsSettingsModel, RewardPointsSettings>();
                 cfg.CreateMap<OrderSettings, OrderSettingsModel>()
-                    .ForMember(dest => dest.GiftCards_Activated_OrderStatuses, mo => mo.Ignore())
-                    .ForMember(dest => dest.GiftCards_Deactivated_OrderStatuses, mo => mo.Ignore())
                     .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())
                     .ForMember(dest => dest.OrderIdent, mo => mo.Ignore())
                     .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
