@@ -798,7 +798,8 @@ GO
 CREATE PROCEDURE [dbo].[LanguagePackImport]
 (
 	@LanguageId int,
-	@XmlPackage xml
+	@XmlPackage xml,
+	@UpdateExistingResources bit
 )
 AS
 BEGIN
@@ -826,9 +827,12 @@ BEGIN
 		BEGIN
 			IF (EXISTS (SELECT 1 FROM [LocaleStringResource] WHERE LanguageID=@LanguageId AND ResourceName=@ResourceName))
 			BEGIN
-				UPDATE [LocaleStringResource]
-				SET [ResourceValue]=@ResourceValue
-				WHERE LanguageID=@LanguageId AND ResourceName=@ResourceName
+				IF (@UpdateExistingResources = 1)
+				BEGIN
+					UPDATE [LocaleStringResource]
+					SET [ResourceValue]=@ResourceValue
+					WHERE LanguageID=@LanguageId AND ResourceName=@ResourceName
+				END
 			END
 			ELSE 
 			BEGIN
