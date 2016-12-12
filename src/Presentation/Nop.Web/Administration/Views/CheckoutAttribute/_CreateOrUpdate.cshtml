@@ -76,31 +76,44 @@
 
         function toggleAttributeControlType() {
             var selectedAttributeControlTypeId = $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").val();
+            //validation
             if (selectedAttributeControlTypeId == @(((int) AttributeControlType.TextBox).ToString())) {
                 $('#pnlValidationMinLength').show();
-            $('#pnlValidationMaxLength').show();
-            $('#pnlValidationFileMaximumSize').hide();
-            $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValue').show();
-        } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
-            $('#pnlValidationMinLength').show();
-            $('#pnlValidationMaxLength').show();
-            $('#pnlValidationFileMaximumSize').hide();
-            $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValue').show();
-        } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.FileUpload).ToString())) {
-            $('#pnlValidationMinLength').hide();
-            $('#pnlValidationMaxLength').hide();
-            $('#pnlValidationFileMaximumSize').show();
-            $('#pnlValidationFileAllowedExtensions').show();
-            $('#pnlDefaultValue').hide();
-        } else {
+                $('#pnlValidationMaxLength').show();
+                $('#pnlValidationFileMaximumSize').hide();
+                $('#pnlValidationFileAllowedExtensions').hide();
+                $('#pnlDefaultValue').show();
+            } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
+                $('#pnlValidationMinLength').show();
+                $('#pnlValidationMaxLength').show();
+                $('#pnlValidationFileMaximumSize').hide();
+                $('#pnlValidationFileAllowedExtensions').hide();
+                $('#pnlDefaultValue').show();
+            } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.FileUpload).ToString())) {
                 $('#pnlValidationMinLength').hide();
-        $('#pnlValidationMaxLength').hide();
-        $('#pnlValidationFileMaximumSize').hide();
-        $('#pnlValidationFileAllowedExtensions').hide();
-        $('#pnlDefaultValue').hide();
-        }
+                $('#pnlValidationMaxLength').hide();
+                $('#pnlValidationFileMaximumSize').show();
+                $('#pnlValidationFileAllowedExtensions').show();
+                $('#pnlDefaultValue').hide();
+            } else {
+                $('#pnlValidationMinLength').hide();
+                $('#pnlValidationMaxLength').hide();
+                $('#pnlValidationFileMaximumSize').hide();
+                $('#pnlValidationFileAllowedExtensions').hide();
+                $('#pnlDefaultValue').hide();
+            }
+
+            //values
+            if (selectedAttributeControlTypeId == @(((int) AttributeControlType.DropdownList).ToString()) ||
+                selectedAttributeControlTypeId == @(((int) AttributeControlType.RadioList).ToString()) ||
+                selectedAttributeControlTypeId == @(((int) AttributeControlType.Checkboxes).ToString()) ||
+                selectedAttributeControlTypeId == @(((int) AttributeControlType.ColorSquares).ToString()) ||
+                selectedAttributeControlTypeId == @(((int) AttributeControlType.ImageSquares).ToString()) ||
+                selectedAttributeControlTypeId == @(((int) AttributeControlType.ReadonlyCheckboxes).ToString())) {
+                 $('[data-tab-name=tab-values]').show();
+            } else {
+                $('[data-tab-name=tab-values]').hide();
+            }
         }
     </script>
 
