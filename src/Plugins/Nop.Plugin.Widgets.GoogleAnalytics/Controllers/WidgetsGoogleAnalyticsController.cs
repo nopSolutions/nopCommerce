@@ -7,6 +7,7 @@ using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Widgets.GoogleAnalytics.Models;
 using Nop.Services.Catalog;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -18,6 +19,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
 {
     public class WidgetsGoogleAnalyticsController : BasePluginController
     {
+        private const string ORDER_ALREADY_PROCESSED_ATTRIBUTE_NAME = "GoogleAnalytics.OrderAlreadyProcessed";
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
@@ -27,6 +29,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ILocalizationService _localizationService;
+        private readonly IGenericAttributeService _genericAttributeService;
 
         public WidgetsGoogleAnalyticsController(IWorkContext workContext,
             IStoreContext storeContext, 
@@ -36,7 +39,8 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             ILogger logger, 
             ICategoryService categoryService,
             IProductAttributeParser productAttributeParser,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IGenericAttributeService genericAttributeService)
         {
             this._workContext = workContext;
             this._storeContext = storeContext;
@@ -47,6 +51,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             this._categoryService = categoryService;
             this._productAttributeParser = productAttributeParser;
             this._localizationService = localizationService;
+            this._genericAttributeService = genericAttributeService;
         }
 
         [AdminAuthorize]
@@ -195,7 +200,8 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             var analyticsTrackingScript = googleAnalyticsSettings.TrackingScript + "\n";
             analyticsTrackingScript = analyticsTrackingScript.Replace("{GOOGLEID}", googleAnalyticsSettings.GoogleId);
 
-            if (order != null)
+            //ensure that ecommerce tracking code is renderred only once (avoid duplicated data in Google Analytics)
+            if (order != null && !order.GetAttribute<bool>(ORDER_ALREADY_PROCESSED_ATTRIBUTE_NAME))
             {
                 var usCulture = new CultureInfo("en-US");
 
@@ -235,6 +241,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
 
                 analyticsTrackingScript = analyticsTrackingScript.Replace("{ECOMMERCE}", analyticsEcommerceScript);
 
+                _genericAttributeService.SaveAttribute(order, ORDER_ALREADY_PROCESSED_ATTRIBUTE_NAME, true);
             }
             else
             {
