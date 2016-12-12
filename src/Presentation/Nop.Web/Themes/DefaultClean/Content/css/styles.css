@@ -2916,6 +2916,11 @@ label, label + * {
 	overflow: hidden;
 	text-align: center;
 }
+.external-authentication .title {
+	margin: 0 0 15px;
+	font-size: 20px;
+	color: #444;
+}
 .external-authentication .buttons {
     margin: 0 0 30px;
     border-top: 1px solid #e6e6e6;

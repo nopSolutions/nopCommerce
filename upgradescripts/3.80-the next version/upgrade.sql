@@ -989,6 +989,12 @@ set @resources='
   <LocaleResource Name="Admin.System.ScheduleTasks.RestartApplication">
     <Value>Do not forget to restart the application once a task has been modified.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.ExternalAuth.Facebook.Login">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth.Or">
+    <Value>- or -</Value>
+  </LocaleResource>
 </Language>
 '
 

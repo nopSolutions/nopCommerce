@@ -27,6 +27,9 @@
   <LocaleResource Name="Account.AssociatedExternalAuth.ExternalIdentifier">
     <Value>External identifier</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth.Or">
+    <Value>- or -</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.AssociatedExternalAuth.Remove">
     <Value>Remove</Value>
   </LocaleResource>
