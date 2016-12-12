@@ -3026,3 +3026,13 @@ BEGIN
 	DROP TABLE #tmp_guests
 END
 GO
+
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.sitemapcustomurls')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'commonsettings.sitemapcustomurls', N'', 0)
+END
+GO

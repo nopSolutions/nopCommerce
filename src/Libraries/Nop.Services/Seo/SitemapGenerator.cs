@@ -140,6 +140,8 @@ namespace Nop.Services.Seo
             }
             //topics
             WriteTopics(urlHelper);
+            //custom URLs
+            WriteCustomUrls();
         }
 
         protected virtual void WriteCategories(UrlHelper urlHelper, int parentCategoryId)
@@ -188,6 +190,19 @@ namespace Nop.Services.Seo
                 WriteUrlLocation(url, UpdateFrequency.Weekly, DateTime.UtcNow);
             }
         }
+
+        protected virtual void WriteCustomUrls()
+        {
+            foreach (var customUrl in _commonSettings.SitemapCustomUrls)
+            {
+                var url = _securitySettings.ForceSslForAllPages
+                    ? _storeContext.CurrentStore.SecureUrl
+                    : _storeContext.CurrentStore.Url;
+                url += customUrl;
+                WriteUrlLocation(url, UpdateFrequency.Weekly, DateTime.UtcNow);
+            }
+        }
+        
 
         #endregion
 
