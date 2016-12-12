@@ -47,22 +47,14 @@ namespace Nop.Core.Infrastructure
         protected virtual void RegisterDependencies(NopConfig config)
         {
             var builder = new ContainerBuilder();
-            var container = builder.Build();
-            this._containerManager = new ContainerManager(container);
-
-            //we create new instance of ContainerBuilder
-            //because Build() or Update() method can only be called once on a ContainerBuilder.
-
+            
             //dependencies
             var typeFinder = new WebAppTypeFinder();
-            builder = new ContainerBuilder();
             builder.RegisterInstance(config).As<NopConfig>().SingleInstance();
             builder.RegisterInstance(this).As<IEngine>().SingleInstance();
             builder.RegisterInstance(typeFinder).As<ITypeFinder>().SingleInstance();
-            builder.Update(container);
 
             //register dependencies provided by other assemblies
-            builder = new ContainerBuilder();
             var drTypes = typeFinder.FindClassesOfType<IDependencyRegistrar>();
             var drInstances = new List<IDependencyRegistrar>();
             foreach (var drType in drTypes)
@@ -71,7 +63,9 @@ namespace Nop.Core.Infrastructure
             drInstances = drInstances.AsQueryable().OrderBy(t => t.Order).ToList();
             foreach (var dependencyRegistrar in drInstances)
                 dependencyRegistrar.Register(builder, typeFinder, config);
-            builder.Update(container);
+
+            var container = builder.Build();
+            this._containerManager = new ContainerManager(container);
 
             //set dependency resolver
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
