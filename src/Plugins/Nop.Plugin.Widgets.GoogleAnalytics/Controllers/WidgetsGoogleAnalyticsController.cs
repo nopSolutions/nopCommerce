@@ -192,12 +192,13 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
         private string GetEcommerceScript(Order order)
         {
             var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(_storeContext.CurrentStore.Id);
-            var usCulture = new CultureInfo("en-US");
             var analyticsTrackingScript = googleAnalyticsSettings.TrackingScript + "\n";
             analyticsTrackingScript = analyticsTrackingScript.Replace("{GOOGLEID}", googleAnalyticsSettings.GoogleId);
 
             if (order != null)
             {
+                var usCulture = new CultureInfo("en-US");
+
                 var analyticsEcommerceScript = googleAnalyticsSettings.EcommerceScript + "\n";
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{GOOGLEID}", googleAnalyticsSettings.GoogleId);
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{ORDERID}", order.Id.ToString());
@@ -234,6 +235,10 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
 
                 analyticsTrackingScript = analyticsTrackingScript.Replace("{ECOMMERCE}", analyticsEcommerceScript);
 
+            }
+            else
+            {
+                analyticsTrackingScript = analyticsTrackingScript.Replace("{ECOMMERCE}", "");
             }
 
             return analyticsTrackingScript;
