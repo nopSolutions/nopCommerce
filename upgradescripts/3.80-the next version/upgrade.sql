@@ -2922,3 +2922,12 @@ BEGIN
 	END
 END
 GO
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'paymentsettings.skippaymentInfostepforredirectionpaymentmethods')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'paymentsettings.skippaymentInfostepforredirectionpaymentmethods', N'False', 0)
+END
+GO

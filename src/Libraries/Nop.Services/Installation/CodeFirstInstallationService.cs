@@ -6149,7 +6149,8 @@ namespace Nop.Services.Installation
                     },
                 AllowRePostingPayments = true,
                 BypassPaymentMethodSelectionIfOnlyOne = true,
-                ShowPaymentMethodDescriptions = true
+                ShowPaymentMethodDescriptions = true,
+                SkipPaymentInfoStepForRedirectionPaymentMethods = false
             });
 
             settingService.SaveSetting(new TaxSettings
