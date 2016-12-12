@@ -986,6 +986,9 @@ set @resources='
   <LocaleResource Name="Admin.Affiliates.Fields.ID.Hint">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.RestartApplication">
+    <Value>Do not forget to restart the application once a task has been modified.</Value>
+  </LocaleResource>
 </Language>
 '
 

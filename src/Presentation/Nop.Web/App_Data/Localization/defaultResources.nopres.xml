@@ -11983,7 +11983,7 @@
     <Value>Name is required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.RestartApplication">
-    <Value>Do not forgot to restart the application once a task has been modified.</Value>
+    <Value>Do not forget to restart the application once a task has been modified.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.RunNow">
     <Value>Run now</Value>
