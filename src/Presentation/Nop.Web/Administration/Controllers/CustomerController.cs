@@ -404,11 +404,8 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected virtual string ParseCustomCustomerAttributes(Customer customer, FormCollection form)
+        protected virtual string ParseCustomCustomerAttributes( FormCollection form)
         {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-
             if (form == null)
                 throw new ArgumentNullException("form");
 
@@ -883,7 +880,18 @@ namespace Nop.Admin.Controllers
                 ModelState.AddModelError("", _localizationService.GetResource("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
                 ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"), false);
             }
-            
+
+            //custom customer attributes
+            var customerAttributesXml = ParseCustomCustomerAttributes(form);
+            if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == SystemCustomerRoleNames.Registered) != null)
+            {
+                var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
+                foreach (var error in customerAttributeWarnings)
+                {
+                    ModelState.AddModelError("", error);
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 var customer = new Customer
@@ -929,8 +937,7 @@ namespace Nop.Admin.Controllers
                     _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.Fax, model.Fax);
 
                 //custom customer attributes
-                var customerAttributes = ParseCustomCustomerAttributes(customer, form);
-                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CustomCustomerAttributes, customerAttributes);
+                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CustomCustomerAttributes, customerAttributesXml);
 
 
                 //newsletter subscriptions
@@ -1081,7 +1088,18 @@ namespace Nop.Admin.Controllers
                 ModelState.AddModelError("", _localizationService.GetResource("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
                 ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"), false);
             }
-            
+
+            //custom customer attributes
+            var customerAttributesXml = ParseCustomCustomerAttributes(form);
+            if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == SystemCustomerRoleNames.Registered) != null)
+            {
+                var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
+                foreach (var error in customerAttributeWarnings)
+                {
+                    ModelState.AddModelError("", error);
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -1174,8 +1192,7 @@ namespace Nop.Admin.Controllers
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.Fax, model.Fax);
 
                     //custom customer attributes
-                    var customerAttributes = ParseCustomCustomerAttributes(customer, form);
-                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CustomCustomerAttributes, customerAttributes);
+                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CustomCustomerAttributes, customerAttributesXml);
 
                     //newsletter subscriptions
                     if (!String.IsNullOrEmpty(customer.Email))
