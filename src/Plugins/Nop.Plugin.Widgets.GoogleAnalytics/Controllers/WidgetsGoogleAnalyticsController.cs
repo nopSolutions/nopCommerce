@@ -136,7 +136,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
                 }
                 else
                 {
-                    globalScript += GetTrackingScript();
+                    globalScript += GetEcommerceScript(null);
                 }
             }
             catch (Exception ex)
@@ -151,28 +151,6 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
                 customerId: _workContext.CurrentCustomer.Id, pageSize: 1).FirstOrDefault();
             return order;
-        }
-        
-        //<script type="text/javascript"> 
-
-        //var _gaq = _gaq || []; 
-        //_gaq.push(['_setAccount', 'UA-XXXXX-X']); 
-        //_gaq.push(['_trackPageview']); 
-
-        //(function() { 
-        //var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; 
-        //ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js'; 
-        //var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s); 
-        //})(); 
-
-        //</script>
-        private string GetTrackingScript()
-        {
-            var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(_storeContext.CurrentStore.Id);
-            var analyticsTrackingScript = googleAnalyticsSettings.TrackingScript + "\n";
-            analyticsTrackingScript = analyticsTrackingScript.Replace("{GOOGLEID}", googleAnalyticsSettings.GoogleId);
-            analyticsTrackingScript = analyticsTrackingScript.Replace("{ECOMMERCE}", "");
-            return analyticsTrackingScript;
         }
         
         //<script type="text/javascript"> 
