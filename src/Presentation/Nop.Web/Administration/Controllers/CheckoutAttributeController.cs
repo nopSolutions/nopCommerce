@@ -175,7 +175,7 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            //currenty any checkout attribute can have condition.
+            //currently any checkout attribute can have condition.
             model.ConditionAllowed = true;
 
             if (checkoutAttribute == null)
