@@ -1009,12 +1009,12 @@ SELECT	nref.value('@Name', 'nvarchar(200)'), nref.value('Value[1]', 'nvarchar(MA
 FROM	@resources.nodes('//Language/LocaleResource') AS R(nref)
 
 --do it for each existing language
-DECLARE @ExistingLanguageID int
+DECLARE @ExistingLanguageId int
 DECLARE cur_existinglanguage CURSOR FOR
-SELECT [ID]
+SELECT [Id]
 FROM [Language]
 OPEN cur_existinglanguage
-FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageID
+FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageId
 WHILE @@FETCH_STATUS = 0
 BEGIN
 	DECLARE @ResourceName nvarchar(200)
@@ -1026,11 +1026,11 @@ BEGIN
 	FETCH NEXT FROM cur_localeresource INTO @ResourceName, @ResourceValue
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
-		IF (EXISTS (SELECT 1 FROM [LocaleStringResource] WHERE LanguageID=@ExistingLanguageID AND ResourceName=@ResourceName))
+		IF (EXISTS (SELECT 1 FROM [LocaleStringResource] WHERE LanguageId=@ExistingLanguageId AND ResourceName=@ResourceName))
 		BEGIN
 			UPDATE [LocaleStringResource]
 			SET [ResourceValue]=@ResourceValue
-			WHERE LanguageID=@ExistingLanguageID AND ResourceName=@ResourceName
+			WHERE LanguageId=@ExistingLanguageId AND ResourceName=@ResourceName
 		END
 		ELSE 
 		BEGIN
@@ -1042,7 +1042,7 @@ BEGIN
 			)
 			VALUES
 			(
-				@ExistingLanguageID,
+				@ExistingLanguageId,
 				@ResourceName,
 				@ResourceValue
 			)
@@ -1051,7 +1051,7 @@ BEGIN
 		IF (@ResourceValue is null or @ResourceValue = '')
 		BEGIN
 			DELETE [LocaleStringResource]
-			WHERE LanguageID=@ExistingLanguageID AND ResourceName=@ResourceName
+			WHERE LanguageId=@ExistingLanguageId AND ResourceName=@ResourceName
 		END
 		
 		FETCH NEXT FROM cur_localeresource INTO @ResourceName, @ResourceValue
@@ -1060,7 +1060,7 @@ BEGIN
 	DEALLOCATE cur_localeresource
 
 	--fetch next language identifier
-	FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageID
+	FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageId
 END
 CLOSE cur_existinglanguage
 DEALLOCATE cur_existinglanguage
@@ -2874,26 +2874,26 @@ BEGIN
 				[ResourceValue] [nvarchar](MAX) NOT NULL
 			)
 
-		INSERT INTO #LocaleStringResourceTmp (LanguageID, ResourceName, ResourceValue)
+		INSERT INTO #LocaleStringResourceTmp (LanguageId, ResourceName, ResourceValue)
 		SELECT	@LanguageId, nref.value('@Name', 'nvarchar(200)'), nref.value('Value[1]', 'nvarchar(MAX)')
 		FROM	@XmlPackage.nodes('//Language/LocaleResource') AS R(nref)
 
 		DECLARE @ResourceName nvarchar(200)
 		DECLARE @ResourceValue nvarchar(MAX)
 		DECLARE cur_localeresource CURSOR FOR
-		SELECT LanguageID, ResourceName, ResourceValue
+		SELECT LanguageId, ResourceName, ResourceValue
 		FROM #LocaleStringResourceTmp
 		OPEN cur_localeresource
 		FETCH NEXT FROM cur_localeresource INTO @LanguageId, @ResourceName, @ResourceValue
 		WHILE @@FETCH_STATUS = 0
 		BEGIN
-			IF (EXISTS (SELECT 1 FROM [LocaleStringResource] WHERE LanguageID=@LanguageId AND ResourceName=@ResourceName))
+			IF (EXISTS (SELECT 1 FROM [LocaleStringResource] WHERE LanguageId=@LanguageId AND ResourceName=@ResourceName))
 			BEGIN
 				IF (@UpdateExistingResources = 1)
 				BEGIN
 					UPDATE [LocaleStringResource]
 					SET [ResourceValue]=@ResourceValue
-					WHERE LanguageID=@LanguageId AND ResourceName=@ResourceName
+					WHERE LanguageId=@LanguageId AND ResourceName=@ResourceName
 				END
 			END
 			ELSE 
@@ -2929,5 +2929,100 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'paymentsettings.skippaym
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'paymentsettings.skippaymentInfostepforredirectionpaymentmethods', N'False', 0)
+END
+GO
+
+
+--updated some indexes (required for case sensitive SQL Server collations)
+IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_NewsletterSubscription_Email_StoreId' and object_id=object_id(N'[dbo].[NewsLetterSubscription]'))
+BEGIN
+	DROP INDEX [IX_NewsletterSubscription_Email_StoreId] ON [NewsLetterSubscription]
+END
+GO
+CREATE NONCLUSTERED INDEX [IX_NewsletterSubscription_Email_StoreId] ON [NewsLetterSubscription] ([Email] ASC, [StoreId] ASC)
+GO
+
+IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Product_ShowOnHomepage' and object_id=object_id(N'[dbo].[Product]'))
+BEGIN
+	DROP INDEX [IX_Product_ShowOnHomepage] ON [Product]
+END
+GO
+CREATE NONCLUSTERED INDEX [IX_Product_ShowOnHomepage] ON [Product] ([ShowOnHomePage] ASC)
+GO
+
+--update a stored procedure
+IF EXISTS (
+		SELECT *
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[DeleteGuests]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
+DROP PROCEDURE [DeleteGuests]
+GO
+CREATE PROCEDURE [dbo].[DeleteGuests]
+(
+	@OnlyWithoutShoppingCart bit = 1,
+	@CreatedFromUtc datetime,
+	@CreatedToUtc datetime,
+	@TotalRecordsDeleted int = null OUTPUT
+)
+AS
+BEGIN
+	CREATE TABLE #tmp_guests (CustomerId int)
+		
+	INSERT #tmp_guests (CustomerId)
+	SELECT [Id] FROM [Customer] c with (NOLOCK)
+	WHERE
+	--created from
+	((@CreatedFromUtc is null) OR (c.[CreatedOnUtc] > @CreatedFromUtc))
+	AND
+	--created to
+	((@CreatedToUtc is null) OR (c.[CreatedOnUtc] < @CreatedToUtc))
+	AND
+	--shopping cart items
+	((@OnlyWithoutShoppingCart=0) OR (NOT EXISTS(SELECT 1 FROM [ShoppingCartItem] sci with (NOLOCK) inner join [Customer] with (NOLOCK) on sci.[CustomerId]=c.[Id])))
+	AND
+	--guests only
+	(EXISTS(SELECT 1 FROM [Customer_CustomerRole_Mapping] ccrm with (NOLOCK) inner join [Customer] with (NOLOCK) on ccrm.[Customer_Id]=c.[Id] inner join [CustomerRole] cr with (NOLOCK) on cr.[Id]=ccrm.[CustomerRole_Id] WHERE cr.[SystemName] = N'Guests'))
+	AND
+	--no orders
+	(NOT EXISTS(SELECT 1 FROM [Order] o with (NOLOCK) inner join [Customer] with (NOLOCK) on o.[CustomerId]=c.[Id]))
+	AND
+	--no blog comments
+	(NOT EXISTS(SELECT 1 FROM [BlogComment] bc with (NOLOCK) inner join [Customer] with (NOLOCK) on bc.[CustomerId]=c.[Id]))
+	AND
+	--no news comments
+	(NOT EXISTS(SELECT 1 FROM [NewsComment] nc  with (NOLOCK)inner join [Customer] with (NOLOCK) on nc.[CustomerId]=c.[Id]))
+	AND
+	--no product reviews
+	(NOT EXISTS(SELECT 1 FROM [ProductReview] pr with (NOLOCK) inner join [Customer] with (NOLOCK) on pr.[CustomerId]=c.[Id]))
+	AND
+	--no product reviews helpfulness
+	(NOT EXISTS(SELECT 1 FROM [ProductReviewHelpfulness] prh with (NOLOCK) inner join [Customer] with (NOLOCK) on prh.[CustomerId]=c.[Id]))
+	AND
+	--no poll voting
+	(NOT EXISTS(SELECT 1 FROM [PollVotingRecord] pvr with (NOLOCK) inner join [Customer] with (NOLOCK) on pvr.[CustomerId]=c.[Id]))
+	AND
+	--no forum topics 
+	(NOT EXISTS(SELECT 1 FROM [Forums_Topic] ft with (NOLOCK) inner join [Customer] with (NOLOCK) on ft.[CustomerId]=c.[Id]))
+	AND
+	--no forum posts 
+	(NOT EXISTS(SELECT 1 FROM [Forums_Post] fp with (NOLOCK) inner join [Customer] with (NOLOCK) on fp.[CustomerId]=c.[Id]))
+	AND
+	--no system accounts
+	(c.IsSystemAccount = 0)
+	
+	--delete guests
+	DELETE [Customer]
+	WHERE [Id] IN (SELECT [CustomerId] FROM #tmp_guests)
+	
+	--delete attributes
+	DELETE [GenericAttribute]
+	WHERE ([EntityId] IN (SELECT [CustomerId] FROM #tmp_guests))
+	AND
+	([KeyGroup] = N'Customer')
+	
+	--total records
+	SELECT @TotalRecordsDeleted = COUNT(1) FROM #tmp_guests
+	
+	DROP TABLE #tmp_guests
 END
 GO

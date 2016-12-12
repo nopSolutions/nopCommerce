@@ -812,26 +812,26 @@ BEGIN
 				[ResourceValue] [nvarchar](MAX) NOT NULL
 			)
 
-		INSERT INTO #LocaleStringResourceTmp (LanguageID, ResourceName, ResourceValue)
+		INSERT INTO #LocaleStringResourceTmp (LanguageId, ResourceName, ResourceValue)
 		SELECT	@LanguageId, nref.value('@Name', 'nvarchar(200)'), nref.value('Value[1]', 'nvarchar(MAX)')
 		FROM	@XmlPackage.nodes('//Language/LocaleResource') AS R(nref)
 
 		DECLARE @ResourceName nvarchar(200)
 		DECLARE @ResourceValue nvarchar(MAX)
 		DECLARE cur_localeresource CURSOR FOR
-		SELECT LanguageID, ResourceName, ResourceValue
+		SELECT LanguageId, ResourceName, ResourceValue
 		FROM #LocaleStringResourceTmp
 		OPEN cur_localeresource
 		FETCH NEXT FROM cur_localeresource INTO @LanguageId, @ResourceName, @ResourceValue
 		WHILE @@FETCH_STATUS = 0
 		BEGIN
-			IF (EXISTS (SELECT 1 FROM [LocaleStringResource] WHERE LanguageID=@LanguageId AND ResourceName=@ResourceName))
+			IF (EXISTS (SELECT 1 FROM [LocaleStringResource] WHERE LanguageId=@LanguageId AND ResourceName=@ResourceName))
 			BEGIN
 				IF (@UpdateExistingResources = 1)
 				BEGIN
 					UPDATE [LocaleStringResource]
 					SET [ResourceValue]=@ResourceValue
-					WHERE LanguageID=@LanguageId AND ResourceName=@ResourceName
+					WHERE LanguageId=@LanguageId AND ResourceName=@ResourceName
 				END
 			END
 			ELSE 
@@ -862,7 +862,6 @@ END
 GO
 
 
---new stored procedure
 CREATE PROCEDURE [dbo].[DeleteGuests]
 (
 	@OnlyWithoutShoppingCart bit = 1,
@@ -918,11 +917,11 @@ BEGIN
 	
 	--delete guests
 	DELETE [Customer]
-	WHERE [Id] IN (SELECT [CustomerID] FROM #tmp_guests)
+	WHERE [Id] IN (SELECT [CustomerId] FROM #tmp_guests)
 	
 	--delete attributes
 	DELETE [GenericAttribute]
-	WHERE ([EntityID] IN (SELECT [CustomerID] FROM #tmp_guests))
+	WHERE ([EntityId] IN (SELECT [CustomerId] FROM #tmp_guests))
 	AND
 	([KeyGroup] = N'Customer')
 	
