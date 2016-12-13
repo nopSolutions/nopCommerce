@@ -82,7 +82,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
                 model.ZoneId_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.WidgetZone, storeScope);
             }
 
-            return View("~/Plugins/Widgets.GoogleAnalytics/Views/WidgetsGoogleAnalytics/Configure.cshtml", model);
+            return View("~/Plugins/Widgets.GoogleAnalytics/Views/Configure.cshtml", model);
         }
 
         [HttpPost]

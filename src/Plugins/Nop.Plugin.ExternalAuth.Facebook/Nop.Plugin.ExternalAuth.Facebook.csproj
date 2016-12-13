@@ -181,10 +181,10 @@
     <Content Include="Notes.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ExternalAuthFacebook\Configure.cshtml">
+    <Content Include="Views\Configure.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\ExternalAuthFacebook\PublicInfo.cshtml">
+    <Content Include="Views\PublicInfo.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="app.config" />

@@ -69,7 +69,7 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
                             model.CarrierServicesOfferedInternational.Add(service);
                     }
                 }
-            return View("~/Plugins/Shipping.USPS/Views/ShippingUSPS/Configure.cshtml", model);
+            return View("~/Plugins/Shipping.USPS/Views/Configure.cshtml", model);
         }
 
         [HttpPost]

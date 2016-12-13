@@ -84,7 +84,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
                 LimitMethodsToCreated = _fixedOrByWeightSettings.LimitMethodsToCreated,
                 ShippingByWeightEnabled = _fixedOrByWeightSettings.ShippingByWeightEnabled
             };
-            return View("~/Plugins/Shipping.FixedOrByWeight/Views/FixedOrByWeight/Configure.cshtml", model);
+            return View("~/Plugins/Shipping.FixedOrByWeight/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -275,7 +275,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
             //states
             model.AvailableStates.Add(new SelectListItem { Text = "*", Value = "0" });
 
-            return View("~/Plugins/Shipping.FixedOrByWeight/Views/FixedOrByWeight/AddRateByWeightPopup.cshtml", model);
+            return View("~/Plugins/Shipping.FixedOrByWeight/Views/AddRateByWeightPopup.cshtml", model);
         }
         
         [HttpPost]
@@ -306,7 +306,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
             ViewBag.btnId = btnId;
             ViewBag.formId = formId;
 
-            return View("~/Plugins/Shipping.FixedOrByWeight/Views/FixedOrByWeight/AddRateByWeightPopup.cshtml", model);
+            return View("~/Plugins/Shipping.FixedOrByWeight/Views/AddRateByWeightPopup.cshtml", model);
         }
         
         public ActionResult EditRateByWeighPopup(int id)
@@ -369,7 +369,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
             foreach (var s in states)
                 model.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (selectedState != null && s.Id == selectedState.Id) });
 
-            return View("~/Plugins/Shipping.FixedOrByWeight/Views/FixedOrByWeight/EditRateByWeightPopup.cshtml", model);
+            return View("~/Plugins/Shipping.FixedOrByWeight/Views/EditRateByWeightPopup.cshtml", model);
         }
 
         [HttpPost]
@@ -402,7 +402,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
             ViewBag.btnId = btnId;
             ViewBag.formId = formId;
 
-            return View("~/Plugins/Shipping.FixedOrByWeight/Views/FixedOrByWeight/EditRateByWeightPopup.cshtml", model);
+            return View("~/Plugins/Shipping.FixedOrByWeight/Views/EditRateByWeightPopup.cshtml", model);
         }
 
         [HttpPost]

@@ -43,7 +43,7 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
                 UseSandbox = _canadaPostSettings.UseSandbox
             };
 
-            return View("~/Plugins/Shipping.CanadaPost/Views/ShippingCanadaPost/Configure.cshtml", model);
+            return View("~/Plugins/Shipping.CanadaPost/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -65,7 +65,7 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
 
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return View("~/Plugins/Shipping.CanadaPost/Views/ShippingCanadaPost/Configure.cshtml", model);
+            return View("~/Plugins/Shipping.CanadaPost/Views/Configure.cshtml", model);
         }
 
         #endregion

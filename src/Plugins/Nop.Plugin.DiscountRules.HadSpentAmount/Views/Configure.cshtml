@@ -1,0 +1,59 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.DiscountRules.HadSpentAmount.Models.RequirementModel
+@using Nop.Web.Framework;
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#savehadspentamountrequirement@(Model.RequirementId)').click(function () {
+            var spentAmount = $("#@Html.FieldIdFor(model => model.SpentAmount)").val();
+            var discountId = @Model.DiscountId;
+            var requirementId = @Model.RequirementId;
+
+            var postData = {
+                discountId: discountId,
+                discountRequirementId: requirementId,
+                spentAmount: spentAmount
+            };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache:false,
+                type: "POST",
+                url: "@(Url.Action("Configure", "DiscountRulesHadSpentAmount"))",
+                data: postData,
+                success: function (data) {
+                    $('#pnl-save-requirement-result@(Model.RequirementId)').fadeIn("slow").delay(1000).fadeOut("slow");
+                    //notify parent if it's a new requirement
+                    @if (Model.RequirementId == 0)
+                    {
+                        <text>$("#discountRequirementContainer").trigger('nopnewdiscountruleadded', [data.NewRequirementId]);</text>
+                    }
+                },
+                error:function (xhr, ajaxOptions, thrownError){
+                    alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Promotions.Discounts.Requirements.FailedToSave").Text))');
+                }
+            });
+        });
+    });
+</script>
+
+<div class="form-group">
+    <div class="col-md-3">
+        @Html.NopLabelFor(model => model.SpentAmount)
+    </div>
+    <div class="col-md-9">
+        @Html.NopEditorFor(model => model.SpentAmount)
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-3">
+        <div id="pnl-save-requirement-result@(Model.RequirementId)" style="display: none; margin-top: 10px;" class="text-green pull-right">
+            @T("Admin.Promotions.Discounts.Requirements.Saved")
+        </div>
+    </div>
+    <div class="col-md-9">
+        <input type="button" id="savehadspentamountrequirement@(Model.RequirementId)" class="btn btn-primary" value="@T("Admin.Common.Save")" />
+    </div>
+</div>

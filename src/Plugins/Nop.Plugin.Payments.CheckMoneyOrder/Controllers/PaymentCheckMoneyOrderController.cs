@@ -62,7 +62,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
                 model.ShippableProductRequired_OverrideForStore = _settingService.SettingExists(checkMoneyOrderPaymentSettings, x => x.ShippableProductRequired, storeScope);
             }
 
-            return View("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentCheckMoneyOrder/Configure.cshtml", model);
+            return View("~/Plugins/Payments.CheckMoneyOrder/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -117,7 +117,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
                 DescriptionText = checkMoneyOrderPaymentSettings.GetLocalizedSetting(x => x.DescriptionText, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id)
             };
 
-            return View("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentCheckMoneyOrder/PaymentInfo.cshtml", model);
+            return View("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentInfo.cshtml", model);
         }
 
         [NonAction]

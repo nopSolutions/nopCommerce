@@ -98,7 +98,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                     });
             }
 
-            return View("~/Plugins/Feed.Froogle/Views/FeedFroogle/Configure.cshtml", model);
+            return View("~/Plugins/Feed.Froogle/Views/Configure.cshtml", model);
         }
 
         [HttpPost]

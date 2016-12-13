@@ -49,7 +49,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder.Controllers
                 model.ShippableProductRequired_OverrideForStore = _settingService.SettingExists(purchaseOrderPaymentSettings, x => x.ShippableProductRequired, storeScope);
             }
 
-            return View("~/Plugins/Payments.PurchaseOrder/Views/PaymentPurchaseOrder/Configure.cshtml", model);
+            return View("~/Plugins/Payments.PurchaseOrder/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -93,7 +93,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder.Controllers
             var form = this.Request.Form;
             model.PurchaseOrderNumber = form["PurchaseOrderNumber"];
 
-            return View("~/Plugins/Payments.PurchaseOrder/Views/PaymentPurchaseOrder/PaymentInfo.cshtml", model);
+            return View("~/Plugins/Payments.PurchaseOrder/Views/PaymentInfo.cshtml", model);
         }
 
         [NonAction]

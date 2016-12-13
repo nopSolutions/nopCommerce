@@ -93,25 +93,25 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\FixedOrByWeight\Configure.cshtml">
+    <Content Include="Views\Configure.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <Content Include="Views\FixedOrByWeight\_CreateOrUpdateRateByWeight.cshtml">
+    <Content Include="Views\_CreateOrUpdateRateByWeight.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\FixedOrByWeight\AddRateByWeightPopup.cshtml">
+    <Content Include="Views\AddRateByWeightPopup.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\FixedOrByWeight\EditRateByWeightPopup.cshtml">
+    <Content Include="Views\EditRateByWeightPopup.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\FixedOrByWeight\_ByWeight.cshtml">
+    <Content Include="Views\_ByWeight.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\FixedOrByWeight\_FixedRate.cshtml">
+    <Content Include="Views\_FixedRate.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -63,7 +63,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
 
-            return View("~/Plugins/Pickup.PickupInStore/Views/PickupInStore/Configure.cshtml");
+            return View("~/Plugins/Pickup.PickupInStore/Views/Configure.cshtml");
         }
 
         [HttpPost]
@@ -121,7 +121,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             foreach (var store in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString() });
 
-            return View("~/Plugins/Pickup.PickupInStore/Views/PickupInStore/Create.cshtml", model);
+            return View("~/Plugins/Pickup.PickupInStore/Views/Create.cshtml", model);
         }
 
         [HttpPost]
@@ -157,7 +157,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             ViewBag.btnId = btnId;
             ViewBag.formId = formId;
 
-            return View("~/Plugins/Pickup.PickupInStore/Views/PickupInStore/Create.cshtml", model);
+            return View("~/Plugins/Pickup.PickupInStore/Views/Create.cshtml", model);
         }
 
         public ActionResult Edit(int id)
@@ -211,7 +211,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             foreach (var store in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString(), Selected = store.Id == model.StoreId });
 
-            return View("~/Plugins/Pickup.PickupInStore/Views/PickupInStore/Edit.cshtml", model);
+            return View("~/Plugins/Pickup.PickupInStore/Views/Edit.cshtml", model);
         }
 
         [HttpPost]
@@ -248,7 +248,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             ViewBag.btnId = btnId;
             ViewBag.formId = formId;
 
-            return View("~/Plugins/Pickup.PickupInStore/Views/PickupInStore/Edit.cshtml", model);
+            return View("~/Plugins/Pickup.PickupInStore/Views/Edit.cshtml", model);
         }
 
         [HttpPost]
