@@ -124,7 +124,7 @@ namespace Nop.Services.Orders
             return _cacheManager.Get(key, () =>
             {
                 var query = from ca in _checkoutAttributeRepository.Table
-                            orderby ca.DisplayOrder
+                            orderby ca.DisplayOrder, ca.Id
                             select ca;
                 var checkoutAttributes = query.ToList();
                 if (storeId > 0)
@@ -224,7 +224,7 @@ namespace Nop.Services.Orders
             return _cacheManager.Get(key, () =>
             {
                 var query = from cav in _checkoutAttributeValueRepository.Table
-                            orderby cav.DisplayOrder
+                            orderby cav.DisplayOrder, cav.Id
                             where cav.CheckoutAttributeId == checkoutAttributeId
                             select cav;
                 var checkoutAttributeValues = query.ToList();

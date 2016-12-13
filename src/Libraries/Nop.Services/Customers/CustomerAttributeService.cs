@@ -111,7 +111,7 @@ namespace Nop.Services.Customers
             return _cacheManager.Get(key, () =>
             {
                 var query = from ca in _customerAttributeRepository.Table
-                            orderby ca.DisplayOrder
+                            orderby ca.DisplayOrder, ca.Id
                             select ca;
                 return query.ToList();
             });
@@ -196,7 +196,7 @@ namespace Nop.Services.Customers
             return _cacheManager.Get(key, () =>
             {
                 var query = from cav in _customerAttributeValueRepository.Table
-                            orderby cav.DisplayOrder
+                            orderby cav.DisplayOrder, cav.Id
                             where cav.CustomerAttributeId == customerAttributeId
                             select cav;
                 var customerAttributeValues = query.ToList();

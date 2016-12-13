@@ -200,7 +200,7 @@ namespace Nop.Services.Catalog
         public virtual IList<SpecificationAttributeOption> GetSpecificationAttributeOptionsBySpecificationAttribute(int specificationAttributeId)
         {
             var query = from sao in _specificationAttributeOptionRepository.Table
-                        orderby sao.DisplayOrder
+                        orderby sao.DisplayOrder, sao.Id
                         where sao.SpecificationAttributeId == specificationAttributeId
                         select sao;
             var specificationAttributeOptions = query.ToList();
@@ -305,7 +305,7 @@ namespace Nop.Services.Catalog
                     query = query.Where(psa => psa.AllowFiltering == allowFiltering.Value);
                 if (showOnProductPage.HasValue)
                     query = query.Where(psa => psa.ShowOnProductPage == showOnProductPage.Value);
-                query = query.OrderBy(psa => psa.DisplayOrder);
+                query = query.OrderBy(psa => psa.DisplayOrder).ThenBy(psa => psa.Id);
 
                 var productSpecificationAttributes = query.ToList();
                 return productSpecificationAttributes;

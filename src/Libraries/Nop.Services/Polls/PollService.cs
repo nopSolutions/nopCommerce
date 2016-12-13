@@ -84,7 +84,7 @@ namespace Nop.Services.Polls
             {
                 query = query.Where(p => p.SystemKeyword == systemKeyword);
             }
-            query = query.OrderBy(p => p.DisplayOrder);
+            query = query.OrderBy(p => p.DisplayOrder).ThenBy(p => p.Id);
 
             var polls = new PagedList<Poll>(query, pageIndex, pageSize);
             return polls;

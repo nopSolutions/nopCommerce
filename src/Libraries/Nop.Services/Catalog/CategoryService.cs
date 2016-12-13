@@ -178,7 +178,7 @@ namespace Nop.Services.Catalog
             if (!String.IsNullOrWhiteSpace(categoryName))
                 query = query.Where(c => c.Name.Contains(categoryName));
             query = query.Where(c => !c.Deleted);
-            query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder);
+            query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder).ThenBy(c => c.Id);
 
             if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) || (!showHidden && !_catalogSettings.IgnoreAcl))
             {
@@ -210,7 +210,7 @@ namespace Nop.Services.Catalog
                         into cGroup
                         orderby cGroup.Key
                         select cGroup.FirstOrDefault();
-                query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder);
+                query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder).ThenBy(c => c.Id);
             }
             
             var unsortedCategories = query.ToList();
@@ -241,7 +241,7 @@ namespace Nop.Services.Catalog
                     query = query.Where(c => c.Published);
                 query = query.Where(c => c.ParentCategoryId == parentCategoryId);
                 query = query.Where(c => !c.Deleted);
-                query = query.OrderBy(c => c.DisplayOrder);
+                query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
 
                 if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
                 {
@@ -273,7 +273,7 @@ namespace Nop.Services.Catalog
                             into cGroup
                             orderby cGroup.Key
                             select cGroup.FirstOrDefault();
-                    query = query.OrderBy(c => c.DisplayOrder);
+                    query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
                 }
 
                 var categories = query.ToList();
@@ -299,7 +299,7 @@ namespace Nop.Services.Catalog
         public virtual IList<Category> GetAllCategoriesDisplayedOnHomePage(bool showHidden = false)
         {
             var query = from c in _categoryRepository.Table
-                        orderby c.DisplayOrder
+                        orderby c.DisplayOrder, c.Id
                         where c.Published &&
                         !c.Deleted && 
                         c.ShowOnHomePage
@@ -422,7 +422,7 @@ namespace Nop.Services.Catalog
                             where pc.CategoryId == categoryId &&
                                   !p.Deleted &&
                                   (showHidden || p.Published)
-                            orderby pc.DisplayOrder
+                            orderby pc.DisplayOrder, pc.Id
                             select pc;
 
                 if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
@@ -457,7 +457,7 @@ namespace Nop.Services.Catalog
                             into cGroup
                             orderby cGroup.Key
                             select cGroup.FirstOrDefault();
-                    query = query.OrderBy(pc => pc.DisplayOrder);
+                    query = query.OrderBy(pc => pc.DisplayOrder).ThenBy(pc => pc.Id);
                 }
 
                 var productCategories = new PagedList<ProductCategory>(query, pageIndex, pageSize);
@@ -495,7 +495,7 @@ namespace Nop.Services.Catalog
                             where pc.ProductId == productId &&
                                   !c.Deleted &&
                                   (showHidden || c.Published)
-                            orderby pc.DisplayOrder
+                            orderby pc.DisplayOrder, pc.Id
                             select pc;
 
                 var allProductCategories = query.ToList();

@@ -63,7 +63,7 @@ namespace Nop.Services.Shipping.Date
         public virtual IList<DeliveryDate> GetAllDeliveryDates()
         {
             var query = from dd in _deliveryDateRepository.Table
-                        orderby dd.DisplayOrder
+                        orderby dd.DisplayOrder, dd.Id
                         select dd;
             var deliveryDates = query.ToList();
             return deliveryDates;
@@ -134,7 +134,10 @@ namespace Nop.Services.Shipping.Date
         /// <returns>Product availability ranges</returns>
         public virtual IList<ProductAvailabilityRange> GetAllProductAvailabilityRanges()
         {
-            return _productAvailabilityRangeRepository.Table.OrderBy(range => range.DisplayOrder).ToList();
+            var query = from par in _productAvailabilityRangeRepository.Table
+                        orderby par.DisplayOrder, par.Id
+                        select par;
+            return query.ToList();
         }
 
         /// <summary>

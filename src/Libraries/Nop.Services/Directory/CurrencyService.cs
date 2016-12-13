@@ -155,7 +155,7 @@ namespace Nop.Services.Directory
                 var query = _currencyRepository.Table;
                 if (!showHidden)
                     query = query.Where(c => c.Published);
-                query = query.OrderBy(c => c.DisplayOrder);
+                query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
                 return query.ToList();
             });
 

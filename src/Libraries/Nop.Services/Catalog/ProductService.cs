@@ -220,7 +220,7 @@ namespace Nop.Services.Catalog
         public virtual IList<Product> GetAllProductsDisplayedOnHomePage()
         {
             var query = from p in _productRepository.Table
-                        orderby p.DisplayOrder, p.Name
+                        orderby p.DisplayOrder, p.Id
                         where p.Published &&
                         !p.Deleted &&
                         p.ShowOnHomePage
@@ -1072,7 +1072,7 @@ namespace Nop.Services.Catalog
                 query = query.Where(p => p.VendorId == vendorId);
             }
             query = query.Where(x => !x.Deleted);
-            query = query.OrderBy(x => x.DisplayOrder);
+            query = query.OrderBy(x => x.DisplayOrder).ThenBy(x => x.Id);
 
             var products = query.ToList();
 
@@ -1598,7 +1598,7 @@ namespace Nop.Services.Catalog
                         where rp.ProductId1 == productId1 &&
                         !p.Deleted &&
                         (showHidden || p.Published)
-                        orderby rp.DisplayOrder
+                        orderby rp.DisplayOrder, rp.Id
                         select rp;
             var relatedProducts = query.ToList();
 
@@ -1873,7 +1873,7 @@ namespace Nop.Services.Catalog
         {
             var query = from pp in _productPictureRepository.Table
                         where pp.ProductId == productId
-                        orderby pp.DisplayOrder
+                        orderby pp.DisplayOrder, pp.Id
                         select pp;
             var productPictures = query.ToList();
             return productPictures;

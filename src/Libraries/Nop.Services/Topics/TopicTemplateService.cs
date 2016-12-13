@@ -59,7 +59,7 @@ namespace Nop.Services.Topics
         public virtual IList<TopicTemplate> GetAllTopicTemplates()
         {
             var query = from pt in _topicTemplateRepository.Table
-                        orderby pt.DisplayOrder
+                        orderby pt.DisplayOrder, pt.Id
                         select pt;
 
             var templates = query.ToList();

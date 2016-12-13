@@ -206,7 +206,7 @@ namespace Nop.Services.Shipping
 
                 var query2 = from sm in _shippingMethodRepository.Table
                              where !query1.Contains(sm.Id)
-                             orderby sm.DisplayOrder
+                             orderby sm.DisplayOrder, sm.Id
                              select sm;
 
                 var shippingMethods = query2.ToList();
@@ -215,7 +215,7 @@ namespace Nop.Services.Shipping
             else
             {
                 var query = from sm in _shippingMethodRepository.Table
-                            orderby sm.DisplayOrder
+                            orderby sm.DisplayOrder, sm.Id
                             select sm;
                 var shippingMethods = query.ToList();
                 return shippingMethods;

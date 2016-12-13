@@ -151,7 +151,7 @@ namespace Nop.Services.Catalog
             if (!String.IsNullOrWhiteSpace(manufacturerName))
                 query = query.Where(m => m.Name.Contains(manufacturerName));
             query = query.Where(m => !m.Deleted);
-            query = query.OrderBy(m => m.DisplayOrder);
+            query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
 
             if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) || (!showHidden && !_catalogSettings.IgnoreAcl))
             {
@@ -182,7 +182,7 @@ namespace Nop.Services.Catalog
                             into mGroup
                             orderby mGroup.Key
                             select mGroup.FirstOrDefault();
-                query = query.OrderBy(m => m.DisplayOrder);
+                query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
             }
 
             return new PagedList<Manufacturer>(query, pageIndex, pageSize);
@@ -282,7 +282,7 @@ namespace Nop.Services.Catalog
                             where pm.ManufacturerId == manufacturerId &&
                                   !p.Deleted &&
                                   (showHidden || p.Published)
-                            orderby pm.DisplayOrder
+                            orderby pm.DisplayOrder, pm.Id
                             select pm;
 
                 if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
@@ -318,7 +318,7 @@ namespace Nop.Services.Catalog
                             into pmGroup
                             orderby pmGroup.Key
                             select pmGroup.FirstOrDefault();
-                    query = query.OrderBy(pm => pm.DisplayOrder);
+                    query = query.OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
                 }
 
                 var productManufacturers = new PagedList<ProductManufacturer>(query, pageIndex, pageSize);
@@ -345,7 +345,7 @@ namespace Nop.Services.Catalog
                             where pm.ProductId == productId &&
                                 !m.Deleted &&
                                 (showHidden || m.Published)
-                            orderby pm.DisplayOrder
+                            orderby pm.DisplayOrder, pm.Id
                             select pm;
 
 
@@ -383,7 +383,7 @@ namespace Nop.Services.Catalog
                             into mGroup
                             orderby mGroup.Key
                             select mGroup.FirstOrDefault();
-                    query = query.OrderBy(pm => pm.DisplayOrder);
+                    query = query.OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
                 }
 
                 var productManufacturers = query.ToList();
