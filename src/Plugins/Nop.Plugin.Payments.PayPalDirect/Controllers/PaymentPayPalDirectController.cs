@@ -33,6 +33,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
+        private readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -45,7 +46,8 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             ISettingService settingService,
             IStoreContext storeContext,
             IStoreService storeService,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            IWebHelper webHelper)
         {
             this._localizationService = localizationService;
             this._logger = logger;
@@ -55,6 +57,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             this._storeContext = storeContext;
             this._storeService = storeService;
             this._workContext = workContext;
+            this._webHelper = webHelper;
         }
 
         #endregion
@@ -86,7 +89,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                 var webhook = new Webhook
                 {
                     event_types = new List<WebhookEventType> { new WebhookEventType { name = "*" } },
-                    url = string.Format("{0}Plugins/PaymentPayPalDirect/Webhook", currentStore.SslEnabled ? currentStore.SecureUrl : currentStore.Url)
+                    url = string.Format("{0}Plugins/PaymentPayPalDirect/Webhook",  _webHelper.GetStoreLocation(currentStore.SslEnabled))
                 }.Create(apiContext);
 
                 return webhook.id;

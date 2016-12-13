@@ -34,6 +34,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ISettingService _settingService;
         private readonly IStoreContext _storeContext;
+        private readonly IWebHelper _webHelper;
         private readonly PayPalDirectPaymentSettings _paypalDirectPaymentSettings;
         
         #endregion
@@ -47,6 +48,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             IOrderTotalCalculationService orderTotalCalculationService,
             ISettingService settingService, 
             IStoreContext storeContext,
+            IWebHelper webHelper,
             PayPalDirectPaymentSettings paypalDirectPaymentSettings)
         {
             this._currencySettings = currencySettings;
@@ -56,6 +58,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._settingService = settingService;
             this._storeContext = storeContext;
+            this._webHelper = webHelper;
             this._paypalDirectPaymentSettings = paypalDirectPaymentSettings;
         }
 
@@ -513,7 +516,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                 Webhook.Get(apiContext, _paypalDirectPaymentSettings.WebhookId);
 
                 //create the plan
-                var url = _storeContext.CurrentStore.SslEnabled ? _storeContext.CurrentStore.SecureUrl : _storeContext.CurrentStore.Url;
+                var url = _webHelper.GetStoreLocation(_storeContext.CurrentStore.SslEnabled);
                 var billingPlan = new Plan
                 {
                     name = processPaymentRequest.OrderGuid.ToString(),
