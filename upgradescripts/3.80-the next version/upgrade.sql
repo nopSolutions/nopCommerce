@@ -995,6 +995,9 @@ set @resources='
   <LocaleResource Name="Account.AssociatedExternalAuth.Or">
     <Value>- or -</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.Choose">
+    <Value>Choose an associated product</Value>
+  </LocaleResource>
 </Language>
 '
 
