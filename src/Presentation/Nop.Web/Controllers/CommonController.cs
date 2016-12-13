@@ -331,7 +331,7 @@ namespace Nop.Web.Controllers
             };
 
             if (model.AvailableCurrencies.Count == 1)
-                Content("");
+                return Content("");
 
             return PartialView(model);
         }
