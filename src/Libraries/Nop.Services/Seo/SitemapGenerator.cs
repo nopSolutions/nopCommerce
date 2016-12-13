@@ -28,6 +28,7 @@ namespace Nop.Services.Seo
         private readonly IProductService _productService;
         private readonly IManufacturerService _manufacturerService;
         private readonly ITopicService _topicService;
+        private readonly IWebHelper _webHelper;
         private readonly CommonSettings _commonSettings;
         private readonly BlogSettings _blogSettings;
         private readonly NewsSettings _newsSettings;
@@ -46,6 +47,7 @@ namespace Nop.Services.Seo
             IProductService productService,
             IManufacturerService manufacturerService,
             ITopicService topicService,
+            IWebHelper webHelper,
             CommonSettings commonSettings,
             BlogSettings blogSettings,
             NewsSettings newsSettings,
@@ -57,6 +59,7 @@ namespace Nop.Services.Seo
             this._productService = productService;
             this._manufacturerService = manufacturerService;
             this._topicService = topicService;
+            this._webHelper = webHelper;
             this._commonSettings = commonSettings;
             this._blogSettings = blogSettings;
             this._newsSettings = newsSettings;
@@ -195,10 +198,7 @@ namespace Nop.Services.Seo
         {
             foreach (var customUrl in _commonSettings.SitemapCustomUrls)
             {
-                var url = _securitySettings.ForceSslForAllPages
-                    ? _storeContext.CurrentStore.SecureUrl
-                    : _storeContext.CurrentStore.Url;
-                url += customUrl;
+                var url = _webHelper.GetStoreLocation() + customUrl;
                 WriteUrlLocation(url, UpdateFrequency.Weekly, DateTime.UtcNow);
             }
         }
