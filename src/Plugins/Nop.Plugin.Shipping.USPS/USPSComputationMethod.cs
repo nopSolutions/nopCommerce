@@ -624,7 +624,16 @@ namespace Nop.Plugin.Shipping.USPS
             
             bool isDomestic = IsDomesticRequest(getShippingOptionRequest);
             string requestString = CreateRequest(_uspsSettings.Username, _uspsSettings.Password, getShippingOptionRequest);
-            string responseXml = DoRequest(_uspsSettings.Url, requestString);
+            string responseXml = "";
+            try
+            {
+                responseXml = DoRequest(_uspsSettings.Url, requestString);
+            }
+            catch (Exception exc)
+            {
+                response.AddError(string.Format("USPS Service is currently unavailable, try again later. {0}",exc.Message));
+                return response;
+            }
             string error = "";
             var shippingOptions = ParseResponse(responseXml, isDomestic, ref error);
             if (String.IsNullOrEmpty(error))
