@@ -658,5 +658,9 @@
     };
 
     $.fn._reverse = [].reverse;
+	
+    $(window).load(function () {
+        $('#nivo-slider').nivoSlider();
+    });
 
 })(jQuery);
