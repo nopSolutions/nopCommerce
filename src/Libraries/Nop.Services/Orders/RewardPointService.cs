@@ -89,7 +89,7 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <returns>Reward point history records</returns>
         public virtual IPagedList<RewardPointsHistory> GetRewardPointsHistory(int customerId = 0, bool showHidden = false,
-            bool showNotActivated = true, int pageIndex = 0, int pageSize = int.MaxValue)
+            bool showNotActivated = false, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _rphRepository.Table;
             if (customerId > 0)
@@ -125,8 +125,8 @@ namespace Nop.Services.Orders
         /// <param name="usedWithOrder">The order for which points were redeemed (spent) as a payment</param>
         /// <param name="usedAmount">Used amount</param>
         /// <param name="activatingDate">Date and time of activating reward points; pass null to immediately activating</param>
-        public virtual void AddRewardPointsHistoryEntry(Customer customer,
-            int points, int storeId, string message = "",
+        /// <returns>Reward points history entry identifier</returns>
+        public virtual int AddRewardPointsHistoryEntry(Customer customer, int points, int storeId, string message = "",
             Order usedWithOrder = null, decimal usedAmount = 0M, DateTime? activatingDate = null)
         {
             if (customer == null)
@@ -151,6 +151,8 @@ namespace Nop.Services.Orders
 
             //event notification
             _eventPublisher.EntityInserted(rph);
+
+            return rph.Id;
         }
 
         /// <summary>
@@ -177,6 +179,35 @@ namespace Nop.Services.Orders
 
             var lastRph = query.FirstOrDefault();
             return lastRph != null && lastRph.PointsBalance.HasValue ? lastRph.PointsBalance.Value : 0;
+        }
+
+
+        /// <summary>
+        /// Gets a reward point history entry
+        /// </summary>
+        /// <param name="rewardPointsHistoryId">Reward point history entry identifier</param>
+        /// <returns>Reward point history entry</returns>
+        public virtual RewardPointsHistory GetRewardPointsHistoryEntryById(int rewardPointsHistoryId)
+        {
+            if (rewardPointsHistoryId == 0)
+                return null;
+
+            return _rphRepository.GetById(rewardPointsHistoryId);
+        }
+
+        /// <summary>
+        /// Delete the reward point history entry
+        /// </summary>
+        /// <param name="rewardPointsHistory">Reward point history entry</param>
+        public virtual void DeleteRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory)
+        {
+            if (rewardPointsHistory == null)
+                throw new ArgumentNullException("rewardPointsHistory");
+
+            _rphRepository.Delete(rewardPointsHistory);
+
+            //event notification
+            _eventPublisher.EntityDeleted(rewardPointsHistory);
         }
 
         /// <summary>

@@ -770,15 +770,22 @@ namespace Nop.Services.Orders
                 return;
 
             //Ensure that reward points were not added (earned) before. We should not add reward points if they were already earned for this order
-            if (order.RewardPointsWereAdded)
+            if (order.RewardPointsHistoryEntryId.HasValue)
                 return;
 
+            //check whether delay is set
+            DateTime? activatingDate = null;
+            if (_rewardPointsSettings.ActivationDelay > 0)
+            {
+                var delayPeriod = (RewardPointsActivatingDelayPeriod)_rewardPointsSettings.ActivationDelayPeriodId;
+                var delayInHours = delayPeriod.ToHours(_rewardPointsSettings.ActivationDelay);
+                activatingDate = DateTime.UtcNow.AddHours(delayInHours);
+            }
+
             //add reward points
-            var activatingDate = _rewardPointsSettings.ActivationDelay > 0
-                ? (DateTime?)(DateTime.UtcNow.AddHours(((RewardPointsActivatingDelayPeriod)_rewardPointsSettings.ActivationDelayPeriodId).ToHours(_rewardPointsSettings.ActivationDelay))) : null;
-            _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, points, order.StoreId,
+            order.RewardPointsHistoryEntryId = _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, points, order.StoreId,
                 string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.Id), activatingDate: activatingDate);
-            order.RewardPointsWereAdded = true;
+
             _orderService.UpdateOrder(order);
         }
 
@@ -793,12 +800,23 @@ namespace Nop.Services.Orders
                 return;
 
             //ensure that reward points were already earned for this order before
-            if (!order.RewardPointsWereAdded)
+            if (!order.RewardPointsHistoryEntryId.HasValue)
                 return;
 
-            //reduce reward points
-            _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, -points, order.StoreId,
-                string.Format(_localizationService.GetResource("RewardPoints.Message.ReducedForOrder"), order.Id));
+            //get appropriate history entry
+            var rewardPointsHistoryEntry = _rewardPointService.GetRewardPointsHistoryEntryById(order.RewardPointsHistoryEntryId.Value);
+            if (rewardPointsHistoryEntry != null && rewardPointsHistoryEntry.CreatedOnUtc > DateTime.UtcNow)
+            {
+                //just delete the upcoming entry (points were not granted yet)
+                _rewardPointService.DeleteRewardPointsHistoryEntry(rewardPointsHistoryEntry);
+            }
+            else
+            {
+                //or reduce reward points if the entry already exists
+                _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, -points, order.StoreId,
+                    string.Format(_localizationService.GetResource("RewardPoints.Message.ReducedForOrder"), order.Id));
+            }
+
             _orderService.UpdateOrder(order);
         }
 

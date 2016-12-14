@@ -3081,8 +3081,6 @@ BEGIN
 END
 GO
 
-
-
 --new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.sitemapcustomurls')
 BEGIN
@@ -3090,8 +3088,6 @@ BEGIN
 	VALUES (N'commonsettings.sitemapcustomurls', N'', 0)
 END
 GO
-
-
 
 --new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shoppingcartsettings.cartssharedbetweenstores')
@@ -3119,3 +3115,30 @@ GO
 	VALUES (N'Customer.EmailRevalidationMessage', NULL, N'%Store.Name%. Email validation.', N'<p><a href="%Store.URL%">%Store.Name%</a> <br /><br />Hello %Customer.FullName%!<br /> To validate your new email address <a href="%Customer.EmailRevalidationURL%">click here</a> .<br />  <br />  %Store.Name%</p>', 1, 0, 0, 0, 0)
  END
  GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='RewardPointsHistoryEntryId')
+BEGIN
+	ALTER TABLE [Order]
+	ADD [RewardPointsHistoryEntryId] int NULL
+END
+GO
+
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='RewardPointsWereAdded')
+BEGIN
+    --column RewardPointsWereAdded was replaced with RewardPointsHistoryEntryId
+    --ensure that the new column value is not null to specify that reward points were added (earned) to an order
+    EXEC('
+        UPDATE [Order]
+        SET [RewardPointsHistoryEntryId] = 0
+        WHERE [RewardPointsWereAdded] = 1')
+END
+GO
+
+--drop column
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='RewardPointsWereAdded')
+BEGIN
+	ALTER TABLE [Order] DROP COLUMN [RewardPointsWereAdded]
+END
+GO
