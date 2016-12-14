@@ -11496,6 +11496,12 @@
   <LocaleResource Name="Admin.SalesReport.NeverSold.RunReport">
     <Value>Run report</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.SearchStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.SearchStore.Hint">
+    <Value>Search by a specific store.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.SalesReport.NeverSold.StartDate">
     <Value>Start date</Value>
   </LocaleResource>

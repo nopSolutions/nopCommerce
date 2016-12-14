@@ -8,6 +8,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Stores;
 using Nop.Services.Helpers;
 
 namespace Nop.Services.Orders
@@ -22,7 +23,9 @@ namespace Nop.Services.Orders
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly CatalogSettings _catalogSettings;
 
         #endregion
 
@@ -34,16 +37,22 @@ namespace Nop.Services.Orders
         /// <param name="orderRepository">Order repository</param>
         /// <param name="orderItemRepository">Order item repository</param>
         /// <param name="productRepository">Product repository</param>
+        /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="dateTimeHelper">Datetime helper</param>
+        /// <param name="catalogSettings">Catalog settings</param>
         public OrderReportService(IRepository<Order> orderRepository,
             IRepository<OrderItem> orderItemRepository,
             IRepository<Product> productRepository,
-            IDateTimeHelper dateTimeHelper)
+            IRepository<StoreMapping> storeMappingRepository,
+            IDateTimeHelper dateTimeHelper,
+            CatalogSettings catalogSettings)
         {
             this._orderRepository = orderRepository;
             this._orderItemRepository = orderItemRepository;
             this._productRepository = productRepository;
+            this._storeMappingRepository = storeMappingRepository;
             this._dateTimeHelper = dateTimeHelper;
+            this._catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -415,38 +424,51 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Gets a list of products that were never sold
         /// </summary>
-        /// <param name="vendorId">Vendor identifier</param>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="storeId">Vendor identifier; 0 to load all records</param>
         /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        public virtual IPagedList<Product> ProductsNeverSold(int vendorId = 0,
+        public virtual IPagedList<Product> ProductsNeverSold(int vendorId = 0, int storeId = 0,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             //this inner query should retrieve all purchased product identifiers
-            var query1 = (from orderItem in _orderItemRepository.Table
-                          join o in _orderRepository.Table on orderItem.OrderId equals o.Id
-                          where (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
-                                (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
-                                (!o.Deleted)
-                          select orderItem.ProductId).Distinct();
+            var query_tmp = (from orderItem in _orderItemRepository.Table
+                join o in _orderRepository.Table on orderItem.OrderId equals o.Id
+                where (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
+                      (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
+                      (!o.Deleted)
+                select orderItem.ProductId).Distinct();
 
-            var simpleProductTypeId = (int)ProductType.SimpleProduct;
+            var simpleProductTypeId = (int) ProductType.SimpleProduct;
 
-            var query2 = from p in _productRepository.Table
-                         orderby p.Name
-                         where (!query1.Contains(p.Id)) &&
-                             //include only simple products
-                               (p.ProductTypeId == simpleProductTypeId) &&
-                               (!p.Deleted) &&
-                               (vendorId == 0 || p.VendorId == vendorId) &&
-                               (showHidden || p.Published)
-                         select p;
+            var query = from p in _productRepository.Table
+                where (!query_tmp.Contains(p.Id)) &&
+                      //include only simple products
+                      (p.ProductTypeId == simpleProductTypeId) &&
+                      (!p.Deleted) &&
+                      (vendorId == 0 || p.VendorId == vendorId) &&
+                      (showHidden || p.Published)
+                select p;
 
-            var products = new PagedList<Product>(query2, pageIndex, pageSize);
+
+            if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+            {
+                query = from p in query
+                        join sm in _storeMappingRepository.Table
+                        on new { c1 = p.Id, c2 = "Product" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into p_sm
+                        from sm in p_sm.DefaultIfEmpty()
+                        where !p.LimitedToStores || storeId == sm.StoreId
+                        select p;
+            }
+
+            query = query.OrderBy(p => p.Name);
+
+            var products = new PagedList<Product>(query, pageIndex, pageSize);
             return products;
         }
 

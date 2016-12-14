@@ -3973,6 +3973,11 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new NeverSoldReportModel();
+            //stores
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+
             return View(model);
         }
         [HttpPost]
@@ -3992,9 +3997,13 @@ namespace Nop.Admin.Controllers
             DateTime? endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
             
-            var items = _orderReportService.ProductsNeverSold(vendorId,
-                startDateValue, endDateValue,
-                command.Page - 1, command.PageSize, true);
+            var items = _orderReportService.ProductsNeverSold(vendorId: vendorId,
+                storeId: model.SearchStoreId,
+                createdFromUtc: startDateValue,
+                createdToUtc: endDateValue,
+                pageIndex : command.Page - 1,
+                pageSize: command.PageSize,
+                showHidden: true);
             var gridModel = new DataSourceResult
             {
                 Data = items.Select(x =>

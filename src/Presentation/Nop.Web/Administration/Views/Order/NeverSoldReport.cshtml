@@ -41,6 +41,14 @@
                             @Html.NopEditorFor(model => model.EndDate)
                         </div>
                     </div>
+                    <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.SearchStoreId)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
+                        </div>
+                    </div>
                     <div class="form-group">
                         <div class="col-md-9 col-md-offset-3">
                             <button type="button" id="search-neversoldreport" class="btn btn-primary btn-search">
@@ -119,7 +127,8 @@
                         function additionalData() {
                             var data = {
                                 StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
-                                EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val()
+                                EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
+                                SearchStoreId: $('#SearchStoreId').val()
                             };
                             addAntiForgeryToken(data);
                             return data;
