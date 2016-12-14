@@ -1010,6 +1010,18 @@ set @resources='
   <LocaleResource Name="Admin.SalesReport.NeverSold.SearchVendor.Hint">
     <Value>Load products only by a specific vendor (owned by this vendor).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.SearchCategory">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.SearchCategory.Hint">
+    <Value>Load products only from a specific category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.SearchManufacturer">
+    <Value>Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.SearchManufacturer.Hint">
+    <Value>Load products only from a specific manufacturer.</Value>
+  </LocaleResource>
 </Language>
 '
 

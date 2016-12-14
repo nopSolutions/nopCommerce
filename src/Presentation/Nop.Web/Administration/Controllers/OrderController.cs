@@ -3977,6 +3977,17 @@ namespace Nop.Admin.Controllers
             //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
+            //categories
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
+            foreach (var c in categories)
+                model.AvailableCategories.Add(c);
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
+                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
+
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var s in _storeService.GetAllStores())
@@ -4010,6 +4021,8 @@ namespace Nop.Admin.Controllers
             
             var items = _orderReportService.ProductsNeverSold(vendorId: model.SearchVendorId,
                 storeId: model.SearchStoreId,
+                categoryId: model.SearchCategoryId,
+                manufacturerId: model.SearchManufacturerId,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
                 pageIndex : command.Page - 1,

@@ -11496,6 +11496,18 @@
   <LocaleResource Name="Admin.SalesReport.NeverSold.RunReport">
     <Value>Run report</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.SearchCategory">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.SearchCategory.Hint">
+    <Value>Load products only from a specific category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.SearchManufacturer">
+    <Value>Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.SearchManufacturer.Hint">
+    <Value>Load products only from a specific manufacturer.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.SalesReport.NeverSold.SearchStore">
     <Value>Store</Value>
   </LocaleResource>
