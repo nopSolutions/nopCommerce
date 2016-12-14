@@ -922,6 +922,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.MaximumWishlistItems_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowOutOfStockItemsToBeAddedToWishlist_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.MoveItemsFromWishlistToCart_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.CartsSharedBetweenStores_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.ShowProductImagesOnShoppingCart_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.ShowProductImagesOnWishList_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.ShowDiscountBox_OverrideForStore, mo => mo.Ignore())

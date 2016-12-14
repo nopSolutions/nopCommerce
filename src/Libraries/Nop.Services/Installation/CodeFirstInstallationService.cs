@@ -6062,6 +6062,7 @@ namespace Nop.Services.Installation
                 MaximumWishlistItems = 1000,
                 AllowOutOfStockItemsToBeAddedToWishlist = false,
                 MoveItemsFromWishlistToCart = true,
+                CartsSharedBetweenStores = false,
                 ShowProductImagesOnShoppingCart = true,
                 ShowProductImagesOnWishList = true,
                 ShowDiscountBox = true,

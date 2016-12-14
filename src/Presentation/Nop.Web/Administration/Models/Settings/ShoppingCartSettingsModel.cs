@@ -32,7 +32,11 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.MoveItemsFromWishlistToCart")]
         public bool MoveItemsFromWishlistToCart { get; set; }
         public bool MoveItemsFromWishlistToCart_OverrideForStore { get; set; }
-        
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.CartsSharedBetweenStores")]
+        public bool CartsSharedBetweenStores { get; set; }
+        public bool CartsSharedBetweenStores_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.ShowProductImagesOnShoppingCart")]
         public bool ShowProductImagesOnShoppingCart { get; set; }
         public bool ShowProductImagesOnShoppingCart_OverrideForStore { get; set; }

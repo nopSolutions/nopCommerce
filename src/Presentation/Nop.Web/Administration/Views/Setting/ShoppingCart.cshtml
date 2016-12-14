@@ -114,6 +114,16 @@
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.CartsSharedBetweenStores_OverrideForStore, model => model.CartsSharedBetweenStores, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.CartsSharedBetweenStores)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.CartsSharedBetweenStores)
+                                @Html.ValidationMessageFor(model => model.CartsSharedBetweenStores)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesOnShoppingCart_OverrideForStore, model => model.ShowProductImagesOnShoppingCart, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.ShowProductImagesOnShoppingCart)
                             </div>

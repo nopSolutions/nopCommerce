@@ -1022,6 +1022,12 @@ set @resources='
   <LocaleResource Name="Admin.SalesReport.NeverSold.SearchManufacturer.Hint">
     <Value>Load products only from a specific manufacturer.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.CartsSharedBetweenStores">
+    <Value>Carts shared between storest</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.CartsSharedBetweenStores.Hint">
+    <Value>Determines whether shopping carts (and wishlist) are shared between stores (in multi-store environment).</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3061,5 +3067,15 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.sitemapcu
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'commonsettings.sitemapcustomurls', N'', 0)
+END
+GO
+
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shoppingcartsettings.cartssharedbetweenstores')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'shoppingcartsettings.activationdelayperiodid', N'False', 0)
 END
 GO
