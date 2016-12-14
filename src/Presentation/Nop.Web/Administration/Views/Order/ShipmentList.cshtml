@@ -55,7 +55,7 @@
                 <div class="panel panel-default panel-search">
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <div class="form-group">
                                     <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.StartDate)
@@ -82,6 +82,16 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.WarehouseId)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopDropDownList("WarehouseId", Model.AvailableWarehouses)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.CountryId)
                                     </div>
                                     <div class="col-md-8">
@@ -106,27 +116,19 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.WarehouseId)
-                                    </div>
-                                    <div class="col-md-8">
-                                        @Html.NopDropDownList("WarehouseId", Model.AvailableWarehouses)
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.LoadNotShipped)
                                     </div>
                                     <div class="col-md-8">
                                         @Html.NopEditorFor(model => model.LoadNotShipped)
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-md-8 col-md-offset-4">
-                                        <button type="button" id="search-shipments" class="btn btn-primary btn-search">
-                                            <i class="fa fa-search"></i>
-                                            @T("Admin.Common.Search")
-                                        </button>
-                                    </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-7 col-md-offset-5">
+                                    <button type="button" id="search-shipments" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
                                 </div>
                             </div>
                         </div>
