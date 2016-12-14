@@ -101,8 +101,8 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Gets a list of products that were never sold
         /// </summary>
-        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
-        /// <param name="storeId">Vendor identifier; 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier (filter products by a specific vendor); 0 to load all records</param>
+        /// <param name="storeId">Store identifier (filter products by a specific store); 0 to load all records</param>
         /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
         /// <param name="pageIndex">Page index</param>
