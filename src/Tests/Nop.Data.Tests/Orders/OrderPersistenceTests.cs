@@ -47,7 +47,7 @@ namespace Nop.Data.Tests.Orders
                 OrderDiscount = 11.1M,
                 OrderTotal = 12.1M,
                 RefundedAmount  = 13.1M,
-                RewardPointsWereAdded = true,
+                RewardPointsHistoryEntryId = 1,
                 CheckoutAttributeDescription = "CheckoutAttributeDescription1",
                 CheckoutAttributesXml = "CheckoutAttributesXml1",
                 CustomerLanguageId = 14,
@@ -103,7 +103,7 @@ namespace Nop.Data.Tests.Orders
             fromDb.OrderDiscount.ShouldEqual(11.1M);
             fromDb.OrderTotal.ShouldEqual(12.1M);
             fromDb.RefundedAmount.ShouldEqual(13.1M);
-            fromDb.RewardPointsWereAdded.ShouldEqual(true);
+            fromDb.RewardPointsHistoryEntryId.ShouldEqual(1);
             fromDb.CheckoutAttributeDescription.ShouldEqual("CheckoutAttributeDescription1");
             fromDb.CheckoutAttributesXml.ShouldEqual("CheckoutAttributesXml1");
             fromDb.CustomerLanguageId.ShouldEqual(14);

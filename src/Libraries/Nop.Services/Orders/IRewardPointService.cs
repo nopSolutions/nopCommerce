@@ -32,7 +32,8 @@ namespace Nop.Services.Orders
         /// <param name="usedWithOrder">the order for which points were redeemed as a payment</param>
         /// <param name="usedAmount">Used amount</param>
         /// <param name="activatingDate">Date and time of activating reward points; pass null to immediately activating</param>
-        void AddRewardPointsHistoryEntry(Customer customer,
+        /// <returns>Reward points history entry identifier</returns>
+        int AddRewardPointsHistoryEntry(Customer customer,
             int points, int storeId, string message = "",
             Order usedWithOrder = null, decimal usedAmount = 0M, DateTime? activatingDate = null);
 
@@ -44,6 +45,19 @@ namespace Nop.Services.Orders
         /// <returns>Balance</returns>
         int GetRewardPointsBalance(int customerId, int storeId);
 
+        /// <summary>
+        /// Gets a reward point history entry
+        /// </summary>
+        /// <param name="rewardPointsHistoryId">Reward point history entry identifier</param>
+        /// <returns>Reward point history entry</returns>
+        RewardPointsHistory GetRewardPointsHistoryEntryById(int rewardPointsHistoryId);
+
+        /// <summary>
+        /// Delete the reward point history entry
+        /// </summary>
+        /// <param name="rewardPointsHistory">Reward point history entry</param>
+        void DeleteRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory);
+        
         /// <summary>
         /// Updates the reward point history entry
         /// </summary>

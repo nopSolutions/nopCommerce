@@ -3060,8 +3060,6 @@ BEGIN
 END
 GO
 
-
-
 --new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.sitemapcustomurls')
 BEGIN
@@ -3070,12 +3068,36 @@ BEGIN
 END
 GO
 
-
-
 --new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shoppingcartsettings.cartssharedbetweenstores')
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'shoppingcartsettings.activationdelayperiodid', N'False', 0)
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='RewardPointsHistoryEntryId')
+BEGIN
+	ALTER TABLE [Order]
+	ADD [RewardPointsHistoryEntryId] int NULL
+END
+GO
+
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='RewardPointsWereAdded')
+BEGIN
+    --column RewardPointsWereAdded was replaced with RewardPointsHistoryEntryId
+    --ensure that the new column value is not null to specify that reward points were added (earned) to an order
+    EXEC('
+        UPDATE [Order]
+        SET [RewardPointsHistoryEntryId] = 0
+        WHERE [RewardPointsWereAdded] = 1')
+END
+GO
+
+--drop column
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='RewardPointsWereAdded')
+BEGIN
+	ALTER TABLE [Order] DROP COLUMN [RewardPointsWereAdded]
 END
 GO
