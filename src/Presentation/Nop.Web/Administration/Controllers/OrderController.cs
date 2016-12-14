@@ -3973,10 +3973,20 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new NeverSoldReportModel();
+
+            //a vendor should have access only to his products
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
+                model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
+
 
             return View(model);
         }
@@ -3987,9 +3997,10 @@ namespace Nop.Admin.Controllers
                 return Content("");
 
             //a vendor should have access only to his products
-            int vendorId = 0;
             if (_workContext.CurrentVendor != null)
-                vendorId = _workContext.CurrentVendor.Id;
+            {
+                model.SearchVendorId = _workContext.CurrentVendor.Id;
+            }
 
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
@@ -3997,7 +4008,7 @@ namespace Nop.Admin.Controllers
             DateTime? endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
             
-            var items = _orderReportService.ProductsNeverSold(vendorId: vendorId,
+            var items = _orderReportService.ProductsNeverSold(vendorId: model.SearchVendorId,
                 storeId: model.SearchStoreId,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,

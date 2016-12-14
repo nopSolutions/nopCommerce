@@ -12,6 +12,7 @@ namespace Nop.Admin.Models.Orders
         public NeverSoldReportModel()
         {
             AvailableStores = new List<SelectListItem>();
+            AvailableVendors = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.SalesReport.NeverSold.StartDate")]
@@ -26,5 +27,12 @@ namespace Nop.Admin.Models.Orders
         [NopResourceDisplayName("Admin.SalesReport.NeverSold.SearchStore")]
         public int SearchStoreId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
+
+
+        [NopResourceDisplayName("Admin.SalesReport.NeverSold.SearchVendor")]
+        public int SearchVendorId { get; set; }
+        public IList<SelectListItem> AvailableVendors { get; set; }
+
+        public bool IsLoggedInAsVendor { get; set; }
     }
 }
