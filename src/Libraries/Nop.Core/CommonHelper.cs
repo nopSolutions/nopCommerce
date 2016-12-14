@@ -235,30 +235,6 @@ namespace Nop.Core
             pi.SetValue(instance, value, new object[0]);
         }
 
-        public static TypeConverter GetNopCustomTypeConverter(Type type)
-        {
-            //we can't use the following code in order to register our custom type descriptors
-            //TypeDescriptor.AddAttributes(typeof(List<int>), new TypeConverterAttribute(typeof(GenericListTypeConverter<int>)));
-            //so we do it manually here
-
-            if (type == typeof(List<int>))
-                return new GenericListTypeConverter<int>();
-            if (type == typeof(List<decimal>))
-                return new GenericListTypeConverter<decimal>();
-            if (type == typeof(List<string>))
-                return new GenericListTypeConverter<string>();
-            if (type == typeof(ShippingOption))
-                return new ShippingOptionTypeConverter();
-            if (type == typeof(List<ShippingOption>) || type == typeof(IList<ShippingOption>))
-                return new ShippingOptionListTypeConverter();
-            if (type == typeof(PickupPoint))
-                return new PickupPointTypeConverter();
-            if (type == typeof(Dictionary<int, int>))
-                return new GenericDictionaryTypeConverter<int, int>();
-
-            return TypeDescriptor.GetConverter(type);
-        }
-
         /// <summary>
         /// Converts a value to a destination type.
         /// </summary>
@@ -283,14 +259,17 @@ namespace Nop.Core
             {
                 var sourceType = value.GetType();
 
-                TypeConverter destinationConverter = GetNopCustomTypeConverter(destinationType);
-                TypeConverter sourceConverter = GetNopCustomTypeConverter(sourceType);
+                var destinationConverter = TypeDescriptor.GetConverter(destinationType);
                 if (destinationConverter != null && destinationConverter.CanConvertFrom(value.GetType()))
                     return destinationConverter.ConvertFrom(null, culture, value);
+
+                var sourceConverter = TypeDescriptor.GetConverter(sourceType);
                 if (sourceConverter != null && sourceConverter.CanConvertTo(destinationType))
                     return sourceConverter.ConvertTo(null, culture, value, destinationType);
+
                 if (destinationType.IsEnum && value is int)
                     return Enum.ToObject(destinationType, (int)value);
+
                 if (!destinationType.IsInstanceOfType(value))
                     return Convert.ChangeType(value, destinationType, culture);
             }

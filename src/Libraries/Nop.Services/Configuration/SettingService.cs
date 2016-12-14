@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -289,7 +290,7 @@ namespace Nop.Services.Configuration
             if (key == null)
                 throw new ArgumentNullException("key");
             key = key.Trim().ToLowerInvariant();
-            string valueStr = CommonHelper.GetNopCustomTypeConverter(typeof(T)).ConvertToInvariantString(value);
+            string valueStr = TypeDescriptor.GetConverter(typeof(T)).ConvertToInvariantString(value);
 
             var allSettings = GetAllSettingsCached();
             var settingForCaching = allSettings.ContainsKey(key) ? 
@@ -367,13 +368,13 @@ namespace Nop.Services.Configuration
                 if (setting == null)
                     continue;
 
-                if (!CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
+                if (!TypeDescriptor.GetConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
                     continue;
 
-                if (!CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).IsValid(setting))
+                if (!TypeDescriptor.GetConverter(prop.PropertyType).IsValid(setting))
                     continue;
 
-                object value = CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).ConvertFromInvariantString(setting);
+                object value = TypeDescriptor.GetConverter(prop.PropertyType).ConvertFromInvariantString(setting);
 
                 //set property
                 prop.SetValue(settings, value, null);
@@ -399,7 +400,7 @@ namespace Nop.Services.Configuration
                 if (!prop.CanRead || !prop.CanWrite)
                     continue;
 
-                if (!CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
+                if (!TypeDescriptor.GetConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
                     continue;
 
                 string key = typeof(T).Name + "." + prop.Name;
