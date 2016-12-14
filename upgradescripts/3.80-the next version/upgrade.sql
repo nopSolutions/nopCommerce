@@ -1049,6 +1049,9 @@ set @resources='
   <LocaleResource Name="Account.Fields.EmailToRevalidate.Note">
     <Value>(not validated yet)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Methods.Description">
+    <Value>Shipping methods used by offline shipping providers. For example, "Manual (Fixed or By Weight)".</Value>
+  </LocaleResource>
 </Language>
 '
 
