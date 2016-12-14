@@ -1394,7 +1394,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="amount">Amount (in primary store currency)</param>
-        /// <returns>umber of reward points</returns>
+        /// <returns>Number of reward points</returns>
         public virtual int CalculateRewardPoints(Customer customer, decimal amount)
         {
             if (!_rewardPointsSettings.Enabled)
@@ -1403,7 +1403,7 @@ namespace Nop.Services.Orders
             if (_rewardPointsSettings.PointsForPurchases_Amount <= decimal.Zero)
                 return 0;
 
-            //Ensure that reward points are applied only to registered users
+            //ensure that reward points are applied only to registered users
             if (customer == null || customer.IsGuest())
                 return 0;
 

@@ -196,7 +196,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="amount">Amount (in primary store currency)</param>
-        /// <returns>umber of reward points</returns>
+        /// <returns>Number of reward points</returns>
         int CalculateRewardPoints(Customer customer, decimal amount);
     }
 }
