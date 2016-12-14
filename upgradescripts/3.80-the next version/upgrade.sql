@@ -1028,6 +1028,27 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.CartsSharedBetweenStores.Hint">
     <Value>Determines whether shopping carts (and wishlist) are shared between stores (in multi-store environment).</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.EmailRevalidation">
+    <Value>Email validation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.EmailRevalidation.AlreadyChanged">
+    <Value>Your email already has been validated</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.EmailRevalidation.Changed">
+    <Value>Your email has been validated</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.EmailRevalidation">
+    <Value>Email validation</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.EmailRevalidation">
+    <Value>Email validation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.EmailToRevalidate">
+    <Value>New email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.EmailToRevalidate.Note">
+    <Value>(not validated yet)</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3079,3 +3100,22 @@ BEGIN
 	VALUES (N'shoppingcartsettings.activationdelayperiodid', N'False', 0)
 END
 GO
+
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='EmailToRevalidate')
+BEGIN
+	ALTER TABLE [Customer]
+	ADD [EmailToRevalidate] nvarchar(1000) NULL
+END
+GO
+
+
+-- new message template
+ IF NOT EXISTS (SELECT 1 FROM [dbo].[MessageTemplate] WHERE [Name] = N'Customer.EmailRevalidationMessage')
+ BEGIN
+	INSERT [dbo].[MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [AttachedDownloadId], [EmailAccountId], [LimitedToStores], [DelayPeriodId]) 
+	VALUES (N'Customer.EmailRevalidationMessage', NULL, N'%Store.Name%. Email validation.', N'<p><a href="%Store.URL%">%Store.Name%</a> <br /><br />Hello %Customer.FullName%!<br /> To validate your new email address <a href="%Customer.EmailRevalidationURL%">click here</a> .<br />  <br />  %Store.Name%</p>', 1, 0, 0, 0, 0)
+ END
+ GO

@@ -249,6 +249,15 @@
   <LocaleResource Name="Account.EmailUsernameErrors.UsernameTooLong">
     <Value>Username is too long</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.EmailRevalidation">
+    <Value>Email validation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.EmailRevalidation.AlreadyChanged">
+    <Value>Your email already has been validated</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.EmailRevalidation.Changed">
+    <Value>Your email has been validated</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Fields.AcceptPrivacyPolicy">
     <Value>I accept privacy policy</Value>
   </LocaleResource>
@@ -305,6 +314,12 @@
   </LocaleResource>
   <LocaleResource Name="Account.Fields.Email.Required">
     <Value>Email is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.EmailToRevalidate">
+    <Value>New email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.EmailToRevalidate.Note">
+    <Value>(not validated yet)</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Fields.Fax">
     <Value>Fax</Value>
@@ -14273,6 +14288,9 @@
   </LocaleResource>
   <LocaleResource Name="PageTitle.CustomerProductReviews">
     <Value>My product reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.EmailRevalidation">
+    <Value>Email validation</Value>
   </LocaleResource>
   <LocaleResource Name="PageTitle.ForumSubscriptions">
     <Value>Forum Subscriptions</Value>

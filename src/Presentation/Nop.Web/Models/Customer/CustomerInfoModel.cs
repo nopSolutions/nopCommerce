@@ -23,6 +23,8 @@ namespace Nop.Web.Models.Customer
         [NopResourceDisplayName("Account.Fields.Email")]
         [AllowHtml]
         public string Email { get; set; }
+        [NopResourceDisplayName("Account.Fields.EmailToRevalidate")]
+        public string EmailToRevalidate { get; set; }
 
         public bool CheckUsernameAvailabilityEnabled { get; set; }
         public bool AllowUsersToChangeUsernames { get; set; }

@@ -38,6 +38,14 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
         int SendCustomerEmailValidationMessage(Customer customer, int languageId);
+        
+        /// <summary>
+        /// Sends an email re-validation message to a customer
+        /// </summary>
+        /// <param name="customer">Customer instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendCustomerEmailRevalidationMessage(Customer customer, int languageId);
 
         /// <summary>
         /// Sends password recovery message to a customer

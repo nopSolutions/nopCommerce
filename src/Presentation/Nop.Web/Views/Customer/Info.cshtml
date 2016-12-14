@@ -117,6 +117,14 @@
                         @Html.RequiredHint()
                         @Html.ValidationMessageFor(model => model.Email)
                     </div>
+                    @if (!String.IsNullOrEmpty(Model.EmailToRevalidate))
+                    {
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.EmailToRevalidate, new { }, ":")
+                            <span class="email-to-revalidate">@Model.EmailToRevalidate</span>
+                            <span class="email-to-revalidate-note"><em>@T("Account.Fields.EmailToRevalidate.Note")</em></span>
+                        </div>
+                    }
                     @if (Model.UsernamesEnabled)
                     {
                         if (Model.AllowUsersToChangeUsernames)

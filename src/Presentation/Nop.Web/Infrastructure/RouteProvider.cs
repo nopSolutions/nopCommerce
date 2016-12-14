@@ -388,6 +388,10 @@ namespace Nop.Web.Infrastructure
                             "customer/activation",
                             new { controller = "Customer", action = "AccountActivation" },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("EmailRevalidation",
+                            "customer/revalidateemail",
+                            new { controller = "Customer", action = "EmailRevalidation" },
+                            new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("CustomerForumSubscriptions",
                             "boards/forumsubscriptions",
                             new { controller = "Boards", action = "CustomerForumSubscriptions" },

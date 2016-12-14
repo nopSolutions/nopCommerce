@@ -2842,13 +2842,15 @@ label, label + * {
 	font-size: 16px;
 	color: #4cb17c;
 }
+.customer-info-page .email-to-revalidate,
 .customer-info-page .readonly-username,
 .customer-info-page .vat-status {
     margin: 0 5px;
     font-size: 14px;
 }
 .registration-page .vat-note,
-.customer-info-page .vat-note {
+.customer-info-page .vat-note,
+.customer-info-page .email-to-revalidate-note {
     display: block;
     font-size: 14px;
     margin-top: 5px;

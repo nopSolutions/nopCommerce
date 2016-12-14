@@ -280,6 +280,9 @@ namespace Nop.Web.Factories
                     model.Username = customer.Username;
             }
 
+            if (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation)
+                model.EmailToRevalidate = customer.EmailToRevalidate;
+
             //countries and states
             if (_customerSettings.CountryEnabled)
             {

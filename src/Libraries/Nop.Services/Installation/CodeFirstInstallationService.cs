@@ -5260,6 +5260,14 @@ namespace Nop.Services.Installation
                                        },
                                    new MessageTemplate
                                        {
+                                           Name = "Customer.EmailRevalidationMessage",
+                                           Subject = "%Store.Name%. Email validation",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Customer.FullName%!<br /> To validate your new email address <a href=\"%Customer.EmailRevalidationURL%\">click here</a> .<br />  <br />  %Store.Name%</p>",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                   new MessageTemplate
+                                       {
                                            Name = "Customer.NewPM",
                                            Subject = "%Store.Name%. You have received a new private message",
                                            Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />You have received a new private message.</p>",

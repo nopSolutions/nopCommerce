@@ -1116,7 +1116,7 @@ namespace Nop.Admin.Controllers
                     //email
                     if (!String.IsNullOrWhiteSpace(model.Email))
                     {
-                        _customerRegistrationService.SetEmail(customer, model.Email);
+                        _customerRegistrationService.SetEmail(customer, model.Email, false);
                     }
                     else
                     {
