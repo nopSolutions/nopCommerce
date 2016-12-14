@@ -1025,11 +1025,12 @@ namespace Nop.Web.Factories
                     }
                 }
                 else
+                {
                     model.HideShippingTotal = _shippingSettings.HideShippingTotal;
+                }
 
                 //payment method fee
-                var paymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
-                    SystemCustomerAttributeNames.SelectedPaymentMethod, _storeContext.CurrentStore.Id);
+                var paymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.SelectedPaymentMethod, _storeContext.CurrentStore.Id);
                 decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, paymentMethodSystemName);
                 decimal paymentMethodAdditionalFeeWithTaxBase = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, _workContext.CurrentCustomer);
                 if (paymentMethodAdditionalFeeWithTaxBase > decimal.Zero)
@@ -1132,8 +1133,14 @@ namespace Nop.Web.Factories
                     _rewardPointsSettings.DisplayHowMuchWillBeEarned &&
                     shoppingCartTotalBase.HasValue)
                 {
-                    model.WillEarnRewardPoints = _orderTotalCalculationService
-                        .CalculateRewardPoints(_workContext.CurrentCustomer, shoppingCartTotalBase.Value);
+                    decimal? shippingBaseInclTax = model.RequiresShipping
+                        ? _orderTotalCalculationService.GetShoppingCartShippingTotal(cart, true)
+                        : 0;
+                    if (shippingBaseInclTax.HasValue)
+                    {
+                        var totalForRewardPoints = _orderTotalCalculationService.CalculateApplicableOrderTotalForRewardPoints(shippingBaseInclTax.Value, shoppingCartTotalBase.Value);
+                        model.WillEarnRewardPoints = _orderTotalCalculationService.CalculateRewardPoints(_workContext.CurrentCustomer, totalForRewardPoints);
+                    }
                 }
 
             }

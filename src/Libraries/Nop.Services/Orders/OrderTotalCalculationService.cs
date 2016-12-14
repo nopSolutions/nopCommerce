@@ -1390,6 +1390,19 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// Calculate how order total (maximum amount) for which reward points could be earned/reduced
+        /// </summary>
+        /// <param name="orderShippingInclTax">Order shipping (including tax)</param>
+        /// <param name="orderTotal">Order total</param>
+        /// <returns>Applicable order total</returns>
+        public virtual decimal CalculateApplicableOrderTotalForRewardPoints(decimal orderShippingInclTax, decimal orderTotal)
+        {
+            //do you give reward points for order total? or do you exclude shipping?
+            //since shipping costs vary some of store owners don't give reward points based on shipping total
+            //you can put your custom logic here
+            return orderTotal - orderShippingInclTax;
+        }
+        /// <summary>
         /// Calculate how much reward points will be earned/reduced based on certain amount spent
         /// </summary>
         /// <param name="customer">Customer</param>
