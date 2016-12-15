@@ -5,10 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
+using Nop.Admin.Helpers;
 using Nop.Admin.Models.Common;
 using Nop.Admin.Models.Customers;
 using Nop.Admin.Models.ShoppingCart;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -90,6 +92,7 @@ namespace Nop.Admin.Controllers
         private readonly IAffiliateService _affiliateService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IRewardPointService _rewardPointService;
+        private readonly ICacheManager _cacheManager;
 
         #endregion
 
@@ -136,7 +139,8 @@ namespace Nop.Admin.Controllers
             IAddressAttributeFormatter addressAttributeFormatter,
             IAffiliateService affiliateService,
             IWorkflowMessageService workflowMessageService,
-            IRewardPointService rewardPointService)
+            IRewardPointService rewardPointService,
+            ICacheManager cacheManager)
         {
             this._customerService = customerService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
@@ -180,6 +184,7 @@ namespace Nop.Admin.Controllers
             this._affiliateService = affiliateService;
             this._workflowMessageService = workflowMessageService;
             this._rewardPointService = rewardPointService;
+            this._cacheManager = cacheManager;
         }
 
         #endregion
@@ -305,15 +310,9 @@ namespace Nop.Admin.Controllers
                 Text = _localizationService.GetResource("Admin.Customers.Customers.Fields.Vendor.None"),
                 Value = "0"
             });
-            var vendors = _vendorService.GetAllVendors(showHidden: true);
-            foreach (var vendor in vendors)
-            {
-                model.AvailableVendors.Add(new SelectListItem
-                {
-                    Text = vendor.Name,
-                    Value = vendor.Id.ToString()
-                });
-            }
+            var vendors = SelectListHelper.GetVendorList(_vendorService, _cacheManager, true);
+            foreach (var v in vendors)
+                model.AvailableVendors.Add(v);
         }
 
         [NonAction]
