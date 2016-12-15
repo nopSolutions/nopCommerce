@@ -59,7 +59,6 @@ namespace Nop.Services.Catalog
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
@@ -96,7 +95,6 @@ namespace Nop.Services.Catalog
         /// <param name="productAttributeService">Product attribute service</param>
         /// <param name="productAttributeParser">Product attribute parser service</param>
         /// <param name="languageService">Language service</param>
-        /// <param name="localizationService">Localization service</param>
         /// <param name="workflowMessageService">Workflow message service</param>
         /// <param name="dataProvider">Data provider</param>
         /// <param name="dbContext">Database Context</param>
@@ -124,7 +122,6 @@ namespace Nop.Services.Catalog
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
             ILanguageService languageService,
-            ILocalizationService localizationService,
             IWorkflowMessageService workflowMessageService,
             IDataProvider dataProvider, 
             IDbContext dbContext,
@@ -153,7 +150,6 @@ namespace Nop.Services.Catalog
             this._productAttributeService = productAttributeService;
             this._productAttributeParser = productAttributeParser;
             this._languageService = languageService;
-            this._localizationService = localizationService;
             this._workflowMessageService = workflowMessageService;
             this._dataProvider = dataProvider;
             this._dbContext = dbContext;
