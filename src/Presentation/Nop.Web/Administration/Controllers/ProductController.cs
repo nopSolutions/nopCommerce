@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -551,8 +552,7 @@ namespace Nop.Admin.Controllers
         }
         
         [NonAction]
-        protected virtual void PrepareProductModel(ProductModel model, Product product,
-            bool setPredefinedValues, bool excludeProperties)
+        protected virtual void PrepareProductModel(ProductModel model, Product product, bool setPredefinedValues, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -639,6 +639,24 @@ namespace Nop.Admin.Controllers
                     Text = template.Name,
                     Value = template.Id.ToString()
                 });
+            }
+            //supported product types
+            foreach (var productType in ProductType.SimpleProduct.ToSelectList(false).ToList())
+            {
+                var productTypeId = int.Parse(productType.Value);
+                model.ProductsTypesSupportedByProductTemplates.Add(productTypeId, new List<SelectListItem>());
+                foreach (var template in templates)
+                {
+                    if (String.IsNullOrEmpty(template.IgnoredProductTypes) ||
+                        !((IList<int>)TypeDescriptor.GetConverter(typeof(List<int>)).ConvertFrom(template.IgnoredProductTypes)).Contains(productTypeId))
+                    {
+                        model.ProductsTypesSupportedByProductTemplates[productTypeId].Add(new SelectListItem
+                        {
+                            Text = template.Name,
+                            Value = template.Id.ToString()
+                        });
+                    }
+                }
             }
 
             //vendors

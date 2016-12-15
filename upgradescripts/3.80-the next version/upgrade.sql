@@ -1052,6 +1052,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Shipping.Methods.Description">
     <Value>Shipping methods used by offline shipping providers. For example, "Manual (Fixed or By Weight)".</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.IgnoredProductTypes">
+    <Value>Ignored product type IDs (advanced)</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3157,4 +3160,23 @@ GO
 UPDATE [Setting]
 SET [Name] = REPLACE([Name], 'frooglesettings.','googlesShoppingsettings.')
 WHERE [Name] like 'frooglesettings.%'
+GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductTemplate]') and NAME='IgnoredProductTypes')
+BEGIN
+	ALTER TABLE [ProductTemplate]
+	ADD [IgnoredProductTypes] nvarchar(MAX) NULL
+END
+GO
+
+UPDATE [ProductTemplate]
+SET [IgnoredProductTypes] = '10'
+WHERE [ViewPath] = N'ProductTemplate.Simple'
+GO
+
+UPDATE [ProductTemplate]
+SET [IgnoredProductTypes] = '5'
+WHERE [ViewPath] = N'ProductTemplate.Grouped'
 GO

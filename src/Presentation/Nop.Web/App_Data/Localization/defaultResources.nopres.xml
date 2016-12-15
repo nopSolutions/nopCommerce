@@ -12198,6 +12198,9 @@
   <LocaleResource Name="Admin.System.Templates.Product.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.IgnoredProductTypes">
+    <Value>Ignored product type IDs (advanced)</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Templates.Product.Name">
     <Value>Name</Value>
   </LocaleResource>

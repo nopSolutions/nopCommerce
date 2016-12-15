@@ -72,6 +72,7 @@
         var simpleProductId = "@((int)ProductType.SimpleProduct)";
         var groupedProductId = "@((int)ProductType.GroupedProduct)";
 
+
         var selectedProductTypeId = $("#@Html.FieldIdFor(model => model.ProductTypeId)").val();
         if (!selectedProductTypeId || selectedProductTypeId == simpleProductId) {
             $('#group-prices').show();
@@ -96,6 +97,30 @@
             $('#group-inventory').hide();
             $('#group-associated-products').show();
         }
+
+        //templates
+        var productTypeSupportedValues = {};
+        @foreach (var kvp in Model.ProductsTypesSupportedByProductTemplates)
+        {
+            <text>productTypeSupportedValues['@(kvp.Key)'] = {};</text>
+            foreach (var item in kvp.Value)
+            {
+                <text>productTypeSupportedValues['@(kvp.Key)']['@(item.Value)'] = '@Html.Raw(HttpUtility.JavaScriptStringEncode((item.Text)))';</text>
+            }
+        }
+        var productTemplateDropddown = $("#@Html.FieldIdFor(model => model.ProductTemplateId)");
+        var productTemplateSelectedValue = productTemplateDropddown.val();
+        productTemplateDropddown.empty();
+        for (var name in productTypeSupportedValues[selectedProductTypeId]) {
+            productTemplateDropddown.append($("<option></option>").attr("value", name).text(productTypeSupportedValues[selectedProductTypeId][name]));
+        }
+        //previously selected value
+        $('#@Html.FieldIdFor(model => model.ProductTemplateId) option').each(function(){
+            if (this.value == productTemplateSelectedValue) {
+                productTemplateDropddown.val(productTemplateSelectedValue);
+            }
+        });
+        
     }
 
     function togglePreOrder() {

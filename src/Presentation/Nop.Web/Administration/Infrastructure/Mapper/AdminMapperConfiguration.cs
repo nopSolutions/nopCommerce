@@ -267,6 +267,7 @@ namespace Nop.Admin.Infrastructure.Mapper
 
                 //products
                 cfg.CreateMap<Product, ProductModel>()
+                    .ForMember(dest => dest.ProductsTypesSupportedByProductTemplates, mo => mo.Ignore())
                     .ForMember(dest => dest.ProductTypeName, mo => mo.Ignore())
                     .ForMember(dest => dest.AssociatedToProductId, mo => mo.Ignore())
                     .ForMember(dest => dest.AssociatedToProductName, mo => mo.Ignore())
