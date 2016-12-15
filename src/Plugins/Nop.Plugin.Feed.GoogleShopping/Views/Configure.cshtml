@@ -1,11 +1,11 @@
 ﻿@{
     Layout = "";
 
-    Html.AddCssFileParts("~/Plugins/Feed.Froogle/Content/styles.css");
+    Html.AddCssFileParts("~/Plugins/Feed.GoogleShopping/Content/styles.css");
 }
-@model FeedFroogleModel
+@model FeedGoogleShoppingModel
 @using Nop.Core.Infrastructure
-@using Nop.Plugin.Feed.Froogle.Models;
+@using Nop.Plugin.Feed.GoogleShopping.Models;
 @using Nop.Web.Framework;
 @using Nop.Web.Framework.UI;
 @using (Html.BeginForm())
@@ -20,8 +20,8 @@
 
     <div id="googlebase-configure" class="nav-tabs-custom">
         <ul class="nav nav-tabs">
-            @Html.RenderBootstrapTabHeader("tab-general", @T("Plugins.Feed.Froogle.General"), true)
-            @Html.RenderBootstrapTabHeader("tab-override", @T("Plugins.Feed.Froogle.Override"))
+            @Html.RenderBootstrapTabHeader("tab-general", @T("Plugins.Feed.GoogleShopping.General"), true)
+            @Html.RenderBootstrapTabHeader("tab-override", @T("Plugins.Feed.GoogleShopping.Override"))
         </ul>
         <div class="tab-content">
             @Html.RenderBootstrapTabContent("tab-general", @TabGeneral(), true)
@@ -135,7 +135,7 @@
                     </div>
                     <div class="col-md-9">
                         <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
-                        <input type="submit" name="generate" class="btn bg-green" value="@T("Plugins.Feed.Froogle.Generate")" />
+                        <input type="submit" name="generate" class="btn bg-green" value="@T("Plugins.Feed.GoogleShopping.Generate")" />
                     </div>
                 </div>
             </div>
@@ -161,7 +161,7 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                                 <div class="col-md-5">
                                     <div class="label-wrapper">
                                         <label for="GoogleCategory" class="control-label">
-                                            @T("Plugins.Feed.Froogle.Products.GoogleCategory")
+                                            @T("Plugins.Feed.GoogleShopping.Products.GoogleCategory")
                                         </label>
                                     </div>
                                 </div>
@@ -173,7 +173,7 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                                 <div class="col-md-5">
                                     <div class="label-wrapper">
                                         <label for="Gender" class="control-label">
-                                            @T("Plugins.Feed.Froogle.Products.Gender")
+                                            @T("Plugins.Feed.GoogleShopping.Products.Gender")
                                         </label>
                                     </div>
                                 </div>
@@ -185,7 +185,7 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                                 <div class="col-md-5">
                                     <div class="label-wrapper">
                                         <label for="AgeGroup" class="control-label">
-                                            @T("Plugins.Feed.Froogle.Products.AgeGroup")
+                                            @T("Plugins.Feed.GoogleShopping.Products.AgeGroup")
                                         </label>
                                     </div>
                                 </div>
@@ -197,7 +197,7 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                                 <div class="col-md-5">
                                     <div class="label-wrapper">
                                         <label for="Color" class="control-label">
-                                            @T("Plugins.Feed.Froogle.Products.Color")
+                                            @T("Plugins.Feed.GoogleShopping.Products.Color")
                                         </label>
                                     </div>
                                 </div>
@@ -209,7 +209,7 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                                 <div class="col-md-5">
                                     <div class="label-wrapper">
                                         <label for="GoogleSize" class="control-label">
-                                            @T("Plugins.Feed.Froogle.Products.Size")
+                                            @T("Plugins.Feed.GoogleShopping.Products.Size")
                                         </label>
                                     </div>
                                 </div>
@@ -221,7 +221,7 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                                 <div class="col-md-5">
                                     <div class="label-wrapper">
                                         <label for="CustomGoods" class="control-label">
-                                            @T("Plugins.Feed.Froogle.Products.CustomGoods")
+                                            @T("Plugins.Feed.GoogleShopping.Products.CustomGoods")
                                         </label>
                                     </div>
                                 </div>
@@ -233,22 +233,22 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                     </div>
                 </script>
 
-                <div id="froogleproducts-grid"></div>
+                <div id="products-grid"></div>
 
                 <script>
                     $(document).ready(function() {
-                        $("#froogleproducts-grid").kendoGrid({
+                        $("#products-grid").kendoGrid({
                             dataSource: {
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("GoogleProductList", "FeedFroogle", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Feed.Froogle.Controllers" }, { "area", "" } }))",
+                                        url: "@Html.Raw(Url.Action("GoogleProductList", "FeedGoogleShopping", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Feed.GoogleShopping.Controllers" }, { "area", "" } }))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
                                     },
                                     update: {
-                                        url: "@Html.Raw(Url.Action("GoogleProductUpdate", "FeedFroogle", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Feed.Froogle.Controllers" }, { "area", "" } }))",
+                                        url: "@Html.Raw(Url.Action("GoogleProductUpdate", "FeedGoogleShopping", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Feed.GoogleShopping.Controllers" }, { "area", "" } }))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
@@ -300,7 +300,7 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                             scrollable: false,
                             columns: [{
                                 field: "ProductName",
-                                title: "@T("Plugins.Feed.Froogle.Products.ProductName")",
+                                title: "@T("Plugins.Feed.GoogleShopping.Products.ProductName")",
                                 width: 300
                             }, {
                                 field: "Id",
@@ -308,12 +308,12 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                                 width: 300,
                                 template: '<div class="google-info">' +
                                     '<dl>' +
-                                    '<dt>@T("Plugins.Feed.Froogle.Products.GoogleCategory"):</dt><dd># if(GoogleCategory !== null) {# #:GoogleCategory# #}  #</dd>' +
-                                    '<dt>@T("Plugins.Feed.Froogle.Products.Gender"):</dt><dd># if(Gender !== null) {# #:Gender# #}  #</dd>' +
-                                    '<dt>@T("Plugins.Feed.Froogle.Products.AgeGroup"):</dt><dd># if(AgeGroup !== null) {# #:AgeGroup# #}  #</dd>' +
-                                    '<dt>@T("Plugins.Feed.Froogle.Products.Color"):</dt><dd># if(Color !== null) {# #:Color# #}  #</dd>' +
-                                    '<dt>@T("Plugins.Feed.Froogle.Products.Size"):</dt><dd># if(GoogleSize !== null) {# #:GoogleSize# #}  #</dd>' +
-                                    '<dt>@T("Plugins.Feed.Froogle.Products.CustomGoods"):</dt><dd>#:CustomGoods#</dd>' +
+                                    '<dt>@T("Plugins.Feed.GoogleShopping.Products.GoogleCategory"):</dt><dd># if(GoogleCategory !== null) {# #:GoogleCategory# #}  #</dd>' +
+                                    '<dt>@T("Plugins.Feed.GoogleShopping.Products.Gender"):</dt><dd># if(Gender !== null) {# #:Gender# #}  #</dd>' +
+                                    '<dt>@T("Plugins.Feed.GoogleShopping.Products.AgeGroup"):</dt><dd># if(AgeGroup !== null) {# #:AgeGroup# #}  #</dd>' +
+                                    '<dt>@T("Plugins.Feed.GoogleShopping.Products.Color"):</dt><dd># if(Color !== null) {# #:Color# #}  #</dd>' +
+                                    '<dt>@T("Plugins.Feed.GoogleShopping.Products.Size"):</dt><dd># if(GoogleSize !== null) {# #:GoogleSize# #}  #</dd>' +
+                                    '<dt>@T("Plugins.Feed.GoogleShopping.Products.CustomGoods"):</dt><dd>#:CustomGoods#</dd>' +
                                     '</dl>' +
                                     '</div>'
                             }, {

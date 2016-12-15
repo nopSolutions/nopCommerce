@@ -3145,3 +3145,16 @@ BEGIN
 	ALTER TABLE [Order] DROP COLUMN [RewardPointsWereAdded]
 END
 GO
+
+
+--update plugin locales (renamed)
+UPDATE [LocaleStringResource]
+SET [ResourceName] = REPLACE([ResourceName], 'Plugins.Feed.Froogle.','Plugins.Feed.GoogleShopping.')
+WHERE [ResourceName] like 'Plugins.Feed.Froogle.%'
+GO
+
+--update settings
+UPDATE [Setting]
+SET [Name] = REPLACE([Name], 'frooglesettings.','googlesShoppingsettings.')
+WHERE [Name] like 'frooglesettings.%'
+GO
