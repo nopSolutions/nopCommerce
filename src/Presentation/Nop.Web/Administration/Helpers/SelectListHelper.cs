@@ -22,7 +22,7 @@ namespace Nop.Admin.Helpers
         public static List<SelectListItem> GetCategoryList(ICategoryService categoryService, ICacheManager cacheManager, bool showHidden = false)
         {
             string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORIES_LIST_KEY, showHidden);
-            var categoryListItems = cacheManager.Get(cacheKey, () =>
+            var listItems = cacheManager.Get(cacheKey, () =>
             {
                 var categories = categoryService.GetAllCategories(showHidden: showHidden);
                 return categories.Select(c => new SelectListItem
@@ -34,7 +34,41 @@ namespace Nop.Admin.Helpers
 
             var result = new List<SelectListItem>();
             //clone the list to ensure that "selected" property is not set
-            foreach (var item in categoryListItems)
+            foreach (var item in listItems)
+            {
+                result.Add(new SelectListItem
+                {
+                    Text = item.Text,
+                    Value = item.Value
+                });
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get manufacturer list
+        /// </summary>
+        /// <param name="manufacturerService">Manufacturer service</param>
+        /// <param name="cacheManager">Cache manager</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Manufacturer list</returns>
+        public static List<SelectListItem> GetManufacturerList(IManufacturerService manufacturerService, ICacheManager cacheManager, bool showHidden = false)
+        {
+            string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURERS_LIST_KEY, showHidden);
+            var listItems = cacheManager.Get(cacheKey, () =>
+            {
+                var manufacturers = manufacturerService.GetAllManufacturers(showHidden: showHidden);
+                return manufacturers.Select(m => new SelectListItem
+                {
+                    Text = m.Name,
+                    Value = m.Id.ToString()
+                });
+            });
+
+            var result = new List<SelectListItem>();
+            //clone the list to ensure that "selected" property is not set
+            foreach (var item in listItems)
             {
                 result.Add(new SelectListItem
                 {

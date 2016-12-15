@@ -20,7 +20,11 @@ namespace Nop.Admin.Infrastructure.Cache
         //categories
         IConsumer<EntityInserted<Category>>,
         IConsumer<EntityUpdated<Category>>,
-        IConsumer<EntityDeleted<Category>>
+        IConsumer<EntityDeleted<Category>>,
+        //manufacturers
+        IConsumer<EntityInserted<Manufacturer>>,
+        IConsumer<EntityUpdated<Manufacturer>>,
+        IConsumer<EntityDeleted<Manufacturer>>
     {
         /// <summary>
         /// Key for nopCommerce.com news cache
@@ -42,6 +46,15 @@ namespace Nop.Admin.Infrastructure.Cache
         /// </remarks>
         public const string CATEGORIES_LIST_KEY = "Nop.pres.admin.categories.list-{0}";
         public const string CATEGORIES_LIST_PATTERN_KEY = "Nop.pres.admin.categories.list";
+
+        /// <summary>
+        /// Key for manufacturers caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : show hidden records?
+        /// </remarks>
+        public const string MANUFACTURERS_LIST_KEY = "Nop.pres.admin.manufacturers.list-{0}";
+        public const string MANUFACTURERS_LIST_PATTERN_KEY = "Nop.pres.admin.manufacturers.list";
 
 
         private readonly ICacheManager _cacheManager;
@@ -84,6 +97,20 @@ namespace Nop.Admin.Infrastructure.Cache
         public void HandleEvent(EntityDeleted<Category> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORIES_LIST_PATTERN_KEY);
+        }
+
+        //manufacturers
+        public void HandleEvent(EntityInserted<Manufacturer> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(MANUFACTURERS_LIST_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<Manufacturer> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(MANUFACTURERS_LIST_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<Manufacturer> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(MANUFACTURERS_LIST_PATTERN_KEY);
         }
     }
 }
