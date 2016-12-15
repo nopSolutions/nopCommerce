@@ -164,6 +164,8 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                var previousIsApproved = productReview.IsApproved;
+
                 productReview.Title = model.Title;
                 productReview.ReviewText = model.ReviewText;
                 productReview.IsApproved = model.IsApproved;
@@ -175,8 +177,13 @@ namespace Nop.Admin.Controllers
                 //update product totals
                 _productService.UpdateProductReviewTotals(productReview.Product);
 
+                //raise event (only if it wasn't approved before and is approved now)
+                if (!previousIsApproved && productReview.IsApproved)
+                    _eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
+
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.ProductReviews.Updated"));
-                return continueEditing ? RedirectToAction("Edit", new { id = productReview.Id}) : RedirectToAction("List");
+
+                return continueEditing ? RedirectToAction("Edit", new { id = productReview.Id }) : RedirectToAction("List");
             }
 
 
@@ -184,7 +191,7 @@ namespace Nop.Admin.Controllers
             PrepareProductReviewModel(model, productReview, true, false);
             return View(model);
         }
-        
+
         //delete
         [HttpPost]
         public ActionResult Delete(int id)
@@ -218,19 +225,18 @@ namespace Nop.Admin.Controllers
 
             if (selectedIds != null)
             {
-                var productReviews = _productService.GetProducReviewsByIds(selectedIds.ToArray());
+                //filter not approved reviews
+                var productReviews = _productService.GetProducReviewsByIds(selectedIds.ToArray()).Where(review => !review.IsApproved);
                 foreach (var productReview in productReviews)
                 {
-                    var previousIsApproved = productReview.IsApproved;
                     productReview.IsApproved = true;
                     _productService.UpdateProduct(productReview.Product);
+                    
                     //update product totals
                     _productService.UpdateProductReviewTotals(productReview.Product);
 
-
-                    //raise event (only if it wasn't approved before)
-                    if (!previousIsApproved)
-                        _eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
+                    //raise event 
+                    _eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
                 }
             }
 
@@ -245,11 +251,13 @@ namespace Nop.Admin.Controllers
 
             if (selectedIds != null)
             {
-                var productReviews = _productService.GetProducReviewsByIds(selectedIds.ToArray());
+                //filter approved reviews
+                var productReviews = _productService.GetProducReviewsByIds(selectedIds.ToArray()).Where(review => review.IsApproved);
                 foreach (var productReview in productReviews)
                 {
                     productReview.IsApproved = false;
                     _productService.UpdateProduct(productReview.Product);
+
                     //update product totals
                     _productService.UpdateProductReviewTotals(productReview.Product);
                 }
