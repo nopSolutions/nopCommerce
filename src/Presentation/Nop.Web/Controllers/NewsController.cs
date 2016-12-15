@@ -6,6 +6,7 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
+using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -37,6 +38,7 @@ namespace Nop.Web.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
+        private readonly IEventPublisher _eventPublisher;
 
         private readonly NewsSettings _newsSettings;
         private readonly LocalizationSettings _localizationSettings;
@@ -44,7 +46,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public NewsController(INewsModelFactory newsModelFactory,
             INewsService newsService,
@@ -56,6 +58,7 @@ namespace Nop.Web.Controllers
             ICustomerActivityService customerActivityService,
             IStoreMappingService storeMappingService,
             IPermissionService permissionService,
+            IEventPublisher eventPublisher,
             NewsSettings newsSettings,
             LocalizationSettings localizationSettings, 
             CaptchaSettings captchaSettings)
@@ -70,6 +73,7 @@ namespace Nop.Web.Controllers
             this._customerActivityService = customerActivityService;
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
+            this._eventPublisher = eventPublisher;
 
             this._newsSettings = newsSettings;
             this._localizationSettings = localizationSettings;
@@ -189,6 +193,10 @@ namespace Nop.Web.Controllers
 
                 //activity log
                 _customerActivityService.InsertActivity("PublicStore.AddNewsComment", _localizationService.GetResource("ActivityLog.PublicStore.AddNewsComment"));
+
+                //raise event
+                if (comment.IsApproved)
+                    _eventPublisher.Publish(new NewsCommentApprovedEvent(comment));
 
                 //The text boxes should be cleared after a comment has been posted
                 //That' why we reload the page

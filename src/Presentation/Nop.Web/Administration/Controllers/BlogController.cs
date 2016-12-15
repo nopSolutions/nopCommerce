@@ -7,6 +7,7 @@ using Nop.Admin.Models.Blogs;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Blogs;
+using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -27,6 +28,7 @@ namespace Nop.Admin.Controllers
         private readonly IBlogService _blogService;
         private readonly ILanguageService _languageService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly IUrlRecordService _urlRecordService;
@@ -36,18 +38,23 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
-        public BlogController(IBlogService blogService, ILanguageService languageService,
-            IDateTimeHelper dateTimeHelper, 
-            ILocalizationService localizationService, IPermissionService permissionService,
+        public BlogController(IBlogService blogService,
+            ILanguageService languageService,
+            IDateTimeHelper dateTimeHelper,
+            IEventPublisher eventPublisher,
+            ILocalizationService localizationService,
+            IPermissionService permissionService,
             IUrlRecordService urlRecordService,
-            IStoreService storeService, IStoreMappingService storeMappingService,
+            IStoreService storeService,
+            IStoreMappingService storeMappingService,
             ICustomerActivityService customerActivityService)
         {
             this._blogService = blogService;
             this._languageService = languageService;
             this._dateTimeHelper = dateTimeHelper;
+            this._eventPublisher = eventPublisher;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._urlRecordService = urlRecordService;
@@ -372,8 +379,14 @@ namespace Nop.Admin.Controllers
             if (comment == null)
                 throw new ArgumentException("No comment found with the specified id");
 
+            var previousIsApproved = comment.IsApproved;
+
             comment.IsApproved = model.IsApproved;
             _blogService.UpdateBlogPost(comment.BlogPost);
+
+            //raise event (only if it wasn't approved before and is approved now)
+            if (!previousIsApproved && comment.IsApproved)
+                _eventPublisher.Publish(new BlogCommentApprovedEvent(comment));
 
             //activity log
             _customerActivityService.InsertActivity("EditBlogComment", _localizationService.GetResource("ActivityLog.EditBlogComment"), model.Id);

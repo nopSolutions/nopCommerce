@@ -7,6 +7,7 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Blogs;
+using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -37,6 +38,7 @@ namespace Nop.Web.Controllers
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
         private readonly IBlogModelFactory _blogModelFactory;
+        private readonly IEventPublisher _eventPublisher;
 
         private readonly BlogSettings _blogSettings;
         private readonly LocalizationSettings _localizationSettings;
@@ -56,6 +58,7 @@ namespace Nop.Web.Controllers
             IStoreMappingService storeMappingService,
             IPermissionService permissionService,
             IBlogModelFactory blogModelFactory,
+            IEventPublisher eventPublisher,
             BlogSettings blogSettings,
             LocalizationSettings localizationSettings,
             CaptchaSettings captchaSettings)
@@ -70,6 +73,7 @@ namespace Nop.Web.Controllers
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
             this._blogModelFactory = blogModelFactory;
+            this._eventPublisher = eventPublisher;
 
             this._blogSettings = blogSettings;
             this._localizationSettings = localizationSettings;
@@ -196,6 +200,10 @@ namespace Nop.Web.Controllers
 
                 //activity log
                 _customerActivityService.InsertActivity("PublicStore.AddBlogComment", _localizationService.GetResource("ActivityLog.PublicStore.AddBlogComment"));
+
+                //raise event
+                if (comment.IsApproved)
+                    _eventPublisher.Publish(new BlogCommentApprovedEvent(comment));
 
                 //The text boxes should be cleared after a comment has been posted
                 //That' why we reload the page
