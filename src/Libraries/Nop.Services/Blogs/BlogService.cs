@@ -242,15 +242,21 @@ namespace Nop.Services.Blogs
         /// Gets all comments
         /// </summary>
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <returns>Comments</returns>
-        public virtual IList<BlogComment> GetAllComments(int customerId)
+        public virtual IList<BlogComment> GetAllComments(int customerId = 0, int storeId = 0)
         {
             var query = _blogCommentRepository.Table;
+
             if (customerId > 0)
-                query = query.Where(bc => bc.CustomerId == customerId);
+                query = query.Where(comment => comment.CustomerId == customerId);
+
+            if (storeId > 0)
+                query = query.Where(comment => comment.StoreId == storeId);
+
             query = query.OrderBy(bc => bc.CreatedOnUtc);
-            var comments = query.ToList();
-            return comments;
+
+            return query.ToList();
         }
 
         /// <summary>
@@ -295,11 +301,15 @@ namespace Nop.Services.Blogs
         /// Get the count of blog comments
         /// </summary>
         /// <param name="blogPost">Blog post</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="isApproved">A value indicating whether to count only approved or not approved comments; pass null to get number of all comments</param>
         /// <returns>Number of blog comments</returns>
-        public virtual int GetBlogCommentsCount(BlogPost blogPost, bool? isApproved = null)
+        public virtual int GetBlogCommentsCount(BlogPost blogPost, int storeId = 0, bool? isApproved = null)
         {
             var query = _blogCommentRepository.Table.Where(comment => comment.BlogPostId == blogPost.Id);
+
+            if (storeId > 0)
+                query = query.Where(comment => comment.StoreId == storeId);
 
             if (isApproved.HasValue)
                 query = query.Where(comment => comment.IsApproved == isApproved.Value);

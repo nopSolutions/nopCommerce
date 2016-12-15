@@ -73,6 +73,15 @@
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.ShowBlogCommentsPerStore)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.ShowBlogCommentsPerStore)
+                                @Html.ValidationMessageFor(model => model.ShowBlogCommentsPerStore)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.PostsPageSize_OverrideForStore, model => model.PostsPageSize, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.PostsPageSize)
                             </div>

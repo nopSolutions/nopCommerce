@@ -1,5 +1,6 @@
 using System;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.News
 {
@@ -34,6 +35,11 @@ namespace Nop.Core.Domain.News
         public bool IsApproved { get; set; }
 
         /// <summary>
+        /// Gets or sets the store identifier
+        /// </summary>
+        public int StoreId { get; set; }
+
+        /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
@@ -47,5 +53,10 @@ namespace Nop.Core.Domain.News
         /// Gets or sets the news item
         /// </summary>
         public virtual NewsItem NewsItem { get; set; }
+
+        /// <summary>
+        /// Gets or sets the store
+        /// </summary>
+        public virtual Store Store { get; set; }
     }
 }

@@ -653,9 +653,10 @@ namespace Nop.Web.Infrastructure.Cache
         /// </summary>
         /// <remarks>
         /// {0} : blog post ID
-        /// {1} : are only approved comments?
+        /// {1} : store ID
+        /// {2} : are only approved comments?
         /// </remarks>
-        public const string BLOG_COMMENTS_NUMBER_KEY = "Nop.pres.blog.comments.number-{0}-{1}";
+        public const string BLOG_COMMENTS_NUMBER_KEY = "Nop.pres.blog.comments.number-{0}-{1}-{2}";
         public const string BLOG_COMMENTS_PATTERN_KEY = "Nop.pres.blog.comments";
 
         /// <summary>
@@ -672,9 +673,10 @@ namespace Nop.Web.Infrastructure.Cache
         /// </summary>
         /// <remarks>
         /// {0} : news item ID
-        /// {1} : are only approved comments?
+        /// {1} : store ID
+        /// {2} : are only approved comments?
         /// </remarks>
-        public const string NEWS_COMMENTS_NUMBER_KEY = "Nop.pres.news.comments.number-{0}-{1}";
+        public const string NEWS_COMMENTS_NUMBER_KEY = "Nop.pres.news.comments.number-{0}-{1}-{2}";
         public const string NEWS_COMMENTS_PATTERN_KEY = "Nop.pres.news.comments";
         
         /// <summary>

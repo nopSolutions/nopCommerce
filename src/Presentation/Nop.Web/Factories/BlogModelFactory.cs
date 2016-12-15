@@ -113,13 +113,17 @@ namespace Nop.Web.Factories
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage;
 
             //number of blog comments
-            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_COMMENTS_NUMBER_KEY, blogPost.Id, true);
-            model.NumberOfComments = _cacheManager.Get(cacheKey, () => _blogService.GetBlogCommentsCount(blogPost, true));
+            var storeId = _blogSettings.ShowBlogCommentsPerStore ? _storeContext.CurrentStore.Id : 0;
+            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_COMMENTS_NUMBER_KEY, blogPost.Id, storeId, true);
+            model.NumberOfComments = _cacheManager.Get(cacheKey, () => _blogService.GetBlogCommentsCount(blogPost, storeId, true));
 
             if (prepareComments)
             {
-                var blogComments = blogPost.BlogComments.Where(comment => comment.IsApproved).OrderBy(comment => comment.CreatedOnUtc);
-                foreach (var bc in blogComments)
+                var blogComments = blogPost.BlogComments.Where(comment => comment.IsApproved);
+                if (_blogSettings.ShowBlogCommentsPerStore)
+                    blogComments = blogComments.Where(comment => comment.StoreId == _storeContext.CurrentStore.Id);
+
+                foreach (var bc in blogComments.OrderBy(comment => comment.CreatedOnUtc))
                 {
                     var commentModel = PrepareBlogPostCommentModel(bc);
                     model.Comments.Add(commentModel);

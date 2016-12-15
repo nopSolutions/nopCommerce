@@ -39,5 +39,10 @@ namespace Nop.Core.Domain.Blogs
         /// Gets or sets a value indicating whether blog comments must be approved
         /// </summary>
         public bool BlogCommentsMustBeApproved { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether blog comments will be filtered per store
+        /// </summary>
+        public bool ShowBlogCommentsPerStore { get; set; }
     }
 }

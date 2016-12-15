@@ -167,8 +167,8 @@ namespace Nop.Admin.Controllers
                         m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     m.LanguageName = x.Language.Name;
-                    m.ApprovedComments = _blogService.GetBlogCommentsCount(x, true);
-                    m.NotApprovedComments = _blogService.GetBlogCommentsCount(x, false);
+                    m.ApprovedComments = _blogService.GetBlogCommentsCount(x, isApproved: true);
+                    m.NotApprovedComments = _blogService.GetBlogCommentsCount(x, isApproved: false);
 
                     return m;
                 }),
@@ -345,7 +345,9 @@ namespace Nop.Admin.Controllers
                 //filter comments by blog
                 _blogService.GetBlogPostById(filterByBlogPostId.Value).BlogComments.OrderBy(bc => bc.CreatedOnUtc).ToList() :
                 //load all blog comments
-                _blogService.GetAllComments(0);
+                _blogService.GetAllComments();
+
+            var storeNames = _storeService.GetAllStores().ToDictionary(store => store.Id, store => store.Name);
 
             var gridModel = new DataSourceResult
             {
@@ -361,6 +363,8 @@ namespace Nop.Admin.Controllers
                     commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc);
                     commentModel.Comment = Core.Html.HtmlHelper.FormatText(blogComment.CommentText, false, true, false, false, false, false);
                     commentModel.IsApproved = blogComment.IsApproved;
+                    commentModel.StoreId = blogComment.StoreId;
+                    commentModel.StoreName = storeNames.ContainsKey(blogComment.StoreId) ? storeNames[blogComment.StoreId] : "Deleted";
 
                     return commentModel;
                 }),

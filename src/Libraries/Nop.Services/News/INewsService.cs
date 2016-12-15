@@ -63,8 +63,9 @@ namespace Nop.Services.News
         /// Gets all comments
         /// </summary>
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <returns>Comments</returns>
-        IList<NewsComment> GetAllComments(int customerId);
+        IList<NewsComment> GetAllComments(int customerId = 0, int storeId = 0);
 
         /// <summary>
         /// Gets a news comment
@@ -84,9 +85,10 @@ namespace Nop.Services.News
         /// Get the count of news comments
         /// </summary>
         /// <param name="newsItem">News item</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="isApproved">A value indicating whether to count only approved or not approved comments; pass null to get number of all comments</param>
         /// <returns>Number of news comments</returns>
-        int GetNewsCommentsCount(NewsItem newsItem, bool? isApproved = null);
+        int GetNewsCommentsCount(NewsItem newsItem, int storeId = 0, bool? isApproved = null);
 
         /// <summary>
         /// Deletes a news comment

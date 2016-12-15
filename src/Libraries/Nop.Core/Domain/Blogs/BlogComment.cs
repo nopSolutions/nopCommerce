@@ -1,5 +1,6 @@
 using System;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.Blogs
 {
@@ -24,6 +25,11 @@ namespace Nop.Core.Domain.Blogs
         public bool IsApproved { get; set; }
 
         /// <summary>
+        /// Gets or sets the store identifier
+        /// </summary>
+        public int StoreId { get; set; }
+
+        /// <summary>
         /// Gets or sets the blog post identifier
         /// </summary>
         public int BlogPostId { get; set; }
@@ -42,5 +48,10 @@ namespace Nop.Core.Domain.Blogs
         /// Gets or sets the blog post
         /// </summary>
         public virtual BlogPost BlogPost { get; set; }
+
+        /// <summary>
+        /// Gets or sets the store
+        /// </summary>
+        public virtual Store Store { get; set; }
     }
 }

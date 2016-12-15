@@ -90,8 +90,9 @@ namespace Nop.Services.Blogs
         /// Gets all comments
         /// </summary>
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <returns>Comments</returns>
-        IList<BlogComment> GetAllComments(int customerId);
+        IList<BlogComment> GetAllComments(int customerId = 0, int storeId = 0);
 
         /// <summary>
         /// Gets a blog comment
@@ -111,9 +112,10 @@ namespace Nop.Services.Blogs
         /// Get the count of blog comments
         /// </summary>
         /// <param name="blogPost">Blog post</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="isApproved">A value indicating whether to count only approved or not approved comments; pass null to get number of all comments</param>
         /// <returns>Number of blog comments</returns>
-        int GetBlogCommentsCount(BlogPost blogPost, bool? isApproved = null);
+        int GetBlogCommentsCount(BlogPost blogPost, int storeId = 0, bool? isApproved = null);
 
         /// <summary>
         /// Deletes a blog comment

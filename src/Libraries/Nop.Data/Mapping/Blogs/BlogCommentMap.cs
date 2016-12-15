@@ -7,15 +7,19 @@ namespace Nop.Data.Mapping.Blogs
         public BlogCommentMap()
         {
             this.ToTable("BlogComment");
-            this.HasKey(pr => pr.Id);
+            this.HasKey(comment => comment.Id);
 
-            this.HasRequired(bc => bc.BlogPost)
-                .WithMany(bp => bp.BlogComments)
-                .HasForeignKey(bc => bc.BlogPostId);
+            this.HasRequired(comment => comment.BlogPost)
+                .WithMany(blog => blog.BlogComments)
+                .HasForeignKey(comment => comment.BlogPostId);
 
-            this.HasRequired(cc => cc.Customer)
+            this.HasRequired(comment => comment.Customer)
                 .WithMany()
-                .HasForeignKey(cc => cc.CustomerId);
+                .HasForeignKey(comment => comment.CustomerId);
+
+            this.HasRequired(comment => comment.Store)
+                .WithMany()
+                .HasForeignKey(comment => comment.StoreId);
         }
     }
 }

@@ -182,6 +182,7 @@ namespace Nop.Web.Controllers
                     CommentTitle = model.AddNewComment.CommentTitle,
                     CommentText = model.AddNewComment.CommentText,
                     IsApproved = !_newsSettings.NewsCommentsMustBeApproved,
+                    StoreId = _storeContext.CurrentStore.Id,
                     CreatedOnUtc = DateTime.UtcNow,
                 };
                 newsItem.NewsComments.Add(comment);

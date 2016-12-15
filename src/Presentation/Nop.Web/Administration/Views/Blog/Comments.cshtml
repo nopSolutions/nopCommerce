@@ -64,6 +64,8 @@
                                             fields: {
                                                 Id: { editable: false, type: "number" },
                                                 BlogPostTitle: { editable: false, type: "string" },
+                                                StoreName: { editable: false, type: "string" },
+                                                StoreId: { editable: false, type: "number" },
                                                 CustomerInfo: { editable: false, type: "string" },
                                                 CustomerId: { editable: false, type: "number" },
                                                 Comment: { editable: false, type: "string" },                                              
@@ -110,6 +112,11 @@
                                         title: "@T("Admin.ContentManagement.Blog.Comments.Fields.BlogPost")",
                                         width: 200,
                                         template: '<a href="@Url.Content("~/Admin/Blog/Edit/")#=BlogPostId#">#:BlogPostTitle#</a>'
+                                    }, {
+                                        field: "StoreId",
+                                        title: "@T("Admin.ContentManagement.Blog.Comments.Fields.StoreName")",
+                                        width: 150,
+                                        template: "#:StoreName#"
                                     }, {
                                         field: "CustomerId",
                                         title: "@T("Admin.ContentManagement.Blog.Comments.Fields.Customer")",

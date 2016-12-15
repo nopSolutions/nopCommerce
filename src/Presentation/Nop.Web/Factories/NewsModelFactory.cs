@@ -113,13 +113,17 @@ namespace Nop.Web.Factories
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage;
 
             //number of news comments
-            var cacheKey = string.Format(ModelCacheEventConsumer.NEWS_COMMENTS_NUMBER_KEY, newsItem.Id, true);
-            model.NumberOfComments = _cacheManager.Get(cacheKey, () => _newsService.GetNewsCommentsCount(newsItem, true));
+            var storeId = _newsSettings.ShowNewsCommentsPerStore ? _storeContext.CurrentStore.Id : 0;
+            var cacheKey = string.Format(ModelCacheEventConsumer.NEWS_COMMENTS_NUMBER_KEY, newsItem.Id, storeId, true);
+            model.NumberOfComments = _cacheManager.Get(cacheKey, () => _newsService.GetNewsCommentsCount(newsItem, storeId, true));
 
             if (prepareComments)
             {
-                var newsComments = newsItem.NewsComments.Where(comment => comment.IsApproved).OrderBy(comment => comment.CreatedOnUtc);
-                foreach (var nc in newsComments)
+                var newsComments = newsItem.NewsComments.Where(comment => comment.IsApproved);
+                if (_newsSettings.ShowNewsCommentsPerStore)
+                    newsComments = newsComments.Where(comment => comment.StoreId == _storeContext.CurrentStore.Id);
+
+                foreach (var nc in newsComments.OrderBy(comment => comment.CreatedOnUtc))
                 {
                     var commentModel = PrepareNewsCommentModel(nc);
                     model.Comments.Add(commentModel);

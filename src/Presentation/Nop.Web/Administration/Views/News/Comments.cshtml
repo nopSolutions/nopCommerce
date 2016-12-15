@@ -64,6 +64,8 @@
                                             fields: {
                                                 Id: { editable: false, type: "number" },
                                                 NewsItemTitle: { editable: false, type: "string" },
+                                                StoreName: { editable: false, type: "string" },
+                                                StoreId: { editable: false, type: "number" },
                                                 CustomerInfo: { editable: false, type: "string" },
                                                 CustomerId: { editable: false, type: "number" },
                                                 CommentTitle: { editable: false, type: "string" },
@@ -111,6 +113,11 @@
                                         title: "@T("Admin.ContentManagement.News.Comments.Fields.NewsItem")",
                                         width: 200,
                                         template: '<a href="@Url.Content("~/Admin/News/Edit/")#=NewsItemId#">#:NewsItemTitle#</a>'
+                                    }, {
+                                        field: "StoreId",
+                                        title: "@T("Admin.ContentManagement.News.Comments.Fields.StoreName")",
+                                        width: 150,
+                                        template: "#:StoreName#"
                                     }, {
                                         field: "CustomerId",
                                         title: "@T("Admin.ContentManagement.News.Comments.Fields.Customer")",

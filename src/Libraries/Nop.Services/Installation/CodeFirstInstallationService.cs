@@ -6207,7 +6207,8 @@ namespace Nop.Services.Installation
                 NotifyAboutNewBlogComments = false,
                 NumberOfTags = 15,
                 ShowHeaderRssUrl = false,
-                BlogCommentsMustBeApproved = false
+                BlogCommentsMustBeApproved = false,
+                ShowBlogCommentsPerStore = false
             });
             settingService.SaveSetting(new NewsSettings
             {
@@ -6218,7 +6219,8 @@ namespace Nop.Services.Installation
                 MainPageNewsCount = 3,
                 NewsArchivePageSize = 10,
                 ShowHeaderRssUrl = false,
-                NewsCommentsMustBeApproved = false
+                NewsCommentsMustBeApproved = false,
+                ShowNewsCommentsPerStore = false
             });
 
             settingService.SaveSetting(new ForumSettings
@@ -10762,6 +10764,7 @@ namespace Nop.Services.Installation
         protected virtual void InstallBlogPosts(string defaultUserEmail)
         {
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
+
             var blogPosts = new List<BlogPost>
                                 {
                                     new BlogPost
@@ -10804,6 +10807,12 @@ namespace Nop.Services.Installation
             var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail);
             if (defaultCustomer == null)
                 throw new Exception("Cannot load default customer");
+
+            //default store
+            var defaultStore = _storeRepository.Table.FirstOrDefault();
+            if (defaultStore == null)
+                throw new Exception("No default store could be loaded");
+
             foreach (var blogPost in blogPosts)
             {
                 blogPost.BlogComments.Add(new BlogComment
@@ -10812,6 +10821,7 @@ namespace Nop.Services.Installation
                     CustomerId = defaultCustomer.Id,
                     CommentText = "This is a sample comment for this blog post",
                     IsApproved = true,
+                    StoreId = defaultStore.Id,
                     CreatedOnUtc = DateTime.UtcNow
                 });
             }
@@ -10821,6 +10831,7 @@ namespace Nop.Services.Installation
         protected virtual void InstallNews(string defaultUserEmail)
         {
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
+
             var news = new List<NewsItem>
                                 {
                                     new NewsItem
@@ -10874,6 +10885,12 @@ namespace Nop.Services.Installation
             var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail);
             if (defaultCustomer == null)
                 throw new Exception("Cannot load default customer");
+
+            //default store
+            var defaultStore = _storeRepository.Table.FirstOrDefault();
+            if (defaultStore == null)
+                throw new Exception("No default store could be loaded");
+
             foreach (var newsItem in news)
             {
                 newsItem.NewsComments.Add(new NewsComment
@@ -10883,6 +10900,7 @@ namespace Nop.Services.Installation
                     CommentTitle = "Sample comment title",
                     CommentText = "This is a sample comment...",
                     IsApproved = true,
+                    StoreId = defaultStore.Id,
                     CreatedOnUtc = DateTime.UtcNow
                 });
             }

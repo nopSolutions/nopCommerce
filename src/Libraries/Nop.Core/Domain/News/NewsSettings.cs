@@ -44,5 +44,10 @@ namespace Nop.Core.Domain.News
         /// Gets or sets a value indicating whether news comments must be approved
         /// </summary>
         public bool NewsCommentsMustBeApproved { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether news comments will be filtered per store
+        /// </summary>
+        public bool ShowNewsCommentsPerStore { get; set; }
     }
 }

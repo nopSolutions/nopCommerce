@@ -34,5 +34,8 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Blog.BlogCommentsMustBeApproved")]
         public bool BlogCommentsMustBeApproved { get; set; }
         public bool BlogCommentsMustBeApproved_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Blog.ShowBlogCommentsPerStore")]
+        public bool ShowBlogCommentsPerStore { get; set; }
     }
 }

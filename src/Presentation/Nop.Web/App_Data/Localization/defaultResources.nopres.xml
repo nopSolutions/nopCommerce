@@ -4959,6 +4959,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Blog.ShowHeaderRSSUrl.Hint">
     <Value>Check to enable the blog RSS feed link in customers browser address bar.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.ShowBlogCommentsPerStore">
+    <Value>Blog comments per store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.ShowBlogCommentsPerStore.Hint">
+    <Value>Check to display blog comments written in the current store only.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog">
     <Value>Catalog settings</Value>
   </LocaleResource>
@@ -6434,6 +6440,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.News.ShowHeaderRSSUrl.Hint">
     <Value>Check to enable the news RSS feed link in customers browser address bar.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.News.ShowNewsCommentsPerStore">
+    <Value>News comments per store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.News.ShowNewsCommentsPerStore.Hint">
+    <Value>Check to display news comments written in the current store only.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.News.ShowNewsOnMainPage">
     <Value>Show on home page</Value>
@@ -7968,6 +7980,9 @@
   <LocaleResource Name="Admin.ContentManagement.Blog.Comments.Fields.IsApproved">
     <Value>Is approved</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.Fields.StoreName">
+    <Value>Store name</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Forums">
     <Value>Forums</Value>
   </LocaleResource>
@@ -8228,6 +8243,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.Comments.Fields.NewsItem">
     <Value>News item</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.Fields.StoreName">
+    <Value>Store name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems">
     <Value>News items</Value>

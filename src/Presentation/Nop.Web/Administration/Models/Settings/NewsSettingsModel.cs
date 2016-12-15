@@ -7,8 +7,6 @@ namespace Nop.Admin.Models.Settings
     {
         public int ActiveStoreScopeConfiguration { get; set; }
 
-
-
         [NopResourceDisplayName("Admin.Configuration.Settings.News.Enabled")]
         public bool Enabled { get; set; }
         public bool Enabled_OverrideForStore { get; set; }
@@ -40,5 +38,8 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.News.NewsCommentsMustBeApproved")]
         public bool NewsCommentsMustBeApproved { get; set; }
         public bool NewsCommentsMustBeApproved_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.News.ShowNewsCommentsPerStore")]
+        public bool ShowNewsCommentsPerStore { get; set; }
     }
 }

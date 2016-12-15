@@ -189,6 +189,7 @@ namespace Nop.Web.Controllers
                     CustomerId = _workContext.CurrentCustomer.Id,
                     CommentText = model.AddNewComment.CommentText,
                     IsApproved = !_blogSettings.BlogCommentsMustBeApproved,
+                    StoreId = _storeContext.CurrentStore.Id,
                     CreatedOnUtc = DateTime.UtcNow,
                 };
                 blogPost.BlogComments.Add(comment);
