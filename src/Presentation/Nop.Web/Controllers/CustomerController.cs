@@ -613,60 +613,46 @@ namespace Nop.Web.Controllers
                     //properties
                     if (_dateTimeSettings.AllowCustomersToSetTimeZone)
                     {
-                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.TimeZoneId,
-                            model.TimeZoneId);
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.TimeZoneId, model.TimeZoneId);
                     }
                     //VAT number
                     if (_taxSettings.EuVatEnabled)
                     {
-                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.VatNumber,
-                            model.VatNumber);
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.VatNumber, model.VatNumber);
 
                         string vatName;
                         string vatAddress;
                         var vatNumberStatus = _taxService.GetVatNumberStatus(model.VatNumber, out vatName,
                             out vatAddress);
-                        _genericAttributeService.SaveAttribute(customer,
-                            SystemCustomerAttributeNames.VatNumberStatusId,
-                            (int) vatNumberStatus);
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.VatNumberStatusId, (int) vatNumberStatus);
                         //send VAT number admin notification
                         if (!String.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
-                            _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(customer, model.VatNumber,
-                                vatAddress, _localizationSettings.DefaultAdminLanguageId);
+                            _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(customer, model.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
 
                     }
 
                     //form fields
                     if (_customerSettings.GenderEnabled)
-                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.Gender,
-                            model.Gender);
-                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.FirstName,
-                        model.FirstName);
-                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.LastName,
-                        model.LastName);
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
+                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
+                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
                     if (_customerSettings.DateOfBirthEnabled)
                     {
                         DateTime? dateOfBirth = model.ParseDateOfBirth();
-                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.DateOfBirth,
-                            dateOfBirth);
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, dateOfBirth);
                     }
                     if (_customerSettings.CompanyEnabled)
-                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.Company,
-                            model.Company);
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.Company, model.Company);
                     if (_customerSettings.StreetAddressEnabled)
-                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.StreetAddress,
-                            model.StreetAddress);
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.StreetAddress, model.StreetAddress);
                     if (_customerSettings.StreetAddress2Enabled)
-                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.StreetAddress2,
-                            model.StreetAddress2);
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.StreetAddress2, model.StreetAddress2);
                     if (_customerSettings.ZipPostalCodeEnabled)
-                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.ZipPostalCode,
-                            model.ZipPostalCode);
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.ZipPostalCode, model.ZipPostalCode);
                     if (_customerSettings.CityEnabled)
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.City, model.City);
                     if (_customerSettings.CountryEnabled)
-                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CountryId,
-                            model.CountryId);
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CountryId, model.CountryId);
                     if (_customerSettings.CountryEnabled && _customerSettings.StateProvinceEnabled)
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.StateProvinceId,
                             model.StateProvinceId);
@@ -680,8 +666,7 @@ namespace Nop.Web.Controllers
                     {
                         //save newsletter value
                         var newsletter =
-                            _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(model.Email,
-                                _storeContext.CurrentStore.Id);
+                            _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(model.Email, _storeContext.CurrentStore.Id);
                         if (newsletter != null)
                         {
                             if (model.Newsletter)
@@ -712,8 +697,7 @@ namespace Nop.Web.Controllers
                     }
 
                     //save customer attributes
-                    _genericAttributeService.SaveAttribute(customer,
-                        SystemCustomerAttributeNames.CustomCustomerAttributes, customerAttributesXml);
+                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CustomCustomerAttributes, customerAttributesXml);
 
                     //login customer now
                     if (isApproved)
@@ -770,10 +754,8 @@ namespace Nop.Web.Controllers
                         case UserRegistrationType.EmailValidation:
                         {
                             //email validation message
-                            _genericAttributeService.SaveAttribute(customer,
-                                SystemCustomerAttributeNames.AccountActivationToken, Guid.NewGuid().ToString());
-                            _workflowMessageService.SendCustomerEmailValidationMessage(customer,
-                                _workContext.WorkingLanguage.Id);
+                            _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.AccountActivationToken, Guid.NewGuid().ToString());
+                            _workflowMessageService.SendCustomerEmailValidationMessage(customer, _workContext.WorkingLanguage.Id);
 
                             //result
                             return RedirectToRoute("RegisterResult",
@@ -789,11 +771,9 @@ namespace Nop.Web.Controllers
                             //send customer welcome message
                             _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
 
-                            var redirectUrl = Url.RouteUrl("RegisterResult",
-                                new {resultId = (int) UserRegistrationType.Standard});
+                            var redirectUrl = Url.RouteUrl("RegisterResult", new {resultId = (int) UserRegistrationType.Standard});
                             if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                                redirectUrl = _webHelper.ModifyQueryString(redirectUrl,
-                                    "returnurl=" + HttpUtility.UrlEncode(returnUrl), null);
+                                redirectUrl = _webHelper.ModifyQueryString(redirectUrl, "returnurl=" + HttpUtility.UrlEncode(returnUrl), null);
                             return Redirect(redirectUrl);
                         }
                         default:
