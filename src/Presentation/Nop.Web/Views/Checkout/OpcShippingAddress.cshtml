@@ -104,22 +104,24 @@
                                         if (point.Latitude != null && point.Longitude != null)
                                         {
                                             <text>
-                                                var marker = new google.maps.Marker({
-                                                    map: googleMap,
-                                                    title: "@point.Name",
-                                                    position: new google.maps.LatLng(@point.Latitude, @point.Longitude),
-                                                    icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-                                                });
-                                                markers.set("@value", marker);
-                                                google.maps.event.addListener(marker, 'click', function () {
-                                                    $('#pickup-points-select').val("@value")
-                                                    infowindow.setContent("@pickupPointInfo");
-                                                    infowindow.open(googleMap, marker);
-                                                });
-                                                @if (i == 0)
-                                                {
-                                                    <text>googleMap.setCenter(marker.getPosition())</text>
-                                                }
+                                                (function() {
+                                                    var marker = new google.maps.Marker({
+                                                        map: googleMap,
+                                                        title: "@point.Name",
+                                                        position: new google.maps.LatLng(@point.Latitude, @point.Longitude),
+                                                        icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                                                    });
+                                                    markers.set("@value", marker);
+                                                    google.maps.event.addListener(marker, 'click', function () {
+                                                        $('#pickup-points-select').val("@value")
+                                                        infowindow.setContent("@pickupPointInfo");
+                                                        infowindow.open(googleMap, marker);
+                                                    });
+                                                    @if (i == 0)
+                                                    {
+                                                        <text>googleMap.setCenter(marker.getPosition())</text>
+                                                    }
+                                                }());
                                             </text>
                                         }
                                         else
