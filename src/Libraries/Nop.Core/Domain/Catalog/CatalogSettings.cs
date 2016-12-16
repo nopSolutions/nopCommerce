@@ -358,5 +358,20 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether need create dropdown list for export
         /// </summary>
         public bool ExportImportUseDropdownlistsForAssociatedEntities { get; set; }
+
+        /// <summary>
+        /// Gets or sets a the number of significant digits in the RoundingHelper
+        /// </summary>
+        public int RoundingPrecision { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether or not to show rounding precision digits for pricing
+        /// </summary>
+        public bool UseRoundingPrecisionForPriceDisplay { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether the RoundingHelper should round away from zero
+        /// </summary>
+        public bool RoundAwayFromZero { get; set; }
     }
 }

@@ -237,5 +237,16 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.CacheProductPrices")]
         public bool CacheProductPrices { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.RoundingPrecision")]
+        public int RoundingPrecision { get; set; }
+        public bool RoundingPrecision_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.UseRoundingPrecisionForPriceDisplay")]
+        public bool UseRoundingPrecisionForPriceDisplay { get; set; }
+        public bool UseRoundingPrecisionForPriceDisplay_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.RoundAwayFromZero")]
+        public bool RoundAwayFromZero { get; set; }
+        public bool RoundAwayFromZero_OverrideForStore { get; set; }
     }
 }

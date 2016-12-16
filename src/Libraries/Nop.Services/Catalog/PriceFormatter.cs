@@ -22,6 +22,7 @@ namespace Nop.Services.Catalog
         private readonly ILocalizationService _localizationService;
         private readonly TaxSettings _taxSettings;
         private readonly CurrencySettings _currencySettings;
+        private readonly CatalogSettings _catalogSettings;
 
         #endregion
 
@@ -31,13 +32,14 @@ namespace Nop.Services.Catalog
             ICurrencyService currencyService,
             ILocalizationService localizationService,
             TaxSettings taxSettings,
-            CurrencySettings currencySettings)
+            CurrencySettings currencySettings, CatalogSettings catalogSettings)
         {
             this._workContext = workContext;
             this._currencyService = currencyService;
             this._localizationService = localizationService;
             this._taxSettings = taxSettings;
             this._currencySettings = currencySettings;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -77,8 +79,10 @@ namespace Nop.Services.Catalog
             {
                 if (!String.IsNullOrEmpty(targetCurrency.DisplayLocale))
                 {
+                    NumberFormatInfo nfi = new CultureInfo(targetCurrency.DisplayLocale, false).NumberFormat;
+                    nfi.CurrencyDecimalDigits = _catalogSettings.RoundingPrecision;
                     //default behavior
-                    result = amount.ToString("C", new CultureInfo(targetCurrency.DisplayLocale));
+                    result = amount.ToString("C", nfi);
                 }
                 else
                 {
@@ -207,7 +211,7 @@ namespace Nop.Services.Catalog
             Currency targetCurrency, Language language, bool priceIncludesTax, bool showTax)
         {
             //we should round it no matter of "ShoppingCartSettings.RoundPricesDuringCalculation" setting
-            price = RoundingHelper.RoundPrice(price);
+            price = RoundingHelper.RoundPrice(price, _catalogSettings);
             
             string currencyString = GetCurrencyString(price, showCurrency, targetCurrency);
             if (showTax)

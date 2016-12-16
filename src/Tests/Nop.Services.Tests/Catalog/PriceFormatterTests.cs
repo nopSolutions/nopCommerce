@@ -6,6 +6,7 @@ using System.Threading;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
@@ -31,6 +32,7 @@ namespace Nop.Services.Tests.Catalog
         private ILocalizationService _localizationService;
         private TaxSettings _taxSettings;
         private IPriceFormatter _priceFormatter;
+        private CatalogSettings _catalogSettings;
         
         [SetUp]
         public new void SetUp()
@@ -74,13 +76,13 @@ namespace Nop.Services.Tests.Catalog
                 _currencySettings, pluginFinder, null);
 
             _taxSettings = new TaxSettings();
-
+            _catalogSettings = new CatalogSettings();
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
             _localizationService.Expect(x => x.GetResource("Products.InclTaxSuffix", 1, false)).Return("{0} incl tax");
             _localizationService.Expect(x => x.GetResource("Products.ExclTaxSuffix", 1, false)).Return("{0} excl tax");
             
             _priceFormatter = new PriceFormatter(_workContext, _currencyService,_localizationService, 
-                _taxSettings, _currencySettings);
+                _taxSettings, _currencySettings, _catalogSettings);
         }
 
         [Test]

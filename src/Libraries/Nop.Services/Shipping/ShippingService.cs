@@ -58,6 +58,7 @@ namespace Nop.Services.Shipping
         private readonly IEventPublisher _eventPublisher;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly ICacheManager _cacheManager;
+        private readonly CatalogSettings _catalogSettings;
 
         #endregion
 
@@ -95,7 +96,7 @@ namespace Nop.Services.Shipping
             IStoreContext storeContext,
             IEventPublisher eventPublisher,
             ShoppingCartSettings shoppingCartSettings,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager, CatalogSettings catalogSettings)
         {
             this._shippingMethodRepository = shippingMethodRepository;
             this._warehouseRepository = warehouseRepository;
@@ -112,6 +113,7 @@ namespace Nop.Services.Shipping
             this._eventPublisher = eventPublisher;
             this._shoppingCartSettings = shoppingCartSettings;
             this._cacheManager = cacheManager;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -852,7 +854,7 @@ namespace Nop.Services.Shipping
                         if (String.IsNullOrEmpty(so.ShippingRateComputationMethodSystemName))
                             so.ShippingRateComputationMethodSystemName = srcm.PluginDescriptor.SystemName;
                         if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                            so.Rate = RoundingHelper.RoundPrice(so.Rate);
+                            so.Rate = RoundingHelper.RoundPrice(so.Rate, _catalogSettings);
                         result.ShippingOptions.Add(so);
                     }
                 }

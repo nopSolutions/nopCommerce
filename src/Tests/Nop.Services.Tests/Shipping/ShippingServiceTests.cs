@@ -39,6 +39,7 @@ namespace Nop.Services.Tests.Shipping
         private IProductService _productService;
         private Store _store;
         private IStoreContext _storeContext;
+        private CatalogSettings _catalogSettings;
 
         [SetUp]
         public new void SetUp()
@@ -64,7 +65,7 @@ namespace Nop.Services.Tests.Shipping
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
             _addressService = MockRepository.GenerateMock<IAddressService>();
             _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
-
+            _catalogSettings= new CatalogSettings();
             _store = new Store { Id = 1 };
             _storeContext = MockRepository.GenerateMock<IStoreContext>();
             _storeContext.Expect(x => x.CurrentStore).Return(_store);
@@ -84,7 +85,7 @@ namespace Nop.Services.Tests.Shipping
                 _storeContext,
                 _eventPublisher,
                 _shoppingCartSettings,
-                cacheManager);
+                cacheManager, _catalogSettings);
         }
 
         [Test]

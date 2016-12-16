@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
@@ -16,6 +17,7 @@ namespace Nop.Services.Tests.Payments
     {
         private PaymentSettings _paymentSettings;
         private ShoppingCartSettings _shoppingCartSettings;
+        private CatalogSettings _catalogSettings;
         private ISettingService _settingService;
         private IPaymentService _paymentService;
         
@@ -29,9 +31,10 @@ namespace Nop.Services.Tests.Payments
             var pluginFinder = new PluginFinder();
 
             _shoppingCartSettings = new ShoppingCartSettings();
+            _catalogSettings = new CatalogSettings();
             _settingService = MockRepository.GenerateMock<ISettingService>();
 
-            _paymentService = new PaymentService(_paymentSettings, pluginFinder, _settingService, _shoppingCartSettings);
+            _paymentService = new PaymentService(_paymentSettings, pluginFinder, _settingService, _shoppingCartSettings, _catalogSettings);
         }
 
         [Test]

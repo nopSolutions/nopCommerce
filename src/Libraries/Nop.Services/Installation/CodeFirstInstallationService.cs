@@ -5903,7 +5903,10 @@ namespace Nop.Services.Installation
                 ShowProductReviewsTabOnAccountPage = true,
                 ProductReviewsPageSizeOnAccountPage = 10,
                 ExportImportProductAttributes = true,
-                ExportImportUseDropdownlistsForAssociatedEntities = true
+                ExportImportUseDropdownlistsForAssociatedEntities = true,
+                RoundingPrecision = 2,
+                UseRoundingPrecisionForPriceDisplay = false,
+                RoundAwayFromZero = false
             });
 
             settingService.SaveSetting(new LocalizationSettings
