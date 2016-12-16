@@ -23,7 +23,6 @@ namespace Nop.Services.Catalog
 
             //using Swiss Franc (CHF)? just uncomment the line below
             //return Math.Round(value * 20, 0) / 20;
-
             catalogSettings = catalogSettings ?? EngineContext.Current.Resolve<CatalogSettings>();
             var roundingPrecision = catalogSettings.RoundingPrecision;
             return catalogSettings.RoundAwayFromZero ?  Math.Round(value, roundingPrecision, MidpointRounding.AwayFromZero) : Math.Round(value, roundingPrecision);
