@@ -371,8 +371,7 @@ namespace Nop.Web.Controllers
             }
 
             //activity log
-            _customerActivityService.InsertActivity("PublicStore.Logout",
-                _localizationService.GetResource("ActivityLog.PublicStore.Logout"));
+            _customerActivityService.InsertActivity("PublicStore.Logout", _localizationService.GetResource("ActivityLog.PublicStore.Logout"));
             //standard logout 
             _authenticationService.SignOut();
 
@@ -660,8 +659,7 @@ namespace Nop.Web.Controllers
                     if (_customerSettings.NewsletterEnabled)
                     {
                         //save newsletter value
-                        var newsletter =
-                            _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(model.Email, _storeContext.CurrentStore.Id);
+                        var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(model.Email, _storeContext.CurrentStore.Id);
                         if (newsletter != null)
                         {
                             if (model.Newsletter)
