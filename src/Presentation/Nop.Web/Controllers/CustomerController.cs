@@ -309,7 +309,7 @@ namespace Nop.Web.Controllers
                         _eventPublisher.Publish(new CustomerLoggedinEvent(customer));
 
                         //activity log
-                        _customerActivityService.InsertActivity("PublicStore.Login", _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
+                        _customerActivityService.InsertActivity(customer, "PublicStore.Login", _localizationService.GetResource("ActivityLog.PublicStore.Login"));
 
                         if (String.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
                             return RedirectToRoute("HomePage");
