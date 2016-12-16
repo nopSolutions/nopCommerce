@@ -1967,7 +1967,7 @@ namespace Nop.Services.Catalog
             if (productId > 0)
                 query = query.Where(c => c.ProductId == productId);
 
-            query = query.OrderBy(c => c.CreatedOnUtc);
+            query = query.OrderBy(c => c.CreatedOnUtc).ThenBy(c => c.Id);
 
             var productReviews = new PagedList<ProductReview>(query, pageIndex, pageSize);
 

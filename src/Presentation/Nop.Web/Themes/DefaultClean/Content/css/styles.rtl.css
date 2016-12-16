@@ -2472,6 +2472,17 @@ label, label + * {
 	line-height: 22px;
 	color: #444;
 }
+.product-review-item .reply {
+	margin: 15px 0;
+    border-top: 1px solid #ddd;
+}
+.product-review-item .reply-header {
+	margin: 15px 0;
+    font-weight: bold;
+}
+.product-review-item .reply-text {
+	line-height: 22px;
+}
 .product-review-item .review-info {
 	margin: 0 0 5px;
 }

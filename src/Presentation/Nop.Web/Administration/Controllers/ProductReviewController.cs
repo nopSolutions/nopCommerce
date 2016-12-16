@@ -56,7 +56,7 @@ namespace Nop.Admin.Controllers
 
         [NonAction]
         protected virtual void PrepareProductReviewModel(ProductReviewModel model,
-            ProductReview productReview, bool excludeProperties, bool formatReviewText)
+            ProductReview productReview, bool excludeProperties, bool formatReviewAndReplyText)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -76,10 +76,16 @@ namespace Nop.Admin.Controllers
             if (!excludeProperties)
             {
                 model.Title = productReview.Title;
-                if (formatReviewText)
+                if (formatReviewAndReplyText)
+                {
                     model.ReviewText = Core.Html.HtmlHelper.FormatText(productReview.ReviewText, false, true, false, false, false, false);
+                    model.ReplyText = Core.Html.HtmlHelper.FormatText(productReview.ReplyText, false, true, false, false, false, false);
+                }
                 else
+                {
                     model.ReviewText = productReview.ReviewText;
+                    model.ReplyText = productReview.ReplyText;
+                }
                 model.IsApproved = productReview.IsApproved;
             }
         }
@@ -168,6 +174,7 @@ namespace Nop.Admin.Controllers
 
                 productReview.Title = model.Title;
                 productReview.ReviewText = model.ReviewText;
+                productReview.ReplyText = model.ReplyText;
                 productReview.IsApproved = model.IsApproved;
                 _productService.UpdateProduct(productReview.Product);
 

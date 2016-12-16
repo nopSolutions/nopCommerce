@@ -2358,6 +2358,12 @@
   <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Rating.Hint">
     <Value>The customer's product rating.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.ReplyText">
+    <Value>Reply text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.ReplyText.Hint">
+    <Value>The reply text (by a store owner). If specified, then it'll be visible to a customer. Leave empty to ignore this functionality.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.ReviewText">
     <Value>Review text</Value>
   </LocaleResource>
@@ -15275,6 +15281,9 @@
   </LocaleResource>
   <LocaleResource Name="Reviews.ProductReviewsFor">
     <Value>Product reviews for</Value>
+  </LocaleResource>
+  <LocaleResource Name="Reviews.Reply">
+    <Value>A manager responded to this review</Value>
   </LocaleResource>
   <LocaleResource Name="Reviews.SeeAfterApproving">
     <Value>You will see the product review after approving by a store administrator.</Value>

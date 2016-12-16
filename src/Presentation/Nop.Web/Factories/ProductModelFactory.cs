@@ -1338,6 +1338,7 @@ namespace Nop.Web.Factories
                     AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !customer.IsGuest(),
                     Title = pr.Title,
                     ReviewText = pr.ReviewText,
+                    ReplyText = pr.ReplyText,
                     Rating = pr.Rating,
                     Helpfulness = new ProductReviewHelpfulnessModel
                     {
@@ -1381,8 +1382,8 @@ namespace Nop.Web.Factories
                     ProductSeName = product.GetSeName(),
                     Rating = review.Rating,
                     ReviewText = review.ReviewText,
-                    WrittenOnStr =
-                        _dateTimeHelper.ConvertToUserTime(product.CreatedOnUtc, DateTimeKind.Utc).ToString("g")
+                    ReplyText = review.ReplyText,
+                    WrittenOnStr = _dateTimeHelper.ConvertToUserTime(product.CreatedOnUtc, DateTimeKind.Utc).ToString("g")
                 };
 
                 if (_catalogSettings.ProductReviewsMustBeApproved)

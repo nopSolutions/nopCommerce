@@ -1079,6 +1079,15 @@ set @resources='
   <LocaleResource Name="Admin.ReturnRequests.Fields.UploadedFile.Download">
     <Value>Download</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.ReplyText">
+    <Value>Reply text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.ReplyText.Hint">
+    <Value>The reply text (by a store owner). If specified, then it''ll be visible to a customer. Leave empty to ignore this functionality.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Reviews.Reply">
+    <Value>A manager responded to this review</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3235,5 +3244,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.returnrequ
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'ordersettings.returnrequestsfilemaximumsize', N'2048', 0)
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductReview]') and NAME='ReplyText')
+BEGIN
+	ALTER TABLE [ProductReview]
+	ADD [ReplyText] nvarchar(MAX) NULL
 END
 GO
