@@ -1055,6 +1055,30 @@ set @resources='
   <LocaleResource Name="Admin.System.Templates.Product.IgnoredProductTypes">
     <Value>Ignored product type IDs (advanced)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestsAllowFiles">
+    <Value>Allow file uploads</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestsAllowFiles.Hint">
+    <Value>Check if you want to allow customers to upload files when submitting return requests.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnRequests.UploadedFile">
+    <Value>Upload (any additional document, scan, etc)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests.UploadedFile">
+    <Value>Uploaded file:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests.UploadedFile.Download">
+    <Value>Download</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.UploadedFile">
+    <Value>Uploaded file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.UploadedFile.Hint">
+    <Value>File uploaded by customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.UploadedFile.Download">
+    <Value>Download</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3179,4 +3203,37 @@ GO
 UPDATE [ProductTemplate]
 SET [IgnoredProductTypes] = '5'
 WHERE [ViewPath] = N'ProductTemplate.Grouped'
+GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ReturnRequest]') and NAME='UploadedFileId')
+BEGIN
+	ALTER TABLE [ReturnRequest]
+	ADD [UploadedFileId] int NULL
+END
+GO
+
+UPDATE [ReturnRequest]
+SET [UploadedFileId] = 0
+WHERE [UploadedFileId] IS NULL
+GO
+
+ALTER TABLE [ReturnRequest] ALTER COLUMN [UploadedFileId] int NOT NULL
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.returnrequestsallowfiles')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'ordersettings.returnrequestsallowfiles', N'False', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.returnrequestsfilemaximumsize')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'ordersettings.returnrequestsfilemaximumsize', N'2048', 0)
+END
 GO

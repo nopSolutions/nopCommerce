@@ -540,7 +540,12 @@ namespace Nop.Web.Infrastructure
                             new { controller = "ShoppingCart", action = "UploadFileCheckoutAttribute" },
                             new { attributeId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
-            
+            //return request with "upload file" tsupport
+            routes.MapLocalizedRoute("UploadFileReturnRequest",
+                            "uploadfilereturnrequest",
+                            new { controller = "ReturnRequest", action = "UploadFileReturnRequest" },
+                            new[] { "Nop.Web.Controllers" });
+
             //forums
             routes.MapLocalizedRoute("ActiveDiscussions",
                             "boards/activediscussions",

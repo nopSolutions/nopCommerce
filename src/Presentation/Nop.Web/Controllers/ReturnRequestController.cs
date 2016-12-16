@@ -1,16 +1,21 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Web.Factories;
@@ -32,8 +37,10 @@ namespace Nop.Web.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerService _customerService;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly LocalizationSettings _localizationSettings;
         private readonly ICustomNumberFormatter _customNumberFormatter;
+        private readonly IDownloadService _downloadService;
+        private readonly LocalizationSettings _localizationSettings;
+        private readonly OrderSettings _orderSettings;
 
         #endregion
 
@@ -48,8 +55,10 @@ namespace Nop.Web.Controllers
             ILocalizationService localizationService,
             ICustomerService customerService,
             IWorkflowMessageService workflowMessageService,
+            ICustomNumberFormatter customNumberFormatter,
+            IDownloadService downloadService,
             LocalizationSettings localizationSettings,
-            ICustomNumberFormatter customNumberFormatter)
+            OrderSettings orderSettings)
         {
             this._returnRequestModelFactory = returnRequestModelFactory;
             this._returnRequestService = returnRequestService;
@@ -60,8 +69,10 @@ namespace Nop.Web.Controllers
             this._localizationService = localizationService;
             this._customerService = customerService;
             this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
             this._customNumberFormatter = customNumberFormatter;
+            this._downloadService = downloadService;
+            this._localizationSettings = localizationSettings;
+            this._orderSettings = orderSettings;
         }
 
         #endregion
@@ -107,6 +118,14 @@ namespace Nop.Web.Controllers
 
             int count = 0;
 
+            var downloadId = 0;
+            if (_orderSettings.ReturnRequestsAllowFiles)
+            {
+                var download = _downloadService.GetDownloadByGuid(model.UploadedFileGuid);
+                if (download != null)
+                    downloadId = download.Id;
+            }
+
             //returnable products
             var orderItems = order.OrderItems.Where(oi => !oi.Product.NotReturnable);
             foreach (var orderItem in orderItems)
@@ -122,7 +141,7 @@ namespace Nop.Web.Controllers
                 {
                     var rrr = _returnRequestService.GetReturnRequestReasonById(model.ReturnRequestReasonId);
                     var rra = _returnRequestService.GetReturnRequestActionById(model.ReturnRequestActionId);
-
+                    
                     var rr = new ReturnRequest
                     {
                         CustomNumber = "",
@@ -133,6 +152,7 @@ namespace Nop.Web.Controllers
                         ReasonForReturn = rrr != null ? rrr.GetLocalized(x => x.Name) : "not available",
                         RequestedAction = rra != null ? rra.GetLocalized(x => x.Name) : "not available",
                         CustomerComments = model.Comments,
+                        UploadedFileId = downloadId,
                         StaffNotes = string.Empty,
                         ReturnRequestStatus = ReturnRequestStatus.Pending,
                         CreatedOnUtc = DateTime.UtcNow,
@@ -159,6 +179,90 @@ namespace Nop.Web.Controllers
                 model.Result = _localizationService.GetResource("ReturnRequests.NoItemsSubmitted");
 
             return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult UploadFileReturnRequest()
+        {
+            if (!_orderSettings.ReturnRequestsEnabled && !_orderSettings.ReturnRequestsAllowFiles)
+            {
+                return Json(new
+                {
+                    success = false,
+                    downloadGuid = Guid.Empty,
+                }, MimeTypes.TextPlain);
+            }
+
+            //we process it distinct ways based on a browser
+            //find more info here http://stackoverflow.com/questions/4884920/mvc3-valums-ajax-file-upload
+            Stream stream = null;
+            var fileName = "";
+            var contentType = "";
+            if (String.IsNullOrEmpty(Request["qqfile"]))
+            {
+                // IE
+                HttpPostedFileBase httpPostedFile = Request.Files[0];
+                if (httpPostedFile == null)
+                    throw new ArgumentException("No file uploaded");
+                stream = httpPostedFile.InputStream;
+                fileName = Path.GetFileName(httpPostedFile.FileName);
+                contentType = httpPostedFile.ContentType;
+            }
+            else
+            {
+                //Webkit, Mozilla
+                stream = Request.InputStream;
+                fileName = Request["qqfile"];
+            }
+
+            var fileBinary = new byte[stream.Length];
+            stream.Read(fileBinary, 0, fileBinary.Length);
+
+            var fileExtension = Path.GetExtension(fileName);
+            if (!String.IsNullOrEmpty(fileExtension))
+                fileExtension = fileExtension.ToLowerInvariant();
+
+            int validationFileMaximumSize = _orderSettings.ReturnRequestsFileMaximumSize;
+            if (validationFileMaximumSize > 0)
+            {
+                //compare in bytes
+                var maxFileSizeBytes = validationFileMaximumSize * 1024;
+                if (fileBinary.Length > maxFileSizeBytes)
+                {
+                    //when returning JSON the mime-type must be set to text/plain
+                    //otherwise some browsers will pop-up a "Save As" dialog.
+                    return Json(new
+                    {
+                        success = false,
+                        message = string.Format(_localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), validationFileMaximumSize),
+                        downloadGuid = Guid.Empty,
+                    }, MimeTypes.TextPlain);
+                }
+            }
+
+            var download = new Download
+            {
+                DownloadGuid = Guid.NewGuid(),
+                UseDownloadUrl = false,
+                DownloadUrl = "",
+                DownloadBinary = fileBinary,
+                ContentType = contentType,
+                //we store filename without extension for downloads
+                Filename = Path.GetFileNameWithoutExtension(fileName),
+                Extension = fileExtension,
+                IsNew = true
+            };
+            _downloadService.InsertDownload(download);
+
+            //when returning JSON the mime-type must be set to text/plain
+            //otherwise some browsers will pop-up a "Save As" dialog.
+            return Json(new
+            {
+                success = true,
+                message = _localizationService.GetResource("ShoppingCart.FileUploaded"),
+                downloadUrl = Url.Action("GetFileUpload", "Download", new {downloadId = download.DownloadGuid}),
+                downloadGuid = download.DownloadGuid,
+            }, MimeTypes.TextPlain);
         }
 
         #endregion

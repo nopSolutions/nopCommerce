@@ -82,6 +82,14 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public bool ReturnRequestsEnabled { get; set; }
         /// <summary>
+        /// Gets or sets a value indicating whether customers are allowed to upload files
+        /// </summary>
+        public bool ReturnRequestsAllowFiles { get; set; }
+        /// <summary>
+        /// Gets or sets maximum file size for upload file (return request). Set 0 to allow any file size
+        /// </summary>
+        public int ReturnRequestsFileMaximumSize { get; set; }
+        /// <summary>
         /// Gets or sets a value "Return requests" number mask
         /// </summary>
         public string ReturnRequestNumberMask { get; set; }

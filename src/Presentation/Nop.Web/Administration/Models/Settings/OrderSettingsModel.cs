@@ -74,6 +74,10 @@ namespace Nop.Admin.Models.Settings
         public bool ReturnRequestsEnabled { get; set; }
         public bool ReturnRequestsEnabled_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestsAllowFiles")]
+        public bool ReturnRequestsAllowFiles { get; set; }
+        public bool ReturnRequestsAllowFiles_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestNumberMask")]
         public string ReturnRequestNumberMask { get; set; }
         public bool ReturnRequestNumberMask_OverrideForStore { get; set; }

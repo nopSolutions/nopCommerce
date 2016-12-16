@@ -231,6 +231,12 @@
   <LocaleResource Name="Account.CustomerReturnRequests.Title">
     <Value>Return #{0} - {1}</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests.UploadedFile">
+    <Value>Uploaded file:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests.UploadedFile.Download">
+    <Value>Download</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.DownloadableProducts">
     <Value>Downloadable products</Value>
   </LocaleResource>
@@ -6648,6 +6654,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.Updated">
     <Value>The return request reason has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestsAllowFiles">
+    <Value>Allow file uploads</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestsAllowFiles.Hint">
+    <Value>Check if you want to allow customers to upload files when submitting return requests.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestsDescription1">
     <Value>The returns system will allow your customers to request a return on items they've purchased. These are also known as RMA requests.</Value>
   </LocaleResource>
@@ -11328,6 +11340,15 @@
   <LocaleResource Name="Admin.ReturnRequests.Fields.Status.Hint">
     <Value>Choose request status.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.UploadedFile">
+    <Value>Uploaded file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.UploadedFile.Download">
+    <Value>Download</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.UploadedFile.Hint">
+    <Value>File uploaded by customer</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Notified">
     <Value>The customer has been notified successfully.</Value>
   </LocaleResource>
@@ -15182,6 +15203,9 @@
   </LocaleResource>
   <LocaleResource Name="ReturnRequests.Title">
     <Value><![CDATA[Return item(s) from <a href="{0}">order #{1}</a>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnRequests.UploadedFile">
+    <Value>Upload (any additional document, scan, etc)</Value>
   </LocaleResource>
   <LocaleResource Name="ReturnRequests.WhyReturning">
     <Value>Why are you returning these items?</Value>

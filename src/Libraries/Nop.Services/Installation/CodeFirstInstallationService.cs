@@ -6107,6 +6107,8 @@ namespace Nop.Services.Installation
                 GeneratePdfInvoiceInCustomerLanguage = true,
                 AttachPdfInvoiceToOrderPaidEmail = false,
                 ReturnRequestsEnabled = true,
+                ReturnRequestsAllowFiles = false,
+                ReturnRequestsFileMaximumSize = 2048,
                 NumberOfDaysReturnRequestAvailable = 365,
                 MinimumOrderPlacementInterval = 30,
                 ActivateGiftCardsAfterCompletingOrder = false,

@@ -40,6 +40,9 @@ namespace Nop.Admin.Models.Orders
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.CustomerComments")]
         public string CustomerComments { get; set; }
 
+        [NopResourceDisplayName("Admin.ReturnRequests.Fields.UploadedFile")]
+        public Guid UploadedFileGuid { get; set; }
+
         [AllowHtml]
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.StaffNotes")]
         public string StaffNotes { get; set; }

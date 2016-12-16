@@ -10,6 +10,7 @@ using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
@@ -29,9 +30,9 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly LocalizationSettings _localizationSettings;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPermissionService _permissionService;
+        private readonly IDownloadService _downloadService;
 
         #endregion Fields
 
@@ -44,9 +45,9 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
-            LocalizationSettings localizationSettings,
             ICustomerActivityService customerActivityService, 
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            IDownloadService downloadService)
         {
             this._returnRequestService = returnRequestService;
             this._orderService = orderService;
@@ -55,9 +56,9 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
             this._customerActivityService = customerActivityService;
             this._permissionService = permissionService;
+            this._downloadService = downloadService;
         }
 
         #endregion
@@ -88,6 +89,9 @@ namespace Nop.Admin.Controllers
             model.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
             model.Quantity = returnRequest.Quantity;
             model.ReturnRequestStatusStr = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext);
+
+            var download = _downloadService.GetDownloadById(returnRequest.UploadedFileId);
+            model.UploadedFileGuid = download != null ? download.DownloadGuid : Guid.Empty;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
             if (!excludeProperties)
             {

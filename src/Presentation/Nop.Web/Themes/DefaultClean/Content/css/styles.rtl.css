@@ -2853,6 +2853,12 @@ label, label + * {
 .return-request-page h1 a {
     color: #4ab2f1;
 }
+.return-request-page .return-request-file {
+    font-size: 14px;
+}
+.return-request-page .return-request-file .uploadedfileinput {
+    display: inline-block;
+}
 .registration-page .message-error,
 .login-page .message-error,
 .account-page .message-error {

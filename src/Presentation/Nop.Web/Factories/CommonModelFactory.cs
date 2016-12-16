@@ -628,8 +628,9 @@ namespace Nop.Web.Factories
                     "/subscribenewsletter",
                     "/topic/authenticate",
                     "/viewpm",
-                    "/uploadfileproductattribute",
                     "/uploadfilecheckoutattribute",
+                    "/uploadfileproductattribute",
+                    "/uploadfilereturnrequest",
                     "/wishlist",
                 };
 

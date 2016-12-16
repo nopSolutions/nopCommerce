@@ -9,6 +9,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Web.Infrastructure.Cache;
@@ -28,6 +29,8 @@ namespace Nop.Web.Factories
         private readonly IPriceFormatter _priceFormatter;
         private readonly ILocalizationService _localizationService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IDownloadService _downloadService;
+        private readonly OrderSettings _orderSettings;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -42,6 +45,8 @@ namespace Nop.Web.Factories
             IPriceFormatter priceFormatter,
             ILocalizationService localizationService,
             IDateTimeHelper dateTimeHelper,
+            IDownloadService downloadService, 
+            OrderSettings orderSettings,
             ICacheManager cacheManager)
         {
             this._returnRequestService = returnRequestService;
@@ -52,6 +57,8 @@ namespace Nop.Web.Factories
             this._priceFormatter = priceFormatter;
             this._localizationService = localizationService;
             this._dateTimeHelper = dateTimeHelper;
+            this._downloadService = downloadService;
+            this._orderSettings = orderSettings;
             this._cacheManager = cacheManager;
         }
 
@@ -102,6 +109,7 @@ namespace Nop.Web.Factories
                 throw new ArgumentNullException("model");
 
             model.OrderId = order.Id;
+            model.AllowFiles = _orderSettings.ReturnRequestsAllowFiles;
 
             //return reasons
             model.AvailableReturnReasons = _cacheManager.Get(string.Format(ModelCacheEventConsumer.RETURNREQUESTREASONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
@@ -146,14 +154,14 @@ namespace Nop.Web.Factories
         {
             var model = new CustomerReturnRequestsModel();
 
-            var returnRequests = _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id, 
-                _workContext.CurrentCustomer.Id);
+            var returnRequests = _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id);
             foreach (var returnRequest in returnRequests)
             {
                 var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
                 if (orderItem != null)
                 {
                     var product = orderItem.Product;
+                    var download = _downloadService.GetDownloadById(returnRequest.UploadedFileId);
 
                     var itemModel = new CustomerReturnRequestsModel.ReturnRequestModel
                     {
@@ -167,6 +175,7 @@ namespace Nop.Web.Factories
                         ReturnAction = returnRequest.RequestedAction,
                         ReturnReason = returnRequest.ReasonForReturn,
                         Comments = returnRequest.CustomerComments,
+                        UploadedFileGuid = download != null ? download.DownloadGuid : Guid.Empty,
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc),
                     };
                     model.Items.Add(itemModel);

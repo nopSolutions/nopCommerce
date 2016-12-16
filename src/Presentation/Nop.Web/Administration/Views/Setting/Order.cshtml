@@ -344,6 +344,16 @@
                         @Html.ValidationMessageFor(model => model.NumberOfDaysReturnRequestAvailable)
                     </div>
                 </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ReturnRequestsAllowFiles_OverrideForStore, model => model.ReturnRequestsAllowFiles, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ReturnRequestsAllowFiles)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.ReturnRequestsAllowFiles)
+                        @Html.ValidationMessageFor(model => model.ReturnRequestsAllowFiles)
+                    </div>
+                </div>
             </div>
         </div>
         @Html.Partial("_ReturnRequestReasons")

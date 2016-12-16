@@ -43,6 +43,17 @@
                         <label>@T("Account.CustomerReturnRequests.Date")</label>
                         <span>@item.CreatedOn.ToString()</span>
                     </li>
+                    @if (item.UploadedFileGuid != Guid.Empty)
+                    {
+                        <li class="uploaded-file">
+                            <label>@T("Account.CustomerReturnRequests.UploadedFile")</label>
+                            <span>
+                                <a href="@Url.Action("GetFileUpload", "Download", new {downloadId = item.UploadedFileGuid.ToString()})">
+                                    @T("Account.CustomerReturnRequests.UploadedFile.Download")
+                                </a>
+                            </span>
+                        </li>
+                    }
                     @if (!String.IsNullOrEmpty(item.Comments))
                     {
                         <li class="comments">
