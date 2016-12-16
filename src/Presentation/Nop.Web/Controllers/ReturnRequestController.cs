@@ -28,15 +28,11 @@ namespace Nop.Web.Controllers
         private readonly IOrderService _orderService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly ICurrencyService _currencyService;
-        private readonly IPriceFormatter _priceFormatter;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerService _customerService;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly LocalizationSettings _localizationSettings;
-        private readonly ICacheManager _cacheManager;
         private readonly ICustomNumberFormatter _customNumberFormatter;
 
         #endregion
@@ -48,15 +44,11 @@ namespace Nop.Web.Controllers
             IOrderService orderService, 
             IWorkContext workContext, 
             IStoreContext storeContext,
-            ICurrencyService currencyService, 
-            IPriceFormatter priceFormatter,
             IOrderProcessingService orderProcessingService,
             ILocalizationService localizationService,
             ICustomerService customerService,
             IWorkflowMessageService workflowMessageService,
-            IDateTimeHelper dateTimeHelper,
             LocalizationSettings localizationSettings,
-            ICacheManager cacheManager, 
             ICustomNumberFormatter customNumberFormatter)
         {
             this._returnRequestModelFactory = returnRequestModelFactory;
@@ -64,15 +56,11 @@ namespace Nop.Web.Controllers
             this._orderService = orderService;
             this._workContext = workContext;
             this._storeContext = storeContext;
-            this._currencyService = currencyService;
-            this._priceFormatter = priceFormatter;
             this._orderProcessingService = orderProcessingService;
             this._localizationService = localizationService;
             this._customerService = customerService;
             this._workflowMessageService = workflowMessageService;
-            this._dateTimeHelper = dateTimeHelper;
             this._localizationSettings = localizationSettings;
-            this._cacheManager = cacheManager;
             this._customNumberFormatter = customNumberFormatter;
         }
 
