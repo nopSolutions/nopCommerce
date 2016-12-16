@@ -5053,19 +5053,19 @@
     <Value>Set rounding precision</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.RoundingPrecision.Hint">
-    <Value>Set rounding precision for all calculations.</Value>
+    <Value>Set rounding precision for all calculations. Default should be 2.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.UseRoundingPrecisionForPriceDisplay">
     <Value>Use rounding precision for display</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.UseRoundingPrecisionForPriceDisplay.Hint">
-    <Value>Use rounding precision for unit price display in all views.</Value>
+    <Value>Check to allow rounding precision for unit price display in all views.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.RoundAwayFromZero">
     <Value>Use away from zero rounding</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.RoundAwayFromZero">
-    <Value>Use away from zero rounding for all rounding.</Value>
+    <Value>Check to use away from zero rounding for all rounding.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductAttributes.Hint">
     <Value>Check if products should be exported/imported with product attributes.</Value>

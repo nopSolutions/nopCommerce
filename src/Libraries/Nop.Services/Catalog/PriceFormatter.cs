@@ -79,16 +79,34 @@ namespace Nop.Services.Catalog
             {
                 if (!String.IsNullOrEmpty(targetCurrency.DisplayLocale))
                 {
-                    NumberFormatInfo nfi = new CultureInfo(targetCurrency.DisplayLocale, false).NumberFormat;
-                    nfi.CurrencyDecimalDigits = _catalogSettings.RoundingPrecision;
-                    //default behavior
-                    result = amount.ToString("C", nfi);
+                    if (_catalogSettings.UseRoundingPrecisionForPriceDisplay)
+                    {
+                        NumberFormatInfo nfi = new CultureInfo(targetCurrency.DisplayLocale, false).NumberFormat;
+                        nfi.CurrencyDecimalDigits = _catalogSettings.RoundingPrecision;
+                        result = amount.ToString("C", nfi);
+                    }
+                    else
+                    {
+                        //default behavior
+                        result = amount.ToString("C");
+                    }
                 }
                 else
                 {
                     //not possible because "DisplayLocale" should be always specified
                     //but anyway let's just handle this behavior
-                    result = String.Format("{0} ({1})", amount.ToString("N"), targetCurrency.CurrencyCode);
+                    if (_catalogSettings.UseRoundingPrecisionForPriceDisplay)
+                    {
+                        NumberFormatInfo nfi = new CultureInfo(targetCurrency.DisplayLocale, false).NumberFormat;
+                        nfi.CurrencyDecimalDigits = _catalogSettings.RoundingPrecision;
+                        result = String.Format("{0} ({1})", amount.ToString("N", nfi), targetCurrency.CurrencyCode);
+                    }
+                    else
+                    {
+                        //default behavior
+                        result = String.Format("{0:N} ({1})", amount, targetCurrency.CurrencyCode);
+                    }
+                   
                     return result;
                 }
             }
