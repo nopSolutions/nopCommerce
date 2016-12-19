@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Nop.Core;
+﻿using System.Web.Mvc;
 using Nop.Services.Authentication.External;
-using Nop.Web.Models.Customer;
+using Nop.Web.Factories;
 
 namespace Nop.Web.Controllers
 {
@@ -11,18 +8,15 @@ namespace Nop.Web.Controllers
     {
 		#region Fields
 
-        private readonly IOpenAuthenticationService _openAuthenticationService;
-        private readonly IStoreContext _storeContext;
+        private readonly IExternalAuthenticationModelFactory _externalAuthenticationModelFactory;
 
         #endregion
 
-		#region Constructors
+        #region Ctor
 
-        public ExternalAuthenticationController(IOpenAuthenticationService openAuthenticationService,
-            IStoreContext storeContext)
+        public ExternalAuthenticationController(IExternalAuthenticationModelFactory externalAuthenticationModelFactory)
         {
-            this._openAuthenticationService = openAuthenticationService;
-            this._storeContext = storeContext;
+            this._externalAuthenticationModelFactory = externalAuthenticationModelFactory;
         }
 
         #endregion
@@ -42,25 +36,7 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult ExternalMethods()
         {
-            //model
-            var model = new List<ExternalAuthenticationMethodModel>();
-
-            foreach (var eam in _openAuthenticationService
-                .LoadActiveExternalAuthenticationMethods(_storeContext.CurrentStore.Id))
-            {
-                var eamModel = new ExternalAuthenticationMethodModel();
-
-                string actionName;
-                string controllerName;
-                RouteValueDictionary routeValues;
-                eam.GetPublicInfoRoute(out actionName, out controllerName, out routeValues);
-                eamModel.ActionName = actionName;
-                eamModel.ControllerName = controllerName;
-                eamModel.RouteValues = routeValues;
-
-                model.Add(eamModel);
-            }
-
+            var model = _externalAuthenticationModelFactory.PrepareExternalMethodsModel();
             return PartialView(model);
         }
 

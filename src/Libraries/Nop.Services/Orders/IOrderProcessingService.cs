@@ -257,5 +257,13 @@ namespace Nop.Services.Orders
         /// <param name="cart">Shopping cart</param>
         /// <returns>true - OK; false - minimum order total amount is not reached</returns>
         bool ValidateMinOrderTotalAmount(IList<ShoppingCartItem> cart);
+
+        /// <summary>
+        /// Gets a value indicating whether payment workflow is required
+        /// </summary>
+        /// <param name="cart">Shopping cart</param>
+        /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
+        /// <returns>true - OK; false - minimum order total amount is not reached</returns>
+        bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool? useRewardPoints = null);
     }
 }

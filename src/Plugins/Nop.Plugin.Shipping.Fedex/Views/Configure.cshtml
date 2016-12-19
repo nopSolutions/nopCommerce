@@ -1,0 +1,172 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Shipping.Fedex.Models.FedexShippingModel
+@using Nop.Web.Framework;
+@using Nop.Plugin.Shipping.Fedex;
+
+@using (Html.BeginForm())
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#PackingType").change(togglePackingType);
+
+            togglePackingType();
+        });
+
+        function togglePackingType() {
+            var selectedPackingTypeId = $("#PackingType").val();
+            if (selectedPackingTypeId == @(((int)PackingType.PackByDimensions).ToString())) {
+                $('#pnlPassDimensions').show();
+                $('#pnlPackingPackageVolume').hide();
+            }
+            else if (selectedPackingTypeId == @(((int)PackingType.PackByOneItemPerPackage).ToString())) {
+                $('#pnlPassDimensions').hide();
+                $('#pnlPackingPackageVolume').hide();
+            }
+            else if (selectedPackingTypeId == @(((int)PackingType.PackByVolume).ToString())) {
+                $('#pnlPassDimensions').hide();
+                $('#pnlPackingPackageVolume').show();
+            }
+        }
+    </script>
+
+    @Html.AntiForgeryToken()
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Url)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Url)
+                        @Html.ValidationMessageFor(model => model.Url)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Key)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Key)
+                        @Html.ValidationMessageFor(model => model.Key)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Password)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Password)
+                        @Html.ValidationMessageFor(model => model.Password)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.AccountNumber)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.AccountNumber)
+                        @Html.ValidationMessageFor(model => model.AccountNumber)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.MeterNumber)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.MeterNumber)
+                        @Html.ValidationMessageFor(model => model.MeterNumber)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.AvailableDropOffTypes)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDropDownList("DropoffType", Model.AvailableDropOffTypes)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.UseResidentialRates)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.UseResidentialRates)
+                        @Html.ValidationMessageFor(model => model.UseResidentialRates)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.ApplyDiscounts)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.ApplyDiscounts)
+                        @Html.ValidationMessageFor(model => model.ApplyDiscounts)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.AdditionalHandlingCharge)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.AdditionalHandlingCharge)
+                        @Html.ValidationMessageFor(model => model.AdditionalHandlingCharge)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.AvailableCarrierServices)
+                    </div>
+                    <div class="col-md-9">
+                        @foreach (var csd in Model.AvailableCarrierServices)
+                        {
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="CheckedCarrierServices" value="@(csd)" checked="@Model.CarrierServicesOffered.Contains(csd)" />
+                                    @csd
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.PackingTypeValues)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDropDownList("PackingType", Model.PackingTypeValues)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlPassDimensions">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.PassDimensions)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.PassDimensions)
+                        @Html.ValidationMessageFor(model => model.PassDimensions)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlPackingPackageVolume">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.PackingPackageVolume)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.PackingPackageVolume)
+                        @Html.ValidationMessageFor(model => model.PackingPackageVolume)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

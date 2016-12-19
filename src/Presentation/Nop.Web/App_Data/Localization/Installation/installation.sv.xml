@@ -48,6 +48,9 @@
   <LocaleResource Name="DatabaseCreationError">
     <Value>Ett fel uppstod när databasen skulle skapas: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Databas</Value>
+  </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Databasinformation</Value>
   </LocaleResource>

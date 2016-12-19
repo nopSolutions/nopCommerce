@@ -18,6 +18,8 @@ namespace Nop.Admin.Models.Plugins
 
             SelectedStoreIds = new List<int>();
             AvailableStores = new List<SelectListItem>();
+            SelectedCustomerRoleIds = new List<int>();
+            AvailableCustomerRoles = new List<SelectListItem>();
         }
         [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.Group")]
         [AllowHtml]
@@ -60,6 +62,11 @@ namespace Nop.Admin.Models.Plugins
 
         public IList<PluginLocalizedModel> Locales { get; set; }
 
+        //ACL (customer roles)
+        [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.AclCustomerRoles")]
+        [UIHint("MultiSelect")]
+        public IList<int> SelectedCustomerRoleIds { get; set; }
+        public IList<SelectListItem> AvailableCustomerRoles { get; set; }
 
         //store mapping
         [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.LimitedToStores")]

@@ -60,7 +60,6 @@ namespace Nop.Services.Tests.Orders
         private ShippingSettings _shippingSettings;
         private ILogger _logger;
         private IRepository<ShippingMethod> _shippingMethodRepository;
-        private IRepository<DeliveryDate> _deliveryDateRepository;
         private IRepository<Warehouse> _warehouseRepository;
         private IOrderService _orderService;
         private IWebHelper _webHelper;
@@ -135,11 +134,9 @@ namespace Nop.Services.Tests.Orders
             _shippingSettings.ActiveShippingRateComputationMethodSystemNames = new List<string>();
             _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add("FixedRateTestShippingRateComputationMethod");
             _shippingMethodRepository = MockRepository.GenerateMock<IRepository<ShippingMethod>>();
-            _deliveryDateRepository = MockRepository.GenerateMock<IRepository<DeliveryDate>>();
             _warehouseRepository = MockRepository.GenerateMock<IRepository<Warehouse>>();
             _logger = new NullLogger();
-            _shippingService = new ShippingService(_shippingMethodRepository, 
-                _deliveryDateRepository,
+            _shippingService = new ShippingService(_shippingMethodRepository,
                 _warehouseRepository,
                 _logger,
                 _productService,

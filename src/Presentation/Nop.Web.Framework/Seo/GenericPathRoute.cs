@@ -127,7 +127,7 @@ namespace Nop.Web.Framework.Seo
                     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                     var response = httpContext.Response;
                     response.Status = "301 Moved Permanently";
-                    response.RedirectLocation = string.Format("{0}{1}", webHelper.GetStoreLocation(false), activeSlug);
+                    response.RedirectLocation = string.Format("{0}{1}", webHelper.GetStoreLocation(), activeSlug);
                     response.End();
                     return null;
                 }
@@ -144,7 +144,7 @@ namespace Nop.Web.Framework.Seo
                     var response = httpContext.Response;
                     //response.Status = "302 Found";
                     response.Status = "302 Moved Temporarily";
-                    response.RedirectLocation = string.Format("{0}{1}", webHelper.GetStoreLocation(false), slugForCurrentLanguage);
+                    response.RedirectLocation = string.Format("{0}{1}", webHelper.GetStoreLocation(), slugForCurrentLanguage);
                     response.End();
                     return null;
                 }

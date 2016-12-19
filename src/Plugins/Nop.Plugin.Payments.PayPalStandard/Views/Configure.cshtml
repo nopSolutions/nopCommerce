@@ -1,0 +1,184 @@
+﻿@{
+    Layout = "";
+}
+@model ConfigurationModel
+@using Nop.Plugin.Payments.PayPalStandard.Models;
+@using Nop.Web.Framework;
+
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+
+<script type="text/javascript">
+	$(document).ready(function () {
+
+		$("#@Html.FieldIdFor(model => model.EnableIpn)").click(toggleEnableIpn);
+
+		toggleEnableIpn();
+	});
+
+	function toggleEnableIpn() {
+	    if ($('#@Html.FieldIdFor(model => model.EnableIpn)').is(':checked')) {
+			$('#pnlIpnUrl').show();
+		}
+		else {
+			$('#pnlIpnUrl').hide();
+		}
+	}
+
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>
+                    <b>If you're using this gateway ensure that your primary store currency is supported by Paypal.</b><br />
+                    <br />
+                    To use PDT, you must activate PDT and Auto Return in your PayPal account profile. You must also acquire a PDT identity token, which is used in all PDT communication you send to PayPal. Follow these steps to configure your account for PDT:<br />
+                    <br />
+                    1. Log in to your PayPal account.<br />
+                    2. Click the Profile subtab.<br />
+                    3. Click Website Payment Preferences in the Seller Preferences column.<br />
+                    4. Under Auto Return for Website Payments, click the On radio button.<br />
+                    5. For the Return URL, enter the URL on your site that will receive the transaction ID posted by PayPal after a customer payment (http://www.yourStore.com/Plugins/PaymentPayPalStandard/PDTHandler).<br />
+                    6. Under Payment Data Transfer, click the On radio button.<br />
+                    7. Click Save.<br />
+                    8. Click Website Payment Preferences in the Seller Preferences column.<br />
+                    9. Scroll down to the Payment Data Transfer section of the page to view your PDT identity token.<br />
+                    <br />
+                    <b>Two ways to be able to receive IPN messages (optional):</b><br />
+                    <br />
+                    <b>The first way is to check 'Enable IPN' below.</b> It will include in the request the url of you IPN handler<br />
+                    <br />
+                    <b>The second way is to confugure your paypal account to activate this service</b>; follow these steps:<br />
+                    1. Log in to your Premier or Business account.<br />
+                    2. Click the Profile subtab.<br />
+                    3. Click Instant Payment Notification in the Selling Preferences column.<br />
+                    4. Click the 'Edit IPN Settings' button to update your settings.<br />
+                    5. Select 'Receive IPN messages' (Enabled) and enter the URL of your IPN handler (http://www.yourStore.com/Plugins/PaymentPayPalStandard/IPNHandler).<br />
+                    6. Click Save, and you should get a message that you have successfully activated IPN.
+                </p>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.UseSandbox_OverrideForStore, model => model.UseSandbox, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.UseSandbox)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.UseSandbox)
+                        @Html.ValidationMessageFor(model => model.UseSandbox)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.BusinessEmail_OverrideForStore, model => model.BusinessEmail, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.BusinessEmail)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.BusinessEmail)
+                        @Html.ValidationMessageFor(model => model.BusinessEmail)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.PdtToken_OverrideForStore, model => model.PdtToken, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.PdtToken)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.PdtToken)
+                        @Html.ValidationMessageFor(model => model.PdtToken)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.PdtValidateOrderTotal_OverrideForStore, model => model.PdtValidateOrderTotal, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.PdtValidateOrderTotal)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.PdtValidateOrderTotal)
+                        @Html.ValidationMessageFor(model => model.PdtValidateOrderTotal)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AdditionalFee_OverrideForStore, model => model.AdditionalFee, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AdditionalFee)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.AdditionalFee)
+                        @Html.ValidationMessageFor(model => model.AdditionalFee)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AdditionalFeePercentage_OverrideForStore, model => model.AdditionalFeePercentage, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AdditionalFeePercentage)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.AdditionalFeePercentage)
+                        @Html.ValidationMessageFor(model => model.AdditionalFeePercentage)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.PassProductNamesAndTotals_OverrideForStore, model => model.PassProductNamesAndTotals, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.PassProductNamesAndTotals)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.PassProductNamesAndTotals)
+                        @Html.ValidationMessageFor(model => model.PassProductNamesAndTotals)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.EnableIpn_OverrideForStore, model => model.EnableIpn, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.EnableIpn)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.EnableIpn)
+                        @Html.ValidationMessageFor(model => model.EnableIpn)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlIpnUrl">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.IpnUrl_OverrideForStore, model => model.IpnUrl, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.IpnUrl)
+                        @*TODO: Move to hint <em>@T("Plugins.Payments.PayPalStandard.Fields.EnableIpn.Hint2")</em>*@
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.IpnUrl)
+                        @Html.ValidationMessageFor(model => model.IpnUrl)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AddressOverride_OverrideForStore, model => model.AddressOverride, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AddressOverride)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.AddressOverride)
+                        @Html.ValidationMessageFor(model => model.AddressOverride)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore, model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage)
+                        @Html.ValidationMessageFor(model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

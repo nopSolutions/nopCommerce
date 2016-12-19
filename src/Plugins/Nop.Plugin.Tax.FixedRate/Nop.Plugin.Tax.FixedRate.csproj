@@ -105,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\TaxFixedRateController.cs" />
+    <Compile Include="Infrastructure\Cache\ModelCacheEventConsumer.cs" />
     <Compile Include="Models\FixedTaxRateModel.cs" />
     <Compile Include="FixedRateTaxProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -144,7 +145,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\TaxFixedRate\Configure.cshtml">
+    <Content Include="Views\Configure.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

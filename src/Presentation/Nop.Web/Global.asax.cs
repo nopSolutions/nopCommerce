@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Net;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
@@ -43,6 +44,9 @@ namespace Nop.Web
 
         protected void Application_Start()
         {
+            //most of API providers require TLS 1.2 nowadays
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
             //disable "X-AspNetMvc-Version" header name
             MvcHandler.DisableMvcResponseHeader = true;
 
@@ -69,25 +73,19 @@ namespace Nop.Web
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
             ModelValidatorProviders.Providers.Add(new FluentValidationModelValidatorProvider(new NopValidatorFactory()));
 
-            //start scheduled tasks
             if (databaseInstalled)
             {
+                //start scheduled tasks
                 TaskManager.Instance.Initialize();
                 TaskManager.Instance.Start();
-            }
 
-            //miniprofiler
-            if (databaseInstalled)
-            {
+                //miniprofiler
                 if (EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
                 {
                     GlobalFilters.Filters.Add(new ProfilingActionFilter());
                 }
-            }
 
-            //log application start
-            if (databaseInstalled)
-            {
+                //log application start
                 try
                 {
                     //log

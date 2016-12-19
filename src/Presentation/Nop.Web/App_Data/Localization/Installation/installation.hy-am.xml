@@ -47,6 +47,9 @@
   <LocaleResource Name="DatabaseCreationError">
     <Value>Տվյալների բազան ստեղծելիս առաջացել է սխալ՝ {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Տվյալների բազա</Value>
+  </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Ինֆորմացիա տվյալների բազայի մասին</Value>
   </LocaleResource>
@@ -135,7 +138,8 @@
     <Value>nopCommerce համակարգը հաջողությամբ տեղադրելու համար Դուք պետք է իմանաք տվյալների բազային միանալու կարգավորումների տողը: Եթե Դուք չունեք այդ ինֆորմացիան, ապա կարող եք հարցնել Ձեր հոսթինգ պրովայդերից: Եթե տեղադրում եք լոկալ համակարգչի վրա, ապա կարող եք իմանալ Ձեր ադմինիստրատորից:</Value>
   </LocaleResource>
   <LocaleResource Name="WindowsAuthentication">
-    <Value>Windows համակարգի ստուգում
+    <Value>
+      Windows համակարգի ստուգում
     </Value>
   </LocaleResource>
 </Language>

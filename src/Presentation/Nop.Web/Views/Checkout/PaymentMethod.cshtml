@@ -24,11 +24,27 @@
                 <div class="use-reward-points">
                     @Html.EditorFor(model => model.UseRewardPoints)
                     @string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)
+                    @if (Model.RewardPointsEnoughToPayForOrder)
+                    {
+                        <script type="text/javascript">
+                            $(document).ready(function() {
+                                $("#@Html.FieldIdFor(model => model.UseRewardPoints)").change(toggleUseRewardPoints);
+                                toggleUseRewardPoints();
+                            });
+                            function toggleUseRewardPoints() {
+                                if ($('#@Html.FieldIdFor(model => model.UseRewardPoints)').is(':checked')) {
+                                    $('#payment-method-block').hide();
+                                } else {
+                                    $('#payment-method-block').show();
+                                }
+                            }
+                        </script>
+                    }
                 </div>
                 }
                 if (Model.PaymentMethods.Count > 0)
                 {
-                <ul class="method-list">
+                <ul class="method-list" id="payment-method-block">
                     @for (int i = 0; i < Model.PaymentMethods.Count; i++)
                     {
                         var paymentMethod = Model.PaymentMethods[i];
@@ -50,6 +66,10 @@
                                 <div class="payment-details">
                                     <input id="paymentmethod_@(i)" type="radio" name="paymentmethod" value="@(paymentMethod.PaymentMethodSystemName)" checked="@paymentMethod.Selected" />
                                     <label for="paymentmethod_@(i)">@paymentMethodName</label>
+                                    @if (!string.IsNullOrEmpty(paymentMethod.Description))
+                                    {
+                                        <div class="payment-description">@paymentMethod.Description</div>
+                                    }
                                 </div>
                             </div>
                         </li>

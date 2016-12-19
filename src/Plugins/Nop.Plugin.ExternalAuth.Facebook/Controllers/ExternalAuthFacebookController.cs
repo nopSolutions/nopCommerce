@@ -72,7 +72,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
                 model.ClientSecret_OverrideForStore = _settingService.SettingExists(facebookExternalAuthSettings, x => x.ClientSecret, storeScope);
             }
 
-            return View("~/Plugins/ExternalAuth.Facebook/Views/ExternalAuthFacebook/Configure.cshtml", model);
+            return View("~/Plugins/ExternalAuth.Facebook/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -111,7 +111,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         [ChildActionOnly]
         public ActionResult PublicInfo()
         {
-            return View("~/Plugins/ExternalAuth.Facebook/Views/ExternalAuthFacebook/PublicInfo.cshtml");
+            return View("~/Plugins/ExternalAuth.Facebook/Views/PublicInfo.cshtml");
         }
 
         [NonAction]
@@ -121,7 +121,8 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             if (processor == null ||
                 !processor.IsMethodActive(_externalAuthenticationSettings) ||
                 !processor.PluginDescriptor.Installed ||
-                !_pluginFinder.AuthenticateStore(processor.PluginDescriptor, _storeContext.CurrentStore.Id))
+                !_pluginFinder.AuthenticateStore(processor.PluginDescriptor, _storeContext.CurrentStore.Id) ||
+                !_pluginFinder.AuthorizedForUser(processor.PluginDescriptor, _workContext.CurrentCustomer))
                 throw new NopException("Facebook module cannot be loaded");
 
             var viewModel = new LoginModel();

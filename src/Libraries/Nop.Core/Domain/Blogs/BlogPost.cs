@@ -39,14 +39,6 @@ namespace Nop.Core.Domain.Blogs
         public bool AllowComments { get; set; }
 
         /// <summary>
-        /// Gets or sets the total number of comments
-        /// <remarks>
-        /// We use this property for performance optimization (no SQL command executed)
-        /// </remarks>
-        /// </summary>
-        public int CommentCount { get; set; }
-
-        /// <summary>
         /// Gets or sets the blog tags
         /// </summary>
         public string Tags { get; set; }

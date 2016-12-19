@@ -266,6 +266,10 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public int ManageInventoryMethodId { get; set; }
         /// <summary>
+        /// Gets or sets a product availability range identifier
+        /// </summary>
+        public int ProductAvailabilityRangeId { get; set; }
+        /// <summary>
         /// Gets or sets a value indicating whether multiple warehouses are used for this product
         /// </summary>
         public bool UseMultipleWarehouses { get; set; }
@@ -359,18 +363,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the product cost
         /// </summary>
         public decimal ProductCost { get; set; }
-        /// <summary>
-        /// Gets or sets the product special price
-        /// </summary>
-        public decimal? SpecialPrice { get; set; }
-        /// <summary>
-        /// Gets or sets the start date and time of the special price
-        /// </summary>
-        public DateTime? SpecialPriceStartDateTimeUtc { get; set; }
-        /// <summary>
-        /// Gets or sets the end date and time of the special price
-        /// </summary>
-        public DateTime? SpecialPriceEndDateTimeUtc { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether a customer enters price
         /// </summary>

@@ -33,6 +33,7 @@ namespace Nop.Services.Tasks
             this.Enabled = task.Enabled;
             this.StopOnError = task.StopOnError;
             this.Name = task.Name;
+            this.LastSuccessUtc = task.LastSuccessUtc;
         }
 
         #endregion
@@ -97,16 +98,19 @@ namespace Nop.Services.Tasks
                             //then it can be used as a machine name
                         }
 
-                        //lease can't be aquired only if for a different machine and it has not expired
-                        if (scheduleTask.LeasedUntilUtc.HasValue &&
-                            scheduleTask.LeasedUntilUtc.Value >= DateTime.UtcNow &&
-                            scheduleTask.LeasedByMachineName != machineName)
-                            return;
+                        if (scheduleTask != null)
+                        {
+                            //lease can't be aquired only if for a different machine and it has not expired
+                            if (scheduleTask.LeasedUntilUtc.HasValue &&
+                                scheduleTask.LeasedUntilUtc.Value >= DateTime.UtcNow &&
+                                scheduleTask.LeasedByMachineName != machineName)
+                                return;
 
-                        //lease the task. so it's run on one farm node at a time
-                        scheduleTask.LeasedByMachineName = machineName;
-                        scheduleTask.LeasedUntilUtc = DateTime.UtcNow.AddMinutes(30);
-                        scheduleTaskService.UpdateTask(scheduleTask);
+                            //lease the task. so it's run on one farm node at a time
+                            scheduleTask.LeasedByMachineName = machineName;
+                            scheduleTask.LeasedUntilUtc = DateTime.UtcNow.AddMinutes(30);
+                            scheduleTaskService.UpdateTask(scheduleTask);
+                        }
                     }
                 }
 

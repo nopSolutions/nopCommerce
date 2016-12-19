@@ -31,9 +31,9 @@ namespace Nop.Admin.Controllers
 	    private readonly IWebHelper _webHelper;
 	    private readonly ILocalizationService _localizationService;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Ctor
 
         public PaymentController(IPaymentService paymentService,
             PaymentSettings paymentSettings,
@@ -52,7 +52,7 @@ namespace Nop.Admin.Controllers
             this._pluginFinder = pluginFinder;
             this._webHelper = webHelper;
             this._localizationService = localizationService;
-		}
+        }
 
 		#endregion 
 

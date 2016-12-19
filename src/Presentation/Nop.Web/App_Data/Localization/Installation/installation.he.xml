@@ -47,6 +47,9 @@
   <LocaleResource Name="DatabaseCreationError">
     <Value>שגיאה בעת יצירת מסד נתונים: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>מסד הנתונים</Value>
+  </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>מידע אודות מסד הנתונים</Value>
   </LocaleResource>

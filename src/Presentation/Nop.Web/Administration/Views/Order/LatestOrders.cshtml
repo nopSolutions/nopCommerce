@@ -1,10 +1,12 @@
 ﻿@using Nop.Core
 @using Nop.Services.Common
+@using Nop.Services.Stores
 @{
     const string panelId = "latest-orders-box";
     const string hidePanelAttributeName = "HideLatestOrdersPanel";
     var hidePanel = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
     var gridPageSize = 5;
+    var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
 }
 
 <div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">
@@ -92,6 +94,7 @@
                         },
                         {
                             field: "StoreName",
+                            hidden: @(stores.Count > 1 ? "false" : "true"),
                             title: "@T("Admin.Orders.Fields.Store")",
                             width: 100
                         }, {

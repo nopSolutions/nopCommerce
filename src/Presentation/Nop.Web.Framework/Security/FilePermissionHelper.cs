@@ -123,7 +123,8 @@ namespace Nop.Web.Framework.Security
                 bool flag13 = true;
                 if (checkRead)
                 {
-                    flag13 = flag13 && flag11;
+                    //flag13 = flag13 && flag11;
+                    flag13 = flag11;
                 }
                 if (checkWrite)
                 {

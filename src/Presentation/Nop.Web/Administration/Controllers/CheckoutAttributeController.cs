@@ -118,7 +118,7 @@ namespace Nop.Admin.Controllers
 
             //tax categories
             var taxCategories = _taxCategoryService.GetAllTaxCategories();
-            model.AvailableTaxCategories.Add(new SelectListItem { Text = "---", Value = "0" });
+            model.AvailableTaxCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Settings.Tax.TaxCategories.None"), Value = "0" });
             foreach (var tc in taxCategories)
                 model.AvailableTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString(), Selected = checkoutAttribute != null && !excludeProperties && tc.Id == checkoutAttribute.TaxCategoryId });
         }
@@ -175,7 +175,7 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            //currenty any checkout attribute can have condition.
+            //currently any checkout attribute can have condition.
             model.ConditionAllowed = true;
 
             if (checkoutAttribute == null)

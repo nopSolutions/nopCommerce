@@ -1,5 +1,6 @@
 ﻿@model ProductOverviewModel
 @using Nop.Core
+@using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Orders
 @using Nop.Core.Domain.Tax
 @using Nop.Core.Infrastructure
@@ -31,6 +32,12 @@
         <h2 class="product-title">
             <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a>
         </h2>
+        @if (EngineContext.Current.Resolve<CatalogSettings>().ShowSkuOnCatalogPages)
+        {
+            <div class="sku">
+                @Model.Sku
+            </div>
+        }
         @if (Model.ReviewOverviewModel.AllowCustomerReviews)
         {
             int ratingPercent = 0;

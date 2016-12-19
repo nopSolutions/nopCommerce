@@ -73,6 +73,17 @@
                     <span>@review.WrittenOnStr</span>
                 </span>
             </div>
+            @if (!String.IsNullOrEmpty(review.ReplyText))
+            {
+                <div class="reply">
+                    <div class="reply-header">
+                        @T("Reviews.Reply")
+                    </div>
+                    <div class="reply-text">
+                        @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(review.ReplyText, false, true, false, false, false, false))
+                    </div>
+                </div>
+            }
         </div>
     </div>
 }

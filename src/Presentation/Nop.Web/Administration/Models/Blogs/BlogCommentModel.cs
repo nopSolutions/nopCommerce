@@ -22,6 +22,13 @@ namespace Nop.Admin.Models.Blogs
         [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.Comment")]
         public string Comment { get; set; }
 
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.IsApproved")]
+        public bool IsApproved { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.StoreName")]
+        public int StoreId { get; set; }
+        public string StoreName { get; set; }
+
         [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
 

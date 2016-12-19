@@ -39,7 +39,7 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
         [ChildActionOnly]
         public ActionResult Configure()
         {
-            return View("~/Plugins/Tax.FixedRate/Views/TaxFixedRate/Configure.cshtml");
+            return View("~/Plugins/Tax.FixedRate/Views/Configure.cshtml");
         }
 
         [HttpPost]

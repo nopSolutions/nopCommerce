@@ -12,6 +12,7 @@ namespace Nop.Core.Plugins
         {
             this.SupportedVersions = new List<string>();
             this.LimitedToStores = new List<int>();
+            this.LimitedToCustomerRoles = new List<int>();
         }
 
 
@@ -87,6 +88,11 @@ namespace Nop.Core.Plugins
         /// Gets or sets the list of store identifiers in which this plugin is available. If empty, then this plugin is available in all stores
         /// </summary>
         public virtual IList<int> LimitedToStores { get; set; }
+
+        /// <summary>
+        /// Gets or sets the list of customer role identifiers for which this plugin is available. If empty, then this plugin is available for all ones.
+        /// </summary>
+        public virtual IList<int> LimitedToCustomerRoles { get; set; }
 
         /// <summary>
         /// Gets or sets the value indicating whether plugin is installed

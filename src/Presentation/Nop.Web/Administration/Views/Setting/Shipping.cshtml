@@ -154,6 +154,16 @@
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.HideShippingTotal_OverrideForStore, model => model.HideShippingTotal, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.HideShippingTotal)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.HideShippingTotal)
+                                @Html.ValidationMessageFor(model => model.HideShippingTotal)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore, model => model.BypassShippingMethodSelectionIfOnlyOne, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.BypassShippingMethodSelectionIfOnlyOne)
                             </div>

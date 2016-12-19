@@ -1,21 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
-using FluentValidation.Attributes;
-using Nop.Admin.Validators.Settings;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Settings
 {
-    [Validator(typeof(OrderSettingsValidator))]
     public partial class OrderSettingsModel : BaseNopModel
     {
-        public OrderSettingsModel()
-        {
-            GiftCards_Activated_OrderStatuses = new List<SelectListItem>();
-            GiftCards_Deactivated_OrderStatuses = new List<SelectListItem>();
-        }
-
         public int ActiveStoreScopeConfiguration { get; set; }
 
 
@@ -83,6 +74,10 @@ namespace Nop.Admin.Models.Settings
         public bool ReturnRequestsEnabled { get; set; }
         public bool ReturnRequestsEnabled_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestsAllowFiles")]
+        public bool ReturnRequestsAllowFiles { get; set; }
+        public bool ReturnRequestsAllowFiles_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestNumberMask")]
         public string ReturnRequestNumberMask { get; set; }
         public bool ReturnRequestNumberMask_OverrideForStore { get; set; }
@@ -91,14 +86,16 @@ namespace Nop.Admin.Models.Settings
         public int NumberOfDaysReturnRequestAvailable { get; set; }
         public bool NumberOfDaysReturnRequestAvailable_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Order.GiftCards_Activated")]
-        public int GiftCards_Activated_OrderStatusId { get; set; }
-        public IList<SelectListItem> GiftCards_Activated_OrderStatuses { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.ActivateGiftCardsAfterCompletingOrder")]
+        public bool ActivateGiftCardsAfterCompletingOrder { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancellingOrder")]
+        public bool DeactivateGiftCardsAfterCancellingOrder { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterDeletingOrder")]
+        public bool DeactivateGiftCardsAfterDeletingOrder { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Order.GiftCards_Deactivated")]
-        public int GiftCards_Deactivated_OrderStatusId { get; set; }
-        public IList<SelectListItem> GiftCards_Deactivated_OrderStatuses { get; set; }
-        
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.CompleteOrderWhenDelivered")]
+        public bool CompleteOrderWhenDelivered { get; set; }
+
         public string PrimaryStoreCurrencyCode { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.OrderIdent")]

@@ -83,7 +83,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
-            var polls = _pollService.GetPolls(0, false, command.Page - 1, command.PageSize, true);
+            var polls = _pollService.GetPolls(0, false, null, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
                 Data = polls.Select(x =>

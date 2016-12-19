@@ -56,12 +56,12 @@ namespace Nop.Web.Framework.Controllers
 
             if (IsAdminPageRequested(filterContext))
             {
-                if (!this.HasAdminAccess(filterContext))
+                if (!this.HasAdminAccess())
                     this.HandleUnauthorizedRequest(filterContext);
             }
         }
 
-        public virtual bool HasAdminAccess(AuthorizationContext filterContext)
+        public virtual bool HasAdminAccess()
         {
             var permissionService = EngineContext.Current.Resolve<IPermissionService>();
             bool result = permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel);

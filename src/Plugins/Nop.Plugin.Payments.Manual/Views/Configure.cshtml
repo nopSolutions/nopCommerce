@@ -1,0 +1,55 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Payments.Manual.Models.ConfigurationModel
+@using Nop.Web.Framework;
+
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.TransactModeId_OverrideForStore, model => model.TransactModeId, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.TransactModeValues)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDropDownList("TransactModeId", Model.TransactModeValues)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AdditionalFee_OverrideForStore, model => model.AdditionalFee, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AdditionalFee)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.AdditionalFee)
+                        @Html.ValidationMessageFor(model => model.AdditionalFee)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AdditionalFeePercentage_OverrideForStore, model => model.AdditionalFeePercentage, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AdditionalFeePercentage)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.AdditionalFeePercentage)
+                        @Html.ValidationMessageFor(model => model.AdditionalFeePercentage)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

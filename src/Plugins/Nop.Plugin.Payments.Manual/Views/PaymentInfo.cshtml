@@ -1,0 +1,51 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Payments.Manual.Models.PaymentInfoModel
+<table width="100%" cellspacing="2" cellpadding="1" border="0">
+    <tr>
+        <td>
+            @Html.LabelFor(model => model.CreditCardTypes, false):
+        </td>
+        <td>
+            @Html.DropDownListFor(model => model.CreditCardType, Model.CreditCardTypes, new { @class = "dropdownlists" })
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(model => model.CardholderName, false):
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.CardholderName, new { style = "Width: 165px;", autocomplete = "off" })
+            @Html.ValidationMessageFor(model => model.CardholderName)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(model => model.CardNumber, false):
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.CardNumber, new { style = "Width: 165px;", autocomplete = "off", maxlength = 22 })
+            @Html.ValidationMessageFor(model => model.CardNumber)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(model => model.ExpireMonth, false):
+        </td>
+        <td>
+            @Html.DropDownListFor(model => model.ExpireMonth, Model.ExpireMonths)
+            /
+            @Html.DropDownListFor(model => model.ExpireYear, Model.ExpireYears)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(model => model.CardCode, false):
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.CardCode, new { style = "Width: 60px;", autocomplete = "off", maxlength = 4 })
+            @Html.ValidationMessageFor(model => model.CardCode)
+        </td>
+    </tr>
+</table>
