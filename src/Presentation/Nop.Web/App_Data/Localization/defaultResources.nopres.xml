@@ -5064,7 +5064,7 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.RoundAwayFromZero">
     <Value>Use away from zero rounding</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.RoundAwayFromZero.Hint">
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.RoundAwayFromZero.Hint ">
     <Value>Check to use away from zero rounding instead of bankers rounding for all site rounding.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductAttributes.Hint">
