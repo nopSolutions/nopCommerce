@@ -72,6 +72,7 @@ namespace Nop.Services.Orders
         private readonly IRewardPointService _rewardPointService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICountryService _countryService;
+        private readonly IStateProvinceService _stateProvinceService;
 
         private readonly ShippingSettings _shippingSettings;
         private readonly PaymentSettings _paymentSettings;
@@ -159,6 +160,7 @@ namespace Nop.Services.Orders
             IRewardPointService rewardPointService,
             IGenericAttributeService genericAttributeService,
             ICountryService countryService,
+            IStateProvinceService stateProvinceService,
             ShippingSettings shippingSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
@@ -199,6 +201,7 @@ namespace Nop.Services.Orders
             this._rewardPointService = rewardPointService;
             this._genericAttributeService = genericAttributeService;
             this._countryService = countryService;
+            this._stateProvinceService = stateProvinceService;
 
             this._paymentSettings = paymentSettings;
             this._shippingSettings = shippingSettings;
@@ -391,12 +394,16 @@ namespace Nop.Services.Orders
                 var pickupPoint = details.Customer.GetAttribute<PickupPoint>(SystemCustomerAttributeNames.SelectedPickupPoint, processPaymentRequest.StoreId);
                 if (_shippingSettings.AllowPickUpInStore && pickupPoint != null)
                 {
+                    var country = _countryService.GetCountryByTwoLetterIsoCode(pickupPoint.CountryCode);
+                    var state = _stateProvinceService.GetStateProvinceByAbbreviation(pickupPoint.StateAbbreviation);
+
                     details.PickUpInStore = true;
                     details.PickupAddress = new Address
                     {
                         Address1 = pickupPoint.Address,
                         City = pickupPoint.City,
-                        Country = _countryService.GetCountryByTwoLetterIsoCode(pickupPoint.CountryCode),
+                        Country = country,
+                        StateProvince = state,
                         ZipPostalCode = pickupPoint.ZipPostalCode,
                         CreatedOnUtc = DateTime.UtcNow,
                     };

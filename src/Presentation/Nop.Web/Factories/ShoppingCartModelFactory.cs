@@ -656,9 +656,7 @@ namespace Nop.Web.Factories
             {
                 model.IsShippable = true;
 
-                var pickupPoint = _workContext.CurrentCustomer
-                    .GetAttribute<PickupPoint>(SystemCustomerAttributeNames.SelectedPickupPoint,
-                        _storeContext.CurrentStore.Id);
+                var pickupPoint = _workContext.CurrentCustomer.GetAttribute<PickupPoint>(SystemCustomerAttributeNames.SelectedPickupPoint,_storeContext.CurrentStore.Id);
                 model.SelectedPickUpInStore = _shippingSettings.AllowPickUpInStore && pickupPoint != null;
                 if (!model.SelectedPickUpInStore)
                 {
@@ -673,11 +671,13 @@ namespace Nop.Web.Factories
                 else
                 {
                     var country = _countryService.GetCountryByTwoLetterIsoCode(pickupPoint.CountryCode);
+                    var state = _stateProvinceService.GetStateProvinceByAbbreviation(pickupPoint.StateAbbreviation);
                     model.PickupAddress = new AddressModel
                     {
                         Address1 = pickupPoint.Address,
                         City = pickupPoint.City,
                         CountryName = country != null ? country.Name : string.Empty,
+                        StateProvinceName = state != null ? state.Name : string.Empty,
                         ZipPostalCode = pickupPoint.ZipPostalCode
                     };
                 }

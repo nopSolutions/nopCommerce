@@ -90,6 +90,7 @@ namespace Nop.Services.Tests.Orders
 
         private IGeoLookupService _geoLookupService;
         private ICountryService _countryService;
+        private IStateProvinceService _stateProvinceService;
         private CustomerSettings _customerSettings;
         private AddressSettings _addressSettings;
 
@@ -161,6 +162,7 @@ namespace Nop.Services.Tests.Orders
 
             _geoLookupService = MockRepository.GenerateMock<IGeoLookupService>();
             _countryService = MockRepository.GenerateMock<ICountryService>();
+            _stateProvinceService = MockRepository.GenerateMock<IStateProvinceService>();
             _customerSettings = new CustomerSettings();
             _addressSettings = new AddressSettings();
 
@@ -229,7 +231,7 @@ namespace Nop.Services.Tests.Orders
                 _customerActivityService, _currencyService, _affiliateService,
                 _eventPublisher,_pdfService, _rewardPointService,
                 _genericAttributeService,
-                _countryService,
+                _countryService, _stateProvinceService,
                 _shippingSettings, _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings,
                 _currencySettings);
