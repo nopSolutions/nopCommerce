@@ -1175,6 +1175,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Categories.List.ImportFromExcelTip">
     <Value>Imported categories are distinguished by ID. If the ID already exists, then its corresponding category will be updated. You should not specify ID (leave 0) for new categories.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Tokens.ConditionalStatement">
+    <Value>For conditional expressions use the token %if (your conditions ) ... endif%</Value>
+  </LocaleResource>
 </Language>
 '
 

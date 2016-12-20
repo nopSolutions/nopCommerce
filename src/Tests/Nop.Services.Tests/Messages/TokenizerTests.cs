@@ -87,5 +87,47 @@ namespace Nop.Services.Tests.Messages
                 .Replace("Some text %Token1%", tokens, true)
                 .ShouldEqual("Some text <Value1>");
         }
+
+        [Test]
+        public void Can_replace_tokens_with_conditional_statements()
+        {
+            var tokenizer = new Tokenizer(new MessageTemplatesSettings
+            {
+                CaseInvariantReplacement = false
+            });
+
+            var tokens = new List<Token>
+            {
+                new Token("ConditionToken", "true"),
+                new Token("ConditionToken2", "2"),
+                new Token("ThenToken", "value"),
+                new Token("ThenToken2", "value2"),
+                new Token("SomeValueToken", "10"),
+            };
+
+            //simple condition
+            tokenizer.Replace(@"Some text %if (%ConditionToken% == ""true"") %ThenToken% endif% %SomeValueToken%", tokens, true)
+                .ShouldEqual("Some text value  10");
+
+            //broken token in condition
+            tokenizer.Replace(@"Some text %if (ConditionToken% == ""true"") %ThenToken% endif% %SomeValueToken%", tokens, true)
+                .ShouldEqual("Some text  10");
+
+            //multiple conditions
+            tokenizer.Replace(@"Some text %if (%ConditionToken% == ""true"" && %ConditionToken2% == ""2"") %ThenToken% endif% %SomeValueToken%", tokens, true)
+                .ShouldEqual("Some text value  10");
+
+            //nested conditional statements
+            tokenizer.Replace(@"Some text %if (%ConditionToken% == ""true"") %ThenToken% %if (%ConditionToken2% == ""2"") %ThenToken2% endif% %if (%ConditionToken% == ""false"") %ThenToken% endif% %ThenToken% endif% %SomeValueToken%", tokens, true)
+                .ShouldEqual("Some text value value2   value  10");
+
+            //wrong condition
+            tokenizer.Replace(@"Some text %if (%ConditionToken% == ""true"") %ThenToken%", tokens, true)
+                .ShouldEqual("Some text %if (true == \"true\") value");
+
+            //complex condition
+            tokenizer.Replace(@"Some text %if (%ConditionToken% == ""true"") %ThenToken% endif% %SomeValueToken% %if (%ConditionToken2% == ""2"") %ThenToken2% %if (%ConditionToken% == ""false"") %ThenToken% endif% endif% %SomeValueToken%", tokens, true)
+                .ShouldEqual("Some text value  10 value2   10");
+        }
     }
 }

@@ -8241,6 +8241,9 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.TestDetails">
     <Value>Send test email</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Tokens.ConditionalStatement">
+    <Value>For conditional expressions use the token %if (your conditions ) ... endif%</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Updated">
     <Value>The message template has been updated successfully.</Value>
   </LocaleResource>
