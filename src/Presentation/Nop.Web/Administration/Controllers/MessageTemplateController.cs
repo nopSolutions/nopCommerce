@@ -396,7 +396,22 @@ namespace Nop.Admin.Controllers
                 if (formKey.StartsWith("token_", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var tokenKey = formKey.Substring("token_".Length).Replace("%", "");
-                    var tokenValue = form[formKey];
+                    var stringValue = form[formKey];
+
+                    //try get non-string value
+                    object tokenValue;
+                    bool boolValue;
+                    int intValue;
+                    decimal decimalValue;
+                    if (bool.TryParse(stringValue, out boolValue))
+                        tokenValue = boolValue;
+                    else if (int.TryParse(stringValue, out intValue))
+                        tokenValue = intValue;
+                    else if (decimal.TryParse(stringValue, out decimalValue))
+                        tokenValue = decimalValue;
+                    else
+                        tokenValue = stringValue;
+
                     tokens.Add(new Token(tokenKey, tokenValue));
                 }
 

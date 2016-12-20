@@ -76,23 +76,25 @@ namespace Nop.Services.Messages
         /// <param name="template">The template with token keys inside</param>
         /// <param name="tokens">The sequence of tokens to use</param>
         /// <param name="htmlEncode">The value indicating whether tokens should be HTML encoded</param>
-        /// <param name="toString">The value indicating whether tokens should be replaced as string (wrapped in quotes)</param>
+        /// <param name="stringWithQuotes">The value indicating whether string token values should be wrapped in quotes</param>
         /// <returns>Text with all token keys replaces by token value</returns>
-        protected string ReplaceTokens(string template, IEnumerable<Token> tokens, bool htmlEncode = false, bool toString = false)
+        protected string ReplaceTokens(string template, IEnumerable<Token> tokens, bool htmlEncode = false, bool stringWithQuotes = false)
         {
             foreach (var token in tokens)
             {
                 var tokenValue = token.Value ?? string.Empty;
 
-                //do not encode URLs
-                if (htmlEncode && !token.NeverHtmlEncoded)
-                    tokenValue = HttpUtility.HtmlEncode(tokenValue);
-
                 //wrap the value in quotes
-                if (toString)
+                if (stringWithQuotes && tokenValue is string)
                     tokenValue = string.Format("\"{0}\"", tokenValue);
+                else
+                {
+                    //do not encode URLs
+                    if (htmlEncode && !token.NeverHtmlEncoded)
+                        tokenValue = HttpUtility.HtmlEncode(tokenValue);
+                }
 
-                template = Replace(template, string.Format(@"%{0}%", token.Key), tokenValue);
+                template = Replace(template, string.Format(@"%{0}%", token.Key), tokenValue.ToString());
             }
 
             return template;
@@ -132,8 +134,9 @@ namespace Nop.Services.Messages
                 {
                     try
                     {
-                        //replace tokens as string
-                        conditionIsMet = new[] { statement }.Where(ReplaceTokens(statement.Condition, tokens, toString: true)).Any();
+                        //replace tokens (string values are wrap in quotes)
+                        var conditionString = ReplaceTokens(statement.Condition, tokens, stringWithQuotes: true);
+                        conditionIsMet = new[] { statement }.Where(conditionString).Any();
                     }
                     catch { }
 
