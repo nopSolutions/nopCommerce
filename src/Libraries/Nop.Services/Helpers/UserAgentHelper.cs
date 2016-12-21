@@ -15,6 +15,7 @@ namespace Nop.Services.Helpers
     {
         private readonly NopConfig _config;
         private readonly HttpContextBase _httpContext;
+        private static readonly object _locker = new object();
 
         /// <summary>
         /// Ctor
@@ -37,11 +38,19 @@ namespace Nop.Services.Helpers
             if (String.IsNullOrEmpty(_config.UserAgentStringsPath))
                 return null;
 
-            var filePath = CommonHelper.MapPath(_config.UserAgentStringsPath);
-            var bowscapXmlHelper = new BrowscapXmlHelper(filePath);
-            
-            Singleton<BrowscapXmlHelper>.Instance = bowscapXmlHelper;
-            return Singleton<BrowscapXmlHelper>.Instance;
+            //prevent multi loading data
+            lock (_locker)
+            {
+                //data can be loaded while we waited
+                if (Singleton<BrowscapXmlHelper>.Instance != null)
+                    return Singleton<BrowscapXmlHelper>.Instance;
+
+                var filePath = CommonHelper.MapPath(_config.UserAgentStringsPath);
+                var browscapXmlHelper = new BrowscapXmlHelper(filePath);
+                Singleton<BrowscapXmlHelper>.Instance = browscapXmlHelper;
+
+                return Singleton<BrowscapXmlHelper>.Instance;
+            }
         }
 
         /// <summary>
