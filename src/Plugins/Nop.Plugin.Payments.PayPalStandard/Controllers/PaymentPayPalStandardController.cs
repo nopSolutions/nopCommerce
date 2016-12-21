@@ -255,7 +255,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     var payPalStandardPaymentSettings = _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
 
                     //validate order total
-                    if (payPalStandardPaymentSettings.PdtValidateOrderTotal && !Math.Round(mc_gross, 2).Equals(Math.Round(order.OrderTotal, 2)))
+                    if (payPalStandardPaymentSettings.PdtValidateOrderTotal && Math.Abs(mc_gross - order.OrderTotal) > 0.01M)
                     {
                         string errorStr = string.Format("PayPal PDT. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.Id);
                         //log
