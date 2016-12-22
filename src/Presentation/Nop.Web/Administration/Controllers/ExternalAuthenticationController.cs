@@ -24,13 +24,14 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IPluginFinder _pluginFinder;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Ctor
 
         public ExternalAuthenticationController(IOpenAuthenticationService openAuthenticationService, 
             ExternalAuthenticationSettings externalAuthenticationSettings,
-            ISettingService settingService, IPermissionService permissionService,
+            ISettingService settingService,
+            IPermissionService permissionService,
             IPluginFinder pluginFinder)
 		{
             this._openAuthenticationService = openAuthenticationService;

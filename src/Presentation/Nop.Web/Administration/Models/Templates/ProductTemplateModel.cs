@@ -19,5 +19,9 @@ namespace Nop.Admin.Models.Templates
 
         [NopResourceDisplayName("Admin.System.Templates.Product.DisplayOrder")]
         public int DisplayOrder { get; set; }
+
+        [NopResourceDisplayName("Admin.System.Templates.Product.IgnoredProductTypes")]
+        [AllowHtml]
+        public string IgnoredProductTypes { get; set; }
     }
 }

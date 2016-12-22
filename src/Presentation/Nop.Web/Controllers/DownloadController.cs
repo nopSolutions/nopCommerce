@@ -81,11 +81,8 @@ namespace Nop.Web.Controllers
             if (download == null)
                 return Content("Download is not available any more.");
 
-            if (product.HasUserAgreement)
-            {
-                if (!agree)
-                    return RedirectToRoute("DownloadUserAgreement", new { orderItemId = orderItemId });
-            }
+            if (product.HasUserAgreement && !agree)
+                return RedirectToRoute("DownloadUserAgreement", new { orderItemId = orderItemId });
 
 
             if (!product.UnlimitedDownloads && orderItem.DownloadCount >= product.MaxNumberOfDownloads)

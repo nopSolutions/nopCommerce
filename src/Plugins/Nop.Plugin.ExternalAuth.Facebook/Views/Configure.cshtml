@@ -1,0 +1,46 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.ExternalAuth.Facebook.Models.ConfigurationModel
+@using Nop.Web.Framework;
+
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ClientKeyIdentifier_OverrideForStore, model => model.ClientKeyIdentifier, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ClientKeyIdentifier)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.ClientKeyIdentifier)
+                        @Html.ValidationMessageFor(model => model.ClientKeyIdentifier)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ClientSecret_OverrideForStore, model => model.ClientSecret, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ClientSecret)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.ClientSecret)
+                        @Html.ValidationMessageFor(model => model.ClientSecret)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div> 
+}

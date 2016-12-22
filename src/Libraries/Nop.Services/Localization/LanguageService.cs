@@ -125,7 +125,7 @@ namespace Nop.Services.Localization
                 var query = _languageRepository.Table;
                 if (!showHidden)
                     query = query.Where(l => l.Published);
-                query = query.OrderBy(l => l.DisplayOrder);
+                query = query.OrderBy(l => l.DisplayOrder).ThenBy(l => l.Id);
                 return query.ToList();
             });
 

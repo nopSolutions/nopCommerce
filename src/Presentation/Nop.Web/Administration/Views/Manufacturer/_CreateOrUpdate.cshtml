@@ -11,6 +11,13 @@
 
 <div class="content">
     <div class="form-horizontal">
+        <div class="row">
+            <div class="col-md-12 clearfix">
+                <div class="pull-left">
+                    @Html.Action("Mode", "Setting", new { modeName = "manufacturer-advanced-mode" })
+                </div>
+            </div>
+        </div>
         <div id="manufacturer-edit" class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Catalog.Manufacturers.Info"), true)
@@ -123,7 +130,7 @@
                         @Html.ValidationMessageFor(model => model.PictureId)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.PriceRanges)
                     </div>
@@ -132,7 +139,7 @@
                         @Html.ValidationMessageFor(model => model.PriceRanges)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AllowCustomersToSelectPageSize)
                     </div>
@@ -141,7 +148,7 @@
                         @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
                     </div>
                 </div>
-                <div id="pnlPageSize" class="form-group">
+                <div id="pnlPageSize" class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.PageSize)
                     </div>
@@ -150,7 +157,7 @@
                         @Html.ValidationMessageFor(model => model.PageSize)
                     </div>
                 </div>
-                <div id="pnlPageSizeOptions" class="form-group">
+                <div id="pnlPageSizeOptions" class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.PageSizeOptions)
                     </div>
@@ -159,7 +166,7 @@
                         @Html.ValidationMessageFor(model => model.PageSizeOptions)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.SelectedDiscountIds)
                     </div>
@@ -187,7 +194,7 @@
                         </script>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.SelectedCustomerRoleIds)
                     </div>
@@ -222,7 +229,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.SelectedStoreIds)
                     </div>
@@ -257,7 +264,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Published)
                     </div>
@@ -323,6 +330,18 @@
                             @Html.ValidationMessageFor(model => model.Locales[item].SeName)
                         </div>
                     </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#@Html.FieldIdFor(model => model.Locales[item].SeName)').on('input propertychange paste', function () {
+                                var parameters = {
+                                    entityId: '@Model.Id',
+                                    entityName: 'Manufacturer',
+                                    seName: $(this).val()
+                                };
+                                warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.FieldNameFor(model => model.Locales[item].SeName)', parameters);
+                            });
+                        });
+                    </script>
                     @Html.HiddenFor(model => model.Locales[item].LanguageId)
                 </div>
     ,
@@ -363,6 +382,18 @@
                             @Html.ValidationMessageFor(model => model.SeName)
                         </div>
                     </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#@Html.FieldIdFor(model => model.SeName)').on('input propertychange paste', function () {
+                                var parameters = {
+                                    entityId: '@Model.Id',
+                                    entityName: 'Manufacturer',
+                                    seName: $(this).val()
+                                };
+                                warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.FieldNameFor(model => model.SeName)', parameters);
+                            });
+                        });
+                    </script>
                 </div>))
             </div>
         </div>

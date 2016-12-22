@@ -5,12 +5,14 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
-using Nop.Web.Models.Newsletter;
+using Nop.Web.Factories;
+using Nop.Web.Framework;
 
 namespace Nop.Web.Controllers
 {
     public partial class NewsletterController : BasePublicController
     {
+        private readonly INewsletterModelFactory _newsletterModelFactory;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
@@ -19,13 +21,15 @@ namespace Nop.Web.Controllers
 
         private readonly CustomerSettings _customerSettings;
 
-        public NewsletterController(ILocalizationService localizationService,
+        public NewsletterController(INewsletterModelFactory newsletterModelFactory,
+            ILocalizationService localizationService,
             IWorkContext workContext,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IWorkflowMessageService workflowMessageService,
             IStoreContext storeContext,
             CustomerSettings customerSettings)
         {
+            this._newsletterModelFactory = newsletterModelFactory;
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
@@ -40,13 +44,12 @@ namespace Nop.Web.Controllers
             if (_customerSettings.HideNewsletterBlock)
                 return Content("");
 
-            var model = new NewsletterBoxModel()
-            {
-                AllowToUnsubscribe = _customerSettings.NewsletterBlockAllowToUnsubscribe
-            };
+            var model = _newsletterModelFactory.PrepareNewsletterBoxModel();
             return PartialView(model);
         }
 
+        //available even when a store is closed
+        [StoreClosed(true)]
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult SubscribeNewsletter(string email, bool subscribe)
@@ -111,13 +114,13 @@ namespace Nop.Web.Controllers
             });
         }
 
+        //available even when a store is closed
+        [StoreClosed(true)]
         public ActionResult SubscriptionActivation(Guid token, bool active)
         {
             var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuid(token);
             if (subscription == null)
                 return RedirectToRoute("HomePage");
-
-            var model = new SubscriptionActivationModel();
 
             if (active)
             {
@@ -127,10 +130,7 @@ namespace Nop.Web.Controllers
             else
                 _newsLetterSubscriptionService.DeleteNewsLetterSubscription(subscription);
 
-            model.Result = active 
-                ?  _localizationService.GetResource("Newsletter.ResultActivated")
-                : _localizationService.GetResource("Newsletter.ResultDeactivated");
-
+            var model = _newsletterModelFactory.PrepareSubscriptionActivationModel(active);
             return View(model);
         }
     }

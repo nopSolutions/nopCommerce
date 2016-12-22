@@ -1,0 +1,102 @@
+﻿@{
+    Layout = "";
+}
+@Html.AntiForgeryToken()
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="tax-categories-grid"></div>
+
+            <script>
+            $(document).ready(function () {
+                $("#tax-categories-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("Configure", "TaxFixedRate", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Tax.FixedRate.Controllers" }, { "area", "" } }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            update: {
+                                url:"@Html.Raw(Url.Action("TaxRateUpdate", "TaxFixedRate", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Tax.FixedRate.Controllers" }, { "area", "" } }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "TaxCategoryId",
+                                fields: {
+                                    TaxCategoryId: { editable: false, type: "number" },
+                                    TaxCategoryName: { editable: false, type: "string" },
+                                    Rate: { editable: true, type: "number" }
+                                }
+                            }
+                        },
+                        requestEnd: function (e) {
+                            if (e.type == "update") {
+                                this.read();
+                            }
+                        },
+                        error: function (e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    editable: {
+                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "TaxCategoryName",
+                        title: "@T("Plugins.Tax.FixedRate.Fields.TaxCategoryName")",
+                        width: 400
+                    }, {
+                        field: "Rate",
+                        title: "@T("Plugins.Tax.FixedRate.Fields.Rate")",
+                        width: 200,
+                        editor: function (container, options) {
+                            $('<input name="' + options.field + '"/>')
+                                    .appendTo(container)
+                                    .kendoNumericTextBox({
+                                        format: "{0:n4}",
+                                        decimals: 4
+                                    });
+                        }
+                    }, {
+                        command: {
+                            name: "edit",
+                            text: {
+                                edit: "@T("Admin.Common.Edit")",
+                                update: "@T("Admin.Common.Update")",
+                                cancel: "@T("Admin.Common.Cancel")"
+                            }
+                        },
+                        title: "@T("Admin.Common.Edit")",
+                        width: 150
+                    }]
+                });
+            });
+
+
+            </script>
+        </div>
+    </div>
+</div>

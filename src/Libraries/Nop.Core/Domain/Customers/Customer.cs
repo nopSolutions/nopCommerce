@@ -39,6 +39,10 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public string Email { get; set; }
         /// <summary>
+        /// Gets or sets the email that should be re-validated. Used in scenarios when a customer is already registered and wants to change an email address.
+        /// </summary>
+        public string EmailToRevalidate { get; set; }
+        /// <summary>
         /// Gets or sets the password
         /// </summary>
         public string Password { get; set; }
@@ -89,6 +93,11 @@ namespace Nop.Core.Domain.Customers
         /// </remarks>
         /// </summary>
         public bool HasShoppingCartItems { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the customer is required to re-login
+        /// </summary>
+        public bool RequireReLogin { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the customer is active

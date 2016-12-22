@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using Nop.Core;
+using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -34,7 +35,6 @@ using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
 using Nop.Services.Stores;
-using Nop.Core.Domain;
 
 namespace Nop.Services.Messages
 {
@@ -53,6 +53,7 @@ namespace Nop.Services.Messages
         private readonly IPaymentService _paymentService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
+        private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
 
@@ -82,6 +83,7 @@ namespace Nop.Services.Messages
             IStoreContext storeContext,
             IProductAttributeParser productAttributeParser,
             IAddressAttributeFormatter addressAttributeFormatter,
+            ICustomerAttributeFormatter customerAttributeFormatter,
             MessageTemplatesSettings templatesSettings,
             CatalogSettings catalogSettings,
             TaxSettings taxSettings,
@@ -101,6 +103,7 @@ namespace Nop.Services.Messages
             this._paymentService = paymentService;
             this._productAttributeParser = productAttributeParser;
             this._addressAttributeFormatter = addressAttributeFormatter;
+            this._customerAttributeFormatter = customerAttributeFormatter;
             this._storeService = storeService;
             this._storeContext = storeContext;
 
@@ -192,7 +195,7 @@ namespace Nop.Services.Messages
                     sb.AppendLine(rentalInfo);
                 }
                 //sku
-                if (_catalogSettings.ShowProductSku)
+                if (_catalogSettings.ShowSkuOnProductDetailsPage)
                 {
                     var sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser);
                     if (!String.IsNullOrEmpty(sku))
@@ -498,7 +501,7 @@ namespace Nop.Services.Messages
                     sb.AppendLine(rentalInfo);
                 }
                 //sku
-                if (_catalogSettings.ShowProductSku)
+                if (_catalogSettings.ShowSkuOnProductDetailsPage)
                 {
                     var sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser);
                     if (!String.IsNullOrEmpty(sku))
@@ -524,16 +527,15 @@ namespace Nop.Services.Messages
         /// Get store URL
         /// </summary>
         /// <param name="storeId">Store identifier; Pass 0 to load URL of the current store</param>
-        /// <param name="useSsl">Use SSL</param>
         /// <returns></returns>
-        protected virtual string GetStoreUrl(int storeId = 0, bool useSsl = false)
+        protected virtual string GetStoreUrl(int storeId = 0)
         {
             var store = _storeService.GetStoreById(storeId) ?? _storeContext.CurrentStore;
 
             if (store == null)
                 throw new Exception("No store could be loaded");
 
-            return useSsl ? store.SecureUrl : store.Url;
+            return store.Url;
         }
 
         #endregion
@@ -735,15 +737,20 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Customer.VatNumber", customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber)));
             tokens.Add(new Token("Customer.VatNumberStatus", ((VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId)).ToString()));
 
+            var customAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes);
+            tokens.Add(new Token("Customer.CustomAttributes", _customerAttributeFormatter.FormatAttributes(customAttributesXml), true));
 
 
             //note: we do not use SEO friendly URLS because we can get errors caused by having .(dot) in the URL (from the email address)
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
-            string passwordRecoveryUrl = string.Format("{0}passwordrecovery/confirm?token={1}&email={2}", GetStoreUrl(), customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), HttpUtility.UrlEncode(customer.Email));
-            string accountActivationUrl = string.Format("{0}customer/activation?token={1}&email={2}", GetStoreUrl(), customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), HttpUtility.UrlEncode(customer.Email));
+            var passwordRecoveryUrl = string.Format("{0}passwordrecovery/confirm?token={1}&email={2}", GetStoreUrl(), customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), HttpUtility.UrlEncode(customer.Email));
+            var accountActivationUrl = string.Format("{0}customer/activation?token={1}&email={2}", GetStoreUrl(), customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), HttpUtility.UrlEncode(customer.Email));
+            var emailRevalidationUrl = string.Format("{0}customer/revalidateemail?token={1}&email={2}", GetStoreUrl(), customer.GetAttribute<string>(SystemCustomerAttributeNames.EmailRevalidationToken), HttpUtility.UrlEncode(customer.Email));
             var wishlistUrl = string.Format("{0}wishlist/{1}", GetStoreUrl(), customer.CustomerGuid);
+
             tokens.Add(new Token("Customer.PasswordRecoveryURL", passwordRecoveryUrl, true));
             tokens.Add(new Token("Customer.AccountActivationURL", accountActivationUrl, true));
+            tokens.Add(new Token("Customer.EmailRevalidationURL", emailRevalidationUrl, true));
             tokens.Add(new Token("Wishlist.URLForCustomer", wishlistUrl, true));
 
             //event notification
@@ -1006,9 +1013,11 @@ namespace Nop.Services.Messages
                 "%Customer.FirstName%",
                 "%Customer.LastName%",
                 "%Customer.VatNumber%",
-                "%Customer.VatNumberStatus%", 
-                "%Customer.PasswordRecoveryURL%", 
-                "%Customer.AccountActivationURL%", 
+                "%Customer.VatNumberStatus%",
+                "%Customer.CustomAttributes%",
+                "%Customer.PasswordRecoveryURL%",
+                "%Customer.AccountActivationURL%",
+                "%Customer.EmailRevalidationURL%",
                 "%Vendor.Name%",
                 "%Vendor.Email%",
                 "%Wishlist.URLForCustomer%", 

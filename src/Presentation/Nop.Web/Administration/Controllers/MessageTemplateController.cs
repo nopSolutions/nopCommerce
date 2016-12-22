@@ -7,6 +7,7 @@ using Nop.Admin.Extensions;
 using Nop.Admin.Models.Messages;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Stores;
@@ -29,7 +30,7 @@ namespace Nop.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly EmailAccountSettings _emailAccountSettings;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion Fields
 
@@ -45,7 +46,7 @@ namespace Nop.Admin.Controllers
             IStoreService storeService,
             IStoreMappingService storeMappingService,
             IWorkflowMessageService workflowMessageService,
-            EmailAccountSettings emailAccountSettings)
+            ICustomerActivityService customerActivityService)
         {
             this._messageTemplateService = messageTemplateService;
             this._emailAccountService = emailAccountService;
@@ -57,7 +58,7 @@ namespace Nop.Admin.Controllers
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
             this._workflowMessageService = workflowMessageService;
-            this._emailAccountSettings = emailAccountSettings;
+            this._customerActivityService = customerActivityService;
         }
 
         #endregion
@@ -271,6 +272,10 @@ namespace Nop.Admin.Controllers
                 if (model.SendImmediately)
                     messageTemplate.DelayBeforeSend = null;
                 _messageTemplateService.UpdateMessageTemplate(messageTemplate);
+
+                //activity log
+                _customerActivityService.InsertActivity("EditMessageTemplate", _localizationService.GetResource("ActivityLog.EditMessageTemplate"), messageTemplate.Id);
+
                 //Stores
                 SaveStoreMappings(messageTemplate, model);
                 //locales
@@ -326,7 +331,10 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             _messageTemplateService.DeleteMessageTemplate(messageTemplate);
-            
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteMessageTemplate", _localizationService.GetResource("ActivityLog.DeleteMessageTemplate"), messageTemplate.Id);
+
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Deleted"));
             return RedirectToAction("List");
         }
@@ -346,7 +354,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 var newMessageTemplate = _messageTemplateService.CopyMessageTemplate(messageTemplate);
-                SuccessNotification("The message template has been copied successfully");
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Copied"));
                 return RedirectToAction("Edit", new { id = newMessageTemplate.Id });
             }
             catch (Exception exc)

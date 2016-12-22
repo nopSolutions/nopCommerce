@@ -389,6 +389,9 @@
             <div class="buttons">
                 <input type="submit" id="register-button" class="button-1 register-next-step-button" value="@T("Account.Register.Button")" name="register-button" />
             </div>
+            <div class="external-authentication">
+                @Html.Action("ExternalMethods", "ExternalAuthentication")
+            </div>
         </div>
     </div>
 }

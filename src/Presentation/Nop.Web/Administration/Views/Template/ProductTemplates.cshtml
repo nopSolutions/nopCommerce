@@ -63,6 +63,7 @@
                                                 Name: { editable: true, type: "string" },
                                                 ViewPath: { editable: true, type: "string" },
                                                 DisplayOrder: { editable: true, type: "number" },
+                                                IgnoredProductTypes: { editable: true, type: "string" },
                                                 Id: { editable: false, type: "number" }
                                             }
                                         }
@@ -107,6 +108,10 @@
                                     //integer format
                                     format: "{0:0}",
                                     width: 100
+                                }, {
+                                    field: "IgnoredProductTypes",
+                                    title: "@T("Admin.System.Templates.Product.IgnoredProductTypes")",
+                                    width: 300
                                 }, {
                                     command: [{
                                         name: "edit",

@@ -349,6 +349,9 @@ namespace Nop.Services.Customers
             }
 
             UpdateCustomer(customer);
+
+            //event notification
+            _eventPublisher.EntityDeleted(customer);
         }
 
         /// <summary>
@@ -375,7 +378,7 @@ namespace Nop.Services.Customers
                 return new List<Customer>();
 
             var query = from c in _customerRepository.Table
-                        where customerIds.Contains(c.Id)
+                        where customerIds.Contains(c.Id) && !c.Deleted
                         select c;
             var customers = query.ToList();
             //sort by passed identifiers
@@ -795,7 +798,7 @@ namespace Nop.Services.Customers
             {
                 var query = from cr in _customerRoleRepository.Table
                             orderby cr.Name
-                            where (showHidden || cr.Active)
+                            where showHidden || cr.Active
                             select cr;
                 var customerRoles = query.ToList();
                 return customerRoles;

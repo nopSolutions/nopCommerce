@@ -53,12 +53,31 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.BlogCommentsMustBeApproved_OverrideForStore, model => model.BlogCommentsMustBeApproved, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.BlogCommentsMustBeApproved)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.BlogCommentsMustBeApproved)
+                                @Html.ValidationMessageFor(model => model.BlogCommentsMustBeApproved)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.NotifyAboutNewBlogComments_OverrideForStore, model => model.NotifyAboutNewBlogComments, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.NotifyAboutNewBlogComments)
                             </div>
                             <div class="col-md-9">
                                 @Html.NopEditorFor(model => model.NotifyAboutNewBlogComments)
                                 @Html.ValidationMessageFor(model => model.NotifyAboutNewBlogComments)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.ShowBlogCommentsPerStore)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.ShowBlogCommentsPerStore)
+                                @Html.ValidationMessageFor(model => model.ShowBlogCommentsPerStore)
                             </div>
                         </div>
                         <div class="form-group advanced-setting">

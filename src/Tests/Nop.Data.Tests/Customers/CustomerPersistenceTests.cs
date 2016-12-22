@@ -31,6 +31,7 @@ namespace Nop.Data.Tests.Customers
             fromDb.AffiliateId.ShouldEqual(1);
             fromDb.VendorId.ShouldEqual(2);
             fromDb.HasShoppingCartItems.ShouldEqual(true);
+            fromDb.RequireReLogin.ShouldEqual(true);
             fromDb.Active.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(false);
             fromDb.IsSystemAccount.ShouldEqual(true);
@@ -228,6 +229,7 @@ namespace Nop.Data.Tests.Customers
                 AffiliateId = 1,
                 VendorId = 2,
                 HasShoppingCartItems = true,
+                RequireReLogin = true,
                 Active = true,
                 Deleted = false,
                 IsSystemAccount = true,

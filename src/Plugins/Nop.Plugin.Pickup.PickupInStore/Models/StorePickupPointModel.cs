@@ -38,12 +38,16 @@ namespace Nop.Plugin.Pickup.PickupInStore.Models
         public AddressModel()
         {
             AvailableCountries = new List<SelectListItem>();
+            AvailableStates = new List<SelectListItem>();
         }
-
-        public IList<SelectListItem> AvailableCountries { get; set; }
 
         [NopResourceDisplayName("Admin.Address.Fields.Country")]
         public int? CountryId { get; set; }
+        public IList<SelectListItem> AvailableCountries { get; set; }
+
+        [NopResourceDisplayName("Admin.Address.Fields.StateProvince")]
+        public int? StateProvinceId { get; set; }
+        public IList<SelectListItem> AvailableStates { get; set; }
 
         [NopResourceDisplayName("Admin.Address.Fields.City")]
         [AllowHtml]

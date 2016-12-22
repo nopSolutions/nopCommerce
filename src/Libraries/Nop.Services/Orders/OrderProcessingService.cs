@@ -218,7 +218,7 @@ namespace Nop.Services.Orders
             public PlaceOrderContainter()
             {
                 this.Cart = new List<ShoppingCartItem>();
-                this.AppliedDiscounts = new List<Discount>();
+                this.AppliedDiscounts = new List<DiscountForCaching>();
                 this.AppliedGiftCards = new List<AppliedGiftCard>();
             }
 
@@ -245,7 +245,7 @@ namespace Nop.Services.Orders
             public string CheckoutAttributesXml { get; set; }
 
             public IList<ShoppingCartItem> Cart { get; set; }
-            public List<Discount> AppliedDiscounts { get; set; }
+            public List<DiscountForCaching> AppliedDiscounts { get; set; }
             public List<AppliedGiftCard> AppliedGiftCards { get; set; }
 
             public decimal OrderSubTotalInclTax { get; set; }
@@ -366,7 +366,7 @@ namespace Nop.Services.Orders
 
             //sub total (incl tax)
             decimal orderSubTotalDiscountAmount;
-            List<Discount> orderSubTotalAppliedDiscounts;
+            List<DiscountForCaching> orderSubTotalAppliedDiscounts;
             decimal subTotalWithoutDiscountBase;
             decimal subTotalWithDiscountBase;
             _orderTotalCalculationService.GetShoppingCartSubTotal(details.Cart, true, out orderSubTotalDiscountAmount,
@@ -429,7 +429,7 @@ namespace Nop.Services.Orders
 
             //shipping total
             decimal tax;
-            List<Discount> shippingTotalDiscounts;
+            List<DiscountForCaching> shippingTotalDiscounts;
             var orderShippingTotalInclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(details.Cart, true, out tax, out shippingTotalDiscounts);
             var orderShippingTotalExclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(details.Cart, false);
             if (!orderShippingTotalInclTax.HasValue || !orderShippingTotalExclTax.HasValue)
@@ -462,7 +462,7 @@ namespace Nop.Services.Orders
 
             //order total (and applied discounts, gift cards, reward points)
             List<AppliedGiftCard> appliedGiftCards;
-            List<Discount> orderAppliedDiscounts;
+            List<DiscountForCaching> orderAppliedDiscounts;
             decimal orderDiscountAmount;
             int redeemedRewardPoints;
             decimal redeemedRewardPointsAmount;
@@ -746,7 +746,7 @@ namespace Nop.Services.Orders
             var vendors = GetVendorsInOrder(order);
             foreach (var vendor in vendors)
             {
-                var orderPlacedVendorNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedVendorNotification(order, vendor, order.CustomerLanguageId);
+                var orderPlacedVendorNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedVendorNotification(order, vendor, _localizationSettings.DefaultAdminLanguageId);
                 if (orderPlacedVendorNotificationQueuedEmailId > 0)
                 {
                     order.OrderNotes.Add(new OrderNote
@@ -765,18 +765,28 @@ namespace Nop.Services.Orders
         /// <param name="order">Order</param>
         protected virtual void AwardRewardPoints(Order order)
         {
-            int points = _orderTotalCalculationService.CalculateRewardPoints(order.Customer, order.OrderTotal);
+            var totalForRewardPoints = _orderTotalCalculationService.CalculateApplicableOrderTotalForRewardPoints(order.OrderShippingInclTax, order.OrderTotal);
+            int points = _orderTotalCalculationService.CalculateRewardPoints(order.Customer, totalForRewardPoints);
             if (points == 0)
                 return;
 
             //Ensure that reward points were not added (earned) before. We should not add reward points if they were already earned for this order
-            if (order.RewardPointsWereAdded)
+            if (order.RewardPointsHistoryEntryId.HasValue)
                 return;
 
+            //check whether delay is set
+            DateTime? activatingDate = null;
+            if (_rewardPointsSettings.ActivationDelay > 0)
+            {
+                var delayPeriod = (RewardPointsActivatingDelayPeriod)_rewardPointsSettings.ActivationDelayPeriodId;
+                var delayInHours = delayPeriod.ToHours(_rewardPointsSettings.ActivationDelay);
+                activatingDate = DateTime.UtcNow.AddHours(delayInHours);
+            }
+
             //add reward points
-            _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, points, order.StoreId,
-                string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.Id));
-            order.RewardPointsWereAdded = true;
+            order.RewardPointsHistoryEntryId = _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, points, order.StoreId,
+                string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.Id), activatingDate: activatingDate);
+
             _orderService.UpdateOrder(order);
         }
 
@@ -786,17 +796,29 @@ namespace Nop.Services.Orders
         /// <param name="order">Order</param>
         protected virtual void ReduceRewardPoints(Order order)
         {
-            int points = _orderTotalCalculationService.CalculateRewardPoints(order.Customer, order.OrderTotal);
+            var totalForRewardPoints = _orderTotalCalculationService.CalculateApplicableOrderTotalForRewardPoints(order.OrderShippingInclTax, order.OrderTotal);
+            int points = _orderTotalCalculationService.CalculateRewardPoints(order.Customer, totalForRewardPoints);
             if (points == 0)
                 return;
 
             //ensure that reward points were already earned for this order before
-            if (!order.RewardPointsWereAdded)
+            if (!order.RewardPointsHistoryEntryId.HasValue)
                 return;
 
-            //reduce reward points
-            _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, -points, order.StoreId,
-                string.Format(_localizationService.GetResource("RewardPoints.Message.ReducedForOrder"), order.Id));
+            //get appropriate history entry
+            var rewardPointsHistoryEntry = _rewardPointService.GetRewardPointsHistoryEntryById(order.RewardPointsHistoryEntryId.Value);
+            if (rewardPointsHistoryEntry != null && rewardPointsHistoryEntry.CreatedOnUtc > DateTime.UtcNow)
+            {
+                //just delete the upcoming entry (points were not granted yet)
+                _rewardPointService.DeleteRewardPointsHistoryEntry(rewardPointsHistoryEntry);
+            }
+            else
+            {
+                //or reduce reward points if the entry already exists
+                _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, -points, order.StoreId,
+                    string.Format(_localizationService.GetResource("RewardPoints.Message.ReducedForOrder"), order.Id));
+            }
+
             _orderService.UpdateOrder(order);
         }
 
@@ -933,25 +955,23 @@ namespace Nop.Services.Orders
             }
 
             //reward points
-            if (_rewardPointsSettings.PointsForPurchases_Awarded == order.OrderStatus)
+            if (order.OrderStatus == OrderStatus.Complete)
             {
                 AwardRewardPoints(order);
             }
-            if (_rewardPointsSettings.PointsForPurchases_Canceled == order.OrderStatus)
+            if (order.OrderStatus == OrderStatus.Cancelled)
             {
                 ReduceRewardPoints(order);
             }
 
             //gift cards activation
-            if (_orderSettings.GiftCards_Activated_OrderStatusId > 0 &&
-               _orderSettings.GiftCards_Activated_OrderStatusId == (int)order.OrderStatus)
+            if (_orderSettings.ActivateGiftCardsAfterCompletingOrder && order.OrderStatus == OrderStatus.Complete)
             {
                 SetActivatedValueForPurchasedGiftCards(order, true);
             }
 
             //gift cards deactivation
-            if (_orderSettings.GiftCards_Deactivated_OrderStatusId > 0 &&
-               _orderSettings.GiftCards_Deactivated_OrderStatusId == (int)order.OrderStatus)
+            if (_orderSettings.DeactivateGiftCardsAfterCancellingOrder && order.OrderStatus == OrderStatus.Cancelled)
             {
                 SetActivatedValueForPurchasedGiftCards(order, false);
             }
@@ -1124,12 +1144,33 @@ namespace Nop.Services.Orders
                 }
             }
 
+            //is order complete?
             if (order.OrderStatus != OrderStatus.Cancelled &&
                 order.OrderStatus != OrderStatus.Complete)
             {
                 if (order.PaymentStatus == PaymentStatus.Paid)
                 {
-                    if (order.ShippingStatus == ShippingStatus.ShippingNotRequired || order.ShippingStatus == ShippingStatus.Delivered)
+                    var completed = false;
+                    if (order.ShippingStatus == ShippingStatus.ShippingNotRequired)
+                    {
+                        //shipping is not required
+                        completed = true;
+                    }
+                    else
+                    {
+                        //shipping is required
+                        if (_orderSettings.CompleteOrderWhenDelivered)
+                        {
+                            completed = order.ShippingStatus == ShippingStatus.Delivered;
+                        }
+                        else
+                        {
+                            completed = order.ShippingStatus == ShippingStatus.Shipped ||
+                                        order.ShippingStatus == ShippingStatus.Delivered;
+                        }
+                    }
+
+                    if (completed)
                     {
                         SetOrderStatus(order, OrderStatus.Complete, true);
                     }
@@ -1213,10 +1254,11 @@ namespace Nop.Services.Orders
                     {
                         //prices
                         decimal taxRate;
-                        List<Discount> scDiscounts;
+                        List<DiscountForCaching> scDiscounts;
                         decimal discountAmount;
+                        int? maximumDiscountQty;
                         var scUnitPrice = _priceCalculationService.GetUnitPrice(sc);
-                        var scSubTotal = _priceCalculationService.GetSubTotal(sc, true, out discountAmount, out scDiscounts);
+                        var scSubTotal = _priceCalculationService.GetSubTotal(sc, true, out discountAmount, out scDiscounts, out maximumDiscountQty);
                         var scUnitPriceInclTax = _taxService.GetProductPrice(sc.Product, scUnitPrice, true, details.Customer, out taxRate);
                         var scUnitPriceExclTax = _taxService.GetProductPrice(sc.Product, scUnitPrice, false, details.Customer, out taxRate);
                         var scSubTotalInclTax = _taxService.GetProductPrice(sc.Product, scSubTotal, true, details.Customer, out taxRate);
@@ -1290,7 +1332,8 @@ namespace Nop.Services.Orders
                         }
 
                         //inventory
-                        _productService.AdjustInventory(sc.Product, -sc.Quantity, sc.AttributesXml);
+                        _productService.AdjustInventory(sc.Product, -sc.Quantity, sc.AttributesXml,
+                            string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.PlaceOrder"), order.Id));
                     }
 
                     //clear shopping cart
@@ -1299,12 +1342,16 @@ namespace Nop.Services.Orders
                     //discount usage history
                     foreach (var discount in details.AppliedDiscounts)
                     {
-                        _discountService.InsertDiscountUsageHistory(new DiscountUsageHistory
+                        var d = _discountService.GetDiscountById(discount.Id);
+                        if (d != null)
                         {
-                            Discount = discount,
-                            Order = order,
-                            CreatedOnUtc = DateTime.UtcNow
-                        });
+                            _discountService.InsertDiscountUsageHistory(new DiscountUsageHistory
+                            {
+                                Discount = d,
+                                Order = order,
+                                CreatedOnUtc = DateTime.UtcNow
+                            });
+                        }
                     }
 
                     //gift card usage history
@@ -1503,13 +1550,19 @@ namespace Nop.Services.Orders
             var discountUsageHistoryForOrder = _discountService.GetAllDiscountUsageHistory(null, updatedOrder.Customer.Id, updatedOrder.Id);
             foreach (var discount in updateOrderParameters.AppliedDiscounts)
             {
-                if (!discountUsageHistoryForOrder.Where(history => history.DiscountId == discount.Id).Any())
-                    _discountService.InsertDiscountUsageHistory(new DiscountUsageHistory
+                if (!discountUsageHistoryForOrder.Any(history => history.DiscountId == discount.Id))
+                {
+                    var d = _discountService.GetDiscountById(discount.Id);
+                    if (d != null)
                     {
-                        Discount = discount,
-                        Order = updatedOrder,
-                        CreatedOnUtc = DateTime.UtcNow
-                    });
+                        _discountService.InsertDiscountUsageHistory(new DiscountUsageHistory
+                        {
+                            Discount = d,
+                            Order = updatedOrder,
+                            CreatedOnUtc = DateTime.UtcNow
+                        });
+                    }
+                }
             }
 
             CheckOrderStatus(updatedOrder);
@@ -1553,16 +1606,23 @@ namespace Nop.Services.Orders
                         if (orderItem == null)
                             continue;
 
-                        _productService.ReverseBookedInventory(orderItem.Product, shipmentItem);
+                        _productService.ReverseBookedInventory(orderItem.Product, shipmentItem,
+                            string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.DeleteOrder"), order.Id));
                     }
                 }
+
                 //Adjust inventory
                 foreach (var orderItem in order.OrderItems)
                 {
-                    _productService.AdjustInventory(orderItem.Product, orderItem.Quantity, orderItem.AttributesXml);
+                    _productService.AdjustInventory(orderItem.Product, orderItem.Quantity, orderItem.AttributesXml,
+                        string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.DeleteOrder"), order.Id));
                 }
 
             }
+
+            //deactivate gift cards
+            if (_orderSettings.DeactivateGiftCardsAfterDeletingOrder)
+                SetActivatedValueForPurchasedGiftCards(order, false);
 
             //add a note
             order.OrderNotes.Add(new OrderNote
@@ -1614,6 +1674,7 @@ namespace Nop.Services.Orders
                     RecurringCycleLength = recurringPayment.CycleLength,
                     RecurringCyclePeriod = recurringPayment.CyclePeriod,
                     RecurringTotalCycles = recurringPayment.TotalCycles,
+                    CustomValues = initialOrder.DeserializeCustomValues()
                 };
 
                 //prepare order details
@@ -1734,7 +1795,8 @@ namespace Nop.Services.Orders
                         }
 
                         //inventory
-                        _productService.AdjustInventory(orderItem.Product, -orderItem.Quantity, orderItem.AttributesXml);
+                        _productService.AdjustInventory(orderItem.Product, -orderItem.Quantity, orderItem.AttributesXml,
+                            string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.PlaceOrder"), order.Id));
                     }
 
                     //notifications
@@ -1912,7 +1974,8 @@ namespace Nop.Services.Orders
             foreach (var item in shipment.ShipmentItems)
             {
                 var orderItem = _orderService.GetOrderItemById(item.OrderItemId);
-                _productService.BookReservedInventory(orderItem.Product, item.WarehouseId, -item.Quantity);
+                _productService.BookReservedInventory(orderItem.Product, item.WarehouseId, -item.Quantity,
+                    string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.Ship"), shipment.OrderId));
             }
 
             //check whether we have more items to ship
@@ -2077,13 +2140,15 @@ namespace Nop.Services.Orders
                     if (orderItem == null)
                         continue;
 
-                    _productService.ReverseBookedInventory(orderItem.Product, shipmentItem);
+                    _productService.ReverseBookedInventory(orderItem.Product, shipmentItem,
+                        string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CancelOrder"), order.Id));
                 }
             }
             //Adjust inventory
             foreach (var orderItem in order.OrderItems)
             {
-                _productService.AdjustInventory(orderItem.Product, orderItem.Quantity, orderItem.AttributesXml);
+                _productService.AdjustInventory(orderItem.Product, orderItem.Quantity, orderItem.AttributesXml,
+                    string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CancelOrder"), order.Id));
             }
 
             _eventPublisher.Publish(new OrderCancelledEvent(order));
@@ -2310,7 +2375,11 @@ namespace Nop.Services.Orders
             if (order.OrderTotal == decimal.Zero)
                 return false;
 
-            //uncomment the lines below in order to allow this operation for cancelled orders
+            //refund cannot be made if previously a partial refund has been already done. only other partial refund can be made in this case
+            if (order.RefundedAmount > decimal.Zero)
+                return false;
+
+            //uncomment the lines below in order to disallow this operation for cancelled orders
             //if (order.OrderStatus == OrderStatus.Cancelled)
             //    return false;
 
@@ -2439,7 +2508,11 @@ namespace Nop.Services.Orders
             if (order.OrderTotal == decimal.Zero)
                 return false;
 
-            //uncomment the lines below in order to allow this operation for cancelled orders
+            //refund cannot be made if previously a partial refund has been already done. only other partial refund can be made in this case
+            if (order.RefundedAmount > decimal.Zero)
+                return false;
+
+            //uncomment the lines below in order to disallow this operation for cancelled orders
             //if (order.OrderStatus == OrderStatus.Cancelled)
             //     return false;
 
@@ -2576,7 +2649,8 @@ namespace Nop.Services.Orders
 
                     //update order info
                     order.RefundedAmount = totalAmountRefunded;
-                    order.PaymentStatus = result.NewPaymentStatus;
+                    //mark payment status as 'Refunded' if the order total amount is fully refunded
+                    order.PaymentStatus = order.OrderTotal == totalAmountRefunded && result.NewPaymentStatus == PaymentStatus.PartiallyRefunded ? PaymentStatus.Refunded : result.NewPaymentStatus;
                     _orderService.UpdateOrder(order);
 
 
@@ -2703,8 +2777,8 @@ namespace Nop.Services.Orders
 
             //update order info
             order.RefundedAmount = totalAmountRefunded;
-            //if (order.OrderTotal == totalAmountRefunded), then set order.PaymentStatus = PaymentStatus.Refunded;
-            order.PaymentStatus = PaymentStatus.PartiallyRefunded;
+            //mark payment status as 'Refunded' if the order total amount is fully refunded
+            order.PaymentStatus = order.OrderTotal == totalAmountRefunded ? PaymentStatus.Refunded : PaymentStatus.PartiallyRefunded;
             _orderService.UpdateOrder(order);
 
             //add a note
@@ -2967,7 +3041,7 @@ namespace Nop.Services.Orders
             {
                 //subtotal
                 decimal orderSubTotalDiscountAmountBase;
-                List<Discount> orderSubTotalAppliedDiscounts;
+                List<DiscountForCaching> orderSubTotalAppliedDiscounts;
                 decimal subTotalWithoutDiscountBase;
                 decimal subTotalWithDiscountBase;
                 _orderTotalCalculationService.GetShoppingCartSubTotal(cart, _orderSettings.MinOrderSubtotalAmountIncludingTax,
@@ -2999,6 +3073,26 @@ namespace Nop.Services.Orders
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether payment workflow is required
+        /// </summary>
+        /// <param name="cart">Shopping cart</param>
+        /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
+        /// <returns>true - OK; false - minimum order total amount is not reached</returns>
+        public virtual bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool? useRewardPoints = null)
+        {
+            if (cart == null)
+                throw new ArgumentNullException("cart");
+
+            bool result = true;
+
+            //check whether order total equals zero
+            decimal? shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart, useRewardPoints: useRewardPoints);
+            if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
+                result = false;
+            return result;
         }
 
         #endregion

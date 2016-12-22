@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Services.Common;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
@@ -23,6 +24,9 @@ namespace Nop.Services.Customers
         private readonly ILocalizationService _localizationService;
         private readonly IStoreService _storeService;
         private readonly IRewardPointService _rewardPointService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IWorkContext _workContext;
+        private readonly IWorkflowMessageService _workflowMessageService;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly CustomerSettings _customerSettings;
 
@@ -39,6 +43,9 @@ namespace Nop.Services.Customers
         /// <param name="localizationService">Localization service</param>
         /// <param name="storeService">Store service</param>
         /// <param name="rewardPointService">Reward points service</param>
+        /// <param name="genericAttributeService">Generic attribute service</param>
+        /// <param name="workContext">Work context</param>
+        /// <param name="workflowMessageService">Workflow message service</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="customerSettings">Customer settings</param>
         public CustomerRegistrationService(ICustomerService customerService, 
@@ -47,6 +54,9 @@ namespace Nop.Services.Customers
             ILocalizationService localizationService,
             IStoreService storeService,
             IRewardPointService rewardPointService,
+            IWorkContext workContext,
+            IGenericAttributeService genericAttributeService,
+            IWorkflowMessageService workflowMessageService,
             RewardPointsSettings rewardPointsSettings,
             CustomerSettings customerSettings)
         {
@@ -56,6 +66,9 @@ namespace Nop.Services.Customers
             this._localizationService = localizationService;
             this._storeService = storeService;
             this._rewardPointService = rewardPointService;
+            this._genericAttributeService = genericAttributeService;
+            this._workContext = workContext;
+            this._workflowMessageService = workflowMessageService;
             this._rewardPointsSettings = rewardPointsSettings;
             this._customerSettings = customerSettings;
         }
@@ -104,9 +117,11 @@ namespace Nop.Services.Customers
             if (!isValid)
                 return CustomerLoginResults.WrongPassword;
 
-            //save last login date
+            //update login details
+            customer.RequireReLogin = false;
             customer.LastLoginDateUtc = DateTime.UtcNow;
             _customerService.UpdateCustomer(customer);
+
             return CustomerLoginResults.Successful;
         }
 
@@ -328,7 +343,8 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="newEmail">New email</param>
-        public virtual void SetEmail(Customer customer, string newEmail)
+        /// <param name="requireValidation">Require validation of new email address</param>
+        public virtual void SetEmail(Customer customer, string newEmail, bool requireValidation)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -349,19 +365,32 @@ namespace Nop.Services.Customers
             if (customer2 != null && customer.Id != customer2.Id)
                 throw new NopException(_localizationService.GetResource("Account.EmailUsernameErrors.EmailAlreadyExists"));
 
-            customer.Email = newEmail;
-            _customerService.UpdateCustomer(customer);
-
-            //update newsletter subscription (if required)
-            if (!String.IsNullOrEmpty(oldEmail) && !oldEmail.Equals(newEmail, StringComparison.InvariantCultureIgnoreCase))
+            if (requireValidation)
             {
-                foreach (var store in _storeService.GetAllStores())
+                //re-validate email
+                customer.EmailToRevalidate = newEmail;
+                _customerService.UpdateCustomer(customer);
+
+                //email re-validation message
+                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.EmailRevalidationToken, Guid.NewGuid().ToString());
+                _workflowMessageService.SendCustomerEmailRevalidationMessage(customer, _workContext.WorkingLanguage.Id);
+            }
+            else
+            {
+                customer.Email = newEmail;
+                _customerService.UpdateCustomer(customer);
+
+                //update newsletter subscription (if required)
+                if (!String.IsNullOrEmpty(oldEmail) && !oldEmail.Equals(newEmail, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    var subscriptionOld = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(oldEmail, store.Id);
-                    if (subscriptionOld != null)
+                    foreach (var store in _storeService.GetAllStores())
                     {
-                        subscriptionOld.Email = newEmail;
-                        _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscriptionOld);
+                        var subscriptionOld = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(oldEmail, store.Id);
+                        if (subscriptionOld != null)
+                        {
+                            subscriptionOld.Email = newEmail;
+                            _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscriptionOld);
+                        }
                     }
                 }
             }
@@ -379,9 +408,6 @@ namespace Nop.Services.Customers
 
             if (!_customerSettings.UsernamesEnabled)
                 throw new NopException("Usernames are disabled");
-
-            if (!_customerSettings.AllowUsersToChangeUsernames)
-                throw new NopException("Changing usernames is not allowed");
 
             newUsername = newUsername.Trim();
 

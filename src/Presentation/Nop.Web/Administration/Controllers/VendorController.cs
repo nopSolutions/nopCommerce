@@ -8,6 +8,7 @@ using Nop.Core.Domain.Vendors;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Security;
 using Nop.Services.Seo;
@@ -32,6 +33,7 @@ namespace Nop.Admin.Controllers
         private readonly IPictureService _pictureService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly VendorSettings _vendorSettings;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion
 
@@ -46,7 +48,8 @@ namespace Nop.Admin.Controllers
             ILocalizedEntityService localizedEntityService,
             IPictureService pictureService,
             IDateTimeHelper dateTimeHelper,
-            VendorSettings vendorSettings)
+            VendorSettings vendorSettings,
+            ICustomerActivityService customerActivityService)
         {
             this._customerService = customerService;
             this._localizationService = localizationService;
@@ -58,6 +61,7 @@ namespace Nop.Admin.Controllers
             this._pictureService = pictureService;
             this._dateTimeHelper = dateTimeHelper;
             this._vendorSettings = vendorSettings;
+            this._customerActivityService = customerActivityService;
         }
 
         #endregion
@@ -180,6 +184,10 @@ namespace Nop.Admin.Controllers
             {
                 var vendor = model.ToEntity();
                 _vendorService.InsertVendor(vendor);
+
+                //activity log
+                _customerActivityService.InsertActivity("AddNewVendor", _localizationService.GetResource("ActivityLog.AddNewVendor"), vendor.Id);
+
                 //search engine name
                 model.SeName = vendor.ValidateSeName(model.SeName, vendor.Name, true);
                 _urlRecordService.SaveSlug(vendor, model.SeName, 0);
@@ -256,6 +264,10 @@ namespace Nop.Admin.Controllers
                 int prevPictureId = vendor.PictureId;
                 vendor = model.ToEntity(vendor);
                 _vendorService.UpdateVendor(vendor);
+
+                //activity log
+                _customerActivityService.InsertActivity("EditVendor", _localizationService.GetResource("ActivityLog.EditVendor"), vendor.Id);
+
                 //search engine name
                 model.SeName = vendor.ValidateSeName(model.SeName, vendor.Name, true);
                 _urlRecordService.SaveSlug(vendor, model.SeName, 0);
@@ -319,6 +331,9 @@ namespace Nop.Admin.Controllers
 
             //delete a vendor
             _vendorService.DeleteVendor(vendor);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteVendor", _localizationService.GetResource("ActivityLog.DeleteVendor"), vendor.Id);
 
             SuccessNotification(_localizationService.GetResource("Admin.Vendors.Deleted"));
             return RedirectToAction("List");

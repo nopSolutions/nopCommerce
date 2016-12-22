@@ -112,6 +112,16 @@
                                 @Html.ValidationMessageFor(model => model.ForceTaxExclusionFromOrderSubtotal)
                             </div>
                         </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.DefaultTaxCategoryId_OverrideForStore, model => model.DefaultTaxCategoryId, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.DefaultTaxCategoryId)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDropDownListFor(model => model.DefaultTaxCategoryId, Model.TaxCategories)
+                                @Html.ValidationMessageFor(model => model.DefaultTaxCategoryId)
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.TaxBasedOn_OverrideForStore, model => model.TaxBasedOn, Model.ActiveStoreScopeConfiguration)
@@ -178,7 +188,7 @@
                                 @Html.NopLabelFor(model => model.ShippingTaxClassId)
                             </div>
                             <div class="col-md-9">
-                                @Html.NopDropDownListFor(model => model.ShippingTaxClassId, Model.ShippingTaxCategories)
+                                @Html.NopDropDownListFor(model => model.ShippingTaxClassId, Model.TaxCategories)
                                 @Html.ValidationMessageFor(model => model.ShippingTaxClassId)
                             </div>
                         </div>

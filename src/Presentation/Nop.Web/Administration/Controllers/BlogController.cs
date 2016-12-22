@@ -7,8 +7,10 @@ using Nop.Admin.Models.Blogs;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Blogs;
+using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
@@ -26,31 +28,40 @@ namespace Nop.Admin.Controllers
         private readonly IBlogService _blogService;
         private readonly ILanguageService _languageService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion
 
-		#region Constructors
+        #region Ctor
 
-        public BlogController(IBlogService blogService, ILanguageService languageService,
-            IDateTimeHelper dateTimeHelper, 
-            ILocalizationService localizationService, IPermissionService permissionService,
+        public BlogController(IBlogService blogService,
+            ILanguageService languageService,
+            IDateTimeHelper dateTimeHelper,
+            IEventPublisher eventPublisher,
+            ILocalizationService localizationService,
+            IPermissionService permissionService,
             IUrlRecordService urlRecordService,
-            IStoreService storeService, IStoreMappingService storeMappingService)
+            IStoreService storeService,
+            IStoreMappingService storeMappingService,
+            ICustomerActivityService customerActivityService)
         {
             this._blogService = blogService;
             this._languageService = languageService;
             this._dateTimeHelper = dateTimeHelper;
+            this._eventPublisher = eventPublisher;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._urlRecordService = urlRecordService;
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
-		}
+            this._customerActivityService = customerActivityService;
+        }
 
         #endregion
 
@@ -148,11 +159,7 @@ namespace Nop.Admin.Controllers
                 Data = blogPosts.Select(x =>
                 {
                     var m = x.ToModel();
-                    //little hack here:
-                    //ensure that descriptions are not returned
-                    //otherwise, we can get the following error if entities have too long descriptions:
-                    //"Error during serialization or deserialization using the JSON JavaScriptSerializer. The length of the string exceeds the value set on the maxJsonLength property. "
-                    //also it improves performance
+                    //little performance optimization: ensure that "Body" is not returned
                     m.Body = "";
                     if (x.StartDateUtc.HasValue)
                         m.StartDate = _dateTimeHelper.ConvertToUserTime(x.StartDateUtc.Value, DateTimeKind.Utc);
@@ -160,7 +167,9 @@ namespace Nop.Admin.Controllers
                         m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     m.LanguageName = x.Language.Name;
-                    m.Comments = x.CommentCount;
+                    m.ApprovedComments = _blogService.GetBlogCommentsCount(x, isApproved: true);
+                    m.NotApprovedComments = _blogService.GetBlogCommentsCount(x, isApproved: false);
+
                     return m;
                 }),
                 Total = blogPosts.TotalCount
@@ -199,7 +208,10 @@ namespace Nop.Admin.Controllers
                 blogPost.EndDateUtc = model.EndDate;
                 blogPost.CreatedOnUtc = DateTime.UtcNow;
                 _blogService.InsertBlogPost(blogPost);
-                
+
+                //activity log
+                _customerActivityService.InsertActivity("AddNewBlogPost", _localizationService.GetResource("ActivityLog.AddNewBlogPost"), blogPost.Id);
+
                 //search engine name
                 var seName = blogPost.ValidateSeName(model.SeName, model.Title, true);
                 _urlRecordService.SaveSlug(blogPost, seName, blogPost.LanguageId);
@@ -263,6 +275,9 @@ namespace Nop.Admin.Controllers
                 blogPost.EndDateUtc = model.EndDate;
                 _blogService.UpdateBlogPost(blogPost);
 
+                //activity log
+                _customerActivityService.InsertActivity("EditBlogPost", _localizationService.GetResource("ActivityLog.EditBlogPost"), blogPost.Id);
+
                 //search engine name
                 var seName = blogPost.ValidateSeName(model.SeName, model.Title, true);
                 _urlRecordService.SaveSlug(blogPost, seName, blogPost.LanguageId);
@@ -300,6 +315,9 @@ namespace Nop.Admin.Controllers
 
             _blogService.DeleteBlogPost(blogPost);
 
+            //activity log
+            _customerActivityService.InsertActivity("DeleteBlogPost", _localizationService.GetResource("ActivityLog.DeleteBlogPost"), blogPost.Id);
+
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Deleted"));
 			return RedirectToAction("List");
 		}
@@ -327,7 +345,9 @@ namespace Nop.Admin.Controllers
                 //filter comments by blog
                 _blogService.GetBlogPostById(filterByBlogPostId.Value).BlogComments.OrderBy(bc => bc.CreatedOnUtc).ToList() :
                 //load all blog comments
-                _blogService.GetAllComments(0);
+                _blogService.GetAllComments();
+
+            var storeNames = _storeService.GetAllStores().ToDictionary(store => store.Id, store => store.Name);
 
             var gridModel = new DataSourceResult
             {
@@ -342,11 +362,40 @@ namespace Nop.Admin.Controllers
                     commentModel.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc);
                     commentModel.Comment = Core.Html.HtmlHelper.FormatText(blogComment.CommentText, false, true, false, false, false, false);
+                    commentModel.IsApproved = blogComment.IsApproved;
+                    commentModel.StoreId = blogComment.StoreId;
+                    commentModel.StoreName = storeNames.ContainsKey(blogComment.StoreId) ? storeNames[blogComment.StoreId] : "Deleted";
+
                     return commentModel;
                 }),
                 Total = comments.Count,
             };
             return Json(gridModel);
+        }
+
+        [HttpPost]
+        public ActionResult CommentUpdate(BlogCommentModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+                return AccessDeniedView();
+
+            var comment = _blogService.GetBlogCommentById(model.Id);
+            if (comment == null)
+                throw new ArgumentException("No comment found with the specified id");
+
+            var previousIsApproved = comment.IsApproved;
+
+            comment.IsApproved = model.IsApproved;
+            _blogService.UpdateBlogPost(comment.BlogPost);
+
+            //raise event (only if it wasn't approved before and is approved now)
+            if (!previousIsApproved && comment.IsApproved)
+                _eventPublisher.Publish(new BlogCommentApprovedEvent(comment));
+
+            //activity log
+            _customerActivityService.InsertActivity("EditBlogComment", _localizationService.GetResource("ActivityLog.EditBlogComment"), model.Id);
+
+            return new NullJsonResult();
         }
 
         public ActionResult CommentDelete(int id)
@@ -360,9 +409,9 @@ namespace Nop.Admin.Controllers
 
             var blogPost = comment.BlogPost;
             _blogService.DeleteBlogComment(comment);
-            //update totals
-            blogPost.CommentCount = blogPost.BlogComments.Count;
-            _blogService.UpdateBlogPost(blogPost);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteBlogPostComment", _localizationService.GetResource("ActivityLog.DeleteBlogPostComment"), blogPost.Id);
 
             return new NullJsonResult();
         }
@@ -379,11 +428,10 @@ namespace Nop.Admin.Controllers
                 var blogPosts = _blogService.GetBlogPostsByIds(comments.Select(p => p.BlogPostId).Distinct().ToArray());
 
                 _blogService.DeleteBlogComments(comments);
-                //update totals
-                foreach (var blogPost in blogPosts)
+                //activity log
+                foreach (var blogComment in comments)
                 {
-                    blogPost.CommentCount = blogPost.BlogComments.Count;
-                    _blogService.UpdateBlogPost(blogPost);
+                    _customerActivityService.InsertActivity("DeleteBlogPostComment", _localizationService.GetResource("ActivityLog.DeleteBlogPostComment"), blogComment.Id);
                 }
             }
 

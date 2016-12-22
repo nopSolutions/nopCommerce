@@ -25,7 +25,6 @@ namespace Nop.Services.Tests.Shipping
     public class CalculateDimensionsTests : ServiceTest
     {
         private IRepository<ShippingMethod> _shippingMethodRepository;
-        private IRepository<DeliveryDate> _deliveryDateRepository;
         private IRepository<Warehouse> _warehouseRepository;
         private ILogger _logger;
         private IProductAttributeParser _productAttributeParser;
@@ -48,7 +47,6 @@ namespace Nop.Services.Tests.Shipping
             _shippingSettings.UseCubeRootMethod = true;
 
             _shippingMethodRepository = MockRepository.GenerateMock<IRepository<ShippingMethod>>();
-            _deliveryDateRepository = MockRepository.GenerateMock<IRepository<DeliveryDate>>();
             _warehouseRepository = MockRepository.GenerateMock<IRepository<Warehouse>>();
             _logger = new NullLogger();
             _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
@@ -72,7 +70,6 @@ namespace Nop.Services.Tests.Shipping
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _shippingService = new ShippingService(_shippingMethodRepository,
-                _deliveryDateRepository,
                 _warehouseRepository,
                 _logger,
                 _productService,

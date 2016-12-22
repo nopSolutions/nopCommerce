@@ -1,159 +1,82 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
-using Nop.Services.Seo;
+using Nop.Web.Factories;
 using Nop.Web.Framework.Security;
-using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Order;
 
 namespace Nop.Web.Controllers
 {
     public partial class ReturnRequestController : BasePublicController
     {
-		#region Fields
+        #region Fields
 
+        private readonly IReturnRequestModelFactory _returnRequestModelFactory;
         private readonly IReturnRequestService _returnRequestService;
         private readonly IOrderService _orderService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly ICurrencyService _currencyService;
-        private readonly IPriceFormatter _priceFormatter;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerService _customerService;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly LocalizationSettings _localizationSettings;
-        private readonly ICacheManager _cacheManager;
         private readonly ICustomNumberFormatter _customNumberFormatter;
+        private readonly IDownloadService _downloadService;
+        private readonly LocalizationSettings _localizationSettings;
+        private readonly OrderSettings _orderSettings;
 
         #endregion
 
         #region Constructors
 
-        public ReturnRequestController(IReturnRequestService returnRequestService,
+        public ReturnRequestController(IReturnRequestModelFactory returnRequestModelFactory,
+            IReturnRequestService returnRequestService,
             IOrderService orderService, 
             IWorkContext workContext, 
             IStoreContext storeContext,
-            ICurrencyService currencyService, 
-            IPriceFormatter priceFormatter,
             IOrderProcessingService orderProcessingService,
             ILocalizationService localizationService,
             ICustomerService customerService,
             IWorkflowMessageService workflowMessageService,
-            IDateTimeHelper dateTimeHelper,
+            ICustomNumberFormatter customNumberFormatter,
+            IDownloadService downloadService,
             LocalizationSettings localizationSettings,
-            ICacheManager cacheManager, 
-            ICustomNumberFormatter customNumberFormatter)
+            OrderSettings orderSettings)
         {
+            this._returnRequestModelFactory = returnRequestModelFactory;
             this._returnRequestService = returnRequestService;
             this._orderService = orderService;
             this._workContext = workContext;
             this._storeContext = storeContext;
-            this._currencyService = currencyService;
-            this._priceFormatter = priceFormatter;
             this._orderProcessingService = orderProcessingService;
             this._localizationService = localizationService;
             this._customerService = customerService;
             this._workflowMessageService = workflowMessageService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationSettings = localizationSettings;
-            this._cacheManager = cacheManager;
             this._customNumberFormatter = customNumberFormatter;
+            this._downloadService = downloadService;
+            this._localizationSettings = localizationSettings;
+            this._orderSettings = orderSettings;
         }
 
         #endregion
 
-        #region Utilities
-
-        [NonAction]
-        protected virtual SubmitReturnRequestModel PrepareReturnRequestModel(SubmitReturnRequestModel model, Order order)
-        {
-            if (order == null)
-                throw new ArgumentNullException("order");
-
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.OrderId = order.Id;
-
-            //return reasons
-            model.AvailableReturnReasons = _cacheManager.Get(string.Format(ModelCacheEventConsumer.RETURNREQUESTREASONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
-                () =>
-                {
-                    var reasons = new List<SubmitReturnRequestModel.ReturnRequestReasonModel>();
-                    foreach (var rrr in _returnRequestService.GetAllReturnRequestReasons())
-                        reasons.Add(new SubmitReturnRequestModel.ReturnRequestReasonModel()
-                        {
-                            Id = rrr.Id,
-                            Name = rrr.GetLocalized(x => x.Name)
-                        });
-                    return reasons;
-                });
-
-            //return actions
-            model.AvailableReturnActions = _cacheManager.Get(string.Format(ModelCacheEventConsumer.RETURNREQUESTACTIONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
-                () =>
-                {
-                    var actions = new List<SubmitReturnRequestModel.ReturnRequestActionModel>();
-                    foreach (var rra in _returnRequestService.GetAllReturnRequestActions())
-                        actions.Add(new SubmitReturnRequestModel.ReturnRequestActionModel()
-                        {
-                            Id = rra.Id,
-                            Name = rra.GetLocalized(x => x.Name)
-                        });
-                    return actions;
-                });
-
-            //returnable products
-            var orderItems = order.OrderItems.Where(oi => !oi.Product.NotReturnable);
-            foreach (var orderItem in orderItems)
-            {
-                var orderItemModel = new SubmitReturnRequestModel.OrderItemModel
-                {
-                    Id = orderItem.Id,
-                    ProductId = orderItem.Product.Id,
-                    ProductName = orderItem.Product.GetLocalized(x => x.Name),
-                    ProductSeName = orderItem.Product.GetSeName(),
-                    AttributeInfo = orderItem.AttributeDescription,
-                    Quantity = orderItem.Quantity
-                };
-                model.Items.Add(orderItemModel);
-
-                //unit price
-                if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
-                {
-                    //including tax
-                    var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
-                    orderItemModel.UnitPrice = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, true);
-                }
-                else
-                {
-                    //excluding tax
-                    var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
-                    orderItemModel.UnitPrice = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, false);
-                }
-            }
-
-            return model;
-        }
-
-        #endregion
-        
         #region Methods
 
         [NopHttpsRequirement(SslRequirement.Yes)]
@@ -162,35 +85,7 @@ namespace Nop.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
-            var model = new CustomerReturnRequestsModel();
-
-            var returnRequests = _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id, 
-                _workContext.CurrentCustomer.Id);
-            foreach (var returnRequest in returnRequests)
-            {
-                var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
-                if (orderItem != null)
-                {
-                    var product = orderItem.Product;
-
-                    var itemModel = new CustomerReturnRequestsModel.ReturnRequestModel
-                    {
-                        Id = returnRequest.Id,
-                        CustomNumber = returnRequest.CustomNumber,
-                        ReturnRequestStatus = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext),
-                        ProductId = product.Id,
-                        ProductName = product.GetLocalized(x => x.Name),
-                        ProductSeName = product.GetSeName(),
-                        Quantity = returnRequest.Quantity,
-                        ReturnAction = returnRequest.RequestedAction,
-                        ReturnReason = returnRequest.ReasonForReturn,
-                        Comments = returnRequest.CustomerComments,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc),
-                    };
-                    model.Items.Add(itemModel);
-                }
-            }
-
+            var model = _returnRequestModelFactory.PrepareCustomerReturnRequestsModel();
             return View(model);
         }
 
@@ -205,7 +100,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             var model = new SubmitReturnRequestModel();
-            model = PrepareReturnRequestModel(model, order);
+            model = _returnRequestModelFactory.PrepareSubmitReturnRequestModel(model, order);
             return View(model);
         }
 
@@ -223,6 +118,14 @@ namespace Nop.Web.Controllers
 
             int count = 0;
 
+            var downloadId = 0;
+            if (_orderSettings.ReturnRequestsAllowFiles)
+            {
+                var download = _downloadService.GetDownloadByGuid(model.UploadedFileGuid);
+                if (download != null)
+                    downloadId = download.Id;
+            }
+
             //returnable products
             var orderItems = order.OrderItems.Where(oi => !oi.Product.NotReturnable);
             foreach (var orderItem in orderItems)
@@ -238,7 +141,7 @@ namespace Nop.Web.Controllers
                 {
                     var rrr = _returnRequestService.GetReturnRequestReasonById(model.ReturnRequestReasonId);
                     var rra = _returnRequestService.GetReturnRequestActionById(model.ReturnRequestActionId);
-
+                    
                     var rr = new ReturnRequest
                     {
                         CustomNumber = "",
@@ -249,6 +152,7 @@ namespace Nop.Web.Controllers
                         ReasonForReturn = rrr != null ? rrr.GetLocalized(x => x.Name) : "not available",
                         RequestedAction = rra != null ? rra.GetLocalized(x => x.Name) : "not available",
                         CustomerComments = model.Comments,
+                        UploadedFileId = downloadId,
                         StaffNotes = string.Empty,
                         ReturnRequestStatus = ReturnRequestStatus.Pending,
                         CreatedOnUtc = DateTime.UtcNow,
@@ -259,20 +163,106 @@ namespace Nop.Web.Controllers
                     //set return request custom number
                     rr.CustomNumber = _customNumberFormatter.GenerateReturnRequestCustomNumber(rr);
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
-                    //notify store owner here (email)
+                    //notify store owner
                     _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, orderItem, _localizationSettings.DefaultAdminLanguageId);
+                    //notify customer
+                    _workflowMessageService.SendNewReturnRequestCustomerNotification(rr, orderItem, order.CustomerLanguageId);
 
                     count++;
                 }
             }
 
-            model = PrepareReturnRequestModel(model, order);
+            model = _returnRequestModelFactory.PrepareSubmitReturnRequestModel(model, order);
             if (count > 0)
                 model.Result = _localizationService.GetResource("ReturnRequests.Submitted");
             else
                 model.Result = _localizationService.GetResource("ReturnRequests.NoItemsSubmitted");
 
             return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult UploadFileReturnRequest()
+        {
+            if (!_orderSettings.ReturnRequestsEnabled && !_orderSettings.ReturnRequestsAllowFiles)
+            {
+                return Json(new
+                {
+                    success = false,
+                    downloadGuid = Guid.Empty,
+                }, MimeTypes.TextPlain);
+            }
+
+            //we process it distinct ways based on a browser
+            //find more info here http://stackoverflow.com/questions/4884920/mvc3-valums-ajax-file-upload
+            Stream stream = null;
+            var fileName = "";
+            var contentType = "";
+            if (String.IsNullOrEmpty(Request["qqfile"]))
+            {
+                // IE
+                HttpPostedFileBase httpPostedFile = Request.Files[0];
+                if (httpPostedFile == null)
+                    throw new ArgumentException("No file uploaded");
+                stream = httpPostedFile.InputStream;
+                fileName = Path.GetFileName(httpPostedFile.FileName);
+                contentType = httpPostedFile.ContentType;
+            }
+            else
+            {
+                //Webkit, Mozilla
+                stream = Request.InputStream;
+                fileName = Request["qqfile"];
+            }
+
+            var fileBinary = new byte[stream.Length];
+            stream.Read(fileBinary, 0, fileBinary.Length);
+
+            var fileExtension = Path.GetExtension(fileName);
+            if (!String.IsNullOrEmpty(fileExtension))
+                fileExtension = fileExtension.ToLowerInvariant();
+
+            int validationFileMaximumSize = _orderSettings.ReturnRequestsFileMaximumSize;
+            if (validationFileMaximumSize > 0)
+            {
+                //compare in bytes
+                var maxFileSizeBytes = validationFileMaximumSize * 1024;
+                if (fileBinary.Length > maxFileSizeBytes)
+                {
+                    //when returning JSON the mime-type must be set to text/plain
+                    //otherwise some browsers will pop-up a "Save As" dialog.
+                    return Json(new
+                    {
+                        success = false,
+                        message = string.Format(_localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), validationFileMaximumSize),
+                        downloadGuid = Guid.Empty,
+                    }, MimeTypes.TextPlain);
+                }
+            }
+
+            var download = new Download
+            {
+                DownloadGuid = Guid.NewGuid(),
+                UseDownloadUrl = false,
+                DownloadUrl = "",
+                DownloadBinary = fileBinary,
+                ContentType = contentType,
+                //we store filename without extension for downloads
+                Filename = Path.GetFileNameWithoutExtension(fileName),
+                Extension = fileExtension,
+                IsNew = true
+            };
+            _downloadService.InsertDownload(download);
+
+            //when returning JSON the mime-type must be set to text/plain
+            //otherwise some browsers will pop-up a "Save As" dialog.
+            return Json(new
+            {
+                success = true,
+                message = _localizationService.GetResource("ShoppingCart.FileUploaded"),
+                downloadUrl = Url.Action("GetFileUpload", "Download", new {downloadId = download.DownloadGuid}),
+                downloadGuid = download.DownloadGuid,
+            }, MimeTypes.TextPlain);
         }
 
         #endregion

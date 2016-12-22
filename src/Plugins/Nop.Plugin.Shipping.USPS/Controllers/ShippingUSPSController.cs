@@ -45,7 +45,7 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
                 foreach (string service in USPSServices.DomesticServices)
                 {
                     string serviceId = USPSServices.GetServiceIdDomestic(service);
-                    if (!String.IsNullOrEmpty(serviceId) && !String.IsNullOrEmpty(carrierServicesOfferedDomestic))
+                    if (!String.IsNullOrEmpty(serviceId))
                     {
                         // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs
                         if (carrierServicesOfferedDomestic.Contains(String.Format("[{0}]", serviceId)))
@@ -62,14 +62,14 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
                 foreach (string service in USPSServices.InternationalServices)
                 {
                     string serviceId = USPSServices.GetServiceIdInternational(service);
-                    if (!String.IsNullOrEmpty(serviceId) && !String.IsNullOrEmpty(carrierServicesOfferedInternational))
+                    if (!String.IsNullOrEmpty(serviceId))
                     {
                         // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs
                         if (carrierServicesOfferedInternational.Contains(String.Format("[{0}]", serviceId)))
                             model.CarrierServicesOfferedInternational.Add(service);
                     }
                 }
-            return View("~/Plugins/Shipping.USPS/Views/ShippingUSPS/Configure.cshtml", model);
+            return View("~/Plugins/Shipping.USPS/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -100,7 +100,7 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
 
                     string serviceId = USPSServices.GetServiceIdDomestic(cs);
                     //unselect any other services if NONE is selected
-                    if (serviceId.Equals("NONE"))
+                    if (!String.IsNullOrEmpty(serviceId) && serviceId.Equals("NONE"))
                     {
                         carrierServicesOfferedDomestic.Clear();
                         carrierServicesOfferedDomestic.AppendFormat("[{0}]:", serviceId);
@@ -132,7 +132,7 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
                     carrierServicesInternationalSelectedCount++;
                     string serviceId = USPSServices.GetServiceIdInternational(cs);
                     // unselect other services if NONE is selected
-                    if (serviceId.Equals("NONE"))
+                    if (!String.IsNullOrEmpty(serviceId) && serviceId.Equals("NONE"))
                     {
                         carrierServicesOfferedInternational.Clear();
                         carrierServicesOfferedInternational.AppendFormat("[{0}]:", serviceId);

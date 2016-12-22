@@ -47,8 +47,8 @@ namespace Nop.Admin.Models.Blogs
         [AllowHtml]
         public string Tags { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments")]
-        public int Comments { get; set; }
+        public int ApprovedComments { get; set; }
+        public int NotApprovedComments { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate")]
         [UIHint("DateTimeNullable")]

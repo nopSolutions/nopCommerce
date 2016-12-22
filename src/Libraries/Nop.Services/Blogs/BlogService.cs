@@ -44,6 +44,8 @@ namespace Nop.Services.Blogs
 
         #region Methods
 
+        #region Blog posts
+
         /// <summary>
         /// Deletes a blog post
         /// </summary>
@@ -80,7 +82,7 @@ namespace Nop.Services.Blogs
         public virtual IList<BlogPost> GetBlogPostsByIds(int[] blogPostIds)
         {
             var query = _blogPostRepository.Table;
-            return query.Where(p => blogPostIds.Contains(p.Id)).ToList();
+            return query.Where(bp => blogPostIds.Contains(bp.Id)).ToList();
         }
 
         /// <summary>
@@ -140,7 +142,7 @@ namespace Nop.Services.Blogs
         /// Gets all blog posts
         /// </summary>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
-        /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
+        /// <param name="languageId">Language identifier. 0 if you want to get all blog posts</param>
         /// <param name="tag">Tag</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
@@ -171,7 +173,7 @@ namespace Nop.Services.Blogs
         /// Gets all blog post tags
         /// </summary>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
-        /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
+        /// <param name="languageId">Language identifier. 0 if you want to get all blog posts</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog post tags</returns>
         public virtual IList<BlogPostTag> GetAllBlogPostTags(int storeId, int languageId, bool showHidden = false)
@@ -231,20 +233,30 @@ namespace Nop.Services.Blogs
             //event notification
             _eventPublisher.EntityUpdated(blogPost);
         }
-        
+
+        #endregion
+
+        #region Blog comments
+
         /// <summary>
         /// Gets all comments
         /// </summary>
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <returns>Comments</returns>
-        public virtual IList<BlogComment> GetAllComments(int customerId)
+        public virtual IList<BlogComment> GetAllComments(int customerId = 0, int storeId = 0)
         {
             var query = _blogCommentRepository.Table;
+
             if (customerId > 0)
-                query = query.Where(bc => bc.CustomerId == customerId);
+                query = query.Where(comment => comment.CustomerId == customerId);
+
+            if (storeId > 0)
+                query = query.Where(comment => comment.StoreId == storeId);
+
             query = query.OrderBy(bc => bc.CreatedOnUtc);
-            var comments = query.ToList();
-            return comments;
+
+            return query.ToList();
         }
 
         /// <summary>
@@ -286,6 +298,26 @@ namespace Nop.Services.Blogs
         }
 
         /// <summary>
+        /// Get the count of blog comments
+        /// </summary>
+        /// <param name="blogPost">Blog post</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <param name="isApproved">A value indicating whether to count only approved or not approved comments; pass null to get number of all comments</param>
+        /// <returns>Number of blog comments</returns>
+        public virtual int GetBlogCommentsCount(BlogPost blogPost, int storeId = 0, bool? isApproved = null)
+        {
+            var query = _blogCommentRepository.Table.Where(comment => comment.BlogPostId == blogPost.Id);
+
+            if (storeId > 0)
+                query = query.Where(comment => comment.StoreId == storeId);
+
+            if (isApproved.HasValue)
+                query = query.Where(comment => comment.IsApproved == isApproved.Value);
+
+            return query.Count();
+        }
+
+        /// <summary>
         /// Deletes a blog comment
         /// </summary>
         /// <param name="blogComment">Blog comment</param>
@@ -295,6 +327,9 @@ namespace Nop.Services.Blogs
                 throw new ArgumentNullException("blogComment");
 
             _blogCommentRepository.Delete(blogComment);
+
+            //event notification
+            _eventPublisher.EntityDeleted(blogComment);
         }
 
         /// <summary>
@@ -306,8 +341,13 @@ namespace Nop.Services.Blogs
             if (blogComments == null)
                 throw new ArgumentNullException("blogComments");
 
-            _blogCommentRepository.Delete(blogComments);
+            foreach (var blogComment in blogComments)
+            {
+                DeleteBlogComment(blogComment);
+            }
         }
+
+        #endregion
 
         #endregion
     }

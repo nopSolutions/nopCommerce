@@ -95,7 +95,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
                 model.Link5_OverrideForStore = _settingService.SettingExists(nivoSliderSettings, x => x.Link5, storeScope);
             }
 
-            return View("~/Plugins/Widgets.NivoSlider/Views/WidgetsNivoSlider/Configure.cshtml", model);
+            return View("~/Plugins/Widgets.NivoSlider/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -181,7 +181,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
                 return Content("");
 
 
-            return View("~/Plugins/Widgets.NivoSlider/Views/WidgetsNivoSlider/PublicInfo.cshtml", model);
+            return View("~/Plugins/Widgets.NivoSlider/Views/PublicInfo.cshtml", model);
         }
     }
 }

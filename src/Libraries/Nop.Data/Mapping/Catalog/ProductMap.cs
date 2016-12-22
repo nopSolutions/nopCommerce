@@ -18,7 +18,6 @@ namespace Nop.Data.Mapping.Catalog
             this.Property(p => p.Price).HasPrecision(18, 4);
             this.Property(p => p.OldPrice).HasPrecision(18, 4);
             this.Property(p => p.ProductCost).HasPrecision(18, 4);
-            this.Property(p => p.SpecialPrice).HasPrecision(18, 4);
             this.Property(p => p.MinimumCustomerEnteredPrice).HasPrecision(18, 4);
             this.Property(p => p.MaximumCustomerEnteredPrice).HasPrecision(18, 4);
             this.Property(p => p.Weight).HasPrecision(18, 4);

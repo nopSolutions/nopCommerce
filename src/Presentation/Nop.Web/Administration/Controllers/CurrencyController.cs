@@ -10,6 +10,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
@@ -31,18 +32,23 @@ namespace Nop.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public CurrencyController(ICurrencyService currencyService, 
-            CurrencySettings currencySettings, ISettingService settingService,
-            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
+            CurrencySettings currencySettings, 
+            ISettingService settingService,
+            IDateTimeHelper dateTimeHelper, 
+            ILocalizationService localizationService,
             IPermissionService permissionService,
-            ILocalizedEntityService localizedEntityService, ILanguageService languageService,
+            ILocalizedEntityService localizedEntityService, 
+            ILanguageService languageService,
             IStoreService storeService, 
-            IStoreMappingService storeMappingService)
+            IStoreMappingService storeMappingService,
+            ICustomerActivityService customerActivityService)
         {
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
@@ -54,6 +60,7 @@ namespace Nop.Admin.Controllers
             this._languageService = languageService;
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
+            this._customerActivityService = customerActivityService;
         }
         
         #endregion
@@ -65,10 +72,7 @@ namespace Nop.Admin.Controllers
         {
             foreach (var localized in model.Locales)
             {
-                _localizedEntityService.SaveLocalizedValue(currency,
-                                                               x => x.Name,
-                                                               localized.Name,
-                                                               localized.LanguageId);
+                _localizedEntityService.SaveLocalizedValue(currency, x => x.Name, localized.Name, localized.LanguageId);
             }
         }
 
@@ -268,6 +272,10 @@ namespace Nop.Admin.Controllers
                 currency.CreatedOnUtc = DateTime.UtcNow;
                 currency.UpdatedOnUtc = DateTime.UtcNow;
                 _currencyService.InsertCurrency(currency);
+
+                //activity log
+                _customerActivityService.InsertActivity("AddNewCurrency", _localizationService.GetResource("ActivityLog.AddNewCurrency"), currency.Id);
+
                 //locales
                 UpdateLocales(currency, model);
                 //Stores
@@ -331,13 +339,17 @@ namespace Nop.Admin.Controllers
                 if (allCurrencies.Count == 1 && allCurrencies[0].Id == currency.Id &&
                     !model.Published)
                 {
-                    ErrorNotification("At least one published currency is required.");
+                    ErrorNotification(_localizationService.GetResource("Admin.Configuration.Currencies.PublishedCurrencyRequired"));
                     return RedirectToAction("Edit", new { id = currency.Id });
                 }
 
                 currency = model.ToEntity(currency);
                 currency.UpdatedOnUtc = DateTime.UtcNow;
                 _currencyService.UpdateCurrency(currency);
+
+                //activity log
+                _customerActivityService.InsertActivity("EditCurrency", _localizationService.GetResource("ActivityLog.EditCurrency"), currency.Id);
+
                 //locales
                 UpdateLocales(currency, model);
                 //Stores
@@ -385,11 +397,14 @@ namespace Nop.Admin.Controllers
                 var allCurrencies = _currencyService.GetAllCurrencies();
                 if (allCurrencies.Count == 1 && allCurrencies[0].Id == currency.Id)
                 {
-                    ErrorNotification("At least one published currency is required.");
+                    ErrorNotification(_localizationService.GetResource("Admin.Configuration.Currencies.PublishedCurrencyRequired"));
                     return RedirectToAction("Edit", new { id = currency.Id });
                 }
 
                 _currencyService.DeleteCurrency(currency);
+
+                //activity log
+                _customerActivityService.InsertActivity("DeleteCurrency", _localizationService.GetResource("ActivityLog.DeleteCurrency"), currency.Id);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Deleted"));
                 return RedirectToAction("List");

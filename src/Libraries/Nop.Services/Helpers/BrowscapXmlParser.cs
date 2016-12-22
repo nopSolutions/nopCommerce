@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Nop.Core;
-using System.Text.RegularExpressions;
 
 namespace Nop.Services.Helpers
 {

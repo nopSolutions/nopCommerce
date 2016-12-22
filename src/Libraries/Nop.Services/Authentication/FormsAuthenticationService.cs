@@ -132,7 +132,7 @@ namespace Nop.Services.Authentication
 
             var formsIdentity = (FormsIdentity)_httpContext.User.Identity;
             var customer = GetAuthenticatedCustomerFromTicket(formsIdentity.Ticket);
-            if (customer != null && customer.Active && !customer.Deleted && customer.IsRegistered())
+            if (customer != null && customer.Active && !customer.RequireReLogin && !customer.Deleted  && customer.IsRegistered())
                 _cachedCustomer = customer;
             return _cachedCustomer;
         }

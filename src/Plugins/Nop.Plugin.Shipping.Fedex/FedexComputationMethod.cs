@@ -10,13 +10,13 @@ using System.Web.Routing;
 using System.Web.Services.Protocols;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
 using Nop.Plugin.Shipping.Fedex.Domain;
 using Nop.Plugin.Shipping.Fedex.RateServiceWebReference;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
+using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
@@ -98,7 +98,7 @@ namespace Nop.Plugin.Shipping.Fedex
             request.CarrierCodes[1] = RateServiceWebReference.CarrierCodeType.FDXG;
 
             decimal orderSubTotalDiscountAmount;
-            List<Discount> orderSubTotalAppliedDiscounts;
+            List<DiscountForCaching> orderSubTotalAppliedDiscounts;
             decimal subTotalWithoutDiscountBase;
             decimal subTotalWithDiscountBase;
             //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal

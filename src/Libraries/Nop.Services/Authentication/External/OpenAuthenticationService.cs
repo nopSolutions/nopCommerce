@@ -15,10 +15,16 @@ namespace Nop.Services.Authentication.External
     /// </summary>
     public partial class OpenAuthenticationService : IOpenAuthenticationService
     {
+        #region Fields
+
         private readonly ICustomerService _customerService;
         private readonly IPluginFinder _pluginFinder;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly IRepository<ExternalAuthenticationRecord> _externalAuthenticationRecordRepository;
+
+        #endregion
+
+        #region Ctor
 
         public OpenAuthenticationService(IRepository<ExternalAuthenticationRecord> externalAuthenticationRecordRepository,
             IPluginFinder pluginFinder,
@@ -31,16 +37,23 @@ namespace Nop.Services.Authentication.External
             this._customerService = customerService;
         }
 
+        #endregion
+
+        #region Methods
+
+        #region External authentication methods
+
         /// <summary>
         /// Load active external authentication methods
         /// </summary>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Payment methods</returns>
-        public virtual IList<IExternalAuthenticationMethod> LoadActiveExternalAuthenticationMethods(int storeId = 0)
+        public virtual IList<IExternalAuthenticationMethod> LoadActiveExternalAuthenticationMethods(Customer customer = null, int storeId = 0)
         {
-            return LoadAllExternalAuthenticationMethods(storeId)
-                   .Where(provider => _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Contains(provider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase))
-                   .ToList();
+            return LoadAllExternalAuthenticationMethods(customer, storeId)
+                .Where(provider => _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames
+                    .Contains(provider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase)).ToList();
         }
 
         /// <summary>
@@ -60,18 +73,21 @@ namespace Nop.Services.Authentication.External
         /// <summary>
         /// Load all external authentication methods
         /// </summary>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>External authentication methods</returns>
-        public virtual IList<IExternalAuthenticationMethod> LoadAllExternalAuthenticationMethods(int storeId = 0)
+        public virtual IList<IExternalAuthenticationMethod> LoadAllExternalAuthenticationMethods(Customer customer = null, int storeId = 0)
         {
-            return _pluginFinder
-                .GetPlugins<IExternalAuthenticationMethod>(storeId: storeId)
-                .ToList();
+            return _pluginFinder.GetPlugins<IExternalAuthenticationMethod>(customer: customer, storeId: storeId).ToList();
         }
 
+        #endregion
 
-
-
+        /// <summary>
+        /// Accociate external account with customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="parameters">Open authentication parameters</param>
         public virtual void AssociateExternalAccountWithUser(Customer customer, OpenAuthenticationParameters parameters)
         {
             if (customer == null)
@@ -102,11 +118,21 @@ namespace Nop.Services.Authentication.External
             _externalAuthenticationRecordRepository.Insert(externalAuthenticationRecord);
         }
 
+        /// <summary>
+        /// Check that account exists
+        /// </summary>
+        /// <param name="parameters">Open authentication parameters</param>
+        /// <returns>True if it exists; otherwise false</returns>
         public virtual bool AccountExists(OpenAuthenticationParameters parameters)
         {
             return GetUser(parameters) != null;
         }
 
+        /// <summary>
+        /// Get the particular user with specified parameters
+        /// </summary>
+        /// <param name="parameters">Open authentication parameters</param>
+        /// <returns>Customer</returns>
         public virtual Customer GetUser(OpenAuthenticationParameters parameters)
         {
             var record = _externalAuthenticationRecordRepository.Table
@@ -119,6 +145,11 @@ namespace Nop.Services.Authentication.External
             return null;
         }
 
+        /// <summary>
+        /// Get external authentication records for the specified customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>List of external authentication records</returns>
         public virtual IList<ExternalAuthenticationRecord> GetExternalIdentifiersFor(Customer customer)
         {
             if (customer == null)
@@ -127,7 +158,11 @@ namespace Nop.Services.Authentication.External
             return customer.ExternalAuthenticationRecords.ToList();
         }
 
-        public virtual void DeletExternalAuthenticationRecord(ExternalAuthenticationRecord externalAuthenticationRecord)
+        /// <summary>
+        /// Delete the external authentication record
+        /// </summary>
+        /// <param name="externalAuthenticationRecord">External authentication record</param>
+        public virtual void DeleteExternalAuthenticationRecord(ExternalAuthenticationRecord externalAuthenticationRecord)
         {
             if (externalAuthenticationRecord == null)
                 throw new ArgumentNullException("externalAuthenticationRecord");
@@ -135,6 +170,10 @@ namespace Nop.Services.Authentication.External
             _externalAuthenticationRecordRepository.Delete(externalAuthenticationRecord);
         }
 
+        /// <summary>
+        /// Remove the association
+        /// </summary>
+        /// <param name="parameters">Open authentication parameters</param>
         public virtual void RemoveAssociation(OpenAuthenticationParameters parameters)
         {
             var record = _externalAuthenticationRecordRepository.Table
@@ -144,5 +183,7 @@ namespace Nop.Services.Authentication.External
             if (record != null)
                 _externalAuthenticationRecordRepository.Delete(record);
         }
+
+        #endregion
     }
 }

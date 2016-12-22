@@ -73,9 +73,8 @@
                                     field: "LanguageName",
                                     title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Language")"
                                 }, {
-                                    field: "Comments",
                                     title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments")",
-                                    template: '<a href="Comments?filterByBlogPostId=#=Id#">@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments") - #=Comments# </a>'
+                                    template: '<a href="Comments?filterByBlogPostId=#=Id#">@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments") - #=ApprovedComments + NotApprovedComments# (#=NotApprovedComments#)</a>'
                                 }, {
                                     field: "StartDate",
                                     title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate")",

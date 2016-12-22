@@ -66,7 +66,7 @@ namespace Nop.Services.Tests.Logging
             _activity2 = new ActivityLog
             {
                 Id = 2,
-                ActivityLogType = _activityType1,
+                ActivityLogType = _activityType2,
                 CustomerId = _customer2.Id,
                 Customer = _customer2
             };

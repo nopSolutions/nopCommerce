@@ -133,7 +133,7 @@ namespace Nop.Services.Common
                 "{0}database_{1}_{2}.bak",
                 GetBackupDirectoryPath(),
                 DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"),
-                CommonHelper.GenerateRandomDigitCode(4));
+                CommonHelper.GenerateRandomDigitCode(10));
 
             var commandText = string.Format(
                 "BACKUP DATABASE [{0}] TO DISK = '{1}' WITH FORMAT",

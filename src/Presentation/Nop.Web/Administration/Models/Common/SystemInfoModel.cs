@@ -56,6 +56,8 @@ namespace Nop.Admin.Models.Common
         {
             public string FullName { get; set; }
             public string Location { get; set; }
+            public bool IsDebug { get; set; }
+            public DateTime? BuildDate { get; set; }
         }
     }
 }

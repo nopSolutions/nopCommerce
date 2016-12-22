@@ -47,6 +47,9 @@
   <LocaleResource Name="DatabaseCreationError">
     <Value>एक त्रुटि जब डेटाबेस बनाने हुआ: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>डेटाबेस</Value>
+  </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>डेटाबेस जानकारी</Value>
   </LocaleResource>
