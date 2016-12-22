@@ -16,30 +16,67 @@ namespace Nop.Services.Helpers
     {
         private readonly List<string> _crawlerUserAgentsRegexp;
        
-        public BrowscapXmlHelper(string filePath)
+        public BrowscapXmlHelper(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath)
         {
             _crawlerUserAgentsRegexp = new List<string>();
 
-            Initialize(filePath);
+            Initialize(userAgentStringsPath, crawlerOnlyUserAgentStringsPath);
         }
 
-        private void Initialize(string filePath)
+        private void Initialize(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath)
         {
-            using (var sr = new StreamReader(filePath))
+            List<XElement> crawlerItems = null;
+
+            if (!string.IsNullOrEmpty(crawlerOnlyUserAgentStringsPath) && File.Exists(crawlerOnlyUserAgentStringsPath))
             {
-                var browsercapItems = XDocument.Load(sr).Root.Return(x => x.Element("browsercapitems"), null);
+                //try to load crawler list from crawlers only file
+                using (var sr = new StreamReader(crawlerOnlyUserAgentStringsPath))
+                {
+                    crawlerItems = XDocument.Load(sr).Root.Return(x => x.Elements("browscapitem").ToList(), null);
+                }
+            }
 
-                if (browsercapItems == null)
-                    throw new Exception("Incorrect file format");
+            if (crawlerItems == null)
+            {
+                //try to load crawler list from full user agents file
+                using (var sr = new StreamReader(userAgentStringsPath))
+                {
+                    crawlerItems = XDocument.Load(sr).Root.Return(x => x.Element("browsercapitems"), null)
+                        //only crawlers
+                        .Return(x => x.Elements("browscapitem").Where(IsBrowscapItemIsCrawler).ToList(), null);
+                }
+            }
 
-                _crawlerUserAgentsRegexp.AddRange(browsercapItems.Elements("browscapitem")
-                    //only crawlers
-                    .Where(IsBrowscapItemIsCrawler)
-                    //get only user agent names
-                    .Select(e => e.Attribute("name"))
-                    .Where(e => e != null && !string.IsNullOrEmpty(e.Value))
-                    .Select(e => e.Value)
-                    .Select(ToRegexp));
+            if (crawlerItems == null)
+                throw new Exception("Incorrect file format");
+
+            _crawlerUserAgentsRegexp.AddRange(crawlerItems
+                //get only user agent names
+                .Select(e => e.Attribute("name"))
+                .Where(e => e != null && !string.IsNullOrEmpty(e.Value))
+                .Select(e => e.Value)
+                .Select(ToRegexp));
+
+            if (string.IsNullOrEmpty(crawlerOnlyUserAgentStringsPath) || File.Exists(crawlerOnlyUserAgentStringsPath))
+                return;
+
+            //try to write crawlers file
+            using (var sw = new StreamWriter(crawlerOnlyUserAgentStringsPath))
+            {
+                var root = new XElement("browsercapitems");
+
+                foreach (var crawler in crawlerItems)
+                {
+                    foreach (var element in crawler.Elements().ToList())
+                    {
+                        if (element.Attribute("name").Return(x => x.Value.ToLower(), string.Empty) == "crawler")
+                            continue;
+                        element.Remove();
+                    }
+
+                    root.Add(crawler);
+                }
+                root.Save(sw);
             }
         }
 

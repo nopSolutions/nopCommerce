@@ -1281,6 +1281,7 @@
 		App_Data\InstalledPlugins.txt;
 		App_Data\Settings.txt;
 		App_Data\Nop.Db.sdf;
+        App_Data\browscap.crawlersonly.xml;
 		bin\Nop.Admin.dll.config;
 		bin\Nop.Web.dll.config;
 		Content\Files\ExportImport\*.txt;
