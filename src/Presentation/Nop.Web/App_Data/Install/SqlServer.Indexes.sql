@@ -37,6 +37,9 @@ GO
 CREATE NONCLUSTERED INDEX [IX_Order_CustomerId] ON [Order] ([CustomerId] ASC)
 GO
 
+CREATE UNIQUE NONCLUSTERED INDEX UI_Order_InvoiceId ON dbo.[Order](InvoiceId)
+WHERE InvoiceId IS NOT NULL;
+
 CREATE NONCLUSTERED INDEX [IX_Language_DisplayOrder] ON [Language] ([DisplayOrder] ASC)
 GO
 

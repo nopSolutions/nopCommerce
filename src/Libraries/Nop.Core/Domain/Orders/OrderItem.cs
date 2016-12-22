@@ -75,7 +75,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the product attributes in XML format
         /// </summary>
         public string AttributesXml { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the download count
         /// </summary>
@@ -125,5 +125,10 @@ namespace Nop.Core.Domain.Orders
             get { return _associatedGiftCards ?? (_associatedGiftCards = new List<GiftCard>()); }
             protected set { _associatedGiftCards = value; }
         }
+
+        /// <summary>
+        /// VAT% of product
+        /// </summary>
+        public decimal VatRate { get; set; } //MF 25.11.16
     }
 }

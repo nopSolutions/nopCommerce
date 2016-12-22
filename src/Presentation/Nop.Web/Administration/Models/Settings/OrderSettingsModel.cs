@@ -98,6 +98,8 @@ namespace Nop.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.OrderIdent")]
         public int? OrderIdent { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.InvoiceIdent")]
+        public int InvoiceIdent { get; set; }
         
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.CustomOrderNumberMask")]
         public string CustomOrderNumberMask { get; set; }

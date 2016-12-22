@@ -28,6 +28,12 @@ namespace Nop.Admin.Models.Orders
         public override int Id { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.OrderGuid")]
         public Guid OrderGuid { get; set; }
+
+        [NopResourceDisplayName("Admin.Orders.Fields.InvoiceId")]
+        public string InvoiceId { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.InvoiceDateUtc")]
+        [UIHint("DateTimeNullable")]
+        public DateTime? InvoiceDateUtc { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.CustomOrderNumber")]
         public string CustomOrderNumber { get; set; }
         
@@ -94,6 +100,10 @@ namespace Nop.Admin.Models.Orders
         public string RefundedAmount { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.Profit")]
         public string Profit { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.OrderAmount")]
+        public string OrderAmount { get; set; } //MF 09.12.16
+        [NopResourceDisplayName("Admin.Orders.Fields.OrderAmountIncl")]
+        public string OrderAmountIncl { get; set; } //MF 09.12.16
 
         //edit totals
         [NopResourceDisplayName("Admin.Orders.Fields.Edit.OrderSubtotal")]
@@ -120,6 +130,10 @@ namespace Nop.Admin.Models.Orders
         public decimal OrderTotalDiscountValue { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.Edit.OrderTotal")]
         public decimal OrderTotalValue { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.Edit.OrderAmount")]
+        public decimal OrderAmountValue { get; set; } //MF 09.12.16
+        [NopResourceDisplayName("Admin.Orders.Fields.Edit.OrderAmountIncl")]
+        public decimal OrderAmountInclValue { get; set; } //MF 09.12.16
 
         //associated recurring payment id
         [NopResourceDisplayName("Admin.Orders.Fields.RecurringPayment")]
@@ -190,7 +204,7 @@ namespace Nop.Admin.Models.Orders
         public AddressModel BillingAddress { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.VatNumber")]
         public string VatNumber { get; set; }
-        
+
         //gift cards
         public IList<GiftCard> GiftCards { get; set; }
 
@@ -281,6 +295,7 @@ namespace Nop.Admin.Models.Orders
             public DownloadActivationType DownloadActivationType { get; set; }
             public bool IsDownloadActivated { get; set; }
             public Guid LicenseDownloadGuid { get; set; }
+            public decimal VatRate { get; set; }
 
             #region Nested Classes
 
@@ -294,8 +309,16 @@ namespace Nop.Admin.Models.Orders
 
         public partial class TaxRate : BaseNopModel
         {
+            [NopResourceDisplayName("Order.TaxRateLine.VatRate")]
             public string Rate { get; set; }
-            public string Value { get; set; }
+            [NopResourceDisplayName("Order.TaxRateLine.Amount")]
+            public string Amount { get; set; } // includes subtotal, shipping and payment fee
+            [NopResourceDisplayName("Order.TaxRateLine.DiscountAmount")]
+            public string DiscountAmount { get; set; }
+            [NopResourceDisplayName("Order.TaxRateLine.BaseAmount")]
+            public string BaseAmount { get; set; }
+            [NopResourceDisplayName("Order.TaxRateLine.VatAmount")]
+            public string VatAmount { get; set; }
         }
 
         public partial class GiftCard : BaseNopModel
@@ -357,7 +380,7 @@ namespace Nop.Admin.Models.Orders
             public int OrderId { get; set; }
 
             #region Nested classes
-            
+
             public partial class ProductModel : BaseNopEntityModel
             {
                 [NopResourceDisplayName("Admin.Orders.Products.AddNew.Name")]
@@ -398,6 +421,8 @@ namespace Nop.Admin.Models.Orders
                 public decimal SubTotalInclTax { get; set; }
                 [NopResourceDisplayName("Admin.Orders.Products.AddNew.SubTotalExclTax")]
                 public decimal SubTotalExclTax { get; set; }
+                [NopResourceDisplayName("ShoppingCart.VatRate")]
+                public decimal VatRate { get; set; }
 
                 //product attributes
                 public IList<ProductAttributeModel> ProductAttributes { get; set; }

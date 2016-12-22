@@ -291,7 +291,7 @@ namespace Nop.Services.ExportImport
                 using (var xlPackage = new ExcelPackage(stream))
                 {
                     // uncomment this line if you want the XML written out to the outputDir
-                    //xlPackage.DebugMode = true; 
+                    //xlPackage.DebugMode = true;
 
                     // get handles to the worksheets
                     var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(T).Name);
@@ -355,7 +355,7 @@ namespace Nop.Services.ExportImport
                 using (var xlPackage = new ExcelPackage(stream))
                 {
                     // uncomment this line if you want the XML written out to the outputDir
-                    //xlPackage.DebugMode = true; 
+                    //xlPackage.DebugMode = true;
 
                     // get handles to the worksheets
                     var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(Product).Name);
@@ -1178,6 +1178,9 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteString("TaxRates", order.TaxRates, ignore);
                 xmlWriter.WriteString("OrderTax", order.OrderTax, ignore);
                 xmlWriter.WriteString("OrderTotal", order.OrderTotal, ignore);
+                xmlWriter.WriteString("OrderAmount", order.OrderAmount, ignore);
+                xmlWriter.WriteString("OrderAmountIncl", order.OrderAmountIncl, ignore);
+
                 xmlWriter.WriteString("RefundedAmount", order.RefundedAmount, ignore);
                 xmlWriter.WriteString("OrderDiscount", order.OrderDiscount, ignore);
                 xmlWriter.WriteString("CurrencyRate", order.CurrencyRate);
@@ -1232,6 +1235,7 @@ namespace Nop.Services.ExportImport
                             xmlWriter.WriteString("DiscountInclTax", orderItem.DiscountAmountInclTax);
                             xmlWriter.WriteString("TotalExclTax", orderItem.PriceExclTax);
                             xmlWriter.WriteString("TotalInclTax", orderItem.PriceInclTax);
+                            xmlWriter.WriteString("VatRate", orderItem.VatRate);
                             xmlWriter.WriteEndElement();
                         }
                         xmlWriter.WriteEndElement();
@@ -1250,9 +1254,9 @@ namespace Nop.Services.ExportImport
                         xmlWriter.WriteElementString("TrackingNumber", null, shipment.TrackingNumber);
                         xmlWriter.WriteElementString("TotalWeight", null, shipment.TotalWeight.HasValue ? shipment.TotalWeight.Value.ToString() : String.Empty);
 
-                        xmlWriter.WriteElementString("ShippedDateUtc", null, shipment.ShippedDateUtc.HasValue ? 
+                        xmlWriter.WriteElementString("ShippedDateUtc", null, shipment.ShippedDateUtc.HasValue ?
                             shipment.ShippedDateUtc.ToString() : String.Empty);
-                        xmlWriter.WriteElementString("DeliveryDateUtc", null, shipment.DeliveryDateUtc.HasValue ? 
+                        xmlWriter.WriteElementString("DeliveryDateUtc", null, shipment.DeliveryDateUtc.HasValue ?
                             shipment.DeliveryDateUtc.Value.ToString() : String.Empty);
                         xmlWriter.WriteElementString("CreatedOnUtc", null, shipment.CreatedOnUtc.ToString());
                         xmlWriter.WriteEndElement();
@@ -1298,6 +1302,8 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("TaxRates", p => p.TaxRates, ignore),
                 new PropertyByName<Order>("OrderTax", p => p.OrderTax, ignore),
                 new PropertyByName<Order>("OrderTotal", p => p.OrderTotal, ignore),
+                new PropertyByName<Order>("OrderAmount", p => p.OrderAmount, ignore),
+                new PropertyByName<Order>("OrderAmountIncl", p => p.OrderAmountIncl, ignore),
                 new PropertyByName<Order>("RefundedAmount", p => p.RefundedAmount, ignore),
                 new PropertyByName<Order>("OrderDiscount", p => p.OrderDiscount, ignore),
                 new PropertyByName<Order>("CurrencyRate", p => p.CurrencyRate),

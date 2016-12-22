@@ -21,7 +21,7 @@
                }
            </ul>
        </div>
-       }     
+       }
        @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
        using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post, new { enctype = "multipart/form-data", id = "shopping-cart-form" }))
        {
@@ -42,6 +42,7 @@
                        <col width="1" />
                    }
                    <col />
+                   <col width="1" />
                    <col width="1" />
                    <col width="1" />
                    <col width="1" />
@@ -74,6 +75,9 @@
                        </th>
                        <th class="quantity">
                            @T("ShoppingCart.Quantity")
+                       </th>
+                       <th class="vatrate">
+                           @T("ShoppingCart.VatRate")
                        </th>
                        <th class="subtotal">
                            @T("ShoppingCart.ItemTotal")
@@ -178,6 +182,10 @@
                                {
                                     <span class="product-quantity">@item.Quantity</span>
                                }
+                           </td>
+                           <td class="vat-rate">
+                               <label class="td-title">@T("ShoppingCart.VatRate"):</label>
+                               <span class="product-vatrate">@item.VatRate.ToString("G29")</span>
                            </td>
                            <td class="subtotal">
                                <label class="td-title">@T("ShoppingCart.ItemTotal"):</label>

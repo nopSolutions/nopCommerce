@@ -156,6 +156,8 @@ namespace Nop.Services.Tests.ExportImport
                 OrderTax = 10.1M,
                 OrderDiscount = 11.1M,
                 OrderTotal = 12.1M,
+                OrderAmount = 12.1M,
+                OrderAmountIncl = 13.1M,
                 RefundedAmount  = 13.1M,
                 CheckoutAttributeDescription = "CheckoutAttributeDescription1",
                 CheckoutAttributesXml = "CheckoutAttributesXml1",

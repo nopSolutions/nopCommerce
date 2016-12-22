@@ -2507,7 +2507,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Copied">
     <Value>The product has been copied successfully</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Copy">
     <Value>Copy product</Value>
   </LocaleResource>
@@ -4595,7 +4595,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.PublishedLanguageRequired">
     <Value>At least one published language is required</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Resources">
     <Value>String resources</Value>
   </LocaleResource>
@@ -6107,7 +6107,7 @@
   </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaAppropriateKeysNotEnteredError">
     <Value>Captcha is enabled but the appropriate keys are not entered</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaEnabled">
     <Value>CAPTCHA enabled</Value>
   </LocaleResource>
@@ -7010,6 +7010,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.TermsOfServiceOnShoppingCartPage.Hint">
     <Value>Require customers to accept or decline terms of service before processing the order (on the shopping cart page).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.InvoiceIdent">
+    <Value>Last used Invoice No.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.InvoiceIdent.Hint">
+    <Value>Invoice ID counter. This is useful if you want your invoices to start from certain number. This only affects invoices henceforward. The value must be greater than the current maximum invoice ID.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ACL">
     <Value>Customer roles</Value>
@@ -8495,7 +8501,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Copied">
     <Value>The message template has been copied successfully</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Copy">
     <Value>Copy template</Value>
   </LocaleResource>
@@ -9467,7 +9473,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.AddCustomerToGuestsOrRegisteredRoleError">
     <Value>Add the customer to 'Guests' or 'Registered' customer role</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Added">
     <Value>The new customer has been added successfully.</Value>
   </LocaleResource>
@@ -9809,7 +9815,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.GuestsAndRegisteredRolesError">
     <Value>The customer cannot be in both 'Guests' and 'Registered' customer roles</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Impersonate">
     <Value>Place order (impersonate)</Value>
   </LocaleResource>
@@ -9893,7 +9899,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.NonAdminNotImpersonateAsAdminError">
     <Value>A non-admin user cannot impersonate as an administrator</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Orders">
     <Value>Orders</Value>
   </LocaleResource>
@@ -10031,7 +10037,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.ValidEmailRequiredRegisteredRole">
     <Value>Valid Email is required for customer to be in 'Registered' role</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.VendorShouldBeInVendorsRole">
     <Value>Note: if you have a vendor associated with this customer, then also ensure it is in "Vendors" customer role.</Value>
   </LocaleResource>
@@ -10599,6 +10605,24 @@
   <LocaleResource Name="Admin.Orders.Fields.EditOrderTotals">
     <Value>Edit order totals</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderAmount">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderAmount.Hint">
+    <Value>Edit Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderAmountIncl">
+    <Value>Amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderAmountIncl.Hint">
+    <Value>Edit Amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.InvoiceId">
+    <Value>Edit Invoice data.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Save.InvoiceID">
+    <Value>Save Invoice Data.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.GiftCardInfo">
     <Value>Gift card</Value>
   </LocaleResource>
@@ -10827,6 +10851,30 @@
   <LocaleResource Name="Admin.Orders.Fields.VoidOffline">
     <Value>Void (Offline)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderAmount">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderAmount.Hint">
+    <Value>Total order base amount.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderAmountIncl">
+    <Value>Amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderAmountIncl.Hint">
+    <Value>Total order amount incl. tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.InvoiceId">
+    <Value>Invoice No.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.InvoiceId.Hint">
+    <Value>Invoice No.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.InvoiceDateUtc">
+    <Value>Invoice Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.InvoiceDateUtc.Hint">
+    <Value>Invoice Date</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Info">
     <Value>Info</Value>
   </LocaleResource>
@@ -10922,7 +10970,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.OrderItem.DeleteAssociatedGiftCardRecordError">
     <Value>This order item has an associated gift card record. Please delete it first</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.OrderNotes">
     <Value>Order notes</Value>
   </LocaleResource>
@@ -12053,6 +12101,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.OrderItemDeleted">
     <Value>Order item is deleted</Value>
+  </LocaleResource>
   </LocaleResource>
     <LocaleResource Name="Admin.ReturnRequests.SearchCustomNumber">
     <Value>ID</Value>
@@ -14706,6 +14755,15 @@
   <LocaleResource Name="Messages.Order.TotalDiscount">
     <Value>Discount:</Value>
   </LocaleResource>
+  <LocaleResource Name="Messages.Order.TaxIncl">
+    <Value>Enthaltene USt.:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.Order.OrderAmount">
+    <Value>Betrag:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.Order.OrderAmountIncl">
+    <Value>Betrag inkl. USt.:</Value>
+  </LocaleResource>
   <LocaleResource Name="News">
     <Value>News</Value>
   </LocaleResource>
@@ -15006,6 +15064,42 @@
   <LocaleResource Name="Order.VATNumber">
     <Value>VAT number</Value>
   </LocaleResource>
+ <LocaleResource Name="Order.TaxIncl">
+    <Value>Included Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.OrderAmount">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.OrderAmountIncl">
+    <Value>Amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.InvoiceId">
+    <Value>Invoice No.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.InvoiceDateUtc">
+    <Value>Invoice Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.TaxRateLine.VatRate">
+    <Value>Tax %</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.TaxRateLine.Amount">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.TaxRateLine.AmountIncl">
+    <Value>Amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.TaxRateLine.DiscountAmount">
+    <Value>Discount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.TaxRateLine.DiscountAmountIncl">
+    <Value>Discount incl. tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.TaxRateLine.BaseAmount">
+    <Value>Base Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.TaxRateLine.VatAmount">
+    <Value>VAT Amount</Value>
+  </LocaleResource>
   <LocaleResource Name="Pager.CurrentPage">
     <Value>Page {0} of {1} ({2} total)</Value>
   </LocaleResource>
@@ -15222,6 +15316,12 @@
   <LocaleResource Name="PDFInvoice.Order#">
     <Value>Order# {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="PDFInvoice.Order">
+    <Value>ORDER</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.VatID">
+    <Value>VatID: {0}</Value>
+  </LocaleResource>
   <LocaleResource Name="PDFInvoice.OrderDate">
     <Value>Date: {0}</Value>
   </LocaleResource>
@@ -15290,6 +15390,54 @@
   </LocaleResource>
   <LocaleResource Name="PDFInvoice.VATNumber">
     <Value>VAT number: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.VatRate">
+    <Value>Tax %</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.Invoice">
+    <Value>Invoice</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.InvoiceDate">
+    <Value>Invoice Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.OrderAmount">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.OrderAmountIncl">
+    <Value>Amount incl. tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.DiscountAmount">
+    <Value>Discount</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.DiscountAmountIncl">
+    <Value>Discount incl. tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.VatAmount">
+    <Value>VAT Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.AmountToPay">
+    <Value>Amount to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.Continue">
+    <Value>Continued on next page ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.CheckOutAttrib">
+    <Value>Additional items</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.InvoiceDiscount">
+    <Value>Invoice discount</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.Currency">
+    <Value>Currency</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.Page">
+    <Value>Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.BaseAmount">
+    <Value>Base Ammount</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.BaseAmountTotal">
+    <Value>Total Base</Value>
   </LocaleResource>
   <LocaleResource Name="PDFPackagingSlip.Address">
     <Value>Address: {0}</Value>
@@ -16414,10 +16562,10 @@
     <Value>{0} remaining</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Totals.OrderTotal">
-    <Value>Total</Value>
+    <Value>Total to pay</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Totals.OrderTotalDiscount">
-    <Value>Discount</Value>
+    <Value>Invoice Discount</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Totals.PaymentMethodAdditionalFee">
     <Value>Payment method additional fee</Value>
@@ -16448,6 +16596,18 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Totals.Tax">
     <Value>Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.TaxIncl">
+    <Value>Included Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.OrderAmount">
+    <Value>Total Amount</Value>
+  </LocaleResource>
+    <LocaleResource Name="ShoppingCart.Totals.OrderAmountIncl">
+    <Value>Total Amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.VatRate">
+    <Value>Tax %</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Totals.TaxRateLine">
     <Value>Tax {0}%</Value>

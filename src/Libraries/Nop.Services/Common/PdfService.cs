@@ -410,18 +410,18 @@ namespace Nop.Services.Common
                     }
                     else
                         if (order.PickupAddress != null)
-                        {
-                            shippingAddress.AddCell(new Paragraph(_localizationService.GetResource("PDFInvoice.Pickup", lang.Id), titleFont));
-                            if (!string.IsNullOrEmpty(order.PickupAddress.Address1))
-                                shippingAddress.AddCell(new Paragraph(string.Format("   {0}", string.Format(_localizationService.GetResource("PDFInvoice.Address", lang.Id), order.PickupAddress.Address1)), font));
-                            if (!string.IsNullOrEmpty(order.PickupAddress.City))
-                                shippingAddress.AddCell(new Paragraph(string.Format("   {0}", order.PickupAddress.City), font));
-                            if (order.PickupAddress.Country != null)
-                                shippingAddress.AddCell(new Paragraph(string.Format("   {0}", order.PickupAddress.Country.GetLocalized(x => x.Name, lang.Id)), font));
-                            if (!string.IsNullOrEmpty(order.PickupAddress.ZipPostalCode))
-                                shippingAddress.AddCell(new Paragraph(string.Format("   {0}", order.PickupAddress.ZipPostalCode), font));
-                            shippingAddress.AddCell(new Paragraph(" "));
-                        }
+                    {
+                        shippingAddress.AddCell(new Paragraph(_localizationService.GetResource("PDFInvoice.Pickup", lang.Id), titleFont));
+                        if (!string.IsNullOrEmpty(order.PickupAddress.Address1))
+                            shippingAddress.AddCell(new Paragraph(string.Format("   {0}", string.Format(_localizationService.GetResource("PDFInvoice.Address", lang.Id), order.PickupAddress.Address1)), font));
+                        if (!string.IsNullOrEmpty(order.PickupAddress.City))
+                            shippingAddress.AddCell(new Paragraph(string.Format("   {0}", order.PickupAddress.City), font));
+                        if (order.PickupAddress.Country != null)
+                            shippingAddress.AddCell(new Paragraph(string.Format("   {0}", order.PickupAddress.Country.GetLocalized(x => x.Name, lang.Id)), font));
+                        if (!string.IsNullOrEmpty(order.PickupAddress.ZipPostalCode))
+                            shippingAddress.AddCell(new Paragraph(string.Format("   {0}", order.PickupAddress.ZipPostalCode), font));
+                        shippingAddress.AddCell(new Paragraph(" "));
+                    }
                     shippingAddress.AddCell(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.ShippingMethod", lang.Id), order.ShippingMethod), font));
                     shippingAddress.AddCell(new Paragraph());
 
@@ -734,7 +734,7 @@ namespace Nop.Services.Common
 
                     //tax
                     string taxStr = string.Empty;
-                    var taxRates = new SortedDictionary<decimal, decimal>();
+                    var taxRates = new SortedDictionary<decimal, TaxRateRec>();
                     bool displayTax = true;
                     bool displayTaxRates = true;
                     if (_taxSettings.HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
@@ -771,7 +771,7 @@ namespace Nop.Services.Common
                         foreach (var item in taxRates)
                         {
                             string taxRate = String.Format(_localizationService.GetResource("PDFInvoice.TaxRate", lang.Id), _priceFormatter.FormatTaxRate(item.Key));
-                            string taxValue = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(item.Value, order.CurrencyRate), true, order.CustomerCurrencyCode, false, lang);
+                            string taxValue = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(item.Value.VatAmount, order.CurrencyRate), true, order.CustomerCurrencyCode, false, lang);
 
                             var p = new PdfPCell(new Paragraph(String.Format("{0} {1}", taxRate, taxValue), font));
                             p.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -1072,19 +1072,19 @@ namespace Nop.Services.Common
                 }
                 else
                     if (order.PickupAddress != null)
-                    {
-                        addressTable.AddCell(new Paragraph(_localizationService.GetResource("PDFInvoice.Pickup", lang.Id), titleFont));
-                        if (!string.IsNullOrEmpty(order.PickupAddress.Address1))
-                            addressTable.AddCell(new Paragraph(string.Format("   {0}", string.Format(_localizationService.GetResource("PDFInvoice.Address", lang.Id), order.PickupAddress.Address1)), font));
-                        if (!string.IsNullOrEmpty(order.PickupAddress.City))
-                            addressTable.AddCell(new Paragraph(string.Format("   {0}", order.PickupAddress.City), font));
-                        if (order.PickupAddress.Country != null)
-                            addressTable.AddCell(new Paragraph(string.Format("   {0}", order.PickupAddress.Country.GetLocalized(x => x.Name, lang.Id)), font));
-                        if (!string.IsNullOrEmpty(order.PickupAddress.ZipPostalCode))
-                            addressTable.AddCell(new Paragraph(string.Format("   {0}", order.PickupAddress.ZipPostalCode), font));
-                        addressTable.AddCell(new Paragraph(" "));
-                    }
-                
+                {
+                    addressTable.AddCell(new Paragraph(_localizationService.GetResource("PDFInvoice.Pickup", lang.Id), titleFont));
+                    if (!string.IsNullOrEmpty(order.PickupAddress.Address1))
+                        addressTable.AddCell(new Paragraph(string.Format("   {0}", string.Format(_localizationService.GetResource("PDFInvoice.Address", lang.Id), order.PickupAddress.Address1)), font));
+                    if (!string.IsNullOrEmpty(order.PickupAddress.City))
+                        addressTable.AddCell(new Paragraph(string.Format("   {0}", order.PickupAddress.City), font));
+                    if (order.PickupAddress.Country != null)
+                        addressTable.AddCell(new Paragraph(string.Format("   {0}", order.PickupAddress.Country.GetLocalized(x => x.Name, lang.Id)), font));
+                    if (!string.IsNullOrEmpty(order.PickupAddress.ZipPostalCode))
+                        addressTable.AddCell(new Paragraph(string.Format("   {0}", order.PickupAddress.ZipPostalCode), font));
+                    addressTable.AddCell(new Paragraph(" "));
+                }
+
                 addressTable.AddCell(new Paragraph(" "));
 
                 addressTable.AddCell(new Paragraph(String.Format(_localizationService.GetResource("PDFPackagingSlip.ShippingMethod", lang.Id), order.ShippingMethod), font));

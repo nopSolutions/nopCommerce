@@ -205,11 +205,13 @@ namespace Nop.Services.Tests.Orders
             List<DiscountForCaching> appliedDiscounts;
             decimal subTotalWithoutDiscount;
             decimal subTotalWithDiscount;
-            SortedDictionary<decimal, decimal> taxRates;
+            
+            TaxSummary taxSummary; //MF 22.11.16
             //10% - default tax rate
             _orderTotalCalcService.GetShoppingCartSubTotal(cart, false,
                 out discountAmount, out appliedDiscounts,
-                out subTotalWithoutDiscount, out subTotalWithDiscount, out taxRates);
+                out subTotalWithoutDiscount, out subTotalWithDiscount, out taxSummary);
+            var taxRates = taxSummary.GenerateOldTaxrateDict(); //MF 22.11.16
             discountAmount.ShouldEqual(0);
             appliedDiscounts.Count.ShouldEqual(0);
             subTotalWithoutDiscount.ShouldEqual(89.39);
@@ -266,11 +268,13 @@ namespace Nop.Services.Tests.Orders
             List<DiscountForCaching> appliedDiscounts;
             decimal subTotalWithoutDiscount;
             decimal subTotalWithDiscount;
-            SortedDictionary<decimal, decimal> taxRates;
 
+            TaxSummary taxSummary; //MF 22.11.16
             _orderTotalCalcService.GetShoppingCartSubTotal(cart, true,
                 out discountAmount, out appliedDiscounts,
-                out subTotalWithoutDiscount, out subTotalWithDiscount, out taxRates);
+                out subTotalWithoutDiscount, out subTotalWithDiscount, out taxSummary);
+            var taxRates = taxSummary.GenerateOldTaxrateDict(); //MF 22.11.16
+
             discountAmount.ShouldEqual(0);
             appliedDiscounts.Count.ShouldEqual(0);
             subTotalWithoutDiscount.ShouldEqual(98.329);
@@ -338,11 +342,12 @@ namespace Nop.Services.Tests.Orders
             List<DiscountForCaching> appliedDiscounts;
             decimal subTotalWithoutDiscount;
             decimal subTotalWithDiscount;
-            SortedDictionary<decimal, decimal> taxRates;
+            TaxSummary taxSummary; //MF 22.11.16
             //10% - default tax rate
             _orderTotalCalcService.GetShoppingCartSubTotal(cart, false,
                 out discountAmount, out appliedDiscounts,
-                out subTotalWithoutDiscount, out subTotalWithDiscount, out taxRates);
+                out subTotalWithoutDiscount, out subTotalWithDiscount, out taxSummary);
+            var taxRates = taxSummary.GenerateOldTaxrateDict(); //MF 22.11.16
             discountAmount.ShouldEqual(3);
             appliedDiscounts.Count.ShouldEqual(1);
             appliedDiscounts.First().Name.ShouldEqual("Discount 1");
@@ -411,10 +416,11 @@ namespace Nop.Services.Tests.Orders
             List<DiscountForCaching> appliedDiscounts;
             decimal subTotalWithoutDiscount;
             decimal subTotalWithDiscount;
-            SortedDictionary<decimal, decimal> taxRates;
+            TaxSummary taxSummary;//MF 22.11.16
             _orderTotalCalcService.GetShoppingCartSubTotal(cart, true,
                 out discountAmount, out appliedDiscounts,
-                out subTotalWithoutDiscount, out subTotalWithDiscount, out taxRates);
+                out subTotalWithoutDiscount, out subTotalWithDiscount, out taxSummary);
+            var taxRates = taxSummary.GenerateOldTaxrateDict(); //MF 22.11.16
 
             //The comparison test failed before, because of a very tiny number difference.
             //discountAmount.ShouldEqual(3.3);
@@ -973,8 +979,9 @@ namespace Nop.Services.Tests.Orders
             //1. shipping is taxable, payment fee is taxable
             _taxSettings.ShippingIsTaxable = true;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
-            SortedDictionary<decimal, decimal> taxRates;
-            _orderTotalCalcService.GetTaxTotal(cart, out taxRates).ShouldEqual(8.6);
+            TaxSummary taxSummary; //22.11.16
+            _orderTotalCalcService.GetTaxTotal(cart, out taxSummary).ShouldEqual(8.6);
+            var taxRates = taxSummary.GenerateOldTaxrateDict();
             taxRates.ShouldNotBeNull();
             taxRates.Count.ShouldEqual(1);
             taxRates.ContainsKey(10).ShouldBeTrue();
@@ -983,7 +990,8 @@ namespace Nop.Services.Tests.Orders
             //2. shipping is taxable, payment fee is not taxable
             _taxSettings.ShippingIsTaxable = true;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = false;
-            _orderTotalCalcService.GetTaxTotal(cart, out taxRates).ShouldEqual(6.6);
+            _orderTotalCalcService.GetTaxTotal(cart, out taxSummary).ShouldEqual(6.6);
+            taxRates = taxSummary.GenerateOldTaxrateDict();
             taxRates.ShouldNotBeNull();
             taxRates.Count.ShouldEqual(1);
             taxRates.ContainsKey(10).ShouldBeTrue();
@@ -992,7 +1000,8 @@ namespace Nop.Services.Tests.Orders
             //3. shipping is not taxable, payment fee is taxable
             _taxSettings.ShippingIsTaxable = false;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
-            _orderTotalCalcService.GetTaxTotal(cart, out taxRates).ShouldEqual(7.6);
+            _orderTotalCalcService.GetTaxTotal(cart, out taxSummary).ShouldEqual(7.6);
+            taxRates = taxSummary.GenerateOldTaxrateDict();
             taxRates.ShouldNotBeNull();
             taxRates.Count.ShouldEqual(1);
             taxRates.ContainsKey(10).ShouldBeTrue();
@@ -1001,7 +1010,8 @@ namespace Nop.Services.Tests.Orders
             //3. shipping is not taxable, payment fee is not taxable
             _taxSettings.ShippingIsTaxable = false;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = false;
-            _orderTotalCalcService.GetTaxTotal(cart, out taxRates).ShouldEqual(5.6);
+            _orderTotalCalcService.GetTaxTotal(cart, out taxSummary).ShouldEqual(5.6);
+            taxRates = taxSummary.GenerateOldTaxrateDict();
             taxRates.ShouldNotBeNull();
             taxRates.Count.ShouldEqual(1);
             taxRates.ContainsKey(10).ShouldBeTrue();
@@ -1073,6 +1083,10 @@ namespace Nop.Services.Tests.Orders
             decimal discountAmount;
             List<DiscountForCaching> appliedDiscounts;
             List<AppliedGiftCard> appliedGiftCards;
+            List<DiscountForCaching> subTotalAppliedDiscounts;
+            List<DiscountForCaching> shippingAppliedDiscounts;
+            TaxSummary taxSummary;
+            bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             int redeemedRewardPoints;
             decimal redeemedRewardPointsAmount;
 
@@ -1082,8 +1096,8 @@ namespace Nop.Services.Tests.Orders
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
 
             //56 - items, 20 - payment fee, 7.6 - tax
-            _orderTotalCalcService.GetShoppingCartTotal(cart,  out discountAmount, out appliedDiscounts, 
-                out appliedGiftCards, out redeemedRewardPoints, out redeemedRewardPointsAmount)
+            _orderTotalCalcService.GetShoppingCartTotal(cart,  out discountAmount, out appliedDiscounts, out subTotalAppliedDiscounts,
+                out shippingAppliedDiscounts, out appliedGiftCards, out redeemedRewardPoints, out redeemedRewardPointsAmount, out taxSummary, includingTax)
                 .ShouldEqual(83.6M);
         }
 
@@ -1152,6 +1166,10 @@ namespace Nop.Services.Tests.Orders
             List<AppliedGiftCard> appliedGiftCards;
             int redeemedRewardPoints;
             decimal redeemedRewardPointsAmount;
+            List<DiscountForCaching> subTotalAppliedDiscounts;
+            List<DiscountForCaching> shippingAppliedDiscounts;
+            TaxSummary taxSummary;
+            bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
 
 
             //shipping is taxable, payment fee is taxable
@@ -1159,8 +1177,8 @@ namespace Nop.Services.Tests.Orders
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
 
             //56 - items, 10 - shipping (fixed), 20 - payment fee, 8.6 - tax
-            _orderTotalCalcService.GetShoppingCartTotal(cart, out discountAmount, out appliedDiscounts,
-                out appliedGiftCards, out redeemedRewardPoints, out redeemedRewardPointsAmount)
+            _orderTotalCalcService.GetShoppingCartTotal(cart, out discountAmount, out appliedDiscounts, out subTotalAppliedDiscounts,
+                out shippingAppliedDiscounts, out appliedGiftCards, out redeemedRewardPoints, out redeemedRewardPointsAmount, out taxSummary, includingTax)
                 .ShouldEqual(94.6M);
         }
 
@@ -1337,14 +1355,18 @@ namespace Nop.Services.Tests.Orders
             List<AppliedGiftCard> appliedGiftCards;
             int redeemedRewardPoints;
             decimal redeemedRewardPointsAmount;
+            List<DiscountForCaching> subTotalAppliedDiscounts;
+            List<DiscountForCaching> shippingAppliedDiscounts;
+            TaxSummary taxSummary;
+            bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
 
             //shipping is taxable, payment fee is taxable
             _taxSettings.ShippingIsTaxable = true;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
 
             //56 - items, 10 - shipping (fixed), 20 - payment fee, 8.6 - tax, [-3] - discount
-            _orderTotalCalcService.GetShoppingCartTotal(cart, out discountAmount, out appliedDiscounts,
-                out appliedGiftCards, out redeemedRewardPoints, out redeemedRewardPointsAmount)
+            _orderTotalCalcService.GetShoppingCartTotal(cart, out discountAmount, out appliedDiscounts, out subTotalAppliedDiscounts,
+                out shippingAppliedDiscounts, out appliedGiftCards, out redeemedRewardPoints, out redeemedRewardPointsAmount, out taxSummary, includingTax)
                 .ShouldEqual(91.6M); 
             discountAmount.ShouldEqual(3);
             appliedDiscounts.Count.ShouldEqual(1);

@@ -369,7 +369,7 @@ namespace Nop.Web.Factories
                 decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, pm.PluginDescriptor.SystemName);
                 decimal rateBase = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, _workContext.CurrentCustomer);
                 decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
-                if (rate > decimal.Zero)
+                if (rate != decimal.Zero) //tfc allow negative fee
                     pmModel.Fee = _priceFormatter.FormatPaymentMethodAdditionalFee(rate, true);
 
                 model.PaymentMethods.Add(pmModel);

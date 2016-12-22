@@ -4,7 +4,175 @@
 declare @resources xml
 --a resource will be deleted if its value is empty
 set @resources='
-<Language>
+<Language>  
+  <LocaleResource Name="Messages.Order.TaxIncl">
+    <Value>Included Tax:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.Order.OrderAmount">
+    <Value>Amount:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.Order.OrderAmountIncl">
+    <Value>Amount incl. Tax:</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.TaxIncl">
+    <Value>Included Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.OrderAmount">
+    <Value>Amount</Value>
+  </LocaleResource>
+    <LocaleResource Name="ShoppingCart.Totals.OrderAmountIncl">
+    <Value>Amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.OrderTotal">
+    <Value>Total to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.OrderTotalDiscount">
+    <Value>Invoice Discount</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.VatRate">
+    <Value>Tax %</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.VatRate">
+    <Value>Tax %</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.Invoice">
+    <Value>Invoice</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.InvoiceDate">
+    <Value>Invoice Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.OrderAmount">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.OrderAmountIncl">
+    <Value>Amount incl. tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.DiscountAmount">
+    <Value>Discount</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.DiscountAmountIncl">
+    <Value>Discount incl. tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.VatAmount">
+    <Value>VAT Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.AmountToPay">
+    <Value>Amount to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.BaseAmount">
+    <Value>Base Ammount</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.BaseAmountTotal">
+    <Value>Total Base</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.Continue">
+    <Value>Continued on next page ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.CheckOutAttrib">
+    <Value>Additional items</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.InvoiceDiscount">
+    <Value>Invoice discount</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.Currency">
+    <Value>Currency</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.Page">
+    <Value>Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.Order#">
+    <Value>Order No.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.OrderDate">
+    <Value>Orderdate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.InvoiceId">
+    <Value>Invoice No.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.InvoiceDateUtc">
+    <Value>Invoice Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderAmount">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderAmount.Hint">
+    <Value>Total order base amount.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderAmountIncl">
+    <Value>Amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderAmountIncl.Hint">
+    <Value>Total order amount incl. tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.InvoiceId">
+    <Value>Invoice No.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.InvoiceId.Hint">
+    <Value>Invoice No.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.InvoiceDateUtc">
+    <Value>Invoice Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.InvoiceDateUtc.Hint">
+    <Value>Invoice Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderAmount">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderAmount.Hint">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderAmountIncl">
+    <Value>Amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderAmountIncl.Hint">
+    <Value>Amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.InvoiceId">
+    <Value>Edit Invoice data.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Save.InvoiceId">
+    <Value>Save Invoice Data.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Orders.Fields.Save.InvoiceId.Hint">
+    <Value>A new InvoiceId get''s assigned when saving an Id = null</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Order.TaxIncl">
+    <Value>Included Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.OrderAmount">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.OrderAmountIncl">
+    <Value>Amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.InvoiceId">
+    <Value>Invoice No.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.InvoiceDateUtc">
+    <Value>Invoice Date</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Order.TaxRateLine.VatRate">
+    <Value>Tax %</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.TaxRateLine.Amount">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.TaxRateLine.AmountIncl">
+    <Value>Amount incl. Tax</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Order.TaxRateLine.DiscountAmount">
+    <Value>Discount</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Order.TaxRateLine.DiscountAmountIncl">
+    <Value>Discount incl. tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.TaxRateLine.BaseAmount">
+    <Value>Base Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.TaxRateLine.VatAmount">
+    <Value>VAT</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.CustomerProductReviews.NoRecords">
     <Value>You haven''t written any reviews yet</Value>
   </LocaleResource>
@@ -2218,6 +2386,20 @@ DROP TABLE #LocaleStringResourceTmp
 GO
 
 --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.invoiceident')   
+   BEGIN   
+     INSERT [Setting] ([Name], [Value], [StoreId])   
+     VALUES (N'ordersettings.invoiceident', 0, 0)   
+   END   
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.invoiceyear')   
+   BEGIN   
+     INSERT [Setting] ([Name], [Value], [StoreId])   
+     VALUES (N'ordersettings.invoiceyear', 2016, 0)   
+   END   
+GO
+--new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.hideshippingtotal')
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
@@ -3130,6 +3312,120 @@ GO
 DELETE FROM [Setting]
 WHERE [name] = N'producteditordettings.specialpriceenddate'
 GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[TierPrice]') and NAME='StartDateTimeUtc')
+BEGIN
+	ALTER TABLE [TierPrice]
+	ADD [StartDateTimeUtc] datetime NULL
+END
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[TierPrice]') and NAME='EndDateTimeUtc')
+BEGIN
+	ALTER TABLE [TierPrice]
+	ADD [EndDateTimeUtc] datetime NULL
+END
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[OrderItem]') and NAME='VatRate')
+BEGIN
+	ALTER TABLE [OrderItem]
+	ADD [VatRate] decimal(18,4) NULL
+END
+GO
+
+IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[OrderItem]') and NAME='VatRate')
+BEGIN
+
+	UPDATE   OrderItem
+	SET     [VatRate] = 0
+	WHERE   ([VatRate] IS NULL) AND (PriceInclTax = PriceExclTax)
+
+	UPDATE   OrderItem
+	SET     [VatRate] = round((PriceInclTax / PriceExclTax  - 1) * 100, 2)
+	WHERE   ([VatRate] IS NULL) AND PriceExclTax <> 0
+
+	ALTER TABLE [OrderItem]
+	ALTER COLUMN [VatRate] DECIMAL(18,4) NOT NULL
+END
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='InvoiceId')
+BEGIN
+	ALTER TABLE [dbo].[Order]
+	ADD InvoiceId NVARCHAR(20) NULL;
+END
+
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Order]') AND name = N'UI_Order_InvoiceId')
+BEGIN
+	CREATE UNIQUE NONCLUSTERED INDEX UI_Order_InvoiceId
+	ON dbo.[Order](InvoiceId)
+	WHERE InvoiceId IS NOT NULL;
+END
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='InvoiceDateUtc')
+BEGIN
+	ALTER TABLE [dbo].[Order]
+	ADD InvoiceDateUtc DATETIME NULL;
+END
+
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='OrderAmount')
+BEGIN
+	ALTER TABLE [dbo].[Order]
+	ADD OrderAmount DECIMAL(18,4) NULL;
+END
+
+GO
+
+IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='OrderAmount')
+BEGIN
+
+	UPDATE   [dbo].[Order]
+	SET     [OrderAmount] = OrderSubtotalExclTax - ISNULL(OrderSubTotalDiscountExclTax, 0) + ISNULL(OrderShippingExclTax, 0) + ISNULL(PaymentMethodAdditionalFeeExclTax, 0) - ISNULL(OrderDiscount, 0)
+	WHERE   CustomerTaxDisplayTypeId = 10 AND OrderSubtotalExclTax IS NOT NULL
+
+	UPDATE   [dbo].[Order]
+	SET     [OrderAmount] = OrderSubtotalInclTax - ISNULL(OrderSubTotalDiscountInclTax, 0) + ISNULL(OrderShippingInclTax, 0) + ISNULL(PaymentMethodAdditionalFeeInclTax, 0) - ISNULL(OrderDiscount, 0) - ISNULL(OrderTax, 0)
+	WHERE   CustomerTaxDisplayTypeId = 0 AND OrderSubtotalInclTax IS NOT NULL
+END
+
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='OrderAmountIncl')
+BEGIN
+	ALTER TABLE [dbo].[Order]
+	ADD OrderAmountIncl DECIMAL(18,4) NULL;
+
+END
+
+GO
+
+IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='OrderAmountIncl')
+BEGIN
+
+	UPDATE   [dbo].[Order]
+	SET     [OrderAmountIncl] = OrderSubtotalExclTax - ISNULL(OrderSubTotalDiscountExclTax, 0) + ISNULL(OrderShippingExclTax, 0) + ISNULL(PaymentMethodAdditionalFeeExclTax, 0) - ISNULL(OrderDiscount, 0) + ISNULL(OrderTax, 0)
+	WHERE   CustomerTaxDisplayTypeId = 10 AND OrderSubtotalExclTax IS NOT NULL
+
+	UPDATE   [dbo].[Order]
+	SET     [OrderAmountIncl] = OrderSubtotalInclTax - ISNULL(OrderSubTotalDiscountInclTax, 0) + ISNULL(OrderShippingInclTax, 0) + ISNULL(PaymentMethodAdditionalFeeInclTax, 0) - ISNULL(OrderDiscount, 0)
+	WHERE   CustomerTaxDisplayTypeId = 0 AND OrderSubtotalExclTax IS NOT NULL
+END
+
+GO
+
 
   --a stored procedure update
 IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[ProductLoadAllPaged]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)

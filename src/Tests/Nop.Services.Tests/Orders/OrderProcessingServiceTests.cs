@@ -33,6 +33,7 @@ using Nop.Services.Vendors;
 using Nop.Tests;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Nop.Services.Configuration;
 
 namespace Nop.Services.Tests.Orders
 {
@@ -94,6 +95,8 @@ namespace Nop.Services.Tests.Orders
         private CustomerSettings _customerSettings;
         private AddressSettings _addressSettings;
         private ICustomNumberFormatter _customNumberFormatter;
+
+        private ISettingService _settingService;
 
         private Store _store;
 
@@ -220,6 +223,7 @@ namespace Nop.Services.Tests.Orders
 
             _rewardPointService = MockRepository.GenerateMock<IRewardPointService>();
             _currencySettings = new CurrencySettings();
+            _settingService = MockRepository.GenerateMock<ISettingService>();
 
             _orderProcessingService = new OrderProcessingService(_orderService, _webHelper,
                 _localizationService, _languageService,
@@ -237,9 +241,10 @@ namespace Nop.Services.Tests.Orders
                 _countryService, _stateProvinceService,
                 _shippingSettings, _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings,
-                _currencySettings, _customNumberFormatter);
+                _currencySettings,
+                _settingService, _customNumberFormatter);
         }
-        
+
         [Test]
         public void Ensure_order_can_only_be_cancelled_when_orderStatus_is_not_cancelled_yet()
         {

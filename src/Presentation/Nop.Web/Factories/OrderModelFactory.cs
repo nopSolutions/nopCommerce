@@ -55,17 +55,17 @@ namespace Nop.Web.Factories
 
 		#region Constructors
 
-        public OrderModelFactory(IAddressModelFactory addressModelFactory, 
+        public OrderModelFactory(IAddressModelFactory addressModelFactory,
             IOrderService orderService,
             IWorkContext workContext,
             ICurrencyService currencyService,
             IPriceFormatter priceFormatter,
-            IOrderProcessingService orderProcessingService, 
+            IOrderProcessingService orderProcessingService,
             IDateTimeHelper dateTimeHelper,
-            IPaymentService paymentService, 
+            IPaymentService paymentService,
             ILocalizationService localizationService,
             IShippingService shippingService,
-            ICountryService countryService, 
+            ICountryService countryService,
             IProductAttributeParser productAttributeParser,
             IDownloadService downloadService,
             IStoreContext storeContext,
@@ -74,7 +74,7 @@ namespace Nop.Web.Factories
             CatalogSettings catalogSettings,
             OrderSettings orderSettings,
             TaxSettings taxSettings,
-            ShippingSettings shippingSettings, 
+            ShippingSettings shippingSettings,
             AddressSettings addressSettings,
             RewardPointsSettings rewardPointsSettings,
             PdfSettings pdfSettings)
@@ -169,6 +169,7 @@ namespace Nop.Web.Factories
             model.IsReOrderAllowed = _orderSettings.IsReOrderAllowed;
             model.IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order);
             model.PdfInvoiceDisabled = _pdfSettings.DisablePdfInvoicesForPendingOrders && order.OrderStatus == OrderStatus.Pending;
+            model.includingTax = order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax; //MF 26.11.2016
             model.CustomOrderNumber = order.CustomOrderNumber;
 
             //shipping info
@@ -194,7 +195,7 @@ namespace Nop.Web.Factories
                             ZipPostalCode = order.PickupAddress.ZipPostalCode
                         };
                 model.ShippingMethod = order.ShippingMethod;
-   
+
 
                 //shipments (only already shipped)
                 var shipments = order.Shipments.Where(x => x.ShippedDateUtc.HasValue).OrderBy(x => x.CreatedOnUtc).ToList();
@@ -312,7 +313,10 @@ namespace Nop.Web.Factories
                         {
                             Rate = _priceFormatter.FormatTaxRate(tr.Key),
                             //TODO pass languageId to _priceFormatter.FormatPrice
-                            Value = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(tr.Value, order.CurrencyRate), true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage),
+                            Amount = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(tr.Value.Amount, order.CurrencyRate), true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage),
+                            DiscountAmount = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(tr.Value.DiscountAmount, order.CurrencyRate), true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage),
+                            BaseAmount = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(tr.Value.BaseAmount, order.CurrencyRate), true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage),
+                            VatAmount = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(tr.Value.VatAmount, order.CurrencyRate), true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage)
                         });
                     }
                 }
@@ -322,10 +326,15 @@ namespace Nop.Web.Factories
             model.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoOrderDetailsPage;
             model.PricesIncludeTax = order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax;
 
+            var orderAmountInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderAmount, order.CurrencyRate);
+            model.OrderAmount = _priceFormatter.FormatPrice(orderAmountInCustomerCurrency, true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage);
+            var orderAmountInclInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderAmountIncl, order.CurrencyRate);
+            model.OrderAmountIncl = _priceFormatter.FormatPrice(orderAmountInclInCustomerCurrency, true, order.CustomerCurrencyCode, true, _workContext.WorkingLanguage);
+
             //discount (applied to order total)
             var orderDiscountInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderDiscount, order.CurrencyRate);
             if (orderDiscountInCustomerCurrency > decimal.Zero)
-                model.OrderTotalDiscount = _priceFormatter.FormatPrice(-orderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage);
+                model.OrderTotalDiscount = _priceFormatter.FormatPrice(-orderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, model.includingTax, _workContext.WorkingLanguage);
 
 
             //gift cards
@@ -338,7 +347,7 @@ namespace Nop.Web.Factories
                 });
             }
 
-            //reward points           
+            //reward points
             if (order.RedeemedRewardPointsEntry != null)
             {
                 model.RedeemedRewardPoints = -order.RedeemedRewardPointsEntry.Points;
@@ -383,6 +392,7 @@ namespace Nop.Web.Factories
                     ProductSeName = orderItem.Product.GetSeName(),
                     Quantity = orderItem.Quantity,
                     AttributeInfo = orderItem.AttributeDescription,
+                    VatRate = orderItem.VatRate
                 };
                 //rental info
                 if (orderItem.Product.IsRental)
@@ -433,13 +443,13 @@ namespace Nop.Web.Factories
             if (order == null)
                 throw new Exception("order cannot be loaded");
             var model = new ShipmentDetailsModel();
-            
+
             model.Id = shipment.Id;
             if (shipment.ShippedDateUtc.HasValue)
                 model.ShippedDate = _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc);
             if (shipment.DeliveryDateUtc.HasValue)
                 model.DeliveryDate = _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc);
-            
+
             //tracking number and shipment information
             if (!String.IsNullOrEmpty(shipment.TrackingNumber))
             {
@@ -500,7 +510,7 @@ namespace Nop.Web.Factories
 
             //order details model
             model.Order = PrepareOrderDetailsModel(order);
-            
+
             return model;
         }
 

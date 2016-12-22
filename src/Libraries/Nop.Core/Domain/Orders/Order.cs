@@ -26,9 +26,10 @@ namespace Nop.Core.Domain.Orders
 
         #region Utilities
 
-        protected virtual SortedDictionary<decimal, decimal> ParseTaxRates(string taxRatesStr)
+        protected virtual SortedDictionary<decimal, TaxRateRec> ParseTaxRates(string taxRatesStr)
         {
-            var taxRatesDictionary = new SortedDictionary<decimal, decimal>();
+            //var taxRatesDictionary = new SortedDictionary<decimal, decimal>();
+            var taxRatesDictionary = new SortedDictionary<decimal, TaxRateRec>();
             if (String.IsNullOrEmpty(taxRatesStr))
                 return taxRatesDictionary;
 
@@ -39,13 +40,20 @@ namespace Nop.Core.Domain.Orders
                     continue;
 
                 string[] taxes = line.Split(new [] { ':' });
-                if (taxes.Length == 2)
+                if (taxes.Length == 6)
                 {
                     try
                     {
-                        decimal taxRate = decimal.Parse(taxes[0].Trim(), CultureInfo.InvariantCulture);
-                        decimal taxValue = decimal.Parse(taxes[1].Trim(), CultureInfo.InvariantCulture);
-                        taxRatesDictionary.Add(taxRate, taxValue);
+                        decimal rate = decimal.Parse(taxes[0].Trim(), CultureInfo.InvariantCulture);
+                        taxRatesDictionary.Add(rate, new TaxRateRec()
+                        {
+                            VatRate = rate,
+                            Amount = decimal.Parse(taxes[1].Trim(), CultureInfo.InvariantCulture),
+                            DiscountAmount = decimal.Parse(taxes[2].Trim(), CultureInfo.InvariantCulture),
+                            BaseAmount = decimal.Parse(taxes[3].Trim(), CultureInfo.InvariantCulture),
+                            VatAmount = decimal.Parse(taxes[4].Trim(), CultureInfo.InvariantCulture),
+                            AmountIncludingVAT = decimal.Parse(taxes[5].Trim(), CultureInfo.InvariantCulture)
+                        });
                     }
                     catch (Exception exc)
                     {
@@ -56,7 +64,15 @@ namespace Nop.Core.Domain.Orders
 
             //add at least one tax rate (0%)
             if (!taxRatesDictionary.Any())
-                taxRatesDictionary.Add(decimal.Zero, decimal.Zero);
+                taxRatesDictionary.Add(decimal.Zero, new TaxRateRec()
+                {
+                    VatRate = decimal.Zero,
+                    Amount = decimal.Zero,
+                    DiscountAmount = decimal.Zero,
+                    BaseAmount = decimal.Zero,
+                    VatAmount = decimal.Zero,
+                    AmountIncludingVAT = decimal.Zero
+                });
 
             return taxRatesDictionary;
         }
@@ -196,7 +212,7 @@ namespace Nop.Core.Domain.Orders
         public decimal OrderDiscount { get; set; }
 
         /// <summary>
-        /// Gets or sets the order total
+        /// Gets or sets the order total to pay
         /// </summary>
         public decimal OrderTotal { get; set; }
 
@@ -209,7 +225,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the reward points history entry identifier when reward points were earned (gained) for placing this order
         /// </summary>
         public int? RewardPointsHistoryEntryId { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the checkout attribute description
         /// </summary>
@@ -309,7 +325,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the paid date and time
         /// </summary>
         public DateTime? PaidDateUtc { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the shipping method
         /// </summary>
@@ -336,10 +352,23 @@ namespace Nop.Core.Domain.Orders
         public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
-        /// Gets or sets the custom order number without prefix
+        /// Gets or sets the invoice ID
         /// </summary>
-        public string CustomOrderNumber { get; set; }
+        public string InvoiceId { get; set; }
+        /// <summary>
+        /// Gets or sets the invoice date UTC
+        /// </summary>
+        public DateTime? InvoiceDateUtc { get; set; }
 
+        /// <summary>
+        /// Gets or sets the order total base amount excl. tax
+        /// </summary>
+        public decimal OrderAmount { get; set; } //MF 09.12.16
+
+        /// <summary>
+        /// Gets or sets the order total amount incl. tax
+        /// </summary>
+        public decimal OrderAmountIncl { get; set; } //MF 09.12.16
         #endregion
 
         #region Navigation properties
@@ -481,14 +510,26 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets the applied tax rates
         /// </summary>
-        public SortedDictionary<decimal, decimal> TaxRatesDictionary
+        public SortedDictionary<decimal, TaxRateRec> TaxRatesDictionary
         {
             get
             {
                 return ParseTaxRates(this.TaxRates);
             }
         }
-        
+
         #endregion
     }
+
+    #region Nested classes
+    public partial class TaxRateRec
+    {
+        public decimal VatRate { get; set; }
+        public decimal Amount { get; set; }
+        public decimal DiscountAmount { get; set; }
+        public decimal BaseAmount { get; set; }
+        public decimal VatAmount { get; set; }
+        public decimal AmountIncludingVAT { get; set; }
+    }
+    #endregion
 }

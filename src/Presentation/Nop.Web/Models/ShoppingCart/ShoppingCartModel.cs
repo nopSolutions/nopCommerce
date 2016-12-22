@@ -80,7 +80,7 @@ namespace Nop.Web.Models.ShoppingCart
 
             public int Quantity { get; set; }
             public List<SelectListItem> AllowedQuantities { get; set; }
-            
+
             public string AttributeInfo { get; set; }
 
             public string RecurringInfo { get; set; }
@@ -92,6 +92,7 @@ namespace Nop.Web.Models.ShoppingCart
             public bool DisableRemoval { get; set; }
 
             public IList<string> Warnings { get; set; }
+            public decimal VatRate { get; set; }
 
         }
 

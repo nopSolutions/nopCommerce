@@ -264,6 +264,11 @@ namespace Nop.Services.Orders
         /// <param name="cart">Shopping cart</param>
         /// <returns>true - OK; false - minimum order total amount is not reached</returns>
         bool ValidateMinOrderTotalAmount(IList<ShoppingCartItem> cart);
+        /// <summary>
+        /// Get next Invoice ID and store settings
+        /// </summary>
+        /// <returns></returns>
+        string GetInvoiceId();
 
         /// <summary>
         /// Gets a value indicating whether payment workflow is required

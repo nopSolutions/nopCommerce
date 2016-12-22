@@ -111,7 +111,7 @@ namespace Nop.Data.Tests.Orders
             fromDb.OrderItems.Count.ShouldEqual(1);
             fromDb.OrderItems.First().PropertiesShouldEqual(this.GetTestOrderItem());
         }
-        
+
         [Test]
         public void Can_save_and_load_order_with_shipments()
         {

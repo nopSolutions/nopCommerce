@@ -238,11 +238,12 @@ namespace Nop.Services.Payments
                 return decimal.Zero;
 
             decimal result = paymentMethod.GetAdditionalHandlingFee(cart);
-            if (result < decimal.Zero)
-                result = decimal.Zero;
+            //tfc allow negative fee
+            //if (result < decimal.Zero)
+            //    result = decimal.Zero;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
             {
-                result = RoundingHelper.RoundPrice(result);
+                result = RoundingHelper.RoundAmount(result);
             }
             return result;
         }

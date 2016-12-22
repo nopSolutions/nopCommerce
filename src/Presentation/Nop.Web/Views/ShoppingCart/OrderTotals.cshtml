@@ -62,31 +62,6 @@
                     </td>
                 </tr>
             }
-            @if (Model.DisplayTaxRates && Model.TaxRates.Count > 0)
-            {
-                foreach (var taxRate in Model.TaxRates)
-                {
-                <tr class="tax-rate">
-                    <td class="cart-total-left">
-                        <label>@string.Format(T("ShoppingCart.Totals.TaxRateLine").Text, taxRate.Rate):</label>
-                    </td>
-                    <td class="cart-total-right">
-                        <span>@taxRate.Value</span>
-                    </td>
-                </tr>
-                }
-            }
-            @if (Model.DisplayTax)
-            {
-                <tr class="tax-value">
-                    <td class="cart-total-left">
-                        <label>@T("ShoppingCart.Totals.Tax"):</label>
-                    </td>
-                    <td class="cart-total-right">
-                        <span class="value-summary">@Model.Tax</span>
-                    </td>
-                </tr>
-            }
             @if (!String.IsNullOrEmpty(Model.OrderTotalDiscount))
             {
                 <tr class="discount-total">
@@ -95,6 +70,79 @@
                     </td>
                     <td class="cart-total-right">
                         <span class="value-summary">@Model.OrderTotalDiscount</span>
+                    </td>
+                </tr>
+            }
+            @if (!String.IsNullOrEmpty(Model.OrderAmount))
+            {
+                <tr class="order-total-amount">
+                    <td class="cart-total-left">
+                        <label>@T("ShoppingCart.Totals.OrderAmount"):</label>
+                    </td>
+                    <td class="cart-total-right">
+                        <span class="value-summary">@(Model.includingTax ? Model.OrderAmountIncl : Model.OrderAmount)</span>
+                    </td>
+                </tr>
+            }
+            @if (Model.DisplayTax)
+            {
+                <tr class="tax-value">
+                    <td class="cart-total-left">
+                        <label>@T(Model.includingTax ? "ShoppingCart.Totals.TaxIncl" : "ShoppingCart.Totals.Tax"):</label>
+                    </td>
+                    <td class="cart-total-right">
+                        <span class="value-summary">@Model.Tax</span>
+                    </td>
+                </tr>
+            }
+            @if (Model.DisplayTaxRates && Model.TaxRates.Count > 0)
+            {
+                <tr class="tax-rate">
+                    <td colspan="2" class="cart-vat">
+                        <ul class="cart-vat-table">
+                            <li class="vatrow header">
+                                <span class="vatcell">@T("Order.TaxRateLine.VatRate")</span>
+                                @if (Model.includingTax)
+                                {
+                                    <span class="vatcell">@T("Order.TaxRateLine.AmountIncl")</span>
+                                }
+                                else
+                                {
+                                    <span class="vatcell">@T("Order.TaxRateLine.Amount")</span>
+                                }
+                                @if (Model.includingTax)
+                                {
+                                    <span class="vatcell">@T("Order.TaxRateLine.DiscountAmountIncl")</span>
+                                }
+                                else
+                                {
+                                    <span class="vatcell">@T("Order.TaxRateLine.DiscountAmount")</span>
+                                }
+                                <span class="vatcell">@T("Order.TaxRateLine.BaseAmount")</span>
+                                <span class="vatcell">@T("Order.TaxRateLine.VatAmount")</span>
+                            </li>
+                            @foreach (var taxRate in Model.TaxRates)
+                            {
+                                <li class="vatrow vat">
+                                    <span class="vatcell">@taxRate.Rate</span>
+                                    <span class="vatcell">@taxRate.Amount</span>
+                                    <span class="vatcell">@taxRate.DiscountAmount</span>
+                                    <span class="vatcell">@taxRate.BaseAmount</span>
+                                    <span class="vatcell">@taxRate.VatAmount</span>
+                                </li>
+                            }
+                        </ul>
+                    </td>
+                </tr>
+            }
+            @if (!String.IsNullOrEmpty(Model.OrderAmount) && !Model.includingTax)
+            {
+                <tr class="order-total-amount">
+                    <td class="cart-total-left">
+                        <label>@T("ShoppingCart.Totals.OrderAmountIncl"):</label>
+                    </td>
+                    <td class="cart-total-right">
+                        <span class="value-summary">@Model.OrderAmountIncl</span>
                     </td>
                 </tr>
             }
