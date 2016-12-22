@@ -29,7 +29,8 @@ namespace Nop.Core.Configuration
 
             var userAgentStringsNode = section.SelectSingleNode("UserAgentStrings");
             config.UserAgentStringsPath = GetString(userAgentStringsNode, "databasePath");
-           
+            config.CrawlerOnlyUserAgentStringsPath = GetString(userAgentStringsNode, "crawlersOnlyDatabasePath");
+
             var supportPreviousNopcommerceVersionsNode = section.SelectSingleNode("SupportPreviousNopcommerceVersions");
             config.SupportPreviousNopcommerceVersions = GetBool(supportPreviousNopcommerceVersionsNode, "Enabled");
             
@@ -78,6 +79,11 @@ namespace Nop.Core.Configuration
         /// Path to database with user agent strings
         /// </summary>
         public string UserAgentStringsPath { get; private set; }
+
+        /// <summary>
+        /// Path to database with crawler only user agent strings
+        /// </summary>
+        public string CrawlerOnlyUserAgentStringsPath { get; private set; }
 
 
 
