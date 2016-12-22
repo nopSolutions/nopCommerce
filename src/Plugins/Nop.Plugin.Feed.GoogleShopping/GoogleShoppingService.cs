@@ -353,9 +353,15 @@ namespace Nop.Plugin.Feed.GoogleShopping
                         decimal finalPriceBase;
                         if (_googleShoppingSettings.PricesConsiderPromotions)
                         {
-                            //calculate for the maximum quantity (in case if we have tier prices)
-                            decimal minPossiblePrice = _priceCalculationService.GetFinalPrice(product,
-                                _workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue);
+                            var minPossiblePrice = _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer);
+
+                            if (product.HasTierPrices)
+                            {
+                                //calculate price for the maximum quantity if we have tier prices, and choose minimal
+                                minPossiblePrice = Math.Min(minPossiblePrice,
+                                    _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, quantity: int.MaxValue));
+                            }
+
                             decimal taxRate;
                             finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
                         }

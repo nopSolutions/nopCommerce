@@ -234,13 +234,19 @@ namespace Nop.Web.Factories
                                 Product minPriceProduct = null;
                                 foreach (var associatedProduct in associatedProducts)
                                 {
-                                    //calculate for the maximum quantity (in case if we have tier prices)
-                                    var tmpPrice = _priceCalculationService.GetFinalPrice(associatedProduct,
-                                        _workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue);
-                                    if (!minPossiblePrice.HasValue || tmpPrice < minPossiblePrice.Value)
+                                    var tmpMinPossiblePrice = _priceCalculationService.GetFinalPrice(associatedProduct, _workContext.CurrentCustomer);
+
+                                    if (associatedProduct.HasTierPrices)
+                                    {
+                                        //calculate price for the maximum quantity if we have tier prices, and choose minimal
+                                        tmpMinPossiblePrice = Math.Min(tmpMinPossiblePrice, 
+                                            _priceCalculationService.GetFinalPrice(associatedProduct, _workContext.CurrentCustomer, quantity: int.MaxValue));
+                                    }
+
+                                    if (!minPossiblePrice.HasValue || tmpMinPossiblePrice < minPossiblePrice.Value)
                                     {
                                         minPriceProduct = associatedProduct;
-                                        minPossiblePrice = tmpPrice;
+                                        minPossiblePrice = tmpMinPossiblePrice;
                                     }
                                 }
                                 if (minPriceProduct != null && !minPriceProduct.CustomerEntersPrice)
@@ -330,10 +336,14 @@ namespace Nop.Web.Factories
                             else
                             {
                                 //prices
+                                var minPossiblePrice = _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer);
 
-                                //calculate for the maximum quantity (in case if we have tier prices)
-                                decimal minPossiblePrice = _priceCalculationService.GetFinalPrice(product,
-                                    _workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue);
+                                if (product.HasTierPrices)
+                                {
+                                    //calculate price for the maximum quantity if we have tier prices, and choose minimal
+                                    minPossiblePrice = Math.Min(minPossiblePrice, 
+                                        _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, quantity: int.MaxValue));
+                                }
 
                                 decimal taxRate;
                                 decimal oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out taxRate);
