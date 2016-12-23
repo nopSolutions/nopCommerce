@@ -84,6 +84,17 @@
                             <button type="submit" onclick="javascript:OpenWindow('@(Url.Action("AssociateProductToAttributeValuePopup", "Product", new {productIdInput = Html.FieldIdFor(model => model.AssociatedProductId), productNameInput = "associate-product-name"}))', 800, 850, true); return false;" class="btn btn-primary">
                                 @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.AddNew")
                             </button>
+                            <script type="text/javascript">
+                                $(document).ready(function () {
+                                    if (@Model.AssociatedProductId > 0) {
+                                        warningValidation('@Url.Action("AssociatedProductHasAttributes", "Product")', '@Html.FieldNameFor(model => model.AssociatedProductId)', { productId: '@Model.AssociatedProductId' });
+                                    }
+                                    
+                                    $('#@Html.FieldIdFor(model => model.AssociatedProductId)').on('change', function () {
+                                        warningValidation('@Url.Action("AssociatedProductHasAttributes", "Product")', '@Html.FieldNameFor(model => model.AssociatedProductId)', { productId: $(this).val() });
+                                    });
+                                });
+                            </script>
                         </div>
                     </div>
                     <div class="form-group" id="group-customer-enters-qty">

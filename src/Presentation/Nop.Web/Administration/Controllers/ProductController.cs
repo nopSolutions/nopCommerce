@@ -4344,7 +4344,6 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && associatedProduct.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             ViewBag.RefreshPage = true;
             ViewBag.productIdInput = productIdInput;
@@ -4354,6 +4353,21 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
+        //action displaying notification (warning) to a store owner that associated product has attributes
+        [ValidateInput(false)]
+        public ActionResult AssociatedProductHasAttributes(int productId)
+        {
+            var associatedProduct = _productService.GetProductById(productId);
+            if (associatedProduct != null && associatedProduct.ProductAttributeMappings.Any())
+            {
+                if (associatedProduct.ProductAttributeMappings.Any(attribute => attribute.IsRequired))
+                    return Json(new { Result = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.HasRequiredAttributes") }, JsonRequestBehavior.AllowGet);
+
+                return Json(new { Result = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.HasAttributes") }, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { Result = string.Empty }, JsonRequestBehavior.AllowGet);
+        }
 
         #endregion
 
