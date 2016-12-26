@@ -3466,7 +3466,7 @@
     <Value>Choose an associated product</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.Downloadable">
-    <Value>The associated product is downoadable, keep in mind that won't be able to download it.</Value>
+    <Value>The associated product is downloadable, keep in mind that won't be able to download it.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.GiftCard">
     <Value>The associated product is a gift card, keep in mind that customers can not specify its details in the product details page.</Value>
