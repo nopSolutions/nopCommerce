@@ -65,20 +65,6 @@ namespace Nop.Admin.Controllers
         
         #region Utilities
 
-        private string FormatTokens(string[] tokens)
-        {
-            var sb = new StringBuilder();
-            for (int i = 0; i < tokens.Length; i++)
-            {
-                string token = tokens[i];
-                sb.Append(token);
-                if (i != tokens.Length - 1)
-                    sb.Append(", ");
-            }
-
-            return sb.ToString();
-        }
-
         [NonAction]
         protected virtual void UpdateLocales(MessageTemplate mt, MessageTemplateModel model)
         {
@@ -219,7 +205,7 @@ namespace Nop.Admin.Controllers
             var model = messageTemplate.ToModel();
             model.SendImmediately = !model.DelayBeforeSend.HasValue;
             model.HasAttachedDownload = model.AttachedDownloadId > 0;
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
+            model.AllowedTokens = string.Join(", ", _messageTokenProvider.GetListOfAllowedTokens(messageTemplate.GetTokenGroups()));
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(new SelectListItem { Text = ea.DisplayName, Value = ea.Id.ToString() });
@@ -293,7 +279,7 @@ namespace Nop.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             model.HasAttachedDownload = model.AttachedDownloadId > 0;
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
+            model.AllowedTokens = string.Join(", ", _messageTokenProvider.GetListOfAllowedTokens(messageTemplate.GetTokenGroups()));
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(new SelectListItem { Text = ea.DisplayName, Value = ea.Id.ToString() });
@@ -379,14 +365,11 @@ namespace Nop.Admin.Controllers
                 Id = messageTemplate.Id,
                 LanguageId = languageId
             };
-            var tokens = _messageTokenProvider.GetListOfAllowedTokens().Distinct().ToList();
-            //filter them to the current template
+
+            //filter tokens to the current template
             var subject = messageTemplate.GetLocalized(mt => mt.Subject, languageId);
             var body = messageTemplate.GetLocalized(mt => mt.Body, languageId);
-            //subject = messageTemplate.Subject;
-            //body = messageTemplate.Body;
-            tokens = tokens.Where(x => subject.Contains(x) || body.Contains(x)).ToList();
-            model.Tokens = tokens;
+            model.Tokens = _messageTokenProvider.GetListOfAllowedTokens().Where(x => subject.Contains(x) || body.Contains(x)).ToList();
 
             return View(model);
         }
