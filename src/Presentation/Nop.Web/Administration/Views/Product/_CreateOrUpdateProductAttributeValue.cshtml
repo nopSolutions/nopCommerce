@@ -87,11 +87,11 @@
                             <script type="text/javascript">
                                 $(document).ready(function () {
                                     if (@Model.AssociatedProductId > 0) {
-                                        warningValidation('@Url.Action("AssociatedProductHasAttributes", "Product")', '@Html.FieldNameFor(model => model.AssociatedProductId)', { productId: '@Model.AssociatedProductId' });
+                                        warningValidation('@Url.Action("AssociatedProductGetWarnings", "Product")', '@Html.FieldNameFor(model => model.AssociatedProductId)', { productId: '@Model.AssociatedProductId' });
                                     }
                                     
                                     $('#@Html.FieldIdFor(model => model.AssociatedProductId)').on('change', function () {
-                                        warningValidation('@Url.Action("AssociatedProductHasAttributes", "Product")', '@Html.FieldNameFor(model => model.AssociatedProductId)', { productId: $(this).val() });
+                                        warningValidation('@Url.Action("AssociatedProductGetWarnings", "Product")', '@Html.FieldNameFor(model => model.AssociatedProductId)', { productId: $(this).val() });
                                     });
                                 });
                             </script>

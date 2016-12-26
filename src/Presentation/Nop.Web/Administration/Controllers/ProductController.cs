@@ -4353,17 +4353,33 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        //action displaying notification (warning) to a store owner that associated product has attributes
+        //action displaying notification (warning) to a store owner when associating some product
         [ValidateInput(false)]
-        public ActionResult AssociatedProductHasAttributes(int productId)
+        public ActionResult AssociatedProductGetWarnings(int productId)
         {
             var associatedProduct = _productService.GetProductById(productId);
-            if (associatedProduct != null && associatedProduct.ProductAttributeMappings.Any())
+            if (associatedProduct != null)
             {
-                if (associatedProduct.ProductAttributeMappings.Any(attribute => attribute.IsRequired))
-                    return Json(new { Result = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.HasRequiredAttributes") }, JsonRequestBehavior.AllowGet);
+                //attributes
+                if (associatedProduct.ProductAttributeMappings.Any())
+                {
+                    if (associatedProduct.ProductAttributeMappings.Any(attribute => attribute.IsRequired))
+                        return Json(new { Result = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.HasRequiredAttributes") }, JsonRequestBehavior.AllowGet);
 
-                return Json(new { Result = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.HasAttributes") }, JsonRequestBehavior.AllowGet);
+                    return Json(new { Result = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.HasAttributes") }, JsonRequestBehavior.AllowGet);
+                }
+                
+                //gift card
+                if (associatedProduct.IsGiftCard)
+                {
+                    return Json(new { Result = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.GiftCard") }, JsonRequestBehavior.AllowGet);
+                }
+
+                //downloaable product
+                if (associatedProduct.IsDownload)
+                {
+                    return Json(new { Result = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.Downloadable") }, JsonRequestBehavior.AllowGet);
+                }
             }
 
             return Json(new { Result = string.Empty }, JsonRequestBehavior.AllowGet);
