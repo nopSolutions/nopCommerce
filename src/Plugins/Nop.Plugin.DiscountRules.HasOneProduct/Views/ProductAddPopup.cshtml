@@ -5,7 +5,7 @@
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Framework;
 @{
-    var popupGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var popupGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().PopupGridPageSize;
 
     //page title
     ViewBag.Title = T("Plugins.DiscountRules.HasOneProduct.Fields.Products.Choose").Text;
