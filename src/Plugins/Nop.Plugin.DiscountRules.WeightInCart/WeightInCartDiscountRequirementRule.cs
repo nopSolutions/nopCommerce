@@ -52,7 +52,7 @@ namespace Nop.Plugin.DiscountRules.WeightInCart
             {
                 //Present in appliedProducts
                 if (sci.Product.AppliedDiscounts.SelectMany(x => x.DiscountRequirements).FirstOrDefault(i => i.Id == request.DiscountRequirementId) != null)
-                    totalWeightInCart += sci.Product.Weight;
+                    totalWeightInCart += (sci.Product.Weight * sci.Quantity);
             }
 
             result.IsValid = totalWeightInCart >= minWeight && totalWeightInCart < maxWeight;
