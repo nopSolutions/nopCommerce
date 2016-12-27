@@ -1,7 +1,7 @@
 ﻿Group: Promotion feeds
 FriendlyName: Google Shopping (formely Google Product Search)
 SystemName: PromotionFeed.Froogle
-Version: 1.77
+Version: 1.78
 SupportedVersions: 3.90
 Author: nopCommerce team
 DisplayOrder: 1

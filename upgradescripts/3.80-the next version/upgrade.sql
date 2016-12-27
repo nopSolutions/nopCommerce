@@ -1118,6 +1118,39 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.GiftCard">
     <Value>The associated product is a gift card, keep in mind that customers can not specify its details in the product details page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Pager.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Display">
+    <Value>{0} - {1} of {2} items</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Empty">
+    <Value>No items to display</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.First">
+    <Value>Go to the first page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.ItemsPerPage">
+    <Value>items per page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Last">
+    <Value>Go to the last page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Next">
+    <Value>Go to the next page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Of">
+    <Value>of {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Page">
+    <Value>Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Previous">
+    <Value>Go to the previous page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Refresh">
+    <Value>Refresh</Value>
+  </LocaleResource>
 </Language>
 '
 

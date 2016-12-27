@@ -118,7 +118,8 @@
                             refresh: true,
                             numeric: false,
                             previousNext: false,
-                            info: false
+                            info: false,
+                            @Html.Partial("_GridPagerMessages")
                         },
                         toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
                         edit: function(e) {
@@ -358,7 +359,8 @@
                             refresh: true,
                             numeric: false,
                             previousNext: false,
-                            info: false
+                            info: false,
+                            @Html.Partial("_GridPagerMessages")
                         },
                         editable: {
                             confirmation: "@T("Admin.Common.DeleteConfirmation")",

@@ -290,7 +290,8 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                             },
                             pageable: {
                                 refresh: true,
-                                pageSizes: [@(gridPageSizes)]
+                                pageSizes: [@(gridPageSizes)],
+                                @Html.Partial("~/Administration/Views/Shared/_GridPagerMessages.cshtml")
                             },
                             editable: {
                                 confirmation: "@T("Admin.Common.DeleteConfirmation")",

@@ -69,7 +69,8 @@
                         },
                         pageable: {
                             refresh: true,
-                            pageSizes: [@(gridPageSizes)]
+                            pageSizes: [@(gridPageSizes)],
+                            @Html.Partial("_GridPagerMessages")
                         },
                         scrollable: false,
                         columns: [
