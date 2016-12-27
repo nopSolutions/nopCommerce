@@ -35,8 +35,8 @@ ul, ol {
 .field-validation-valid.warning {
     color: #fff;
     background-color: #f39c12;
-    margin-top: 5px;
-    display: inline-block;
+    margin: 5px 0;
+    display: block;
     padding: 5px;
     border-radius: 3px;
     border-left: 5px solid #c87f0a;

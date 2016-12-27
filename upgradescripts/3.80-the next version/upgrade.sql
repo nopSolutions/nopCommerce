@@ -1106,6 +1106,18 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.News.Comments.Fields.StoreName">
     <Value>Store name</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.HasAttributes">
+    <Value>The associated product has attributes, keep in mind that customers can not select them in the product details page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.HasRequiredAttributes">
+    <Value>The associated product has required product attributes, so customers won''t be able to choose this product attribute value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.Downloadable">
+    <Value>The associated product is downloadable, keep in mind that won''t be able to download it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.GiftCard">
+    <Value>The associated product is a gift card, keep in mind that customers can not specify its details in the product details page.</Value>
+  </LocaleResource>
 </Language>
 '
 

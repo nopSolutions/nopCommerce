@@ -13,7 +13,7 @@
 {
     <script type="text/javascript">
         try {
-            window.opener.document.getElementById('@(ViewBag.productIdInput)').value = '@(ViewBag.productId)';
+            window.opener.$('#@(ViewBag.productIdInput)').val('@(ViewBag.productId)').trigger('change');
             window.opener.document.getElementById('@(ViewBag.productNameInput)').innerHTML = '@(ViewBag.productName)';
         }
         catch (e){}
