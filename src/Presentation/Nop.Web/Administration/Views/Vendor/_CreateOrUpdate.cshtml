@@ -11,10 +11,17 @@
 
 <div class="content">
     <div class="form-horizontal">
+        <div class="row">
+            <div class="col-md-12 clearfix">
+                <div class="pull-left">
+                    @Html.Action("Mode", "Setting", new { modeName = "vendor-advanced-mode" })
+                </div>
+            </div>
+        </div>
         <div id="vendor-edit" class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Vendors.Info"), true)
-                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"))
+                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"), customCssClass: "advanced-setting")
                 @if (Model.Id > 0)
                 {
                     @Html.RenderBootstrapTabHeader("tab-vendor-notes", @T("Admin.Vendors.VendorNotes"))
@@ -147,6 +154,15 @@
                 }
                 <div class="form-group">
                     <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Active)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Active)
+                        @Html.ValidationMessageFor(model => model.Active)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.PictureId)
                     </div>
                     <div class="col-md-9">
@@ -154,7 +170,7 @@
                         @Html.ValidationMessageFor(model => model.PictureId)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AdminComment)
                     </div>
@@ -163,7 +179,7 @@
                         @Html.ValidationMessageFor(model => model.AdminComment)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AllowCustomersToSelectPageSize)
                     </div>
@@ -172,7 +188,7 @@
                         @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
                     </div>
                 </div>
-                <div class="form-group" id="pnlPageSize">
+                <div class="form-group advanced-setting" id="pnlPageSize">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.PageSize)
                     </div>
@@ -181,7 +197,7 @@
                         @Html.ValidationMessageFor(model => model.PageSize)
                     </div>
                 </div>
-                <div class="form-group" id="pnlPageSizeOptions">
+                <div class="form-group advanced-setting" id="pnlPageSizeOptions">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.PageSizeOptions)
                     </div>
@@ -190,16 +206,7 @@
                         @Html.ValidationMessageFor(model => model.PageSizeOptions)
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.Active)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.Active)
-                        @Html.ValidationMessageFor(model => model.Active)
-                    </div>
-                </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.DisplayOrder)
                     </div>
@@ -340,13 +347,15 @@
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("VendorNotesSelect", "Vendor", new {vendorId = Model.Id}))",
+                                        url:
+                                            "@Html.Raw(Url.Action("VendorNotesSelect", "Vendor", new {vendorId = Model.Id}))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
                                     },
                                     destroy: {
-                                        url: "@Html.Raw(Url.Action("VendorNoteDelete", "Vendor", new {vendorId = Model.Id}))",
+                                        url:
+                                            "@Html.Raw(Url.Action("VendorNoteDelete", "Vendor", new {vendorId = Model.Id}))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
@@ -388,21 +397,21 @@
                             },
                             scrollable: false,
                             columns: [
-                            {
-                                field: "CreatedOn",
-                                title: "@T("Admin.Vendors.VendorNotes.Fields.CreatedOn")",
-                                width: 200,
-                                type: "date",
-                                format: "{0:G}"
-                            }, {
-                                field: "Note",
-                                title: "@T("Admin.Vendors.VendorNotes.Fields.Note")",
-                                encoded: false
-                            }, {
-                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
-                                title: "@T("Admin.Common.Delete")",
-                                width: 100
-                            }
+                                {
+                                    field: "CreatedOn",
+                                    title: "@T("Admin.Vendors.VendorNotes.Fields.CreatedOn")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                }, {
+                                    field: "Note",
+                                    title: "@T("Admin.Vendors.VendorNotes.Fields.Note")",
+                                    encoded: false
+                                }, {
+                                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                    title: "@T("Admin.Common.Delete")",
+                                    width: 100
+                                }
                             ]
                         });
                     });
@@ -433,34 +442,34 @@
         </div>
     </div>
 
-                <script type="text/javascript">
-                    $(document).ready(function () {
-                        $('#addVendorNote').click(function () {
-                            var vendorNoteMessage = $("#@Html.FieldIdFor(model => model.AddVendorNoteMessage)").val();
-                            $('#addVendorNote').attr('disabled', true);
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#addVendorNote').click(function() {
+                var vendorNoteMessage = $("#@Html.FieldIdFor(model => model.AddVendorNoteMessage)").val();
+                $('#addVendorNote').attr('disabled', true);
 
-                            var postData = {
-                                message: vendorNoteMessage,
-                                vendorId: @Model.Id
-                                };
-                            addAntiForgeryToken(postData);
+                var postData = {
+                    message: vendorNoteMessage,
+                    vendorId: @Model.Id
+                };
+                addAntiForgeryToken(postData);
 
-                            $.ajax({
-                                cache:false,
-                                type: "POST",
-                                url: "@(Url.Action("VendorNoteAdd", "Vendor"))",
-                                data: postData,
-                                success: function (data) {
-                                    var grid = $("#vendornotes-grid").data('kendoGrid');
-                                    grid.dataSource.read();
-                                    $('#addVendorNote').attr('disabled', false);
-                                },
-                                error:function (xhr, ajaxOptions, thrownError){
-                                    alert('Failed to add vendor note.');
-                                    $('#addVendorNote').attr('disabled', false);
-                                }
-                            });
-                        });
-                    });
-                </script>
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@( Url.Action("VendorNoteAdd", "Vendor"))",
+                    data: postData,
+                    success: function(data) {
+                        var grid = $("#vendornotes-grid").data('kendoGrid');
+                        grid.dataSource.read();
+                        $('#addVendorNote').attr('disabled', false);
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert('Failed to add vendor note.');
+                        $('#addVendorNote').attr('disabled', false);
+                    }
+                });
+            });
+        });
+    </script>
 }

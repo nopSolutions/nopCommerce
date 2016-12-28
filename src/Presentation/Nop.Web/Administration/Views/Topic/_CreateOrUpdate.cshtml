@@ -21,7 +21,7 @@
         <div id="topic-edit" class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.ContentManagement.Topics.Info"), true)
-                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"))
+                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"), customCssClass: "advanced-setting")
             </ul>
             <div class="tab-content">
                 @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
