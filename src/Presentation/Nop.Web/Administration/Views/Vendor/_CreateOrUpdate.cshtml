@@ -24,7 +24,7 @@
                 @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"), customCssClass: "advanced-setting")
                 @if (Model.Id > 0)
                 {
-                    @Html.RenderBootstrapTabHeader("tab-vendor-notes", @T("Admin.Vendors.VendorNotes"))
+                    @Html.RenderBootstrapTabHeader("tab-vendor-notes", @T("Admin.Vendors.VendorNotes"), customCssClass: "advanced-setting")
                 }
             </ul>
             <div class="tab-content">
