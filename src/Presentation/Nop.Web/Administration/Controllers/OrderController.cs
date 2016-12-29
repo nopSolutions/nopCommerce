@@ -640,6 +640,7 @@ namespace Nop.Admin.Controllers
             model.BillingAddress.CompanyEnabled = _addressSettings.CompanyEnabled;
             model.BillingAddress.CompanyRequired = _addressSettings.CompanyRequired;
             model.BillingAddress.CountryEnabled = _addressSettings.CountryEnabled;
+            model.BillingAddress.CountryRequired = _addressSettings.CountryEnabled; //country is required when enabled
             model.BillingAddress.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
             model.BillingAddress.CityEnabled = _addressSettings.CityEnabled;
             model.BillingAddress.CityRequired = _addressSettings.CityRequired;
@@ -673,6 +674,7 @@ namespace Nop.Admin.Controllers
                     model.ShippingAddress.CompanyEnabled = _addressSettings.CompanyEnabled;
                     model.ShippingAddress.CompanyRequired = _addressSettings.CompanyRequired;
                     model.ShippingAddress.CountryEnabled = _addressSettings.CountryEnabled;
+                    model.ShippingAddress.CountryRequired = _addressSettings.CountryEnabled; //country is required when enabled
                     model.ShippingAddress.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
                     model.ShippingAddress.CityEnabled = _addressSettings.CityEnabled;
                     model.ShippingAddress.CityRequired = _addressSettings.CityRequired;
@@ -2772,6 +2774,7 @@ namespace Nop.Admin.Controllers
             model.Address.CompanyEnabled = _addressSettings.CompanyEnabled;
             model.Address.CompanyRequired = _addressSettings.CompanyRequired;
             model.Address.CountryEnabled = _addressSettings.CountryEnabled;
+            model.Address.CountryRequired = _addressSettings.CountryEnabled; //country is required when enabled
             model.Address.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
             model.Address.CityEnabled = _addressSettings.CityEnabled;
             model.Address.CityRequired = _addressSettings.CityRequired;
@@ -2864,6 +2867,7 @@ namespace Nop.Admin.Controllers
             model.Address.CompanyEnabled = _addressSettings.CompanyEnabled;
             model.Address.CompanyRequired = _addressSettings.CompanyRequired;
             model.Address.CountryEnabled = _addressSettings.CountryEnabled;
+            model.Address.CountryRequired = _addressSettings.CountryEnabled; //country is required when enabled
             model.Address.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
             model.Address.CityEnabled = _addressSettings.CityEnabled;
             model.Address.CityRequired = _addressSettings.CityRequired;

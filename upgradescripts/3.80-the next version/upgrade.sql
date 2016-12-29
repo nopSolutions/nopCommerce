@@ -1151,6 +1151,9 @@ set @resources='
   <LocaleResource Name="Admin.Pager.Refresh">
     <Value>Refresh</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Address">
+    <Value>Address (optional)</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3386,4 +3389,22 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'newssettings.shownewscommentsperstore', N'False', 0)
 END
+GO
+
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Vendor]') and NAME='AddressId')
+BEGIN
+	ALTER TABLE [Vendor]
+	ADD [AddressId] int NULL
+END
+GO
+
+UPDATE [Vendor]
+SET [AddressId] = 0
+WHERE [AddressId] IS NULL
+GO
+
+ALTER TABLE [Vendor] ALTER COLUMN [AddressId] int NOT NULL
 GO

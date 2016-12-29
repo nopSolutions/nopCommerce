@@ -87,6 +87,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CompanyEnabled, mo => mo.Ignore())
                     .ForMember(dest => dest.CompanyRequired, mo => mo.Ignore())
                     .ForMember(dest => dest.CountryEnabled, mo => mo.Ignore())
+                    .ForMember(dest => dest.CountryRequired, mo => mo.Ignore())
                     .ForMember(dest => dest.StateProvinceEnabled, mo => mo.Ignore())
                     .ForMember(dest => dest.CityEnabled, mo => mo.Ignore())
                     .ForMember(dest => dest.CityRequired, mo => mo.Ignore())
@@ -257,6 +258,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                 //vendors
                 cfg.CreateMap<Vendor, VendorModel>()
                     .ForMember(dest => dest.AssociatedCustomers, mo => mo.Ignore())
+                    .ForMember(dest => dest.Address, mo => mo.Ignore())
                     .ForMember(dest => dest.AddVendorNoteMessage, mo => mo.Ignore())
                     .ForMember(dest => dest.Locales, mo => mo.Ignore())
                     .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName(0, true, false)))

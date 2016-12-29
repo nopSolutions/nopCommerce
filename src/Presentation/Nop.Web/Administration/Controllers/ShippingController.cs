@@ -730,6 +730,7 @@ namespace Nop.Admin.Controllers
                 model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
             model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
             model.Address.CountryEnabled = true;
+            model.Address.CountryRequired = true;
             model.Address.StateProvinceEnabled = true;
             model.Address.CityEnabled = true;
             model.Address.StreetAddressEnabled = true;
@@ -820,6 +821,7 @@ namespace Nop.Admin.Controllers
             else
                 model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
             model.Address.CountryEnabled = true;
+            model.Address.CountryRequired = true;
             model.Address.StateProvinceEnabled = true;
             model.Address.CityEnabled = true;
             model.Address.StreetAddressEnabled = true;

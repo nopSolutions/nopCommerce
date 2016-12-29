@@ -12420,6 +12420,9 @@
   <LocaleResource Name="Admin.Vendors.AddNew">
     <Value>Add a new vendor</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Address">
+    <Value>Address (optional)</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.BackToList">
     <Value>back to vendor list</Value>
   </LocaleResource>
