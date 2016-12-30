@@ -185,6 +185,7 @@ namespace Nop.Services.Messages
                     "%Order.BillingZipPostalCode%",
                     "%Order.BillingCountry%",
                     "%Order.BillingCustomAttributes%",
+                    "%Order.Shippable%",
                     "%Order.ShippingMethod%",
                     "%Order.ShippingFirstName%",
                     "%Order.ShippingLastName%",
@@ -857,6 +858,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.BillingCountry", order.BillingAddress.Country != null ? order.BillingAddress.Country.GetLocalized(x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.BillingCustomAttributes", _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes), true));
 
+            tokens.Add(new Token("Order.Shippable", !string.IsNullOrEmpty(order.ShippingMethod)));
             tokens.Add(new Token("Order.ShippingMethod", order.ShippingMethod));
             tokens.Add(new Token("Order.ShippingFirstName", order.ShippingAddress != null ? order.ShippingAddress.FirstName : string.Empty));
             tokens.Add(new Token("Order.ShippingLastName", order.ShippingAddress != null ? order.ShippingAddress.LastName : string.Empty));
