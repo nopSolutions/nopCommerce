@@ -4250,8 +4250,8 @@ namespace Nop.Admin.Controllers
             {
                 case "year":
                     //year statistics
-                    var yearAgoRoundedDt = nowDt.AddYears(-1).AddMonths(1);
-                    var searchYearDateUser = new DateTime(yearAgoRoundedDt.Year, yearAgoRoundedDt.Month, 1);
+                    var yearAgoDt = nowDt.AddYears(-1).AddMonths(1);
+                    var searchYearDateUser = new DateTime(yearAgoDt.Year, yearAgoDt.Month, 1);
                     if (!timeZone.IsInvalidTime(searchYearDateUser))
                     {
                         for (int i = 0; i <= 12; i++)
@@ -4273,7 +4273,8 @@ namespace Nop.Admin.Controllers
 
                 case "month":
                     //month statistics
-                    var searchMonthDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-30).Month, nowDt.AddDays(-30).Day);
+                    var monthAgoDt = nowDt.AddDays(-30);
+                    var searchMonthDateUser = new DateTime(monthAgoDt.Year, monthAgoDt.Month, monthAgoDt.Day);
                     if (!timeZone.IsInvalidTime(searchMonthDateUser))
                     {
                         for (int i = 0; i <= 30; i++)
@@ -4296,7 +4297,8 @@ namespace Nop.Admin.Controllers
                 case "week":
                 default:
                     //week statistics
-                    var searchWeekDateUser = new DateTime(nowDt.Year, nowDt.AddDays(-7).Month, nowDt.AddDays(-7).Day);
+                    var weekAgoDt = nowDt.AddDays(-7);
+                    var searchWeekDateUser = new DateTime(weekAgoDt.Year, weekAgoDt.Month, weekAgoDt.Day);
                     if (!timeZone.IsInvalidTime(searchWeekDateUser))
                     {
                         for (int i = 0; i <= 7; i++)
