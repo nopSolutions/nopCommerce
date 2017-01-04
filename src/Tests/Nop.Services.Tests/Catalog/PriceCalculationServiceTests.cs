@@ -116,7 +116,7 @@ namespace Nop.Services.Tests.Catalog
                 Price = 8,
                 Quantity = 5,
                 Product = product,
-                StartDateTimeUtc = new DateTime(2017, 01, 03)
+                StartDateTimeUtc = new DateTime(2027, 01, 03)
             });
             product.TierPrices.Add(new TierPrice
             {
