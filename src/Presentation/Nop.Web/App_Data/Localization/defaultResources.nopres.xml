@@ -501,6 +501,9 @@
   <LocaleResource Name="Account.Login.WrongCredentials.Deleted">
     <Value>Customer is deleted</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Login.WrongCredentials.LockedOut">
+    <Value>Customer is locked out</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Login.WrongCredentials.NotActive">
     <Value>Account is not active</Value>
   </LocaleResource>
@@ -5595,6 +5598,18 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FaxRequired.Hint">
     <Value>Check if 'Fax number' is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FailedPasswordAllowedAttempts">
+    <Value>Maximum login failures</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FailedPasswordAllowedAttempts.Hint">
+    <Value>Maximum login failures to lockout account. Set 0 to disable this feature.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FailedPasswordLockoutMinutes">
+    <Value>Lockout time (login failures)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FailedPasswordLockoutMinutes.Hint">
+    <Value>Enter number of minutes to lockout users (for login failures).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.GenderEnabled">
     <Value>'Gender' enabled</Value>
   </LocaleResource>
@@ -5653,7 +5668,7 @@
     <Value>Password recovery link. Days valid</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRecoveryLinkDaysValid.Hint">
-    <Value>Enter number of days for password recovery link. Set to 0 if it doesn't expire..</Value>
+    <Value>Enter number of days for password recovery link. Set to 0 if it doesn't expire.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneEnabled">
     <Value>'Phone number' enabled</Value>

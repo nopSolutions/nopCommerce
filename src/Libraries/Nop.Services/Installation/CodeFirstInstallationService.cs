@@ -5928,6 +5928,8 @@ namespace Nop.Services.Installation
                 HashedPasswordFormat = "SHA1",
                 PasswordMinLength = 6,
                 PasswordRecoveryLinkDaysValid = 7,
+                FailedPasswordAllowedAttempts = 0,
+                FailedPasswordLockoutMinutes = 30,
                 UserRegistrationType = UserRegistrationType.Standard,
                 AllowCustomersToUploadAvatars = false,
                 AvatarMaximumSizeBytes = 20000,

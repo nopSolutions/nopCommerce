@@ -98,6 +98,9 @@ namespace Nop.Services.Customers
             //only registered can login
             if (!customer.IsRegistered())
                 return CustomerLoginResults.NotRegistered;
+            //check whether a customer is locked out
+            if (customer.CannotLoginUntilDateUtc.HasValue && customer.CannotLoginUntilDateUtc.Value > DateTime.UtcNow)
+                return CustomerLoginResults.LockedOut;
 
             string pwd;
             switch (customer.PasswordFormat)
@@ -115,9 +118,25 @@ namespace Nop.Services.Customers
 
             bool isValid = pwd == customer.Password;
             if (!isValid)
+            {
+                //wrong password
+                customer.FailedLoginAttempts++;
+                if (_customerSettings.FailedPasswordAllowedAttempts > 0 &&
+                    customer.FailedLoginAttempts >= _customerSettings.FailedPasswordAllowedAttempts)
+                {
+                    //lock out
+                    customer.CannotLoginUntilDateUtc = DateTime.UtcNow.AddMinutes(_customerSettings.FailedPasswordLockoutMinutes);
+                    //reset the counter
+                    customer.FailedLoginAttempts = 0;
+                }
+                _customerService.UpdateCustomer(customer);
+
                 return CustomerLoginResults.WrongPassword;
+            }
 
             //update login details
+            customer.FailedLoginAttempts = 0;
+            customer.CannotLoginUntilDateUtc = null;
             customer.RequireReLogin = false;
             customer.LastLoginDateUtc = DateTime.UtcNow;
             _customerService.UpdateCustomer(customer);

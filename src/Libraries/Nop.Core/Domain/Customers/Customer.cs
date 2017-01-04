@@ -100,6 +100,15 @@ namespace Nop.Core.Domain.Customers
         public bool RequireReLogin { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating number of failed login attempts (wrong password)
+        /// </summary>
+        public int FailedLoginAttempts { get; set; }
+        /// <summary>
+        /// Gets or sets the date and time until which a customer cannot login (locked out)
+        /// </summary>
+        public DateTime? CannotLoginUntilDateUtc { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the customer is active
         /// </summary>
         public bool Active { get; set; }

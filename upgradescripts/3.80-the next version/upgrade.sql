@@ -1154,6 +1154,21 @@ set @resources='
   <LocaleResource Name="Admin.Vendors.Address">
     <Value>Address (optional)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FailedPasswordAllowedAttempts">
+    <Value>Maximum login failures</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FailedPasswordAllowedAttempts.Hint">
+    <Value>Maximum login failures to lockout account. Set 0 to disable this feature.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FailedPasswordLockoutMinutes">
+    <Value>Lockout time (login failures)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FailedPasswordLockoutMinutes.Hint">
+    <Value>Enter number of minutes to lockout users (for login failures).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Login.WrongCredentials.LockedOut">
+    <Value>Customer is locked out</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3392,7 +3407,6 @@ END
 GO
 
 
-
 --new column
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Vendor]') and NAME='AddressId')
 BEGIN
@@ -3407,4 +3421,46 @@ WHERE [AddressId] IS NULL
 GO
 
 ALTER TABLE [Vendor] ALTER COLUMN [AddressId] int NOT NULL
+GO
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.failedpasswordallowedattempts')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.failedpasswordallowedattempts', N'0', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.failedpasswordlockoutminutes')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.failedpasswordlockoutminutes', N'30', 0)
+END
+GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='FailedLoginAttempts')
+BEGIN
+	ALTER TABLE [Customer]
+	ADD [FailedLoginAttempts] int NULL
+END
+GO
+
+UPDATE [Customer]
+SET [FailedLoginAttempts] = 0
+WHERE [FailedLoginAttempts] IS NULL
+GO
+
+ALTER TABLE [Customer] ALTER COLUMN [FailedLoginAttempts] int NOT NULL
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='CannotLoginUntilDateUtc')
+BEGIN
+	ALTER TABLE [Customer]
+	ADD [CannotLoginUntilDateUtc] datetime NULL
+END
 GO
