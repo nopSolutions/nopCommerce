@@ -1169,6 +1169,12 @@ set @resources='
   <LocaleResource Name="Account.Login.WrongCredentials.LockedOut">
     <Value>Customer is locked out</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.List.ImportFromExcelTip">
+    <Value>Imported manufacturers are distinguished by ID. If the ID already exists, then its corresponding manufacturer will be updated. You should not specify ID (leave 0) for new manufacturers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.List.ImportFromExcelTip">
+    <Value>Imported categories are distinguished by ID. If the ID already exists, then its corresponding category will be updated. You should not specify ID (leave 0) for new categories.</Value>
+  </LocaleResource>
 </Language>
 '
 
