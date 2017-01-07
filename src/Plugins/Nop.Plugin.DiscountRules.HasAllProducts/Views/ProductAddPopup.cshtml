@@ -121,7 +121,8 @@
                                         serverSorting: true
                                     },
                                     pageable: {
-                                        refresh: true
+                                        refresh: true,
+                                        @Html.Partial("~/Administration/Views/Shared/_GridPagerMessages.cshtml")
                                     },
                                     editable: {
                                         confirmation: "@T("Admin.Common.DeleteConfirmation")",

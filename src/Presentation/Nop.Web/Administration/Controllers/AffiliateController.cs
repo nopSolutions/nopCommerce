@@ -102,6 +102,7 @@ namespace Nop.Admin.Controllers
                 model.Address.EmailRequired = true;
                 model.Address.CompanyEnabled = true;
                 model.Address.CountryEnabled = true;
+                model.Address.CountryRequired = true;
                 model.Address.StateProvinceEnabled = true;
                 model.Address.CityEnabled = true;
                 model.Address.CityRequired = true;

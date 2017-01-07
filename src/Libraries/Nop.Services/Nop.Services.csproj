@@ -257,6 +257,8 @@
     <Compile Include="Logging\ClearLogTask.cs" />
     <Compile Include="Media\AzurePictureService.cs" />
     <Compile Include="Media\ResizeType.cs" />
+    <Compile Include="Messages\TokenGroupNames.cs" />
+    <Compile Include="Messages\MessageTemplateExtensions.cs" />
     <Compile Include="Orders\UpdateOrderParameters.cs" />
     <Compile Include="Orders\ICustomNumberFormatter.cs" />
     <Compile Include="Orders\IReturnRequestService.cs" />

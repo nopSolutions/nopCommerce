@@ -57,7 +57,8 @@
                         refresh: true,
                         numeric: false,
                         previousNext: false,
-                        info: false
+                        info: false,
+                        @Html.Partial("~/Administration/Views/Shared/_GridPagerMessages.cshtml")
                     },
                     editable: {
                         confirmation: "@T("Admin.Common.DeleteConfirmation")",

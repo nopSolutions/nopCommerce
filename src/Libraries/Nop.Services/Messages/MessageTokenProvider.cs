@@ -118,6 +118,264 @@ namespace Nop.Services.Messages
 
         #endregion
 
+        #region Allowed tokens
+
+        private Dictionary<string, IEnumerable<string>> _allowedTokens;
+        /// <summary>
+        /// Get all available tokens by token groups
+        /// </summary>
+        protected Dictionary<string, IEnumerable<string>> AllowedTokens
+        {
+            get
+            {
+                if (_allowedTokens != null)
+                    return _allowedTokens;
+
+                _allowedTokens = new Dictionary<string, IEnumerable<string>>();
+
+                //store tokens
+                _allowedTokens.Add(TokenGroupNames.StoreTokens, new[]
+                {
+                    "%Store.Name%",
+                    "%Store.URL%",
+                    "%Store.Email%",
+                    "%Store.CompanyName%",
+                    "%Store.CompanyAddress%",
+                    "%Store.CompanyPhoneNumber%",
+                    "%Store.CompanyVat%",
+                    "%Facebook.URL%",
+                    "%Twitter.URL%",
+                    "%YouTube.URL%",
+                    "%GooglePlus.URL%"
+                });
+
+                //customer tokens
+                _allowedTokens.Add(TokenGroupNames.CustomerTokens, new[]
+                {
+                    "%Customer.Email%",
+                    "%Customer.Username%",
+                    "%Customer.FullName%",
+                    "%Customer.FirstName%",
+                    "%Customer.LastName%",
+                    "%Customer.VatNumber%",
+                    "%Customer.VatNumberStatus%",
+                    "%Customer.CustomAttributes%",
+                    "%Customer.PasswordRecoveryURL%",
+                    "%Customer.AccountActivationURL%",
+                    "%Customer.EmailRevalidationURL%",
+                    "%Wishlist.URLForCustomer%"
+                });
+
+                //order tokens
+                _allowedTokens.Add(TokenGroupNames.OrderTokens, new[]
+                {
+                    "%Order.OrderNumber%",
+                    "%Order.CustomerFullName%",
+                    "%Order.CustomerEmail%",
+                    "%Order.BillingFirstName%",
+                    "%Order.BillingLastName%",
+                    "%Order.BillingPhoneNumber%",
+                    "%Order.BillingEmail%",
+                    "%Order.BillingFaxNumber%",
+                    "%Order.BillingCompany%",
+                    "%Order.BillingAddress1%",
+                    "%Order.BillingAddress2%",
+                    "%Order.BillingCity%",
+                    "%Order.BillingStateProvince%",
+                    "%Order.BillingZipPostalCode%",
+                    "%Order.BillingCountry%",
+                    "%Order.BillingCustomAttributes%",
+                    "%Order.ShippingMethod%",
+                    "%Order.ShippingFirstName%",
+                    "%Order.ShippingLastName%",
+                    "%Order.ShippingPhoneNumber%",
+                    "%Order.ShippingEmail%",
+                    "%Order.ShippingFaxNumber%",
+                    "%Order.ShippingCompany%",
+                    "%Order.ShippingAddress1%",
+                    "%Order.ShippingAddress2%",
+                    "%Order.ShippingCity%",
+                    "%Order.ShippingStateProvince%",
+                    "%Order.ShippingZipPostalCode%",
+                    "%Order.ShippingCountry%",
+                    "%Order.ShippingCustomAttributes%",
+                    "%Order.PaymentMethod%",
+                    "%Order.VatNumber%",
+                    "%Order.CustomValues%",
+                    "%Order.Product(s)%",
+                    "%Order.CreatedOn%",
+                    "%Order.OrderURLForCustomer%"
+                });
+
+                //shipment tokens
+                _allowedTokens.Add(TokenGroupNames.ShipmentTokens, new[]
+                {
+                    "%Shipment.ShipmentNumber%",
+                    "%Shipment.TrackingNumber%",
+                    "%Shipment.TrackingNumberURL%",
+                    "%Shipment.Product(s)%",
+                    "%Shipment.URLForCustomer%"
+                });
+
+                //refunded order tokens
+                _allowedTokens.Add(TokenGroupNames.RefundedOrderTokens, new[]
+                {
+                    "%Order.AmountRefunded%"
+                });
+
+                //order note tokens
+                _allowedTokens.Add(TokenGroupNames.OrderNoteTokens, new[]
+                {
+                    "%Order.NewNoteText%",
+                    "%Order.OrderNoteAttachmentUrl%"
+                });
+
+                //recurring payment tokens
+                _allowedTokens.Add(TokenGroupNames.RecurringPaymentTokens, new[]
+                {
+                    "%RecurringPayment.ID%"
+                });
+
+                //newsletter subscription tokens
+                _allowedTokens.Add(TokenGroupNames.SubscriptionTokens, new[]
+                {
+                    "%NewsLetterSubscription.Email%",
+                    "%NewsLetterSubscription.ActivationUrl%",
+                    "%NewsLetterSubscription.DeactivationUrl%"
+                });
+
+                //product tokens
+                _allowedTokens.Add(TokenGroupNames.ProductTokens, new[]
+                {
+                    "%Product.ID%",
+                    "%Product.Name%",
+                    "%Product.ShortDescription%",
+                    "%Product.ProductURLForCustomer%",
+                    "%Product.SKU%",
+                    "%Product.StockQuantity%"
+                });
+
+                //return request tokens
+                _allowedTokens.Add(TokenGroupNames.ReturnRequestTokens, new[]
+                {
+                    "%ReturnRequest.CustomNumber%",
+                    "%ReturnRequest.OrderId%",
+                    "%ReturnRequest.Product.Quantity%",
+                    "%ReturnRequest.Product.Name%",
+                    "%ReturnRequest.Reason%",
+                    "%ReturnRequest.RequestedAction%",
+                    "%ReturnRequest.CustomerComment%",
+                    "%ReturnRequest.StaffNotes%",
+                    "%ReturnRequest.Status%"
+                });
+
+                //forum tokens
+                _allowedTokens.Add(TokenGroupNames.ForumTokens, new[]
+                {
+                    "%Forums.ForumURL%",
+                    "%Forums.ForumName%"
+                });
+
+                //forum topic tokens
+                _allowedTokens.Add(TokenGroupNames.ForumTopicTokens, new[]
+                {
+                    "%Forums.TopicURL%",
+                    "%Forums.TopicName%"
+                });
+
+                //forum post tokens
+                _allowedTokens.Add(TokenGroupNames.ForumPostTokens, new[]
+                {
+                    "%Forums.PostAuthor%",
+                    "%Forums.PostBody%"
+                });
+
+                //private message tokens
+                _allowedTokens.Add(TokenGroupNames.PrivateMessageTokens, new[]
+                {
+                    "%PrivateMessage.Subject%",
+                    "%PrivateMessage.Text%"
+                });
+
+                //vendor tokens
+                _allowedTokens.Add(TokenGroupNames.VendorTokens, new[]
+                {
+                    "%Vendor.Name%",
+                    "%Vendor.Email%"
+                });
+
+                //gift card tokens
+                _allowedTokens.Add(TokenGroupNames.GiftCardTokens, new[]
+                {
+                    "%GiftCard.SenderName%",
+                    "%GiftCard.SenderEmail%",
+                    "%GiftCard.RecipientName%",
+                    "%GiftCard.RecipientEmail%",
+                    "%GiftCard.Amount%",
+                    "%GiftCard.CouponCode%",
+                    "%GiftCard.Message%"
+                });
+
+                //product review tokens
+                _allowedTokens.Add(TokenGroupNames.ProductReviewTokens, new[]
+                {
+                    "%ProductReview.ProductName%"
+                });
+
+                //attribute combination tokens
+                _allowedTokens.Add(TokenGroupNames.AttributeCombinationTokens, new[]
+                {
+                    "%AttributeCombination.Formatted%",
+                    "%AttributeCombination.SKU%",
+                    "%AttributeCombination.StockQuantity%"
+                });
+
+                //blog comment tokens
+                _allowedTokens.Add(TokenGroupNames.BlogCommentTokens, new[]
+                {
+                    "%BlogComment.BlogPostTitle%"
+                });
+
+                //news comment tokens
+                _allowedTokens.Add(TokenGroupNames.NewsCommentTokens, new[]
+                {
+                    "%NewsComment.NewsTitle%"
+                });
+
+                //product back in stock tokens
+                _allowedTokens.Add(TokenGroupNames.ProductBackInStockTokens, new[]
+                {
+                    "%BackInStockSubscription.ProductName%",
+                    "%BackInStockSubscription.ProductUrl%"
+                });
+
+                //email a friend tokens
+                _allowedTokens.Add(TokenGroupNames.EmailAFriendTokens, new[]
+                {
+                    "%EmailAFriend.PersonalMessage%",
+                    "%EmailAFriend.Email%"
+                });
+
+                //wishlist to friend tokens
+                _allowedTokens.Add(TokenGroupNames.WishlistToFriendTokens, new[]
+                {
+                    "%Wishlist.PersonalMessage%",
+                    "%Wishlist.Email%"
+                });
+
+                //VAT validation tokens
+                _allowedTokens.Add(TokenGroupNames.VatValidation, new[]
+                {
+                    "%VatValidationResult.Name%",
+                    "%VatValidationResult.Address%"
+                });
+
+                return _allowedTokens;
+            }
+        }
+
+        #endregion
+
         #region Utilities
 
         /// <summary>
@@ -542,6 +800,12 @@ namespace Nop.Services.Messages
 
         #region Methods
 
+        /// <summary>
+        /// Add store tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="store">Store</param>
+        /// <param name="emailAccount">Email account</param>
         public virtual void AddStoreTokens(IList<Token> tokens, Store store, EmailAccount emailAccount)
         {
             if (emailAccount == null)
@@ -564,6 +828,13 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(store, tokens);
         }
 
+        /// <summary>
+        /// Add order tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="order"></param>
+        /// <param name="languageId">Language identifier</param>
+        /// <param name="vendorId">Vendor identifier</param>
         public virtual void AddOrderTokens(IList<Token> tokens, Order order, int languageId, int vendorId = 0)
         {
             tokens.Add(new Token("Order.OrderNumber", order.Id.ToString()));
@@ -639,6 +910,12 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(order, tokens);
         }
 
+        /// <summary>
+        /// Add refunded order tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="order">Order</param>
+        /// <param name="refundedAmount">Refunded amount of order</param>
         public virtual void AddOrderRefundedTokens(IList<Token> tokens, Order order, decimal refundedAmount)
         {
             //should we convert it to customer currency?
@@ -655,6 +932,12 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(order, tokens);
         }
 
+        /// <summary>
+        /// Add shipment tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="shipment">Shipment item</param>
+        /// <param name="languageId">Language identifier</param>
         public virtual void AddShipmentTokens(IList<Token> tokens, Shipment shipment, int languageId)
         {
             tokens.Add(new Token("Shipment.ShipmentNumber", shipment.Id.ToString()));
@@ -676,6 +959,11 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(shipment, tokens);
         }
 
+        /// <summary>
+        /// Add order note tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="orderNote">Order note</param>
         public virtual void AddOrderNoteTokens(IList<Token> tokens, OrderNote orderNote)
         {
             tokens.Add(new Token("Order.NewNoteText", orderNote.FormatOrderNoteText(), true));
@@ -685,6 +973,11 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(orderNote, tokens);
         }
 
+        /// <summary>
+        /// Add recurring payment tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="recurringPayment">Recurring payment</param>
         public virtual void AddRecurringPaymentTokens(IList<Token> tokens, RecurringPayment recurringPayment)
         {
             tokens.Add(new Token("RecurringPayment.ID", recurringPayment.Id.ToString()));
@@ -693,6 +986,12 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(recurringPayment, tokens);
         }
 
+        /// <summary>
+        /// Add return request tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="returnRequest">Return request</param>
+        /// <param name="orderItem">Order item</param>
         public virtual void AddReturnRequestTokens(IList<Token> tokens, ReturnRequest returnRequest, OrderItem orderItem)
         {
             tokens.Add(new Token("ReturnRequest.CustomNumber", returnRequest.CustomNumber));
@@ -709,6 +1008,11 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(returnRequest, tokens);
         }
 
+        /// <summary>
+        /// Add gift card tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="giftCard">Gift card</param>
         public virtual void AddGiftCardTokens(IList<Token> tokens, GiftCard giftCard)
         {
             tokens.Add(new Token("GiftCard.SenderName", giftCard.SenderName));
@@ -727,6 +1031,11 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(giftCard, tokens);
         }
 
+        /// <summary>
+        /// Add customer tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="customer">Customer</param>
         public virtual void AddCustomerTokens(IList<Token> tokens, Customer customer)
         {
             tokens.Add(new Token("Customer.Email", customer.Email));
@@ -757,6 +1066,11 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(customer, tokens);
         }
 
+        /// <summary>
+        /// Add vendor tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="vendor">Vendor</param>
         public virtual void AddVendorTokens(IList<Token> tokens, Vendor vendor)
         {
             tokens.Add(new Token("Vendor.Name", vendor.Name));
@@ -766,6 +1080,11 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(vendor, tokens);
         }
 
+        /// <summary>
+        /// Add newsletter subscription tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="subscription">Newsletter subscription</param>
         public virtual void AddNewsLetterSubscriptionTokens(IList<Token> tokens, NewsLetterSubscription subscription)
         {
             tokens.Add(new Token("NewsLetterSubscription.Email", subscription.Email));
@@ -783,6 +1102,11 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(subscription, tokens);
         }
 
+        /// <summary>
+        /// Add product review tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="productReview">Product review</param>
         public virtual void AddProductReviewTokens(IList<Token> tokens, ProductReview productReview)
         {
             tokens.Add(new Token("ProductReview.ProductName", productReview.Product.Name));
@@ -791,6 +1115,11 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(productReview, tokens);
         }
 
+        /// <summary>
+        /// Add blog comment tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="blogComment">Blog post comment</param>
         public virtual void AddBlogCommentTokens(IList<Token> tokens, BlogComment blogComment)
         {
             tokens.Add(new Token("BlogComment.BlogPostTitle", blogComment.BlogPost.Title));
@@ -799,6 +1128,11 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(blogComment, tokens);
         }
 
+        /// <summary>
+        /// Add news comment tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="newsComment">News comment</param>
         public virtual void AddNewsCommentTokens(IList<Token> tokens, NewsComment newsComment)
         {
             tokens.Add(new Token("NewsComment.NewsTitle", newsComment.NewsItem.Title));
@@ -807,6 +1141,12 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(newsComment, tokens);
         }
 
+        /// <summary>
+        /// Add product tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="product">Product</param>
+        /// <param name="languageId">Language identifier</param>
         public virtual void AddProductTokens(IList<Token> tokens, Product product, int languageId)
         {
             tokens.Add(new Token("Product.ID", product.Id.ToString()));
@@ -823,6 +1163,12 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(product, tokens);
         }
 
+        /// <summary>
+        /// Add product attribute combination tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="combination">Product attribute combination</param>
+        /// <param name="languageId">Language identifier</param>
         public virtual void AddAttributeCombinationTokens(IList<Token> tokens, ProductAttributeCombination combination,  int languageId)
         {
             //attributes
@@ -844,6 +1190,13 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(combination, tokens);
         }
 
+        /// <summary>
+        /// Add forum topic tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="forumTopic">Forum topic</param>
+        /// <param name="friendlyForumTopicPageIndex">Friendly (starts with 1) forum topic page to use for URL generation</param>
+        /// <param name="appendedPostIdentifierAnchor">Forum post identifier</param>
         public virtual void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic, 
             int? friendlyForumTopicPageIndex = null, int? appendedPostIdentifierAnchor = null)
         {
@@ -862,6 +1215,11 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(forumTopic, tokens);
         }
 
+        /// <summary>
+        /// Add forum post tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="forumPost">Forum post</param>
         public virtual void AddForumPostTokens(IList<Token> tokens, ForumPost forumPost)
         {
             tokens.Add(new Token("Forums.PostAuthor", forumPost.Customer.FormatUserName()));
@@ -871,6 +1229,11 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(forumPost, tokens);
         }
 
+        /// <summary>
+        /// Add forum tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="forum">Forum</param>
         public virtual void AddForumTokens(IList<Token> tokens, Forum forum)
         {
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
@@ -882,6 +1245,11 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(forum, tokens);
         }
 
+        /// <summary>
+        /// Add private message tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="privateMessage">Private message</param>
         public virtual void AddPrivateMessageTokens(IList<Token> tokens, PrivateMessage privateMessage)
         {
             tokens.Add(new Token("PrivateMessage.Subject", privateMessage.Subject));
@@ -891,6 +1259,11 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(privateMessage, tokens);
         }
 
+        /// <summary>
+        /// Add tokens of BackInStock subscription
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="subscription">BackInStock subscription</param>
         public virtual void AddBackInStockTokens(IList<Token> tokens, BackInStockSubscription subscription)
         {
             tokens.Add(new Token("BackInStockSubscription.ProductName", subscription.Product.Name));
@@ -903,157 +1276,36 @@ namespace Nop.Services.Messages
         }
 
         /// <summary>
-        /// Gets list of allowed (supported) message tokens for campaigns
+        /// Get collection of allowed (supported) message tokens for campaigns
         /// </summary>
-        /// <returns>List of allowed (supported) message tokens for campaigns</returns>
-        public virtual string[] GetListOfCampaignAllowedTokens()
+        /// <returns>Collection of allowed (supported) message tokens for campaigns</returns>
+        public virtual IEnumerable<string> GetListOfCampaignAllowedTokens()
         {
             var additionTokens = new CampaignAdditionTokensAddedEvent();
             _eventPublisher.Publish(additionTokens);
 
-            var allowedTokens = new List<string>
-            {
-                "%Store.Name%",
-                "%Store.URL%",
-                "%Store.Email%",
-                "%Store.CompanyName%",
-                "%Store.CompanyAddress%",
-                "%Store.CompanyPhoneNumber%",
-                "%Store.CompanyVat%",
-                "%NewsLetterSubscription.Email%",
-                "%NewsLetterSubscription.ActivationUrl%",
-                "%NewsLetterSubscription.DeactivationUrl%",
-                "%Facebook.URL%",
-                "%Twitter.URL%",
-                "%YouTube.URL%",
-                "%GooglePlus.URL%"
-            };
+            var allowedTokens = GetListOfAllowedTokens(new[] { TokenGroupNames.StoreTokens, TokenGroupNames.SubscriptionTokens }).ToList();
             allowedTokens.AddRange(additionTokens.AdditionTokens);
-            return allowedTokens.Distinct().ToArray();
+
+            return allowedTokens.Distinct();
         }
 
-        public virtual string[] GetListOfAllowedTokens()
+        /// <summary>
+        /// Get collection of allowed (supported) message tokens
+        /// </summary>
+        /// <param name="tokenGroups">Collection of token groups; pass null to get all available tokens</param>
+        /// <returns>Collection of allowed message tokens</returns>
+        public virtual IEnumerable<string> GetListOfAllowedTokens(IEnumerable<string> tokenGroups = null)
         {
             var additionTokens = new AdditionTokensAddedEvent();
             _eventPublisher.Publish(additionTokens);
 
-            var allowedTokens = new List<string>
-            {
-                "%Store.Name%",
-                "%Store.URL%",
-                "%Store.Email%",
-                "%Store.CompanyName%",
-                "%Store.CompanyAddress%",
-                "%Store.CompanyPhoneNumber%",
-                "%Store.CompanyVat%",
-                "%Order.OrderNumber%",
-                "%Order.CustomerFullName%",
-                "%Order.CustomerEmail%",
-                "%Order.BillingFirstName%",
-                "%Order.BillingLastName%",
-                "%Order.BillingPhoneNumber%",
-                "%Order.BillingEmail%",
-                "%Order.BillingFaxNumber%",
-                "%Order.BillingCompany%",
-                "%Order.BillingAddress1%",
-                "%Order.BillingAddress2%",
-                "%Order.BillingCity%",
-                "%Order.BillingStateProvince%",
-                "%Order.BillingZipPostalCode%",
-                "%Order.BillingCountry%",
-                "%Order.BillingCustomAttributes%",
-                "%Order.ShippingMethod%",
-                "%Order.ShippingFirstName%",
-                "%Order.ShippingLastName%",
-                "%Order.ShippingPhoneNumber%",
-                "%Order.ShippingEmail%",
-                "%Order.ShippingFaxNumber%",
-                "%Order.ShippingCompany%",
-                "%Order.ShippingAddress1%",
-                "%Order.ShippingAddress2%",
-                "%Order.ShippingCity%",
-                "%Order.ShippingStateProvince%",
-                "%Order.ShippingZipPostalCode%", 
-                "%Order.ShippingCountry%",
-                "%Order.ShippingCustomAttributes%",
-                "%Order.PaymentMethod%",
-                "%Order.VatNumber%", 
-                "%Order.CustomValues%", 
-                "%Order.Product(s)%",
-                "%Order.CreatedOn%",
-                "%Order.OrderURLForCustomer%",
-                "%Order.NewNoteText%",
-                "%Order.OrderNoteAttachmentUrl%",
-                "%Order.AmountRefunded%",
-                "%RecurringPayment.ID%",
-                "%Shipment.ShipmentNumber%",
-                "%Shipment.TrackingNumber%",
-                "%Shipment.TrackingNumberURL%",
-                "%Shipment.Product(s)%",
-                "%Shipment.URLForCustomer%",
-                "%ReturnRequest.CustomNumber%",
-                "%ReturnRequest.OrderId%",
-                "%ReturnRequest.Product.Quantity%",
-                "%ReturnRequest.Product.Name%", 
-                "%ReturnRequest.Reason%", 
-                "%ReturnRequest.RequestedAction%", 
-                "%ReturnRequest.CustomerComment%", 
-                "%ReturnRequest.StaffNotes%",
-                "%ReturnRequest.Status%",
-                "%GiftCard.SenderName%", 
-                "%GiftCard.SenderEmail%",
-                "%GiftCard.RecipientName%", 
-                "%GiftCard.RecipientEmail%", 
-                "%GiftCard.Amount%", 
-                "%GiftCard.CouponCode%",
-                "%GiftCard.Message%",
-                "%Customer.Email%", 
-                "%Customer.Username%",
-                "%Customer.FullName%",
-                "%Customer.FirstName%",
-                "%Customer.LastName%",
-                "%Customer.VatNumber%",
-                "%Customer.VatNumberStatus%",
-                "%Customer.CustomAttributes%",
-                "%Customer.PasswordRecoveryURL%",
-                "%Customer.AccountActivationURL%",
-                "%Customer.EmailRevalidationURL%",
-                "%Vendor.Name%",
-                "%Vendor.Email%",
-                "%Wishlist.URLForCustomer%", 
-                "%NewsLetterSubscription.Email%", 
-                "%NewsLetterSubscription.ActivationUrl%",
-                "%NewsLetterSubscription.DeactivationUrl%", 
-                "%ProductReview.ProductName%", 
-                "%BlogComment.BlogPostTitle%", 
-                "%NewsComment.NewsTitle%",
-                "%Product.ID%", 
-                "%Product.Name%",
-                "%Product.ShortDescription%", 
-                "%Product.ProductURLForCustomer%",
-                "%Product.SKU%", 
-                "%Product.StockQuantity%", 
-                "%Forums.TopicURL%",
-                "%Forums.TopicName%", 
-                "%Forums.PostAuthor%",
-                "%Forums.PostBody%",
-                "%Forums.ForumURL%", 
-                "%Forums.ForumName%",
-                "%AttributeCombination.Formatted%",
-                "%AttributeCombination.SKU%",
-                "%AttributeCombination.StockQuantity%",
-                "%PrivateMessage.Subject%", 
-                "%PrivateMessage.Text%",
-                "%BackInStockSubscription.ProductName%",
-                "%BackInStockSubscription.ProductUrl%",
-                "%Facebook.URL%",
-                "%Twitter.URL%",
-                "%YouTube.URL%",
-                "%GooglePlus.URL%"
-            };
+            var allowedTokens = AllowedTokens.Where(x => tokenGroups == null || tokenGroups.Contains(x.Key))
+                .SelectMany(x => x.Value).ToList();
+
             allowedTokens.AddRange(additionTokens.AdditionTokens);
 
-            return allowedTokens.Distinct().ToArray();
+            return allowedTokens.Distinct();
         }
 
         #endregion

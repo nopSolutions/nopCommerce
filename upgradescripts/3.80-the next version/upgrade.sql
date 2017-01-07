@@ -1118,6 +1118,42 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.GiftCard">
     <Value>The associated product is a gift card, keep in mind that customers can not specify its details in the product details page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Pager.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Display">
+    <Value>{0} - {1} of {2} items</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Empty">
+    <Value>No items to display</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.First">
+    <Value>Go to the first page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.ItemsPerPage">
+    <Value>items per page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Last">
+    <Value>Go to the last page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Next">
+    <Value>Go to the next page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Of">
+    <Value>of {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Page">
+    <Value>Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Previous">
+    <Value>Go to the previous page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Refresh">
+    <Value>Refresh</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Address">
+    <Value>Address (optional)</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3353,4 +3389,22 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'newssettings.shownewscommentsperstore', N'False', 0)
 END
+GO
+
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Vendor]') and NAME='AddressId')
+BEGIN
+	ALTER TABLE [Vendor]
+	ADD [AddressId] int NULL
+END
+GO
+
+UPDATE [Vendor]
+SET [AddressId] = 0
+WHERE [AddressId] IS NULL
+GO
+
+ALTER TABLE [Vendor] ALTER COLUMN [AddressId] int NOT NULL
 GO

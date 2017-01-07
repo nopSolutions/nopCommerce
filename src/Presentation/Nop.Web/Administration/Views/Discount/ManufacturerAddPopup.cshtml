@@ -91,7 +91,8 @@
                                         serverSorting: true
                                     },
                                     pageable: {
-                                        refresh: true
+                                        refresh: true,
+                                        @Html.Partial("_GridPagerMessages")
                                     },
                                     editable: {
                                         confirmation: "@T("Admin.Common.DeleteConfirmation")",
