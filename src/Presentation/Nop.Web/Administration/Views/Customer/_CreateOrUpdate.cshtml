@@ -1120,6 +1120,7 @@
 {
 var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
 var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
 
     <div class="panel-group">
         <div class="panel panel-default">
@@ -1167,7 +1168,8 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                             columns: [
                             {
                                 field: "StoreName",
-                                title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Store")"
+                                title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Store")",
+                                hidden: @(stores.Count > 1 ? "false" : "true"),
                             }, {
                                 field: "Points",
                                 title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Points")"
