@@ -6171,7 +6171,7 @@ namespace Nop.Services.Installation
             {
                 TaxBasedOn = TaxBasedOn.BillingAddress,
                 TaxDisplayType = TaxDisplayType.ExcludingTax,
-                ActiveTaxProviderSystemName = "Tax.FixedRate",
+                ActiveTaxProviderSystemName = "Tax.FixedOrByCountryStateZip",
                 DefaultTaxAddressId = 0,
                 DisplayTaxSuffix = false,
                 DisplayTaxRates = false,
