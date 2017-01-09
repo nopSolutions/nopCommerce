@@ -1,0 +1,71 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.DiscountRules.WeightInCart.Models.RequirementModel
+@using Nop.Web.Framework;
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#saveWeightInCartrequirement@(Model.RequirementId)').click(function () {
+            var weightRange = $("#@Html.FieldIdFor(model => model.WeightRange)").val();
+            var discountId = @Model.DiscountId;
+            var requirementId = @Model.RequirementId;
+
+            var postData = {
+                discountId: discountId,
+                discountRequirementId: requirementId,
+                weightRange: weightRange
+            };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache:false,
+                type: "POST",
+                url: "@Url.Action("Configure", "DiscountRulesWeightInCart")",
+                data: postData,
+                success: function (data) {
+                    $('#pnl-save-requirement-result@(Model.RequirementId)').fadeIn("slow").delay(1000).fadeOut("slow");
+                    //notify parent if it's a new requirement
+                    @if (Model.RequirementId == 0)
+                    {
+                        <text>$("#discountRequirementContainer").trigger('nopnewdiscountruleadded', [data.NewRequirementId]);</text>
+                    }
+                },
+                error:function (xhr, ajaxOptions, thrownError){
+                    alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Promotions.Discounts.Requirements.FailedToSave").Text))');
+                }
+            });
+        });
+    });
+</script>
+
+<div class="form-group">
+    <div class="col-md-3">
+        @Html.NopLabelFor(model => model.WeightRange)
+    </div>
+    <div class="col-md-9">
+        <div class="input-group">
+            @Html.NopEditorFor(model => model.WeightRange)
+            <div class="input-group-btn">
+                <input type="button" id="saveWeightInCartrequirement@(Model.RequirementId)" class="btn btn-info" value="@T("Admin.Common.Save")"/>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-3">
+        &nbsp;
+        <div id="pnl-save-requirement-result@(Model.RequirementId)" style="display: none; margin-top: 10px;" class="text-green pull-right">
+            @T("Admin.Promotions.Discounts.Requirements.Saved")
+        </div>
+        <div id="discountrequirement-products-check-progress@(Model.RequirementId)" class="please-wait pull-right" style="display: none;">
+            @T("Common.Wait...")
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-9 col-sm-offset-3">
+        <p id="discountrequirement-product-names@(Model.RequirementId)"></p>
+    </div>
+</div>
+
