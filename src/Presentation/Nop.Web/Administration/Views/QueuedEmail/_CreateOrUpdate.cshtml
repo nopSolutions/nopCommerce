@@ -102,14 +102,9 @@
                             @Html.NopLabelFor(model => model.Body)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopTextAreaFor(model => model.Body)
+                            @Html.EditorFor(model => model.Body, "RichEditor")
                             @Html.ValidationMessageFor(model => model.Body)
                         </div>
-                        <script type="text/javascript">
-                            $(document).ready(function () {
-                                $('#@Html.FieldIdFor(model => model.Body)').height($('#@Html.FieldIdFor(model => model.Body)')[0].scrollHeight);
-                            });
-                        </script>
                     </div>
                     @if (!String.IsNullOrEmpty(Model.AttachmentFilePath))
                     {
