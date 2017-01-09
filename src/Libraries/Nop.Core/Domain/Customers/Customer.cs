@@ -138,6 +138,11 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the date and time of last activity
         /// </summary>
         public DateTime LastActivityDateUtc { get; set; }
+
+        /// <summary>
+        ///  Gets or sets the store identifier in which customer registered
+        /// </summary>
+        public int RegisteredInStoreId { get; set; }
         
         #region Navigation properties
 

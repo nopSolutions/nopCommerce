@@ -1106,6 +1106,12 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.News.Comments.Fields.StoreName">
     <Value>Store name</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.RegisteredInStore">
+    <Value>Registered in the store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.RegisteredInStore.Hint">
+    <Value>Indicating in which store the customer is registered</Value>
+  </LocaleResource>  
 </Language>
 '
 
@@ -3341,4 +3347,23 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'newssettings.shownewscommentsperstore', N'False', 0)
 END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='RegisteredInStoreId')
+BEGIN
+   ALTER TABLE [dbo].[Customer]
+   ADD	[RegisteredInStoreId] int NULL
+END
+GO
+
+declare @DefaultStoreId int;
+if ((select count(id) from [dbo].[Store]) = 1)
+set @DefaultStoreId = (select top(1) id from [dbo].[Store])
+else
+set @DefaultStoreId = 0;
+--set default value to store column
+UPDATE [dbo].[Customer] set [RegisteredInStoreId] = @DefaultStoreId where [RegisteredInStoreId] is NULL
+
+ALTER TABLE [dbo].[Customer] ALTER COLUMN [RegisteredInStoreId] int NOT NULL
 GO

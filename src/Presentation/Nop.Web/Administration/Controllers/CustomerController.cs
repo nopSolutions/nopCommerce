@@ -498,6 +498,11 @@ namespace Nop.Admin.Controllers
                     model.IsTaxExempt = customer.IsTaxExempt;
                     model.Active = customer.Active;
 
+                    if (customer.RegisteredInStoreId == 0 || allStores.All(s => s.Id != customer.RegisteredInStoreId))
+                        model.RegisteredInStore = string.Empty;
+                    else
+                        model.RegisteredInStore = allStores.First(s => s.Id == customer.RegisteredInStoreId).Name;
+
                     var affiliate = _affiliateService.GetAffiliateById(customer.AffiliateId);
                     if (affiliate != null)
                     {
@@ -904,6 +909,7 @@ namespace Nop.Admin.Controllers
                     Active = model.Active,
                     CreatedOnUtc = DateTime.UtcNow,
                     LastActivityDateUtc = DateTime.UtcNow,
+                    RegisteredInStoreId = _storeContext.CurrentStore.Id
                 };
                 _customerService.InsertCustomer(customer);
 

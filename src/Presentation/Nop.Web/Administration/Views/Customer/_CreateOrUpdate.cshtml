@@ -531,6 +531,17 @@
                         @Html.ValidationMessageFor(model => model.Active)
                     </div>
                 </div>
+                @if (Model.Id > 0 && !string.IsNullOrEmpty(Model.RegisteredInStore))
+                {
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.RegisteredInStore)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDisplayFor(model => model.RegisteredInStore)
+                        </div>
+                    </div>
+                }
                 @if (Model.Id > 0)
                 {
                     <div class="form-group">
