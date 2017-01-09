@@ -1279,7 +1279,34 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Plugins.Tax.FixedOrByCountryStateZip.AddRecordTitle">
     <Value>New tax rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.SearchCustomNumber">
+    <Value>ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.SearchCustomNumber.Hint">
+    <Value>Search by a specific return request identifier.</Value>
   </LocaleResource>    
+  <LocaleResource Name="Admin.ReturnRequests.SearchEndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.SearchEndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>    
+  <LocaleResource Name="Admin.ReturnRequests.SearchReturnRequestStatus">
+    <Value>Return status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.SearchReturnRequestStatus.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.SearchReturnRequestStatus.Hint">
+    <Value>Search by a specific return request status e.g. Received.</Value>
+  </LocaleResource>    
+  <LocaleResource Name="Admin.ReturnRequests.SearchStartDate">
+    <Value>Start date</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.ReturnRequests.SearchStartDate.Hint">
+    <Value>The start date for the search.</Value>
+  </LocaleResource>   
 </Language>
 '
 

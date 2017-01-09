@@ -551,7 +551,7 @@ namespace Nop.Web.Factories
 
             if (_orderSettings.ReturnRequestsEnabled &&
                 _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id,
-                    _workContext.CurrentCustomer.Id, 0, null, 0, 1).Any())
+                    _workContext.CurrentCustomer.Id, pageIndex: 0, pageSize: 1).Any())
             {
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
