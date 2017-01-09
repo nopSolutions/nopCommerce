@@ -3,6 +3,7 @@ using System.Linq;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Stores;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -75,7 +76,8 @@ namespace Nop.Data.Tests.Blogs
                     {
                         IsApproved = true,
                         CreatedOnUtc = new DateTime(2010, 01, 03),
-                        Customer = GetTestCustomer()
+                        Customer = GetTestCustomer(),
+                        Store = GetTestStore()
                     }
                 );
             var fromDb = SaveAndLoadEntity(blogPost);
@@ -85,6 +87,7 @@ namespace Nop.Data.Tests.Blogs
             fromDb.BlogComments.ShouldNotBeNull();
             (fromDb.BlogComments.Count == 1).ShouldBeTrue();
             fromDb.BlogComments.First().IsApproved.ShouldEqual(true);
+            fromDb.BlogComments.First().Store.ShouldNotBeNull();
         }
 
         protected Customer GetTestCustomer()
@@ -94,6 +97,16 @@ namespace Nop.Data.Tests.Blogs
                 CustomerGuid = Guid.NewGuid(),
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 LastActivityDateUtc = new DateTime(2010, 01, 02)
+            };
+        }
+
+        protected Store GetTestStore()
+        {
+            return new Store
+            {
+                Name = "Store 1",
+                Url = "http://www.test.com",
+                DisplayOrder = 1
             };
         }
     }

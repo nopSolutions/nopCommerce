@@ -3,6 +3,7 @@ using System.Linq;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
+using Nop.Core.Domain.Stores;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -78,7 +79,8 @@ namespace Nop.Data.Tests.News
                         CommentText = "Comment text 1",
                         IsApproved = false,
                         CreatedOnUtc = new DateTime(2010, 01, 03),
-                        Customer = GetTestCustomer()
+                        Customer = GetTestCustomer(),
+                        Store = GetTestStore()
                     }
                 );
             var fromDb = SaveAndLoadEntity(news);
@@ -89,6 +91,7 @@ namespace Nop.Data.Tests.News
             (fromDb.NewsComments.Count == 1).ShouldBeTrue();
             fromDb.NewsComments.First().CommentText.ShouldEqual("Comment text 1");
             fromDb.NewsComments.First().IsApproved.ShouldEqual(false);
+            fromDb.NewsComments.First().Store.ShouldNotBeNull();
         }
 
         protected Customer GetTestCustomer()
@@ -98,6 +101,16 @@ namespace Nop.Data.Tests.News
                 CustomerGuid = Guid.NewGuid(),
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 LastActivityDateUtc = new DateTime(2010, 01, 02)
+            };
+        }
+
+        protected Store GetTestStore()
+        {
+            return new Store
+            {
+                Name = "Store 1",
+                Url = "http://www.test.com",
+                DisplayOrder = 1
             };
         }
     }
