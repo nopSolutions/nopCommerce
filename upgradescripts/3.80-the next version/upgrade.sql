@@ -1178,6 +1178,108 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Tokens.ConditionalStatement">
     <Value>For conditional expressions use the token %if (your conditions ) ... endif%</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedRate.Fields.TaxCategoryName">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedRate.Fields.Rate">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.CountryStateZip.Fields.Store">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.CountryStateZip.Fields.Store.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.CountryStateZip.Fields.Country">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.CountryStateZip.Fields.Country.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.CountryStateZip.Fields.StateProvince">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.CountryStateZip.Fields.StateProvince.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.CountryStateZip.Fields.Zip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.CountryStateZip.Fields.Zip.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.CountryStateZip.Fields.TaxCategory">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.CountryStateZip.Fields.TaxCategory.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.CountryStateZip.Fields.Percentage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.CountryStateZip.Fields.Percentage.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.CountryStateZip.AddRecord">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.CountryStateZip.AddRecord.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedOrByCountryStateZip.Fixed">
+    <Value>Fixed rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedOrByCountryStateZip.TaxByCountryStateZip">
+    <Value>By Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedOrByCountryStateZip.Fields.TaxCategoryName">
+    <Value>Tax category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedOrByCountryStateZip.Fields.Rate">
+    <Value>Rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedOrByCountryStateZip.Fields.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedOrByCountryStateZip.Fields.Store.Hint">
+    <Value>If an asterisk is selected, then this shipping rate will apply to all stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedOrByCountryStateZip.Fields.Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedOrByCountryStateZip.Fields.Country.Hint">
+    <Value>The country.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedOrByCountryStateZip.Fields.StateProvince">
+    <Value>State / province</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedOrByCountryStateZip.Fields.StateProvince.Hint">
+    <Value>If an asterisk is selected, then this tax rate will apply to all customers from the given country, regardless of the state.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedOrByCountryStateZip.Fields.Zip">
+    <Value>Zip</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedOrByCountryStateZip.Fields.Zip.Hint">
+    <Value>Zip / postal code. If zip is empty, then this tax rate will apply to all customers from the given country or state, regardless of the zip code.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedOrByCountryStateZip.Fields.TaxCategory">
+    <Value>Tax category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedOrByCountryStateZip.Fields.TaxCategory.Hint">
+    <Value>The tax category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedOrByCountryStateZip.Fields.Percentage">
+    <Value>Percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedOrByCountryStateZip.Fields.Percentage.Hint">
+    <Value>The tax rate.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedOrByCountryStateZip.AddRecord">
+    <Value>Add tax rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedOrByCountryStateZip.AddRecordTitle">
+    <Value>New tax rate</Value>
+  </LocaleResource>    
 </Language>
 '
 
@@ -3472,4 +3574,18 @@ BEGIN
 	ALTER TABLE [Customer]
 	ADD [CannotLoginUntilDateUtc] datetime NULL
 END
+GO
+
+ --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'fixedorbycountrystateziptaxsettings.countrystatezipenabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'fixedorbycountrystateziptaxsettings.countrystatezipenabled', N'False', 0)
+END
+GO
+
+--rename settings
+UPDATE [Setting] 
+SET [Name] = N'tax.taxprovider.fixedorbycountrystatezip.taxcategoryid' + SUBSTRING(name, 40, len(name))
+WHERE [Name] like N'tax.taxprovider.fixedrate.taxcategoryid%'
 GO

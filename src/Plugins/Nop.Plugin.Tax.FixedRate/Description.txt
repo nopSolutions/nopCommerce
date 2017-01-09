@@ -1,9 +1,0 @@
-﻿Group: Tax providers
-FriendlyName: Fixed tax rate provider
-SystemName: Tax.FixedRate
-Version: 1.17
-SupportedVersions: 3.90
-Author: nopCommerce team
-DisplayOrder: 1
-FileName: Nop.Plugin.Tax.FixedRate.dll
-Description: This plugin allow to configure fix tax rates
