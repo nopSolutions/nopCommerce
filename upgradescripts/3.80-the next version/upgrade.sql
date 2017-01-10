@@ -1307,6 +1307,18 @@ set @resources='
   <LocaleResource Name="Admin.ReturnRequests.SearchStartDate.Hint">
     <Value>The start date for the search.</Value>
   </LocaleResource>   
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.ApproveSelected">
+    <Value>Approve selected</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.ApproveSelected">
+    <Value>Approve selected</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.DisapproveSelected">
+    <Value>Disapprove selected</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.DisapproveSelected">
+    <Value>Disapprove selected</Value>
+  </LocaleResource>  
 </Language>
 '
 
