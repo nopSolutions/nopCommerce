@@ -514,6 +514,18 @@ namespace Nop.Services.Installation
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
                 },
+                new Currency
+                {
+                    Name = "Indian Rupee",
+                    CurrencyCode = "INR",
+                    Rate = 68.21M,
+                    DisplayLocale = "en-IN",
+                    CustomFormatting = "",
+                    Published = false,
+                    DisplayOrder = 12,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    UpdatedOnUtc = DateTime.UtcNow,
+                },
             };
             _currencyRepository.Insert(currencies);
         }
