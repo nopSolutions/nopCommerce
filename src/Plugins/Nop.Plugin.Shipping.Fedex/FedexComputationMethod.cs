@@ -188,6 +188,33 @@ namespace Nop.Plugin.Shipping.Fedex
             request.RequestedShipment.RateRequestTypes[1] = RateRequestType.LIST;
             //request.RequestedShipment.PackageDetail = RequestedPackageDetailType.INDIVIDUAL_PACKAGES;
             //request.RequestedShipment.PackageDetailSpecified = true;
+
+            //for India domestic shipping add additional details
+            if (request.RequestedShipment.Shipper.Address.CountryCode.Equals("IN", StringComparison.InvariantCultureIgnoreCase) &&
+                request.RequestedShipment.Recipient.Address.CountryCode.Equals("IN", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var commodity = new Commodity
+                {
+                    Name = "1",
+                    NumberOfPieces = "1",
+                    CustomsValue = new Money
+                    {
+                        Amount = orderSubTotal,
+                        AmountSpecified = true,
+                        Currency = currencyCode
+                    }
+                };
+
+                request.RequestedShipment.CustomsClearanceDetail = new CustomsClearanceDetail
+                {
+                    CommercialInvoice = new CommercialInvoice
+                    {
+                        Purpose = PurposeOfShipmentType.SOLD,
+                        PurposeSpecified = true
+                    },
+                    Commodities = new[] { commodity }
+                };
+            }
         }
 
         private void SetPayment(RateRequest request)
@@ -720,13 +747,15 @@ namespace Nop.Plugin.Shipping.Fedex
             var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
 
             //The solution coded here might be considered a bit of a hack
-            //it only supports the scenario for US / Canada shipping
+            //it only supports the scenario for US / Canada / India shipping
             //because nopCommerce does not have a concept of a designated currency for a Country.
             string originCurrencyCode;
             if (originCountryCode == "US")
                 originCurrencyCode = "USD";
             else if (originCountryCode == "CA")
                 originCurrencyCode = "CAD";
+            else if (originCountryCode == "IN")
+                originCurrencyCode = "INR";
             else
                 originCurrencyCode = primaryStoreCurrency.CurrencyCode;
 
@@ -735,6 +764,8 @@ namespace Nop.Plugin.Shipping.Fedex
                 destinCurrencyCode = "USD";
             else if (destinCountryCode == "CA")
                 destinCurrencyCode = "CAD";
+            else if (destinCountryCode == "IN")
+                destinCurrencyCode = "INR";
             else
                 destinCurrencyCode = primaryStoreCurrency.CurrencyCode;
             
