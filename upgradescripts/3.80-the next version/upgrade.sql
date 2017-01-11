@@ -1372,7 +1372,13 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchText.Hint">
     <Value>Search in comment text.</Value>
-  </LocaleResource>  
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerOrders.RecurringOrders.RetryLastPayment">
+    <Value>Retry last payment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.RecurringPayments.History.LastPaymentFailed">
+    <Value>Last payment failed</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3717,5 +3723,47 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.bbcodeedi
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'commonsettings.bbcodeeditoropenlinksinnewwindow', N'false', 0)
+END
+GO
+
+ --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'paymentsettings.cancelrecurringpaymentsafterfailedpayment')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'paymentsettings.cancelrecurringpaymentsafterfailedpayment', N'False', 0)
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[RecurringPayment]') and NAME='LastPaymentFailed')
+BEGIN
+	ALTER TABLE [RecurringPayment]
+	ADD [LastPaymentFailed] bit NULL
+END
+GO
+
+UPDATE [RecurringPayment]
+SET [LastPaymentFailed] = 0
+WHERE [LastPaymentFailed] IS NULL
+GO
+
+ALTER TABLE [RecurringPayment] ALTER COLUMN [LastPaymentFailed] bit NOT NULL
+GO
+
+-- new message template
+IF NOT EXISTS (SELECT 1 FROM [dbo].[MessageTemplate] WHERE [Name] = N'RecurringPaymentCancelled.CustomerNotification')
+BEGIN
+    DECLARE @NewLine AS CHAR(2) = CHAR(13) + CHAR(10)
+    INSERT [dbo].[MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [AttachedDownloadId], [EmailAccountId], [LimitedToStores], [DelayPeriodId]) 
+    VALUES (N'RecurringPaymentCancelled.CustomerNotification', NULL, N'%Store.Name%. Recurring payment cancelled', N'<p>' + @NewLine + '<a href=\"%Store.URL%\">%Store.Name%</a>' + @NewLine + '<br />' + @NewLine + '<br />' + @NewLine + 'Hello %Customer.FullName%,' + @NewLine + '<br />' + @NewLine + '%if (%RecurringPayment.CancelAfterFailedPayment%) It appears your credit card didn''t go through for this recurring payment (<a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a>)' + @NewLine + '<br />' + @NewLine + 'So your subscription has been canceled. endif% %if (!%RecurringPayment.CancelAfterFailedPayment%) The recurring payment ID=%RecurringPayment.ID% was cancelled. endif%' + @NewLine + '</p>' + @NewLine, 1, 0, 0, 0, 0)
+END
+GO
+
+-- new message template
+IF NOT EXISTS (SELECT 1 FROM [dbo].[MessageTemplate] WHERE [Name] = N'RecurringPaymentFailed.CustomerNotification')
+BEGIN
+    DECLARE @NewLine AS CHAR(2) = CHAR(13) + CHAR(10)
+    INSERT [dbo].[MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [AttachedDownloadId], [EmailAccountId], [LimitedToStores], [DelayPeriodId]) 
+    VALUES (N'RecurringPaymentFailed.CustomerNotification', NULL, N'%Store.Name%. Last recurring payment failed', N'<p>' + @NewLine + '<a href=\"%Store.URL%\">%Store.Name%</a>' + @NewLine + '<br />' + @NewLine + '<br />' + @NewLine + 'Hello %Customer.FullName%,' + @NewLine + '<br />' + @NewLine + 'It appears your credit card didn''t go through for this recurring payment (<a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a>)' + @NewLine + '<br /> %if (%RecurringPayment.RecurringPaymentType% == "Manual") ' + @NewLine + 'You can recharge balance and manually retry payment or cancel it on the order history page. endif% %if (%RecurringPayment.RecurringPaymentType% == "Automatic") ' + @NewLine + 'You can recharge balance and wait, we will try to make the payment again, or you can cancel it on the order history page. endif%' + @NewLine + '</p>' + @NewLine, 1, 0, 0, 0, 0)
 END
 GO

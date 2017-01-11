@@ -3042,6 +3042,9 @@ label, label + * {
 .cancel-recurring-order-button {
 	background: url('../images/remove.png') right center no-repeat;
 }
+.retry-recurring-order-button {
+	background: url('../images/retry.png') right center no-repeat;
+}
 .return-items-button {
 	background: url('../images/return.png') right center no-repeat;
 }

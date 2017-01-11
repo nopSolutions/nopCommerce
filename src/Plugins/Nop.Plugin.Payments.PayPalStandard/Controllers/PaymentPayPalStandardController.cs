@@ -377,8 +377,8 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     case "recurring_payment_profile_created":
                         //do nothing here
                         break;
+                    #region Recurring payment
                     case "recurring_payment":
-                        #region Recurring payment
                         {
                             Guid orderNumberGuid = Guid.Empty;
                             try
@@ -427,6 +427,15 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                                 }
                                             }
                                             break;
+                                        case PaymentStatus.Voided:
+                                            //failed payment
+                                            var failedPaymentResult = new ProcessPaymentResult
+                                            {
+                                                Errors = new[] { string.Format("PayPal IPN. Recurring payment is {0} .", payment_status) },
+                                                RecurringPaymentFailed = true
+                                            };
+                                            _orderProcessingService.ProcessNextRecurringPayment(rp, failedPaymentResult);
+                                            break;
                                     }
                                 }
 
@@ -437,9 +446,23 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                             {
                                 _logger.Error("PayPal IPN. Order is not found", new NopException(sb.ToString()));
                             }
-                        }
-                        #endregion
+                        }                       
                         break;
+                    case "recurring_payment_failed":
+                        var orderGuid = Guid.Empty;
+                        if (Guid.TryParse(rp_invoice_id, out orderGuid))
+                        {
+                            var initialOrder = _orderService.GetOrderByGuid(orderGuid);
+                            if (initialOrder != null)
+                            {
+                                var recurringPayment = _orderService.SearchRecurringPayments(initialOrderId: initialOrder.Id).FirstOrDefault();
+                                //failed payment
+                                if (recurringPayment != null)
+                                    _orderProcessingService.ProcessNextRecurringPayment(recurringPayment, new ProcessPaymentResult { Errors = new[] { txn_type }, RecurringPaymentFailed = true });
+                            }
+                        }
+                        break;
+                    #endregion
                     default:
                         #region Standard payment
                         {

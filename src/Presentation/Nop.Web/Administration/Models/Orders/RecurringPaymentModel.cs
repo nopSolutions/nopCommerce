@@ -46,6 +46,8 @@ namespace Nop.Admin.Models.Orders
         
         public bool CanCancelRecurringPayment { get; set; }
 
+        public bool LastPaymentFailed { get; set; }
+
         #region Nested classes
 
 

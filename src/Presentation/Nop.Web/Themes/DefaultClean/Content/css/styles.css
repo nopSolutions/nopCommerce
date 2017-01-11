@@ -3018,6 +3018,9 @@ label, label + * {
 .cancel-recurring-order-button {
 	background: url('../images/remove.png') left center no-repeat;
 }
+.retry-recurring-order-button {
+	background: url('../images/retry.png') left center no-repeat;
+}
 .return-items-button {
 	background: url('../images/return.png') left center no-repeat;
 }

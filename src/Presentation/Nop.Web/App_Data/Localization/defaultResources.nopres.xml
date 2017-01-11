@@ -183,6 +183,9 @@
   <LocaleResource Name="Account.CustomerOrders.RecurringOrders.NextPayment">
     <Value>Next payment</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.CustomerOrders.RecurringOrders.RetryLastPayment">
+    <Value>Retry last payment</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.CustomerOrders.RecurringOrders.StartDate">
     <Value>Start date</Value>
   </LocaleResource>
@@ -11372,6 +11375,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.RecurringPayments.History.CreatedOn">
     <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.RecurringPayments.History.LastPaymentFailed">
+    <Value>Last payment failed</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.RecurringPayments.History.NextPaymentDate">
     <Value>Next payment date</Value>

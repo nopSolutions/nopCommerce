@@ -183,7 +183,23 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
         int SendRecurringPaymentCancelledStoreOwnerNotification(RecurringPayment recurringPayment, int languageId);
-        
+
+        /// <summary>
+        /// Sends a "Recurring payment cancelled" notification to a customer
+        /// </summary>
+        /// <param name="recurringPayment">Recurring payment</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendRecurringPaymentCancelledCustomerNotification(RecurringPayment recurringPayment, int languageId);
+
+        /// <summary>
+        /// Sends a "Recurring payment failed" notification to a customer
+        /// </summary>
+        /// <param name="recurringPayment">Recurring payment</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendRecurringPaymentFailedCustomerNotification(RecurringPayment recurringPayment, int languageId);
+
         #endregion
 
         #region Newsletter workflow

@@ -89,7 +89,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                 var webhook = new Webhook
                 {
                     event_types = new List<WebhookEventType> { new WebhookEventType { name = "*" } },
-                    url = string.Format("{0}Plugins/PaymentPayPalDirect/Webhook",  _webHelper.GetStoreLocation(currentStore.SslEnabled))
+                    url = string.Format("{0}Plugins/PaymentPayPalDirect/Webhook", _webHelper.GetStoreLocation(currentStore.SslEnabled))
                 }.Create(apiContext);
 
                 return webhook.id;
@@ -331,6 +331,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                         {
                             var recurringPayment = _orderService.SearchRecurringPayments(initialOrderId: initialOrder.Id).FirstOrDefault();
                             if (recurringPayment != null)
+                            {
                                 if (sale.state.ToLowerInvariant().Equals("completed"))
                                 {
                                     if (recurringPayment.RecurringPaymentHistory.Count == 0)
@@ -364,8 +365,15 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                                         }
                                     }
                                 }
+                                else if (sale.state.ToLowerInvariant().Equals("denied"))
+                                {
+                                    //payment denied
+                                    _orderProcessingService.ProcessNextRecurringPayment(recurringPayment,
+                                        new ProcessPaymentResult { Errors = new[] { webhook.summary }, RecurringPaymentFailed = true });
+                                }
                                 else
                                     _logger.Error(string.Format("PayPal error: Sale is {0} for the order #{1}", sale.state, initialOrder.Id));
+                            }
                         }
                     }
                     else

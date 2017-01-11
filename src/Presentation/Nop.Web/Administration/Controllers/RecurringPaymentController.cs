@@ -74,6 +74,7 @@ namespace Nop.Admin.Controllers
             model.CustomerEmail = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
             model.PaymentType = _paymentService.GetRecurringPaymentType(recurringPayment.InitialOrder.PaymentMethodSystemName).GetLocalizedEnum(_localizationService, _workContext);
             model.CanCancelRecurringPayment = _orderProcessingService.CanCancelRecurringPayment(_workContext.CurrentCustomer, recurringPayment);
+            model.LastPaymentFailed = recurringPayment.LastPaymentFailed;
         }
 
         [NonAction]
@@ -245,11 +246,15 @@ namespace Nop.Admin.Controllers
             
             try
             {
-                _orderProcessingService.ProcessNextRecurringPayment(payment);
+                var errors = _orderProcessingService.ProcessNextRecurringPayment(payment);
+
                 var model = new RecurringPaymentModel();
                 PrepareRecurringPaymentModel(model, payment);
 
-                SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.NextPaymentProcessed"), false);
+                if (errors.Any())
+                    errors.ToList().ForEach(error => ErrorNotification(error, false));
+                else
+                    SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.NextPaymentProcessed"), false);
 
                 //selected tab
                 SaveSelectedTabName(persistForTheNextRequest: false);

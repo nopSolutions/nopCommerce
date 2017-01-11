@@ -1649,7 +1649,8 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
         /// <param name="paymentResult">Process payment result (info about last payment for automatic recurring payments)</param>
-        public virtual void ProcessNextRecurringPayment(RecurringPayment recurringPayment, ProcessPaymentResult paymentResult = null)
+        /// <returns>Collection of errors</returns>
+        public virtual IEnumerable<string> ProcessNextRecurringPayment(RecurringPayment recurringPayment, ProcessPaymentResult paymentResult = null)
         {
             if (recurringPayment == null)
                 throw new ArgumentNullException("recurringPayment");
@@ -1818,6 +1819,9 @@ namespace Nop.Services.Orders
                     if (order.PaymentStatus == PaymentStatus.Paid)
                         ProcessOrderPaid(order);
 
+                    //last payment succeeded
+                    recurringPayment.LastPaymentFailed = false;
+
                     //next recurring payment
                     recurringPayment.RecurringPaymentHistory.Add(new RecurringPaymentHistory
                     {
@@ -1826,6 +1830,8 @@ namespace Nop.Services.Orders
                         OrderId = order.Id,
                     });
                     _orderService.UpdateRecurringPayment(recurringPayment);
+
+                    return new List<string>();
                 }
                 else
                 {
@@ -1833,6 +1839,27 @@ namespace Nop.Services.Orders
                     var logError = processPaymentResult.Errors.Aggregate("Error while processing recurring order. ",
                         (current, next) => string.Format("{0}Error {1}: {2}. ", current, processPaymentResult.Errors.IndexOf(next) + 1, next));
                     _logger.Error(logError, customer: customer);
+
+                    if (processPaymentResult.RecurringPaymentFailed)
+                    {
+                        //set flag that last payment failed
+                        recurringPayment.LastPaymentFailed = true;
+                        _orderService.UpdateRecurringPayment(recurringPayment);
+
+                        if (_paymentSettings.CancelRecurringPaymentsAfterFailedPayment)
+                        {
+                            //cancel recurring payment
+                            CancelRecurringPayment(recurringPayment).ToList().ForEach(error => _logger.Error(error));
+
+                            //notify a customer about cancelled payment
+                            _workflowMessageService.SendRecurringPaymentCancelledCustomerNotification(recurringPayment, initialOrder.CustomerLanguageId);
+                        }
+                        else
+                            //notify a customer about failed payment
+                            _workflowMessageService.SendRecurringPaymentFailedCustomerNotification(recurringPayment, initialOrder.CustomerLanguageId);
+                    }
+
+                    return processPaymentResult.Errors;
                 }
             }
             catch (Exception exc)
@@ -1955,6 +1982,29 @@ namespace Nop.Services.Orders
             return true;
         }
 
+
+        /// <summary>
+        /// Gets a value indicating whether a customer can retry last failed recurring payment
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="recurringPayment">Recurring Payment</param>
+        /// <returns>True if a customer can retry payment; otherwise false</returns>
+        public virtual bool CanRetryLastRecurringPayment(Customer customer, RecurringPayment recurringPayment)
+        {
+            if (recurringPayment == null || customer == null)
+                return false;
+
+            if (recurringPayment.InitialOrder == null || recurringPayment.InitialOrder.OrderStatus == OrderStatus.Cancelled)
+                return false;
+
+            if (!recurringPayment.LastPaymentFailed || _paymentService.GetRecurringPaymentType(recurringPayment.InitialOrder.PaymentMethodSystemName) != RecurringPaymentType.Manual)
+                return false;
+
+            if (recurringPayment.InitialOrder.Customer == null || (!customer.IsAdmin() && recurringPayment.InitialOrder.Customer.Id != customer.Id))
+                return false;
+
+            return true;
+        }
 
 
         /// <summary>
