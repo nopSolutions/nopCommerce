@@ -22,7 +22,7 @@ namespace Nop.Services.ExportImport.Help
         /// Ctor
         /// </summary>
         /// <param name="properties">All acsess properties</param>
-        public PropertyManager(PropertyByName<T>[] properties)
+        public PropertyManager(IEnumerable<PropertyByName<T>> properties)
         {
             _properties = new Dictionary<string, PropertyByName<T>>();
 
