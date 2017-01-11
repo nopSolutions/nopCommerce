@@ -982,7 +982,7 @@ namespace Nop.Services.Messages
         /// <param name="recurringPayment">Recurring payment</param>
         public virtual void AddRecurringPaymentTokens(IList<Token> tokens, RecurringPayment recurringPayment)
         {
-            tokens.Add(new Token("RecurringPayment.ID", recurringPayment));
+            tokens.Add(new Token("RecurringPayment.ID", recurringPayment.Id));
 
             //event notification
             _eventPublisher.EntityTokensAdded(recurringPayment, tokens);
