@@ -5249,7 +5249,7 @@ namespace Nop.Services.Installation
             {
                 new MessageTemplate
                 {
-                    Name = "Blog.BlogComment",
+                    Name = MessageTemplateSystemNames.BlogCommentNotification,
                     Subject = "%Store.Name%. New blog comment.",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}A new blog comment has been created for blog post \"%BlogComment.BlogPostTitle%\".{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5257,7 +5257,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "Customer.BackInStock",
+                    Name = MessageTemplateSystemNames.BackInStockNotification,
                     Subject = "%Store.Name%. Back in stock notification",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}Hello %Customer.FullName%,{0}<br />{0}Product <a target=\"_blank\" href=\"%BackInStockSubscription.ProductUrl%\">%BackInStockSubscription.ProductName%</a> is in stock.{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5265,7 +5265,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "Customer.EmailValidationMessage",
+                    Name = MessageTemplateSystemNames.CustomerEmailValidationMessage,
                     Subject = "%Store.Name%. Email validation",
                     Body = string.Format("<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}To activate your account <a href=\"%Customer.AccountActivationURL%\">click here</a>.{0}<br />{0}<br />{0}%Store.Name%{0}", Environment.NewLine),
                     IsActive = true,
@@ -5273,7 +5273,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "Customer.EmailRevalidationMessage",
+                    Name = MessageTemplateSystemNames.CustomerEmailRevalidationMessage,
                     Subject = "%Store.Name%. Email validation",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}Hello %Customer.FullName%!{0}<br />{0}To validate your new email address <a href=\"%Customer.EmailRevalidationURL%\">click here</a>.{0}<br />{0}<br />{0}%Store.Name%{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5281,7 +5281,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "Customer.NewPM",
+                    Name = MessageTemplateSystemNames.PrivateMessageNotification,
                     Subject = "%Store.Name%. You have received a new private message",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}You have received a new private message.{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5289,7 +5289,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "Customer.PasswordRecovery",
+                    Name = MessageTemplateSystemNames.CustomerPasswordRecoveryMessage,
                     Subject = "%Store.Name%. Password recovery",
                     Body = string.Format("<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}To change your password <a href=\"%Customer.PasswordRecoveryURL%\">click here</a>.{0}<br />{0}<br />{0}%Store.Name%{0}", Environment.NewLine),
                     IsActive = true,
@@ -5297,7 +5297,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "Customer.WelcomeMessage",
+                    Name = MessageTemplateSystemNames.CustomerWelcomeMessage,
                     Subject = "Welcome to %Store.Name%",
                     Body = string.Format("We welcome you to <a href=\"%Store.URL%\"> %Store.Name%</a>.{0}<br />{0}<br />{0}You can now take part in the various services we have to offer you. Some of these services include:{0}<br />{0}<br />{0}Permanent Cart - Any products added to your online cart remain there until you remove them, or check them out.{0}<br />{0}Address Book - We can now deliver your products to another address other than yours! This is perfect to send birthday gifts direct to the birthday-person themselves.{0}<br />{0}Order History - View your history of purchases that you have made with us.{0}<br />{0}Products Reviews - Share your opinions on products with our other customers.{0}<br />{0}<br />{0}For help with any of our online services, please email the store-owner: <a href=\"mailto:%Store.Email%\">%Store.Email%</a>.{0}<br />{0}<br />{0}Note: This email address was provided on our registration page. If you own the email and did not register on our site, please send an email to <a href=\"mailto:%Store.Email%\">%Store.Email%</a>.{0}", Environment.NewLine),
                     IsActive = true,
@@ -5305,7 +5305,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "Forums.NewForumPost",
+                    Name = MessageTemplateSystemNames.NewForumPostMessage,
                     Subject = "%Store.Name%. New Post Notification.",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}A new post has been created in the topic <a href=\"%Forums.TopicURL%\">\"%Forums.TopicName%\"</a> at <a href=\"%Forums.ForumURL%\">\"%Forums.ForumName%\"</a> forum.{0}<br />{0}<br />{0}Click <a href=\"%Forums.TopicURL%\">here</a> for more info.{0}<br />{0}<br />{0}Post author: %Forums.PostAuthor%{0}<br />{0}Post body: %Forums.PostBody%{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5313,7 +5313,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "Forums.NewForumTopic",
+                    Name = MessageTemplateSystemNames.NewForumTopicMessage,
                     Subject = "%Store.Name%. New Topic Notification.",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}A new topic <a href=\"%Forums.TopicURL%\">\"%Forums.TopicName%\"</a> has been created at <a href=\"%Forums.ForumURL%\">\"%Forums.ForumName%\"</a> forum.{0}<br />{0}<br />{0}Click <a href=\"%Forums.TopicURL%\">here</a> for more info.{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5321,7 +5321,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "GiftCard.Notification",
+                    Name = MessageTemplateSystemNames.GiftCardNotification,
                     Subject = "%GiftCard.SenderName% has sent you a gift card for %Store.Name%",
                     Body = string.Format("<p>{0}You have received a gift card for %Store.Name%{0}</p>{0}<p>{0}Dear %GiftCard.RecipientName%,{0}<br />{0}<br />{0}%GiftCard.SenderName% (%GiftCard.SenderEmail%) has sent you a %GiftCard.Amount% gift cart for <a href=\"%Store.URL%\"> %Store.Name%</a>{0}</p>{0}<p>{0}You gift card code is %GiftCard.CouponCode%{0}</p>{0}<p>{0}%GiftCard.Message%{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5329,7 +5329,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "NewCustomer.Notification",
+                    Name = MessageTemplateSystemNames.CustomerRegisteredNotification,
                     Subject = "%Store.Name%. New customer registration",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}A new customer registered with your store. Below are the customer's details:{0}<br />{0}Full name: %Customer.FullName%{0}<br />{0}Email: %Customer.Email%{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5337,7 +5337,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "NewReturnRequest.StoreOwnerNotification",
+                    Name = MessageTemplateSystemNames.NewReturnRequestStoreOwnerNotification,
                     Subject = "%Store.Name%. New return request.",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}%Customer.FullName% has just submitted a new return request. Details are below:{0}<br />{0}Request ID: %ReturnRequest.CustomNumber%{0}<br />{0}Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%{0}<br />{0}Reason for return: %ReturnRequest.Reason%{0}<br />{0}Requested action: %ReturnRequest.RequestedAction%{0}<br />{0}Customer comments:{0}<br />{0}%ReturnRequest.CustomerComment%{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5345,7 +5345,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "NewReturnRequest.CustomerNotification",
+                    Name = MessageTemplateSystemNames.NewReturnRequestCustomerNotification,
                     Subject = "%Store.Name%. New return request.",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}Hello %Customer.FullName%!{0}<br />{0}You have just submitted a new return request. Details are below:{0}<br />{0}Request ID: %ReturnRequest.CustomNumber%{0}<br />{0}Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%{0}<br />{0}Reason for return: %ReturnRequest.Reason%{0}<br />{0}Requested action: %ReturnRequest.RequestedAction%{0}<br />{0}Customer comments:{0}<br />{0}%ReturnRequest.CustomerComment%{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5353,7 +5353,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "News.NewsComment",
+                    Name = MessageTemplateSystemNames.NewsCommentNotification,
                     Subject = "%Store.Name%. New news comment.",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}A new news comment has been created for news \"%NewsComment.NewsTitle%\".{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5361,7 +5361,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "NewsLetterSubscription.ActivationMessage",
+                    Name = MessageTemplateSystemNames.NewsletterSubscriptionActivationMessage,
                     Subject = "%Store.Name%. Subscription activation message.",
                     Body = string.Format("<p>{0}<a href=\"%NewsLetterSubscription.ActivationUrl%\">Click here to confirm your subscription to our list.</a>{0}</p>{0}<p>{0}If you received this email by mistake, simply delete it.{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5369,7 +5369,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "NewsLetterSubscription.DeactivationMessage",
+                    Name = MessageTemplateSystemNames.NewsletterSubscriptionDeactivationMessage,
                     Subject = "%Store.Name%. Subscription deactivation message.",
                     Body = string.Format("<p>{0}<a href=\"%NewsLetterSubscription.DeactivationUrl%\">Click here to unsubscribe from our newsletter.</a>{0}</p>{0}<p>{0}If you received this email by mistake, simply delete it.{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5377,7 +5377,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "NewVATSubmitted.StoreOwnerNotification",
+                    Name = MessageTemplateSystemNames.NewVatSubmittedStoreOwnerNotification,
                     Subject = "%Store.Name%. New VAT number is submitted.",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}%Customer.FullName% (%Customer.Email%) has just submitted a new VAT number. Details are below:{0}<br />{0}VAT number: %Customer.VatNumber%{0}<br />{0}VAT number status: %Customer.VatNumberStatus%{0}<br />{0}Received name: %VatValidationResult.Name%{0}<br />{0}Received address: %VatValidationResult.Address%{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5385,7 +5385,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "OrderCancelled.CustomerNotification",
+                    Name = MessageTemplateSystemNames.OrderCancelledCustomerNotification,
                     Subject = "%Store.Name%. Your order cancelled",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}Hello %Order.CustomerFullName%,{0}<br />{0}Your order has been cancelled. Below is the summary of the order.{0}<br />{0}<br />{0}Order Number: %Order.OrderNumber%{0}<br />{0}Order Details: <a target=\"_blank\" href=\"%Order.OrderURLForCustomer%\">%Order.OrderURLForCustomer%</a>{0}<br />{0}Date Ordered: %Order.CreatedOn%{0}<br />{0}<br />{0}<br />{0}<br />{0}Billing Address{0}<br />{0}%Order.BillingFirstName% %Order.BillingLastName%{0}<br />{0}%Order.BillingAddress1%{0}<br />{0}%Order.BillingCity% %Order.BillingZipPostalCode%{0}<br />{0}%Order.BillingStateProvince% %Order.BillingCountry%{0}<br />{0}<br />{0}<br />{0}<br />{0}%if (%Order.Shippable%) Shipping Address{0}<br />{0}%Order.ShippingFirstName% %Order.ShippingLastName%{0}<br />{0}%Order.ShippingAddress1%{0}<br />{0}%Order.ShippingCity% %Order.ShippingZipPostalCode%{0}<br />{0}%Order.ShippingStateProvince% %Order.ShippingCountry%{0}<br />{0}<br />{0}Shipping Method: %Order.ShippingMethod%{0}<br />{0}<br />{0} endif% %Order.Product(s)%{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5393,7 +5393,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "OrderCompleted.CustomerNotification",
+                    Name = MessageTemplateSystemNames.OrderCompletedCustomerNotification,
                     Subject = "%Store.Name%. Your order completed",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}Hello %Order.CustomerFullName%,{0}<br />{0}Your order has been completed. Below is the summary of the order.{0}<br />{0}<br />{0}Order Number: %Order.OrderNumber%{0}<br />{0}Order Details: <a target=\"_blank\" href=\"%Order.OrderURLForCustomer%\">%Order.OrderURLForCustomer%</a>{0}<br />{0}Date Ordered: %Order.CreatedOn%{0}<br />{0}<br />{0}<br />{0}<br />{0}Billing Address{0}<br />{0}%Order.BillingFirstName% %Order.BillingLastName%{0}<br />{0}%Order.BillingAddress1%{0}<br />{0}%Order.BillingCity% %Order.BillingZipPostalCode%{0}<br />{0}%Order.BillingStateProvince% %Order.BillingCountry%{0}<br />{0}<br />{0}<br />{0}<br />{0}%if (%Order.Shippable%) Shipping Address{0}<br />{0}%Order.ShippingFirstName% %Order.ShippingLastName%{0}<br />{0}%Order.ShippingAddress1%{0}<br />{0}%Order.ShippingCity% %Order.ShippingZipPostalCode%{0}<br />{0}%Order.ShippingStateProvince% %Order.ShippingCountry%{0}<br />{0}<br />{0}Shipping Method: %Order.ShippingMethod%{0}<br />{0}<br />{0} endif% %Order.Product(s)%{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5401,7 +5401,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "ShipmentDelivered.CustomerNotification",
+                    Name = MessageTemplateSystemNames.ShipmentDeliveredCustomerNotification,
                     Subject = "Your order from %Store.Name% has been delivered.",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\"> %Store.Name%</a>{0}<br />{0}<br />{0}Hello %Order.CustomerFullName%,{0}<br />{0}Good news! You order has been delivered.{0}<br />{0}Order Number: %Order.OrderNumber%{0}<br />{0}Order Details: <a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a>{0}<br />{0}Date Ordered: %Order.CreatedOn%{0}<br />{0}<br />{0}<br />{0}<br />{0}Billing Address{0}<br />{0}%Order.BillingFirstName% %Order.BillingLastName%{0}<br />{0}%Order.BillingAddress1%{0}<br />{0}%Order.BillingCity% %Order.BillingZipPostalCode%{0}<br />{0}%Order.BillingStateProvince% %Order.BillingCountry%{0}<br />{0}<br />{0}<br />{0}<br />{0}%if (%Order.Shippable%) Shipping Address{0}<br />{0}%Order.ShippingFirstName% %Order.ShippingLastName%{0}<br />{0}%Order.ShippingAddress1%{0}<br />{0}%Order.ShippingCity% %Order.ShippingZipPostalCode%{0}<br />{0}%Order.ShippingStateProvince% %Order.ShippingCountry%{0}<br />{0}<br />{0}Shipping Method: %Order.ShippingMethod%{0}<br />{0}<br />{0} endif% Delivered Products:{0}<br />{0}<br />{0}%Shipment.Product(s)%{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5409,7 +5409,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "OrderPlaced.CustomerNotification",
+                    Name = MessageTemplateSystemNames.OrderPlacedCustomerNotification,
                     Subject = "Order receipt from %Store.Name%.",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}Hello %Order.CustomerFullName%,{0}<br />{0}Thanks for buying from <a href=\"%Store.URL%\">%Store.Name%</a>. Below is the summary of the order.{0}<br />{0}<br />{0}Order Number: %Order.OrderNumber%{0}<br />{0}Order Details: <a target=\"_blank\" href=\"%Order.OrderURLForCustomer%\">%Order.OrderURLForCustomer%</a>{0}<br />{0}Date Ordered: %Order.CreatedOn%{0}<br />{0}<br />{0}<br />{0}<br />{0}Billing Address{0}<br />{0}%Order.BillingFirstName% %Order.BillingLastName%{0}<br />{0}%Order.BillingAddress1%{0}<br />{0}%Order.BillingCity% %Order.BillingZipPostalCode%{0}<br />{0}%Order.BillingStateProvince% %Order.BillingCountry%{0}<br />{0}<br />{0}<br />{0}<br />{0}%if (%Order.Shippable%) Shipping Address{0}<br />{0}%Order.ShippingFirstName% %Order.ShippingLastName%{0}<br />{0}%Order.ShippingAddress1%{0}<br />{0}%Order.ShippingCity% %Order.ShippingZipPostalCode%{0}<br />{0}%Order.ShippingStateProvince% %Order.ShippingCountry%{0}<br />{0}<br />{0}Shipping Method: %Order.ShippingMethod%{0}<br />{0}<br />{0} endif% %Order.Product(s)%{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5417,7 +5417,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "OrderPlaced.StoreOwnerNotification",
+                    Name = MessageTemplateSystemNames.OrderPlacedStoreOwnerNotification,
                     Subject = "%Store.Name%. Purchase Receipt for Order #%Order.OrderNumber%",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}%Order.CustomerFullName% (%Order.CustomerEmail%) has just placed an order from your store. Below is the summary of the order.{0}<br />{0}<br />{0}Order Number: %Order.OrderNumber%{0}<br />{0}Date Ordered: %Order.CreatedOn%{0}<br />{0}<br />{0}<br />{0}<br />{0}Billing Address{0}<br />{0}%Order.BillingFirstName% %Order.BillingLastName%{0}<br />{0}%Order.BillingAddress1%{0}<br />{0}%Order.BillingCity% %Order.BillingZipPostalCode%{0}<br />{0}%Order.BillingStateProvince% %Order.BillingCountry%{0}<br />{0}<br />{0}<br />{0}<br />{0}%if (%Order.Shippable%) Shipping Address{0}<br />{0}%Order.ShippingFirstName% %Order.ShippingLastName%{0}<br />{0}%Order.ShippingAddress1%{0}<br />{0}%Order.ShippingCity% %Order.ShippingZipPostalCode%{0}<br />{0}%Order.ShippingStateProvince% %Order.ShippingCountry%{0}<br />{0}<br />{0}Shipping Method: %Order.ShippingMethod%{0}<br />{0}<br />{0} endif% %Order.Product(s)%{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5425,7 +5425,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "ShipmentSent.CustomerNotification",
+                    Name = MessageTemplateSystemNames.ShipmentSentCustomerNotification,
                     Subject = "Your order from %Store.Name% has been shipped.",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\"> %Store.Name%</a>{0}<br />{0}<br />{0}Hello %Order.CustomerFullName%!,{0}<br />{0}Good news! You order has been shipped.{0}<br />{0}Order Number: %Order.OrderNumber%{0}<br />{0}Order Details: <a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a>{0}<br />{0}Date Ordered: %Order.CreatedOn%{0}<br />{0}<br />{0}<br />{0}<br />{0}Billing Address{0}<br />{0}%Order.BillingFirstName% %Order.BillingLastName%{0}<br />{0}%Order.BillingAddress1%{0}<br />{0}%Order.BillingCity% %Order.BillingZipPostalCode%{0}<br />{0}%Order.BillingStateProvince% %Order.BillingCountry%{0}<br />{0}<br />{0}<br />{0}<br />{0}%if (%Order.Shippable%) Shipping Address{0}<br />{0}%Order.ShippingFirstName% %Order.ShippingLastName%{0}<br />{0}%Order.ShippingAddress1%{0}<br />{0}%Order.ShippingCity% %Order.ShippingZipPostalCode%{0}<br />{0}%Order.ShippingStateProvince% %Order.ShippingCountry%{0}<br />{0}<br />{0}Shipping Method: %Order.ShippingMethod%{0}<br />{0}<br />{0} endif% Shipped Products:{0}<br />{0}<br />{0}%Shipment.Product(s)%{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5433,7 +5433,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "Product.ProductReview",
+                    Name = MessageTemplateSystemNames.ProductReviewNotification,
                     Subject = "%Store.Name%. New product review.",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}A new product review has been written for product \"%ProductReview.ProductName%\".{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5441,7 +5441,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "QuantityBelow.StoreOwnerNotification",
+                    Name = MessageTemplateSystemNames.QuantityBelowStoreOwnerNotification,
                     Subject = "%Store.Name%. Quantity below notification. %Product.Name%",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}%Product.Name% (ID: %Product.ID%) low quantity.{0}<br />{0}<br />{0}Quantity: %Product.StockQuantity%{0}<br />{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5449,7 +5449,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "QuantityBelow.AttributeCombination.StoreOwnerNotification",
+                    Name = MessageTemplateSystemNames.QuantityBelowAttributeCombinationStoreOwnerNotification,
                     Subject = "%Store.Name%. Quantity below notification. %Product.Name%",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}%Product.Name% (ID: %Product.ID%) low quantity.{0}<br />{0}%AttributeCombination.Formatted%{0}<br />{0}Quantity: %AttributeCombination.StockQuantity%{0}<br />{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5457,7 +5457,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "ReturnRequestStatusChanged.CustomerNotification",
+                    Name = MessageTemplateSystemNames.ReturnRequestStatusChangedCustomerNotification,
                     Subject = "%Store.Name%. Return request status was changed.",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}Hello %Customer.FullName%,{0}<br />{0}Your return request #%ReturnRequest.CustomNumber% status has been changed.{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5465,7 +5465,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "Service.EmailAFriend",
+                    Name = MessageTemplateSystemNames.EmailAFriendMessage,
                     Subject = "%Store.Name%. Referred Item",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\"> %Store.Name%</a>{0}<br />{0}<br />{0}%EmailAFriend.Email% was shopping on %Store.Name% and wanted to share the following item with you.{0}<br />{0}<br />{0}<b><a target=\"_blank\" href=\"%Product.ProductURLForCustomer%\">%Product.Name%</a></b>{0}<br />{0}%Product.ShortDescription%{0}<br />{0}<br />{0}For more info click <a target=\"_blank\" href=\"%Product.ProductURLForCustomer%\">here</a>{0}<br />{0}<br />{0}<br />{0}%EmailAFriend.PersonalMessage%{0}<br />{0}<br />{0}%Store.Name%{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5473,7 +5473,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "Wishlist.EmailAFriend",
+                    Name = MessageTemplateSystemNames.WishlistToFriendMessage,
                     Subject = "%Store.Name%. Wishlist",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\"> %Store.Name%</a>{0}<br />{0}<br />{0}%Wishlist.Email% was shopping on %Store.Name% and wanted to share a wishlist with you.{0}<br />{0}<br />{0}<br />{0}For more info click <a target=\"_blank\" href=\"%Wishlist.URLForCustomer%\">here</a>{0}<br />{0}<br />{0}<br />{0}%Wishlist.PersonalMessage%{0}<br />{0}<br />{0}%Store.Name%{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5481,7 +5481,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "Customer.NewOrderNote",
+                    Name = MessageTemplateSystemNames.NewOrderNoteAddedCustomerNotification,
                     Subject = "%Store.Name%. New order note has been added",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}Hello %Customer.FullName%,{0}<br />{0}New order note has been added to your account:{0}<br />{0}\"%Order.NewNoteText%\".{0}<br />{0}<a target=\"_blank\" href=\"%Order.OrderURLForCustomer%\">%Order.OrderURLForCustomer%</a>{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5489,7 +5489,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "RecurringPaymentCancelled.StoreOwnerNotification",
+                    Name = MessageTemplateSystemNames.RecurringPaymentCancelledStoreOwnerNotification,
                     Subject = "%Store.Name%. Recurring payment cancelled",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}%Customer.FullName% (%Customer.Email%) has just cancelled a recurring payment ID=%RecurringPayment.ID%.{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5497,7 +5497,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "OrderPlaced.VendorNotification",
+                    Name = MessageTemplateSystemNames.OrderPlacedVendorNotification,
                     Subject = "%Store.Name%. Order placed",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}%Customer.FullName% (%Customer.Email%) has just placed an order.{0}<br />{0}<br />{0}Order Number: %Order.OrderNumber%{0}<br />{0}Date Ordered: %Order.CreatedOn%{0}<br />{0}<br />{0}%Order.Product(s)%{0}</p>{0}", Environment.NewLine),
                     //this template is disabled by default
@@ -5506,7 +5506,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "OrderRefunded.CustomerNotification",
+                    Name = MessageTemplateSystemNames.OrderRefundedCustomerNotification,
                     Subject = "%Store.Name%. Order #%Order.OrderNumber% refunded",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}Hello %Order.CustomerFullName%,{0}<br />{0}Thanks for buying from <a href=\"%Store.URL%\">%Store.Name%</a>. Order #%Order.OrderNumber% has been has been refunded. Please allow 7-14 days for the refund to be reflected in your account.{0}<br />{0}<br />{0}Amount refunded: %Order.AmountRefunded%{0}<br />{0}<br />{0}Below is the summary of the order.{0}<br />{0}<br />{0}Order Number: %Order.OrderNumber%{0}<br />{0}Order Details: <a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a>{0}<br />{0}Date Ordered: %Order.CreatedOn%{0}<br />{0}<br />{0}<br />{0}<br />{0}Billing Address{0}<br />{0}%Order.BillingFirstName% %Order.BillingLastName%{0}<br />{0}%Order.BillingAddress1%{0}<br />{0}%Order.BillingCity% %Order.BillingZipPostalCode%{0}<br />{0}%Order.BillingStateProvince% %Order.BillingCountry%{0}<br />{0}<br />{0}<br />{0}<br />{0}%if (%Order.Shippable%) Shipping Address{0}<br />{0}%Order.ShippingFirstName% %Order.ShippingLastName%{0}<br />{0}%Order.ShippingAddress1%{0}<br />{0}%Order.ShippingCity% %Order.ShippingZipPostalCode%{0}<br />{0}%Order.ShippingStateProvince% %Order.ShippingCountry%{0}<br />{0}<br /{0}>Shipping Method: %Order.ShippingMethod%{0}<br />{0}<br />{0} endif% %Order.Product(s)%{0}</p>{0}", Environment.NewLine),
                     //this template is disabled by default
@@ -5515,7 +5515,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "OrderRefunded.StoreOwnerNotification",
+                    Name = MessageTemplateSystemNames.OrderRefundedStoreOwnerNotification,
                     Subject = "%Store.Name%. Order #%Order.OrderNumber% refunded",
                     Body = string.Format("%Store.Name%. Order #%Order.OrderNumber% refunded', N'{0}<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}Order #%Order.OrderNumber% has been just refunded{0}<br />{0}<br />{0}Amount refunded: %Order.AmountRefunded%{0}<br />{0}<br />{0}Date Ordered: %Order.CreatedOn%{0}</p>{0}", Environment.NewLine),
                     //this template is disabled by default
@@ -5524,7 +5524,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "OrderPaid.StoreOwnerNotification",
+                    Name = MessageTemplateSystemNames.OrderPaidStoreOwnerNotification,
                     Subject = "%Store.Name%. Order #%Order.OrderNumber% paid",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}Order #%Order.OrderNumber% has been just paid{0}<br />{0}Date Ordered: %Order.CreatedOn%{0}</p>{0}", Environment.NewLine),
                     //this template is disabled by default
@@ -5533,7 +5533,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "OrderPaid.CustomerNotification",
+                    Name = MessageTemplateSystemNames.OrderPaidCustomerNotification,
                     Subject = "%Store.Name%. Order #%Order.OrderNumber% paid",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}Hello %Order.CustomerFullName%,{0}<br />{0}Thanks for buying from <a href=\"%Store.URL%\">%Store.Name%</a>. Order #%Order.OrderNumber% has been just paid. Below is the summary of the order.{0}<br />{0}<br />{0}Order Number: %Order.OrderNumber%{0}<br />{0}Order Details: <a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a>{0}<br />{0}Date Ordered: %Order.CreatedOn%{0}<br />{0}<br />{0}<br />{0}<br />{0}Billing Address{0}<br />{0}%Order.BillingFirstName% %Order.BillingLastName%{0}<br />{0}%Order.BillingAddress1%{0}<br />{0}%Order.BillingCity% %Order.BillingZipPostalCode%{0}<br />{0}%Order.BillingStateProvince% %Order.BillingCountry%{0}<br />{0}<br />{0}<br />{0}<br />{0}%if (%Order.Shippable%) Shipping Address{0}<br />{0}%Order.ShippingFirstName% %Order.ShippingLastName%{0}<br />{0}%Order.ShippingAddress1%{0}<br />{0}%Order.ShippingCity% %Order.ShippingZipPostalCode%{0}<br />{0}%Order.ShippingStateProvince% %Order.ShippingCountry%{0}<br />{0}<br />{0}Shipping Method: %Order.ShippingMethod%{0}<br />{0}<br />{0} endif% %Order.Product(s)%{0}</p>{0}", Environment.NewLine),
                     //this template is disabled by default
@@ -5542,7 +5542,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "OrderPaid.VendorNotification",
+                    Name = MessageTemplateSystemNames.OrderPaidVendorNotification,
                     Subject = "%Store.Name%. Order #%Order.OrderNumber% paid",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}Order #%Order.OrderNumber% has been just paid.{0}<br />{0}<br />{0}Order Number: %Order.OrderNumber%{0}<br />{0}Date Ordered: %Order.CreatedOn%{0}<br />{0}<br />{0}%Order.Product(s)%{0}</p>{0}", Environment.NewLine),
                     //this template is disabled by default
@@ -5551,7 +5551,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "VendorAccountApply.StoreOwnerNotification",
+                    Name = MessageTemplateSystemNames.NewVendorAccountApplyStoreOwnerNotification,
                     Subject = "%Store.Name%. New vendor account submitted.",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}%Customer.FullName% (%Customer.Email%) has just submitted for a vendor account. Details are below:{0}<br />{0}Vendor name: %Vendor.Name%{0}<br />{0}Vendor email: %Vendor.Email%{0}<br />{0}<br />{0}You can activate it in admin area.{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
@@ -5559,7 +5559,7 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = "VendorInformationChange.StoreOwnerNotification",
+                    Name = MessageTemplateSystemNames.VendorInformationChangeNotification,
                     Subject = "%Store.Name%. Vendor information change.",
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}Vendor %Vendor.Name% (%Vendor.Email%) has just changed information about itself.{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
