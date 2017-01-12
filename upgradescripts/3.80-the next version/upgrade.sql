@@ -3010,8 +3010,9 @@ GO
 -- new message template
  IF NOT EXISTS (SELECT 1 FROM [dbo].[MessageTemplate] WHERE [Name] = N'NewReturnRequest.CustomerNotification')
  BEGIN
+    DECLARE @NewLine AS CHAR(2) = CHAR(13) + CHAR(10)
 	INSERT [dbo].[MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [AttachedDownloadId], [EmailAccountId], [LimitedToStores], [DelayPeriodId]) 
-	VALUES (N'NewReturnRequest.CustomerNotification', NULL, N'%Store.Name%. New return request.', N'<p><a href="%Store.URL%">%Store.Name%</a> <br /><br />Hello %Customer.FullName%!<br /> You have just submitted a new return request. Details are below:<br />Request ID: %ReturnRequest.CustomNumber%<br />Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%<br />Reason for return: %ReturnRequest.Reason%<br />Requested action: %ReturnRequest.RequestedAction%<br />Customer comments:<br />%ReturnRequest.CustomerComment%</p>', 1, 0, 0, 0, 0)
+	VALUES (N'NewReturnRequest.CustomerNotification', NULL, N'%Store.Name%. New return request.', N'<p>' + @NewLine + '<a href="%Store.URL%">%Store.Name%</a>' + @NewLine + '<br />' + @NewLine + '<br />' + @NewLine + 'Hello %Customer.FullName%!' + @NewLine + '<br />' + @NewLine + 'You have just submitted a new return request. Details are below:' + @NewLine + '<br />' + @NewLine + 'Request ID: %ReturnRequest.CustomNumber%' + @NewLine + '<br />' + @NewLine + 'Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%' + @NewLine + '<br />' + @NewLine + 'Reason for return: %ReturnRequest.Reason%' + @NewLine + '<br />' + @NewLine + 'Requested action: %ReturnRequest.RequestedAction%' + @NewLine + '<br />' + @NewLine + 'Customer comments:' + @NewLine + '<br />' + @NewLine + '%ReturnRequest.CustomerComment%' + @NewLine + '</p>' + @NewLine, 1, 0, 0, 0, 0)
  END
  GO
 
@@ -3366,8 +3367,9 @@ GO
 -- new message template
  IF NOT EXISTS (SELECT 1 FROM [dbo].[MessageTemplate] WHERE [Name] = N'Customer.EmailRevalidationMessage')
  BEGIN
+    DECLARE @NewLine AS CHAR(2) = CHAR(13) + CHAR(10)
 	INSERT [dbo].[MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [AttachedDownloadId], [EmailAccountId], [LimitedToStores], [DelayPeriodId]) 
-	VALUES (N'Customer.EmailRevalidationMessage', NULL, N'%Store.Name%. Email validation.', N'<p><a href="%Store.URL%">%Store.Name%</a> <br /><br />Hello %Customer.FullName%!<br /> To validate your new email address <a href="%Customer.EmailRevalidationURL%">click here</a> .<br />  <br />  %Store.Name%</p>', 1, 0, 0, 0, 0)
+	VALUES (N'Customer.EmailRevalidationMessage', NULL, N'%Store.Name%. Email validation.', N'<p>' + @NewLine + '<a href="%Store.URL%">%Store.Name%</a>' + @NewLine + '<br />' + @NewLine + '<br />' + @NewLine + 'Hello %Customer.FullName%!' + @NewLine + '<br />' + @NewLine + 'To validate your new email address <a href="%Customer.EmailRevalidationURL%">click here</a> .' + @NewLine + '<br />' + @NewLine + '<br />' + @NewLine + '%Store.Name%' + @NewLine + '</p>' + @NewLine, 1, 0, 0, 0, 0)
  END
  GO
 
