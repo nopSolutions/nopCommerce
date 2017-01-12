@@ -27,6 +27,15 @@ namespace Nop.Plugin.Payments.PayPalStandard
     /// </summary>
     public class PayPalStandardPaymentProcessor : BasePlugin, IPaymentMethod
     {
+        #region Constants
+
+        /// <summary>
+        /// nopCommerce partner code
+        /// </summary>
+        private const string BN_CODE = "nopCommerce_SP";
+
+        #endregion
+
         #region Fields
 
         private readonly CurrencySettings _currencySettings;
@@ -286,6 +295,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
 
             builder.AppendFormat("&custom={0}", postProcessPaymentRequest.Order.OrderGuid);
             builder.AppendFormat("&charset={0}", "utf-8");
+            builder.AppendFormat("&bn={0}", BN_CODE);
             builder.Append(string.Format("&no_note=1&currency_code={0}", HttpUtility.UrlEncode(_currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode)));
             builder.AppendFormat("&invoice={0}", postProcessPaymentRequest.Order.Id);
             builder.AppendFormat("&rm=2", new object[0]);

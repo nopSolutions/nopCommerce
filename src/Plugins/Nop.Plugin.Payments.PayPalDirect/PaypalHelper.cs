@@ -8,6 +8,17 @@ namespace Nop.Plugin.Payments.PayPalDirect
     /// </summary>
     public class PaypalHelper
     {
+        #region Constants
+
+        /// <summary>
+        /// nopCommerce partner code
+        /// </summary>
+        private const string BN_CODE = "nopCommerce_SP";
+
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Get PayPal Api context 
         /// </summary>
@@ -27,8 +38,14 @@ namespace Nop.Plugin.Payments.PayPalDirect
             var accessToken = new OAuthTokenCredential(config).GetAccessToken();
             var apiContext = new APIContext(accessToken) { Config = config };
 
+            if (apiContext.HTTPHeaders == null)
+                apiContext.HTTPHeaders = new Dictionary<string, string>();
+            apiContext.HTTPHeaders["PayPal-Partner-Attribution-Id"] = BN_CODE;
+
             return apiContext;
         }
+
+        #endregion
     }
 }
 
