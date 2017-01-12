@@ -1893,6 +1893,7 @@ namespace Nop.Admin.Controllers
                             OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false),
                             StoreName = store != null ? store.Name : "Unknown",
                             CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
+                            CustomOrderNumber = order.CustomOrderNumber
                         };
                         return orderModel;
                     }),

@@ -2606,7 +2606,8 @@ namespace Nop.Admin.Controllers
                         PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
                         ShippingStatus = x.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
                         CustomerEmail = x.BillingAddress.Email,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
+                        CustomOrderNumber = x.CustomOrderNumber
                     };
                 }),
                 Total = orders.TotalCount

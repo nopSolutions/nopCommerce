@@ -46,22 +46,23 @@ namespace Nop.Data.Tests.Discounts
         protected Order GetTestOrder()
         {
             return new Order
+            {
+                OrderGuid = Guid.NewGuid(),
+                Customer = GetTestCustomer(),
+                BillingAddress = new Address
                 {
-                    OrderGuid = Guid.NewGuid(),
-                    Customer = GetTestCustomer(),
-                    BillingAddress = new Address
+                    Country = new Country
                     {
-                        Country = new Country
-                        {
-                            Name = "United States",
-                            TwoLetterIsoCode = "US",
-                            ThreeLetterIsoCode = "USA",
-                        },
-                        CreatedOnUtc = new DateTime(2010, 01, 01),
+                        Name = "United States",
+                        TwoLetterIsoCode = "US",
+                        ThreeLetterIsoCode = "USA",
                     },
-                    Deleted = true,
-                    CreatedOnUtc = new DateTime(2010, 01, 01)
-                };
+                    CreatedOnUtc = new DateTime(2010, 01, 01),
+                },
+                Deleted = true,
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                CustomOrderNumber = "1"
+            };
         }
 
         protected Discount GetTestDiscount()

@@ -142,11 +142,10 @@
                                                 template:
                                                     '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
                                             }, {
-                                                field: "OrderId",
-                                                title: "@T("Admin.ReturnRequests.Fields.Order")",
+                                                field: "CustomOrderNumber",
+                                                title: "@T("Admin.ReturnRequests.Fields.CustomOrderNumber")",
                                                 width: 200,
-                                                template:
-                                                    '# if(OrderId > 0) {# <a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderId# - @T("Admin.Common.View")</a> #} else {# order item is deleted #} #'
+                                                template: '# if(OrderId > 0) {# <a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=CustomOrderNumber# - @T("Admin.Common.View")</a> #} else {# order item is deleted #} #'
                                             }, {
                                                 field: "ReturnRequestStatusStr",
                                                 title: "@T("Admin.ReturnRequests.Fields.Status")",

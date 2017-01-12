@@ -120,12 +120,12 @@
             }
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.Id)
+                    @Html.NopLabelFor(model => model.CustomOrderNumber)
                 </div>
                 <div class="col-md-9">
-                    @Html.NopDisplayFor(model => model.Id)
+                    @Html.NopDisplayFor(model => model.CustomOrderNumber)
                 </div>
-            </div>
+            </div>           
             @if (!Model.IsLoggedInAsVendor)
             {
                 <div class="form-group">

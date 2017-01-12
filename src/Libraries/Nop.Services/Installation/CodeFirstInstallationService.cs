@@ -4410,9 +4410,12 @@ namespace Nop.Services.Installation
                 ShippingRateComputationMethodSystemName = "Shipping.FixedOrByWeight",
                 CustomValuesXml = string.Empty,
                 VatNumber = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow
+                CreatedOnUtc = DateTime.UtcNow,
+                CustomOrderNumber = string.Empty
             };
             _orderRepository.Insert(firstOrder);
+            firstOrder.CustomOrderNumber = firstOrder.Id.ToString();
+            _orderRepository.Update(firstOrder);
 
             //item Apple iCam
             var firstOrderItem1 = new OrderItem()
@@ -4574,9 +4577,12 @@ namespace Nop.Services.Installation
                 ShippingRateComputationMethodSystemName = "Shipping.FixedOrByWeight",
                 CustomValuesXml = string.Empty,
                 VatNumber = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow
+                CreatedOnUtc = DateTime.UtcNow,
+                CustomOrderNumber = string.Empty
             };
             _orderRepository.Insert(secondOrder);
+            secondOrder.CustomOrderNumber = secondOrder.Id.ToString();
+            _orderRepository.Update(secondOrder);
 
             //order notes
             _orderNoteRepository.Insert(new OrderNote()
@@ -4690,9 +4696,12 @@ namespace Nop.Services.Installation
                 ShippingRateComputationMethodSystemName = string.Empty,
                 CustomValuesXml = string.Empty,
                 VatNumber = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow
+                CreatedOnUtc = DateTime.UtcNow,
+                CustomOrderNumber = string.Empty
             };
             _orderRepository.Insert(thirdOrder);
+            thirdOrder.CustomOrderNumber = thirdOrder.Id.ToString();
+            _orderRepository.Update(thirdOrder);
 
             //order notes
             _orderNoteRepository.Insert(new OrderNote()
@@ -4832,9 +4841,12 @@ namespace Nop.Services.Installation
                 ShippingRateComputationMethodSystemName = "Pickup.PickupInStore",
                 CustomValuesXml = string.Empty,
                 VatNumber = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow
+                CreatedOnUtc = DateTime.UtcNow,
+                CustomOrderNumber = string.Empty
             };
             _orderRepository.Insert(fourthOrder);
+            fourthOrder.CustomOrderNumber = fourthOrder.Id.ToString();
+            _orderRepository.Update(fourthOrder);
 
             //order notes
             _orderNoteRepository.Insert(new OrderNote()
@@ -5041,9 +5053,12 @@ namespace Nop.Services.Installation
                 ShippingRateComputationMethodSystemName = "Shipping.FixedOrByWeight",
                 CustomValuesXml = string.Empty,
                 VatNumber = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow
+                CreatedOnUtc = DateTime.UtcNow,
+                CustomOrderNumber = string.Empty
             };
             _orderRepository.Insert(fifthOrder);
+            fifthOrder.CustomOrderNumber = fifthOrder.Id.ToString();
+            _orderRepository.Update(fifthOrder);
 
             //order notes
             _orderNoteRepository.Insert(new OrderNote()
@@ -6129,7 +6144,8 @@ namespace Nop.Services.Installation
                 ActivateGiftCardsAfterCompletingOrder = false,
                 DeactivateGiftCardsAfterCancellingOrder = false,
                 DeactivateGiftCardsAfterDeletingOrder = false,
-                CompleteOrderWhenDelivered = true
+                CompleteOrderWhenDelivered = true,
+                CustomOrderNumberMask = "{ID}"
             });
 
             settingService.SaveSetting(new SecuritySettings

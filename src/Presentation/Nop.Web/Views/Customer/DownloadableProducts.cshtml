@@ -50,7 +50,7 @@
                             var item = Model.Items[i];
                             <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
                                 <td class="order">
-                                    <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.OrderId })">@item.OrderId</a>
+                                    <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.OrderId })">@item.CustomOrderNumber</a>
                                 </td>
                                 <td class="date">
                                     @item.CreatedOn.ToString("d")

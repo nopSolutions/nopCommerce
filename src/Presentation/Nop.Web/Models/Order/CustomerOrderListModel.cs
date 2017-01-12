@@ -23,6 +23,7 @@ namespace Nop.Web.Models.Order
 
         public partial class OrderDetailsModel : BaseNopEntityModel
         {
+            public string CustomOrderNumber { get; set; }
             public string OrderTotal { get; set; }
             public bool IsReturnRequestAllowed { get; set; }
             public OrderStatus OrderStatusEnum { get; set; }
@@ -40,6 +41,7 @@ namespace Nop.Web.Models.Order
             public int TotalCycles { get; set; }
             public int CyclesRemaining { get; set; }
             public int InitialOrderId { get; set; }
+            public string InitialOrderNumber { get; set; }
             public bool CanCancel { get; set; }
         }
 

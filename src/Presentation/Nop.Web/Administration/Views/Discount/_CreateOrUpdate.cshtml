@@ -883,10 +883,10 @@
                                 type: "date",
                                 format: "{0:G}"
                             }, {
-                                field: "OrderId",
-                                title: "@T("Admin.Promotions.Discounts.History.Order")",
+                                field: "CustomOrderNumber",
+                                title: "@T("Admin.Promotions.Discounts.History.CustomOrderNumber")",
                                 width: 200,
-                                template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderId# - @T("Admin.Common.View")</a>'
+                                template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=CustomOrderNumber# - @T("Admin.Common.View")</a>'
                             }, {
                                 field: "OrderTotal",
                                 title: "@T("Admin.Promotions.Discounts.History.OrderTotal")",

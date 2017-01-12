@@ -95,6 +95,7 @@ namespace Nop.Admin.Controllers
             model.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(history.CreatedOnUtc, DateTimeKind.Utc);
+            model.CustomOrderNumber = order.CustomOrderNumber;
         }
 
         #endregion

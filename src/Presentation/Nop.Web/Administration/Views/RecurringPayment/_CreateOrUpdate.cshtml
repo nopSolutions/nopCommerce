@@ -204,10 +204,10 @@
                             scrollable: false,
                             columns: [
                             {
-                                field: "OrderId",
-                                title: "@T("Admin.RecurringPayments.History.Order")",
+                                field: "CustomOrderNumber",
+                                title: "@T("Admin.RecurringPayments.History.CustomOrderNumber")",
                                 width: 200,
-                                template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderId# - @T("Admin.Common.View")</a>'
+                                template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=CustomOrderNumber# - @T("Admin.Common.View")</a>'
                             }, {
                                 field: "OrderStatus",
                                 title: "@T("Admin.RecurringPayments.History.OrderStatus")",

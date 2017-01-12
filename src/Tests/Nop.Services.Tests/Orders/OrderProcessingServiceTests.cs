@@ -93,6 +93,7 @@ namespace Nop.Services.Tests.Orders
         private IStateProvinceService _stateProvinceService;
         private CustomerSettings _customerSettings;
         private AddressSettings _addressSettings;
+        private ICustomNumberFormatter _customNumberFormatter;
 
         private Store _store;
 
@@ -200,6 +201,7 @@ namespace Nop.Services.Tests.Orders
             _affiliateService = MockRepository.GenerateMock<IAffiliateService>();
             _vendorService = MockRepository.GenerateMock<IVendorService>();
             _pdfService = MockRepository.GenerateMock<IPdfService>();
+            _customNumberFormatter = MockRepository.GenerateMock<ICustomNumberFormatter>();
 
             _paymentSettings = new PaymentSettings
             {
@@ -234,7 +236,7 @@ namespace Nop.Services.Tests.Orders
                 _countryService, _stateProvinceService,
                 _shippingSettings, _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings,
-                _currencySettings);
+                _currencySettings, _customNumberFormatter);
         }
         
         [Test]

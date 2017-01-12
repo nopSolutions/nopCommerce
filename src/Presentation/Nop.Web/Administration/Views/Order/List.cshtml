@@ -237,16 +237,16 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.GoDirectlyToNumber)
+                                        @Html.NopLabelFor(model => model.GoDirectlyToCustomOrderNumber)
                                     </div>
                                     <div class="col-md-8">
                                         <div class="input-group input-group-short">
-                                            @Html.NopEditorFor(model => model.GoDirectlyToNumber)
+                                            @Html.NopEditorFor(model => model.GoDirectlyToCustomOrderNumber)
                                             <span class="input-group-btn">
-                                                <button type="submit" id="go-to-order-by-number" name="go-to-order-by-number" class="btn btn-info btn-flat">
-                                                    @T("Admin.Common.Go")
-                                                </button>
-                                            </span>
+                                                    <button type="submit" id="go-to-order-by-number" name="go-to-order-by-number" class="btn btn-info btn-flat">
+                                                        @T("Admin.Common.Go")
+                                                    </button>
+                                                </span>
                                         </div>
                                     </div>
                                 </div>
@@ -323,10 +323,9 @@
                                             attributes: { style: "text-align:center" },
                                             template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
                                             width: 50
-                                        },
-                                        {
-                                            field: "Id",
-                                            title: "@T("Admin.Orders.Fields.ID")",
+                                        }, {
+                                            field: "CustomOrderNumber",
+                                            title: "@T("Admin.Orders.Fields.CustomOrderNumber")",
                                             width: 80
                                         },
                                         @if (!Model.IsLoggedInAsVendor)
@@ -427,7 +426,7 @@
                                         }
                                     });
 
-                                $("#@Html.FieldIdFor(model => model.GoDirectlyToNumber)").keydown(function(event) {
+                                $("#@Html.FieldIdFor(model => model.GoDirectlyToCustomOrderNumber)").keydown(function(event) {
                                     if (event.keyCode === 13) {
                                         $("#go-to-order-by-number").click();
                                         return false;

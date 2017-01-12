@@ -642,7 +642,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.RemainingAmountStr, mo => mo.Ignore())
                     .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                     .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())
-                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                    .ForMember(dest => dest.PurchasedWithOrderNumber, mo => mo.Ignore());
                 cfg.CreateMap<GiftCardModel, GiftCard>()
                     .ForMember(dest => dest.PurchasedWithOrderItemId, mo => mo.Ignore())
                     .ForMember(dest => dest.GiftCardType, mo => mo.Ignore())
@@ -913,7 +914,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.AttachPdfInvoiceToOrderPaidEmail_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
-                    .ForMember(dest => dest.ReturnRequestNumberMask_OverrideForStore, mo => mo.Ignore());
+                    .ForMember(dest => dest.ReturnRequestNumberMask_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.CustomOrderNumberMask_OverrideForStore, mo => mo.Ignore());
                 cfg.CreateMap<OrderSettingsModel, OrderSettings>()
                     .ForMember(dest => dest.GeneratePdfInvoiceInCustomerLanguage, mo => mo.Ignore())
                     .ForMember(dest => dest.ReturnRequestsFileMaximumSize, mo => mo.Ignore())

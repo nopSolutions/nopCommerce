@@ -84,10 +84,10 @@
                 {
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.PurchasedWithOrderId)
+                            @Html.NopLabelFor(model => model.PurchasedWithOrderNumber)
                         </div>
                         <div class="col-md-9">
-                            <a href="@Url.Action("Edit", "Order", new { Id = Model.PurchasedWithOrderId.Value })">@Model.PurchasedWithOrderId.Value - @T("Admin.Common.View")</a>
+                            <a href="@Url.Action("Edit", "Order", new { Id = Model.PurchasedWithOrderId.Value })">@Model.PurchasedWithOrderNumber - @T("Admin.Common.View")</a>
                         </div>
                     </div>
                 }
@@ -292,10 +292,10 @@
                                 type: "date",
                                 format: "{0:G}"
                             }, {
-                                field: "OrderId",
-                                title: "@T("Admin.GiftCards.History.Order")",
+                                field: "CustomOrderNumber",
+                                title: "@T("Admin.GiftCards.History.CustomOrderNumber")",
                                 width: 200,
-                                template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderId# - @T("Admin.Common.View")</a>'
+                                template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=CustomOrderNumber# - @T("Admin.Common.View")</a>'
                             }, {
                                 field: "UsedValue",
                                 title: "@T("Admin.GiftCards.History.UsedValue")",

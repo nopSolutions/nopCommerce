@@ -25,11 +25,12 @@ namespace Nop.Admin.Models.Orders
         public bool IsLoggedInAsVendor { get; set; }
 
         //identifiers
-        [NopResourceDisplayName("Admin.Orders.Fields.ID")]
         public override int Id { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.OrderGuid")]
         public Guid OrderGuid { get; set; }
-
+        [NopResourceDisplayName("Admin.Orders.Fields.CustomOrderNumber")]
+        public string CustomOrderNumber { get; set; }
+        
         //store
         [NopResourceDisplayName("Admin.Orders.Fields.Store")]
         public string StoreName { get; set; }

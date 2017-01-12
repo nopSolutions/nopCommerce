@@ -84,7 +84,7 @@
                                             @item.CyclesRemaining
                                         </td>
                                         <td class="initial-order">
-                                            <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.InitialOrderId })">@string.Format(T("Account.CustomerOrders.RecurringOrders.ViewInitialOrder").Text, item.InitialOrderId)</a>
+                                            <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.InitialOrderId })">@string.Format(T("Account.CustomerOrders.RecurringOrders.ViewInitialOrder").Text, item.InitialOrderNumber)</a>
                                         </td>
                                         <td class="cancel">
                                             @if (item.CanCancel)
@@ -119,7 +119,7 @@
                 {
                 <div class="section order-item">
                     <div class="title">
-                        <strong>@T("Account.CustomerOrders.OrderNumber"): @order.Id</strong>
+                        <strong>@T("Account.CustomerOrders.OrderNumber"): @order.CustomOrderNumber</strong>
                     </div>
                     <ul class="info">
                         <li>@T("Account.CustomerOrders.OrderStatus"): <span class="order-status @order.OrderStatusEnum.ToString().ToLowerInvariant()">@order.OrderStatus</span></li>

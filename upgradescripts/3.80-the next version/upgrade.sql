@@ -1306,7 +1306,151 @@ set @resources='
   </LocaleResource>  
   <LocaleResource Name="Admin.ReturnRequests.SearchStartDate.Hint">
     <Value>The start date for the search.</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Affiliates.Orders.Order">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Promotions.Discounts.History.Order">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.GiftCards.History.Order">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.RecurringPayments.History.Order">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.Order">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.Order.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.OrderId">
+    <Value>Order ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.CustomOrderNumber">
+    <Value>Order #</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Customers.Customers.Orders.CustomOrderNumber">
+    <Value>Order #</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.History.OrderId">
+    <Value>Order ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.History.CustomOrderNumber">
+    <Value>Order #</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.History.OrderId">
+    <Value>Order ID</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.GiftCards.History.CustomOrderNumber">
+    <Value>Order #</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Orders.Fields.CustomOrderNumber">
+    <Value>Order #</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.CustomOrderNumber.Hint">
+    <Value>The unique number of this order.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.RecurringPayments.History.OrderId">
+    <Value>Created order ID</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.RecurringPayments.History.CustomOrderNumber">
+    <Value>Created order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.OrderId">
+    <Value>Order ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.CustomOrderNumber">
+    <Value>Order #</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.OrderID">
+    <Value>Order ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.CustomOrderNumber">
+    <Value>Order #</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Orders.Shipments.CustomOrderNumber.Hint">
+    <Value>The order associated to this shipment.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask">
+    <Value>Order number mask</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Hint">
+    <Value>Order number mask, for creating custom order number. For example, RE-{YYYY}-{MM}. Leave this field empty if you don''t want to use custom order numbers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.DD">
+    <Value>{DD} - day of order creation date</Value>
   </LocaleResource>   
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.ID">
+    <Value>{ID} -Order identifier</Value>
+  </LocaleResource>     
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.MM">
+    <Value>{MM} - month of order creation date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.YYYY">
+    <Value>{YYYY} - year of order creation date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.YY">
+    <Value>{YY} - last two digits of year of order creation date</Value>
+  </LocaleResource>    
+  <LocaleResource Name="Admin.GiftCards.Fields.Order">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.Fields.Order.Hint">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.GiftCards.Fields.OrderId">
+    <Value>Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.Fields.OrderId.Hint">
+    <Value>The gift card was purchased with this order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.Fields.CustomOrderNumber">
+    <Value>Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.Fields.CustomOrderNumber.Hint">
+    <Value>The gift card was purchased with this order.</Value>
+  </LocaleResource>   
+  <LocaleResource Name="ActivityLog.EditOrder">
+    <Value>Edited an order (Order number = {0}). See order notes for details</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Account.CustomerOrders.RecurringOrders.ViewInitialOrder">
+    <Value>View order (Order number - {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.CustomOrderNumber.Hint">
+    <Value>The unique number of the order.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Affiliates.Orders.OrderId">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Orders.ID">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Promotions.Discounts.History.OrderId">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.GiftCards.History.OrderId">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Orders.Fields.ID">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.ID.Hint">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.RecurringPayments.History.OrderId">
+    <Value></Value>
+  </LocaleResource>   
+  <LocaleResource Name="Admin.ReturnRequests.Fields.OrderId">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Orders.Shipments.OrderID">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.OrderID.Hint">
+    <Value></Value>
+  </LocaleResource>    
 </Language>
 '
 
@@ -3615,4 +3759,29 @@ GO
 UPDATE [Setting] 
 SET [Name] = N'tax.taxprovider.fixedorbycountrystatezip.taxcategoryid' + SUBSTRING(name, 40, len(name))
 WHERE [Name] like N'tax.taxprovider.fixedrate.taxcategoryid%'
+GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='CustomOrderNumber')
+BEGIN
+	ALTER TABLE [Order]
+	ADD [CustomOrderNumber] nvarchar(MAX) NULL
+END
+GO
+
+UPDATE [Order]
+SET [CustomOrderNumber] = [id]
+WHERE [CustomOrderNumber] IS NULL
+GO
+
+ALTER TABLE [Order] ALTER COLUMN [CustomOrderNumber] nvarchar(MAX) NOT NULL
+GO
+
+ --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.customordernumbermask')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'ordersettings.customordernumbermask', N'{ID}', 0)
+END
 GO

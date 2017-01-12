@@ -16,7 +16,8 @@ namespace Nop.Web.Models.Order
         }
 
         public int OrderId { get; set; }
-        
+        public string CustomOrderNumber { get; set; }
+
         public IList<OrderItemModel> Items { get; set; }
         
         [AllowHtml]
