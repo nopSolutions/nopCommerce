@@ -36,6 +36,9 @@ namespace Nop.Plugin.Tax.CountryStateZip.Models
         public IList<SelectListItem> AvailableTaxCategories { get; set; }
 
         public IList<TaxRateModel> TaxRates { get; set; }
+
+        [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.MinimumAmount")]
+        public decimal AddMinimumAmount { get; set; }
         
     }
 }

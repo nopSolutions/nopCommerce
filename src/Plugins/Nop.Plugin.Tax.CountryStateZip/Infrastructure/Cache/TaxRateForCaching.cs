@@ -12,5 +12,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Infrastructure.Cache
         public int StateProvinceId { get; set; }
         public string Zip { get; set; }
         public decimal Percentage { get; set; }
+
+        public decimal MinimumAmount { get; set; }
     }
 }

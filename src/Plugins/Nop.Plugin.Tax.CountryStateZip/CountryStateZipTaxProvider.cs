@@ -10,6 +10,7 @@ using Nop.Plugin.Tax.CountryStateZip.Infrastructure.Cache;
 using Nop.Plugin.Tax.CountryStateZip.Services;
 using Nop.Services.Localization;
 using Nop.Services.Tax;
+using Nop.Services.Catalog;
 
 namespace Nop.Plugin.Tax.CountryStateZip
 {
@@ -22,16 +23,22 @@ namespace Nop.Plugin.Tax.CountryStateZip
         private readonly IStoreContext _storeContext;
         private readonly TaxRateObjectContext _objectContext;
         private readonly ICacheManager _cacheManager;
+        private readonly IWorkContext _workContext;
+        private readonly IPriceCalculationService _priceCalculationService;
 
         public CountryStateZipTaxProvider(ITaxRateService taxRateService,
             IStoreContext storeContext,
             TaxRateObjectContext objectContext,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            IWorkContext workContext,
+            IPriceCalculationService priceCalculationService)
         {
             this._taxRateService = taxRateService;
             this._storeContext = storeContext;
             this._objectContext = objectContext;
             this._cacheManager = cacheManager;
+            this._workContext = workContext;
+            this._priceCalculationService = priceCalculationService; 
         }
 
         /// <summary>
@@ -63,6 +70,7 @@ namespace Nop.Plugin.Tax.CountryStateZip
                     StateProvinceId = x.StateProvinceId,
                     Zip = x.Zip,
                     Percentage = x.Percentage,
+                    MinimumAmount = x.MinimumAmount
                 }
                 )
                 .ToList()
@@ -74,6 +82,13 @@ namespace Nop.Plugin.Tax.CountryStateZip
             int stateProvinceId = calculateTaxRequest.Address.StateProvince != null ? calculateTaxRequest.Address.StateProvince.Id : 0;
             string zip = calculateTaxRequest.Address.ZipPostalCode;
 
+            decimal cartSubTotal = decimal.Zero;
+            decimal price = decimal.Zero;
+            foreach (var i in calculateTaxRequest.Customer.ShoppingCartItems.Where(x => x.ShoppingCartTypeId == 1))
+            {
+                price = _priceCalculationService.GetFinalPrice(i.Product, _workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue);
+                cartSubTotal += price * i.Quantity;
+            }
 
             if (zip == null)
                 zip = string.Empty;
@@ -82,7 +97,7 @@ namespace Nop.Plugin.Tax.CountryStateZip
             var existingRates = new List<TaxRateForCaching>();
             foreach (var taxRate in allTaxRates)
             {
-                if (taxRate.CountryId == countryId && taxRate.TaxCategoryId == taxCategoryId)
+                if (taxRate.CountryId == countryId && taxRate.TaxCategoryId == taxCategoryId && taxRate.MinimumAmount < cartSubTotal)
                     existingRates.Add(taxRate);
             }
 
@@ -165,6 +180,8 @@ namespace Nop.Plugin.Tax.CountryStateZip
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Percentage.Hint", "The tax rate.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.AddRecord", "Add tax rate");
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.AddRecord.Hint", "Adding a new tax rate");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.MinimumAmount", "Add minimum amount");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.MinimumAmount.Hint", "Add minimum amount to apply tax");
 
             base.Install();
         }
@@ -192,6 +209,8 @@ namespace Nop.Plugin.Tax.CountryStateZip
             this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Percentage.Hint");
             this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.AddRecord");
             this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.AddRecord.Hint");
+            this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.MinimumAmount");
+            this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.MinimumAmount.Hint");
 
             base.Uninstall();
         }

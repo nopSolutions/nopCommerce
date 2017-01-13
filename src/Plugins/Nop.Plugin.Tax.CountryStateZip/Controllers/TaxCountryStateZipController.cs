@@ -103,6 +103,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
                         StateProvinceId = x.StateProvinceId,
                         Zip = x.Zip,
                         Percentage = x.Percentage,
+                        MinimumAmount = x.MinimumAmount
                     };
                     //store
                     var store = _storeService.GetStoreById(x.StoreId);
@@ -140,6 +141,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
             var taxRate = _taxRateService.GetTaxRateById(model.Id);
             taxRate.Zip = model.Zip == "*" ? null : model.Zip;
             taxRate.Percentage = model.Percentage;
+            taxRate.MinimumAmount = model.MinimumAmount;
             _taxRateService.UpdateTaxRate(taxRate);
 
             return new NullJsonResult();
@@ -173,7 +175,8 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
                 CountryId = model.AddCountryId,
                 StateProvinceId = model.AddStateProvinceId,
                 Zip = model.AddZip,
-                Percentage = model.AddPercentage
+                Percentage = model.AddPercentage,
+                MinimumAmount = model.AddMinimumAmount
             };
             _taxRateService.InsertTaxRate(taxRate);
 

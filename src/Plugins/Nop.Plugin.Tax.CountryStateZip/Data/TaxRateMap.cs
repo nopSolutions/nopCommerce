@@ -10,6 +10,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Data
             this.ToTable("TaxRate");
             this.HasKey(tr => tr.Id);
             this.Property(tr => tr.Percentage).HasPrecision(18, 4);
+            this.Property(tr => tr.MinimumAmount).HasPrecision(18, 4);
         }
     }
 }

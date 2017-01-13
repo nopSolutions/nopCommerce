@@ -4931,3 +4931,10 @@ BEGIN
 	VALUES (N'producteditorsettings.specificationattributes', N'true', 0)
 END
 GO
+
+--default value for minimum amount
+Alter table TaxRate
+Add MinimumAmount decimal(18,4) null default 0
+Go
+
+Update TaxRate SET MinimumAMount = 0

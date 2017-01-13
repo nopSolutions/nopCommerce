@@ -30,5 +30,8 @@ namespace Nop.Plugin.Tax.CountryStateZip.Models
 
         [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Percentage")]
         public decimal Percentage { get; set; }
+
+        [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.MinimumAmount")]
+        public decimal MinimumAmount { get; set; }
     }
 }

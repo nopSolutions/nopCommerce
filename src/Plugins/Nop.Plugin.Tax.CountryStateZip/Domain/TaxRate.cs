@@ -36,5 +36,10 @@ namespace Nop.Plugin.Tax.CountryStateZip.Domain
         /// Gets or sets the percentage
         /// </summary>
         public decimal Percentage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the minimum amount
+        /// </summary>
+        public decimal MinimumAmount { get; set; }
     }
 }
