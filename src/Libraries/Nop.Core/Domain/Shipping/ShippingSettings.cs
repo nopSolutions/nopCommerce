@@ -107,5 +107,10 @@ namespace Nop.Core.Domain.Shipping
         /// Gets or sets a value indicating whether dimensions are calculated based on cube root of volume
         /// </summary>
         public bool UseCubeRootMethod { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to consider associated products dimensions and weight on shipping, false if main product includes them
+        /// </summary>
+        public bool ConsiderAssociatedProductsDimensions { get; set; }
     }
 }

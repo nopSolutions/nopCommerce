@@ -7071,6 +7071,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.BypassShippingMethodSelectionIfOnlyOne.Hint">
     <Value>Check to bypass a shipping method page during checkout if there's only one shipping method available.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ConsiderAssociatedProductsDimensions">
+    <Value>Consider associated products dimensions and weight</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ConsiderAssociatedProductsDimensions.Hint">
+    <Value>Check to consider associated products dimensions and weight on shipping, uncheck for example if the main product already includes them.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.DisplayPickupPointsOnMap">
     <Value>Display pickup points on the map</Value>
   </LocaleResource>

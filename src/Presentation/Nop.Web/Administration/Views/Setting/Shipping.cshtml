@@ -172,6 +172,16 @@
                                 @Html.ValidationMessageFor(model => model.BypassShippingMethodSelectionIfOnlyOne)
                             </div>
                         </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ConsiderAssociatedProductsDimensions_OverrideForStore, model => model.ConsiderAssociatedProductsDimensions, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ConsiderAssociatedProductsDimensions)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.ConsiderAssociatedProductsDimensions)
+                                @Html.ValidationMessageFor(model => model.ConsiderAssociatedProductsDimensions)
+                            </div>
+                        </div>
                     </div>
                     <script type="text/javascript">
                         $(document).ready(function() {

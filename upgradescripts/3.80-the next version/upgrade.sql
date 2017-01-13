@@ -1331,6 +1331,13 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.Fields.RegisteredInStore.Hint">
     <Value>Indicating in which store the customer is registered</Value>
   </LocaleResource>    
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ConsiderAssociatedProductsDimensions">
+    <Value>Consider associated products dimensions and weight</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.ConsiderAssociatedProductsDimensions.Hint">
+    <Value>Check to consider associated products dimensions and weight on shipping, uncheck for example if the main product already includes them.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3660,4 +3667,12 @@ set @DefaultStoreId = 0;
 UPDATE [dbo].[Customer] set [RegisteredInStoreId] = @DefaultStoreId where [RegisteredInStoreId] is NULL
 
 ALTER TABLE [dbo].[Customer] ALTER COLUMN [RegisteredInStoreId] int NOT NULL
+GO
+
+ --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.considerassociatedproductsdimensions')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'shippingsettings.considerassociatedproductsdimensions', N'True', 0)
+END
 GO

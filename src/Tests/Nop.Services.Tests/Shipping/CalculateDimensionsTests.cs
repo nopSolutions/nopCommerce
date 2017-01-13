@@ -45,6 +45,7 @@ namespace Nop.Services.Tests.Shipping
         {
             _shippingSettings = new ShippingSettings();
             _shippingSettings.UseCubeRootMethod = true;
+            _shippingSettings.ConsiderAssociatedProductsDimensions = true;
 
             _shippingMethodRepository = MockRepository.GenerateMock<IRepository<ShippingMethod>>();
             _warehouseRepository = MockRepository.GenerateMock<IRepository<Warehouse>>();

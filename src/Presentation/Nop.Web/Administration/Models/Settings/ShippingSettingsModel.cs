@@ -63,7 +63,11 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.BypassShippingMethodSelectionIfOnlyOne")]
         public bool BypassShippingMethodSelectionIfOnlyOne { get; set; }
         public bool BypassShippingMethodSelectionIfOnlyOne_OverrideForStore { get; set; }
-        
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.ConsiderAssociatedProductsDimensions")]
+        public bool ConsiderAssociatedProductsDimensions { get; set; }
+        public bool ConsiderAssociatedProductsDimensions_OverrideForStore { get; set; }
+
         public AddressModel ShippingOriginAddress { get; set; }
         public bool ShippingOriginAddress_OverrideForStore { get; set; }
     }
