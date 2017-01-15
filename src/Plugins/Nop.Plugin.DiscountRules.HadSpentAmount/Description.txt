@@ -1,9 +1,0 @@
-﻿Group: Discount requirements
-FriendlyName: Customer had spent x.xx amount
-SystemName: DiscountRequirement.HadSpentAmount
-Version: 1.16
-SupportedVersions: 3.90
-Author: nopCommerce team
-DisplayOrder: 1
-FileName: Nop.Plugin.DiscountRules.HadSpentAmount.dll
-Description: This plugin allows you to configure discounts for customers who spent more than the certain amount
