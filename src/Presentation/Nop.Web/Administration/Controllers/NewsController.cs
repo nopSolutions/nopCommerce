@@ -449,6 +449,57 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = true });
         }
 
+        [HttpPost]
+        public ActionResult ApproveSelected(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                //filter not approved comments
+                var newsComments = _newsService.GetNewsCommentsByIds(selectedIds.ToArray()).Where(comment => !comment.IsApproved);
+
+                foreach (var newsComment in newsComments)
+                {
+                    newsComment.IsApproved = true;
+                    _newsService.UpdateNews(newsComment.NewsItem);
+                    
+                    //raise event 
+                    _eventPublisher.Publish(new NewsCommentApprovedEvent(newsComment));
+
+                    //activity log
+                    _customerActivityService.InsertActivity("EditNewsComment", _localizationService.GetResource("ActivityLog.EditNewsComment"), newsComment.Id);
+                }
+            }
+
+            return Json(new { Result = true });
+        }
+
+        [HttpPost]
+        public ActionResult DisapproveSelected(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                //filter approved comments
+                var newsComments = _newsService.GetNewsCommentsByIds(selectedIds.ToArray()).Where(comment => comment.IsApproved);
+
+                foreach (var newsComment in newsComments)
+                {
+                    newsComment.IsApproved = false;
+                    _newsService.UpdateNews(newsComment.NewsItem);
+
+                    //activity log
+                    _customerActivityService.InsertActivity("EditNewsComment", _localizationService.GetResource("ActivityLog.EditNewsComment"), newsComment.Id);
+                }
+            }
+
+            return Json(new { Result = true });
+        }
+
         #endregion
     }
 }

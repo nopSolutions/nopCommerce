@@ -438,6 +438,57 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = true });
         }
 
+        [HttpPost]
+        public ActionResult ApproveSelected(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                //filter not approved comments
+                var blogComments = _blogService.GetBlogCommentsByIds(selectedIds.ToArray()).Where(comment => !comment.IsApproved);
+
+                foreach (var blogComment in blogComments)
+                {
+                    blogComment.IsApproved = true;
+                    _blogService.UpdateBlogPost(blogComment.BlogPost);
+
+                    //raise event 
+                    _eventPublisher.Publish(new BlogCommentApprovedEvent(blogComment));
+
+                    //activity log
+                    _customerActivityService.InsertActivity("EditBlogComment", _localizationService.GetResource("ActivityLog.EditBlogComment"), blogComment.Id);
+                }
+            }
+
+            return Json(new { Result = true });
+        }
+
+        [HttpPost]
+        public ActionResult DisapproveSelected(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                //filter approved comments
+                var blogComments = _blogService.GetBlogCommentsByIds(selectedIds.ToArray()).Where(comment => comment.IsApproved);
+
+                foreach (var blogComment in blogComments)
+                {
+                    blogComment.IsApproved = false;
+                    _blogService.UpdateBlogPost(blogComment.BlogPost);
+
+                    //activity log
+                    _customerActivityService.InsertActivity("EditBlogComment", _localizationService.GetResource("ActivityLog.EditBlogComment"), blogComment.Id);
+                }
+            }
+
+            return Json(new { Result = true });
+        }
+
         #endregion
     }
 }

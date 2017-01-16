@@ -1313,6 +1313,18 @@ set @resources='
       You can add attribute for your product using existing list of attributes, or if you need to create a new one go to Catalog > Attributes > Product attributes. Please notice that if you want to manage inventory by product attributes (e.g. 5 green shirts and 3 blue ones), then ensure that "Inventory method" is set to "Track inventory by product attributes".
     </Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.ApproveSelected">
+    <Value>Approve selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.ApproveSelected">
+    <Value>Approve selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.DisapproveSelected">
+    <Value>Disapprove selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.DisapproveSelected">
+    <Value>Disapprove selected</Value>
+  </LocaleResource>
 </Language>
 '
 

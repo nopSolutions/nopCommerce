@@ -16,6 +16,14 @@
         @T("Admin.ContentManagement.News.Comments")
     </h1>
     <div class="pull-right">
+        <button type="button" id="approve-selected" class="btn bg-green">
+            <i class="fa fa-check-square-o"></i>
+            @T("Admin.ContentManagement.News.Comments.ApproveSelected")
+        </button>
+        <button type="button" id="disapprove-selected" class="btn bg-navy">
+            <i class="fa fa-minus-square-o"></i>
+            @T("Admin.ContentManagement.News.Comments.DisapproveSelected")
+        </button>
         <button type="button" id="delete-selected" class="btn bg-red">
             <i class="fa fa-trash-o"></i>
             @T("Admin.ContentManagement.News.Comments.DeleteSelected")
@@ -195,6 +203,62 @@
                                 });
                                 return false;
                             });
+                            
+                            //"approve selected" button
+                            $('#approve-selected')
+                                .click(function(e) {
+                                    e.preventDefault();
+
+                                    var postData = {
+                                        selectedIds: selectedIds
+                                    };
+                                    addAntiForgeryToken(postData);
+
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@(Url.Action("ApproveSelected", "News"))",
+                                        data: postData,
+                                        complete: function(data) {
+                                            //reload grid
+                                            var grid = $('#comments-grid').data('kendoGrid');
+                                            grid.dataSource.read();
+                                        },
+                                        error: function(xhr, ajaxOptions, thrownError) {
+                                            alert(thrownError);
+                                        },
+                                        traditional: true
+                                    });
+                                    return false;
+                                });
+
+                            //"disapprove selected" button
+                            $('#disapprove-selected')
+                                .click(function(e) {
+                                    e.preventDefault();
+
+                                    var postData = {
+                                        selectedIds: selectedIds
+                                    };
+                                    addAntiForgeryToken(postData);
+
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@(Url.Action("DisapproveSelected", "News"))",
+                                        data: postData,
+                                        complete: function(data) {
+                                            //reload grid
+                                            var grid = $('#comments-grid').data('kendoGrid');
+                                            grid.dataSource.read();
+                                        },
+                                        error: function(xhr, ajaxOptions, thrownError) {
+                                            alert(thrownError);
+                                        },
+                                        traditional: true
+                                    });
+                                    return false;
+                                });
                             
                             $('#mastercheckbox').click(function() {
                                 $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
