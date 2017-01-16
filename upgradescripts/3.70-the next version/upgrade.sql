@@ -899,6 +899,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerIds.Hint">
      <Value>Product manufacturer mappings.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsCumulative">
+    <Value>Cumulative with other discounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsCumulative.Hint">
+    <Value>If checked, this discount can be used with other ones simultaneously. Please note that this feature works only for discounts with the same discount type. Right now discounts with distinct types are already cumulative.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3443,3 +3449,21 @@ GO
  	VALUES (N'ordersettings.GeneratePdfInvoiceInCustomerLanguage', N'true', 0)
  END
  GO
+
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Discount]') and NAME='IsCumulative')
+BEGIN
+	ALTER TABLE [Discount]
+	ADD [IsCumulative] bit NULL
+END
+GO
+
+UPDATE [Discount]
+SET [IsCumulative] = 0
+WHERE [IsCumulative] IS NULL
+GO
+
+ALTER TABLE [Discount] ALTER COLUMN [IsCumulative] bit NOT NULL
+GO

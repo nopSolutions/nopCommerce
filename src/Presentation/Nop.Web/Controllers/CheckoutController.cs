@@ -280,13 +280,12 @@ namespace Nop.Web.Controllers
                                       };
 
                     //adjust rate
-                    Discount appliedDiscount;
+                    List<Discount> appliedDiscounts;
                     var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(
-                        shippingOption.Rate, cart, out appliedDiscount);
+                        shippingOption.Rate, cart, out appliedDiscounts);
 
                     decimal rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
-                    decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase,
-                                                                                    _workContext.WorkingCurrency);
+                    decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
                     soModel.Fee = _priceFormatter.FormatShippingPrice(rate, true);
 
                     model.ShippingMethods.Add(soModel);
