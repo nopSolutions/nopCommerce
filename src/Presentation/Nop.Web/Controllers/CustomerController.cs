@@ -574,6 +574,7 @@ namespace Nop.Web.Controllers
                 _workContext.CurrentCustomer = _customerService.InsertGuestCustomer();
             }
             var customer = _workContext.CurrentCustomer;
+            customer.RegisteredInStoreId = _storeContext.CurrentStore.Id;
 
             //custom customer attributes
             var customerAttributesXml = ParseCustomCustomerAttributes(form);

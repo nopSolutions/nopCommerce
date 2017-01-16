@@ -4077,6 +4077,14 @@ namespace Nop.Services.Installation
                                 };
             _customerRoleRepository.Insert(customerRoles);
 
+            //default store 
+            var defaultStore = _storeRepository.Table.FirstOrDefault();
+
+            if (defaultStore == null)
+                throw new Exception("No default store could be loaded");
+
+            var storeId = defaultStore.Id;
+
             //admin user
             var adminUser = new Customer
             {
@@ -4089,7 +4097,9 @@ namespace Nop.Services.Installation
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
+                RegisteredInStoreId = storeId
             };
+
             var defaultAdminUserAddress = new Address
             {
                 FirstName = "John",
@@ -4131,6 +4141,7 @@ namespace Nop.Services.Installation
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
+                RegisteredInStoreId = storeId
             };
             var defaultSecondUserAddress = new Address
             {
@@ -4171,6 +4182,7 @@ namespace Nop.Services.Installation
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
+                RegisteredInStoreId = storeId
             };
             var defaultThirdUserAddress = new Address
             {
@@ -4210,6 +4222,7 @@ namespace Nop.Services.Installation
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
+                RegisteredInStoreId = storeId
             };
             var defaultFourthUserAddress = new Address
             {
@@ -4249,6 +4262,7 @@ namespace Nop.Services.Installation
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
+                RegisteredInStoreId = storeId
             };
             var defaultFifthUserAddress = new Address
             {
@@ -4289,6 +4303,7 @@ namespace Nop.Services.Installation
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
+                RegisteredInStoreId = storeId
             };
             var defaultSixthUserAddress = new Address
             {
@@ -4328,6 +4343,7 @@ namespace Nop.Services.Installation
                 SystemName = SystemCustomerNames.SearchEngine,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
+                RegisteredInStoreId = storeId
             };
             searchEngineUser.CustomerRoles.Add(crGuests);
             _customerRepository.Insert(searchEngineUser);
@@ -4345,6 +4361,7 @@ namespace Nop.Services.Installation
                 SystemName = SystemCustomerNames.BackgroundTask,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
+                RegisteredInStoreId = storeId
             };
             backgroundTaskUser.CustomerRoles.Add(crGuests);
             _customerRepository.Insert(backgroundTaskUser);
