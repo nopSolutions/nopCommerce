@@ -215,6 +215,7 @@
     <Compile Include="Extensions\MappingExtensions.cs" />
     <Compile Include="Models\Affiliates\AffiliateListModel.cs" />
     <Compile Include="Models\Affiliates\AffiliatedOrderListModel.cs" />
+    <Compile Include="Models\Blogs\BlogCommentListModel.cs" />
     <Compile Include="Models\Catalog\ProductAttributeConditionModel.cs" />
     <Compile Include="Models\Catalog\AddProductAttributeCombinationModel.cs" />
     <Compile Include="Models\Catalog\LowStockProductModel.cs" />
@@ -244,6 +245,7 @@
     <Compile Include="Models\Localization\LanguageResourcesListModel.cs" />
     <Compile Include="Models\Messages\CampaignListModel.cs" />
     <Compile Include="Models\Messages\TestMessageTemplateModel.cs" />
+    <Compile Include="Models\News\NewsCommentListModel.cs" />
     <Compile Include="Models\Orders\CountryReportLineModel.cs" />
     <Compile Include="Models\Orders\CountryReportModel.cs" />
     <Compile Include="Models\Orders\ReturnRequestListModel.cs" />

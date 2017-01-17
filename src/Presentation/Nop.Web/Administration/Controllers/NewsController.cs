@@ -343,16 +343,18 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Comments(int? filterByNewsItemId, DataSourceRequest command)
+        public ActionResult Comments(int? filterByNewsItemId, DataSourceRequest command, NewsCommentListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            IList<NewsComment> comments = filterByNewsItemId.HasValue ?
-                //filter comments by news item
-                _newsService.GetNewsById(filterByNewsItemId.Value).NewsComments.OrderBy(bc => bc.CreatedOnUtc).ToList() :
-                //load all news comments
-                _newsService.GetAllComments();
+            var createdOnFromValue = model.CreatedOnFrom == null ? null
+                           : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
+
+            var createdOnToValue = model.CreatedOnTo == null ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            var comments = _newsService.GetAllComments(0, 0, filterByNewsItemId, createdOnFromValue, createdOnToValue, model.SearchText);
 
             var storeNames = _storeService.GetAllStores().ToDictionary(store => store.Id, store => store.Name);
 

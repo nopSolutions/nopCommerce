@@ -171,16 +171,33 @@ namespace Nop.Services.News
         /// </summary>
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <param name="newsItemId">News item ID; 0 or null to load all records</param>
+        /// <param name="fromUtc">Item creation from; null to load all records</param>
+        /// <param name="toUtc">Item creation to; null to load all records</param>
+        /// <param name="commentText">Search comment text or comment title; null to load all records</param>
         /// <returns>Comments</returns>
-        public virtual IList<NewsComment> GetAllComments(int customerId = 0, int storeId = 0)
+        public virtual IList<NewsComment> GetAllComments(int customerId = 0, int storeId = 0, int? newsItemId = null,
+            DateTime? fromUtc = null, DateTime? toUtc = null, string commentText = null)
         {
             var query = _newsCommentRepository.Table;
+
+            if (newsItemId > 0)
+                query = query.Where(comment => comment.NewsItemId == newsItemId);
 
             if (customerId > 0)
                 query = query.Where(comment => comment.CustomerId == customerId);
 
             if (storeId > 0)
                 query = query.Where(comment => comment.StoreId == storeId);
+
+            if (fromUtc.HasValue)
+                query = query.Where(comment => fromUtc.Value <= comment.CreatedOnUtc);
+
+            if (toUtc.HasValue)
+                query = query.Where(comment => toUtc.Value >= comment.CreatedOnUtc);
+
+            if (!string.IsNullOrEmpty(commentText))
+                query = query.Where(c => c.CommentText.Contains(commentText) || c.CommentTitle.Contains(commentText));
 
             query = query.OrderBy(nc => nc.CreatedOnUtc);
 

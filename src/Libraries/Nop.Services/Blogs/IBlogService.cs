@@ -91,8 +91,13 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <param name="blogPostId">Blog post ID; 0 or null to load all records</param>
+        /// <param name="fromUtc">Item creation from; null to load all records</param>
+        /// <param name="toUtc">Item creation to; null to load all records</param>
+        /// <param name="commentText">Search comment text; null to load all records</param>
         /// <returns>Comments</returns>
-        IList<BlogComment> GetAllComments(int customerId = 0, int storeId = 0);
+        IList<BlogComment> GetAllComments(int customerId = 0, int storeId = 0, int? blogPostId = null,
+            DateTime? fromUtc = null, DateTime? toUtc = null, string commentText = null);
 
         /// <summary>
         /// Gets a blog comment
