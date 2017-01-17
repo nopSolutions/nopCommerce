@@ -25,16 +25,16 @@
     <Value>Ange bekräfta lösenord</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionString">
-    <Value>Connection string</Value>
+    <Value>Anslutningssträng</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringRequired">
-    <Value>En SQL connection string behövs</Value>
+    <Value>En SQL anslutningssträng behövs</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringValues">
     <Value>Ange SQL anslutningsvärden</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringWrongFormat">
-    <Value>Fel format på SQL connection string</Value>
+    <Value>Fel format på SQL anslutningssträngen</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Skapa databasen om den inte existerar</Value>
@@ -85,7 +85,7 @@
     <Value>Lösenorden matchar inte</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
-    <Value>Ange rå connection string (avancerat)</Value>
+    <Value>Ange manuell anslutningssträng (avancerat)</Value>
   </LocaleResource>
   <LocaleResource Name="Recommended">
     <Value>[Rekommenderat]</Value>
@@ -127,16 +127,16 @@
     <Value>Använd SQL Server (eller SQL Express) databas</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
-    <Value>Lagra information</Value>
+    <Value>Butiksinformation</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce installation</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip1">
-    <Value>nopCommerce är den ledande  ASP.NET-lösningen för onlinebutik och e-handel. Den här guiden hjälper dig igenom processen att konfigurera nopCommerce</Value>
+    <Value>nopCommerce är den ledande ASP.NET-lösningen för onlinebutik och e-handel. Den här guiden hjälper dig igenom processen att konfigurera nopCommerce</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
-    <Value>För att genomföra den här guiden behöver du känna till en del information om din databasserver ("connection string"). Vänligen kontakta din internetleverantör vid behov. Om du installerar på en lokal maskin eller server, kanske du behöver kontakta din systemadministratör.</Value>
+    <Value>För att genomföra den här guiden behöver du känna till en del information om din databasserver ("anslutningssträng"). Vänligen kontakta din internetleverantör vid behov. Om du installerar på en lokal maskin eller server, kanske du behöver kontakta din systemadministratör.</Value>
   </LocaleResource>
   <LocaleResource Name="WindowsAuthentication">
     <Value>Använd integrerad Windowsautenticering</Value>
