@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Nop.Plugin.Tax.CountryStateZip")]
+[assembly: AssemblyTitle("Nop.Plugin.Tax.FixedOrByCountryStateZip")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Nop Solutions, Ltd")]
-[assembly: AssemblyProduct("Nop.Plugin.Tax.CountryStateZip")]
+[assembly: AssemblyProduct("Nop.Plugin.Tax.FixedOrByCountryStateZip")]
 [assembly: AssemblyCopyright("Copyright © Nop Solutions, Ltd")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
