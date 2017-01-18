@@ -239,7 +239,11 @@ namespace Nop.Web.Framework
             builder.RegisterType<LocalizedEntityService>().As<ILocalizedEntityService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();
-            builder.RegisterType<LanguageService>().As<ILanguageService>().InstancePerLifetimeScope();
+
+            //use static cache (between HTTP requests)
+            builder.RegisterType<LanguageService>().As<ILanguageService>()
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
+                .InstancePerLifetimeScope();
 
             builder.RegisterType<DownloadService>().As<IDownloadService>().InstancePerLifetimeScope();
             //picture service
