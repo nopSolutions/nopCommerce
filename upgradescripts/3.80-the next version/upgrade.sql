@@ -1331,7 +1331,6 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.Fields.RegisteredInStore.Hint">
     <Value>Indicating in which store the customer is registered</Value>
   </LocaleResource>    
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ConsiderAssociatedProductsDimensions">
     <Value>Consider associated products dimensions and weight</Value>
   </LocaleResource>
