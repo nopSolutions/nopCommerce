@@ -118,10 +118,6 @@ namespace Nop.Web.Framework.Menu
             {
                 siteMapNode.OpenUrlInNewTab = booleanResult;
             }
-            else
-            {
-                siteMapNode.OpenUrlInNewTab = false;
-            }
         }
 
         private static string GetStringValueFromAttribute(XmlNode node, string attributeName)
