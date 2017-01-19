@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
@@ -42,6 +43,8 @@ namespace Nop.Services.Tests.Customers
         private RewardPointsSettings _rewardPointsSettings;
         private SecuritySettings _securitySettings;
         private IRewardPointService _rewardPointService;
+        private IWorkContext _workContext;
+        private IWorkflowMessageService _workflowMessageService;
 
         [SetUp]
         public new void SetUp()
@@ -129,13 +132,17 @@ namespace Nop.Services.Tests.Customers
             _rewardPointService = MockRepository.GenerateMock<IRewardPointService>();
 
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
+            _workContext = MockRepository.GenerateMock<IWorkContext>();
+            _workflowMessageService = MockRepository.GenerateMock<IWorkflowMessageService>();
+
             _customerService = new CustomerService(new NopNullCache(), _customerRepo, _customerRoleRepo,
                 _genericAttributeRepo, _orderRepo, _forumPostRepo, _forumTopicRepo,
                 null, null, null, null, null,
                 _genericAttributeService, null, null, _eventPublisher, _customerSettings, null);
             _customerRegistrationService = new CustomerRegistrationService(_customerService,
                 _encryptionService, _newsLetterSubscriptionService, _localizationService,
-                _storeService, _rewardPointService, _rewardPointsSettings, _customerSettings);
+                _storeService, _rewardPointService, _workContext,_genericAttributeService,
+                _workflowMessageService, _rewardPointsSettings, _customerSettings);
         }
 
         //[Test]

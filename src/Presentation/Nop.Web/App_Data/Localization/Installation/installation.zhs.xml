@@ -47,6 +47,9 @@
   <LocaleResource Name="DatabaseCreationError">
     <Value>创建数据库: {0}的时候发生错误</Value>
   </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>数据库</Value>
+  </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>数据库信心</Value>
   </LocaleResource>

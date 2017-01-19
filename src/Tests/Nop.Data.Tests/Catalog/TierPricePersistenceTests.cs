@@ -17,6 +17,7 @@ namespace Nop.Data.Tests.Catalog
                 StoreId = 7,
                 Quantity = 1,
                 Price = 2.1M,
+                StartDateTimeUtc = new DateTime(2010, 01, 03),
                 Product = GetTestProduct(),
            };
 
@@ -25,7 +26,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.StoreId.ShouldEqual(7);
             fromDb.Quantity.ShouldEqual(1);
             fromDb.Price.ShouldEqual(2.1M);
-
+            fromDb.StartDateTimeUtc.ShouldEqual(new DateTime(2010, 01, 03));
             fromDb.Product.ShouldNotBeNull();
         }
 

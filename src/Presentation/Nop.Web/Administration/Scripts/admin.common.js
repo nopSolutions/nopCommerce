@@ -120,6 +120,28 @@ function saveUserPreferences(url, name, value) {
     });
 };
 
+function warningValidation(validationUrl, warningElementName, passedParameters) {
+    addAntiForgeryToken(passedParameters);
+    $.ajax({
+        cache: false,
+        url: validationUrl,
+        type: 'post',
+        dataType: "json",
+        data: passedParameters,
+        success: function (data) {
+            var element = $('[data-valmsg-for="' + warningElementName + '"]');
+            if (data.Result) {
+                element.addClass("warning");
+                element.html(data.Result);
+            }
+            else {
+                element.removeClass("warning");
+                element.html('');
+            }
+        }
+    });
+};
+
 //scroll to top
 (function ($) {
     $.fn.backTop = function () {

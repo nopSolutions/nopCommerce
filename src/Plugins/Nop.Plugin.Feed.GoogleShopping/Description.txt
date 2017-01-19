@@ -1,0 +1,9 @@
+﻿Group: Promotion feeds
+FriendlyName: Google Shopping (formely Google Product Search)
+SystemName: PromotionFeed.Froogle
+Version: 1.78
+SupportedVersions: 3.90
+Author: nopCommerce team
+DisplayOrder: 1
+FileName: Nop.Plugin.Feed.GoogleShopping.dll
+Description: This plugin enables integration with Google Shopping, formerly Google Product Search and Froogle

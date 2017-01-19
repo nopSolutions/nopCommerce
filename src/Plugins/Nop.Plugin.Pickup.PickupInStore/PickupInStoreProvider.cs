@@ -22,6 +22,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
         private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
         private readonly ILocalizationService _localizationService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly IStorePickupPointService _storePickupPointService;
         private readonly StorePickupPointObjectContext _objectContext;
@@ -33,6 +34,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
         public PickupInStoreProvider(IAddressService addressService,
             ICountryService countryService,
             ILocalizationService localizationService,
+            IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             IStorePickupPointService storePickupPointService,
             StorePickupPointObjectContext objectContext)
@@ -40,6 +42,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
             this._addressService = addressService;
             this._countryService = countryService;
             this._localizationService = localizationService;
+            this._stateProvinceService = stateProvinceService;
             this._storeContext = storeContext;
             this._storePickupPointService = storePickupPointService;
             this._objectContext = objectContext;
@@ -69,6 +72,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
         public GetPickupPointsResponse GetPickupPoints(Address address)
         {
             var result = new GetPickupPointsResponse();
+
             foreach (var point in _storePickupPointService.GetAllStorePickupPoints(_storeContext.CurrentStore.Id))
             {
                 var pointAddress = _addressService.GetAddressById(point.AddressId);
@@ -80,6 +84,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
                         Description = point.Description,
                         Address = pointAddress.Address1,
                         City = pointAddress.City,
+                        StateAbbreviation = pointAddress.StateProvince != null ? pointAddress.StateProvince.Abbreviation : string.Empty,
                         CountryCode = pointAddress.Country != null ? pointAddress.Country.TwoLetterIsoCode : string.Empty,
                         ZipPostalCode = pointAddress.ZipPostalCode,
                         OpeningHours = point.OpeningHours,
@@ -117,11 +122,13 @@ namespace Nop.Plugin.Pickup.PickupInStore
 
             //sample pickup point
             var country = _countryService.GetCountryByThreeLetterIsoCode("USA");
+            var state = _stateProvinceService.GetStateProvinceByAbbreviation("NY");
             var address = new Address
             {
                 Address1 = "21 West 52nd Street",
                 City = "New York",
                 CountryId = country != null ? (int?)country.Id : null,
+                StateProvinceId = state != null ? (int?)state.Id : null,
                 ZipPostalCode = "10021",
                 CreatedOnUtc = DateTime.UtcNow
             };

@@ -19,12 +19,12 @@
                 @Model.Message
             </div>
         }
-        @if (!String.IsNullOrEmpty(Model.CurrentCode))
+        @foreach (var discount in Model.AppliedDiscountsWithCodes)
         {
             <div class="current-code">
-                <span class="applied-discount-code">@string.Format(T("ShoppingCart.DiscountCouponCode.CurrentCode").Text, Model.CurrentCode)</span>
+                <span class="applied-discount-code">@string.Format(T("ShoppingCart.DiscountCouponCode.CurrentCode").Text, discount.CouponCode)</span>
                 @*empty value (little hack for FormValueExistsAttribute)*@
-                <input type="submit" name="removediscountcouponcode" value=" " title="@T("Common.Remove")" class="remove-discount-button" />
+                <input type="submit" name="removediscount-@discount.Id" value=" " title="@T("Common.Remove")" class="remove-discount-button" />
             </div>
         }
     </div>

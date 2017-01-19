@@ -3,6 +3,7 @@ using System.Linq;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
+using Nop.Core.Domain.Stores;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -23,7 +24,6 @@ namespace Nop.Data.Tests.News
                 StartDateUtc = new DateTime(2010, 01, 01),
                 EndDateUtc = new DateTime(2010, 01, 02),
                 AllowComments = true,
-                CommentCount = 1,
                 LimitedToStores = true,
                 CreatedOnUtc = new DateTime(2010, 01, 03),
                 MetaTitle = "MetaTitle 1",
@@ -45,7 +45,6 @@ namespace Nop.Data.Tests.News
             fromDb.StartDateUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.EndDateUtc.ShouldEqual(new DateTime(2010, 01, 02));
             fromDb.AllowComments.ShouldEqual(true);
-            fromDb.CommentCount.ShouldEqual(1);
             fromDb.LimitedToStores.ShouldEqual(true);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 03));
             fromDb.MetaTitle.ShouldEqual("MetaTitle 1");
@@ -78,8 +77,10 @@ namespace Nop.Data.Tests.News
                     new NewsComment
                     {
                         CommentText = "Comment text 1",
+                        IsApproved = false,
                         CreatedOnUtc = new DateTime(2010, 01, 03),
-                        Customer = GetTestCustomer()
+                        Customer = GetTestCustomer(),
+                        Store = GetTestStore()
                     }
                 );
             var fromDb = SaveAndLoadEntity(news);
@@ -89,6 +90,8 @@ namespace Nop.Data.Tests.News
             fromDb.NewsComments.ShouldNotBeNull();
             (fromDb.NewsComments.Count == 1).ShouldBeTrue();
             fromDb.NewsComments.First().CommentText.ShouldEqual("Comment text 1");
+            fromDb.NewsComments.First().IsApproved.ShouldEqual(false);
+            fromDb.NewsComments.First().Store.ShouldNotBeNull();
         }
 
         protected Customer GetTestCustomer()
@@ -98,6 +101,16 @@ namespace Nop.Data.Tests.News
                 CustomerGuid = Guid.NewGuid(),
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 LastActivityDateUtc = new DateTime(2010, 01, 02)
+            };
+        }
+
+        protected Store GetTestStore()
+        {
+            return new Store
+            {
+                Name = "Store 1",
+                Url = "http://www.test.com",
+                DisplayOrder = 1
             };
         }
     }

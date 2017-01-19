@@ -44,6 +44,8 @@ namespace Nop.Services.News
 
         #region Methods
 
+        #region News
+
         /// <summary>
         /// Deletes a news
         /// </summary>
@@ -159,20 +161,30 @@ namespace Nop.Services.News
             //event notification
             _eventPublisher.EntityUpdated(news);
         }
-        
+
+        #endregion
+
+        #region News comments
+
         /// <summary>
         /// Gets all comments
         /// </summary>
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <returns>Comments</returns>
-        public virtual IList<NewsComment> GetAllComments(int customerId)
+        public virtual IList<NewsComment> GetAllComments(int customerId = 0, int storeId = 0)
         {
             var query = _newsCommentRepository.Table;
+
             if (customerId > 0)
-                query = query.Where(nc => nc.CustomerId == customerId);
+                query = query.Where(comment => comment.CustomerId == customerId);
+
+            if (storeId > 0)
+                query = query.Where(comment => comment.StoreId == storeId);
+
             query = query.OrderBy(nc => nc.CreatedOnUtc);
-            var comments = query.ToList();
-            return comments;
+
+            return query.ToList();
         }
 
         /// <summary>
@@ -214,6 +226,26 @@ namespace Nop.Services.News
         }
 
         /// <summary>
+        /// Get the count of news comments
+        /// </summary>
+        /// <param name="newsItem">News item</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <param name="isApproved">A value indicating whether to count only approved or not approved comments; pass null to get number of all comments</param>
+        /// <returns>Number of news comments</returns>
+        public virtual int GetNewsCommentsCount(NewsItem newsItem, int storeId = 0, bool? isApproved = null)
+        {
+            var query = _newsCommentRepository.Table.Where(comment => comment.NewsItemId == newsItem.Id);
+
+            if (storeId > 0)
+                query = query.Where(comment => comment.StoreId == storeId);
+
+            if (isApproved.HasValue)
+                query = query.Where(comment => comment.IsApproved == isApproved.Value);
+
+            return query.Count();
+        }
+
+        /// <summary>
         /// Deletes a news comment
         /// </summary>
         /// <param name="newsComment">News comment</param>
@@ -223,6 +255,9 @@ namespace Nop.Services.News
                 throw new ArgumentNullException("newsComment");
 
             _newsCommentRepository.Delete(newsComment);
+
+            //event notification
+            _eventPublisher.EntityDeleted(newsComment);
         }
 
         /// <summary>
@@ -234,8 +269,14 @@ namespace Nop.Services.News
             if (newsComments == null)
                 throw new ArgumentNullException("newsComments");
 
-            _newsCommentRepository.Delete(newsComments);
+            foreach (var newsComment in newsComments)
+            {
+                DeleteNewsComment(newsComment);
+            }
         }
+        
+        #endregion
+
         #endregion
     }
 }

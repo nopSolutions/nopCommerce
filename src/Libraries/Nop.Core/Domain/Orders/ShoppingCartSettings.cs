@@ -34,6 +34,11 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether to move items from wishlist to cart when clicking "Add to cart" button. Otherwise, they are copied.
         /// </summary>
         public bool MoveItemsFromWishlistToCart { get; set; }
+        
+        /// <summary>
+        /// Gets or sets a value indicating whether shopping carts (and wishlist) are shared between stores (in multi-store environment)
+        /// </summary>
+        public bool CartsSharedBetweenStores { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show product image on shopping cart page

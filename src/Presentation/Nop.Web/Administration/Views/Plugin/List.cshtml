@@ -60,7 +60,9 @@
                                         <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
                                         <li>@T("Admin.Configuration.Plugins.Description.Step5")</li>
                                     </ol>
-                                    You can download more nopCommerce plugins on our <a href="http://www.nopcommerce.com/extensions-and-themes.aspx?utm_source=admin-panel&utm_medium=plugins&utm_campaign=admin-panel" target="_blank">extensions directory</a>
+                                </p>
+                                <p>
+                                    You can download more nopCommerce plugins in our <a href="http://www.nopcommerce.com/marketplace.aspx?utm_source=admin-panel&utm_medium=plugins&utm_campaign=admin-panel" target="_blank">marketplace</a>
                                 </p>
 
                                 <div class="form-group">
@@ -127,7 +129,8 @@
                                         refresh: true,
                                         numeric: false,
                                         previousNext: false,
-                                        info: false
+                                        info: false,
+                                        @Html.Partial("_GridPagerMessages")
                                     },
                                     editable: {
                                         confirmation: "@T("Admin.Common.DeleteConfirmation")",
@@ -160,12 +163,12 @@
                                             field: "FriendlyName",
                                             title: "@T("Admin.Configuration.Plugins.AdditionalInfo")",
                                             template: '<ul class="common-list">' +
-                                                '<li>@T("Admin.Configuration.Plugins.Fields.Version") #:Version#</li>' +
-                                                '<li>@T("Admin.Configuration.Plugins.Fields.Author") #:Author#</li>' +
-                                                '<li>@T("Admin.Configuration.Plugins.Fields.SystemName") #:SystemName#</li>' +
-                                                '<li>@T("Admin.Configuration.Plugins.Fields.DisplayOrder") #:DisplayOrder#</li>' +
-                                                '<li>@T("Admin.Configuration.Plugins.Fields.Installed")  # if(Installed) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #</li>' +
-                                                '# if(CanChangeEnabled) {# <li>@T("Admin.Configuration.Plugins.Fields.IsEnabled") # if(IsEnabled) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} # </li> #} #' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.Version"): #:Version#</li>' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.Author"): #:Author#</li>' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.SystemName"): #:SystemName#</li>' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.DisplayOrder"): #:DisplayOrder#</li>' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.Installed"):  # if(Installed) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #</li>' +
+                                                '# if(CanChangeEnabled) {# <li>@T("Admin.Configuration.Plugins.Fields.IsEnabled"): # if(IsEnabled) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} # </li> #} #' +
                                                 '</ul>'
                                         }, {
                                             field: "Installed",

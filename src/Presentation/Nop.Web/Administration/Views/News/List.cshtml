@@ -85,7 +85,8 @@
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)]
+                                    pageSizes: [@(gridPageSizes)],
+                                    @Html.Partial("_GridPagerMessages")
                                 },
                                 editable: {
                                     confirmation: "@T("Admin.Common.DeleteConfirmation")",
@@ -101,9 +102,8 @@
                                         title: "@T("Admin.ContentManagement.News.NewsItems.Fields.Language")",
                                         width: 200,
                                     }, {
-                                        field: "Comments",
                                         title: "@T("Admin.ContentManagement.News.NewsItems.Fields.Comments")",
-                                        template: '<a href="Comments?filterByNewsItemId=#=Id#">@T("Admin.ContentManagement.News.NewsItems.Fields.Comments") - #=Comments# </a>'
+                                        template: '<a href="Comments?filterByNewsItemId=#=Id#">@T("Admin.ContentManagement.News.NewsItems.Fields.Comments") - #=ApprovedComments + NotApprovedComments# (#=NotApprovedComments#)</a>'
                                     }, {
                                         field: "StartDate",
                                         title: "@T("Admin.ContentManagement.News.NewsItems.Fields.StartDate")",

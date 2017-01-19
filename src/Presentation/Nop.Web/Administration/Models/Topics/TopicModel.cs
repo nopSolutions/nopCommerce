@@ -96,7 +96,7 @@ namespace Nop.Admin.Models.Topics
         public IList<SelectListItem> AvailableStores { get; set; }
 
         //ACL (customer roles)
-        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.AclCustomerRoles")]
+        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.AclCustomerRoles")]
         [UIHint("MultiSelect")]
         public IList<int> SelectedCustomerRoleIds { get; set; }
         public IList<SelectListItem> AvailableCustomerRoles { get; set; }

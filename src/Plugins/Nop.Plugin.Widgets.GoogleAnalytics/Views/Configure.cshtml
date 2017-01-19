@@ -1,0 +1,188 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Widgets.GoogleAnalytics.Models.ConfigurationModel
+@using Nop.Web.Framework;
+
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+
+@{
+    //default values
+    var googleAnalytics_trackingScript = Html.Raw(HttpUtility.JavaScriptStringEncode("<!-- Google code for Analytics tracking -->" + "\r\n" +
+        "<script type=\"text/javascript\">" + "\r\n" +
+        "var _gaq = _gaq || [];" + "\r\n" +
+        "_gaq.push(['_setAccount', '{GOOGLEID}']);" + "\r\n" +
+        "_gaq.push(['_trackPageview']);" + "\r\n" +
+        "{ECOMMERCE}" + "\r\n" +
+        "(function() {" + "\r\n" +
+        "var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;" + "\r\n" +
+        "ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';" + "\r\n" +
+        "var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);" + "\r\n" +
+        "})();" + "\r\n" +
+        "</script>"));
+    var googleAnalytics_EcommerceScript = Html.Raw(HttpUtility.JavaScriptStringEncode("_gaq.push(['_addTrans', '{ORDERID}', '{SITE}', '{TOTAL}', '{TAX}', '{SHIP}', '{CITY}', '{STATEPROVINCE}', '{COUNTRY}']);" + "\r\n" +
+        "{DETAILS}" + "\r\n" +
+        "_gaq.push(['_trackTrans']); "));
+    var googleAnalytics_EcommerceDetailScript = Html.Raw(HttpUtility.JavaScriptStringEncode("_gaq.push(['_addItem', '{ORDERID}', '{PRODUCTSKU}', '{PRODUCTNAME}', '{CATEGORYNAME}', '{UNITPRICE}', '{QUANTITY}' ]); "));
+
+
+
+    var universalAnalytics_trackingScript = Html.Raw(HttpUtility.JavaScriptStringEncode("<!-- Google code for Analytics tracking -->" + "\r\n" +
+        "<script>" + "\r\n" +
+        "(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){" + "\r\n" +
+        "(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o)," + "\r\n" +
+        "m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)" + "\r\n" +
+        "})(window,document,'script','//www.google-analytics.com/analytics.js','ga');" + "\r\n" +
+        "ga('create', '{GOOGLEID}', 'auto');" + "\r\n" +
+        "ga('send', 'pageview');" + "\r\n" +
+        "{ECOMMERCE}" + "\r\n" +
+        "</script>"));
+    var universalAnalytics_EcommerceScript = Html.Raw(HttpUtility.JavaScriptStringEncode("ga('require', 'ecommerce', 'ecommerce.js');" + "\r\n" +
+        "ga('ecommerce:addTransaction', {" + "\r\n" +
+        "'id': '{ORDERID}'," + "\r\n" +
+        "'affiliation': '{SITE}'," + "\r\n" +
+        "'revenue': '{TOTAL}'," + "\r\n" +
+        "'shipping': '{SHIP}'," + "\r\n" +
+        "'tax': '{TAX}'" + "\r\n" +
+        "});" + "\r\n" +
+        "{DETAILS} " + "\r\n" +
+        "ga('ecommerce:send');"));
+    var universalAnalytics_EcommerceDetailScript = Html.Raw(HttpUtility.JavaScriptStringEncode("ga('ecommerce:addItem', {" + "\r\n" +
+        "'id': '{ORDERID}'," + "\r\n" +
+        "'name': '{PRODUCTNAME}'," + "\r\n" +
+        "'sku': '{PRODUCTSKU}'," + "\r\n" +
+        "'category': '{CATEGORYNAME}'," + "\r\n" +
+        "'price': '{UNITPRICE}'," + "\r\n" +
+        "'quantity': '{QUANTITY}'" + "\r\n" +
+        "});"));
+}
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>
+                    Google Analytics is a free website stats tool from Google. It keeps track of statistics
+                    about the visitors and ecommerce conversion on your website.<br />
+                    <br />
+                    Follow the next steps to enable Google Analytics integration:<br />
+                    <ul>
+                        <li>
+                            <a href="http://www.google.com/analytics/" target="_blank">
+                                Create a Google Analytics
+                                account
+                            </a> and follow the wizard to add your website
+                        </li>
+                        <li>Copy the Tracking ID into the 'ID' box below</li>
+                        <li>Click the 'Save' button below and Google Analytics will be integrated into your store</li>
+                    </ul>
+                    <br />
+                    If you would like to switch between Google Analytics (used by default) and Universal Analytics, then please use the buttons below:
+                </p>               
+            </div>
+            <div class="panel-footer">
+                <input type="button" id="pre-configure-google-analytics" class="btn btn-primary" value="Pre-configure Google Analytics" />
+                <input type="button" id="pre-configure-universal-analytics" class="btn bg-aqua" value="Pre-configure Universal Analytics" />
+
+                <script type="text/javascript">
+                    $(document).ready(function () {
+
+                        $("#pre-configure-google-analytics").click(preConfigureGoogleAnalytic);
+                        $("#pre-configure-universal-analytics").click(preConfigureUniversalAnalytic);
+                    });
+
+                    function preConfigureGoogleAnalytic() {
+                        $('#@Html.FieldIdFor(model => model.TrackingScript)').val('@googleAnalytics_trackingScript');
+                        $('#@Html.FieldIdFor(model => model.EcommerceScript)').val('@googleAnalytics_EcommerceScript');
+                        $('#@Html.FieldIdFor(model => model.EcommerceDetailScript)').val('@googleAnalytics_EcommerceDetailScript');
+                    }
+
+                    function preConfigureUniversalAnalytic() {
+                        $('#@Html.FieldIdFor(model => model.TrackingScript)').val('@universalAnalytics_trackingScript');
+                        $('#@Html.FieldIdFor(model => model.EcommerceScript)').val('@universalAnalytics_EcommerceScript');
+                        $('#@Html.FieldIdFor(model => model.EcommerceDetailScript)').val('@universalAnalytics_EcommerceDetailScript');
+                    }
+
+                </script>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>
+                    <em>Please note that {ECOMMERCE} line works only when you have "Disable order completed page" order setting unticked.</em>
+                </p>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.GoogleId_OverrideForStore, model => model.GoogleId, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.GoogleId)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.GoogleId)
+                        @Html.ValidationMessageFor(model => model.GoogleId)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.TrackingScript_OverrideForStore, model => model.TrackingScript, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.TrackingScript)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopTextAreaFor(model => model.TrackingScript)
+                        @Html.ValidationMessageFor(model => model.TrackingScript)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.EcommerceScript_OverrideForStore, model => model.EcommerceScript, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.EcommerceScript)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopTextAreaFor(model => model.EcommerceScript)
+                        @Html.ValidationMessageFor(model => model.EcommerceScript)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.EcommerceDetailScript_OverrideForStore, model => model.EcommerceDetailScript, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.EcommerceDetailScript)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopTextAreaFor(model => model.EcommerceDetailScript)
+                        @Html.ValidationMessageFor(model => model.EcommerceDetailScript)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.IncludingTax_OverrideForStore, model => model.IncludingTax, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.IncludingTax)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.IncludingTax)
+                        @Html.ValidationMessageFor(model => model.IncludingTax)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.ZoneId)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDropDownListFor(model => model.ZoneId, Model.AvailableZones)
+                        @Html.ValidationMessageFor(model => model.ZoneId)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

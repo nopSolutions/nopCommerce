@@ -4,10 +4,11 @@
 @using Nop.Services.Catalog;
 @using System.Text;
 @using Nop.Services
-@using Nop.Services.Customers
 @using Nop.Services.Stores
 
 @{
+    var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
+
     //resources for product tags input
     Html.AppendCssFileParts("~/Administration/Content/tagEditor/jquery.tag-editor.css");
     Html.AppendScriptParts("~/Administration/Scripts/tagEditor/jquery.tag-editor.min.js");
@@ -68,30 +69,58 @@
     }
 
     function toggleProductType() {
+        var simpleProductId = "@((int)ProductType.SimpleProduct)";
+        var groupedProductId = "@((int)ProductType.GroupedProduct)";
+
+
         var selectedProductTypeId = $("#@Html.FieldIdFor(model => model.ProductTypeId)").val();
-        if (!selectedProductTypeId || selectedProductTypeId == @(((int) ProductType.SimpleProduct).ToString())) {
+        if (!selectedProductTypeId || selectedProductTypeId == simpleProductId) {
             $('#group-prices').show();
-        $('#tier-prices').show();
-        $('#group-required-other-products').show();
-        $('#group-giftcard').show();
-        $('#group-downloads').show();
-        $('#group-recurring').show();
-        $('#group-rental').show();
-        $('#group-shipping').show();
-        $('#group-inventory').show();
-        $('#group-associated-products').hide();
-    } else if (selectedProductTypeId == @(((int) ProductType.GroupedProduct).ToString())) {
-        $('#group-prices').hide();
-        $('#tier-prices').hide();
-        $('#group-required-other-products').hide();
-        $('#group-giftcard').hide();
-        $('#group-downloads').hide();
-        $('#group-recurring').hide();
-        $('#group-rental').hide();
-        $('#group-shipping').hide();
-        $('#group-inventory').hide();
-        $('#group-associated-products').show();
-    }
+            $('#tier-prices').show();
+            $('#group-required-other-products').show();
+            $('#group-giftcard').show();
+            $('#group-downloads').show();
+            $('#group-recurring').show();
+            $('#group-rental').show();
+            $('#group-shipping').show();
+            $('#group-inventory').show();
+            $('#group-associated-products').hide();
+        } else if (selectedProductTypeId == groupedProductId) {
+            $('#group-prices').hide();
+            $('#tier-prices').hide();
+            $('#group-required-other-products').hide();
+            $('#group-giftcard').hide();
+            $('#group-downloads').hide();
+            $('#group-recurring').hide();
+            $('#group-rental').hide();
+            $('#group-shipping').hide();
+            $('#group-inventory').hide();
+            $('#group-associated-products').show();
+        }
+
+        //templates
+        var productTypeSupportedValues = {};
+        @foreach (var kvp in Model.ProductsTypesSupportedByProductTemplates)
+        {
+            <text>productTypeSupportedValues['@(kvp.Key)'] = {};</text>
+            foreach (var item in kvp.Value)
+            {
+                <text>productTypeSupportedValues['@(kvp.Key)']['@(item.Value)'] = '@Html.Raw(HttpUtility.JavaScriptStringEncode((item.Text)))';</text>
+            }
+        }
+        var productTemplateDropddown = $("#@Html.FieldIdFor(model => model.ProductTemplateId)");
+        var productTemplateSelectedValue = productTemplateDropddown.val();
+        productTemplateDropddown.empty();
+        for (var name in productTypeSupportedValues[selectedProductTypeId]) {
+            productTemplateDropddown.append($("<option></option>").attr("value", name).text(productTypeSupportedValues[selectedProductTypeId][name]));
+        }
+        //previously selected value
+        $('#@Html.FieldIdFor(model => model.ProductTemplateId) option').each(function(){
+            if (this.value == productTemplateSelectedValue) {
+                productTemplateDropddown.val(productTemplateSelectedValue);
+            }
+        });
+        
     }
 
     function togglePreOrder() {
@@ -238,71 +267,95 @@
     }
 
     function toggleManageStock() {
-        var selectedManageInventoryMethodId = $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").val();
-        if (selectedManageInventoryMethodId == @(((int) ManageInventoryMethod.DontManageStock).ToString())) {
-            $('#pnlUseMultipleWarehouses').hide();
-        $('#pnlWarehouse').show();
-        $('#pnlMultipleWarehouses').hide();
-        $('#pnlStockQuantity').hide();
-        $('#pnlDisplayStockAvailability').hide();
-        $('#pnlDisplayStockQuantity').hide();
-        $('#pnlMinStockQuantity').hide();
-        $('#pnlLowStockActivity').hide();
-        $('#pnlNotifyForQuantityBelow').hide();
-        $('#pnlAllowBackInStockSubscriptions').hide();
-        $('#pnlBackorders').hide();
-        $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
-    } else if (selectedManageInventoryMethodId == @(((int) ManageInventoryMethod.ManageStock).ToString())) {
-        $('#pnlUseMultipleWarehouses').show();
+        var dontManageStockId = "@((int)ManageInventoryMethod.DontManageStock)";
+        var manageStockId = "@((int)ManageInventoryMethod.ManageStock)";
+        var noBackordersId = "@((int)BackorderMode.NoBackorders)";
+        var allowQtyBelow0Id = "@((int)BackorderMode.AllowQtyBelow0)";
+        var allowQtyBelow0AndNotifyCustomerId = "@((int)BackorderMode.AllowQtyBelow0AndNotifyCustomer)";
 
-        if ($('#@Html.FieldIdFor(model => model.UseMultipleWarehouses)').is(':checked')) {
-            $('#pnlWarehouse').hide();
-            $('#pnlMultipleWarehouses').show();
-            $('#pnlStockQuantity').hide();
-        } else {
+        var selectedManageInventoryMethodId = $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").val();
+        if (selectedManageInventoryMethodId == dontManageStockId) {
+            $('#pnlProductAvailabilityRange').hide();
+            $('#pnlUseMultipleWarehouses').hide();
             $('#pnlWarehouse').show();
             $('#pnlMultipleWarehouses').hide();
-            $('#pnlStockQuantity').show();
-        }
-
-        $('#pnlDisplayStockAvailability').show();
-        if ($('#@Html.FieldIdFor(model => model.DisplayStockAvailability)').is(':checked')) {
-            $('#pnlDisplayStockQuantity').show();
-        } else {
+            $('#pnlStockQuantity').hide();
+            $('#pnlDisplayStockAvailability').hide();
             $('#pnlDisplayStockQuantity').hide();
-        }
+            $('#pnlMinStockQuantity').hide();
+            $('#pnlLowStockActivity').hide();
+            $('#pnlNotifyForQuantityBelow').hide();
+            $('#pnlAllowBackInStockSubscriptions').hide();
+            $('#pnlBackorders').hide();
+            $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
 
-        $('#pnlMinStockQuantity').show();
-        $('#pnlLowStockActivity').show();
-        $('#pnlNotifyForQuantityBelow').show();
-        $('#pnlBackorders').show();
-        var selectedBackorderModeId = $("#@Html.FieldIdFor(model => model.BackorderModeId)").val();
-        if (selectedBackorderModeId == @(((int) BackorderMode.NoBackorders).ToString())) {
-            //no backorders
-            $('#pnlAllowBackInStockSubscriptions').show();
-    } else {
-    //backorders are enabled
+            $('[data-tab-name=tab-stock-quantity-history]').hide();
+        } else if (selectedManageInventoryMethodId == manageStockId) {
+            $('#pnlUseMultipleWarehouses').show();
+
+            if ($('#@Html.FieldIdFor(model => model.UseMultipleWarehouses)').is(':checked')) {
+                $('#pnlWarehouse').hide();
+                $('#pnlMultipleWarehouses').show();
+                $('#pnlStockQuantity').hide();
+            } else {
+                $('#pnlWarehouse').show();
+                $('#pnlMultipleWarehouses').hide();
+                $('#pnlStockQuantity').show();
+            }
+
+            $('#pnlDisplayStockAvailability').show();
+            if ($('#@Html.FieldIdFor(model => model.DisplayStockAvailability)').is(':checked')) {
+                $('#pnlDisplayStockQuantity').show();
+            } else {
+                $('#pnlDisplayStockQuantity').hide();
+            }
+
+            $('#pnlMinStockQuantity').show();
+            $('#pnlLowStockActivity').show();
+            $('#pnlNotifyForQuantityBelow').show();
+            $('#pnlBackorders').show();
+
+            var selectedBackorderModeId = $("#@Html.FieldIdFor(model => model.BackorderModeId)").val();
+            if (selectedBackorderModeId == noBackordersId) {
+                //no backorders
+                $('#pnlAllowBackInStockSubscriptions').show();
+                $('#pnlProductAvailabilityRange').show();
+            } else if (selectedBackorderModeId == allowQtyBelow0AndNotifyCustomerId) {
+                //backorders are enabled
                 $('#pnlAllowBackInStockSubscriptions').hide();
-    }
-    $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
-    } else {
-        $('#pnlUseMultipleWarehouses').hide();
-        $('#pnlWarehouse').show();
-        $('#pnlMultipleWarehouses').hide();
-        $('#pnlStockQuantity').hide();
-        $('#pnlDisplayStockAvailability').show();
-        if ($('#@Html.FieldIdFor(model => model.DisplayStockAvailability)').is(':checked')) {
-            $('#pnlDisplayStockQuantity').show();
+                $('#pnlProductAvailabilityRange').show();
+            }
+            else if (selectedBackorderModeId == allowQtyBelow0Id) {
+                //backorders are enabled
+                $('#pnlAllowBackInStockSubscriptions').hide();
+                $('#pnlProductAvailabilityRange').hide();
+            }
+
+            $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
+
+            $('[data-tab-name=tab-stock-quantity-history]').show();
         } else {
-            $('#pnlDisplayStockQuantity').hide();
+            $('#pnlProductAvailabilityRange').show();
+            $('#pnlUseMultipleWarehouses').hide();
+            $('#pnlWarehouse').show();
+            $('#pnlMultipleWarehouses').hide();
+            $('#pnlStockQuantity').hide();
+            $('#pnlDisplayStockAvailability').show();
+
+            if ($('#@Html.FieldIdFor(model => model.DisplayStockAvailability)').is(':checked')) {
+                $('#pnlDisplayStockQuantity').show();
+            } else {
+                $('#pnlDisplayStockQuantity').hide();
+            }
+            $('#pnlMinStockQuantity').hide();
+            $('#pnlLowStockActivity').hide();
+            $('#pnlNotifyForQuantityBelow').hide();
+            $('#pnlAllowBackInStockSubscriptions').hide();
+            $('#pnlBackorders').hide();
+            $('#pnlAllowAddingOnlyExistingAttributeCombinations').show();
+
+            $('[data-tab-name=tab-stock-quantity-history]').show();
         }
-        $('#pnlMinStockQuantity').hide();
-        $('#pnlLowStockActivity').hide();
-        $('#pnlNotifyForQuantityBelow').hide();
-        $('#pnlAllowBackInStockSubscriptions').hide();
-        $('#pnlBackorders').hide();
-        $('#pnlAllowAddingOnlyExistingAttributeCombinations').show();
-    }
     }
 
     function toggleMarkAsNew() {
@@ -344,7 +397,7 @@
                 source: initialProductTags
             },
             delimiter: ',',
-            placeholder: 'Enter tags ...'
+            placeholder: '@T("Admin.Catalog.Products.Fields.ProductTags.Placeholder")'
         });
     });
 
@@ -908,33 +961,6 @@
                             @Html.ValidationMessageFor(model => model.ProductCost)
                         </div>
                     </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.SpecialPrice ? null : "advanced-setting")">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.SpecialPrice)
-                        </div>
-                        <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.SpecialPrice) [@Model.PrimaryStoreCurrencyCode]
-                            @Html.ValidationMessageFor(model => model.SpecialPrice)
-                        </div>
-                    </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.SpecialPriceStartDate ? null : "advanced-setting")">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.SpecialPriceStartDateTimeUtc)
-                        </div>
-                        <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.SpecialPriceStartDateTimeUtc)
-                            @Html.ValidationMessageFor(model => model.SpecialPriceStartDateTimeUtc)
-                        </div>
-                    </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.SpecialPriceEndDate ? null : "advanced-setting")">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.SpecialPriceEndDateTimeUtc)
-                        </div>
-                        <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.SpecialPriceEndDateTimeUtc)
-                            @Html.ValidationMessageFor(model => model.SpecialPriceEndDateTimeUtc)
-                        </div>
-                    </div>
                     <div class="form-group @(Model.ProductEditorSettingsModel.DisableBuyButton ? null : "advanced-setting")">
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.DisableBuyButton)
@@ -1113,12 +1139,12 @@
                 <div class="panel-heading">
                     @T("Admin.Catalog.Products.TierPrices")
                 </div>
-                <div class="panel-body">
-                    <p>
-                        @T("Admin.Catalog.Products.TierPrices.Hint")
-                    </p>
-                    @if (Model.Id > 0)
-                    {
+                @if (Model.Id > 0)
+                {
+                    <div class="panel-body">
+                        <p>
+                            @T("Admin.Catalog.Products.TierPrices.Hint")
+                        </p>
                         <div id="tierprices-grid"></div>
 
                         <script>
@@ -1129,18 +1155,6 @@
                                         transport: {
                                             read: {
                                                 url: "@Html.Raw(Url.Action("TierPriceList", "Product", new {productId = Model.Id}))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: addAntiForgeryToken
-                                            },
-                                            create: {
-                                                url: "@Html.Raw(Url.Action("TierPriceInsert", "Product", new {productId = Model.Id}))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: addAntiForgeryToken
-                                            },
-                                            update: {
-                                                url: "@Html.Raw(Url.Action("TierPriceUpdate", "Product"))",
                                                 type: "POST",
                                                 dataType: "json",
                                                 data: addAntiForgeryToken
@@ -1163,16 +1177,12 @@
                                                     StoreId: { editable: true, type: "number" },
                                                     CustomerRole: { editable: true, type: "string" },
                                                     CustomerRoleId: { editable: true, type: "number" },
-                                                    //ProductId: { editable: false, type: "number" },
                                                     Quantity: { editable: true, type: "number" },
                                                     Price: { editable: true, type: "number" },
+                                                    StartDateTimeUtc: { editable: true, type: "date" },
+                                                    EndDateTimeUtc: { editable: true, type: "date" },
                                                     Id: { editable: false, type: "number" }
                                                 }
-                                            }
-                                        },
-                                        requestEnd: function(e) {
-                                            if (e.type == "create" || e.type == "update") {
-                                                this.read();
                                             }
                                         },
                                         error: function(e) {
@@ -1188,9 +1198,9 @@
                                         refresh: true,
                                         numeric: false,
                                         previousNext: false,
-                                        info: false
+                                        info: false,
+                                        @Html.Partial("_GridPagerMessages")
                                     },
-                                    toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
                                     editable: {
                                         confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                         mode: "inline"
@@ -1199,121 +1209,65 @@
                                     columns: [
                                         {
                                             field: "StoreId",
+                                            hidden: @(stores.Count > 1 ? "false" : "true"),
                                             title: "@T("Admin.Catalog.Products.TierPrices.Fields.Store")",
-                                            width: 250,
-                                            editor: storeDropDownEditor,
                                             template: "#:Store#"
-                                        },
-                                        {
+                                        }, {
                                             field: "CustomerRoleId",
                                             title: "@T("Admin.Catalog.Products.TierPrices.Fields.CustomerRole")",
-                                            width: 250,
-                                            editor: customerRoleDropDownEditor,
                                             template: "#:CustomerRole#"
-                                        },
-                                        {
+                                        }, {
                                             field: "Quantity",
                                             title: "@T("Admin.Catalog.Products.TierPrices.Fields.Quantity")",
-                                            width: 150,
-                                            //integer format
                                             format: "{0:0}"
                                         }, {
                                             field: "Price",
-                                            title: "@T("Admin.Catalog.Products.TierPrices.Fields.Price")",
-                                            width: 150,
-                                            editor: function(container, options) {
-                                                $('<input name="' + options.field + '"/>')
-                                                    .appendTo(container)
-                                                    .kendoNumericTextBox({
-                                                        format: "{0:n4}",
-                                                        decimals: 4
-                                                    });
-                                            }
+                                            title: "@T("Admin.Catalog.Products.TierPrices.Fields.Price")"
                                         }, {
-                                            command: [
-                                                {
-                                                    name: "edit",
-                                                    text: {
-                                                        edit: "@T("Admin.Common.Edit")",
-                                                        update: "@T("Admin.Common.Update")",
-                                                        cancel: "@T("Admin.Common.Cancel")"
-                                                    }
-                                                }, {
-                                                    name: "destroy",
-                                                    text: "@T("Admin.Common.Delete")"
-                                                }
-                                            ],
-                                            width: 200
+                                            field: "StartDateTimeUtc",
+                                            title: "@T("Admin.Catalog.Products.TierPrices.Fields.StartDateTimeUtc")",
+                                            type: "date",
+                                            format: "{0:G}"
+                                        }, {
+                                            field: "EndDateTimeUtc",
+                                            title: "@T("Admin.Catalog.Products.TierPrices.Fields.EndDateTimeUtc")",
+                                            type: "date",
+                                            format: "{0:G}"
+                                        }, {
+                                            field: "Id",
+                                            title: "@T("Admin.Common.Edit")",
+                                            template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/TierPriceEditPopup/")#=Id#?btnId=btnRefreshTierPrices&formId=product-form', 800, 600, true); return false;\" class='btn btn-default' />"
+                                        },{
+                                            command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                            title: "@T("Admin.Common.Delete")"
                                         }
                                     ]
                                 });
                             });
-
-                            //local datasource
-                            var allStores = [
-                                {
-                                    Id: 0,
-                                    Name: "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores")"
-                                }
-                                @{
-                                var storeService = EngineContext.Current.Resolve<IStoreService>();
-                                var allStores = storeService.GetAllStores();
-                            }
-                                @foreach (var store in allStores)
-                            {
-                                <text>
-                                            , {
-                                                Id: @(store.Id),
-                                                Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(store.Name)))"
-                                            }
-                                            </text>
-                            }
-                            ];
-
-                            var allCustomerRoles = [
-                                {
-                                    Id: 0,
-                                    Name: "@T("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All")"
-                                }
-                                @{
-                                var customerService = EngineContext.Current.Resolve<ICustomerService>();
-                                var allCustomerRoles = customerService.GetAllCustomerRoles(true);
-                            }
-                                @foreach (var customerRole in allCustomerRoles)
-                            {
-                                <text>
-                                                , {
-                                                    Id: @(customerRole.Id),
-                                                    Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(customerRole.Name)))"
-                                                }
-                                    </text>
-                            }
-                            ];
-
-                            function storeDropDownEditor(container, options) {
-                                $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:StoreId"/>')
-                                    .appendTo(container)
-                                    .kendoDropDownList({
-                                        autoBind: false,
-                                        dataSource: allStores
-                                    });
-                            }
-
-                            function customerRoleDropDownEditor(container, options) {
-                                $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:CustomerRoleId"/>')
-                                    .appendTo(container)
-                                    .kendoDropDownList({
-                                        autoBind: false,
-                                        dataSource: allCustomerRoles
-                                    });
-                            }
                         </script>
-    }
-    else
-    {
-        @T("Admin.Catalog.Products.TierPrices.SaveBeforeEdit")
-    }
-                </div>
+                    </div>
+                    <div class="panel-footer">
+                        <button type="submit" id="btnAddNewTierPrice" onclick="javascript:OpenWindow('@(Url.Action("TierPriceCreatePopup", "Product", new { productId = Model.Id, btnId = "btnRefreshTierPrices", formId = "product-form"}))', 800, 600, true); return false;" class="btn btn-primary">
+                            @T("Admin.Catalog.Products.TierPrices.AddNew")
+                        </button>
+                        <input type="submit" id="btnRefreshTierPrices" style="display: none" />
+                        <script type="text/javascript">
+                            $(document).ready(function() {
+                                $('#btnRefreshTierPrices').click(function() {
+                                    $("#tierprices-grid").data('kendoGrid').dataSource.read();
+                                    //return false to don't reload a page
+                                    return false;
+                                });
+                            });
+                        </script>
+                    </div>
+                }
+                else
+                {
+                    <div class="panel-body">
+                        @T("Admin.Catalog.Products.TierPrices.SaveBeforeEdit")
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -1398,7 +1352,8 @@
                                         refresh: true,
                                         numeric: false,
                                         previousNext: false,
-                                        info: false
+                                        info: false,
+                                        @Html.Partial("_GridPagerMessages")
                                     },
                                     editable: {
                                         confirmation: "@T("Admin.Common.DeleteConfirmation")",
@@ -1647,6 +1602,15 @@
                         <div class="@rightColumnClass">
                             @Html.NopEditorFor(model => model.AllowBackInStockSubscriptions)
                             @Html.ValidationMessageFor(model => model.AllowBackInStockSubscriptions)
+                        </div>
+                    </div>
+                    <div class="form-group @(Model.ProductEditorSettingsModel.ProductAvailabilityRange ? null : "advanced-setting")" id="pnlProductAvailabilityRange">
+                        <div class="@leftColumnClass">
+                            @Html.NopLabelFor(model => model.ProductAvailabilityRangeId)
+                        </div>
+                        <div class="@rightColumnClass">
+                            @Html.NopDropDownListFor(model => model.ProductAvailabilityRangeId, Model.AvailableProductAvailabilityRanges)
+                            @Html.ValidationMessageFor(model => model.ProductAvailabilityRangeId)
                         </div>
                     </div>
                     <div class="form-group @(Model.ProductEditorSettingsModel.MinimumCartQuantity ? null : "advanced-setting")">
@@ -2050,7 +2014,8 @@
                                         refresh: true,
                                         numeric: false,
                                         previousNext: false,
-                                        info: false
+                                        info: false,
+                                        @Html.Partial("_GridPagerMessages")
                                     },
                                     editable: {
                                         confirmation: "@T("Admin.Common.DeleteConfirmation")",
@@ -2172,7 +2137,8 @@
                                         refresh: true,
                                         numeric: false,
                                         previousNext: false,
-                                        info: false
+                                        info: false,
+                                        @Html.Partial("_GridPagerMessages")
                                     },
                                     editable: {
                                         confirmation: "@T("Admin.Common.DeleteConfirmation")",

@@ -187,7 +187,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("NewCustomer.Notification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.CustomerRegisteredNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -204,9 +204,8 @@ namespace Nop.Services.Messages
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -223,7 +222,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Customer.WelcomeMessage", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.CustomerWelcomeMessage, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -240,9 +239,8 @@ namespace Nop.Services.Messages
 
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens, 
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -259,7 +257,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Customer.EmailValidationMessage", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.CustomerEmailValidationMessage, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -277,9 +275,45 @@ namespace Nop.Services.Messages
 
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+                
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+        }
+
+        /// <summary>
+        /// Sends an email re-validation message to a customer
+        /// </summary>
+        /// <param name="customer">Customer instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendCustomerEmailRevalidationMessage(Customer customer, int languageId)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            var store = _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.CustomerEmailRevalidationMessage, store.Id);
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            //tokens
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            //email to re-validate
+            var toEmail = customer.EmailToRevalidate;
+            var toName = customer.GetFullName();
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -296,7 +330,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Customer.PasswordRecovery", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.CustomerPasswordRecoveryMessage, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -314,9 +348,8 @@ namespace Nop.Services.Messages
 
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         #endregion
@@ -341,7 +374,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("OrderPlaced.VendorNotification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.OrderPlacedVendorNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -359,9 +392,8 @@ namespace Nop.Services.Messages
 
             var toEmail = vendor.Email;
             var toName = vendor.Name;
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -378,7 +410,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("OrderPlaced.StoreOwnerNotification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.OrderPlacedStoreOwnerNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -396,9 +428,8 @@ namespace Nop.Services.Messages
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -415,7 +446,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("OrderPaid.StoreOwnerNotification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.OrderPaidStoreOwnerNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -433,9 +464,8 @@ namespace Nop.Services.Messages
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -455,7 +485,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("OrderPaid.CustomerNotification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.OrderPaidCustomerNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -473,11 +503,9 @@ namespace Nop.Services.Messages
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName,
-                attachmentFilePath,
-                attachmentFileName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                attachmentFilePath, attachmentFileName);
         }
 
         /// <summary>
@@ -498,7 +526,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("OrderPaid.VendorNotification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.OrderPaidVendorNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -516,9 +544,8 @@ namespace Nop.Services.Messages
 
             var toEmail = vendor.Email;
             var toName = vendor.Name;
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -538,7 +565,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("OrderPlaced.CustomerNotification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.OrderPlacedCustomerNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -556,11 +583,9 @@ namespace Nop.Services.Messages
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName,
-                attachmentFilePath,
-                attachmentFileName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName, 
+                attachmentFilePath, attachmentFileName);
         }
 
         /// <summary>
@@ -581,7 +606,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("ShipmentSent.CustomerNotification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.ShipmentSentCustomerNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -600,9 +625,8 @@ namespace Nop.Services.Messages
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -623,7 +647,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("ShipmentDelivered.CustomerNotification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.ShipmentDeliveredCustomerNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -642,9 +666,8 @@ namespace Nop.Services.Messages
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -664,7 +687,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("OrderCompleted.CustomerNotification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.OrderCompletedCustomerNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -682,11 +705,9 @@ namespace Nop.Services.Messages
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName,
-                attachmentFilePath,
-                attachmentFileName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                attachmentFilePath, attachmentFileName);
         }
 
         /// <summary>
@@ -703,7 +724,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("OrderCancelled.CustomerNotification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.OrderCancelledCustomerNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -721,9 +742,8 @@ namespace Nop.Services.Messages
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -741,7 +761,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("OrderRefunded.StoreOwnerNotification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.OrderRefundedStoreOwnerNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -760,9 +780,8 @@ namespace Nop.Services.Messages
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -780,7 +799,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("OrderRefunded.CustomerNotification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.OrderRefundedCustomerNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -799,9 +818,8 @@ namespace Nop.Services.Messages
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -820,7 +838,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Customer.NewOrderNote", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.NewOrderNoteAddedCustomerNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -839,9 +857,8 @@ namespace Nop.Services.Messages
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -858,7 +875,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(recurringPayment.InitialOrder.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("RecurringPaymentCancelled.StoreOwnerNotification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.RecurringPaymentCancelledStoreOwnerNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -877,9 +894,8 @@ namespace Nop.Services.Messages
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         #endregion
@@ -892,8 +908,7 @@ namespace Nop.Services.Messages
         /// <param name="subscription">Newsletter subscription</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendNewsLetterSubscriptionActivationMessage(NewsLetterSubscription subscription,
-            int languageId)
+        public virtual int SendNewsLetterSubscriptionActivationMessage(NewsLetterSubscription subscription, int languageId)
         {
             if (subscription == null)
                 throw new ArgumentNullException("subscription");
@@ -901,7 +916,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("NewsLetterSubscription.ActivationMessage", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.NewsletterSubscriptionActivationMessage, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -916,11 +931,7 @@ namespace Nop.Services.Messages
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-            var toEmail = subscription.Email;
-            var toName = "";
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, subscription.Email, string.Empty);
         }
 
         /// <summary>
@@ -929,8 +940,7 @@ namespace Nop.Services.Messages
         /// <param name="subscription">Newsletter subscription</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendNewsLetterSubscriptionDeactivationMessage(NewsLetterSubscription subscription,
-            int languageId)
+        public virtual int SendNewsLetterSubscriptionDeactivationMessage(NewsLetterSubscription subscription, int languageId)
         {
             if (subscription == null)
                 throw new ArgumentNullException("subscription");
@@ -938,7 +948,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("NewsLetterSubscription.DeactivationMessage", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.NewsletterSubscriptionDeactivationMessage, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -953,11 +963,7 @@ namespace Nop.Services.Messages
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-            var toEmail = subscription.Email;
-            var toName = "";
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, subscription.Email, string.Empty);
         }
 
         #endregion
@@ -986,7 +992,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Service.EmailAFriend", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.EmailAFriendMessage, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1003,12 +1009,8 @@ namespace Nop.Services.Messages
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
-
-            var toEmail = friendsEmail;
-            var toName = "";
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+            
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, friendsEmail, string.Empty);
         }
 
         /// <summary>
@@ -1029,7 +1031,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Wishlist.EmailAFriend", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.WishlistToFriendMessage, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1046,11 +1048,7 @@ namespace Nop.Services.Messages
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-            var toEmail = friendsEmail;
-            var toName = "";
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, friendsEmail, string.Empty);
         }
 
         #endregion
@@ -1072,7 +1070,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(orderItem.Order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("NewReturnRequest.StoreOwnerNotification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.NewReturnRequestStoreOwnerNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1090,9 +1088,49 @@ namespace Nop.Services.Messages
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+        }
+
+        /// <summary>
+        /// Sends 'New Return Request' message to a customer
+        /// </summary>
+        /// <param name="returnRequest">Return request</param>
+        /// <param name="orderItem">Order item</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendNewReturnRequestCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, int languageId)
+        {
+            if (returnRequest == null)
+                throw new ArgumentNullException("returnRequest");
+
+            var store = _storeService.GetStoreById(orderItem.Order.StoreId) ?? _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.NewReturnRequestCustomerNotification, store.Id);
+            if (messageTemplate == null)
+                return 0;
+            
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            //tokens
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(tokens, returnRequest.Customer);
+            _messageTokenProvider.AddReturnRequestTokens(tokens, returnRequest, orderItem);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var toEmail = returnRequest.Customer.IsGuest() ?
+                orderItem.Order.BillingAddress.Email :
+                returnRequest.Customer.Email;
+            var toName = returnRequest.Customer.IsGuest() ?
+                orderItem.Order.BillingAddress.FirstName :
+                returnRequest.Customer.GetFullName();
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -1110,7 +1148,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(orderItem.Order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("ReturnRequestStatusChanged.CustomerNotification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.ReturnRequestStatusChangedCustomerNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1132,9 +1170,8 @@ namespace Nop.Services.Messages
             var toName = returnRequest.Customer.IsGuest() ? 
                 orderItem.Order.BillingAddress.FirstName :
                 returnRequest.Customer.GetFullName();
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
         
         #endregion
@@ -1149,16 +1186,14 @@ namespace Nop.Services.Messages
         /// <param name="forum">Forum</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public int SendNewForumTopicMessage(Customer customer,
-            ForumTopic forumTopic, Forum forum, int languageId)
+        public int SendNewForumTopicMessage(Customer customer, ForumTopic forumTopic, Forum forum, int languageId)
         {
             if (customer == null)
-            {
                 throw new ArgumentNullException("customer");
-            }
+
             var store = _storeContext.CurrentStore;
 
-            var messageTemplate = GetActiveMessageTemplate("Forums.NewForumTopic", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.NewForumTopicMessage, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1191,22 +1226,17 @@ namespace Nop.Services.Messages
         /// <param name="friendlyForumTopicPageIndex">Friendly (starts with 1) forum topic page to use for URL generation</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public int SendNewForumPostMessage(Customer customer,
-            ForumPost forumPost, ForumTopic forumTopic,
+        public int SendNewForumPostMessage(Customer customer, ForumPost forumPost, ForumTopic forumTopic,
             Forum forum, int friendlyForumTopicPageIndex, int languageId)
         {
             if (customer == null)
-            {
                 throw new ArgumentNullException("customer");
-            }
 
             var store = _storeContext.CurrentStore;
 
-            var messageTemplate = GetActiveMessageTemplate("Forums.NewForumPost", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.NewForumPostMessage, store.Id);
             if (messageTemplate == null )
-            {
                 return 0;
-            }
 
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
@@ -1215,8 +1245,7 @@ namespace Nop.Services.Messages
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddForumPostTokens(tokens, forumPost);
-            _messageTokenProvider.AddForumTopicTokens(tokens, forumPost.ForumTopic,
-                friendlyForumTopicPageIndex, forumPost.Id);
+            _messageTokenProvider.AddForumTopicTokens(tokens, forumPost.ForumTopic, friendlyForumTopicPageIndex, forumPost.Id);
             _messageTokenProvider.AddForumTokens(tokens, forumPost.ForumTopic.Forum);
             _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
@@ -1238,17 +1267,13 @@ namespace Nop.Services.Messages
         public int SendPrivateMessageNotification(PrivateMessage privateMessage, int languageId)
         {
             if (privateMessage == null)
-            {
                 throw new ArgumentNullException("privateMessage");
-            }
 
             var store = _storeService.GetStoreById(privateMessage.StoreId) ?? _storeContext.CurrentStore;
 
-            var messageTemplate = GetActiveMessageTemplate("Customer.NewPM", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.PrivateMessageNotification, store.Id);
             if (messageTemplate == null )
-            {
                 return 0;
-            }
 
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
@@ -1290,7 +1315,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("VendorAccountApply.StoreOwnerNotification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.NewVendorAccountApplyStoreOwnerNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1308,9 +1333,8 @@ namespace Nop.Services.Messages
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -1327,7 +1351,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("VendorInformationChange.StoreOwnerNotification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.VendorInformationChangeNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1344,9 +1368,8 @@ namespace Nop.Services.Messages
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -1360,18 +1383,12 @@ namespace Nop.Services.Messages
             if (giftCard == null)
                 throw new ArgumentNullException("giftCard");
 
-            Store store = null;
-            var order = giftCard.PurchasedWithOrderItem != null ?
-                giftCard.PurchasedWithOrderItem.Order : 
-                null;
-            if (order != null)
-                store = _storeService.GetStoreById(order.StoreId);
-            if (store == null)
-                store = _storeContext.CurrentStore;
+            var order = giftCard.PurchasedWithOrderItem != null ? giftCard.PurchasedWithOrderItem.Order : null;
+            var store = order != null ? _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore : _storeContext.CurrentStore;
 
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("GiftCard.Notification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.GiftCardNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1385,11 +1402,11 @@ namespace Nop.Services.Messages
             
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
             var toEmail = giftCard.RecipientEmail;
             var toName = giftCard.RecipientName;
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
         
         /// <summary>
@@ -1398,8 +1415,7 @@ namespace Nop.Services.Messages
         /// <param name="productReview">Product review</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendProductReviewNotificationMessage(ProductReview productReview,
-            int languageId)
+        public virtual int SendProductReviewNotificationMessage(ProductReview productReview, int languageId)
         {
             if (productReview == null)
                 throw new ArgumentNullException("productReview");
@@ -1407,7 +1423,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Product.ProductReview", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.ProductReviewNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1425,9 +1441,8 @@ namespace Nop.Services.Messages
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -1444,7 +1459,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("QuantityBelow.StoreOwnerNotification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.QuantityBelowStoreOwnerNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1460,9 +1475,8 @@ namespace Nop.Services.Messages
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -1479,7 +1493,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("QuantityBelow.AttributeCombination.StoreOwnerNotification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.QuantityBelowAttributeCombinationStoreOwnerNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1498,9 +1512,8 @@ namespace Nop.Services.Messages
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -1520,7 +1533,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("NewVATSubmitted.StoreOwnerNotification", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.NewVatSubmittedStoreOwnerNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1539,9 +1552,8 @@ namespace Nop.Services.Messages
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -1558,7 +1570,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Blog.BlogComment", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.BlogCommentNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1576,9 +1588,8 @@ namespace Nop.Services.Messages
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -1595,7 +1606,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("News.NewsComment", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.NewsCommentNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1613,9 +1624,8 @@ namespace Nop.Services.Messages
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -1632,7 +1642,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(subscription.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Customer.BackInStock", store.Id);
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.BackInStockNotification, store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1651,9 +1661,8 @@ namespace Nop.Services.Messages
             var customer = subscription.Customer;
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                toEmail, toName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
         /// <summary>
@@ -1664,8 +1673,7 @@ namespace Nop.Services.Messages
         /// <param name="tokens">Tokens</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendTestEmail(int messageTemplateId, string sendToEmail, 
-            List<Token> tokens, int languageId)
+        public virtual int SendTestEmail(int messageTemplateId, string sendToEmail, List<Token> tokens, int languageId)
         {
             var messageTemplate = _messageTemplateService.GetMessageTemplateById(messageTemplateId);
             if (messageTemplate == null)
@@ -1677,9 +1685,7 @@ namespace Nop.Services.Messages
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
-                sendToEmail, null);
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, sendToEmail, null);
         }
 
         #endregion

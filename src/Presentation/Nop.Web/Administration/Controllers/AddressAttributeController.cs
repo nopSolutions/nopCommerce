@@ -7,6 +7,7 @@ using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Services.Common;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
@@ -24,6 +25,7 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IPermissionService _permissionService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion
 
@@ -34,7 +36,8 @@ namespace Nop.Admin.Controllers
             ILocalizedEntityService localizedEntityService,
             ILocalizationService localizationService,
             IWorkContext workContext,
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            ICustomerActivityService customerActivityService)
         {
             this._addressAttributeService = addressAttributeService;
             this._languageService = languageService;
@@ -42,6 +45,7 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._permissionService = permissionService;
+            this._customerActivityService = customerActivityService;
         }
 
         #endregion
@@ -140,6 +144,10 @@ namespace Nop.Admin.Controllers
             {
                 var addressAttribute = model.ToEntity();
                 _addressAttributeService.InsertAddressAttribute(addressAttribute);
+
+                //activity log
+                _customerActivityService.InsertActivity("AddNewAddressAttribute", _localizationService.GetResource("ActivityLog.AddNewAddressAttribute"), addressAttribute.Id);
+
                 //locales
                 UpdateAttributeLocales(addressAttribute, model);
 
@@ -194,6 +202,10 @@ namespace Nop.Admin.Controllers
             {
                 addressAttribute = model.ToEntity(addressAttribute);
                 _addressAttributeService.UpdateAddressAttribute(addressAttribute);
+
+                //activity log
+                _customerActivityService.InsertActivity("EditAddressAttribute", _localizationService.GetResource("ActivityLog.EditAddressAttribute"), addressAttribute.Id);
+
                 //locales
                 UpdateAttributeLocales(addressAttribute, model);
 
@@ -221,6 +233,9 @@ namespace Nop.Admin.Controllers
 
             var addressAttribute = _addressAttributeService.GetAddressAttributeById(id);
             _addressAttributeService.DeleteAddressAttribute(addressAttribute);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteAddressAttribute", _localizationService.GetResource("ActivityLog.DeleteAddressAttribute"), addressAttribute.Id);
 
             SuccessNotification(_localizationService.GetResource("Admin.Address.AddressAttributes.Deleted"));
             return RedirectToAction("List");
@@ -293,6 +308,10 @@ namespace Nop.Admin.Controllers
                 };
 
                 _addressAttributeService.InsertAddressAttributeValue(cav);
+
+                //activity log
+                _customerActivityService.InsertActivity("AddNewAddressAttributeValue", _localizationService.GetResource("ActivityLog.AddNewAddressAttributeValue"), cav.Id);
+                
                 UpdateValueLocales(cav, model);
 
                 ViewBag.RefreshPage = true;
@@ -353,6 +372,9 @@ namespace Nop.Admin.Controllers
 
                 UpdateValueLocales(cav, model);
 
+                //activity log
+                _customerActivityService.InsertActivity("EditAddressAttributeValue", _localizationService.GetResource("ActivityLog.EditAddressAttributeValue"), cav.Id);
+                
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
                 ViewBag.formId = formId;
@@ -374,7 +396,10 @@ namespace Nop.Admin.Controllers
             if (cav == null)
                 throw new ArgumentException("No address attribute value found with the specified id");
             _addressAttributeService.DeleteAddressAttributeValue(cav);
-
+            
+            //activity log
+            _customerActivityService.InsertActivity("DeleteAddressAttributeValue", _localizationService.GetResource("ActivityLog.DeleteAddressAttributeValue"), cav.Id);
+            
             return new NullJsonResult();
         }
 

@@ -30,8 +30,7 @@ namespace Nop.Admin.Models.Customers
             this.AvailableNewsletterSubscriptionStores = new List<StoreModel>();
             this.RewardPointsAvailableStores = new List<SelectListItem>();
         }
-
-        public bool AllowUsersToChangeUsernames { get; set; }
+       
         public bool UsernamesEnabled { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Username")]
@@ -116,7 +115,8 @@ namespace Nop.Admin.Models.Customers
 
         public List<CustomerAttributeModel> CustomerAttributes { get; set; }
 
-
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.RegisteredInStore")]
+        public string RegisteredInStore { get; set; }
 
 
 
@@ -251,7 +251,7 @@ namespace Nop.Admin.Models.Customers
             public int Points { get; set; }
 
             [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.PointsBalance")]
-            public int PointsBalance { get; set; }
+            public string PointsBalance { get; set; }
 
             [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Message")]
             [AllowHtml]

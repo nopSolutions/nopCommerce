@@ -11,13 +11,20 @@
 
 <div class="content">
     <div class="form-horizontal">
+        <div class="row">
+            <div class="col-md-12 clearfix">
+                <div class="pull-left">
+                    @Html.Action("Mode", "Setting", new { modeName = "vendor-advanced-mode" })
+                </div>
+            </div>
+        </div>
         <div id="vendor-edit" class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Vendors.Info"), true)
-                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"))
+                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"), customCssClass: "advanced-setting")
                 @if (Model.Id > 0)
                 {
-                    @Html.RenderBootstrapTabHeader("tab-vendor-notes", @T("Admin.Vendors.VendorNotes"))
+                    @Html.RenderBootstrapTabHeader("tab-vendor-notes", @T("Admin.Vendors.VendorNotes"), customCssClass: "advanced-setting")
                 }
             </ul>
             <div class="tab-content">
@@ -68,49 +75,49 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-info-localized",
-                @<div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.Locales[item].Name)
-                        </div>
-                        <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.Locales[item].Name)
-                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.Locales[item].Description)
-                        </div>
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
-                            @Html.ValidationMessageFor(model => model.Locales[item].Description)
-                        </div>
-                    </div>
-                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
-                </div>
+                      @<div>
+                          <div class="form-group">
+                              <div class="col-md-3">
+                                  @Html.NopLabelFor(model => model.Locales[item].Name)
+                              </div>
+                              <div class="col-md-9">
+                                  @Html.NopEditorFor(model => model.Locales[item].Name)
+                                  @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <div class="col-md-3">
+                                  @Html.NopLabelFor(model => model.Locales[item].Description)
+                              </div>
+                              <div class="col-md-9">
+                                  @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
+                                  @Html.ValidationMessageFor(model => model.Locales[item].Description)
+                              </div>
+                          </div>
+                          @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                      </div>
     ,
-                @<div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.Name)
-                        </div>
-                        <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.Name)
-                            @Html.ValidationMessageFor(model => model.Name)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.Description)
-                        </div>
-                        <div class="col-md-9">
-                            @Html.EditorFor(x => x.Description, "RichEditor")
-                            @Html.ValidationMessageFor(model => model.Description)
-                        </div>
-                    </div>
-                </div>
-    ))
+                      @<div>
+                          <div class="form-group">
+                              <div class="col-md-3">
+                                  @Html.NopLabelFor(model => model.Name)
+                              </div>
+                              <div class="col-md-9">
+                                  @Html.NopEditorFor(model => model.Name)
+                                  @Html.ValidationMessageFor(model => model.Name)
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <div class="col-md-3">
+                                  @Html.NopLabelFor(model => model.Description)
+                              </div>
+                              <div class="col-md-9">
+                                  @Html.EditorFor(x => x.Description, "RichEditor")
+                                  @Html.ValidationMessageFor(model => model.Description)
+                              </div>
+                          </div>
+                      </div>
+                      ))
                 <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Email)
@@ -147,6 +154,15 @@
                 }
                 <div class="form-group">
                     <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Active)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Active)
+                        @Html.ValidationMessageFor(model => model.Active)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.PictureId)
                     </div>
                     <div class="col-md-9">
@@ -154,7 +170,7 @@
                         @Html.ValidationMessageFor(model => model.PictureId)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AdminComment)
                     </div>
@@ -163,7 +179,7 @@
                         @Html.ValidationMessageFor(model => model.AdminComment)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AllowCustomersToSelectPageSize)
                     </div>
@@ -172,7 +188,7 @@
                         @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
                     </div>
                 </div>
-                <div class="form-group" id="pnlPageSize">
+                <div class="form-group advanced-setting" id="pnlPageSize">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.PageSize)
                     </div>
@@ -181,7 +197,7 @@
                         @Html.ValidationMessageFor(model => model.PageSize)
                     </div>
                 </div>
-                <div class="form-group" id="pnlPageSizeOptions">
+                <div class="form-group advanced-setting" id="pnlPageSizeOptions">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.PageSizeOptions)
                     </div>
@@ -190,16 +206,7 @@
                         @Html.ValidationMessageFor(model => model.PageSizeOptions)
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.Active)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.Active)
-                        @Html.ValidationMessageFor(model => model.Active)
-                    </div>
-                </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.DisplayOrder)
                     </div>
@@ -210,14 +217,22 @@
                 </div>
             </div>
         </div>
+        <div class="panel panel-default advanced-setting">
+            <div class="panel-heading">
+                @T("Admin.Vendors.Address")
+            </div>
+            <div class="panel-body">
+                @Html.EditorFor(model => model.Address, "Address")
+            </div>
+        </div>
     </div>
 }
 
 @helper TabSeo()
 {
     <div class="panel-group">
-        <div class="panel-group">
-            <div class="panel panel-default">
+        <div class="panel panel-default">
+            <div class="panel-body">
                 @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-seo-localized",
                 @<div>
                     <div class="form-group">
@@ -256,6 +271,18 @@
                             @Html.ValidationMessageFor(model => model.Locales[item].SeName)
                         </div>
                     </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#@Html.FieldIdFor(model => model.Locales[item].SeName)').on('input propertychange paste', function () {
+                                var parameters = {
+                                    entityId: '@Model.Id',
+                                    entityName: 'Vendor',
+                                    seName: $(this).val()
+                                };
+                                warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.FieldNameFor(model => model.Locales[item].SeName)', parameters);
+                            });
+                        });
+                    </script>
                     @Html.HiddenFor(model => model.Locales[item].LanguageId)
                 </div>
     ,
@@ -296,6 +323,18 @@
                             @Html.ValidationMessageFor(model => model.SeName)
                         </div>
                     </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#@Html.FieldIdFor(model => model.SeName)').on('input propertychange paste', function () {
+                                var parameters = {
+                                    entityId: '@Model.Id',
+                                    entityName: 'Vendor',
+                                    seName: $(this).val()
+                                };
+                                warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.FieldNameFor(model => model.SeName)', parameters);
+                            });
+                        });
+                    </script>
                 </div>))
             </div>
         </div>
@@ -316,13 +355,15 @@
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("VendorNotesSelect", "Vendor", new {vendorId = Model.Id}))",
+                                        url:
+                                            "@Html.Raw(Url.Action("VendorNotesSelect", "Vendor", new {vendorId = Model.Id}))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
                                     },
                                     destroy: {
-                                        url: "@Html.Raw(Url.Action("VendorNoteDelete", "Vendor", new {vendorId = Model.Id}))",
+                                        url:
+                                            "@Html.Raw(Url.Action("VendorNoteDelete", "Vendor", new {vendorId = Model.Id}))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
@@ -355,7 +396,8 @@
                                 refresh: true,
                                 numeric: false,
                                 previousNext: false,
-                                info: false
+                                info: false,
+                                @Html.Partial("_GridPagerMessages")
                             },
                             editable: {
                                 confirmation: "@T("Admin.Common.DeleteConfirmation")",
@@ -363,21 +405,21 @@
                             },
                             scrollable: false,
                             columns: [
-                            {
-                                field: "CreatedOn",
-                                title: "@T("Admin.Vendors.VendorNotes.Fields.CreatedOn")",
-                                width: 200,
-                                type: "date",
-                                format: "{0:G}"
-                            }, {
-                                field: "Note",
-                                title: "@T("Admin.Vendors.VendorNotes.Fields.Note")",
-                                encoded: false
-                            }, {
-                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
-                                title: "@T("Admin.Common.Delete")",
-                                width: 100
-                            }
+                                {
+                                    field: "CreatedOn",
+                                    title: "@T("Admin.Vendors.VendorNotes.Fields.CreatedOn")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                }, {
+                                    field: "Note",
+                                    title: "@T("Admin.Vendors.VendorNotes.Fields.Note")",
+                                    encoded: false
+                                }, {
+                                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                    title: "@T("Admin.Common.Delete")",
+                                    width: 100
+                                }
                             ]
                         });
                     });
@@ -408,34 +450,34 @@
         </div>
     </div>
 
-                <script type="text/javascript">
-                    $(document).ready(function () {
-                        $('#addVendorNote').click(function () {
-                            var vendorNoteMessage = $("#@Html.FieldIdFor(model => model.AddVendorNoteMessage)").val();
-                            $('#addVendorNote').attr('disabled', true);
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#addVendorNote').click(function() {
+                var vendorNoteMessage = $("#@Html.FieldIdFor(model => model.AddVendorNoteMessage)").val();
+                $('#addVendorNote').attr('disabled', true);
 
-                            var postData = {
-                                message: vendorNoteMessage,
-                                vendorId: @Model.Id
-                                };
-                            addAntiForgeryToken(postData);
+                var postData = {
+                    message: vendorNoteMessage,
+                    vendorId: @Model.Id
+                };
+                addAntiForgeryToken(postData);
 
-                            $.ajax({
-                                cache:false,
-                                type: "POST",
-                                url: "@(Url.Action("VendorNoteAdd", "Vendor"))",
-                                data: postData,
-                                success: function (data) {
-                                    var grid = $("#vendornotes-grid").data('kendoGrid');
-                                    grid.dataSource.read();
-                                    $('#addVendorNote').attr('disabled', false);
-                                },
-                                error:function (xhr, ajaxOptions, thrownError){
-                                    alert('Failed to add vendor note.');
-                                    $('#addVendorNote').attr('disabled', false);
-                                }
-                            });
-                        });
-                    });
-                </script>
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@( Url.Action("VendorNoteAdd", "Vendor"))",
+                    data: postData,
+                    success: function(data) {
+                        var grid = $("#vendornotes-grid").data('kendoGrid');
+                        grid.dataSource.read();
+                        $('#addVendorNote').attr('disabled', false);
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert('Failed to add vendor note.');
+                        $('#addVendorNote').attr('disabled', false);
+                    }
+                });
+            });
+        });
+    </script>
 }

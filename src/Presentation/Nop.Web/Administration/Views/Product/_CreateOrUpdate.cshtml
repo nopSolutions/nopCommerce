@@ -35,6 +35,7 @@
                 @if (Model.Id > 0)
                 {
                     @Html.RenderBootstrapTabHeader("tab-purchased-with-orders", @T("Admin.Catalog.Products.PurchasedWithOrders"), customCssClass: Model.ProductEditorSettingsModel.PurchasedWithOrders ? "" : "advanced-setting")
+                    @Html.RenderBootstrapTabHeader("tab-stock-quantity-history", @T("Admin.Catalog.Products.StockQuantityHistory"), customCssClass: Model.ProductEditorSettingsModel.StockQuantityHistory ? "" : "advanced-setting")
                 }
             </ul>
             <div class="tab-content">
@@ -46,6 +47,7 @@
                 @if (Model.Id > 0)
                 {
                     @Html.RenderBootstrapTabContent("tab-purchased-with-orders", @TabPurchasedWithOrders())
+                    @Html.RenderBootstrapTabContent("tab-stock-quantity-history", @TabStockQuantityHistory())
                 }
             </div>
         </div>
@@ -93,4 +95,9 @@
 @helper TabPurchasedWithOrders()
 {
     @Html.Partial("_CreateOrUpdate.PurchasedWithOrders", Model)
+}
+
+@helper TabStockQuantityHistory()
+{
+    @Html.Partial("_StockQuantityHistory", Model)
 }

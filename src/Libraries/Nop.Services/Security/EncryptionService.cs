@@ -21,13 +21,15 @@ namespace Nop.Services.Security
         /// <returns>Salt key</returns>
         public virtual string CreateSaltKey(int size) 
         {
-            // Generate a cryptographic random number
-            var rng = new RNGCryptoServiceProvider();
-            var buff = new byte[size];
-            rng.GetBytes(buff);
+            //generate a cryptographic random number
+            using (var provider = new RNGCryptoServiceProvider())
+            {
+                var buff = new byte[size];
+                provider.GetBytes(buff);
 
-            // Return a Base64 string representation of the random number
-            return Convert.ToBase64String(buff);
+                // Return a Base64 string representation of the random number
+                return Convert.ToBase64String(buff);
+            }
         }
 
         /// <summary>
@@ -76,12 +78,14 @@ namespace Nop.Services.Security
             if (String.IsNullOrEmpty(encryptionPrivateKey))
                 encryptionPrivateKey = _securitySettings.EncryptionKey;
 
-            var tDESalg = new TripleDESCryptoServiceProvider();
-            tDESalg.Key = Encoding.ASCII.GetBytes(encryptionPrivateKey.Substring(0, 16));
-            tDESalg.IV = Encoding.ASCII.GetBytes(encryptionPrivateKey.Substring(8, 8));
+            using (var provider = new TripleDESCryptoServiceProvider())
+            {
+                provider.Key = Encoding.ASCII.GetBytes(encryptionPrivateKey.Substring(0, 16));
+                provider.IV = Encoding.ASCII.GetBytes(encryptionPrivateKey.Substring(8, 8));
 
-            byte[] encryptedBinary = EncryptTextToMemory(plainText, tDESalg.Key, tDESalg.IV);
-            return Convert.ToBase64String(encryptedBinary);
+                byte[] encryptedBinary = EncryptTextToMemory(plainText, provider.Key, provider.IV);
+                return Convert.ToBase64String(encryptedBinary);
+            }
         }
 
         /// <summary>
@@ -98,12 +102,14 @@ namespace Nop.Services.Security
             if (String.IsNullOrEmpty(encryptionPrivateKey))
                 encryptionPrivateKey = _securitySettings.EncryptionKey;
 
-            var tDESalg = new TripleDESCryptoServiceProvider();
-            tDESalg.Key = Encoding.ASCII.GetBytes(encryptionPrivateKey.Substring(0, 16));
-            tDESalg.IV = Encoding.ASCII.GetBytes(encryptionPrivateKey.Substring(8, 8));
+            using (var provider = new TripleDESCryptoServiceProvider())
+            {
+                provider.Key = Encoding.ASCII.GetBytes(encryptionPrivateKey.Substring(0, 16));
+                provider.IV = Encoding.ASCII.GetBytes(encryptionPrivateKey.Substring(8, 8));
 
-            byte[] buffer = Convert.FromBase64String(cipherText);
-            return DecryptTextFromMemory(buffer, tDESalg.Key, tDESalg.IV);
+                byte[] buffer = Convert.FromBase64String(cipherText);
+                return DecryptTextFromMemory(buffer, provider.Key, provider.IV);
+            }
         }
 
         #region Utilities

@@ -26,7 +26,7 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the points balance
         /// </summary>
-        public int PointsBalance { get; set; }
+        public int? PointsBalance { get; set; }
 
         /// <summary>
         /// Gets or sets the used amount

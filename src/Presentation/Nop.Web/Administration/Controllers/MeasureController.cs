@@ -7,6 +7,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
@@ -22,21 +23,24 @@ namespace Nop.Admin.Controllers
         private readonly ISettingService _settingService;
         private readonly IPermissionService _permissionService;
         private readonly ILocalizationService _localizationService;
+        private readonly ICustomerActivityService _customerActivityService;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
         public MeasureController(IMeasureService measureService,
             MeasureSettings measureSettings, ISettingService settingService,
-            IPermissionService permissionService, ILocalizationService localizationService)
-		{
+            IPermissionService permissionService, ILocalizationService localizationService,
+            ICustomerActivityService customerActivityService)
+        {
             this._measureService = measureService;
             this._measureSettings = measureSettings;
             this._settingService = settingService;
             this._permissionService = permissionService;
             this._localizationService = localizationService;
-		}
+            this._customerActivityService = customerActivityService;
+        }
 
         #endregion
 
@@ -88,6 +92,9 @@ namespace Nop.Admin.Controllers
             weight = model.ToEntity(weight);
             _measureService.UpdateMeasureWeight(weight);
 
+            //activity log
+            _customerActivityService.InsertActivity("EditMeasureWeight", _localizationService.GetResource("ActivityLog.EditMeasureWeight"), weight.Id);
+
             return new NullJsonResult();
         }
         
@@ -105,6 +112,9 @@ namespace Nop.Admin.Controllers
             var weight = new MeasureWeight();
             weight = model.ToEntity(weight);
             _measureService.InsertMeasureWeight(weight);
+
+            //activity log
+            _customerActivityService.InsertActivity("AddNewMeasureWeight", _localizationService.GetResource("ActivityLog.AddNewMeasureWeight"), weight.Id);
 
             return new NullJsonResult();
         }
@@ -125,6 +135,9 @@ namespace Nop.Admin.Controllers
             }
 
             _measureService.DeleteMeasureWeight(weight);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteMeasureWeight", _localizationService.GetResource("ActivityLog.DeleteMeasureWeight"), weight.Id);
 
             return new NullJsonResult();
         }
@@ -184,6 +197,9 @@ namespace Nop.Admin.Controllers
             dimension = model.ToEntity(dimension);
             _measureService.UpdateMeasureDimension(dimension);
 
+            //activity log
+            _customerActivityService.InsertActivity("EditMeasureDimension", _localizationService.GetResource("ActivityLog.EditMeasureDimension"), dimension.Id);
+
             return new NullJsonResult();
         }
 
@@ -201,6 +217,9 @@ namespace Nop.Admin.Controllers
             var dimension = new MeasureDimension();
             dimension = model.ToEntity(dimension);
             _measureService.InsertMeasureDimension(dimension);
+
+            //activity log
+            _customerActivityService.InsertActivity("AddNewMeasureDimension", _localizationService.GetResource("ActivityLog.AddNewMeasureDimension"), dimension.Id);
 
             return new NullJsonResult();
         }
@@ -221,6 +240,9 @@ namespace Nop.Admin.Controllers
             }
 
             _measureService.DeleteMeasureDimension(dimension);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteMeasureDimension", _localizationService.GetResource("ActivityLog.DeleteMeasureDimension"), dimension.Id);
 
             return new NullJsonResult();
         }

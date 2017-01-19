@@ -67,7 +67,6 @@
 
 @helper TabCustomerSettings()
 {
-
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -204,6 +203,42 @@
                     <div class="col-md-9">
                         @Html.NopEditorFor(model => model.CustomerSettings.PasswordRecoveryLinkDaysValid)
                         @Html.ValidationMessageFor(model => model.CustomerSettings.PasswordRecoveryLinkDaysValid)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.FailedPasswordAllowedAttempts)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.FailedPasswordAllowedAttempts)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.FailedPasswordAllowedAttempts)
+                        
+
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $("#@Html.FieldIdFor(model => model.CustomerSettings.FailedPasswordAllowedAttempts)").change(toggleFailedPasswordAllowedAttempts);
+
+                                toggleFailedPasswordAllowedAttempts();
+                            });
+
+                            function toggleFailedPasswordAllowedAttempts() {
+                                var failedPasswordAllowedAttempts = $("#@Html.FieldIdFor(model => model.CustomerSettings.FailedPasswordAllowedAttempts)").data("kendoNumericTextBox");
+                                if (failedPasswordAllowedAttempts.value($("#value").val()) > 0) {
+                                    $('#pnlFailedPasswordLockoutMinutes').show();
+                                } else {
+                                    $('#pnlFailedPasswordLockoutMinutes').hide();
+                                }
+                            }
+                        </script>
+                    </div>
+                </div>
+                <div class="form-group advanced-setting" id="pnlFailedPasswordLockoutMinutes">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.FailedPasswordLockoutMinutes)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.FailedPasswordLockoutMinutes)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.FailedPasswordLockoutMinutes)
                     </div>
                 </div>
                 <div class="form-group advanced-setting">

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Stores;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -19,7 +21,6 @@ namespace Nop.Data.Tests.Blogs
                 Body = "Body 1",
                 BodyOverview = "BodyOverview 1",
                 AllowComments = true,
-                CommentCount = 1,
                 Tags = "Tags 1",
                 StartDateUtc = new DateTime(2010, 01, 01),
                 EndDateUtc = new DateTime(2010, 01, 02),
@@ -41,7 +42,6 @@ namespace Nop.Data.Tests.Blogs
             fromDb.Body.ShouldEqual("Body 1");
             fromDb.BodyOverview.ShouldEqual("BodyOverview 1");
             fromDb.AllowComments.ShouldEqual(true);
-            fromDb.CommentCount.ShouldEqual(1);
             fromDb.Tags.ShouldEqual("Tags 1");
             fromDb.StartDateUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.EndDateUtc.ShouldEqual(new DateTime(2010, 01, 02));
@@ -74,8 +74,10 @@ namespace Nop.Data.Tests.Blogs
                 (
                     new BlogComment
                     {
+                        IsApproved = true,
                         CreatedOnUtc = new DateTime(2010, 01, 03),
-                        Customer = GetTestCustomer()
+                        Customer = GetTestCustomer(),
+                        Store = GetTestStore()
                     }
                 );
             var fromDb = SaveAndLoadEntity(blogPost);
@@ -84,6 +86,8 @@ namespace Nop.Data.Tests.Blogs
 
             fromDb.BlogComments.ShouldNotBeNull();
             (fromDb.BlogComments.Count == 1).ShouldBeTrue();
+            fromDb.BlogComments.First().IsApproved.ShouldEqual(true);
+            fromDb.BlogComments.First().Store.ShouldNotBeNull();
         }
 
         protected Customer GetTestCustomer()
@@ -93,6 +97,16 @@ namespace Nop.Data.Tests.Blogs
                 CustomerGuid = Guid.NewGuid(),
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 LastActivityDateUtc = new DateTime(2010, 01, 02)
+            };
+        }
+
+        protected Store GetTestStore()
+        {
+            return new Store
+            {
+                Name = "Store 1",
+                Url = "http://www.test.com",
+                DisplayOrder = 1
             };
         }
     }

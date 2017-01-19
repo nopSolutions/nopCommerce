@@ -12,6 +12,7 @@ using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Seo;
 using Nop.Services.Vendors;
+using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
@@ -23,6 +24,7 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
+        private readonly IVendorModelFactory _vendorModelFactory;
         private readonly IWorkContext _workContext;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerService _customerService;
@@ -34,13 +36,13 @@ namespace Nop.Web.Controllers
         private readonly LocalizationSettings _localizationSettings;
         private readonly VendorSettings _vendorSettings;
         private readonly CaptchaSettings _captchaSettings;
-        private readonly MediaSettings _mediaSettings;
 
         #endregion
 
         #region Constructors
 
-        public VendorController(IWorkContext workContext,
+        public VendorController(IVendorModelFactory vendorModelFactory,
+            IWorkContext workContext,
             ILocalizationService localizationService,
             ICustomerService customerService,
             IWorkflowMessageService workflowMessageService,
@@ -49,9 +51,9 @@ namespace Nop.Web.Controllers
             IPictureService pictureService,
             LocalizationSettings localizationSettings,
             VendorSettings vendorSettings,
-            CaptchaSettings captchaSettings,
-            MediaSettings mediaSettings)
+            CaptchaSettings captchaSettings)
         {
+            this._vendorModelFactory = vendorModelFactory;
             this._workContext = workContext;
             this._localizationService = localizationService;
             this._customerService = customerService;
@@ -63,7 +65,6 @@ namespace Nop.Web.Controllers
             this._localizationSettings = localizationSettings;
             this._vendorSettings = vendorSettings;
             this._captchaSettings = captchaSettings;
-            this._mediaSettings = mediaSettings;
         }
 
         #endregion
@@ -92,16 +93,7 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             var model = new ApplyVendorModel();
-            if (_workContext.CurrentCustomer.VendorId > 0)
-            {
-                //already applied for vendor account
-                model.DisableFormInput = true;
-                model.Result = _localizationService.GetResource("Vendors.ApplyAccount.AlreadyApplied");
-                return View(model);
-            }
-
-            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage;
-            model.Email = _workContext.CurrentCustomer.Email;
+            model = _vendorModelFactory.PrepareApplyVendorModel(model, true, false);
             return View(model);
         }
 
@@ -180,7 +172,7 @@ namespace Nop.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage;
+            model = _vendorModelFactory.PrepareApplyVendorModel(model, false, true);
             return View(model);
         }
 
@@ -193,17 +185,8 @@ namespace Nop.Web.Controllers
             if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
                 return RedirectToRoute("CustomerInfo");
 
-            var vendor = _workContext.CurrentVendor;
-            var picture = _pictureService.GetPictureById(vendor.PictureId);
-            var pictureSize = _mediaSettings.AvatarPictureSize;
-            var model = new VendorInfoModel
-            {
-                Description = vendor.Description,
-                Email = vendor.Email,
-                Name = vendor.Name,
-                PictureUrl = picture != null ? _pictureService.GetPictureUrl(picture, pictureSize) : string.Empty
-            };
-
+            var model = new VendorInfoModel();
+            model = _vendorModelFactory.PrepareVendorInfoModel(model, false);
             return View(model);
         }
 
@@ -220,7 +203,6 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CustomerInfo");
             
             Picture picture = null;
-            var pictureSize = _mediaSettings.AvatarPictureSize;
 
             if (uploadedFile != null && !string.IsNullOrEmpty(uploadedFile.FileName))
             {
@@ -268,7 +250,7 @@ namespace Nop.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model.PictureUrl = _pictureService.GetPictureUrl(prevPicture, pictureSize);
+            model = _vendorModelFactory.PrepareVendorInfoModel(model, true);
             return View(model);
         }
 
