@@ -327,7 +327,7 @@
         </member>
         <member name="T:Autofac.Module">
              <summary>
-             Base class for user-defined modules. Modules can add a set of releated components
+             Base class for user-defined modules. Modules can add a set of related components
              to a container (<see cref="M:Autofac.Module.Load(Autofac.ContainerBuilder)"/>) or attach cross-cutting functionality
              to other components (<see cref="M:Autofac.Module.AttachToComponentRegistration(Autofac.Core.IComponentRegistry,Autofac.Core.IComponentRegistration)"/>.
              Modules are given special support in the XML configuration feature - see
@@ -6067,6 +6067,277 @@
             <summary>
               Looks up a localized string similar to This resolve operation has already ended. When registering components using lambdas, the IComponentContext &apos;c&apos; parameter to the lambda cannot be stored. Instead, either resolve IComponentContext again from &apos;c&apos;, or resolve a Func&lt;&gt; based factory to create subsequent components from..
             </summary>
+        </member>
+        <member name="T:Autofac.Features.AttributeFilters.KeyFilterAttribute">
+             <summary>
+             Provides an annotation to resolve constructor dependencies
+             according to their registered key.
+             </summary>
+             <remarks>
+             <para>
+             This attribute allows constructor dependencies to be resolved by key.
+             By marking your dependencies with this attribute and associating
+             an attribute filter with your type registration, you can be selective
+             about which service registration should be used to provide the
+             dependency.
+             </para>
+             </remarks>
+             <example>
+             <para>
+             A simple example might be registration of a specific logger type to be
+             used by a class. If many loggers are registered with their own key,
+             the consumer can simply specify the key filter as an attribute to
+             the constructor parameter.
+             </para>
+             <code lang="C#">
+             public class Manager
+             {
+               public Manager([WithKey("Manager")] ILogger logger)
+               {
+                 // ...
+               }
+             }
+             </code>
+             <para>
+             The same thing can be done for enumerable:
+             </para>
+             <code lang="C#">
+             public class SolutionExplorer
+             {
+               public SolutionExplorer(
+                 [WithKey("Solution")] IEnumerable&lt;IAdapter&gt; adapters,
+                 [WithKey("Solution")] ILogger logger)
+               {
+                 this.Adapters = adapters.ToList();
+                 this.Logger = logger;
+               }
+             }
+             </code>
+             <para>
+             When registering your components, the associated key on the
+             dependencies will be used. Be sure to specify the
+             <see cref="M:Autofac.Features.AttributeFilters.RegistrationExtensions.WithAttributeFiltering``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2})" />
+             extension on the type with the filtered constructor parameters.
+             </para>
+             <code lang="C#">
+             var builder = new ContainerBuilder();
+             builder.RegisterModule(new AttributedMetadataModule());
+            
+             // Register the components getting filtered with keys
+             builder.RegisterType&lt;ConsoleLogger&gt;().Keyed&lt;ILogger&gt;(&quot;Solution&quot;);
+             builder.RegisterType&lt;FileLogger&gt;().Keyed&lt;ILogger&gt;(&quot;Other&quot;);
+            
+             // Attach the filtering behavior to the component with the constructor
+             builder.RegisterType&lt;SolutionExplorer&gt;().WithAttributeFilter();
+            
+             var container = builder.Build();
+            
+             // The resolved instance will have the appropriate services in place
+             var explorer = container.Resolve&lt;SolutionExplorer&gt;();
+             </code>
+             </example>
+        </member>
+        <member name="M:Autofac.Features.AttributeFilters.KeyFilterAttribute.#ctor(System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Features.AttributeFilters.KeyFilterAttribute"/> class.
+            </summary>
+            <param name="key">The key that the dependency should have in order to satisfy the parameter.</param>
+        </member>
+        <member name="P:Autofac.Features.AttributeFilters.KeyFilterAttribute.Key">
+            <summary>
+            Gets the key the dependency is expected to have to satisfy the parameter.
+            </summary>
+            <value>
+            The <see cref="T:System.Object"/> corresponding to a registered service key on a component.
+            Resolved components must be keyed with this value to satisfy the filter.
+            </value>
+        </member>
+        <member name="M:Autofac.Features.AttributeFilters.KeyFilterAttribute.ResolveParameter(System.Reflection.ParameterInfo,Autofac.IComponentContext)">
+            <summary>
+            Resolves a constructor parameter based on keyed service requirements.
+            </summary>
+            <param name="parameter">The specific parameter being resolved that is marked with this attribute.</param>
+            <param name="context">The component context under which the parameter is being resolved.</param>
+            <returns>
+            The instance of the object that should be used for the parameter value.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="parameter" /> or <paramref name="context" /> is <see langword="null" />.
+            </exception>
+        </member>
+        <member name="T:Autofac.Features.AttributeFilters.MetadataFilterAttribute">
+             <summary>
+             Provides an annotation to filter constructor dependencies
+             according to their specified metadata.
+             </summary>
+             <remarks>
+             <para>
+             This attribute allows constructor dependencies to be filtered by metadata.
+             By marking your dependencies with this attribute and associating
+             an attribute filter with your type registration, you can be selective
+             about which service registration should be used to provide the
+             dependency.
+             </para>
+             </remarks>
+             <example>
+             <para>
+             A simple example might be registration of a specific logger type to be
+             used by a class. If many loggers are registered with the <c>LoggerName</c>
+             metadata, the consumer can simply specify the filter as an attribute to
+             the constructor parameter.
+             </para>
+             <code lang="C#">
+             public class Manager
+             {
+               public Manager([WithMetadata("LoggerName", "Manager")] ILogger logger)
+               {
+                 // ...
+               }
+             }
+             </code>
+             <para>
+             The same thing can be done for enumerable:
+             </para>
+             <code lang="C#">
+             public class SolutionExplorer
+             {
+               public SolutionExplorer(
+                 [WithMetadata("Target", "Solution")] IEnumerable&lt;IAdapter&gt; adapters,
+                 [WithMetadata("LoggerName", "Solution")] ILogger logger)
+               {
+                 this.Adapters = adapters.ToList();
+                 this.Logger = logger;
+               }
+             }
+             </code>
+             <para>
+             When registering your components, the associated metadata on the dependencies will be used.
+             Be sure to specify the <see cref="M:Autofac.Features.AttributeFilters.RegistrationExtensions.WithAttributeFiltering``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2})" />
+             extension on the type with the filtered constructor parameters.
+             </para>
+             <code lang="C#">
+             var builder = new ContainerBuilder();
+             builder.RegisterModule(new AttributedMetadataModule());
+            
+             // Attach metadata to the components getting filtered
+             builder.RegisterType&lt;ConsoleLogger&gt;().WithMetadata(&quot;LoggerName&quot;, &quot;Solution&quot;).As&lt;ILogger&gt;();
+             builder.RegisterType&lt;FileLogger&gt;().WithMetadata(&quot;LoggerName&quot;, &quot;Other&quot;).As&lt;ILogger&gt;();
+            
+             // Attach the filtering behavior to the component with the constructor
+             builder.RegisterType&lt;SolutionExplorer&gt;().WithAttributeFilter();
+            
+             var container = builder.Build();
+            
+             // The resolved instance will have the appropriate services in place
+             var explorer = container.Resolve&lt;SolutionExplorer&gt;();
+             </code>
+             </example>
+        </member>
+        <member name="M:Autofac.Features.AttributeFilters.MetadataFilterAttribute.#ctor(System.String,System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Features.AttributeFilters.MetadataFilterAttribute"/> class.
+            </summary>
+            <param name="key">The metadata key that the dependency should have in order to satisfy the parameter.</param>
+            <param name="value">The metadata value that the dependency should have in order to satisfy the parameter.</param>
+        </member>
+        <member name="P:Autofac.Features.AttributeFilters.MetadataFilterAttribute.Key">
+            <summary>
+            Gets the key the dependency is expected to have to satisfy the parameter.
+            </summary>
+            <value>
+            The <see cref="T:System.String"/> corresponding to a registered metadata
+            key on a component. Resolved components must have this metadata key to
+            satisfy the filter.
+            </value>
+        </member>
+        <member name="P:Autofac.Features.AttributeFilters.MetadataFilterAttribute.Value">
+            <summary>
+            Gets the value the dependency is expected to have to satisfy the parameter.
+            </summary>
+            <value>
+            The <see cref="T:System.Object"/> corresponding to a registered metadata
+            value on a component. Resolved components must have the metadata
+            <see cref="P:Autofac.Features.AttributeFilters.MetadataFilterAttribute.Key"/> with
+            this value to satisfy the filter.
+            </value>
+        </member>
+        <member name="M:Autofac.Features.AttributeFilters.MetadataFilterAttribute.ResolveParameter(System.Reflection.ParameterInfo,Autofac.IComponentContext)">
+            <summary>
+            Resolves a constructor parameter based on metadata requirements.
+            </summary>
+            <param name="parameter">The specific parameter being resolved that is marked with this attribute.</param>
+            <param name="context">The component context under which the parameter is being resolved.</param>
+            <returns>
+            The instance of the object that should be used for the parameter value.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="parameter" /> or <paramref name="context" /> is <see langword="null" />.
+            </exception>
+        </member>
+        <member name="T:Autofac.Features.AttributeFilters.ParameterFilterAttribute">
+            <summary>
+            Base attribute class for marking constructor parameters and enabling
+            filtering by attributed criteria.
+            </summary>
+            <remarks>
+            <para>
+            Implementations of this attribute can be used to mark constructor parameters
+            so filtering can be done based on registered service data. For example, the
+            <see cref="T:Autofac.Features.AttributeFilters.MetadataFilterAttribute"/> allows constructor
+            parameters to be filtered by registered metadata criteria and the
+            <see cref="T:Autofac.Features.AttributeFilters.KeyFilterAttribute"/> allows constructor
+            parameters to be filtered by a keyed service registration.
+            </para>
+            <para>
+            If a type uses these attributes, it should be registered with Autofac
+            using the
+            <see cref="M:Autofac.Features.AttributeFilters.RegistrationExtensions.WithAttributeFiltering``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2})" />
+            extension to enable the behavior.
+            </para>
+            <para>
+            For specific attribute usage examples, see the attribute documentation.
+            </para>
+            </remarks>
+            <seealso cref="T:Autofac.Features.AttributeFilters.MetadataFilterAttribute"/>
+            <seealso cref="T:Autofac.Features.AttributeFilters.KeyFilterAttribute"/>
+        </member>
+        <member name="M:Autofac.Features.AttributeFilters.ParameterFilterAttribute.ResolveParameter(System.Reflection.ParameterInfo,Autofac.IComponentContext)">
+            <summary>
+            Implemented in derived classes to resolve a specific parameter marked with this attribute.
+            </summary>
+            <param name="parameter">The specific parameter being resolved that is marked with this attribute.</param>
+            <param name="context">The component context under which the parameter is being resolved.</param>
+            <returns>The instance of the object that should be used for the parameter value.</returns>
+        </member>
+        <member name="T:Autofac.Features.AttributeFilters.RegistrationExtensions">
+            <summary>
+            Extends registration syntax for attribute scenarios.
+            </summary>
+        </member>
+        <member name="M:Autofac.Features.AttributeFilters.RegistrationExtensions.WithAttributeFiltering``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2})">
+            <summary>
+            Applies attribute-based filtering on constructor dependencies for use with attributes
+            derived from the <see cref="T:Autofac.Features.AttributeFilters.ParameterFilterAttribute"/>.
+            </summary>
+            <typeparam name="TLimit">The type of the registration limit.</typeparam>
+            <typeparam name="TReflectionActivatorData">Activator data type.</typeparam>
+            <typeparam name="TRegistrationStyle">Registration style type.</typeparam>
+            <param name="builder">The registration builder containing registration data.</param>
+            <returns>Registration builder allowing the registration to be configured.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="builder" /> is <see langword="null" />.
+            </exception>
+            <remarks>
+            <para>
+            Apply this extension to component registrations that use attributes
+            that derive from the <see cref="T:Autofac.Features.AttributeFilters.ParameterFilterAttribute"/>
+            like the <see cref="T:Autofac.Features.AttributeFilters.MetadataFilterAttribute"/>
+            in their constructors. Doing so will allow the attribute-based filtering to occur. See
+            <see cref="T:Autofac.Features.AttributeFilters.MetadataFilterAttribute"/> for an
+            example on how to use the filter and attribute together.
+            </para>
+            </remarks>
+            <seealso cref="T:Autofac.Features.AttributeFilters.MetadataFilterAttribute"/>
         </member>
         <member name="T:Autofac.Features.Collections.CollectionRegistrationSource">
             <summary>
