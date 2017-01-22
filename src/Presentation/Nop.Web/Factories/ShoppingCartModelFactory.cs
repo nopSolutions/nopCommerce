@@ -387,7 +387,7 @@ namespace Nop.Web.Factories
                 ProductSeName = sci.Product.GetSeName(),
                 Quantity = sci.Quantity,
                 AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.Product, sci.AttributesXml),
-                VatRate = sci.VatRate ?? decimal.Zero
+                VatRate = sci.VatRate == null ? "" : sci.VatRate.Value.ToString("G29")
             };
 
             //allow editing?
@@ -438,9 +438,11 @@ namespace Nop.Web.Factories
             }
 
             //unit prices
+            decimal itemSubtotal;
+
             decimal taxRate;
             decimal shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci), out taxRate);
-            cartItemModel.VatRate = taxRate;
+            cartItemModel.VatRate = taxRate.ToString("G29");
 
             if (sci.Product.CallForPrice)
             {
@@ -458,6 +460,7 @@ namespace Nop.Web.Factories
             if (sci.Product.CallForPrice)
             {
                 cartItemModel.SubTotal = _localizationService.GetResource("Products.CallForPrice");
+                itemSubtotal = decimal.Zero;
             }
             else
             {
@@ -468,6 +471,7 @@ namespace Nop.Web.Factories
                 //decimal taxRate;
                 decimal shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci, true, out shoppingCartItemDiscountBase, out scDiscounts, out maximumDiscountQty), out taxRate);
                 decimal shoppingCartItemSubTotalWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartItemSubTotalWithDiscountBase, _workContext.WorkingCurrency);
+                itemSubtotal = shoppingCartItemSubTotalWithDiscount;
                 cartItemModel.SubTotal = _priceFormatter.FormatPrice(shoppingCartItemSubTotalWithDiscount);
                 cartItemModel.MaximumDiscountedQty = maximumDiscountQty;
 
@@ -481,6 +485,13 @@ namespace Nop.Web.Factories
                         cartItemModel.Discount = _priceFormatter.FormatPrice(shoppingCartItemDiscount);
                     }
                 }
+            }
+            //attribute tax info
+            if (!String.IsNullOrEmpty(sci.AttributesXml))
+            {
+                cartItemModel.AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.Product, sci.AttributesXml, _workContext.CurrentCustomer, subTotal: itemSubtotal);
+                if (sci.AttributesXml.Contains("<TaxRate Rate="))
+                    cartItemModel.VatRate = "(*)";
             }
 
             //picture

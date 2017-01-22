@@ -5,6 +5,8 @@ using System.Linq;
 using System.Xml;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
+using Nop.Services.Tax;
+using System.Globalization;
 
 namespace Nop.Services.Catalog
 {
@@ -402,7 +404,7 @@ namespace Nop.Services.Catalog
                                 bool hasValue = false;
                                 foreach (var str2 in values2Str)
                                 {
-                                    //case insensitive? 
+                                    //case insensitive?
                                     //if (str1.Trim().ToLower() == str2.Trim().ToLower())
                                     if (str1.Item1.Trim() == str2.Item1.Trim())
                                     {
@@ -482,9 +484,9 @@ namespace Nop.Services.Catalog
 
             return allFound;
         }
-        
+
         /// <summary>
-        /// Finds a product attribute combination by attributes stored in XML 
+        /// Finds a product attribute combination by attributes stored in XML
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
@@ -497,7 +499,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("product");
 
             var combinations = _productAttributeService.GetAllProductAttributeCombinations(product.Id);
-            return combinations.FirstOrDefault(x => 
+            return combinations.FirstOrDefault(x =>
                 AreProductAttributesEqual(x.AttributesXml, attributesXml, ignoreNonCombinableAttributes));
         }
 
@@ -658,7 +660,101 @@ namespace Nop.Services.Catalog
         }
 
         #endregion
+        #region taxAttribute
+        /// <summary>
+        /// Adds tax subdivision to existing attributesXml
+        /// </summary>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="taxSummary">Set Product tax subdivision</param>
+        /// <returns>Updated result (XML format)</returns>
+        public virtual string AddTaxAttribute(string attributesXml, TaxSummary taxSummary)
+        {
+            string result = string.Empty;
+            try
+            {
+                var xmlDoc = new XmlDocument();
+                if (String.IsNullOrEmpty(attributesXml))
+                {
+                    var element1 = xmlDoc.CreateElement("Attributes");
+                    xmlDoc.AppendChild(element1);
+                }
+                else
+                {
+                    xmlDoc.LoadXml(attributesXml);
+                }
+                var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
+                var attributeTaxElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes/ProductAttributesTax");
 
+                if (taxSummary.TaxRates.Any())
+                {
+                    //create new ProductAttributesTax element if not found
+                    if (attributeTaxElement == null)
+                    {
+                        attributeTaxElement = xmlDoc.CreateElement("ProductAttributesTax");
+                        rootElement.AppendChild(attributeTaxElement);
+                    }
+
+                    foreach (KeyValuePair<decimal, TaxRateEntry> kvp in taxSummary.TaxRates)
+                    {
+                        decimal vatpercentage = kvp.Key;
+                        TaxRateEntry taxrate = kvp.Value;
+
+                        //find existing
+                        var strVatPer = vatpercentage.ToString(CultureInfo.InvariantCulture);
+                        var strNode = String.Format("//Attributes/ProductAttributesTax/TaxRate[@Rate='{0}']", strVatPer);
+                        var attributeTaxRateElement = (XmlElement)xmlDoc.SelectSingleNode(@strNode);
+
+                        //create new one if not found
+                        if (attributeTaxRateElement == null)
+                        {
+                            attributeTaxRateElement = xmlDoc.CreateElement("TaxRate");
+                            attributeTaxRateElement.SetAttribute("Rate", strVatPer);
+                            attributeTaxElement.AppendChild(attributeTaxRateElement);
+                        }
+                        attributeTaxRateElement.SetAttribute("RateWeight", taxrate.VatRateWeight.ToString(CultureInfo.InvariantCulture));
+
+                    }
+                }
+                else
+                {
+                    //remove attributeTaxElement when no taxRates
+                    if (attributeTaxElement != null)
+                    {
+                        rootElement.RemoveChild(attributeTaxElement);
+                    }
+                }
+                result = xmlDoc.OuterXml;
+            }
+            catch (Exception exc)
+            {
+                Debug.Write(exc.ToString());
+            }
+            return result;
+        }
+        /// <summary>
+        /// Parse ProductAttributesTax
+        /// </summary>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <returns>SortedDictionary with vatRate and vatRateWeight</returns>
+        public SortedDictionary<decimal, decimal> ParseTaxAttribute(string attributesXml)
+        {
+            var taxDict = new SortedDictionary<decimal, decimal>();
+            var xmlDoc = new XmlDocument();
+            if (!String.IsNullOrEmpty(attributesXml))
+            {
+                xmlDoc.LoadXml(attributesXml);
+                foreach (XmlElement e in xmlDoc.SelectNodes("//Attributes/ProductAttributesTax/TaxRate"))
+                {
+                    var style = NumberStyles.AllowDecimalPoint;
+                    decimal rate = decimal.Zero; decimal rateWeight = decimal.Zero;
+                    if (decimal.TryParse(e.GetAttribute("Rate"), style, CultureInfo.InvariantCulture, out rate) && decimal.TryParse(e.GetAttribute("RateWeight"), style, CultureInfo.InvariantCulture, out rateWeight))
+                        taxDict.Add(rate, rateWeight);
+                }
+
+            }
+            return taxDict;
+        }
+        #endregion
         #region Gift card attributes
 
         /// <summary>

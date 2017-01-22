@@ -23,8 +23,8 @@ namespace Nop.Services.Catalog
         /// <returns>Final price</returns>
         decimal GetFinalPrice(Product product,
             Customer customer,
-            decimal additionalCharge = decimal.Zero, 
-            bool includeDiscounts = true, 
+            decimal additionalCharge = decimal.Zero,
+            bool includeDiscounts = true,
             int quantity = 1);
         /// <summary>
         /// Gets the final price
@@ -108,7 +108,7 @@ namespace Nop.Services.Catalog
             Customer customer,
             ShoppingCartType shoppingCartType,
             int quantity,
-            string attributesXml,
+            ref string attributesXml,
             decimal customerEnteredPrice,
             DateTime? rentalStartDate, DateTime? rentalEndDate,
             bool includeDiscounts,
@@ -147,7 +147,7 @@ namespace Nop.Services.Catalog
 
 
 
-        
+
         /// <summary>
         /// Get a price adjustment of a product attribute value
         /// </summary>

@@ -78,13 +78,13 @@ namespace Nop.Web.Controllers
 		#region Ctor
 
         public ShoppingCartController(IShoppingCartModelFactory shoppingCartModelFactory,
-            IProductService productService, 
+            IProductService productService,
             IStoreContext storeContext,
             IWorkContext workContext,
             IShoppingCartService shoppingCartService, 
             IPictureService pictureService,
-            ILocalizationService localizationService, 
-            IProductAttributeService productAttributeService, 
+            ILocalizationService localizationService,
+            IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
             ITaxService taxService, ICurrencyService currencyService, 
             IPriceCalculationService priceCalculationService,
@@ -94,7 +94,7 @@ namespace Nop.Web.Controllers
             ICustomerService customerService, 
             IGiftCardService giftCardService,
             IDateRangeService dateRangeService,
-            ICheckoutAttributeService checkoutAttributeService, 
+            ICheckoutAttributeService checkoutAttributeService,
             IWorkflowMessageService workflowMessageService,
             IPermissionService permissionService, 
             IDownloadService downloadService,
@@ -182,7 +182,7 @@ namespace Nop.Web.Controllers
                             var cblAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(cblAttributes))
                             {
-                                foreach (var item in cblAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                foreach (var item in cblAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
                                     int selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
@@ -313,7 +313,7 @@ namespace Nop.Web.Controllers
                             var ctrlAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
-                                foreach (var item in ctrlAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                foreach (var item in ctrlAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
                                     int selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
@@ -592,7 +592,7 @@ namespace Nop.Web.Controllers
             var quantityToValidate = shoppingCartItem != null ? shoppingCartItem.Quantity + quantity : quantity;
             var addToCartWarnings = _shoppingCartService
                 .GetShoppingCartItemWarnings(_workContext.CurrentCustomer, cartType,
-                product, _storeContext.CurrentStore.Id, string.Empty, 
+                product, _storeContext.CurrentStore.Id, string.Empty,
                 decimal.Zero, null, null, quantityToValidate, false, true, false, false, false);
             if (addToCartWarnings.Any())
             {
@@ -960,7 +960,7 @@ namespace Nop.Web.Controllers
                 decimal finalPrice = _priceCalculationService.GetUnitPrice(product,
                     _workContext.CurrentCustomer,
                     ShoppingCartType.ShoppingCart,
-                    1, attributeXml, 0,
+                    1, ref attributeXml, 0,
                     rentalStartDate, rentalEndDate,
                     true, out discountAmount, out scDiscounts);
                 decimal taxRate;
@@ -1242,7 +1242,7 @@ namespace Nop.Web.Controllers
                 downloadGuid = download.DownloadGuid,
             }, MimeTypes.TextPlain);
         }
-        
+
         [NopHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult Cart()
         {
@@ -1266,8 +1266,8 @@ namespace Nop.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
-            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart, 
-                isEditable: false, 
+            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart,
+                isEditable: false,
                 prepareEstimateShippingIfEnabled: false,
                 prepareAndDisplayOrderReviewData: prepareAndDisplayOrderReviewData.GetValueOrDefault());
             return PartialView(model);

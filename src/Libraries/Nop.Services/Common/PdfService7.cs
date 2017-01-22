@@ -685,7 +685,8 @@ namespace Nop.Services.Common
                         tabPage.AddCell(new Cell().Add(paraPdf).AddStyle(styleCell));
                     }
                     //vatrate
-                    paraPdf = new Paragraph(_priceFormatter.FormatTaxRate(orderItem.VatRate)).AddStyle(styleNormal).SetTextAlignment(TextAlignment.CENTER);
+                    bool hasAttribVat = !String.IsNullOrEmpty(orderItem.AttributesXml) && orderItem.AttributesXml.Contains("<TaxRate Rate=");
+                    paraPdf = new Paragraph(hasAttribVat ? "(*)" : _priceFormatter.FormatTaxRate(orderItem.VatRate)).AddStyle(styleNormal).SetTextAlignment(TextAlignment.CENTER);
                     tabPage.AddCell(new Cell().Add(paraPdf).AddStyle(styleCell));
 
                     //price

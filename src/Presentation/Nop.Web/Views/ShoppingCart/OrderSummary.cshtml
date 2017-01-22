@@ -185,7 +185,8 @@
                            </td>
                            <td class="vat-rate">
                                <label class="td-title">@T("ShoppingCart.VatRate"):</label>
-                               <span class="product-vatrate">@item.VatRate.ToString("G29")</span>
+                               @*<span class="product-vatrate">@item.VatRate.ToString("G29")</span>*@
+                               <span class="product-vatrate">@item.VatRate</span>
                            </td>
                            <td class="subtotal">
                                <label class="td-title">@T("ShoppingCart.ItemTotal"):</label>

@@ -92,7 +92,7 @@ namespace Nop.Web.Models.ShoppingCart
             public bool DisableRemoval { get; set; }
 
             public IList<string> Warnings { get; set; }
-            public decimal VatRate { get; set; }
+            public string VatRate { get; set; }
 
         }
 

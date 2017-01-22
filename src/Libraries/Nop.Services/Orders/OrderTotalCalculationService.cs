@@ -43,6 +43,7 @@ namespace Nop.Services.Orders
         private readonly ShippingSettings _shippingSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
+        private readonly IProductAttributeParser _productAttributeParser;
         #endregion
 
         #region Ctor
@@ -66,6 +67,7 @@ namespace Nop.Services.Orders
         /// <param name="shippingSettings">Shipping settings</param>
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
         /// <param name="catalogSettings">Catalog settings</param>
+        /// <param name="productAttributeParser">Product Attribute Parser</param>
         public OrderTotalCalculationService(IWorkContext workContext,
             IStoreContext storeContext,
             IPriceCalculationService priceCalculationService,
@@ -81,7 +83,8 @@ namespace Nop.Services.Orders
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings,
             ShoppingCartSettings shoppingCartSettings,
-            CatalogSettings catalogSettings)
+            CatalogSettings catalogSettings,
+            IProductAttributeParser productAttributeParser)
         {
             this._workContext = workContext;
             this._storeContext = storeContext;
@@ -99,6 +102,7 @@ namespace Nop.Services.Orders
             this._shippingSettings = shippingSettings;
             this._shoppingCartSettings = shoppingCartSettings;
             this._catalogSettings = catalogSettings;
+            this._productAttributeParser = productAttributeParser;
         }
 
         #endregion
@@ -269,7 +273,7 @@ namespace Nop.Services.Orders
                 decimal taxRate;
 
                 //restored cartitem
-                if (shoppingCartItem.VatRate.HasValue)
+                if (shoppingCartItem.VatRate.HasValue && shoppingCartItem.SubTotalExclTax != null && shoppingCartItem.SubTotalInclTax != null)
                 {
                     itemAmount = includingTax ? shoppingCartItem.SubTotalInclTax ?? 0 : shoppingCartItem.SubTotalExclTax ?? 0;
                     taxRate = shoppingCartItem.VatRate ?? 0;
@@ -282,9 +286,19 @@ namespace Nop.Services.Orders
                     itemAmount = _taxService.GetProductPrice(shoppingCartItem.Product, sciSubTotal, includingTax, customer, out taxRate);
                     subTotalAmount += itemAmount;
                 }
+
                 //tax rates
-                if (itemAmount > decimal.Zero) //MF 22.11.16 taxRate > decimal.Zero &&: VatBase is need also when tax is 0 to show up in summary
-                    taxSummary.AddRate(taxRate, itemAmount);
+                var attributesXml = shoppingCartItem.AttributesXml;
+                SortedDictionary<decimal, decimal> attributeTaxWeight = !String.IsNullOrEmpty(attributesXml) ? _productAttributeParser.ParseTaxAttribute(attributesXml) : null;
+                if (attributeTaxWeight == null || !attributeTaxWeight.Any())
+                {
+                    if (itemAmount > decimal.Zero) //MF 22.11.16 taxRate > decimal.Zero &&: VatBase is need also when tax is 0 to show up in summary
+                        taxSummary.AddRate(taxRate, itemAmount);
+                }
+                else //tax in attributes
+                {
+                    taxSummary.AddAttributeRate(itemAmount, attributeTaxWeight);
+                }
             }
 
             //checkout attributes
@@ -495,16 +509,7 @@ namespace Nop.Services.Orders
             #region Tax rates
             //tax rates
             var taxrates = includingTax ? taxSummaryIncl : taxSummaryExcl;
-            updatedOrder.TaxRates = taxrates.TaxRates.Aggregate(string.Empty, (current, next) =>
-                string.Format("{0}{1}:{2}:{3}:{4}:{5}:{6};   ", current,
-                    next.Key.ToString(CultureInfo.InvariantCulture),
-                    (next.Value.SubtotalAmount + next.Value.ShippingAmount + next.Value.PaymentFeeAmount).ToString(CultureInfo.InvariantCulture),
-                    (next.Value.SubTotalDiscAmount + next.Value.InvoiceDiscountAmount).ToString(CultureInfo.InvariantCulture),
-                    next.Value.BaseAmount.ToString(CultureInfo.InvariantCulture),
-                    next.Value.VatAmount.ToString(CultureInfo.InvariantCulture),
-                    next.Value.AmountIncludingVAT.ToString(CultureInfo.InvariantCulture)
-                 )
-            );
+            updatedOrder.TaxRates = taxrates.GenerateTaxRateString();
 
             #endregion
 
@@ -862,7 +867,7 @@ namespace Nop.Services.Orders
 
                 if (paymentMethodAdditionalFee != decimal.Zero )
                     //tfc case of taxable fee > 0
-                    if (paymentMethodAdditionalFee > decimal.Zero && _taxSettings.PaymentMethodAdditionalFeeIsTaxable) 
+                    if (paymentMethodAdditionalFee > decimal.Zero && _taxSettings.PaymentMethodAdditionalFeeIsTaxable)
                         taxSummary.AddRate(taxRate, paymentfeeAmount: paymentMethodAdditionalFee);
                     //tfc case fee < 0 is considered as discount or as surcharge when not taxable
                     else

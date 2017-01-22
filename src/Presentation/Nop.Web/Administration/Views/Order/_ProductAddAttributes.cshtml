@@ -299,6 +299,18 @@
                             if (data.message) {
                                 alert(data.message);
                             }
+                            if (data.finalPriceInclTax) {
+                                setAttribValue('#UnitPriceInclTax', data.finalPriceInclTax);
+                            }
+                            if (data.finalPriceInclTax) {
+                                setAttribValue('#UnitPriceExclTax', data.finalPriceExclTax);
+                            }
+                            if (data.finalPriceInclTax) {
+                                setAttribValue('#SubTotalInclTax', data.finalSubInclTax);
+                            }
+                            if (data.finalPriceInclTax) {
+                                setAttribValue('#SubTotalExclTax', data.finalSubExclTax);
+                            }
                         }
                     });
                 }
@@ -307,6 +319,12 @@
                     @(attributeChangeHandlerFuncName)();
                     @Html.Raw(attributeChangeScriptsBuilder.ToString())
                 });
+
+                function setAttribValue(attrib, value)
+                {
+                    $(attrib).val(value).parent().children(':first-child').val(value);
+                    return;
+                }
             </script>
         </div>
         <script>

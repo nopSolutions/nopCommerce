@@ -1,23 +1,28 @@
 ﻿
 using Nop.Services.Catalog;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 
 namespace Nop.Services.Tax
 {
     /// <summary>
     /// TaxRate entry to store amounts per vatrate
-    /// all value are per rate and most of them calculated
+    /// all values are per rate and most of them calculated
     /// only VatRate, ItemAmount, ShippingAmount and PaymentFeeAmount can be set
     /// </summary>
     public partial class TaxRateEntry
     {
         public decimal VatRate { get; set; }
+        public decimal VatRateWeight { get; internal set; } //weight of VatRate used for product sets [it's (sum of associated products price per VatRate) / (total price of assoc. prod.) ]
         public decimal SubtotalAmount { get; set; }
         public decimal ShippingAmount { get; set; }
         public decimal PaymentFeeAmount { get; set; } //can be negative when discounted
+        public decimal Amount { get; internal set; } //sum of above amounts
         public decimal SubTotalDiscAmount { get; internal set; }
         public decimal InvoiceDiscountAmount { get; internal set; }
+        public decimal DiscountAmount { get; internal set; } //sum of above discounts
         public decimal BaseAmount { get; internal set; }
         public decimal VatAmount { get; internal set; }
         public decimal AmountIncludingVAT { get; internal set; }
@@ -68,6 +73,19 @@ namespace Nop.Services.Tax
         private bool HasChanged = false;
 
         #region utilities
+        public string GenerateTaxRateString()
+        {
+            return this.TaxRates.Aggregate(string.Empty, (current, next) =>
+                string.Format("{0}{1}:{2}:{3}:{4}:{5}:{6};   ", current,
+                    next.Key.ToString(CultureInfo.InvariantCulture),
+                    next.Value.Amount.ToString(CultureInfo.InvariantCulture),
+                    next.Value.DiscountAmount.ToString(CultureInfo.InvariantCulture),
+                    next.Value.BaseAmount.ToString(CultureInfo.InvariantCulture),
+                    next.Value.VatAmount.ToString(CultureInfo.InvariantCulture),
+                    next.Value.AmountIncludingVAT.ToString(CultureInfo.InvariantCulture)
+                 )
+            );
+        }
         public SortedDictionary<decimal, decimal> GenerateOldTaxrateDict()
         {
             return new SortedDictionary<decimal, decimal>(TaxRates.ToDictionary(x => x.Key, x => x.Value.VatAmount));
@@ -101,7 +119,51 @@ namespace Nop.Services.Tax
             }
             HasChanged = true;
         }
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="attribAmount">Total Amount of Attributes</param>
+        /// <param name="attributeTaxWeight">dictionary of taxRate weights on that amount</param>
+        public void AddAttributeRate(decimal attribAmount, SortedDictionary<decimal, decimal> attributeTaxWeight)
+        {
+            var dummyResult = ParseOrAddAttributeRate(attribAmount, attributeTaxWeight, doAdd: true);
+        }
 
+        public SortedDictionary<decimal, decimal> ParseAttributeRate(decimal attribAmount, SortedDictionary<decimal, decimal> attributeTaxWeight)
+        {
+            return ParseOrAddAttributeRate(attribAmount, attributeTaxWeight, doAdd: false);
+        }
+        public SortedDictionary<decimal, decimal> ParseOrAddAttributeRate(decimal attribAmount, SortedDictionary<decimal, decimal> attributeTaxWeight, bool doAdd = true)
+        {
+            var result = new SortedDictionary<decimal, decimal>();
+            int i = 0;
+            int c = attributeTaxWeight.Count();
+            decimal reminder = attribAmount;
+            foreach (KeyValuePair<decimal, decimal> kvp in attributeTaxWeight)
+            {
+                i += 1;
+                decimal vatpercentage = kvp.Key;
+                decimal rateWeight = kvp.Value;
+                var attribAmountWeighted = RoundingHelper.RoundAmount(attribAmount * rateWeight);
+                if (i < c)
+                {
+                    if (doAdd)
+                        AddRate(vatpercentage, attribAmountWeighted);
+                    else
+                        result.Add(kvp.Key, attribAmountWeighted);
+                    reminder -= attribAmountWeighted;
+                }
+                else
+                {
+                    if (doAdd)
+                        AddRate(vatpercentage, reminder);
+                    else
+                        result.Add(kvp.Key, reminder);
+                }
+            }
+
+            return result;
+        }
         public void SetSubtotalDiscAmount(decimal totalSubTotalDiscAmount, decimal totalAmount = 0)
         {
             if (totalAmount == 0)
@@ -120,7 +182,7 @@ namespace Nop.Services.Tax
         /// <param name="totalAmount">Base amount to which apply fee</param>
         public void SetPaymentFeeDiscAmount(decimal totalPaymentFeeDiscAmount, decimal totalAmount)
         {
-            PercentagePaymentFeeDiscount = totalPaymentFeeDiscAmount / totalAmount * 100;           
+            PercentagePaymentFeeDiscount = totalPaymentFeeDiscAmount / totalAmount * 100;
             HasChanged = true;
         }
 
@@ -192,8 +254,11 @@ namespace Nop.Services.Tax
 
                 //last remainder get's lost as it can't be considered anywhere else. This has no implication and only lowers or highers discount.
 
+                taxrate.Amount = taxrate.SubtotalAmount + taxrate.ShippingAmount + taxrate.PaymentFeeAmount;
+                taxrate.DiscountAmount = taxrate.SubTotalDiscAmount + taxrate.InvoiceDiscountAmount;
+
                 //VAT: always round VAT first
-                decimal rateamount = taxrate.SubtotalAmount + taxrate.ShippingAmount + taxrate.PaymentFeeAmount - taxrate.SubTotalDiscAmount - taxrate.InvoiceDiscountAmount;
+                decimal rateamount = taxrate.Amount - taxrate.DiscountAmount;
                 if (PricesIncludeTax)
                 {
                     taxrate.AmountIncludingVAT = rateamount;
@@ -221,7 +286,24 @@ namespace Nop.Services.Tax
                 TotalAmount += taxrate.BaseAmount;
                 TotalAmountVAT += taxrate.VatAmount;
                 TotalAmountIncludingVAT += taxrate.AmountIncludingVAT;
-
+            }
+            int i = 0;
+            int c = TaxRates.Count();
+            decimal totWeight = decimal.Zero;
+            foreach (KeyValuePair<decimal, TaxRateEntry> kvp in this.TaxRates)
+            {
+                i++;
+                decimal vatpercentage = kvp.Key;
+                TaxRateEntry taxrate = kvp.Value;
+                if (i < c)
+                {
+                    taxrate.VatRateWeight = (this.PricesIncludeTax ? (taxrate.AmountIncludingVAT / this.TotalAmountIncludingVAT) : (taxrate.BaseAmount / this.TotalAmount));
+                    totWeight += taxrate.VatRateWeight;
+                }
+                else
+                {
+                    taxrate.VatRateWeight = decimal.One - totWeight; //assure sum of VatRateWeight = 1
+                }
             }
         }
         #endregion

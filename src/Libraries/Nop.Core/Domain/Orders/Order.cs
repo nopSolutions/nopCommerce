@@ -26,20 +26,24 @@ namespace Nop.Core.Domain.Orders
 
         #region Utilities
 
+        /// <summary>
+        /// Parses order.TaxRates string
+        /// </summary>
+        /// <param name="taxRatesStr"></param>
+        /// <returns>Returns the sorted dictionary of taxrateEntries</returns>
         protected virtual SortedDictionary<decimal, TaxRateRec> ParseTaxRates(string taxRatesStr)
         {
-            //var taxRatesDictionary = new SortedDictionary<decimal, decimal>();
             var taxRatesDictionary = new SortedDictionary<decimal, TaxRateRec>();
             if (String.IsNullOrEmpty(taxRatesStr))
                 return taxRatesDictionary;
 
-            string[] lines = taxRatesStr.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = taxRatesStr.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string line in lines)
             {
                 if (String.IsNullOrEmpty(line.Trim()))
                     continue;
 
-                string[] taxes = line.Split(new [] { ':' });
+                string[] taxes = line.Split(new[] { ':' });
                 if (taxes.Length == 6)
                 {
                     try

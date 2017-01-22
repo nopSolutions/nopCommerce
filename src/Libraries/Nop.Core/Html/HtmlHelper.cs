@@ -189,6 +189,11 @@ namespace Nop.Core.Html
             text = text.Replace("<br />", "\n");
             text = text.Replace("&nbsp;&nbsp;", "\t");
             text = text.Replace("&nbsp;&nbsp;", "  ");
+            //attribute Vat tags to remove
+            text = text.Replace("<span style=\"display:inline-block;width:20%;\">", "");
+            text = text.Replace("<span style=\"display:inline-block;width:auto;\">", "\t");
+            text = text.Replace("</span>", "");
+            
 
             if (replaceAnchorTags)
                 text = ReplaceAnchorTags(text);

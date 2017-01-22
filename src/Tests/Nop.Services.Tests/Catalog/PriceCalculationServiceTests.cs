@@ -16,6 +16,7 @@ using Nop.Services.Discounts;
 using Nop.Tests;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Nop.Services.Tax;
 
 namespace Nop.Services.Tests.Catalog
 {
@@ -33,7 +34,7 @@ namespace Nop.Services.Tests.Catalog
         private ShoppingCartSettings _shoppingCartSettings;
         private CatalogSettings _catalogSettings;
         private ICacheManager _cacheManager;
-
+        private ITaxService _taxService;
         private Store _store;
 
         [SetUp]
@@ -66,7 +67,8 @@ namespace Nop.Services.Tests.Catalog
                 _productAttributeParser,
                 _productService,
                 _cacheManager,
-                _shoppingCartSettings, 
+                _shoppingCartSettings,
+                _taxService,
                 _catalogSettings);
 
             var nopEngine = MockRepository.GenerateMock<NopEngine>();

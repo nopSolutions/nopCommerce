@@ -485,16 +485,7 @@ namespace Nop.Services.Orders
             //tax rates
             //var taxrates = includingTax ? taxSummaryIncl.GenerateOldTaxrateDict() : taxSummaryExcl.GenerateOldTaxrateDict();
             var taxrates = includingTax ? taxSummaryIncl : taxSummaryExcl;
-            details.TaxRates = taxrates.TaxRates.Aggregate(string.Empty, (current, next) =>
-                string.Format("{0}{1}:{2}:{3}:{4}:{5}:{6};   ", current,
-                    next.Key.ToString(CultureInfo.InvariantCulture),
-                    (next.Value.SubtotalAmount + next.Value.ShippingAmount + next.Value.PaymentFeeAmount).ToString(CultureInfo.InvariantCulture),
-                    (next.Value.SubTotalDiscAmount + next.Value.InvoiceDiscountAmount).ToString(CultureInfo.InvariantCulture),
-                    next.Value.BaseAmount.ToString(CultureInfo.InvariantCulture),
-                    next.Value.VatAmount.ToString(CultureInfo.InvariantCulture),
-                    next.Value.AmountIncludingVAT.ToString(CultureInfo.InvariantCulture)
-                 )
-                 );
+            details.TaxRates = taxrates.GenerateTaxRateString();
 
             //order total (and applied discounts, gift cards, reward points)
             details.OrderDiscountAmount = includingTax ? taxSummaryIncl.TotalInvDiscAmount : taxSummaryExcl.TotalInvDiscAmount;
@@ -502,6 +493,8 @@ namespace Nop.Services.Orders
             details.RedeemedRewardPointsAmount = redeemedRewardPointsAmount;
             details.AppliedGiftCards = appliedGiftCards;
             details.OrderTotal = includingTax ? orderTotalIncl ?? 0 : orderTotalExcl ?? 0;
+            details.OrderAmount = includingTax ? taxSummaryIncl.TotalAmount : taxSummaryExcl.TotalAmount;
+            details.OrderAmountIncl = includingTax ? taxSummaryIncl.TotalAmountIncludingVAT : taxSummaryExcl.TotalAmountIncludingVAT;
 
             //discount history
             foreach (var disc in orderAppliedDiscounts)
@@ -573,7 +566,7 @@ namespace Nop.Services.Orders
             //billing address
             if (details.InitialOrder.BillingAddress == null)
                 throw new NopException("Billing address is not available");
-            
+
             details.BillingAddress = (Address)details.InitialOrder.BillingAddress.Clone();
             if (details.BillingAddress.Country != null && !details.BillingAddress.Country.AllowsBilling)
                 throw new NopException(string.Format("Country '{0}' is not allowed for billing", details.BillingAddress.Country.Name));
@@ -884,7 +877,7 @@ namespace Nop.Services.Orders
         /// <param name="activate">A value indicating whether to activate gift cards; true - activate, false - deactivate</param>
         protected virtual void SetActivatedValueForPurchasedGiftCards(Order order, bool activate)
         {
-            var giftCards = _giftCardService.GetAllGiftCards(purchasedWithOrderId: order.Id, 
+            var giftCards = _giftCardService.GetAllGiftCards(purchasedWithOrderId: order.Id,
                 isGiftCardActivated: !activate);
             foreach (var gc in giftCards)
             {
@@ -1316,7 +1309,7 @@ namespace Nop.Services.Orders
                                 details.AppliedDiscounts.Add(disc);
 
                         //attributes
-                        var attributeDescription = _productAttributeFormatter.FormatAttributes(sc.Product, sc.AttributesXml, details.Customer);
+                        var attributeDescription = _productAttributeFormatter.FormatAttributes(sc.Product, sc.AttributesXml, details.Customer, subTotal: _taxSettings.PricesIncludeTax ? scSubTotalInclTax : scSubTotalExclTax);
 
                         var itemWeight = _shippingService.GetShoppingCartItemWeight(sc);
 
@@ -1465,7 +1458,7 @@ namespace Nop.Services.Orders
                     //check order status
                     CheckOrderStatus(order);
 
-                    //raise event       
+                    //raise event
                     _eventPublisher.Publish(new OrderPlacedEvent(order));
 
                     if (order.PaymentStatus == PaymentStatus.Paid)
@@ -1559,7 +1552,7 @@ namespace Nop.Services.Orders
                 updatedOrderItem.ItemWeight = _shippingService.GetShoppingCartItemWeight(updatedShoppingCartItem);
                 updatedOrderItem.OriginalProductCost = _priceCalculationService.GetProductCost(updatedShoppingCartItem.Product, updatedShoppingCartItem.AttributesXml);
                 updatedOrderItem.AttributeDescription = _productAttributeFormatter.FormatAttributes(updatedShoppingCartItem.Product,
-                    updatedShoppingCartItem.AttributesXml, updatedOrder.Customer);
+                    updatedShoppingCartItem.AttributesXml, updatedOrder.Customer,subTotal: updatedOrder.CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? updatedOrderItem.PriceInclTax : updatedOrderItem.PriceExclTax);
 
                 //gift cards
                 if (updatedShoppingCartItem.Product.IsGiftCard)
@@ -1682,7 +1675,7 @@ namespace Nop.Services.Orders
                 CreatedOnUtc = DateTime.UtcNow
             });
             _orderService.UpdateOrder(order);
-            
+
             //now delete an order
             _orderService.DeleteOrder(order);
         }
@@ -1857,7 +1850,7 @@ namespace Nop.Services.Orders
                     //check order status
                     CheckOrderStatus(order);
 
-                    //raise event       
+                    //raise event
                     _eventPublisher.Publish(new OrderPlacedEvent(order));
 
                     if (order.PaymentStatus == PaymentStatus.Paid)
@@ -2366,7 +2359,7 @@ namespace Nop.Services.Orders
                     _orderService.UpdateOrder(order);
 
                     CheckOrderStatus(order);
-     
+
                     if (order.PaymentStatus == PaymentStatus.Paid)
                     {
                         ProcessOrderPaid(order);
@@ -2454,7 +2447,7 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             CheckOrderStatus(order);
-   
+
             if (order.PaymentStatus == PaymentStatus.Paid)
             {
                 ProcessOrderPaid(order);
@@ -2490,7 +2483,7 @@ namespace Nop.Services.Orders
 
             return false;
         }
-        
+
         /// <summary>
         /// Refunds an order (from admin panel)
         /// </summary>
@@ -2558,7 +2551,7 @@ namespace Nop.Services.Orders
                         _orderService.UpdateOrder(order);
                     }
 
-                    //raise event       
+                    //raise event
                     _eventPublisher.Publish(new OrderRefundedEvent(order, request.AmountToRefund));
                 }
 
@@ -2682,7 +2675,7 @@ namespace Nop.Services.Orders
                 _orderService.UpdateOrder(order);
             }
 
-            //raise event       
+            //raise event
             _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
         }
 
@@ -2791,7 +2784,7 @@ namespace Nop.Services.Orders
                         _orderService.UpdateOrder(order);
                     }
 
-                    //raise event       
+                    //raise event
                     _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
                 }
             }
@@ -2869,7 +2862,7 @@ namespace Nop.Services.Orders
         {
             if (order == null)
                 throw new ArgumentNullException("order");
-            
+
             if (!CanPartiallyRefundOffline(order, amountToRefund))
                 throw new NopException("You can't partially refund (offline) this order");
 
@@ -2917,7 +2910,7 @@ namespace Nop.Services.Orders
                 });
                 _orderService.UpdateOrder(order);
             }
-            //raise event       
+            //raise event
             _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
         }
 
@@ -3085,7 +3078,7 @@ namespace Nop.Services.Orders
             foreach (var orderItem in order.OrderItems)
             {
                 _shoppingCartService.AddToCart(order.Customer, orderItem.Product,
-                    ShoppingCartType.ShoppingCart, order.StoreId, 
+                    ShoppingCartType.ShoppingCart, order.StoreId,
                     orderItem.AttributesXml, orderItem.UnitPriceExclTax,
                     orderItem.RentalStartDateUtc, orderItem.RentalEndDateUtc,
                     orderItem.Quantity, false);
@@ -3095,7 +3088,7 @@ namespace Nop.Services.Orders
             //comment the code below if you want to disable this functionality
             _genericAttributeService.SaveAttribute(order.Customer, SystemCustomerAttributeNames.CheckoutAttributes, order.CheckoutAttributesXml, order.StoreId);
         }
-        
+
         /// <summary>
         /// Check whether return request is allowed
         /// </summary>
@@ -3124,7 +3117,7 @@ namespace Nop.Services.Orders
             //ensure that we have at least one returnable product
             return order.OrderItems.Any(oi => !oi.Product.NotReturnable);
         }
-        
+
 
 
         /// <summary>

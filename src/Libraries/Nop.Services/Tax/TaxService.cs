@@ -422,9 +422,6 @@ namespace Nop.Services.Tax
                 return price;
             }
 
-
-
-
             if (priceIncludesTax)
             {
                 //"price" already includes tax

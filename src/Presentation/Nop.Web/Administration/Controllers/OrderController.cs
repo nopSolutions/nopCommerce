@@ -868,6 +868,7 @@ namespace Nop.Admin.Controllers
             };
 
             //attributes
+            string attributesXml = "";
             var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
             foreach (var attribute in attributes)
             {
@@ -911,10 +912,37 @@ namespace Nop.Admin.Controllers
                             PriceAdjustmentValue = priceAdjustment
                         });
                     }
+
+                    //creating XML for "read-only checkboxes" attributes
+                    foreach (var selectedAttributeId in attributeValues
+                    .Where(v => v.IsPreSelected)
+                    .Select(v => v.Id)
+                    .ToList())
+                    {
+                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                            attribute, selectedAttributeId.ToString());
+                    }
                 }
 
                 model.ProductAttributes.Add(attributeModel);
             }
+
+            //Get final price using attributes
+            List<DiscountForCaching> scDiscounts;
+            decimal discountAmount;
+            decimal finalPrice = _priceCalculationService.GetUnitPrice(product,
+                    order.Customer,
+                    ShoppingCartType.ShoppingCart,
+                    1, ref attributesXml, 0,
+                    null, null,
+                    true, out discountAmount, out scDiscounts);
+            decimal finalPriceInclTax = RoundingHelper.RoundPrice(_taxService.GetProductPrice(product, finalPrice, true, order.Customer, out taxRate));
+            decimal finalPriceExclTax = RoundingHelper.RoundPrice(_taxService.GetProductPrice(product, finalPrice, false, order.Customer, out taxRate));
+            model.UnitPriceExclTax = finalPriceExclTax;
+            model.UnitPriceInclTax = finalPriceInclTax;
+            model.SubTotalExclTax = RoundingHelper.RoundAmount(finalPriceExclTax);
+            model.SubTotalInclTax = RoundingHelper.RoundAmount(finalPriceInclTax);
+
             model.HasCondition = model.ProductAttributes.Any(a => a.HasCondition);
             //gift card
             model.GiftCard.IsGiftCard = product.IsGiftCard;
@@ -1988,6 +2016,30 @@ namespace Nop.Admin.Controllers
             var errors = new List<string>();
             var attributeXml = ParseProductAttributes(product, form, errors);
 
+            //Get final price using attributes
+            decimal finalPriceInclTax = decimal.Zero; decimal finalPriceExclTax = decimal.Zero;
+            decimal finalSubInclTax = decimal.Zero; decimal finalSubExclTax = decimal.Zero;
+
+            List<DiscountForCaching> scDiscounts;
+            decimal discountAmount;
+            decimal taxRate;
+            int quantity;
+            decimal finalPrice = _priceCalculationService.GetUnitPrice(product,
+                    _workContext.CurrentCustomer,
+                    ShoppingCartType.ShoppingCart,
+                    1, ref attributeXml, 0,
+                    null, null,
+                    true, out discountAmount, out scDiscounts);
+            finalPriceInclTax = RoundingHelper.RoundPrice(_taxService.GetProductPrice(product, finalPrice, true, _workContext.CurrentCustomer, out taxRate));
+            finalPriceExclTax = RoundingHelper.RoundPrice(_taxService.GetProductPrice(product, finalPrice, false, _workContext.CurrentCustomer, out taxRate));
+            finalSubInclTax = RoundingHelper.RoundAmount(finalPriceInclTax);
+            finalSubExclTax = RoundingHelper.RoundAmount(finalPriceExclTax);
+            if (int.TryParse(form["Quantity"], out quantity))
+            {
+                finalSubInclTax = RoundingHelper.RoundAmount(_taxService.GetProductPrice(product, finalPriceInclTax * quantity, true, _workContext.CurrentCustomer, out taxRate));
+                finalSubExclTax = RoundingHelper.RoundAmount(_taxService.GetProductPrice(product, finalPriceInclTax * quantity, false, _workContext.CurrentCustomer, out taxRate));
+            }
+
             //conditional attributes
             var enabledAttributeMappingIds = new List<int>();
             var disabledAttributeMappingIds = new List<int>();
@@ -2011,6 +2063,10 @@ namespace Nop.Admin.Controllers
             {
                 enabledattributemappingids = enabledAttributeMappingIds.ToArray(),
                 disabledattributemappingids = disabledAttributeMappingIds.ToArray(),
+                finalPriceInclTax,
+                finalPriceExclTax,
+                finalSubInclTax,
+                finalSubExclTax,
                 message = errors.Any() ? errors.ToArray() : null
             });
         }
@@ -2689,6 +2745,16 @@ namespace Nop.Admin.Controllers
             //attributes
             var attributesXml = ParseProductAttributes(product, form, warnings);
 
+            //attributes tax
+            List<DiscountForCaching> scDiscounts;
+            decimal discountAmount;
+            decimal finalPrice = _priceCalculationService.GetUnitPrice(product,
+                    _workContext.CurrentCustomer,
+                    ShoppingCartType.ShoppingCart,
+                    1, ref attributesXml, 0,
+                    null, null,
+                    true, out discountAmount, out scDiscounts);
+
             #region Gift cards
 
             string recipientName = "";
@@ -2753,7 +2819,7 @@ namespace Nop.Admin.Controllers
                 //no errors
 
                 //attributes
-                var attributeDescription = _productAttributeFormatter.FormatAttributes(product, attributesXml, order.Customer);
+                var attributeDescription = _productAttributeFormatter.FormatAttributes(product, attributesXml, order.Customer, subTotal: order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? priceInclTax : priceExclTax);
 
                 //save item
                 var orderItem = new OrderItem
