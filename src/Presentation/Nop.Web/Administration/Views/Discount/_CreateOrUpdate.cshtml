@@ -285,6 +285,23 @@
             <p>
                 @T("Admin.Promotions.Discounts.Requirements.Description")
             </p>
+                    <div class="requirement-container requirement-group" id="editrequirement8">
+                        <div class="requirement-heading clearfix">
+                            <span class="pull-left margin-r-5">
+                                Group <i>@T("Admin.Promotions.Discounts.Requirements.DefaultRequirementGroup")</i>.
+                            </span>
+                            <div class="iteraction-type pull-left clearfix">
+                                <span class="pull-left margin-r-10">@T("Admin.Promotions.Discounts.Requirements.IteractionTypeInGroup")</span>
+                                @Html.NopDropDownList("DefaultGroupIteractionTypeId",
+                                        RequirementInteractionType.And.ToSelectList(false),
+                                        new { onchange = "changeInteraction(0, 0, this.value)", @class = "input-sm" })
+                            </div>
+                        </div>
+                        <div class="requirement-body">
+                            <!-- Template container -->
+                            <div id="discountRequirementContainer"></div>
+                        </div>
+                    </div>
 
             <script type="text/javascript">
                 $(document).ready(function() {
@@ -390,6 +407,9 @@
                             else {
                                 $("#pnlGroup").hide();
                             }
+
+                            //set iteraction type for default group
+                            $("[name=DefaultGroupIteractionTypeId]").val(result.DefaultGroupIteractionTypeId);
                         },
                         error: function(xhr, ajaxOptions, thrownError) {
                             alert('Failed to load requirements info. Please refresh the page');
@@ -399,7 +419,11 @@
 
                 //load HTML for exisiting requirements
                 function loadRequirementBoxes(requirements, placeholder) {
-                    $(placeholder).html('');
+                    if(requirements.length > 0)
+                        $(placeholder).html('');
+                    else
+                        $(placeholder).html('@T("Admin.Promotions.Discounts.Requirements.GroupIsEmpty")');
+
                     $("#discountRequirementTemplate").tmpl(requirements).appendTo(placeholder);
 
                     for (var i = 0; i < requirements.length; i++) {
@@ -447,51 +471,55 @@
                 };
             </script>
 
-            <!-- Template container -->
-            <div id="discountRequirementContainer" style="margin-bottom: 5px;"></div>
-
-            <!-- Discount requirement template -->
+                    <!-- Discount requirement template -->
             <script id="discountRequirementTemplate" type="text/html">
-                <div class="panel panel-default" id="editrequirement{{= DiscountRequirementId }}">
-                    <div class="panel-heading">
+                <div class="requirement-container {{if IsGroup}}requirement-group{{/if}}" id="editrequirement{{= DiscountRequirementId }}">
+                    <div class="requirement-heading clearfix">
                         {{if IsGroup}}
-                            @T("Admin.Promotions.Discounts.Requirements.RequirementGroup.Title"): <strong>{{= RuleName }}</strong>
-                        {{else}}
-                            @T("Admin.Promotions.Discounts.Requirements.DiscountRequirementType"): <strong>{{= RuleName }}</strong>
-                        {{/if}}
-                    </div>
-                    <div class="panel-body">
-                        <div id="editrequirementplaceholder{{= DiscountRequirementId }}"></div>
-                        <div class="form-group pull-right" style="margin-top: 10px;">
-                            <div class="col-md-12">
-                                <div class="input-group input-group-short">
-                                    {{if !IsLastInGroup}}
-                                        <div class="input-group-text">
-                                            <select class="form-control" id="interactiontype{{= DiscountRequirementId }}" name="interactiontype{{= DiscountRequirementId }}"
-                                                onchange="changeInteraction({{= DiscountRequirementId }}, ${ParentId ? ParentId : 'null'}, this.value)">
-                                                {{each AvailableInteractionTypes}}
-                                                    <option value="${Value}" ${Selected == true ? 'selected' : ''}>${Text}</option>
-                                                {{/each}}
-                                            </select>
-                                        </div>
-                                    {{/if}}
-                                    <div class="input-group-btn">
-                                        <button type="button" class="btn bg-red" id="deleterequirement{{= DiscountRequirementId }}" onclick="deleteRequirement({{= DiscountRequirementId }})">
-                                            {{if IsGroup}}
-                                                @T("Admin.Promotions.Discounts.Requirements.RequirementGroup.Remove")
-                                            {{else}}
-                                                @T("Admin.Promotions.Discounts.Requirements.Remove")
-                                            {{/if}}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                        <span class="pull-left margin-r-5">
+                            @T("Admin.Promotions.Discounts.Requirements.RequirementGroup.Title")
+                            <i>{{= RuleName }}</i>
+                        </span>
+                        <div class="iteraction-type pull-left clearfix">
+                            <span class="pull-left margin-r-10">@T("Admin.Promotions.Discounts.Requirements.IteractionTypeInGroup")</span>
+                            <select class="form-control input-sm pull-left" id="interactiontype{{= DiscountRequirementId }}" name="interactiontype{{= DiscountRequirementId }}"
+                                    onchange="changeInteraction({{= DiscountRequirementId }}, ${ParentId ? ParentId : 'null'}, this.value)">
+                                {{each AvailableInteractionTypes}}
+                                <option value="${Value}" ${Selected==true ? 'selected' : '' }>${Text}</option>
+                                {{/each}}
+                            </select>
                         </div>
+                        {{else}}
+                        <div class="pull-left">
+                            @T("Admin.Promotions.Discounts.Requirements.Requirement.Title")
+                            <i>{{= RuleName }}</i>
+                        </div>
+                        {{/if}}
+                        <button type="button" class="btn btn-link" id="deleterequirement{{= DiscountRequirementId }}" onclick="deleteRequirement({{= DiscountRequirementId }})">
+                            <i class="fa fa-trash"></i>
+                            {{if IsGroup}}
+                                @T("Admin.Promotions.Discounts.Requirements.RemoveGroup")
+                            {{else}}
+                                @T("Admin.Promotions.Discounts.Requirements.RemoveRequirement")
+                            {{/if}}
+                        </button>
+                    </div>
+                    <div class="requirement-body">
+                        <div id="editrequirementplaceholder{{= DiscountRequirementId }}"></div>
                     </div>
                 </div>
+                {{if !IsLastInGroup}}
+                <div class="iteraction-type-label">
+                    {{each AvailableInteractionTypes}}
+                    {{if Value == InteractionTypeId}}
+                    ${Text}
+                    {{/if}}
+                    {{/each}}
+                </div>
+                {{/if}}
             </script>
 
-            <div class="panel panel-primary">
+            <div class="panel panel-default panel-add-requirement">
                 <div class="panel-heading">
                     @T("Admin.Promotions.Discounts.Requirements.AddNew")
                 </div>
@@ -505,7 +533,7 @@
                             @Html.ValidationMessageFor(model => model.AddDiscountRequirement)
                         </div>
                     </div>
-                    <div class="form-group" id="pnlGroup" style="display:none">
+                    <div class="form-group" id="pnlGroup" style="display: none">
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.RequirementGroupId)
                         </div>
@@ -515,7 +543,7 @@
                         </div>
                     </div>
                     <div id="addrequirementplaceholder"></div>
-                    <div class="form-group" id="pnlGroupName" style="display:none">
+                    <div class="form-group" id="pnlGroupName" style="display: none">
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.GroupName)
                         </div>
@@ -524,9 +552,9 @@
                             @Html.ValidationMessageFor(model => model.GroupName)
                         </div>
                     </div>
-                    <div class="form-group" id="pnlAddNewGroup" style="display:none">
+                    <div class="form-group" id="pnlAddNewGroup" style="display: none">
                         <div class="col-md-9 col-md-offset-3">
-                            <input type="button" id="saverequirement" class="btn btn-primary" value="@T("Admin.Common.Save")" onclick="addNewGroup()"/>
+                            <input type="button" id="saverequirement" class="btn btn-primary" value="@T("Admin.Common.Save")" onclick="addNewGroup()" />
                         </div>
                     </div>
                 </div>
@@ -890,8 +918,8 @@
 
 @helper TabHistory()
 {
-    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
     <div class="panel-group">
         <div class="panel panel-default">

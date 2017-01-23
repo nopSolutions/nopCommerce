@@ -123,6 +123,85 @@ ul.common-list {
     background-color: transparent !important;
 }
 
+/*DISCOUNT*/
+.requirement-container {
+    margin-bottom: 5px;
+    margin-top: 5px;
+    border: 1px dashed #8c949a;
+    display: table;
+}
+.requirement-container.requirement-group {
+    border: none;
+    border-left: 2px solid #8c949a;
+}
+.requirement-container .requirement-heading {
+    padding: 7px 10px 3px 10px;
+    line-height: 24px;
+}
+.requirement-container.requirement-group > .requirement-heading {
+    height: 30px;
+    line-height: 30px;
+    display: table;
+    background: #eeeeee;
+    padding: 0px 2px 0px 10px;
+}
+.requirement-container .requirement-heading .btn-link {
+    padding: 0 3px;
+    margin-left: 50px;
+    font-size: 15px;
+    color: #367fa9;
+    float: right;
+    text-decoration: none;
+}
+.requirement-container.requirement-group > .requirement-heading .btn-link {
+    padding: 3px 10px 3px 0px;
+}
+.requirement-container .requirement-body {
+    padding: 10px 20px 8px 10px;
+    min-height: 35px;
+}
+.requirement-container.requirement-group > .requirement-body {
+    padding: 10px 0 5px 20px;
+}
+.requirement-container .requirement-product-names.filled {
+    clear: both;
+    max-width: 600px;
+    padding-top: 5px;
+}
+.requirement-data-buttons {
+    margin-top: 5px;
+}
+.requirement-container .requirement-data-buttons {
+    margin-top: 0;
+    float: left;
+}
+.requirement-container .requirement-data-input {
+    float: left;
+    margin-right: 5px;
+}
+.requirement-container .requirement-label-col {
+    width: auto;
+}
+.requirement-container .requirement-data-col {
+    width: auto;
+}
+.requirement-container .requirement-data-buttons button{
+    margin-top: 0;
+}
+.requirement-container .requirement-messages-col {
+    margin-left: 0;
+}
+.iteraction-type select{
+    width: 70px;
+    height: 26px;
+    line-height: 25px;
+    font-size: 12px;
+    margin-top: 2px;
+}
+.panel-add-requirement{
+    margin-top: 20px;
+}
+
 /*MODAL WINDOWS*/
 .modal-content {
     text-align: left;

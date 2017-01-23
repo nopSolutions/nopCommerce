@@ -1761,7 +1761,7 @@ set @resources='
     <Value>Check if orders should be exported with products.</Value>
   </LocaleResource> 
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Description">
-    <Value>Here you can set up requirements for the discount created to limit them to certain users categories depends on their customer roles, amount spent and so on. You can use single requirement type or make a group of requirements to use any of requirements simultaneously. Requirement group is a very useful feature for creating discount requirement templates. Once you created a requirement group and then use it every time you want this limitation to be counted. You can put one requirement group into another if needed.</Value>
+    <Value><![CDATA[Set up requirements to a created discount if you want to limit it to certain user categories depending on a customer role, the amount spent, etc. You can use single requirement type, or group several types and apply them simultaneously.<br>Requirement group is a useful feature for creating discount requirement templates. You can create a requirement group just once and then use it every time you want this limitation to be applied. You can include one requirement group into another one if needed.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.DiscountRequirementType.AddGroup">
     <Value>Add requirement group</Value>
@@ -1784,17 +1784,35 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RequirementGroup.None">
     <Value>None</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RequirementGroup.Remove">
-    <Value>Remove requirement group</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RequirementGroup.Title">
-    <Value>Requirement group</Value>
+    <Value>Group</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Discounts.RequirementInteractionType.And">
     <Value>AND</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Discounts.RequirementInteractionType.Or">
     <Value>OR</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Remove">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Requirement.Title">
+    <Value>Requirement</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.DefaultRequirementGroup">
+    <Value>Default requirement group</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.IteractionTypeInGroup">
+    <Value>Iteraction type in this group is</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.GroupIsEmpty">
+    <Value>The group is empty</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RemoveRequirement">
+    <Value>Remove requirement</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RemoveGroup">
+    <Value>Remove group</Value>
   </LocaleResource>
 </Language>
 '

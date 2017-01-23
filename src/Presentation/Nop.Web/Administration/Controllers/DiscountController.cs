@@ -54,14 +54,14 @@ namespace Nop.Admin.Controllers
 
         #region Ctor
 
-        public DiscountController(IDiscountService discountService, 
+        public DiscountController(IDiscountService discountService,
             ILocalizationService localizationService,
             ICurrencyService currencyService,
             ICategoryService categoryService,
             IProductService productService,
-            IWebHelper webHelper, 
+            IWebHelper webHelper,
             IDateTimeHelper dateTimeHelper,
-            ICustomerActivityService customerActivityService, 
+            ICustomerActivityService customerActivityService,
             CurrencySettings currencySettings,
             IPermissionService permissionService,
             IWorkContext workContext,
@@ -69,7 +69,7 @@ namespace Nop.Admin.Controllers
             IStoreService storeService,
             IVendorService vendorService,
             IOrderService orderService,
-            IPriceFormatter priceFormatter, 
+            IPriceFormatter priceFormatter,
             ICacheManager cacheManager)
         {
             this._discountService = discountService;
@@ -97,7 +97,7 @@ namespace Nop.Admin.Controllers
 
         [NonAction]
         protected virtual string GetRequirementUrlInternal(IDiscountRequirementRule discountRequirementRule, Discount discount, int? discountRequirementId)
-        {   
+        {
             if (discountRequirementRule == null)
                 throw new ArgumentNullException("discountRequirementRule");
 
@@ -107,7 +107,7 @@ namespace Nop.Admin.Controllers
             string url = string.Format("{0}{1}", _webHelper.GetStoreLocation(), discountRequirementRule.GetConfigurationUrl(discount.Id, discountRequirementId));
             return url;
         }
-        
+
         [NonAction]
         protected virtual void PrepareDiscountModel(DiscountModel model, Discount discount)
         {
@@ -126,7 +126,7 @@ namespace Nop.Admin.Controllers
             model.AvailableRequirementGroups.Add(new SelectListItem { Value = "0", Text = _localizationService.GetResource("Admin.Promotions.Discounts.Requirements.RequirementGroup.None") });
             foreach (var dr in discount.DiscountRequirements.Where(dr => dr.IsGroup))
                 model.AvailableRequirementGroups.Add(new SelectListItem { Value = dr.Id.ToString(), Text = dr.DiscountRequirementRuleSystemName });
-            
+            model.AvailableInteractionTypes = RequirementInteractionType.And.ToSelectList().ToList();
         }
 
         [NonAction]
@@ -139,14 +139,21 @@ namespace Nop.Admin.Controllers
                 var requirement = new DiscountModel.DiscountRequirementMetaInfo
                 {
                     DiscountRequirementId = dr.Id,
-                    InteractionTypeId = dr.InteractionTypeId,
                     ParentId = dr.ParentId,
                     AvailableInteractionTypes = dr.InteractionType.ToSelectList(true),
                     IsGroup = dr.IsGroup,
                     RuleName = dr.DiscountRequirementRuleSystemName,
                     IsLastInGroup = lastRequirement == null || lastRequirement.Id == dr.Id,
-                    ChildRequirements = GetReqirements(dr.ChildRequirements, discount)
+                    ChildRequirements = GetReqirements(dr.ChildRequirements, discount),
+                    InteractionTypeId = dr.InteractionTypeId,
                 };
+
+                var childInteractionTypeId = RequirementInteractionType.And;
+                var firstChildRequirement = requirement.ChildRequirements.FirstOrDefault();
+                if (firstChildRequirement != null)
+                    childInteractionTypeId = (RequirementInteractionType) firstChildRequirement.InteractionTypeId;
+
+                requirement.AvailableInteractionTypes = childInteractionTypeId.ToSelectList(true);
 
                 if (dr.IsGroup)
                     return requirement;
@@ -207,7 +214,7 @@ namespace Nop.Admin.Controllers
 
             DiscountType? discountType = null;
             if (model.SearchDiscountTypeId > 0)
-                discountType = (DiscountType) model.SearchDiscountTypeId;
+                discountType = (DiscountType)model.SearchDiscountTypeId;
             var discounts = _discountService.GetAllDiscounts(discountType,
                 model.SearchDiscountCouponCode,
                 model.SearchDiscountName,
@@ -228,7 +235,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-        
+
         //create
         public virtual ActionResult Create()
         {
@@ -307,7 +314,7 @@ namespace Nop.Admin.Controllers
                 _discountService.UpdateDiscount(discount);
 
                 //clean up old references (if changed) and update "HasDiscountsApplied" properties
-                if (prevDiscountType == DiscountType.AssignedToCategories 
+                if (prevDiscountType == DiscountType.AssignedToCategories
                     && discount.DiscountType != DiscountType.AssignedToCategories)
                 {
                     //applied to categories
@@ -343,7 +350,7 @@ namespace Nop.Admin.Controllers
                     //selected tab
                     SaveSelectedTabName();
 
-                    return RedirectToAction("Edit",  new {id = discount.Id});
+                    return RedirectToAction("Edit", new { id = discount.Id });
                 }
                 return RedirectToAction("List");
             }
@@ -364,12 +371,12 @@ namespace Nop.Admin.Controllers
             if (discount == null)
                 //No discount found with the specified id
                 return RedirectToAction("List");
-            
+
             //applied to products
             var products = discount.AppliedToProducts.ToList();
 
             _discountService.DeleteDiscount(discount);
-            
+
             //update "HasDiscountsApplied" properties
             foreach (var p in products)
                 _productService.UpdateHasDiscountsApplied(p);
@@ -393,7 +400,7 @@ namespace Nop.Admin.Controllers
 
             if (String.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException("systemName");
-            
+
             var discountRequirementRule = _discountService.LoadDiscountRequirementRuleBySystemName(systemName);
             if (discountRequirementRule == null)
                 throw new ArgumentException("Discount requirement rule could not be loaded");
@@ -422,12 +429,29 @@ namespace Nop.Admin.Controllers
             {
                 //delete
                 if (deleteRequirement)
-                    DeleteRequirement(new List<DiscountRequirement> { discountRequirement });
+                    DeleteRequirement(new List<DiscountRequirement> {discountRequirement});
                 //or update the requirement
                 else
                 {
                     discountRequirement.ParentId = parentId.HasValue && parentId > 0 ? parentId : null;
-                    discountRequirement.InteractionTypeId = interactionTypeId;
+
+                    //update interactionTypeId for child requirements
+                    for (var i = 0; i < discountRequirement.ChildRequirements.Count; i++)
+                        discountRequirement.ChildRequirements.ElementAt(i).InteractionTypeId = interactionTypeId;
+
+                    _discountService.UpdateDiscount(discount);
+                }
+            }
+            else
+            {
+                //default requirement group
+                if (discountRequirementId == 0)
+                {
+                    var noParentDiscountRequirements = discount.DiscountRequirements.Where(x => !x.ParentId.HasValue).ToList();
+                    //update interactionTypeId for child requirements
+                    for (var i = 0; i < noParentDiscountRequirements.Count; i++)
+                        noParentDiscountRequirements.ElementAt(i).InteractionTypeId = interactionTypeId;
+
                     _discountService.UpdateDiscount(discount);
                 }
             }
@@ -440,7 +464,15 @@ namespace Nop.Admin.Controllers
             foreach (var dr in discount.DiscountRequirements.Where(dr => dr.IsGroup))
                 availableRequirementGroups.Add(new SelectListItem { Value = dr.Id.ToString(), Text = dr.DiscountRequirementRuleSystemName });
 
-            return Json(new { Requirements = requirements, AvailableGroups = availableRequirementGroups }, JsonRequestBehavior.AllowGet);
+            return Json(new
+            {
+                Requirements = requirements,
+                AvailableGroups = availableRequirementGroups,
+                DefaultGroupIteractionTypeId = discount.DiscountRequirements.FirstOrDefault(x => !x.ParentId.HasValue) != null 
+                                                ? discount.DiscountRequirements.First(x => !x.ParentId.HasValue).InteractionTypeId 
+                                                : (int)RequirementInteractionType.And
+            },
+                JsonRequestBehavior.AllowGet);
         }
 
         public virtual ActionResult AddNewGroup(int discountId, string name)
@@ -514,7 +546,7 @@ namespace Nop.Admin.Controllers
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new Exception("No product found with the specified id");
-            
+
             //remove discount
             if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
                 product.AppliedDiscounts.Remove(discount);
@@ -848,7 +880,7 @@ namespace Nop.Admin.Controllers
         #endregion
 
         #region Discount usage history
-        
+
         [HttpPost]
         public virtual ActionResult UsageHistoryList(int discountId, DataSourceRequest command)
         {
@@ -863,7 +895,8 @@ namespace Nop.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = duh.Select(x => {
+                Data = duh.Select(x =>
+                {
                     var order = _orderService.GetOrderById(x.OrderId);
                     var duhModel = new DiscountModel.DiscountUsageHistoryModel
                     {
@@ -891,7 +924,7 @@ namespace Nop.Admin.Controllers
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("No discount found with the specified id");
-            
+
             var duh = _discountService.GetDiscountUsageHistoryById(id);
             if (duh != null)
                 _discountService.DeleteDiscountUsageHistory(duh);

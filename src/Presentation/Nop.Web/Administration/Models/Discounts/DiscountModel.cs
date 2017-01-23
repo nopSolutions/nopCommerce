@@ -16,6 +16,7 @@ namespace Nop.Admin.Models.Discounts
         {
             AvailableDiscountRequirementRules = new List<SelectListItem>();
             AvailableRequirementGroups = new List<SelectListItem>();
+            AvailableInteractionTypes = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.Name")]
@@ -89,6 +90,9 @@ namespace Nop.Admin.Models.Discounts
         public int RequirementGroupId { get; set; }
 
         public IList<SelectListItem> AvailableRequirementGroups { get; set; }
+
+        public IList<SelectListItem> AvailableInteractionTypes { get; set; }
+
 
         #region Nested classes
 
