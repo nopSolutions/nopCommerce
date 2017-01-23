@@ -336,16 +336,18 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Comments(int? filterByBlogPostId, DataSourceRequest command)
+        public ActionResult Comments(int? filterByBlogPostId, DataSourceRequest command, BlogCommentListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
-            IList<BlogComment> comments = filterByBlogPostId.HasValue ?
-                //filter comments by blog
-                _blogService.GetBlogPostById(filterByBlogPostId.Value).BlogComments.OrderBy(bc => bc.CreatedOnUtc).ToList() :
-                //load all blog comments
-                _blogService.GetAllComments();
+            var createdOnFromValue = model.CreatedOnFrom == null ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
+
+            var createdOnToValue = model.CreatedOnTo == null ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            var comments = _blogService.GetAllComments(0, 0, filterByBlogPostId, createdOnFromValue, createdOnToValue, model.SearchText);
 
             var storeNames = _storeService.GetAllStores().ToDictionary(store => store.Id, store => store.Name);
 

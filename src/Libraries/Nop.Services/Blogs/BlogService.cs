@@ -243,10 +243,18 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <param name="blogPostId">Blog post ID; 0 or null to load all records</param>
+        /// <param name="fromUtc">Item creation from; null to load all records</param>
+        /// <param name="toUtc">Item creation to; null to load all records</param>
+        /// <param name="commentText">Search comment text; null to load all records</param>
         /// <returns>Comments</returns>
-        public virtual IList<BlogComment> GetAllComments(int customerId = 0, int storeId = 0)
+        public virtual IList<BlogComment> GetAllComments(int customerId = 0, int storeId = 0, int? blogPostId = null,
+            DateTime? fromUtc = null, DateTime? toUtc = null, string commentText = null)
         {
             var query = _blogCommentRepository.Table;
+
+            if (blogPostId > 0)
+                query = query.Where(comment => comment.BlogPostId == blogPostId);
 
             if (customerId > 0)
                 query = query.Where(comment => comment.CustomerId == customerId);
@@ -254,7 +262,16 @@ namespace Nop.Services.Blogs
             if (storeId > 0)
                 query = query.Where(comment => comment.StoreId == storeId);
 
-            query = query.OrderBy(bc => bc.CreatedOnUtc);
+            if (fromUtc.HasValue)
+                query = query.Where(comment => fromUtc.Value <= comment.CreatedOnUtc);
+
+            if (toUtc.HasValue)
+                query = query.Where(comment => toUtc.Value >= comment.CreatedOnUtc);
+
+            if (!string.IsNullOrEmpty(commentText))
+                query = query.Where(c => c.CommentText.Contains(commentText));
+
+            query = query.OrderBy(comment => comment.CreatedOnUtc);
 
             return query.ToList();
         }

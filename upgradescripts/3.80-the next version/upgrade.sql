@@ -1330,13 +1330,49 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.RegisteredInStore.Hint">
     <Value>Indicating in which store the customer is registered</Value>
-  </LocaleResource>    
+  </LocaleResource> 
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ConsiderAssociatedProductsDimensions">
     <Value>Consider associated products dimensions and weight</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ConsiderAssociatedProductsDimensions.Hint">
     <Value>Check to consider associated products dimensions and weight on shipping, uncheck for example if the main product already includes them.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.CreatedOnFrom">
+    <Value>Created from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.CreatedOnFrom.Hint">
+    <Value>The creation from date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.CreatedOnTo">
+    <Value>Created to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.CreatedOnTo.Hint">
+    <Value>The creation to date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchText">
+    <Value>Message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchText.Hint">
+    <Value>Search in title and comment text.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.CreatedOnFrom">
+    <Value>Created from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.CreatedOnFrom.Hint">
+    <Value>The creation from date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.CreatedOnTo">
+    <Value>Created to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.CreatedOnTo.Hint">
+    <Value>The creation to date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchText">
+    <Value>Message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchText.Hint">
+    <Value>Search in comment text.</Value>
+  </LocaleResource>  
 </Language>
 '
 
