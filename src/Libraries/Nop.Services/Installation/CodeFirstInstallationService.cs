@@ -5766,7 +5766,8 @@ namespace Nop.Services.Installation
                 Log404Errors = true,
                 BreadcrumbDelimiter = "/",
                 RenderXuaCompatible = false,
-                XuaCompatibleValue = "IE=edge"
+                XuaCompatibleValue = "IE=edge",
+                BbcodeEditorOpenLinksInNewWindow = false
             });
 
             settingService.SaveSetting(new SeoSettings

@@ -3711,3 +3711,11 @@ BEGIN
     VALUES (N'shippingsettings.considerassociatedproductsdimensions', N'True', 0)
 END
 GO
+
+ --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.bbcodeeditoropenlinksinnewwindow')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'commonsettings.bbcodeeditoropenlinksinnewwindow', N'false', 0)
+END
+GO
