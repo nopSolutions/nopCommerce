@@ -282,6 +282,31 @@ namespace Nop.Services.ExportImport
             }
         }
 
+        protected virtual IList<PropertyByName<T>> GetPropertiesByExcelCells<T>(ExcelWorksheet worksheet)
+        {
+            var properties = new List<PropertyByName<T>>();
+            var poz = 1;
+            while (true)
+            {
+                try
+                {
+                    var cell = worksheet.Cells[1, poz];
+
+                    if (cell == null || cell.Value == null || string.IsNullOrEmpty(cell.Value.ToString()))
+                        break;
+
+                    poz += 1;
+                    properties.Add(new PropertyByName<T>(cell.Value.ToString()));
+                }
+                catch
+                {
+                    break;
+                }
+            }
+
+            return properties;
+        }
+
         #endregion
 
         #region Methods
@@ -301,27 +326,9 @@ namespace Nop.Services.ExportImport
                     throw new NopException("No worksheet found");
 
                 //the columns
-                var properties = new List<PropertyByName<Product>>();
-                var poz = 1;
-                while (true)
-                {
-                    try
-                    {
-                        var cell = worksheet.Cells[1, poz];
-
-                        if (cell == null || cell.Value == null || String.IsNullOrEmpty(cell.Value.ToString()))
-                            break;
-
-                        poz += 1;
-                        properties.Add(new PropertyByName<Product>(cell.Value.ToString()));
-                    }
-                    catch
-                    {
-                       break;
-                    }
-                }
-
-                var manager = new PropertyManager<Product>(properties.ToArray());
+                var properties = GetPropertiesByExcelCells<Product>(worksheet);
+                
+                var manager = new PropertyManager<Product>(properties);
 
                 var attributProperties = new[]
                    {
@@ -1217,28 +1224,6 @@ namespace Nop.Services.ExportImport
         /// <param name="stream">Stream</param>
         public virtual void ImportManufacturersFromXlsx(Stream stream)
         {
-            //property array
-            var properties = new[]
-            {
-                new PropertyByName<Manufacturer>("Id"),
-                new PropertyByName<Manufacturer>("Name"),
-                new PropertyByName<Manufacturer>("Description"),
-                new PropertyByName<Manufacturer>("ManufacturerTemplateId"),
-                new PropertyByName<Manufacturer>("MetaKeywords"),
-                new PropertyByName<Manufacturer>("MetaDescription"),
-                new PropertyByName<Manufacturer>("MetaTitle"),
-                new PropertyByName<Manufacturer>("SeName"),
-                new PropertyByName<Manufacturer>("Picture"),
-                new PropertyByName<Manufacturer>("PageSize"),
-                new PropertyByName<Manufacturer>("AllowCustomersToSelectPageSize"),
-                new PropertyByName<Manufacturer>("PageSizeOptions"),
-                new PropertyByName<Manufacturer>("PriceRanges"),
-                new PropertyByName<Manufacturer>("Published"),
-                new PropertyByName<Manufacturer>("DisplayOrder")
-            };
-
-            var manager = new PropertyManager<Manufacturer>(properties);
-
             using (var xlPackage = new ExcelPackage(stream))
             {
                 // get the first worksheet in the workbook
@@ -1246,7 +1231,13 @@ namespace Nop.Services.ExportImport
                 if (worksheet == null)
                     throw new NopException("No worksheet found");
 
+                //the columns
+                var properties = GetPropertiesByExcelCells<Manufacturer>(worksheet);
+
+                var manager = new PropertyManager<Manufacturer>(properties);
+
                 var iRow = 2;
+                var setSeName = properties.Any(p => p.PropertyName == "SeName");
 
                 while (true)
                 {
@@ -1266,25 +1257,71 @@ namespace Nop.Services.ExportImport
                     manufacturer = manufacturer ?? new Manufacturer();
 
                     if (isNew)
+                    {
                         manufacturer.CreatedOnUtc = DateTime.UtcNow;
 
-                    manufacturer.Name = manager.GetProperty("Name").StringValue;
-                    manufacturer.Description = manager.GetProperty("Description").StringValue;
-                    manufacturer.ManufacturerTemplateId = manager.GetProperty("ManufacturerTemplateId").IntValue;
-                    manufacturer.MetaKeywords = manager.GetProperty("MetaKeywords").StringValue;
-                    manufacturer.MetaDescription = manager.GetProperty("MetaDescription").StringValue;
-                    manufacturer.MetaTitle = manager.GetProperty("MetaTitle").StringValue;
-                    var picture = LoadPicture(manager.GetProperty("Picture").StringValue, manufacturer.Name,
-                        isNew ? null : (int?) manufacturer.PictureId);
-                    manufacturer.PageSize = manager.GetProperty("PageSize").IntValue;
-                    manufacturer.AllowCustomersToSelectPageSize = manager.GetProperty("AllowCustomersToSelectPageSize").BooleanValue;
-                    manufacturer.PageSizeOptions = manager.GetProperty("PageSizeOptions").StringValue;
-                    manufacturer.PriceRanges = manager.GetProperty("PriceRanges").StringValue;
-                    manufacturer.Published = manager.GetProperty("Published").BooleanValue;
-                    manufacturer.DisplayOrder = manager.GetProperty("DisplayOrder").IntValue;
+                        //default values
+                        manufacturer.PageSize = _catalogSettings.DefaultManufacturerPageSize;
+                        manufacturer.PageSizeOptions = _catalogSettings.DefaultManufacturerPageSizeOptions;
+                        manufacturer.Published = true;
+                        manufacturer.AllowCustomersToSelectPageSize = true;
+                    }
 
-                    if (picture != null)
-                        manufacturer.PictureId = picture.Id;
+                    var seName = string.Empty;
+
+                    foreach (var property in manager.GetProperties)
+                    {
+                        switch (property.PropertyName)
+                        {
+                            case "Name":
+                                manufacturer.Name = property.StringValue;
+                                break;
+                            case "Description":
+                                manufacturer.Description = property.StringValue;
+                                break;
+                            case "ManufacturerTemplateId":
+                                manufacturer.ManufacturerTemplateId = property.IntValue;
+                                break;
+                            case "MetaKeywords":
+                                manufacturer.MetaKeywords = property.StringValue;
+                                break;
+                            case "MetaDescription":
+                                manufacturer.MetaDescription = property.StringValue;
+                                break;
+                            case "MetaTitle":
+                                manufacturer.MetaTitle = property.StringValue;
+                                break;
+                            case "Picture":
+                                var picture = LoadPicture(manager.GetProperty("Picture").StringValue, manufacturer.Name,
+                                    isNew ? null : (int?) manufacturer.PictureId);
+
+                                if (picture != null)
+                                    manufacturer.PictureId = picture.Id;
+
+                                break;
+                            case "PageSize":
+                                manufacturer.PageSize = property.IntValue;
+                                break;
+                            case "AllowCustomersToSelectPageSize":
+                                manufacturer.AllowCustomersToSelectPageSize = property.BooleanValue;
+                                break;
+                            case "PageSizeOptions":
+                                manufacturer.PageSizeOptions = property.StringValue;
+                                break;
+                            case "PriceRanges":
+                                manufacturer.PriceRanges = property.StringValue;
+                                break;
+                            case "Published":
+                                manufacturer.Published = property.BooleanValue;
+                                break;
+                            case "DisplayOrder":
+                                manufacturer.DisplayOrder = property.IntValue;
+                                break;
+                            case "SeName":
+                                seName = property.StringValue;
+                                break;
+                        }
+                    }
 
                     manufacturer.UpdatedOnUtc = DateTime.UtcNow;
 
@@ -1294,8 +1331,8 @@ namespace Nop.Services.ExportImport
                         _manufacturerService.UpdateManufacturer(manufacturer);
 
                     //search engine name
-                    var seName = manager.GetProperty("SeName").StringValue;
-                    _urlRecordService.SaveSlug(manufacturer, manufacturer.ValidateSeName(seName, manufacturer.Name, true), 0);
+                    if (setSeName)
+                        _urlRecordService.SaveSlug(manufacturer, manufacturer.ValidateSeName(seName, manufacturer.Name, true), 0);
 
                     iRow++;
                 }
@@ -1308,30 +1345,6 @@ namespace Nop.Services.ExportImport
         /// <param name="stream">Stream</param>
         public virtual void ImportCategoriesFromXlsx(Stream stream)
         {
-            var properties = new[]
-            {
-                new PropertyByName<Category>("Id"),
-                new PropertyByName<Category>("Name"),
-                new PropertyByName<Category>("Description"),
-                new PropertyByName<Category>("CategoryTemplateId"),
-                new PropertyByName<Category>("MetaKeywords"),
-                new PropertyByName<Category>("MetaDescription"),
-                new PropertyByName<Category>("MetaTitle"),
-                new PropertyByName<Category>("SeName"),
-                new PropertyByName<Category>("ParentCategoryId"),
-                new PropertyByName<Category>("Picture"),
-                new PropertyByName<Category>("PageSize"),
-                new PropertyByName<Category>("AllowCustomersToSelectPageSize"),
-                new PropertyByName<Category>("PageSizeOptions"),
-                new PropertyByName<Category>("PriceRanges"),
-                new PropertyByName<Category>("ShowOnHomePage"),
-                new PropertyByName<Category>("IncludeInTopMenu"),
-                new PropertyByName<Category>("Published"),
-                new PropertyByName<Category>("DisplayOrder")
-            };
-
-            var manager = new PropertyManager<Category>(properties);
-
             using (var xlPackage = new ExcelPackage(stream))
             {
                 // get the first worksheet in the workbook
@@ -1339,7 +1352,13 @@ namespace Nop.Services.ExportImport
                 if (worksheet == null)
                     throw new NopException("No worksheet found");
 
+                //the columns
+                var properties = GetPropertiesByExcelCells<Category>(worksheet);
+
+                var manager = new PropertyManager<Category>(properties);
+
                 var iRow = 2;
+                var setSeName = properties.Any(p => p.PropertyName == "SeName");
 
                 while (true)
                 {
@@ -1359,28 +1378,77 @@ namespace Nop.Services.ExportImport
                     category = category ?? new Category();
 
                     if (isNew)
+                    {
                         category.CreatedOnUtc = DateTime.UtcNow;
+                        //default values
+                        category.PageSize = _catalogSettings.DefaultCategoryPageSize;
+                        category.PageSizeOptions = _catalogSettings.DefaultCategoryPageSizeOptions;
+                        category.Published = true;
+                        category.IncludeInTopMenu = true;
+                        category.AllowCustomersToSelectPageSize = true;
+                    }
 
-                    category.Name = manager.GetProperty("Name").StringValue;
-                    category.Description = manager.GetProperty("Description").StringValue;
+                    var seName = string.Empty;
 
-                    category.CategoryTemplateId = manager.GetProperty("CategoryTemplateId").IntValue;
-                    category.MetaKeywords = manager.GetProperty("MetaKeywords").StringValue;
-                    category.MetaDescription = manager.GetProperty("MetaDescription").StringValue;
-                    category.MetaTitle = manager.GetProperty("MetaTitle").StringValue;
-                    category.ParentCategoryId = manager.GetProperty("ParentCategoryId").IntValue;
-                    var picture = LoadPicture(manager.GetProperty("Picture").StringValue, category.Name, isNew ? null : (int?) category.PictureId);
-                    category.PageSize = manager.GetProperty("PageSize").IntValue;
-                    category.AllowCustomersToSelectPageSize = manager.GetProperty("AllowCustomersToSelectPageSize").BooleanValue;
-                    category.PageSizeOptions = manager.GetProperty("PageSizeOptions").StringValue;
-                    category.PriceRanges = manager.GetProperty("PriceRanges").StringValue;
-                    category.ShowOnHomePage = manager.GetProperty("ShowOnHomePage").BooleanValue;
-                    category.IncludeInTopMenu = manager.GetProperty("IncludeInTopMenu").BooleanValue;
-                    category.Published = manager.GetProperty("Published").BooleanValue;
-                    category.DisplayOrder = manager.GetProperty("DisplayOrder").IntValue;
-
-                    if (picture != null)
-                        category.PictureId = picture.Id;
+                    foreach (var property in manager.GetProperties)
+                    {
+                        switch (property.PropertyName)
+                        {
+                            case "Name":
+                                category.Name = property.StringValue;
+                                break;
+                            case "Description":
+                                category.Description = property.StringValue;
+                                break;
+                            case "CategoryTemplateId":
+                                category.CategoryTemplateId = property.IntValue;
+                                break;
+                            case "MetaKeywords":
+                                category.MetaKeywords = property.StringValue;
+                                break;
+                            case "MetaDescription":
+                                category.MetaDescription = property.StringValue;
+                                break;
+                            case "MetaTitle":
+                                category.MetaTitle = property.StringValue;
+                                break;
+                            case "ParentCategoryId":
+                                category.ParentCategoryId = property.IntValue;
+                                break;
+                            case "Picture":
+                                var picture = LoadPicture(manager.GetProperty("Picture").StringValue, category.Name, isNew ? null : (int?)category.PictureId);
+                                if (picture != null)
+                                    category.PictureId = picture.Id;
+                                break;
+                            case "PageSize":
+                                category.PageSize = property.IntValue;
+                                break;
+                            case "AllowCustomersToSelectPageSize":
+                                category.AllowCustomersToSelectPageSize = property.BooleanValue;
+                                break;
+                            case "PageSizeOptions":
+                                category.PageSizeOptions = property.StringValue;
+                                break;
+                            case "PriceRanges":
+                                category.PriceRanges = property.StringValue;
+                                break;
+                            case "ShowOnHomePage":
+                                category.ShowOnHomePage = property.BooleanValue;
+                                break;
+                            case "IncludeInTopMenu":
+                                category.IncludeInTopMenu = property.BooleanValue;
+                                break;
+                            case "Published":
+                                category.Published = property.BooleanValue;
+                                break;
+                            case "DisplayOrder":
+                                category.DisplayOrder = property.IntValue;
+                                break;
+                            case "SeName":
+                                seName = property.StringValue;
+                                break;
+                        }
+                    }
 
                     category.UpdatedOnUtc = DateTime.UtcNow;
 
@@ -1390,8 +1458,8 @@ namespace Nop.Services.ExportImport
                         _categoryService.UpdateCategory(category);
 
                     //search engine name
-                    var seName = manager.GetProperty("SeName").StringValue;
-                    _urlRecordService.SaveSlug(category, category.ValidateSeName(seName, category.Name, true), 0);
+                    if (setSeName)
+                        _urlRecordService.SaveSlug(category, category.ValidateSeName(seName, category.Name, true), 0);
 
                     iRow++;
                 }
