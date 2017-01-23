@@ -106,27 +106,29 @@ namespace Nop.Services.ExportImport
                 foreach (var category in categories)
                 {
                     xmlWriter.WriteStartElement("Category");
-                    xmlWriter.WriteElementString("Id", null, category.Id.ToString());
-                    xmlWriter.WriteElementString("Name", null, category.Name);
-                    xmlWriter.WriteElementString("Description", null, category.Description);
-                    xmlWriter.WriteElementString("CategoryTemplateId", null, category.CategoryTemplateId.ToString());
-                    xmlWriter.WriteElementString("MetaKeywords", null, category.MetaKeywords);
-                    xmlWriter.WriteElementString("MetaDescription", null, category.MetaDescription);
-                    xmlWriter.WriteElementString("MetaTitle", null, category.MetaTitle);
-                    xmlWriter.WriteElementString("SeName", null, category.GetSeName(0));
-                    xmlWriter.WriteElementString("ParentCategoryId", null, category.ParentCategoryId.ToString());
-                    xmlWriter.WriteElementString("PictureId", null, category.PictureId.ToString());
-                    xmlWriter.WriteElementString("PageSize", null, category.PageSize.ToString());
-                    xmlWriter.WriteElementString("AllowCustomersToSelectPageSize", null, category.AllowCustomersToSelectPageSize.ToString());
-                    xmlWriter.WriteElementString("PageSizeOptions", null, category.PageSizeOptions);
-                    xmlWriter.WriteElementString("PriceRanges", null, category.PriceRanges);
-                    xmlWriter.WriteElementString("ShowOnHomePage", null, category.ShowOnHomePage.ToString());
-                    xmlWriter.WriteElementString("IncludeInTopMenu", null, category.IncludeInTopMenu.ToString());
-                    xmlWriter.WriteElementString("Published", null, category.Published.ToString());
-                    xmlWriter.WriteElementString("Deleted", null, category.Deleted.ToString());
-                    xmlWriter.WriteElementString("DisplayOrder", null, category.DisplayOrder.ToString());
-                    xmlWriter.WriteElementString("CreatedOnUtc", null, category.CreatedOnUtc.ToString());
-                    xmlWriter.WriteElementString("UpdatedOnUtc", null, category.UpdatedOnUtc.ToString());
+
+                    xmlWriter.WriteString("Id", category.Id);
+
+                    xmlWriter.WriteString("Name", category.Name);
+                    xmlWriter.WriteString("Description", category.Description);
+                    xmlWriter.WriteString("CategoryTemplateId", category.CategoryTemplateId);
+                    xmlWriter.WriteString("MetaKeywords", category.MetaKeywords, IgnoreExportCategoryProperty());
+                    xmlWriter.WriteString("MetaDescription", category.MetaDescription, IgnoreExportCategoryProperty());
+                    xmlWriter.WriteString("MetaTitle", category.MetaTitle, IgnoreExportCategoryProperty());
+                    xmlWriter.WriteString("SeName", category.GetSeName(0), IgnoreExportCategoryProperty());
+                    xmlWriter.WriteString("ParentCategoryId", category.ParentCategoryId);
+                    xmlWriter.WriteString("PictureId", category.PictureId);
+                    xmlWriter.WriteString("PageSize", category.PageSize, IgnoreExportCategoryProperty());
+                    xmlWriter.WriteString("AllowCustomersToSelectPageSize", category.AllowCustomersToSelectPageSize, IgnoreExportCategoryProperty());
+                    xmlWriter.WriteString("PageSizeOptions", category.PageSizeOptions, IgnoreExportCategoryProperty());
+                    xmlWriter.WriteString("PriceRanges", category.PriceRanges, IgnoreExportCategoryProperty());
+                    xmlWriter.WriteString("ShowOnHomePage", category.ShowOnHomePage, IgnoreExportCategoryProperty());
+                    xmlWriter.WriteString("IncludeInTopMenu", category.IncludeInTopMenu, IgnoreExportCategoryProperty());
+                    xmlWriter.WriteString("Published", category.Published, IgnoreExportCategoryProperty());
+                    xmlWriter.WriteString("Deleted", category.Deleted, true);
+                    xmlWriter.WriteString("DisplayOrder", category.DisplayOrder);
+                    xmlWriter.WriteString("CreatedOnUtc", category.CreatedOnUtc, IgnoreExportCategoryProperty());
+                    xmlWriter.WriteString("UpdatedOnUtc", category.UpdatedOnUtc, IgnoreExportCategoryProperty());
 
                     xmlWriter.WriteStartElement("Products");
                     var productCategories = _categoryService.GetProductCategoriesByCategoryId(category.Id, showHidden: true);
@@ -136,11 +138,11 @@ namespace Nop.Services.ExportImport
                         if (product != null && !product.Deleted)
                         {
                             xmlWriter.WriteStartElement("ProductCategory");
-                            xmlWriter.WriteElementString("ProductCategoryId", null, productCategory.Id.ToString());
-                            xmlWriter.WriteElementString("ProductId", null, productCategory.ProductId.ToString());
-                            xmlWriter.WriteElementString("ProductName", null, product.Name);
-                            xmlWriter.WriteElementString("IsFeaturedProduct", null, productCategory.IsFeaturedProduct.ToString());
-                            xmlWriter.WriteElementString("DisplayOrder", null, productCategory.DisplayOrder.ToString());
+                            xmlWriter.WriteString("ProductCategoryId", productCategory.Id);
+                            xmlWriter.WriteString("ProductId", productCategory.ProductId);
+                            xmlWriter.WriteString("ProductName", product.Name);
+                            xmlWriter.WriteString("IsFeaturedProduct", productCategory.IsFeaturedProduct);
+                            xmlWriter.WriteString("DisplayOrder", productCategory.DisplayOrder);
                             xmlWriter.WriteEndElement();
                         }
                     }
@@ -257,7 +259,17 @@ namespace Nop.Services.ExportImport
             var productAdvancedMode = _workContext.CurrentCustomer.GetAttribute<bool>("product-advanced-mode");
             return !productAdvancedMode && !func(_productEditorSettings);
         }
-        
+
+        private bool IgnoreExportCategoryProperty()
+        {
+            return !_workContext.CurrentCustomer.GetAttribute<bool>("category-advanced-mode");
+        }
+
+        private bool IgnoreExportManufacturerProperty()
+        {
+            return !_workContext.CurrentCustomer.GetAttribute<bool>("manufacturer-advanced-mode");
+        }
+
         /// <summary>
         /// Export objects to XLSX
         /// </summary>
@@ -277,11 +289,11 @@ namespace Nop.Services.ExportImport
 
                     // get handles to the worksheets
                     var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(T).Name);
-                    var fWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductsFilters");
+                    var fWorksheet = xlPackage.Workbook.Worksheets.Add("DataForFilters");
                     fWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
                     
                     //create Headers and format them 
-                    var manager = new PropertyManager<T>(properties.Where(p => !p.Ignore).ToArray());
+                    var manager = new PropertyManager<T>(properties.Where(p => !p.Ignore));
                     manager.WriteCaption(worksheet, SetCaptionStyle);
 
                     var row = 2;
@@ -347,7 +359,7 @@ namespace Nop.Services.ExportImport
                     faWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
 
                     //create Headers and format them 
-                    var manager = new PropertyManager<Product>(properties.Where(p => !p.Ignore).ToArray());
+                    var manager = new PropertyManager<Product>(properties.Where(p => !p.Ignore));
                     manager.WriteCaption(worksheet, SetCaptionStyle);
 
                     var row = 2;
@@ -437,29 +449,29 @@ namespace Nop.Services.ExportImport
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Manufacturers");
             xmlWriter.WriteAttributeString("Version", NopVersion.CurrentVersion);
-
+            
             foreach (var manufacturer in manufacturers)
             {
                 xmlWriter.WriteStartElement("Manufacturer");
 
-                xmlWriter.WriteElementString("ManufacturerId", null, manufacturer.Id.ToString());
-                xmlWriter.WriteElementString("Name", null, manufacturer.Name);
-                xmlWriter.WriteElementString("Description", null, manufacturer.Description);
-                xmlWriter.WriteElementString("ManufacturerTemplateId", null, manufacturer.ManufacturerTemplateId.ToString());
-                xmlWriter.WriteElementString("MetaKeywords", null, manufacturer.MetaKeywords);
-                xmlWriter.WriteElementString("MetaDescription", null, manufacturer.MetaDescription);
-                xmlWriter.WriteElementString("MetaTitle", null, manufacturer.MetaTitle);
-                xmlWriter.WriteElementString("SEName", null, manufacturer.GetSeName(0));
-                xmlWriter.WriteElementString("PictureId", null, manufacturer.PictureId.ToString());
-                xmlWriter.WriteElementString("PageSize", null, manufacturer.PageSize.ToString());
-                xmlWriter.WriteElementString("AllowCustomersToSelectPageSize", null, manufacturer.AllowCustomersToSelectPageSize.ToString());
-                xmlWriter.WriteElementString("PageSizeOptions", null, manufacturer.PageSizeOptions);
-                xmlWriter.WriteElementString("PriceRanges", null, manufacturer.PriceRanges);
-                xmlWriter.WriteElementString("Published", null, manufacturer.Published.ToString());
-                xmlWriter.WriteElementString("Deleted", null, manufacturer.Deleted.ToString());
-                xmlWriter.WriteElementString("DisplayOrder", null, manufacturer.DisplayOrder.ToString());
-                xmlWriter.WriteElementString("CreatedOnUtc", null, manufacturer.CreatedOnUtc.ToString());
-                xmlWriter.WriteElementString("UpdatedOnUtc", null, manufacturer.UpdatedOnUtc.ToString());
+                xmlWriter.WriteString("ManufacturerId", manufacturer.Id);
+                xmlWriter.WriteString("Name", manufacturer.Name);
+                xmlWriter.WriteString("Description", manufacturer.Description);
+                xmlWriter.WriteString("ManufacturerTemplateId", manufacturer.ManufacturerTemplateId);
+                xmlWriter.WriteString("MetaKeywords", manufacturer.MetaKeywords, IgnoreExportManufacturerProperty());
+                xmlWriter.WriteString("MetaDescription", manufacturer.MetaDescription, IgnoreExportManufacturerProperty());
+                xmlWriter.WriteString("MetaTitle", manufacturer.MetaTitle, IgnoreExportManufacturerProperty());
+                xmlWriter.WriteString("SEName", manufacturer.GetSeName(0), IgnoreExportManufacturerProperty());
+                xmlWriter.WriteString("PictureId", manufacturer.PictureId);
+                xmlWriter.WriteString("PageSize", manufacturer.PageSize, IgnoreExportManufacturerProperty());
+                xmlWriter.WriteString("AllowCustomersToSelectPageSize", manufacturer.AllowCustomersToSelectPageSize, IgnoreExportManufacturerProperty());
+                xmlWriter.WriteString("PageSizeOptions", manufacturer.PageSizeOptions, IgnoreExportManufacturerProperty());
+                xmlWriter.WriteString("PriceRanges", manufacturer.PriceRanges, IgnoreExportManufacturerProperty());
+                xmlWriter.WriteString("Published", manufacturer.Published, IgnoreExportManufacturerProperty());
+                xmlWriter.WriteString("Deleted", manufacturer.Deleted, true);
+                xmlWriter.WriteString("DisplayOrder", manufacturer.DisplayOrder);
+                xmlWriter.WriteString("CreatedOnUtc", manufacturer.CreatedOnUtc, IgnoreExportManufacturerProperty());
+                xmlWriter.WriteString("UpdatedOnUtc", manufacturer.UpdatedOnUtc, IgnoreExportManufacturerProperty());
 
                 xmlWriter.WriteStartElement("Products");
                 var productManufacturers = _manufacturerService.GetProductManufacturersByManufacturerId(manufacturer.Id, showHidden: true);
@@ -471,11 +483,11 @@ namespace Nop.Services.ExportImport
                         if (product != null && !product.Deleted)
                         {
                             xmlWriter.WriteStartElement("ProductManufacturer");
-                            xmlWriter.WriteElementString("ProductManufacturerId", null, productManufacturer.Id.ToString());
-                            xmlWriter.WriteElementString("ProductId", null, productManufacturer.ProductId.ToString());
-                            xmlWriter.WriteElementString("ProductName", null, product.Name);
-                            xmlWriter.WriteElementString("IsFeaturedProduct", null, productManufacturer.IsFeaturedProduct.ToString());
-                            xmlWriter.WriteElementString("DisplayOrder", null, productManufacturer.DisplayOrder.ToString());
+                            xmlWriter.WriteString("ProductManufacturerId", productManufacturer.Id);
+                            xmlWriter.WriteString("ProductId", productManufacturer.ProductId);
+                            xmlWriter.WriteString("ProductName", product.Name);
+                            xmlWriter.WriteString("IsFeaturedProduct", productManufacturer.IsFeaturedProduct);
+                            xmlWriter.WriteString("DisplayOrder", productManufacturer.DisplayOrder);
                             xmlWriter.WriteEndElement();
                         }
                     }
@@ -504,16 +516,16 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Manufacturer>("Name", p => p.Name),
                 new PropertyByName<Manufacturer>("Description", p => p.Description),
                 new PropertyByName<Manufacturer>("ManufacturerTemplateId", p => p.ManufacturerTemplateId),
-                new PropertyByName<Manufacturer>("MetaKeywords", p => p.MetaKeywords),
-                new PropertyByName<Manufacturer>("MetaDescription", p => p.MetaDescription),
-                new PropertyByName<Manufacturer>("MetaTitle", p => p.MetaTitle),
-                new PropertyByName<Manufacturer>("SeName", p => p.GetSeName(0)),
+                new PropertyByName<Manufacturer>("MetaKeywords", p => p.MetaKeywords, IgnoreExportManufacturerProperty()),
+                new PropertyByName<Manufacturer>("MetaDescription", p => p.MetaDescription, IgnoreExportManufacturerProperty()),
+                new PropertyByName<Manufacturer>("MetaTitle", p => p.MetaTitle, IgnoreExportManufacturerProperty()),
+                new PropertyByName<Manufacturer>("SeName", p => p.GetSeName(0), IgnoreExportManufacturerProperty()),
                 new PropertyByName<Manufacturer>("Picture", p => GetPictures(p.PictureId)),
-                new PropertyByName<Manufacturer>("PageSize", p => p.PageSize),
-                new PropertyByName<Manufacturer>("AllowCustomersToSelectPageSize", p => p.AllowCustomersToSelectPageSize),
-                new PropertyByName<Manufacturer>("PageSizeOptions", p => p.PageSizeOptions),
-                new PropertyByName<Manufacturer>("PriceRanges", p => p.PriceRanges),
-                new PropertyByName<Manufacturer>("Published", p => p.Published),
+                new PropertyByName<Manufacturer>("PageSize", p => p.PageSize, IgnoreExportManufacturerProperty()),
+                new PropertyByName<Manufacturer>("AllowCustomersToSelectPageSize", p => p.AllowCustomersToSelectPageSize, IgnoreExportManufacturerProperty()),
+                new PropertyByName<Manufacturer>("PageSizeOptions", p => p.PageSizeOptions, IgnoreExportManufacturerProperty()),
+                new PropertyByName<Manufacturer>("PriceRanges", p => p.PriceRanges, IgnoreExportManufacturerProperty()),
+                new PropertyByName<Manufacturer>("Published", p => p.Published, IgnoreExportManufacturerProperty()),
                 new PropertyByName<Manufacturer>("DisplayOrder", p => p.DisplayOrder)
             };
 
@@ -552,19 +564,19 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Category>("Name", p => p.Name),
                 new PropertyByName<Category>("Description", p => p.Description),
                 new PropertyByName<Category>("CategoryTemplateId", p => p.CategoryTemplateId),
-                new PropertyByName<Category>("MetaKeywords", p => p.MetaKeywords),
-                new PropertyByName<Category>("MetaDescription", p => p.MetaDescription),
-                new PropertyByName<Category>("MetaTitle", p => p.MetaTitle),
-                new PropertyByName<Category>("SeName", p => p.GetSeName(0)),
+                new PropertyByName<Category>("MetaKeywords", p => p.MetaKeywords, IgnoreExportCategoryProperty()),
+                new PropertyByName<Category>("MetaDescription", p => p.MetaDescription, IgnoreExportCategoryProperty()),
+                new PropertyByName<Category>("MetaTitle", p => p.MetaTitle, IgnoreExportCategoryProperty()),
+                new PropertyByName<Category>("SeName", p => p.GetSeName(0), IgnoreExportCategoryProperty()),
                 new PropertyByName<Category>("ParentCategoryId", p => p.ParentCategoryId),
                 new PropertyByName<Category>("Picture", p => GetPictures(p.PictureId)),
-                new PropertyByName<Category>("PageSize", p => p.PageSize),
-                new PropertyByName<Category>("AllowCustomersToSelectPageSize", p => p.AllowCustomersToSelectPageSize),
-                new PropertyByName<Category>("PageSizeOptions", p => p.PageSizeOptions),
-                new PropertyByName<Category>("PriceRanges", p => p.PriceRanges),
-                new PropertyByName<Category>("ShowOnHomePage", p => p.ShowOnHomePage),
-                new PropertyByName<Category>("IncludeInTopMenu", p => p.IncludeInTopMenu),
-                new PropertyByName<Category>("Published", p => p.Published),
+                new PropertyByName<Category>("PageSize", p => p.PageSize, IgnoreExportCategoryProperty()),
+                new PropertyByName<Category>("AllowCustomersToSelectPageSize", p => p.AllowCustomersToSelectPageSize, IgnoreExportCategoryProperty()),
+                new PropertyByName<Category>("PageSizeOptions", p => p.PageSizeOptions, IgnoreExportCategoryProperty()),
+                new PropertyByName<Category>("PriceRanges", p => p.PriceRanges, IgnoreExportCategoryProperty()),
+                new PropertyByName<Category>("ShowOnHomePage", p => p.ShowOnHomePage, IgnoreExportCategoryProperty()),
+                new PropertyByName<Category>("IncludeInTopMenu", p => p.IncludeInTopMenu, IgnoreExportCategoryProperty()),
+                new PropertyByName<Category>("Published", p => p.Published, IgnoreExportCategoryProperty()),
                 new PropertyByName<Category>("DisplayOrder", p => p.DisplayOrder)
             };
             return ExportToXlsx(properties, categories);

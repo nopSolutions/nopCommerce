@@ -31,7 +31,7 @@ namespace Nop.Core.Caching
             // ConnectionMultiplexer.Connect should only be called once and shared between callers
             this._connectionWrapper = connectionWrapper;
 
-            this._db = _connectionWrapper.Database();
+            this._db = _connectionWrapper.GetDatabase();
             this._perRequestCacheManager = EngineContext.Current.Resolve<ICacheManager>();
         }
 
@@ -129,9 +129,9 @@ namespace Nop.Core.Caching
         /// <param name="pattern">pattern</param>
         public virtual void RemoveByPattern(string pattern)
         {
-            foreach (var ep in _connectionWrapper.GetEndpoints())
+            foreach (var ep in _connectionWrapper.GetEndPoints())
             {
-                var server = _connectionWrapper.Server(ep);
+                var server = _connectionWrapper.GetServer(ep);
                 var keys = server.Keys(database: _db.Database, pattern: "*" + pattern + "*");
                 foreach (var key in keys)
                     Remove(key);
@@ -143,9 +143,9 @@ namespace Nop.Core.Caching
         /// </summary>
         public virtual void Clear()
         {
-            foreach (var ep in _connectionWrapper.GetEndpoints())
+            foreach (var ep in _connectionWrapper.GetEndPoints())
             {
-                var server = _connectionWrapper.Server(ep);
+                var server = _connectionWrapper.GetServer(ep);
                 //we can use the code below (commented)
                 //but it requires administration permission - ",allowAdmin=true"
                 //server.FlushDatabase();
