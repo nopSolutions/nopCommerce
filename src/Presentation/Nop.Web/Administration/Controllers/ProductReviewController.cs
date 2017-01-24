@@ -110,6 +110,15 @@ namespace Nop.Admin.Controllers
             var stores = _storeService.GetAllStores().Select(st => new SelectListItem() { Text = st.Name, Value = st.Id.ToString() });
             foreach (var selectListItem in stores)
                 model.AvailableStores.Add(selectListItem);
+
+            //"approved" property
+            //0 - all
+            //1 - approved only
+            //2 - disapproved only
+            model.AvailableApprovedOptions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Catalog.ProductReviews.List.SearchApproved.All"), Value = "0" });
+            model.AvailableApprovedOptions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Catalog.ProductReviews.List.SearchApproved.ApprovedOnly"), Value = "1" });
+            model.AvailableApprovedOptions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Catalog.ProductReviews.List.SearchApproved.DisapprovedOnly"), Value = "2" });
+            
             return View(model);
         }
 
@@ -125,7 +134,11 @@ namespace Nop.Admin.Controllers
             DateTime? createdToFromValue = (model.CreatedOnTo == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            var productReviews = _productService.GetAllProductReviews(0, null, 
+            bool? approved = null;
+            if (model.SearchApprovedId > 0)
+                approved = model.SearchApprovedId == 1;
+
+            var productReviews = _productService.GetAllProductReviews(0, approved, 
                 createdOnFromValue, createdToFromValue, model.SearchText, model.SearchStoreId, model.SearchProductId, command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {

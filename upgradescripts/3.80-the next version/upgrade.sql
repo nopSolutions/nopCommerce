@@ -1373,6 +1373,51 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchText.Hint">
     <Value>Search in comment text.</Value>
   </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchApproved">
+    <Value>Approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchApproved.Hint">
+    <Value>Search by a "Approved" property.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchApproved.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchApproved.ApprovedOnly">
+    <Value>Approved only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchApproved.DisapprovedOnly">
+    <Value>Disapproved only</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchApproved">
+    <Value>Approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchApproved.Hint">
+    <Value>Search by a "Approved" property.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchApproved.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchApproved.ApprovedOnly">
+    <Value>Approved only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchApproved.DisapprovedOnly">
+    <Value>Disapproved only</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchApproved">
+    <Value>Approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchApproved.Hint">
+    <Value>Search by a "Approved" property.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchApproved.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchApproved.ApprovedOnly">
+    <Value>Approved only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchApproved.DisapprovedOnly">
+    <Value>Disapproved only</Value>
+  </LocaleResource>     
 </Language>
 '
 
