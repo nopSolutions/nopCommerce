@@ -1233,15 +1233,17 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            //a vendor cannot export orders
-            if (_workContext.CurrentVendor != null)
-                return AccessDeniedView();
-
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
             DateTime? endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                model.VendorId = _workContext.CurrentVendor.Id;
+            }
 
             var orderStatusIds = !model.OrderStatusIds.Contains(0) ? model.OrderStatusIds : null;
             var paymentStatusIds = !model.PaymentStatusIds.Contains(0) ? model.PaymentStatusIds : null;
@@ -1285,11 +1287,7 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
-
-            //a vendor cannot export orders
-            if (_workContext.CurrentVendor != null)
-                return AccessDeniedView();
-
+            
             var orders = new List<Order>();
             if (selectedIds != null)
             {
@@ -1297,7 +1295,7 @@ namespace Nop.Admin.Controllers
                     .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
-                orders.AddRange(_orderService.GetOrdersByIds(ids));
+                orders.AddRange(_orderService.GetOrdersByIds(ids).Where(HasAccessToOrder));
             }
 
             var xml = _exportManager.ExportOrdersToXml(orders);
@@ -1310,16 +1308,18 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
-
-            //a vendor cannot export orders
-            if (_workContext.CurrentVendor != null)
-                return AccessDeniedView();
-
+            
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
             DateTime? endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                model.VendorId = _workContext.CurrentVendor.Id;
+            }
 
             var orderStatusIds = !model.OrderStatusIds.Contains(0) ? model.OrderStatusIds : null;
             var paymentStatusIds = !model.PaymentStatusIds.Contains(0) ? model.PaymentStatusIds : null;
@@ -1364,10 +1364,6 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            //a vendor cannot export orders
-            if (_workContext.CurrentVendor != null)
-                return AccessDeniedView();
-
             var orders = new List<Order>();
             if (selectedIds != null)
             {
@@ -1375,7 +1371,7 @@ namespace Nop.Admin.Controllers
                     .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
-                orders.AddRange(_orderService.GetOrdersByIds(ids));
+                orders.AddRange(_orderService.GetOrdersByIds(ids).Where(HasAccessToOrder));
             }
 
             try
