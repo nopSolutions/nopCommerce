@@ -136,7 +136,6 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableCurrencies, mo => mo.Ignore())
                     .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
-                    .ForMember(dest => dest.FlagFileNames, mo => mo.Ignore())
                     .ForMember(dest => dest.Search, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<LanguageModel, Language>()
