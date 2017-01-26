@@ -403,7 +403,7 @@ namespace Nop.Web.Framework
         }
 
         public static MvcHtmlString NopEditorFor<TModel, TValue>(this HtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression, bool? renderFormControlClass = null)
+            Expression<Func<TModel, TValue>> expression, string postfix = "", bool? renderFormControlClass = null)
         {
             var result = new StringBuilder();
 
@@ -413,7 +413,7 @@ namespace Nop.Web.Framework
                 (renderFormControlClass.HasValue && renderFormControlClass.Value))
                 htmlAttributes = new { @class = "form-control" };
 
-            result.Append(helper.EditorFor(expression, new { htmlAttributes }));
+            result.Append(helper.EditorFor(expression, new { htmlAttributes, postfix }));
 
             return MvcHtmlString.Create(result.ToString());
         }

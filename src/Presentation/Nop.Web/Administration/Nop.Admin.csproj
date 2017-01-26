@@ -486,6 +486,8 @@
     <Content Include="Content\adminLTE\skins\skin-yellow.min.css" />
     <Content Include="Content\adminLTE\skins\_all-skins.css" />
     <Content Include="Content\adminLTE\skins\_all-skins.min.css" />
+    <Content Include="Content\bootstrap-touchspin\jquery.bootstrap-touchspin.css" />
+    <Content Include="Content\bootstrap-touchspin\jquery.bootstrap-touchspin.min.css" />
     <Content Include="Content\bootstrap\css\bootstrap-theme.css" />
     <Content Include="Content\bootstrap\css\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap\css\bootstrap.css" />
@@ -1062,6 +1064,8 @@
     <Content Include="Scripts\admin.search.js" />
     <Content Include="Scripts\adminLTE\app.js" />
     <Content Include="Scripts\adminLTE\app.min.js" />
+    <Content Include="Scripts\bootstrap-touchspin\jquery.bootstrap-touchspin.js" />
+    <Content Include="Scripts\bootstrap-touchspin\jquery.bootstrap-touchspin.min.js" />
     <Content Include="Scripts\bootstrap\bootstrap.js" />
     <Content Include="Scripts\bootstrap\bootstrap.min.js" />
     <Content Include="Scripts\bootstrap\npm.js" />

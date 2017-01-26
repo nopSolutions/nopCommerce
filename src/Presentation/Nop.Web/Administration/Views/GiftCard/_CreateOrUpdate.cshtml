@@ -96,7 +96,7 @@
                         @Html.NopLabelFor(model => model.Amount)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.Amount) [@Model.PrimaryStoreCurrencyCode]
+                        @Html.NopEditorFor(model => model.Amount, Model.PrimaryStoreCurrencyCode)
                         @Html.ValidationMessageFor(model => model.Amount)
                     </div>
                 </div>

@@ -178,7 +178,7 @@
                         @Html.NopLabelFor(model => model.DiscountAmount)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.DiscountAmount) [@Model.PrimaryStoreCurrencyCode]
+                        @Html.NopEditorFor(model => model.DiscountAmount, Model.PrimaryStoreCurrencyCode)
                         @Html.ValidationMessageFor(model => model.DiscountAmount)
                     </div>
                 </div>
@@ -196,7 +196,7 @@
                         @Html.NopLabelFor(model => model.MaximumDiscountAmount)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.MaximumDiscountAmount) [@Model.PrimaryStoreCurrencyCode]
+                        @Html.NopEditorFor(model => model.MaximumDiscountAmount, Model.PrimaryStoreCurrencyCode)
                         @Html.ValidationMessageFor(model => model.MaximumDiscountAmount)
                     </div>
                 </div>

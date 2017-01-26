@@ -4,6 +4,11 @@
 <input id="@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)" name="@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)" value="@(Model > DateTime.MinValue || Model.HasValue ? Model.Value.ToString(CultureInfo.CurrentCulture.DateTimeFormat) : null)" />
 <script>
     $(document).ready(function () {
-        $("#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)").kendoDateTimePicker();
+        $("#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)").kendoDateTimePicker({
+            popup: {
+                position: "bottom right",
+                origin: "top right"
+            }
+        });
     });
 </script>

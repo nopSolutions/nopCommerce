@@ -194,25 +194,43 @@ table.adminContent {
     border-radius: 0;
     border: none;
     height: 34px;
+    padding-right: 23px;
+    background: #fff; 
+}
+.k-picker-wrap.k-state-hover {
+    background: #fff;
 }
 .k-picker-wrap .k-select,
 .k-numeric-wrap .k-select {
     border-radius: 0;
     border: none;
 }
-.k-picker-wrap.k-state-default > .k-select,
 .k-numeric-wrap.k-state-default > .k-select {
-    background-color: #3c8dbc;
+    background-color: #fff;
     border: none;
     height: 34px;
+    width: 22px;
+    opacity: 1;
+}
+.k-picker-wrap.k-state-default > .k-select {
+    background: #fff;
+    border: 1px solid #d2d6de;
+    height: 32px;
+    width: 4.5em;
+    padding-left: 1px;
+    -moz-box-sizing: content-box;
+}
+.k-picker-wrap.k-state-hover > .k-select {
+    border-color: #afafaf;
 }
 .k-picker-wrap .k-input,
 .k-numeric-wrap .k-input {
-    height: 27px;
+    height: 26px;
     border-radius: 0;
     border: 1px solid #d2d6de;
     text-indent: 0.7em;
     color: #555;
+    padding: 3px 0;
 }
 .k-picker-wrap.k-state-focused.k-state-selected,
 .k-numeric-wrap.k-state-focused.k-state-selected,
@@ -242,12 +260,23 @@ td.k-state-focused.k-state-selected {
 .k-numeric-wrap.k-state-focused {
     border-color: #00c0ef;
     box-shadow: none;
+    padding-bottom: 0;
 }
 .k-numerictextbox .k-link {
-    height: 17px;
+    height: 16px;
+    border: 1px solid #d2d6de;
+    border-radius: 0;
+}
+.k-numerictextbox .k-link:hover {
+    border-color: #afafaf;
+}
+.k-numerictextbox .k-link:hover + .k-link{
+    border-top-color: #afafaf;
 }
 .k-numeric-wrap .k-link + .k-link {
-    border-radius: 0;
+   margin-top: -1px;
+   height: 15px;
+   border-radius: 0;
 }
 .k-numeric-wrap.k-state-disabled,
 .k-picker-wrap.k-state-disabled {
@@ -262,29 +291,46 @@ td.k-state-focused.k-state-selected {
     cursor: not-allowed;
 }
 .k-numerictextbox .k-link.k-state-selected {
-    background-color: #00c0ef;
+    -webkit-box-shadow: inset 0 3px 5px rgba(0,0,0,0.125);
+    -moz-box-shadow: inset 0 3px 5px rgba(0,0,0,0.125);
+    box-shadow: inset 0 3px 5px rgba(0,0,0,0.125);
+    background: #fff;
 }
 .k-numerictextbox .k-i-arrow-n,
 .k-numerictextbox .k-i-arrow-s {
+    position: absolute;
+    left: 0px;
+    font-size: 0;
+    font-weight: 400;
     height: 17px;
     background: none;
+    position: relative;
+    top: 0px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    opacity: 1;
 }
 .k-numerictextbox .k-select .k-i-arrow-n:before,
 .k-numerictextbox .k-select .k-i-arrow-s:before {
-    color: #fff;
-    font: normal normal normal 14px/1 FontAwesome;
+    color: #444;
+    font-family: 'Glyphicons Halflings';
     height: 17px;
     line-height: 17px;
+    font-size: 9px;
 }
 .k-numerictextbox .k-link .k-i-arrow-n:before {
-    content: "\f0d8";
+    content: "\e113";
 }
 .k-numerictextbox .k-link .k-i-arrow-s:before {
-    content: "\f0d7";
+    content: "\e114";
 }
 .k-picker-wrap .k-select .k-i-calendar:before,
 .k-picker-wrap .k-select .k-i-clock:before {
-    color: #fff;
     font: normal normal normal 14px/1 FontAwesome;
     height: 17px;
     line-height: 17px;
@@ -293,6 +339,14 @@ td.k-state-focused.k-state-selected {
 .k-picker-wrap .k-i-clock {
     background: none;
 }
+.k-calendar-container.k-group {
+    padding: 0;
+    border-radius: 0;
+    background: #fff;
+}
+.k-calendar th {
+    padding: .4em .45em .4em .8em;
+}
 .k-picker-wrap .k-i-calendar:before {
     content: "\f073";
 }
@@ -300,7 +354,7 @@ td.k-state-focused.k-state-selected {
     content: "\f017";
 }
 .k-datetimepicker .k-picker-wrap .k-icon {
-    margin: 0 3px;
+    padding: 0 3px;
 }
 .k-multiselect.k-header {
     border-color: #d2d6de;
@@ -522,15 +576,23 @@ td.k-state-focused.k-state-selected {
     padding: 8px 15px;
     margin-left: -20px !important;
 }
-.form-horizontal .k-autocomplete, .form-horizontal .k-combobox, .form-horizontal .k-datepicker,
-.form-horizontal .k-timepicker, .form-horizontal .k-datetimepicker, .form-horizontal .k-colorpicker,
-.form-horizontal .k-numerictextbox, .form-horizontal .k-dropdown, .form-horizontal .k-selectbox,
-.form-horizontal .k-textbox, .form-horizontal .k-datetimepicker {
-    width: 200px !important;
+.form-horizontal .k-autocomplete, .form-horizontal .k-combobox, 
+.form-horizontal .k-numerictextbox, .form-horizontal .k-dropdown, 
+.form-horizontal .k-selectbox, .form-horizontal .k-textbox, 
+.form-horizontal .k-colorpicker,
+.form-horizontal .k-timepicker, .form-horizontal .k-datetimepicker, 
+.form-horizontal .k-datepicker {
+    width: 300px !important;
     max-width: 100%;
     border-radius: 0;
     border-color: #d2d6de;
     height: 34px;
+}
+.k-grid-edit-row>td>.k-numerictextbox {
+    width: auto !important;
+}
+.k-grid .k-dropdown{
+    width: auto !important;
 }
 .tag-editor {
     border: 1px solid #d2d6de !important;
@@ -564,8 +626,14 @@ td.k-state-focused.k-state-selected {
     white-space: normal;
     max-width: 330px;
 }
+.custom-input-group.input-group-short .custom-input-group-btn,
 .input-group.input-group-short .input-group-btn {
     width: auto;
+}
+.custom-input-group.input-group-short .bootstrap-touchspin{
+    float: left;
+    margin-right: 3px;
+    width: 200px;
 }
 .input-group.input-group-short .k-widget {
     margin-right: 10px;
@@ -847,6 +915,32 @@ span.grid-report-item.red {
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
     right: 0px; 
+}
+
+/*bootstrap touchspin*/
+.bootstrap-touchspin {
+    max-width: 300px;
+}
+.bootstrap-touchspin-postfix {
+    border-left: none;
+}
+.bootstrap-touchspin .input-group-btn-vertical i {
+    left: 6px;
+}
+.input-group-addon.bootstrap-touchspin-postfix {
+    background-color: #eee;
+}
+.bootstrap-touchspin .input-group-btn-vertical>.btn {
+    background: #fff;
+    border-color: #d2d6de;
+    border-radius: 0;
+}
+.bootstrap-touchspin .input-group-btn-vertical>.btn:hover {
+    border-color: #afafaf;
+}
+.bootstrap-touchspin .input-group-btn-vertical .bootstrap-touchspin-down {
+   margin-top: 0;
+   padding-bottom: 7px; 
 }
 
 /* THROBBER */
