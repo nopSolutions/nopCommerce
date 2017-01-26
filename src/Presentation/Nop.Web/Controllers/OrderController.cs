@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Web.Mvc;
 using Nop.Core;
@@ -95,7 +96,7 @@ namespace Nop.Web.Controllers
                 var errors = _orderProcessingService.CancelRecurringPayment(recurringPayment);
 
                 var model = _orderModelFactory.PrepareCustomerOrderListModel();
-                model.CancelRecurringPaymentErrors = errors;
+                model.RecurringPaymentErrors = errors;
 
                 return View(model);
             }
@@ -103,6 +104,37 @@ namespace Nop.Web.Controllers
             {
                 return RedirectToRoute("CustomerOrders");
             }
+        }
+
+        //My account / Orders / Retry last recurring order
+        [HttpPost, ActionName("CustomerOrders")]
+        [PublicAntiForgery]
+        [FormValueRequired(FormValueRequirement.StartsWith, "retryLastPayment")]
+        public ActionResult RetryLastRecurringPayment(FormCollection form)
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return new HttpUnauthorizedResult();
+
+            //get recurring payment identifier
+            var recurringPaymentId = 0;
+            if (!form.AllKeys.Any(formValue => formValue.StartsWith("retryLastPayment", StringComparison.InvariantCultureIgnoreCase) &&
+                int.TryParse(formValue.Substring(formValue.IndexOf('_') + 1), out recurringPaymentId)))
+            {
+                return RedirectToRoute("CustomerOrders");
+            }
+
+            var recurringPayment = _orderService.GetRecurringPaymentById(recurringPaymentId);
+            if (recurringPayment == null)
+                return RedirectToRoute("CustomerOrders");
+
+            if (!_orderProcessingService.CanRetryLastRecurringPayment(_workContext.CurrentCustomer, recurringPayment))
+                return RedirectToRoute("CustomerOrders");
+
+            var errors = _orderProcessingService.ProcessNextRecurringPayment(recurringPayment);
+            var model = _orderModelFactory.PrepareCustomerOrderListModel();
+            model.RecurringPaymentErrors = errors.ToList();
+
+            return View(model);
         }
 
         //My account / Reward points

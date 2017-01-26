@@ -261,7 +261,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                         var authorization = payment.transactions[0].related_resources[0].authorization;
                         if (authorization != null)
                         {
-                            if (authorization.fmf_details != null)
+                            if (authorization.fmf_details != null && !string.IsNullOrEmpty(authorization.fmf_details.filter_id))
                             {
                                 result.AuthorizationTransactionResult = string.Format("Authorization is {0}. Based on fraud filter: {1}. {2}",
                                     authorization.fmf_details.filter_type, authorization.fmf_details.name, authorization.fmf_details.description);
@@ -280,7 +280,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                         var sale = payment.transactions[0].related_resources[0].sale;
                         if (sale != null)
                         {
-                            if (sale.fmf_details != null)
+                            if (sale.fmf_details != null && !string.IsNullOrEmpty(sale.fmf_details.filter_id))
                             {
                                 result.CaptureTransactionResult = string.Format("Sale is {0}. Based on fraud filter: {1}. {2}",
                                     sale.fmf_details.filter_type, sale.fmf_details.name, sale.fmf_details.description);

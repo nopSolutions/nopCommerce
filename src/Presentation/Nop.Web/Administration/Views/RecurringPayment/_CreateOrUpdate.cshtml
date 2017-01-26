@@ -131,6 +131,14 @@
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
+                @if (Model.LastPaymentFailed)
+                {
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @T("Admin.RecurringPayments.History.LastPaymentFailed")
+                        </div>
+                    </div>
+                }
                 @if (!String.IsNullOrEmpty(Model.NextPaymentDate))
                 {
                     <div class="form-group">

@@ -689,6 +689,7 @@
     <Content Include="Themes\DefaultClean\Content\images\remove.png" />
     <Content Include="Themes\DefaultClean\Content\images\remove_.png" />
     <Content Include="Themes\DefaultClean\Content\images\reply.png" />
+    <Content Include="Themes\DefaultClean\Content\images\retry.png" />
     <Content Include="Themes\DefaultClean\Content\images\return.png" />
     <Content Include="Themes\DefaultClean\Content\images\rss.png" />
     <Content Include="Themes\DefaultClean\Content\images\shipping.png" />

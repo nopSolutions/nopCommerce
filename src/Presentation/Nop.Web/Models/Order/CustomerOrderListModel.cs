@@ -11,12 +11,12 @@ namespace Nop.Web.Models.Order
         {
             Orders = new List<OrderDetailsModel>();
             RecurringOrders = new List<RecurringOrderModel>();
-            CancelRecurringPaymentErrors = new List<string>();
+            RecurringPaymentErrors = new List<string>();
         }
 
         public IList<OrderDetailsModel> Orders { get; set; }
         public IList<RecurringOrderModel> RecurringOrders { get; set; }
-        public IList<string> CancelRecurringPaymentErrors { get; set; }
+        public IList<string> RecurringPaymentErrors { get; set; }
 
 
         #region Nested classes
@@ -40,6 +40,7 @@ namespace Nop.Web.Models.Order
             public int TotalCycles { get; set; }
             public int CyclesRemaining { get; set; }
             public int InitialOrderId { get; set; }
+            public bool CanRetryLastPayment { get; set; }
             public bool CanCancel { get; set; }
         }
 
