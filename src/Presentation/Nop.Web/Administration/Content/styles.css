@@ -407,6 +407,9 @@ td.k-state-focused.k-state-selected {
 .sidebar-menu, .main-sidebar .user-panel, .sidebar-menu > li.header {
     white-space: normal;
 }
+.sidebar-menu .treeview-menu>li>a {
+    padding: 5px 15px;
+}
 .sidebar-form {
     border: none !important;
     overflow: visible;
