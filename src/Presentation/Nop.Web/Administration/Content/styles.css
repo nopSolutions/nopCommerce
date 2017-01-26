@@ -186,6 +186,9 @@ table.adminContent {
     box-shadow: none;
     -webkit-box-shadow: none;
 }
+.k-grid .k-button, .k-grid tbody td > .k-grid-delete, table .btn {
+    margin: 2px;
+}
 .k-picker-wrap.k-state-default,
 .k-numeric-wrap.k-state-default {
     border-radius: 0;
@@ -366,9 +369,6 @@ td.k-state-focused.k-state-selected {
 }
 .k-popup .k-list .k-item.k-state-focused {
     box-shadow: none;
-}
-.k-grid tbody td > .k-grid-delete {
-    margin-top: 0;
 }
 .k-grid table tr:hover > td {
     background: #e3e3e3 !important;
