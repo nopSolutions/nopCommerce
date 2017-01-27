@@ -8,6 +8,7 @@ using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Plugin.Payments.PayPalStandard.Models;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -26,12 +27,14 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         private readonly IPaymentService _paymentService;
         private readonly IOrderService _orderService;
         private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IStoreContext _storeContext;
         private readonly ILogger _logger;
         private readonly IWebHelper _webHelper;
         private readonly PaymentSettings _paymentSettings;
         private readonly PayPalStandardPaymentSettings _payPalStandardPaymentSettings;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
 
         public PaymentPayPalStandardController(IWorkContext workContext,
             IStoreService storeService, 
@@ -39,12 +42,14 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             IPaymentService paymentService, 
             IOrderService orderService, 
             IOrderProcessingService orderProcessingService,
+            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IStoreContext storeContext,
             ILogger logger, 
             IWebHelper webHelper,
             PaymentSettings paymentSettings,
-            PayPalStandardPaymentSettings payPalStandardPaymentSettings)
+            PayPalStandardPaymentSettings payPalStandardPaymentSettings,
+            ShoppingCartSettings shoppingCartSettings)
         {
             this._workContext = workContext;
             this._storeService = storeService;
@@ -52,12 +57,14 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             this._paymentService = paymentService;
             this._orderService = orderService;
             this._orderProcessingService = orderProcessingService;
+            this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._storeContext = storeContext;
             this._logger = logger;
             this._webHelper = webHelper;
             this._paymentSettings = paymentSettings;
             this._payPalStandardPaymentSettings = payPalStandardPaymentSettings;
+            this._shoppingCartSettings = shoppingCartSettings;
         }
         
         [AdminAuthorize]
@@ -146,6 +153,17 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
+        }
+
+        //action displaying notification (warning) to a store owner about inaccurate PayPal rounding
+        [ValidateInput(false)]
+        public ActionResult RoundingWarning(bool passProductNamesAndTotals)
+        {
+            //prices and total aren't rounded, so display warning
+            if (passProductNamesAndTotals && !_shoppingCartSettings.RoundPricesDuringCalculation)
+                return Json(new { Result = _localizationService.GetResource("Plugins.Payments.PayPalStandard.RoundingWarning") }, JsonRequestBehavior.AllowGet);
+
+            return Json(new { Result = string.Empty }, JsonRequestBehavior.AllowGet);
         }
 
         [ChildActionOnly]
@@ -255,7 +273,8 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     var payPalStandardPaymentSettings = _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
 
                     //validate order total
-                    if (payPalStandardPaymentSettings.PdtValidateOrderTotal && Math.Abs(mc_gross - order.OrderTotal) > 0.01M)
+                    var orderTotalSentToPayPal = order.GetAttribute<decimal?>("OrderTotalSentToPayPal");
+                    if (payPalStandardPaymentSettings.PdtValidateOrderTotal && orderTotalSentToPayPal.HasValue && mc_gross != orderTotalSentToPayPal.Value)
                     {
                         string errorStr = string.Format("PayPal PDT. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.Id);
                         //log
@@ -271,6 +290,9 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
                         return RedirectToAction("Index", "Home", new { area = "" });
                     }
+                    //clear attribute
+                    if (orderTotalSentToPayPal.HasValue)
+                        _genericAttributeService.SaveAttribute<decimal?>(order, "OrderTotalSentToPayPal", null);
 
                     //mark order as paid
                     if (newPaymentStatus == PaymentStatus.Paid)
