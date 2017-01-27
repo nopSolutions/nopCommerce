@@ -1379,7 +1379,6 @@ set @resources='
   <LocaleResource Name="Admin.RecurringPayments.History.LastPaymentFailed">
     <Value>Last payment failed</Value>
   </LocaleResource>
-  </LocaleResource>  
   <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchApproved">
     <Value>Approved</Value>
   </LocaleResource>
