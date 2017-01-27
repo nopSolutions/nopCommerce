@@ -332,7 +332,17 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             ViewBag.FilterByBlogPostId = filterByBlogPostId;
-            return View();
+            var model = new BlogCommentListModel();
+
+            //"approved" property
+            //0 - all
+            //1 - approved only
+            //2 - disapproved only
+            model.AvailableApprovedOptions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.ContentManagement.Blog.Comments.List.SearchApproved.All"), Value = "0" });
+            model.AvailableApprovedOptions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.ContentManagement.Blog.Comments.List.SearchApproved.ApprovedOnly"), Value = "1" });
+            model.AvailableApprovedOptions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.ContentManagement.Blog.Comments.List.SearchApproved.DisapprovedOnly"), Value = "2" });
+
+            return View(model);
         }
 
         [HttpPost]
@@ -347,7 +357,11 @@ namespace Nop.Admin.Controllers
             var createdOnToValue = model.CreatedOnTo == null ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            var comments = _blogService.GetAllComments(0, 0, filterByBlogPostId, createdOnFromValue, createdOnToValue, model.SearchText);
+            bool? approved = null;
+            if (model.SearchApprovedId > 0)
+                approved = model.SearchApprovedId == 1;
+
+            var comments = _blogService.GetAllComments(0, 0, filterByBlogPostId, approved, createdOnFromValue, createdOnToValue, model.SearchText);
 
             var storeNames = _storeService.GetAllStores().ToDictionary(store => store.Id, store => store.Name);
 
