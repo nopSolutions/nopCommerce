@@ -6,7 +6,7 @@ namespace Nop.Web.Controllers
     //they can create guest account(s), etc
     public partial class KeepAliveController : Controller
     {
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return Content("I am alive!");
         }

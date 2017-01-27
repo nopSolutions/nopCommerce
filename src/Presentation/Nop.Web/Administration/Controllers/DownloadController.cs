@@ -18,7 +18,7 @@ namespace Nop.Admin.Controllers
             this._downloadService = downloadService;
         }
 
-        public ActionResult DownloadFile(Guid downloadGuid)
+        public virtual ActionResult DownloadFile(Guid downloadGuid)
         {
             var download = _downloadService.GetDownloadByGuid(downloadGuid);
             if (download == null)
@@ -45,7 +45,7 @@ namespace Nop.Admin.Controllers
         [ValidateInput(false)]
         //do not validate request token (XSRF)
         [AdminAntiForgery(true)] 
-        public ActionResult SaveDownloadUrl(string downloadUrl)
+        public virtual ActionResult SaveDownloadUrl(string downloadUrl)
         {
             //insert
             var download = new Download
@@ -63,7 +63,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         //do not validate request token (XSRF)
         [AdminAntiForgery(true)]
-        public ActionResult AsyncUpload()
+        public virtual ActionResult AsyncUpload()
         {
             //we process it distinct ways based on a browser
             //find more info here http://stackoverflow.com/questions/4884920/mvc3-valums-ajax-file-upload

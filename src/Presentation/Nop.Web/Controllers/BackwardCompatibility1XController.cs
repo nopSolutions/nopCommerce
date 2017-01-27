@@ -49,7 +49,7 @@ namespace Nop.Web.Controllers
         
         #region Methods
 
-        public ActionResult GeneralRedirect()
+        public virtual ActionResult GeneralRedirect()
         {
             
             // use Request.RawUrl, for instance to parse out what was invoked
@@ -145,7 +145,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("HomePage");
         }
 
-        public ActionResult RedirectProduct(string id, bool idIncludesSename = true)
+        public virtual ActionResult RedirectProduct(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
             var productId = idIncludesSename ? Convert.ToInt32(id.Split(new [] { '-' })[0]) : Convert.ToInt32(id);
@@ -156,7 +156,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoutePermanent("Product", new { SeName = product.GetSeName() });
         }
 
-        public ActionResult RedirectCategory(string id, bool idIncludesSename = true)
+        public virtual ActionResult RedirectCategory(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
             var categoryid = idIncludesSename ? Convert.ToInt32(id.Split(new [] { '-' })[0]) : Convert.ToInt32(id);
@@ -167,7 +167,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoutePermanent("Category", new { SeName = category.GetSeName() });
         }
 
-        public ActionResult RedirectManufacturer(string id, bool idIncludesSename = true)
+        public virtual ActionResult RedirectManufacturer(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
             var manufacturerId = idIncludesSename ? Convert.ToInt32(id.Split(new [] { '-' })[0]) : Convert.ToInt32(id);
@@ -178,7 +178,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoutePermanent("Manufacturer", new { SeName = manufacturer.GetSeName() });
         }
 
-        public ActionResult RedirectProductTag(string id, bool idIncludesSename = true)
+        public virtual ActionResult RedirectProductTag(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
             var tagId = idIncludesSename ? Convert.ToInt32(id.Split(new [] { '-' })[0]) : Convert.ToInt32(id);
@@ -189,7 +189,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoutePermanent("ProductsByTag", new { productTagId = tag.Id });
         }
 
-        public ActionResult RedirectNewsItem(string id, bool idIncludesSename = true)
+        public virtual ActionResult RedirectNewsItem(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
             var newsId = idIncludesSename ? Convert.ToInt32(id.Split(new [] { '-' })[0]) : Convert.ToInt32(id);
@@ -200,7 +200,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoutePermanent("NewsItem", new { newsItemId = newsItem.Id, SeName = newsItem.GetSeName(newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
         }
 
-        public ActionResult RedirectBlogPost(string id, bool idIncludesSename = true)
+        public virtual ActionResult RedirectBlogPost(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
             var blogPostId = idIncludesSename ? Convert.ToInt32(id.Split(new [] { '-' })[0]) : Convert.ToInt32(id);
@@ -211,7 +211,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoutePermanent("BlogPost", new { blogPostId = blogPost.Id, SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
         }
 
-        public ActionResult RedirectTopic(string id, bool idIncludesSename = true)
+        public virtual ActionResult RedirectTopic(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
             var topicid = idIncludesSename ? Convert.ToInt32(id.Split(new [] { '-' })[0]) : Convert.ToInt32(id);
@@ -222,7 +222,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoutePermanent("Topic", new { SeName = topic.GetSeName() });
         }
 
-        public ActionResult RedirectForumGroup(string id, bool idIncludesSename = true)
+        public virtual ActionResult RedirectForumGroup(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
             var forumGroupId = idIncludesSename ? Convert.ToInt32(id.Split(new [] { '-' })[0]) : Convert.ToInt32(id);
@@ -233,7 +233,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoutePermanent("ForumGroupSlug", new { id = forumGroup.Id, slug = forumGroup.GetSeName() });
         }
 
-        public ActionResult RedirectForum(string id, bool idIncludesSename = true)
+        public virtual ActionResult RedirectForum(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
             var forumId = idIncludesSename ? Convert.ToInt32(id.Split(new [] { '-' })[0]) : Convert.ToInt32(id);
@@ -244,7 +244,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoutePermanent("ForumSlug", new { id = forum.Id, slug = forum.GetSeName() });
         }
 
-        public ActionResult RedirectForumTopic(string id, bool idIncludesSename = true)
+        public virtual ActionResult RedirectForumTopic(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
             var forumTopicId = idIncludesSename ? Convert.ToInt32(id.Split(new [] { '-' })[0]) : Convert.ToInt32(id);
@@ -255,7 +255,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoutePermanent("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() });
         }
 
-        public ActionResult RedirectUserProfile(string id)
+        public virtual ActionResult RedirectUserProfile(string id)
         {
             //we can't use dash in MVC
             var userId = Convert.ToInt32(id);

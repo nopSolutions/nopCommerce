@@ -161,7 +161,7 @@ namespace Nop.Admin.Controllers
         #region Methods
 
         [ChildActionOnly]
-        public ActionResult Mode(string modeName = "settings-advanced-mode")
+        public virtual ActionResult Mode(string modeName = "settings-advanced-mode")
         {
             var model = new ModeModel()
             {
@@ -172,7 +172,7 @@ namespace Nop.Admin.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult StoreScopeConfiguration()
+        public virtual ActionResult StoreScopeConfiguration()
         {
             var allStores = _storeService.GetAllStores();
             if (allStores.Count < 2)
@@ -191,7 +191,7 @@ namespace Nop.Admin.Controllers
 
             return PartialView(model);
         }
-        public ActionResult ChangeStoreScopeConfiguration(int storeid, string returnUrl = "")
+        public virtual ActionResult ChangeStoreScopeConfiguration(int storeid, string returnUrl = "")
         {
             var store = _storeService.GetStoreById(storeid);
             if (store != null || storeid == 0)
@@ -209,7 +209,7 @@ namespace Nop.Admin.Controllers
             return Redirect(returnUrl);
         }
 
-        public ActionResult Blog()
+        public virtual ActionResult Blog()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -233,7 +233,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult Blog(BlogSettingsModel model)
+        public virtual ActionResult Blog(BlogSettingsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -268,7 +268,7 @@ namespace Nop.Admin.Controllers
 
 
 
-        public ActionResult Vendor()
+        public virtual ActionResult Vendor()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -294,7 +294,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult Vendor(VendorSettingsModel model)
+        public virtual ActionResult Vendor(VendorSettingsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -330,7 +330,7 @@ namespace Nop.Admin.Controllers
 
 
 
-        public ActionResult Forum()
+        public virtual ActionResult Forum()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -371,7 +371,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult Forum(ForumSettingsModel model)
+        public virtual ActionResult Forum(ForumSettingsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -422,7 +422,7 @@ namespace Nop.Admin.Controllers
 
 
 
-        public ActionResult News()
+        public virtual ActionResult News()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -446,7 +446,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult News(NewsSettingsModel model)
+        public virtual ActionResult News(NewsSettingsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -483,7 +483,7 @@ namespace Nop.Admin.Controllers
 
 
 
-        public ActionResult Shipping()
+        public virtual ActionResult Shipping()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -543,7 +543,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult Shipping(ShippingSettingsModel model)
+        public virtual ActionResult Shipping(ShippingSettingsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -612,7 +612,7 @@ namespace Nop.Admin.Controllers
 
 
 
-        public ActionResult Tax()
+        public virtual ActionResult Tax()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -696,7 +696,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult Tax(TaxSettingsModel model)
+        public virtual ActionResult Tax(TaxSettingsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -772,7 +772,7 @@ namespace Nop.Admin.Controllers
 
 
 
-        public ActionResult Catalog()
+        public virtual ActionResult Catalog()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -843,7 +843,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult Catalog(CatalogSettingsModel model)
+        public virtual ActionResult Catalog(CatalogSettingsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -933,7 +933,7 @@ namespace Nop.Admin.Controllers
         #region Sort options
 
         [HttpPost]
-        public ActionResult SortOptionsList(DataSourceRequest command)
+        public virtual ActionResult SortOptionsList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -960,7 +960,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult SortOptionUpdate(SortOptionModel model)
+        public virtual ActionResult SortOptionUpdate(SortOptionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -982,7 +982,7 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
-        public ActionResult RewardPoints()
+        public virtual ActionResult RewardPoints()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1014,7 +1014,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult RewardPoints(RewardPointsSettingsModel model)
+        public virtual ActionResult RewardPoints(RewardPointsSettingsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1065,7 +1065,7 @@ namespace Nop.Admin.Controllers
 
 
 
-        public ActionResult Order()
+        public virtual ActionResult Order()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1109,7 +1109,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult Order(OrderSettingsModel model)
+        public virtual ActionResult Order(OrderSettingsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1185,7 +1185,7 @@ namespace Nop.Admin.Controllers
 
         #region Return request reasons
 
-        public ActionResult ReturnRequestReasonList()
+        public virtual ActionResult ReturnRequestReasonList()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1197,7 +1197,7 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Order", "Setting");
         }
         [HttpPost]
-        public ActionResult ReturnRequestReasonList(DataSourceRequest command)
+        public virtual ActionResult ReturnRequestReasonList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1211,7 +1211,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
         //create
-        public ActionResult ReturnRequestReasonCreate()
+        public virtual ActionResult ReturnRequestReasonCreate()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1222,7 +1222,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult ReturnRequestReasonCreate(ReturnRequestReasonModel model, bool continueEditing)
+        public virtual ActionResult ReturnRequestReasonCreate(ReturnRequestReasonModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1242,7 +1242,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         //edit
-        public ActionResult ReturnRequestReasonEdit(int id)
+        public virtual ActionResult ReturnRequestReasonEdit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1261,7 +1261,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult ReturnRequestReasonEdit(ReturnRequestReasonModel model, bool continueEditing)
+        public virtual ActionResult ReturnRequestReasonEdit(ReturnRequestReasonModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1294,7 +1294,7 @@ namespace Nop.Admin.Controllers
         }
         //delete
         [HttpPost]
-        public ActionResult ReturnRequestReasonDelete(int id)
+        public virtual ActionResult ReturnRequestReasonDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1310,7 +1310,7 @@ namespace Nop.Admin.Controllers
 
         #region Return request actions
 
-        public ActionResult ReturnRequestActionList()
+        public virtual ActionResult ReturnRequestActionList()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1322,7 +1322,7 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Order", "Setting");
         }
         [HttpPost]
-        public ActionResult ReturnRequestActionList(DataSourceRequest command)
+        public virtual ActionResult ReturnRequestActionList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1336,7 +1336,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
         //create
-        public ActionResult ReturnRequestActionCreate()
+        public virtual ActionResult ReturnRequestActionCreate()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1347,7 +1347,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult ReturnRequestActionCreate(ReturnRequestActionModel model, bool continueEditing)
+        public virtual ActionResult ReturnRequestActionCreate(ReturnRequestActionModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1367,7 +1367,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         //edit
-        public ActionResult ReturnRequestActionEdit(int id)
+        public virtual ActionResult ReturnRequestActionEdit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1386,7 +1386,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult ReturnRequestActionEdit(ReturnRequestActionModel model, bool continueEditing)
+        public virtual ActionResult ReturnRequestActionEdit(ReturnRequestActionModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1419,7 +1419,7 @@ namespace Nop.Admin.Controllers
         }
         //delete
         [HttpPost]
-        public ActionResult ReturnRequestActionDelete(int id)
+        public virtual ActionResult ReturnRequestActionDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1437,7 +1437,7 @@ namespace Nop.Admin.Controllers
 
 
 
-        public ActionResult ShoppingCart()
+        public virtual ActionResult ShoppingCart()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1471,7 +1471,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult ShoppingCart(ShoppingCartSettingsModel model)
+        public virtual ActionResult ShoppingCart(ShoppingCartSettingsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1517,7 +1517,7 @@ namespace Nop.Admin.Controllers
 
 
 
-        public ActionResult Media()
+        public virtual ActionResult Media()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1549,7 +1549,7 @@ namespace Nop.Admin.Controllers
         }
         [HttpPost]
         [FormValueRequired("save")]
-        public ActionResult Media(MediaSettingsModel model)
+        public virtual ActionResult Media(MediaSettingsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1588,7 +1588,7 @@ namespace Nop.Admin.Controllers
         }
         [HttpPost, ActionName("Media")]
         [FormValueRequired("change-picture-storage")]
-        public ActionResult ChangePictureStorage()
+        public virtual ActionResult ChangePictureStorage()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1604,7 +1604,7 @@ namespace Nop.Admin.Controllers
 
 
 
-        public ActionResult CustomerUser()
+        public virtual ActionResult CustomerUser()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1637,7 +1637,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult CustomerUser(CustomerUserSettingsModel model)
+        public virtual ActionResult CustomerUser(CustomerUserSettingsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1678,7 +1678,7 @@ namespace Nop.Admin.Controllers
 
 
 
-        public ActionResult GeneralCommon()
+        public virtual ActionResult GeneralCommon()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1838,7 +1838,7 @@ namespace Nop.Admin.Controllers
         }
         [HttpPost]
         [FormValueRequired("save")]
-        public ActionResult GeneralCommon(GeneralCommonSettingsModel model)
+        public virtual ActionResult GeneralCommon(GeneralCommonSettingsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -2012,7 +2012,7 @@ namespace Nop.Admin.Controllers
         }
         [HttpPost, ActionName("GeneralCommon")]
         [FormValueRequired("changeencryptionkey")]
-        public ActionResult ChangeEncryptionKey(GeneralCommonSettingsModel model)
+        public virtual ActionResult ChangeEncryptionKey(GeneralCommonSettingsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -2092,7 +2092,7 @@ namespace Nop.Admin.Controllers
         }
         [HttpPost, ActionName("GeneralCommon")]
         [FormValueRequired("togglefulltext")]
-        public ActionResult ToggleFullText(GeneralCommonSettingsModel model)
+        public virtual ActionResult ToggleFullText(GeneralCommonSettingsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -2135,7 +2135,7 @@ namespace Nop.Admin.Controllers
 
 
         //all settings
-        public ActionResult AllSettings()
+        public virtual ActionResult AllSettings()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -2146,7 +2146,7 @@ namespace Nop.Admin.Controllers
         //do not validate request token (XSRF)
         //for some reasons it does not work with "filtering" support
         [AdminAntiForgery(true)] 
-        public ActionResult AllSettings(DataSourceRequest command, AllSettingsListModel model)
+        public virtual ActionResult AllSettings(DataSourceRequest command, AllSettingsListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -2192,7 +2192,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
         [HttpPost]
-        public ActionResult SettingUpdate(SettingModel model)
+        public virtual ActionResult SettingUpdate(SettingModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -2228,7 +2228,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
         [HttpPost]
-        public ActionResult SettingAdd([Bind(Exclude = "Id")] SettingModel model)
+        public virtual ActionResult SettingAdd([Bind(Exclude = "Id")] SettingModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -2251,7 +2251,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
         [HttpPost]
-        public ActionResult SettingDelete(int id)
+        public virtual ActionResult SettingDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();

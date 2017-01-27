@@ -72,7 +72,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected CustomerRoleModel PrepareCustomerRoleModel(CustomerRole customerRole)
+        protected virtual CustomerRoleModel PrepareCustomerRoleModel(CustomerRole customerRole)
         {
             var model = customerRole.ToModel();
             var product = _productService.GetProductById(customerRole.PurchasedWithProductId);
@@ -87,12 +87,12 @@ namespace Nop.Admin.Controllers
 
         #region Customer roles
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-		public ActionResult List()
+		public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -101,7 +101,7 @@ namespace Nop.Admin.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult List(DataSourceRequest command)
+		public virtual ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -118,7 +118,7 @@ namespace Nop.Admin.Controllers
 			};
 		}
 
-        public ActionResult Create()
+        public virtual ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -130,7 +130,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Create(CustomerRoleModel model, bool continueEditing)
+        public virtual ActionResult Create(CustomerRoleModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -151,7 +151,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-		public ActionResult Edit(int id)
+		public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -166,7 +166,7 @@ namespace Nop.Admin.Controllers
 		}
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Edit(CustomerRoleModel model, bool continueEditing)
+        public virtual ActionResult Edit(CustomerRoleModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -211,7 +211,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -241,7 +241,7 @@ namespace Nop.Admin.Controllers
 
 
 
-        public ActionResult AssociateProductToCustomerRolePopup()
+        public virtual ActionResult AssociateProductToCustomerRolePopup()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -281,7 +281,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult AssociateProductToCustomerRolePopupList(DataSourceRequest command,
+        public virtual ActionResult AssociateProductToCustomerRolePopupList(DataSourceRequest command,
             CustomerRoleModel.AssociateProductToCustomerRoleModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -313,7 +313,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public ActionResult AssociateProductToCustomerRolePopup(string btnId, string productIdInput,
+        public virtual ActionResult AssociateProductToCustomerRolePopup(string btnId, string productIdInput,
             string productNameInput, CustomerRoleModel.AssociateProductToCustomerRoleModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))

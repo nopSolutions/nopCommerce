@@ -29,7 +29,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Upload()
+        public virtual ActionResult Upload()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
             {

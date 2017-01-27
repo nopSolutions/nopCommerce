@@ -65,7 +65,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected  virtual void UpdateValueLocales(AddressAttributeValue addressAttributeValue, AddressAttributeValueModel model)
+        protected virtual void UpdateValueLocales(AddressAttributeValue addressAttributeValue, AddressAttributeValueModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -77,20 +77,20 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Address attributes
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult ListBlock()
+        public virtual ActionResult ListBlock()
         {
             return PartialView("ListBlock");
         }
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -103,7 +103,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult List(DataSourceRequest command)
+        public virtual ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -121,9 +121,9 @@ namespace Nop.Admin.Controllers
             };
             return Json(gridModel);
         }
-        
+
         //create
-        public ActionResult Create()
+        public virtual ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -135,7 +135,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Create(AddressAttributeModel model, bool continueEditing)
+        public virtual ActionResult Create(AddressAttributeModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -168,7 +168,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult Edit(int id)
+        public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -188,7 +188,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Edit(AddressAttributeModel model, bool continueEditing)
+        public virtual ActionResult Edit(AddressAttributeModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -226,7 +226,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -247,7 +247,7 @@ namespace Nop.Admin.Controllers
 
         //list
         [HttpPost]
-        public ActionResult ValueList(int addressAttributeId, DataSourceRequest command)
+        public virtual ActionResult ValueList(int addressAttributeId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -269,7 +269,7 @@ namespace Nop.Admin.Controllers
         }
 
         //create
-        public ActionResult ValueCreatePopup(int addressAttributeId)
+        public virtual ActionResult ValueCreatePopup(int addressAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -287,7 +287,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ValueCreatePopup(string btnId, string formId, AddressAttributeValueModel model)
+        public virtual ActionResult ValueCreatePopup(string btnId, string formId, AddressAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -325,7 +325,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult ValueEditPopup(int id)
+        public virtual ActionResult ValueEditPopup(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -353,7 +353,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ValueEditPopup(string btnId, string formId, AddressAttributeValueModel model)
+        public virtual ActionResult ValueEditPopup(string btnId, string formId, AddressAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -387,7 +387,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult ValueDelete(int id)
+        public virtual ActionResult ValueDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -402,7 +402,6 @@ namespace Nop.Admin.Controllers
             
             return new NullJsonResult();
         }
-
 
         #endregion
     }

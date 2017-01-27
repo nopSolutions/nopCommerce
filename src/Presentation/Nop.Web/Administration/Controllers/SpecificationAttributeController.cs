@@ -77,12 +77,12 @@ namespace Nop.Admin.Controllers
         #region Specification attributes
 
         //list
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -91,7 +91,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult List(DataSourceRequest command)
+        public virtual ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -108,7 +108,7 @@ namespace Nop.Admin.Controllers
         }
         
         //create
-        public ActionResult Create()
+        public virtual ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -120,7 +120,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Create(SpecificationAttributeModel model, bool continueEditing)
+        public virtual ActionResult Create(SpecificationAttributeModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -151,7 +151,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult Edit(int id)
+        public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -172,7 +172,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Edit(SpecificationAttributeModel model, bool continueEditing)
+        public virtual ActionResult Edit(SpecificationAttributeModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -210,7 +210,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -235,7 +235,7 @@ namespace Nop.Admin.Controllers
 
         //list
         [HttpPost]
-        public ActionResult OptionList(int specificationAttributeId, DataSourceRequest command)
+        public virtual ActionResult OptionList(int specificationAttributeId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -263,7 +263,7 @@ namespace Nop.Admin.Controllers
         }
 
         //create
-        public ActionResult OptionCreatePopup(int specificationAttributeId)
+        public virtual ActionResult OptionCreatePopup(int specificationAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -276,7 +276,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult OptionCreatePopup(string btnId, string formId, SpecificationAttributeOptionModel model)
+        public virtual ActionResult OptionCreatePopup(string btnId, string formId, SpecificationAttributeOptionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -307,7 +307,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult OptionEditPopup(int id)
+        public virtual ActionResult OptionEditPopup(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -330,7 +330,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult OptionEditPopup(string btnId, string formId, SpecificationAttributeOptionModel model)
+        public virtual ActionResult OptionEditPopup(string btnId, string formId, SpecificationAttributeOptionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -363,7 +363,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult OptionDelete(int id, int specificationAttributeId)
+        public virtual ActionResult OptionDelete(int id, int specificationAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -380,7 +380,7 @@ namespace Nop.Admin.Controllers
 
         //ajax
         [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult GetOptionsByAttributeId(string attributeId)
+        public virtual ActionResult GetOptionsByAttributeId(string attributeId)
         {
             //do not make any permission validation here 
             //because this method could be used on some other pages (such as product editing)

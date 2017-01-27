@@ -60,7 +60,7 @@ namespace Nop.Admin.Controllers
         #region Methods
 
         //shopping carts
-        public ActionResult CurrentCarts()
+        public virtual ActionResult CurrentCarts()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();
@@ -69,7 +69,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult CurrentCarts(DataSourceRequest command)
+        public virtual ActionResult CurrentCarts(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();
@@ -95,7 +95,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetCartDetails(int customerId)
+        public virtual ActionResult GetCartDetails(int customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();
@@ -134,7 +134,7 @@ namespace Nop.Admin.Controllers
 
 
         //wishlists
-        public ActionResult CurrentWishlists()
+        public virtual ActionResult CurrentWishlists()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();
@@ -143,7 +143,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult CurrentWishlists(DataSourceRequest command)
+        public virtual ActionResult CurrentWishlists(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();
@@ -169,7 +169,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetWishlistDetails(int customerId)
+        public virtual ActionResult GetWishlistDetails(int customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();

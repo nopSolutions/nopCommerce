@@ -163,7 +163,7 @@ namespace Nop.Admin.Controllers
 
         #region Methods
 
-        public ActionResult SystemInfo()
+        public virtual ActionResult SystemInfo()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -226,7 +226,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult Warnings()
+        public virtual ActionResult Warnings()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -485,7 +485,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         
-        public ActionResult Maintenance()
+        public virtual ActionResult Maintenance()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -499,7 +499,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("delete-guests")]
-        public ActionResult MaintenanceDeleteGuests(MaintenanceModel model)
+        public virtual ActionResult MaintenanceDeleteGuests(MaintenanceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -517,7 +517,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("delete-abondoned-carts")]
-        public ActionResult MaintenanceDeleteAbandonedCarts(MaintenanceModel model)
+        public virtual ActionResult MaintenanceDeleteAbandonedCarts(MaintenanceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -530,7 +530,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("delete-exported-files")]
-        public ActionResult MaintenanceDeleteFiles(MaintenanceModel model)
+        public virtual ActionResult MaintenanceDeleteFiles(MaintenanceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -570,7 +570,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult BackupFiles(DataSourceRequest command)
+        public virtual ActionResult BackupFiles(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -590,7 +590,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("backup-database")]
-        public ActionResult BackupDatabase(MaintenanceModel model)
+        public virtual ActionResult BackupDatabase(MaintenanceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -610,7 +610,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("backupFileName", "action")]
-        public ActionResult BackupAction(MaintenanceModel model)
+        public virtual ActionResult BackupAction(MaintenanceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -647,7 +647,7 @@ namespace Nop.Admin.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult LanguageSelector()
+        public virtual ActionResult LanguageSelector()
         {
             var model = new LanguageSelectorModel();
             model.CurrentLanguage = _workContext.WorkingLanguage.ToModel();
@@ -657,7 +657,7 @@ namespace Nop.Admin.Controllers
                 .ToList();
             return PartialView(model);
         }
-        public ActionResult SetLanguage(int langid, string returnUrl = "")
+        public virtual ActionResult SetLanguage(int langid, string returnUrl = "")
         {
             var language = _languageService.GetLanguageById(langid);
             if (language != null)
@@ -675,7 +675,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ClearCache(string returnUrl = "")
+        public virtual ActionResult ClearCache(string returnUrl = "")
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -693,7 +693,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult RestartApplication(string returnUrl = "")
+        public virtual ActionResult RestartApplication(string returnUrl = "")
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -711,7 +711,7 @@ namespace Nop.Admin.Controllers
         }
 
 
-        public ActionResult SeNames()
+        public virtual ActionResult SeNames()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -720,7 +720,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult SeNames(DataSourceRequest command, UrlRecordListModel model)
+        public virtual ActionResult SeNames(DataSourceRequest command, UrlRecordListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -788,7 +788,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
         [HttpPost]
-        public ActionResult DeleteSelectedSeNames(ICollection<int> selectedIds)
+        public virtual ActionResult DeleteSelectedSeNames(ICollection<int> selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -803,7 +803,7 @@ namespace Nop.Admin.Controllers
 
 
         [ChildActionOnly]
-        public ActionResult PopularSearchTermsReport()
+        public virtual ActionResult PopularSearchTermsReport()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return Content("");
@@ -811,7 +811,7 @@ namespace Nop.Admin.Controllers
             return PartialView();
         }
         [HttpPost]
-        public ActionResult PopularSearchTermsReport(DataSourceRequest command)
+        public virtual ActionResult PopularSearchTermsReport(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -832,7 +832,7 @@ namespace Nop.Admin.Controllers
 
         //action displaying notification (warning) to a store owner that "limit per store" feature is ignored
         [ChildActionOnly]
-        public ActionResult MultistoreDisabledWarning()
+        public virtual ActionResult MultistoreDisabledWarning()
         {
             //default setting
             bool enabled = _catalogSettings.IgnoreStoreLimitations;
@@ -858,7 +858,7 @@ namespace Nop.Admin.Controllers
         }
         //action displaying notification (warning) to a store owner that "ACL rules" feature is ignored
         [ChildActionOnly]
-        public ActionResult AclDisabledWarning()
+        public virtual ActionResult AclDisabledWarning()
         {
             //default setting
             bool enabled = _catalogSettings.IgnoreAcl;
@@ -885,7 +885,7 @@ namespace Nop.Admin.Controllers
 
         //action displaying notification (warning) to a store owner that entered SE URL already exists
         [ValidateInput(false)]
-        public ActionResult UrlReservedWarning(string entityId, string entityName, string seName)
+        public virtual ActionResult UrlReservedWarning(string entityId, string entityName, string seName)
         {
             if (string.IsNullOrEmpty(seName))
                 return Json(new { Result = string.Empty }, JsonRequestBehavior.AllowGet);

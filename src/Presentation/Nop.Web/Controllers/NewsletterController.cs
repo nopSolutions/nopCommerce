@@ -39,7 +39,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult NewsletterBox()
+        public virtual ActionResult NewsletterBox()
         {
             if (_customerSettings.HideNewsletterBlock)
                 return Content("");
@@ -52,7 +52,7 @@ namespace Nop.Web.Controllers
         [StoreClosed(true)]
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult SubscribeNewsletter(string email, bool subscribe)
+        public virtual ActionResult SubscribeNewsletter(string email, bool subscribe)
         {
             string result;
             bool success = false;
@@ -116,7 +116,7 @@ namespace Nop.Web.Controllers
 
         //available even when a store is closed
         [StoreClosed(true)]
-        public ActionResult SubscriptionActivation(Guid token, bool active)
+        public virtual ActionResult SubscriptionActivation(Guid token, bool active)
         {
             var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuid(token);
             if (subscription == null)

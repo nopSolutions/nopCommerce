@@ -130,18 +130,18 @@ namespace Nop.Admin.Controllers
                     model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
             }
         }
-        
+
         #endregion
 
         #region Methods
 
         //list
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
@@ -151,7 +151,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult List(DataSourceRequest command, AffiliateListModel model)
+        public virtual ActionResult List(DataSourceRequest command, AffiliateListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
@@ -175,7 +175,7 @@ namespace Nop.Admin.Controllers
         }
 
         //create
-        public ActionResult Create()
+        public virtual ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
@@ -187,7 +187,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public ActionResult Create(AffiliateModel model, bool continueEditing)
+        public virtual ActionResult Create(AffiliateModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
@@ -225,7 +225,7 @@ namespace Nop.Admin.Controllers
 
 
         //edit
-        public ActionResult Edit(int id)
+        public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
@@ -241,7 +241,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Edit(AffiliateModel model, bool continueEditing)
+        public virtual ActionResult Edit(AffiliateModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
@@ -287,7 +287,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
@@ -307,7 +307,7 @@ namespace Nop.Admin.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult AffiliatedOrderList(int affiliateId)
+        public virtual ActionResult AffiliatedOrderList(int affiliateId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return Content("");
@@ -333,7 +333,7 @@ namespace Nop.Admin.Controllers
             return PartialView(model);
         }
         [HttpPost]
-        public ActionResult AffiliatedOrderListGrid(DataSourceRequest command, AffiliatedOrderListModel model)
+        public virtual ActionResult AffiliatedOrderListGrid(DataSourceRequest command, AffiliatedOrderListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
@@ -383,7 +383,7 @@ namespace Nop.Admin.Controllers
 
 
         [HttpPost]
-        public ActionResult AffiliatedCustomerList(int affiliateId, DataSourceRequest command)
+        public virtual ActionResult AffiliatedCustomerList(int affiliateId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();

@@ -26,7 +26,7 @@ namespace Nop.Web.Controllers
             this._customerSettings = customerSettings;
         }
 
-        public ActionResult Index(int? id, int? page)
+        public virtual ActionResult Index(int? id, int? page)
         {
             if (!_customerSettings.AllowViewingProfiles)
             {
@@ -55,7 +55,7 @@ namespace Nop.Web.Controllers
 
         //profile info tab
         [ChildActionOnly]
-        public ActionResult Info(int customerProfileId)
+        public virtual ActionResult Info(int customerProfileId)
         {
             var customer = _customerService.GetCustomerById(customerProfileId);
             if (customer == null)
@@ -69,7 +69,7 @@ namespace Nop.Web.Controllers
 
         //latest posts tab
         [ChildActionOnly]
-        public ActionResult Posts(int customerProfileId, int page)
+        public virtual ActionResult Posts(int customerProfileId, int page)
         {
             var customer = _customerService.GetCustomerById(customerProfileId);
             if (customer == null)
