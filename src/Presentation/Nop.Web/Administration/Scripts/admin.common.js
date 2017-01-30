@@ -37,7 +37,7 @@ function checkOverriddenStoreValue(obj, selector) {
         $(selector).attr('disabled', true);
         //Kendo UI elements are enabled/disabled some other way
         $.each(elementsArray, function(key, value) {
-            var kenoduiElement = $(value).data("kendoNumericTextBox");
+            var kenoduiElement = $(value).data("kendoNumericTextBox") || $(value).data("kendoMultiSelect");
             if (kenoduiElement !== undefined && kenoduiElement !== null) {
                 kenoduiElement.enable(false);
             }
@@ -47,7 +47,7 @@ function checkOverriddenStoreValue(obj, selector) {
         $(selector).removeAttr('disabled');
         //Kendo UI elements are enabled/disabled some other way
         $.each(elementsArray, function(key, value) {
-            var kenoduiElement = $(value).data("kendoNumericTextBox");
+            var kenoduiElement = $(value).data("kendoNumericTextBox") || $(value).data("kendoMultiSelect");
             if (kenoduiElement !== undefined && kenoduiElement !== null) {
                 kenoduiElement.enable();
             }
