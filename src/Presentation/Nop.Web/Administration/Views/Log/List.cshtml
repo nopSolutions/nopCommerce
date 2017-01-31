@@ -146,7 +146,9 @@
                                         field: "Id",
                                         title: "@T("Admin.Common.View")",
                                         width: 50,
-                                        template: '<a href="View/#=Id#">@T("Admin.Common.View")</a>'
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-default" href="View/#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
                                     }
                                     ]
                                 });

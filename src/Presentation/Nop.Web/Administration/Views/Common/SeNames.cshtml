@@ -123,8 +123,10 @@
                                 }, {
                                     field: "DetailsUrl",
                                     title: "@T("Admin.System.SeNames.Details")",
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
                                     width: 100,
-                                    template: '# if(DetailsUrl && DetailsUrl.length > 0) {# <a href="#=DetailsUrl#">@T("Admin.System.SeNames.Details")</a> #} #'
+                                    template: '# if(DetailsUrl && DetailsUrl.length > 0) {# <a class="btn btn-default" href="#=DetailsUrl#"><i class="fa fa-pencil"></i>@T("Admin.System.SeNames.Details")</a> #} #'
                                 }]
                             });
                         });

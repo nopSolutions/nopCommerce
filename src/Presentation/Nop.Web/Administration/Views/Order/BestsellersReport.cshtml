@@ -169,7 +169,9 @@
                                     field: "ProductId",
                                     title: "@T("Admin.Common.View")",
                                     width: 100,
-                                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
                                 }]
                             });
                         });

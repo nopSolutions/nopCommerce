@@ -186,7 +186,9 @@
                                     field: "Id",
                                     title: "@T("Admin.Common.Edit")",
                                     width: 100,
-                                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/AddressAttribute/ValueEditPopup/")#=Id#?btnId=btnRefresh&formId=addressattribute-form', 800, 400, true); return false;\" class='btn btn-default' />"
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: "<button value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/AddressAttribute/ValueEditPopup/")#=Id#?btnId=btnRefresh&formId=addressattribute-form', 800, 400, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
                                 }, {
                                     command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                     title: "@T("Admin.Common.Delete")",

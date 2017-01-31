@@ -215,7 +215,9 @@
                                 field: "OrderId",
                                 title: "@T("Admin.RecurringPayments.History.Order")",
                                 width: 200,
-                                template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderId# - @T("Admin.Common.View")</a>'
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
                             }, {
                                 field: "OrderStatus",
                                 title: "@T("Admin.RecurringPayments.History.OrderStatus")",

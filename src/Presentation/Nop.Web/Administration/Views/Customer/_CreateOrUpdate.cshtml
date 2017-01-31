@@ -682,7 +682,9 @@
                                 field: "Id",
                                 title: "@T("Admin.Common.View")",
                                 width: 100,
-                                template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
                             }]
                         });
                     });
@@ -770,11 +772,15 @@
                                 field: "Id",
                                 title: "@T("Admin.Common.Edit")",
                                 width: 100,
-                                template: '<a href="@Url.Content("~/Admin/Customer/AddressEdit?customerId=")@Model.Id&addressid=#=Id#">@T("Admin.Common.Edit")</a>'
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Customer/AddressEdit?customerId=")@Model.Id&addressid=#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
                             }, {
                                 command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                 title: "@T("Admin.Common.Delete")",
-                                width: 100
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" }
                             }]
                         });
                     });

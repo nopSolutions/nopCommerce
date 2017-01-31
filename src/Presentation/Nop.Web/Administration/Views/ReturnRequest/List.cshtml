@@ -145,8 +145,9 @@
                                                 field: "OrderId",
                                                 title: "@T("Admin.ReturnRequests.Fields.Order")",
                                                 width: 200,
-                                                template:
-                                                    '# if(OrderId > 0) {# <a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderId# - @T("Admin.Common.View")</a> #} else {# order item is deleted #} #'
+                                                headerAttributes: { style: "text-align:center" },
+                                                attributes: { style: "text-align:center" },
+                                                template: '# if(OrderId > 0) {# <a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#"><i class="fa fa-eye"></i>#=OrderId# - @T("Admin.Common.View")</a> #} else {# order item is deleted #} #'
                                             }, {
                                                 field: "ReturnRequestStatusStr",
                                                 title: "@T("Admin.ReturnRequests.Fields.Status")",
@@ -161,7 +162,9 @@
                                                 field: "Id",
                                                 title: "@T("Admin.Common.Edit")",
                                                 width: 100,
-                                                template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                                                headerAttributes: { style: "text-align:center" },
+                                                attributes: { style: "text-align:center" },
+                                                template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
                                             }
                                         ]
                                     });
@@ -170,15 +173,15 @@
 
                     <script type="text/javascript">
                         $(document)
-                            .ready(function() {
-                                $('#search-returnrequests')
-                                    .click(function() {
-                                        var grid = $('#returnrequests-grid').data('kendoGrid');
-                                        grid.dataSource.page(1); //new search. Set page size to 1
-                                        //grid.dataSource.read(); we already loaded the grid above using "page" function
-                                        return false;
-                                    });
-                            });
+                        .ready(function() {
+                            $('#search-returnrequests')
+                                .click(function() {
+                                    var grid = $('#returnrequests-grid').data('kendoGrid');
+                                    grid.dataSource.page(1); //new search. Set page size to 1
+                                    //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                    return false;
+                                });
+                        });
 
                         function additionalData() {
                             var data = {
@@ -192,7 +195,6 @@
                             return data;
                         }
                     </script>
-
                 </div>
             </div>
         </div>
