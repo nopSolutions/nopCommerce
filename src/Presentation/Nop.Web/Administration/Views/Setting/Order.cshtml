@@ -159,8 +159,8 @@
                         @Html.NopLabelFor(model => model.MinOrderSubtotalAmount)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.MinOrderSubtotalAmount)
-                        @Html.ValidationMessageFor(model => model.MinOrderSubtotalAmount) @Model.PrimaryStoreCurrencyCode
+                        @Html.NopEditorFor(model => model.MinOrderSubtotalAmount, Model.PrimaryStoreCurrencyCode)
+                        @Html.ValidationMessageFor(model => model.MinOrderSubtotalAmount)
                     </div>
                 </div>
                 <div class="form-group advanced-setting">
@@ -179,8 +179,8 @@
                         @Html.NopLabelFor(model => model.MinOrderTotalAmount)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.MinOrderTotalAmount)
-                        @Html.ValidationMessageFor(model => model.MinOrderTotalAmount) @Model.PrimaryStoreCurrencyCode
+                        @Html.NopEditorFor(model => model.MinOrderTotalAmount, Model.PrimaryStoreCurrencyCode)
+                        @Html.ValidationMessageFor(model => model.MinOrderTotalAmount)
                     </div>
                 </div>
                 <div class="form-group advanced-setting">

@@ -99,7 +99,7 @@
                     @Html.NopLabelFor(model => model.From)
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.From) [@Model.BaseWeightIn]
+                    @Html.NopEditorFor(model => model.From, Model.BaseWeightIn)
                     @Html.ValidationMessageFor(model => model.From)
                 </div>
             </div>
@@ -108,7 +108,7 @@
                     @Html.NopLabelFor(model => model.To)
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.To) [@Model.BaseWeightIn]
+                    @Html.NopEditorFor(model => model.To, Model.BaseWeightIn)
                     @Html.ValidationMessageFor(model => model.To)
                 </div>
             </div>
@@ -117,7 +117,7 @@
                     @Html.NopLabelFor(model => model.AdditionalFixedCost)
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.AdditionalFixedCost) [@Model.PrimaryStoreCurrencyCode]
+                    @Html.NopEditorFor(model => model.AdditionalFixedCost, Model.PrimaryStoreCurrencyCode)
                     @Html.ValidationMessageFor(model => model.AdditionalFixedCost)
                 </div>
             </div>
@@ -135,7 +135,7 @@
                     @Html.NopLabelFor(model => model.RatePerWeightUnit)
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.RatePerWeightUnit) [@Model.PrimaryStoreCurrencyCode]
+                    @Html.NopEditorFor(model => model.RatePerWeightUnit, Model.PrimaryStoreCurrencyCode)
                     @Html.ValidationMessageFor(model => model.RatePerWeightUnit)
                 </div>
             </div>

@@ -939,7 +939,7 @@
                             @Html.NopLabelFor(model => model.Price)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.Price) [@Model.PrimaryStoreCurrencyCode]
+                            @Html.NopEditorFor(model => model.Price, Model.PrimaryStoreCurrencyCode)
                             @Html.ValidationMessageFor(model => model.Price)
                         </div>
                     </div>
@@ -948,7 +948,7 @@
                             @Html.NopLabelFor(model => model.OldPrice)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.OldPrice) [@Model.PrimaryStoreCurrencyCode]
+                            @Html.NopEditorFor(model => model.OldPrice, Model.PrimaryStoreCurrencyCode)
                             @Html.ValidationMessageFor(model => model.OldPrice)
                         </div>
                     </div>
@@ -957,7 +957,7 @@
                             @Html.NopLabelFor(model => model.ProductCost)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.ProductCost) [@Model.PrimaryStoreCurrencyCode]
+                            @Html.NopEditorFor(model => model.ProductCost, Model.PrimaryStoreCurrencyCode)
                             @Html.ValidationMessageFor(model => model.ProductCost)
                         </div>
                     </div>
@@ -1020,7 +1020,7 @@
                             @Html.NopLabelFor(model => model.MinimumCustomerEnteredPrice)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.MinimumCustomerEnteredPrice) [@Model.PrimaryStoreCurrencyCode]
+                            @Html.NopEditorFor(model => model.MinimumCustomerEnteredPrice, Model.PrimaryStoreCurrencyCode)
                             @Html.ValidationMessageFor(model => model.MinimumCustomerEnteredPrice)
                         </div>
                     </div>
@@ -1029,7 +1029,7 @@
                             @Html.NopLabelFor(model => model.MaximumCustomerEnteredPrice)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.MaximumCustomerEnteredPrice) [@Model.PrimaryStoreCurrencyCode]
+                            @Html.NopEditorFor(model => model.MaximumCustomerEnteredPrice, Model.PrimaryStoreCurrencyCode)
                             @Html.ValidationMessageFor(model => model.MaximumCustomerEnteredPrice)
                         </div>
                     </div>
@@ -1682,7 +1682,7 @@
                             @Html.NopLabelFor(model => model.Weight)
                         </div>
                         <div class="@rightColumnClass">
-                            @Html.NopEditorFor(model => model.Weight) [@Model.BaseWeightIn]
+                            @Html.NopEditorFor(model => model.Weight, Model.BaseWeightIn)
                             @Html.ValidationMessageFor(model => model.Weight)
                         </div>
                     </div>
@@ -1691,7 +1691,7 @@
                             @Html.NopLabelFor(model => model.Length)
                         </div>
                         <div class="@rightColumnClass">
-                            @Html.NopEditorFor(model => model.Length) [@Model.BaseDimensionIn]
+                            @Html.NopEditorFor(model => model.Length, Model.BaseDimensionIn)
                             @Html.ValidationMessageFor(model => model.Length)
                         </div>
                     </div>
@@ -1700,7 +1700,7 @@
                             @Html.NopLabelFor(model => model.Width)
                         </div>
                         <div class="@rightColumnClass">
-                            @Html.NopEditorFor(model => model.Width) [@Model.BaseDimensionIn]
+                            @Html.NopEditorFor(model => model.Width, Model.BaseDimensionIn)
                             @Html.ValidationMessageFor(model => model.Width)
                         </div>
                     </div>
@@ -1709,7 +1709,7 @@
                             @Html.NopLabelFor(model => model.Height)
                         </div>
                         <div class="@rightColumnClass">
-                            @Html.NopEditorFor(model => model.Height) [@Model.BaseDimensionIn]
+                            @Html.NopEditorFor(model => model.Height, Model.BaseDimensionIn)
                             @Html.ValidationMessageFor(model => model.Height)
                         </div>
                     </div>
@@ -1736,7 +1736,7 @@
                             @Html.NopLabelFor(model => model.AdditionalShippingCharge)
                         </div>
                         <div class="@rightColumnClass">
-                            @Html.NopEditorFor(model => model.AdditionalShippingCharge) [@Model.PrimaryStoreCurrencyCode]
+                            @Html.NopEditorFor(model => model.AdditionalShippingCharge, Model.PrimaryStoreCurrencyCode)
                             @Html.ValidationMessageFor(model => model.AdditionalShippingCharge)
                         </div>
                     </div>
