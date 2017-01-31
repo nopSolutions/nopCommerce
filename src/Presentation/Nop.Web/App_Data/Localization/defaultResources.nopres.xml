@@ -2406,6 +2406,21 @@
   <LocaleResource Name="Admin.Catalog.ProductReviews.List.CreatedOnTo.Hint">
     <Value>The creation to date for the search.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchApproved">
+    <Value>Approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchApproved.Hint">
+    <Value>Search by a "Approved" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchApproved.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchApproved.ApprovedOnly">
+    <Value>Approved only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchApproved.DisapprovedOnly">
+    <Value>Disapproved only</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchStore">
     <Value>Store</Value>
   </LocaleResource>
@@ -8037,6 +8052,21 @@
   <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.CreatedOnTo.Hint">
     <Value>The creation to date for the search.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchApproved">
+    <Value>Approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchApproved.Hint">
+    <Value>Search by a "Approved" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchApproved.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchApproved.ApprovedOnly">
+    <Value>Approved only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchApproved.DisapprovedOnly">
+    <Value>Disapproved only</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchText">
     <Value>Message</Value>
   </LocaleResource>
@@ -8327,6 +8357,21 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.Comments.List.CreatedOnTo.Hint">
     <Value>The creation to date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchApproved">
+    <Value>Approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchApproved.Hint">
+    <Value>Search by a "Approved" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchApproved.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchApproved.ApprovedOnly">
+    <Value>Approved only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchApproved.DisapprovedOnly">
+    <Value>Disapproved only</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchText">
     <Value>Message</Value>

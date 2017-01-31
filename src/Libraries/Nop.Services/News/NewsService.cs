@@ -172,14 +172,18 @@ namespace Nop.Services.News
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="newsItemId">News item ID; 0 or null to load all records</param>
+        /// <param name="approved">A value indicating whether to content is approved; null to load all records</param> 
         /// <param name="fromUtc">Item creation from; null to load all records</param>
         /// <param name="toUtc">Item creation to; null to load all records</param>
-        /// <param name="commentText">Search comment text or comment title; null to load all records</param>
+        /// <param name="commentText">Search comment text; null to load all records</param>
         /// <returns>Comments</returns>
         public virtual IList<NewsComment> GetAllComments(int customerId = 0, int storeId = 0, int? newsItemId = null,
-            DateTime? fromUtc = null, DateTime? toUtc = null, string commentText = null)
+            bool? approved = null, DateTime? fromUtc = null, DateTime? toUtc = null, string commentText = null)
         {
             var query = _newsCommentRepository.Table;
+
+            if (approved.HasValue)
+                query = query.Where(comment => comment.IsApproved == approved);
 
             if (newsItemId > 0)
                 query = query.Where(comment => comment.NewsItemId == newsItemId);

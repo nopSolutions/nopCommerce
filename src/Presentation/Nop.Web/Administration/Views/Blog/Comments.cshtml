@@ -57,6 +57,14 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.SearchApprovedId)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopDropDownList("SearchApprovedId", Model.AvailableApprovedOptions)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
                                     @Html.NopLabelFor(model => model.SearchText)
                                 </div>
                                 <div class="col-md-8">
@@ -359,7 +367,8 @@
                             var data = {
                                 CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
                                 CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
-                                SearchText: $('#@Html.FieldIdFor(model => model.SearchText)').val()
+                                SearchText: $('#@Html.FieldIdFor(model => model.SearchText)').val(),
+                                SearchApprovedId: $('#SearchApprovedId').val()
                             };
                             addAntiForgeryToken(data);
                             return data;

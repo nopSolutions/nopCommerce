@@ -66,12 +66,13 @@ namespace Nop.Services.News
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="newsItemId">News item ID; 0 or null to load all records</param>
+        /// <param name="approved">A value indicating whether to content is approved; null to load all records</param> 
         /// <param name="fromUtc">Item creation from; null to load all records</param>
         /// <param name="toUtc">Item creation to; null to load all records</param>
         /// <param name="commentText">Search comment text; null to load all records</param>
         /// <returns>Comments</returns>
         IList<NewsComment> GetAllComments(int customerId = 0, int storeId = 0, int? newsItemId = null,
-            DateTime? fromUtc = null, DateTime? toUtc = null, string commentText = null);
+            bool? approved = null, DateTime? fromUtc = null, DateTime? toUtc = null, string commentText = null);
 
         /// <summary>
         /// Gets a news comment
