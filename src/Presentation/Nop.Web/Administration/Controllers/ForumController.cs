@@ -9,6 +9,7 @@ using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -103,6 +104,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [PublicAntiForgery]
         public ActionResult CreateForumGroup(ForumGroupModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
@@ -139,6 +141,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [PublicAntiForgery]
         public ActionResult CreateForum(ForumModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
@@ -183,6 +186,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [PublicAntiForgery]
         public ActionResult EditForumGroup(ForumGroupModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
@@ -227,6 +231,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [PublicAntiForgery]
         public ActionResult EditForum(ForumModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
@@ -261,6 +266,7 @@ namespace Nop.Admin.Controllers
         #region Delete
 
         [HttpPost]
+        [PublicAntiForgery]
         public ActionResult DeleteForumGroup(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
@@ -278,6 +284,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
+        [PublicAntiForgery]
         public ActionResult DeleteForum(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
