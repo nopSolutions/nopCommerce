@@ -69,6 +69,9 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PasswordMinLength")]
             public int PasswordMinLength { get; set; }
 
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UnduplicatedPasswordsNumber")]
+            public int UnduplicatedPasswordsNumber { get; set; }
+
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PasswordRecoveryLinkDaysValid")]
             public int PasswordRecoveryLinkDaysValid { get; set; }
 

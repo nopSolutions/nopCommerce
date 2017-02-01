@@ -1577,6 +1577,15 @@ set @resources='
   <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.PassPurchasedItems.Hint">
     <Value>Check to pass information about purchased items to PayPal.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UnduplicatedPasswordsNumber">
+    <Value>Unduplicated passwords number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UnduplicatedPasswordsNumber.Hint">
+    <Value>Specify the number of customer passwords that mustn''t be the same as the previous one, enter 0 if the customer can use the same password time after time.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.ChangePassword.Errors.PasswordMatchesWithPrevious">
+    <Value>You entered the password that is the same as one of the last passwords you used. Please create a new password.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3986,5 +3995,75 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.customorde
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'ordersettings.customordernumbermask', N'{ID}', 0)
+END
+GO
+
+ --new table
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CustomerPassword]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[CustomerPassword]
+    (
+		[Id] int IDENTITY(1,1) NOT NULL,
+        [CustomerId] int NOT NULL,
+		[Password] NVARCHAR (MAX) NULL,
+        [PasswordFormatId] INT NOT NULL,
+        [PasswordSalt] NVARCHAR (MAX) NULL,
+		[CreatedOnUtc] datetime NOT NULL
+		PRIMARY KEY CLUSTERED 
+		(
+			[Id] ASC
+		) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+	)
+END
+GO
+
+IF EXISTS (SELECT 1 FROM sys.objects WHERE name = 'CustomerPassword_Customer' AND parent_object_id = Object_id('CustomerPassword') AND Objectproperty(object_id, N'IsForeignKey') = 1)
+BEGIN
+    ALTER TABLE [dbo].CustomerPassword
+    DROP CONSTRAINT CustomerPassword_Customer
+END
+GO
+
+ALTER TABLE [dbo].[CustomerPassword] WITH CHECK ADD CONSTRAINT [CustomerPassword_Customer] FOREIGN KEY([CustomerId])
+REFERENCES [dbo].[Customer] ([Id])
+ON DELETE CASCADE
+GO
+
+--move customer passwords into a new table
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and (NAME='Password' or NAME='PasswordFormatId' or NAME='PasswordSalt'))
+BEGIN
+    EXEC('
+        INSERT INTO [dbo].[CustomerPassword]([CustomerId], [Password], [PasswordFormatId], [PasswordSalt], [CreatedOnUtc])
+        SELECT [Id], [Password], [PasswordFormatId], [PasswordSalt], [CreatedOnUtc]
+        FROM [dbo].[Customer]')
+END
+GO
+
+--drop column
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='Password')
+BEGIN
+	ALTER TABLE [Customer] DROP COLUMN [Password]
+END
+GO
+
+--drop column
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='PasswordFormatId')
+BEGIN
+	ALTER TABLE [Customer] DROP COLUMN [PasswordFormatId]
+END
+GO
+
+--drop column
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='PasswordSalt')
+BEGIN
+	ALTER TABLE [Customer] DROP COLUMN [PasswordSalt]
+END
+GO
+
+ --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.unduplicatedpasswordsnumber')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.unduplicatedpasswordsnumber', N'4', 0)
 END
 GO

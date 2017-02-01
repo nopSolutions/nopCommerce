@@ -2070,16 +2070,16 @@ namespace Nop.Admin.Controllers
                     _orderService.UpdateOrder(order);
                 }
 
-                //update user information
-                //optimization - load only users with PasswordFormat.Encrypted
-                var customers = _customerService.GetAllCustomersByPasswordFormat(PasswordFormat.Encrypted);
-                foreach (var customer in customers)
+                //update password information
+                //optimization - load only passwords with PasswordFormat.Encrypted
+                var customerPasswords = _customerService.GetCustomerPasswords(passwordFormat: PasswordFormat.Encrypted);
+                foreach (var customerPassword in customerPasswords)
                 {
-                    string decryptedPassword = _encryptionService.DecryptText(customer.Password, oldEncryptionPrivateKey);
-                    string encryptedPassword = _encryptionService.EncryptText(decryptedPassword, newEncryptionPrivateKey);
+                    var decryptedPassword = _encryptionService.DecryptText(customerPassword.Password, oldEncryptionPrivateKey);
+                    var encryptedPassword = _encryptionService.EncryptText(decryptedPassword, newEncryptionPrivateKey);
 
-                    customer.Password = encryptedPassword;
-                    _customerService.UpdateCustomer(customer);
+                    customerPassword.Password = encryptedPassword;
+                    _customerService.UpdateCustomerPassword(customerPassword);
                 }
 
                 securitySettings.EncryptionKey = newEncryptionPrivateKey;

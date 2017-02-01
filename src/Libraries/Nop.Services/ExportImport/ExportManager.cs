@@ -40,6 +40,7 @@ namespace Nop.Services.ExportImport
 
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly ICustomerService _customerService;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IPictureService _pictureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
@@ -61,6 +62,7 @@ namespace Nop.Services.ExportImport
 
         public ExportManager(ICategoryService categoryService,
             IManufacturerService manufacturerService,
+            ICustomerService customerService,
             IProductAttributeService productAttributeService,
             IPictureService pictureService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
@@ -78,6 +80,7 @@ namespace Nop.Services.ExportImport
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
+            this._customerService = customerService;
             this._productAttributeService = productAttributeService;
             this._pictureService = pictureService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
@@ -1282,9 +1285,9 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer>("CustomerGuid", p => p.CustomerGuid),
                 new PropertyByName<Customer>("Email", p => p.Email),
                 new PropertyByName<Customer>("Username", p => p.Username),
-                new PropertyByName<Customer>("Password", p => p.Password),
-                new PropertyByName<Customer>("PasswordFormatId", p => p.PasswordFormatId),
-                new PropertyByName<Customer>("PasswordSalt", p => p.PasswordSalt),
+                new PropertyByName<Customer>("Password", p => _customerService.GetCurrentPassword(p.Id).Return(password => password.Password, null)),
+                new PropertyByName<Customer>("PasswordFormatId", p => _customerService.GetCurrentPassword(p.Id).Return(password => password.PasswordFormatId, 0)),
+                new PropertyByName<Customer>("PasswordSalt", p => _customerService.GetCurrentPassword(p.Id).Return(password => password.PasswordSalt, null)),
                 new PropertyByName<Customer>("IsTaxExempt", p => p.IsTaxExempt),
                 new PropertyByName<Customer>("AffiliateId", p => p.AffiliateId),
                 new PropertyByName<Customer>("VendorId", p => p.VendorId),
@@ -1339,9 +1342,12 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("CustomerGuid", null, customer.CustomerGuid.ToString());
                 xmlWriter.WriteElementString("Email", null, customer.Email);
                 xmlWriter.WriteElementString("Username", null, customer.Username);
-                xmlWriter.WriteElementString("Password", null, customer.Password);
-                xmlWriter.WriteElementString("PasswordFormatId", null, customer.PasswordFormatId.ToString());
-                xmlWriter.WriteElementString("PasswordSalt", null, customer.PasswordSalt);
+
+                var customerPassword = _customerService.GetCurrentPassword(customer.Id);
+                xmlWriter.WriteElementString("Password", null, customerPassword.Return(password => password.Password, null));
+                xmlWriter.WriteElementString("PasswordFormatId", null, customerPassword.Return(password => password.PasswordFormatId, 0).ToString());
+                xmlWriter.WriteElementString("PasswordSalt", null, customerPassword.Return(password => password.PasswordSalt, null));
+
                 xmlWriter.WriteElementString("IsTaxExempt", null, customer.IsTaxExempt.ToString());
                 xmlWriter.WriteElementString("AffiliateId", null, customer.AffiliateId.ToString());
                 xmlWriter.WriteElementString("VendorId", null, customer.VendorId.ToString());

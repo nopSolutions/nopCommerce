@@ -84,6 +84,9 @@
   <LocaleResource Name="Account.ChangePassword.Errors.PasswordIsNotProvided">
     <Value>Password is not entered</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.ChangePassword.Errors.PasswordMatchesWithPrevious">
+    <Value>You entered the password that is the same as one of the last passwords you used. Please create a new password.</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.ChangePassword.Fields.ConfirmNewPassword">
     <Value>Confirm password</Value>
   </LocaleResource>
@@ -5759,6 +5762,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StreetAddressRequired.Hint">
     <Value>Check if 'Street address' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UnduplicatedPasswordsNumber">
+    <Value>Unduplicated passwords number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UnduplicatedPasswordsNumber.Hint">
+    <Value>Specify the number of customer passwords that mustn't be the same as the previous one, enter 0 if the customer can use the same password time after time.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernamesEnabled">
     <Value>'Usernames' enabled</Value>
