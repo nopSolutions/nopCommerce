@@ -77,7 +77,10 @@ namespace Nop.Admin.Models.Settings
 
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.DefaultPasswordFormat")]
             public int DefaultPasswordFormat { get; set; }
-            
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PasswordLifetime")]
+            public int PasswordLifetime { get; set; }
+
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.FailedPasswordAllowedAttempts")]
             public int FailedPasswordAllowedAttempts { get; set; }
 

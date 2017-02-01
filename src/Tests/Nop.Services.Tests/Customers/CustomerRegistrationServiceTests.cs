@@ -177,7 +177,7 @@ namespace Nop.Services.Tests.Customers
             _customerRegistrationService = new CustomerRegistrationService(_customerService,
                 _encryptionService, _newsLetterSubscriptionService, _localizationService,
                 _storeService, _rewardPointService, _workContext, _genericAttributeService,
-                _workflowMessageService, _rewardPointsSettings, _customerSettings);
+                _workflowMessageService, _eventPublisher, _rewardPointsSettings, _customerSettings);
         }
 
         //[Test]

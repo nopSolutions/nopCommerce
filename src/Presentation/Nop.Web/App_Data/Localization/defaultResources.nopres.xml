@@ -111,6 +111,9 @@
   <LocaleResource Name="Account.ChangePassword.Fields.OldPassword.Required">
     <Value>Old password is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.ChangePassword.PasswordIsExpired">
+    <Value>Your password has expired, please create a new one</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.ChangePassword.Success">
     <Value>Password was changed</Value>
   </LocaleResource>
@@ -5679,6 +5682,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NotifyNewCustomerRegistration.Hint">
     <Value>Notify the store owner when a new customer is registered.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordLifetime">
+    <Value>Password lifetime</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordLifetime.Hint">
+    <Value>Specify number of days for password expiration. Don't forget to check "EnablePasswordLifetime" property on customer role edit page for those roles, who will have to change passwords.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMinLength">
     <Value>Password minimum length</Value>
   </LocaleResource>
@@ -8972,6 +8981,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.Active.Hint">
     <Value>Check to make this role active.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.EnablePasswordLifetime">
+    <Value>Enable password lifetime</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.EnablePasswordLifetime.Hint">
+    <Value>Check to force customers to change their passwords after a specified time.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.FreeShipping">
     <Value>Free shipping</Value>

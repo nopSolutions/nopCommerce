@@ -172,6 +172,7 @@
     <Compile Include="Seo\CustomUrlRecordEntityNameRequested.cs" />
     <Compile Include="Seo\WwwRequirementAttribute.cs" />
     <Compile Include="Security\AdminAntiForgeryAttribute.cs" />
+    <Compile Include="ValidatePasswordAttribute.cs" />
     <Compile Include="Validators\BaseNopValidator.cs" />
     <Compile Include="WebStoreContext.cs" />
     <Compile Include="StoreIpAddressAttribute.cs" />

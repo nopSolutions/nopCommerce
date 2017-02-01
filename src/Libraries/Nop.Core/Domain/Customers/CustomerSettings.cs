@@ -38,6 +38,10 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a number of days for password recovery link. Set to 0 if it doesn't expire.
         /// </summary>
         public int PasswordRecoveryLinkDaysValid { get; set; }
+        /// <summary>
+        /// Gets or sets a number of days for password expiration
+        /// </summary>
+        public int PasswordLifetime { get; set; }
 
         /// <summary>
         /// Gets or sets maximum login failures to lockout account. Set 0 to disable this feature

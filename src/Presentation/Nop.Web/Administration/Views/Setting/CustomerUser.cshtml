@@ -207,6 +207,15 @@
                 </div>
                 <div class="form-group advanced-setting">
                     <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.PasswordLifetime)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.PasswordLifetime)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.PasswordLifetime)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.PasswordRecoveryLinkDaysValid)
                     </div>
                     <div class="col-md-9">

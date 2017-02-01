@@ -30,6 +30,9 @@ namespace Nop.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.SystemName")]
         public string SystemName { get; set; }
 
+        [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.EnablePasswordLifetime")]
+        public bool EnablePasswordLifetime { get; set; }
+
         [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct")]
         public int PurchasedWithProductId { get; set; }
 

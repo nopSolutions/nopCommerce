@@ -6027,6 +6027,7 @@ namespace Nop.Services.Installation
                 PasswordMinLength = 6,
                 UnduplicatedPasswordsNumber = 4,
                 PasswordRecoveryLinkDaysValid = 7,
+                PasswordLifetime = 90,
                 FailedPasswordAllowedAttempts = 0,
                 FailedPasswordLockoutMinutes = 30,
                 UserRegistrationType = UserRegistrationType.Standard,

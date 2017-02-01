@@ -53,4 +53,20 @@ namespace Nop.Core.Domain.Customers
         }
     }
 
+    /// <summary>
+    /// Customer password changed event
+    /// </summary>
+    public class CustomerPasswordChangedEvent
+    {
+        public CustomerPasswordChangedEvent(CustomerPassword password)
+        {
+            this.Password = password;
+        }
+
+        /// <summary>
+        /// Customer password
+        /// </summary>
+        public CustomerPassword Password { get; private set; }
+    }
+
 }

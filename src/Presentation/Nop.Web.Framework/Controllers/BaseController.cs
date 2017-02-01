@@ -21,6 +21,7 @@ namespace Nop.Web.Framework.Controllers
     [StoreIpAddress]
     [CustomerLastActivity]
     [StoreLastVisitedPage]
+    [ValidatePassword]
     public abstract class BaseController : Controller
     {
         /// <summary>

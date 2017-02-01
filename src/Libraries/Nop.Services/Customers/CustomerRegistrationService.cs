@@ -3,6 +3,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Common;
+using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
@@ -27,6 +28,7 @@ namespace Nop.Services.Customers
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly CustomerSettings _customerSettings;
 
@@ -46,6 +48,7 @@ namespace Nop.Services.Customers
         /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="workContext">Work context</param>
         /// <param name="workflowMessageService">Workflow message service</param>
+        /// <param name="eventPublisher">Event publisher</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="customerSettings">Customer settings</param>
         public CustomerRegistrationService(ICustomerService customerService, 
@@ -57,6 +60,7 @@ namespace Nop.Services.Customers
             IWorkContext workContext,
             IGenericAttributeService genericAttributeService,
             IWorkflowMessageService workflowMessageService,
+            IEventPublisher eventPublisher,
             RewardPointsSettings rewardPointsSettings,
             CustomerSettings customerSettings)
         {
@@ -69,6 +73,7 @@ namespace Nop.Services.Customers
             this._genericAttributeService = genericAttributeService;
             this._workContext = workContext;
             this._workflowMessageService = workflowMessageService;
+            this._eventPublisher = eventPublisher;
             this._rewardPointsSettings = rewardPointsSettings;
             this._customerSettings = customerSettings;
         }
@@ -280,6 +285,10 @@ namespace Nop.Services.Customers
             }
 
             _customerService.UpdateCustomer(request.Customer);
+
+            //publish event
+            _eventPublisher.Publish(new CustomerPasswordChangedEvent(customerPassword));
+
             return result;
         }
         
@@ -360,6 +369,9 @@ namespace Nop.Services.Customers
                     break;
             }
             _customerService.InsertCustomerPassword(customerPassword);
+
+            //publish event
+            _eventPublisher.Publish(new CustomerPasswordChangedEvent(customerPassword));
 
             return result;
         }

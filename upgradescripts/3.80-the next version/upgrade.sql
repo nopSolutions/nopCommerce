@@ -1586,6 +1586,21 @@ set @resources='
   <LocaleResource Name="Account.ChangePassword.Errors.PasswordMatchesWithPrevious">
     <Value>You entered the password that is the same as one of the last passwords you used. Please create a new password.</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.ChangePassword.PasswordIsExpired">
+    <Value>Your password has expired, please create a new one</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordLifetime">
+    <Value>Password lifetime</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordLifetime.Hint">
+    <Value>Specify number of days for password expiration. Don''t forget to check "EnablePasswordLifetime" property on customer role edit page for those roles, who will have to change passwords.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.EnablePasswordLifetime">
+    <Value>Enable password lifetime</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.EnablePasswordLifetime.Hint">
+    <Value>Check to force customers to change their passwords after a specified time.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -4066,4 +4081,28 @@ BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'customersettings.unduplicatedpasswordsnumber', N'4', 0)
 END
+GO
+
+ --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.passwordlifetime')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.passwordlifetime', N'90', 0)
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[CustomerRole]') and NAME='EnablePasswordLifetime')
+BEGIN
+	ALTER TABLE [CustomerRole]
+	ADD [EnablePasswordLifetime] bit NULL
+END
+GO
+
+UPDATE [CustomerRole]
+SET [EnablePasswordLifetime] = 0
+WHERE [EnablePasswordLifetime] IS NULL
+GO
+
+ALTER TABLE [CustomerRole] ALTER COLUMN [EnablePasswordLifetime] bit NOT NULL
 GO

@@ -41,6 +41,11 @@ namespace Nop.Core.Domain.Customers
         public string SystemName { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the customers must change passwords after a specified time
+        /// </summary>
+        public bool EnablePasswordLifetime { get; set; }
+
+        /// <summary>
         /// Gets or sets a product identifier that is required by this customer role. 
         /// A customer is added to this customer role once a specified product is purchased.
         /// </summary>

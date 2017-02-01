@@ -1364,6 +1364,11 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             var model = _customerModelFactory.PrepareChangePasswordModel();
+
+            //display the cause of the change password 
+            if (_workContext.CurrentCustomer.PasswordIsExpired())
+                ModelState.AddModelError(string.Empty, _localizationService.GetResource("Account.ChangePassword.PasswordIsExpired"));
+
             return View(model);
         }
 
