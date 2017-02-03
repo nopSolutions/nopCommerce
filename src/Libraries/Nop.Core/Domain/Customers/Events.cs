@@ -18,6 +18,21 @@ namespace Nop.Core.Domain.Customers
             get; private set;
         }
     }
+    /// <summary>
+    /// "Customer is logged out" event
+    /// </summary>
+    public class CustomerLoggedOutEvent
+    {
+        public CustomerLoggedOutEvent(Customer customer)
+        {
+            this.Customer = customer;
+        }
+
+        /// <summary>
+        /// Get or set the customer
+        /// </summary>
+        public Customer Customer { get; private set; }
+    }
 
     /// <summary>
     /// Customer registered event

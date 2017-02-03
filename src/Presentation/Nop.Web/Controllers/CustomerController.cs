@@ -375,8 +375,12 @@ namespace Nop.Web.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("PublicStore.Logout", _localizationService.GetResource("ActivityLog.PublicStore.Logout"));
+            
             //standard logout 
             _authenticationService.SignOut();
+
+            //raise logged out event       
+            _eventPublisher.Publish(new CustomerLoggedOutEvent(_workContext.CurrentCustomer));
 
             //EU Cookie
             if (_storeInformationSettings.DisplayEuCookieLawWarning)
@@ -569,6 +573,9 @@ namespace Nop.Web.Controllers
             {
                 //Already registered customer. 
                 _authenticationService.SignOut();
+
+                //raise logged out event       
+                _eventPublisher.Publish(new CustomerLoggedOutEvent(_workContext.CurrentCustomer));
 
                 //Save a new record
                 _workContext.CurrentCustomer = _customerService.InsertGuestCustomer();
