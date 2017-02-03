@@ -203,7 +203,7 @@ namespace Nop.Admin.Controllers
         public ActionResult List(DataSourceRequest command, VendorListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var vendors = _vendorService.GetAllVendors(model.SearchName, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
@@ -443,7 +443,7 @@ namespace Nop.Admin.Controllers
         public ActionResult VendorNotesSelect(int vendorId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var vendor = _vendorService.GetVendorById(vendorId);
             if (vendor == null)

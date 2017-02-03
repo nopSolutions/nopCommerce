@@ -165,7 +165,7 @@ namespace Nop.Admin.Controllers
         public ActionResult List(DataSourceRequest command, MessageTemplateListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var messageTemplates = _messageTemplateService.GetAllMessageTemplates(model.SearchStoreId);
             var gridModel = new DataSourceResult

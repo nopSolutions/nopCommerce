@@ -148,7 +148,7 @@ namespace Nop.Admin.Controllers
         public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var languages = _languageService.GetAllLanguages(true);
             var gridModel = new DataSourceResult
@@ -353,7 +353,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Resources(int languageId, DataSourceRequest command, LanguageResourcesListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var query = _localizationService
                 .GetAllResourceValues(languageId)

@@ -120,7 +120,7 @@ namespace Nop.Admin.Controllers
         public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var payments = _orderService.SearchRecurringPayments(0, 0, 0, null, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
@@ -209,7 +209,7 @@ namespace Nop.Admin.Controllers
         public ActionResult HistoryList(int recurringPaymentId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var payment = _orderService.GetRecurringPaymentById(recurringPaymentId);
             if (payment == null)

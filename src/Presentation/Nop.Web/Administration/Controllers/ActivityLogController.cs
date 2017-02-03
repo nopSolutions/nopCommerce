@@ -107,7 +107,7 @@ namespace Nop.Admin.Controllers
         public ActionResult ListLogs(DataSourceRequest command, ActivityLogSearchModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             DateTime? startDateValue = (model.CreatedOnFrom == null) ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);

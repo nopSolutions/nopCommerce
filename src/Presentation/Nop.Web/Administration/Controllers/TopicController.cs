@@ -240,7 +240,7 @@ namespace Nop.Admin.Controllers
         public ActionResult List(DataSourceRequest command, TopicListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var topicModels = _topicService.GetAllTopics(model.SearchStoreId, true, true)
                 .Select(x =>x.ToModel())

@@ -126,7 +126,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Providers(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var shippingProvidersModel = new List<ShippingRateComputationMethodModel>();
             var shippingProviders = _shippingService.LoadAllShippingRateComputationMethods();
@@ -218,7 +218,7 @@ namespace Nop.Admin.Controllers
         public ActionResult PickupPointProviders(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var pickupPointProviderModel = new List<PickupPointProviderModel>();
             var allProviders = _shippingService.LoadAllPickupPointProviders();
@@ -309,7 +309,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Methods(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var shippingMethodsModel = _shippingService.GetAllShippingMethods()
                 .Select(x => x.ToModel())
@@ -438,7 +438,7 @@ namespace Nop.Admin.Controllers
         public ActionResult DeliveryDates(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var deliveryDatesModel = _dateRangeService.GetAllDeliveryDates().Select(x => x.ToModel()).ToList();
             var gridModel = new DataSourceResult
@@ -562,7 +562,7 @@ namespace Nop.Admin.Controllers
         public ActionResult ProductAvailabilityRanges(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var productAvailabilityRangesModel = _dateRangeService.GetAllProductAvailabilityRanges().Select(range => range.ToModel()).ToList();
             var gridModel = new DataSourceResult
@@ -695,7 +695,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Warehouses(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var warehousesModel = _shippingService.GetAllWarehouses()
                 .Select(x =>

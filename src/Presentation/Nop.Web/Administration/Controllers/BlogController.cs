@@ -151,7 +151,7 @@ namespace Nop.Admin.Controllers
         public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var blogPosts = _blogService.GetAllBlogPosts(0, 0, null, null, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
@@ -349,7 +349,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Comments(int? filterByBlogPostId, DataSourceRequest command, BlogCommentListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var createdOnFromValue = model.CreatedOnFrom == null ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);

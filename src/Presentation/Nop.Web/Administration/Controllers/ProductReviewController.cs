@@ -126,7 +126,7 @@ namespace Nop.Admin.Controllers
         public ActionResult List(DataSourceRequest command, ProductReviewListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             DateTime? createdOnFromValue = (model.CreatedOnFrom == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);

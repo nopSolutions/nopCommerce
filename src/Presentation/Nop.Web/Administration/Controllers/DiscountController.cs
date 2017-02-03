@@ -167,7 +167,7 @@ namespace Nop.Admin.Controllers
         public ActionResult List(DiscountListModel model, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             DiscountType? discountType = null;
             if (model.SearchDiscountTypeId > 0)
@@ -419,7 +419,7 @@ namespace Nop.Admin.Controllers
         public ActionResult ProductList(DataSourceRequest command, int discountId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
@@ -505,7 +505,7 @@ namespace Nop.Admin.Controllers
         public ActionResult ProductAddPopupList(DataSourceRequest command, DiscountModel.AddProductToDiscountModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var gridModel = new DataSourceResult();
             var products = _productService.SearchProducts(
@@ -566,7 +566,7 @@ namespace Nop.Admin.Controllers
         public ActionResult CategoryList(DataSourceRequest command, int discountId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
@@ -624,7 +624,7 @@ namespace Nop.Admin.Controllers
         public ActionResult CategoryAddPopupList(DataSourceRequest command, DiscountModel.AddCategoryToDiscountModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var categories = _categoryService.GetAllCategories(model.SearchCategoryName,
                 0, command.Page - 1, command.PageSize, true);
@@ -682,7 +682,7 @@ namespace Nop.Admin.Controllers
         public ActionResult ManufacturerList(DataSourceRequest command, int discountId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
@@ -740,7 +740,7 @@ namespace Nop.Admin.Controllers
         public ActionResult ManufacturerAddPopupList(DataSourceRequest command, DiscountModel.AddManufacturerToDiscountModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var manufacturers = _manufacturerService.GetAllManufacturers(model.SearchManufacturerName,
                 0, command.Page - 1, command.PageSize, true);
@@ -793,7 +793,7 @@ namespace Nop.Admin.Controllers
         public ActionResult UsageHistoryList(int discountId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)

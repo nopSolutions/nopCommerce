@@ -58,7 +58,7 @@ namespace Nop.Admin.Controllers
 		public ActionResult QueuedEmailList(DataSourceRequest command, QueuedEmailListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             DateTime? startDateValue = (model.SearchStartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SearchStartDate.Value, _dateTimeHelper.CurrentTimeZone);

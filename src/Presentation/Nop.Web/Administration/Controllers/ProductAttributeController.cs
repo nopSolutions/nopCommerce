@@ -104,7 +104,7 @@ namespace Nop.Admin.Controllers
         public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var productAttributes = _productAttributeService
                 .GetAllProductAttributes(command.Page - 1, command.PageSize);
@@ -249,7 +249,7 @@ namespace Nop.Admin.Controllers
         public ActionResult UsedByProducts(DataSourceRequest command, int productAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var orders = _productService.GetProductsByProductAtributeId(
                 productAttributeId: productAttributeId,
@@ -280,7 +280,7 @@ namespace Nop.Admin.Controllers
         public ActionResult PredefinedProductAttributeValueList(int productAttributeId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var values = _productAttributeService.GetPredefinedProductAttributeValues(productAttributeId);
             var gridModel = new DataSourceResult

@@ -56,7 +56,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Providers(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var taxProvidersModel = _taxService.LoadAllTaxProviders()
                 .Select(x => x.ToModel())
@@ -128,7 +128,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Categories(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var categoriesModel = _taxCategoryService.GetAllTaxCategories()
                 .Select(x => x.ToModel())

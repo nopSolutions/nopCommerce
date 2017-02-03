@@ -99,7 +99,7 @@ namespace Nop.Admin.Controllers
         public ActionResult GiftCardList(DataSourceRequest command, GiftCardListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             bool? isGiftCardActivated = null;
             if (model.ActivatedId == 1)
@@ -304,7 +304,7 @@ namespace Nop.Admin.Controllers
         public ActionResult UsageHistoryList(int giftCardId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var giftCard = _giftCardService.GetGiftCardById(giftCardId);
             if (giftCard == null)

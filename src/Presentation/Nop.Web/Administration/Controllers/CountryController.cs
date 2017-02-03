@@ -163,7 +163,7 @@ namespace Nop.Admin.Controllers
         public ActionResult CountryList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var countries = _countryService.GetAllCountries(showHidden: true);
             var gridModel = new DataSourceResult
@@ -369,7 +369,7 @@ namespace Nop.Admin.Controllers
         public ActionResult States(int countryId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var states = _stateProvinceService.GetStateProvincesByCountryId(countryId, showHidden: true);
 

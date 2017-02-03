@@ -54,9 +54,8 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult LogList(DataSourceRequest command, LogListModel model)
         {
-
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             DateTime? createdOnFromValue = (model.CreatedOnFrom == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);

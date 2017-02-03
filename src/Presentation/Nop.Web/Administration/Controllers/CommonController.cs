@@ -573,7 +573,7 @@ namespace Nop.Admin.Controllers
         public ActionResult BackupFiles(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var backupFiles = _maintenanceService.GetAllBackupFiles().ToList();
             
@@ -723,7 +723,7 @@ namespace Nop.Admin.Controllers
         public ActionResult SeNames(DataSourceRequest command, UrlRecordListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var urlRecords = _urlRecordService.GetAllUrlRecords(model.SeName, command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
@@ -814,7 +814,7 @@ namespace Nop.Admin.Controllers
         public ActionResult PopularSearchTermsReport(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var searchTermRecordLines = _searchTermService.GetStats(command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult

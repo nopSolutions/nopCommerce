@@ -167,7 +167,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
         public ActionResult ProductAddPopupList(DataSourceRequest command, RequirementModel.AddProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return Content("Access denied");
+                return ErrorForKendoGridJson("Access denied");
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)

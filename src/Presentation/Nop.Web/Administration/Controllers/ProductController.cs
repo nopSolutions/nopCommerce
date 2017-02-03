@@ -974,7 +974,7 @@ namespace Nop.Admin.Controllers
         public ActionResult ProductList(DataSourceRequest command, ProductListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1518,7 +1518,7 @@ namespace Nop.Admin.Controllers
         public ActionResult RequiredProductAddPopupList(DataSourceRequest command, ProductModel.AddRequiredProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1552,7 +1552,7 @@ namespace Nop.Admin.Controllers
         public ActionResult RelatedProductList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1681,7 +1681,7 @@ namespace Nop.Admin.Controllers
         public ActionResult RelatedProductAddPopupList(DataSourceRequest command, ProductModel.AddRelatedProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1756,7 +1756,7 @@ namespace Nop.Admin.Controllers
         public ActionResult CrossSellProductList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1858,7 +1858,7 @@ namespace Nop.Admin.Controllers
         public ActionResult CrossSellProductAddPopupList(DataSourceRequest command, ProductModel.AddCrossSellProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1932,7 +1932,7 @@ namespace Nop.Admin.Controllers
         public ActionResult AssociatedProductList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -2057,7 +2057,7 @@ namespace Nop.Admin.Controllers
         public ActionResult AssociatedProductAddPopupList(DataSourceRequest command, ProductModel.AddAssociatedProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -2176,7 +2176,7 @@ namespace Nop.Admin.Controllers
         public ActionResult ProductPictureList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -2339,7 +2339,7 @@ namespace Nop.Admin.Controllers
         public ActionResult ProductSpecAttrList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -2481,7 +2481,7 @@ namespace Nop.Admin.Controllers
         public ActionResult ProductTags(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var tags = _productTagService.GetAllProductTags()
                 //order by product count
@@ -2579,7 +2579,7 @@ namespace Nop.Admin.Controllers
         public ActionResult PurchasedWithOrders(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -2878,7 +2878,7 @@ namespace Nop.Admin.Controllers
         public ActionResult LowStockReportList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             int vendorId = 0;
             //a vendor should have access only to his products
@@ -2959,7 +2959,7 @@ namespace Nop.Admin.Controllers
         public ActionResult BulkEditSelect(DataSourceRequest command, BulkEditListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             int vendorId = 0;
             //a vendor should have access only to his products
@@ -3088,7 +3088,7 @@ namespace Nop.Admin.Controllers
         public ActionResult TierPriceList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -3332,7 +3332,7 @@ namespace Nop.Admin.Controllers
         public ActionResult ProductAttributeMappingList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -3881,7 +3881,7 @@ namespace Nop.Admin.Controllers
         public ActionResult ProductAttributeValueList(int productAttributeMappingId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var productAttributeMapping = _productAttributeService.GetProductAttributeMappingById(productAttributeMappingId);
             if (productAttributeMapping == null)
@@ -4302,7 +4302,7 @@ namespace Nop.Admin.Controllers
             ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -4393,7 +4393,7 @@ namespace Nop.Admin.Controllers
         public ActionResult ProductAttributeCombinationList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -4801,7 +4801,7 @@ namespace Nop.Admin.Controllers
         public ActionResult StockQuantityHistory(DataSourceRequest command, int productId, int warehouseId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var product = _productService.GetProductById(productId);
             if (product == null)

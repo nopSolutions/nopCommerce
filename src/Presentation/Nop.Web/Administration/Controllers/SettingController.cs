@@ -936,7 +936,7 @@ namespace Nop.Admin.Controllers
         public ActionResult SortOptionsList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var catalogSettings = _settingService.LoadSetting<CatalogSettings>();
             var model = new List<SortOptionModel>();
@@ -1200,7 +1200,7 @@ namespace Nop.Admin.Controllers
         public ActionResult ReturnRequestReasonList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var reasons = _returnRequestService.GetAllReturnRequestReasons();
             var gridModel = new DataSourceResult
@@ -1325,7 +1325,7 @@ namespace Nop.Admin.Controllers
         public ActionResult ReturnRequestActionList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var actions = _returnRequestService.GetAllReturnRequestActions();
             var gridModel = new DataSourceResult
@@ -2149,7 +2149,7 @@ namespace Nop.Admin.Controllers
         public ActionResult AllSettings(DataSourceRequest command, AllSettingsListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var query = _settingService.GetAllSettings().AsQueryable();
 

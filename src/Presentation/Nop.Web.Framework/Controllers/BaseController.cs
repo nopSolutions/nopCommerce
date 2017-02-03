@@ -9,6 +9,7 @@ using Nop.Services.Common;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Stores;
+using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.UI;
 
@@ -157,7 +158,20 @@ namespace Nop.Web.Framework.Controllers
             }
         }
 
+        /// <summary>
+        /// Error's json data for kendo grid
+        /// </summary>
+        /// <param name="errorMessage">Error message</param>
+        /// <returns>Error's json data</returns>
+        protected JsonResult ErrorForKendoGridJson(string errorMessage)
+        {
+            var gridModel = new DataSourceResult
+            {
+                Errors = errorMessage
+            };
 
+            return Json(gridModel);
+        }
 
         /// <summary>
         /// Display "Edit" (manage) link (in public store)

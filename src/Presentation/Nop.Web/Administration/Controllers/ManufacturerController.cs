@@ -307,7 +307,7 @@ namespace Nop.Admin.Controllers
         public ActionResult List(DataSourceRequest command, ManufacturerListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var manufacturers = _manufacturerService.GetAllManufacturers(model.SearchManufacturerName,
                 model.SearchStoreId, command.Page - 1, command.PageSize, true);
@@ -625,7 +625,7 @@ namespace Nop.Admin.Controllers
         public ActionResult ProductList(DataSourceRequest command, int manufacturerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var productManufacturers = _manufacturerService.GetProductManufacturersByManufacturerId(manufacturerId,
                 command.Page - 1, command.PageSize, true);
@@ -722,7 +722,7 @@ namespace Nop.Admin.Controllers
         public ActionResult ProductAddPopupList(DataSourceRequest command, ManufacturerModel.AddManufacturerProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var gridModel = new DataSourceResult();
             var products = _productService.SearchProducts(

@@ -70,7 +70,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Methods(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var paymentMethodsModel = new List<PaymentMethodModel>();
             var paymentMethods = _paymentService.LoadAllPaymentMethods();

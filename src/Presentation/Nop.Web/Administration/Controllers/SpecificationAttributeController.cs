@@ -94,7 +94,7 @@ namespace Nop.Admin.Controllers
         public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var specificationAttributes = _specificationAttributeService
                 .GetSpecificationAttributes(command.Page - 1, command.PageSize);
@@ -238,7 +238,7 @@ namespace Nop.Admin.Controllers
         public ActionResult OptionList(int specificationAttributeId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var options = _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(specificationAttributeId);
             var gridModel = new DataSourceResult

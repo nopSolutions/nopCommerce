@@ -154,7 +154,7 @@ namespace Nop.Admin.Controllers
         public ActionResult List(DataSourceRequest command, AffiliateListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var affiliates = _affiliateService.GetAllAffiliates(model.SearchFriendlyUrlName,
                 model.SearchFirstName, model.SearchLastName,
@@ -336,7 +336,7 @@ namespace Nop.Admin.Controllers
         public ActionResult AffiliatedOrderListGrid(DataSourceRequest command, AffiliatedOrderListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var affiliate = _affiliateService.GetAffiliateById(model.AffliateId);
             if (affiliate == null)
@@ -386,7 +386,7 @@ namespace Nop.Admin.Controllers
         public ActionResult AffiliatedCustomerList(int affiliateId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var affiliate = _affiliateService.GetAffiliateById(affiliateId);
             if (affiliate == null)
