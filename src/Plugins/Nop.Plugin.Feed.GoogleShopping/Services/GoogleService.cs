@@ -24,7 +24,7 @@ namespace Nop.Plugin.Feed.GoogleShopping.Services
 
         #endregion
 
-        #region Utilties
+        #region Utilities
 
         private string GetEmbeddedFileContent(string resourceName)
         {
