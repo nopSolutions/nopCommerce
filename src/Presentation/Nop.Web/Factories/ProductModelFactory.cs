@@ -30,13 +30,14 @@ using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
+using Nop.Services.Discounts;
 
 namespace Nop.Web.Factories
 {
     public partial class ProductModelFactory : IProductModelFactory
     {
         #region Fields
-        
+
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
@@ -239,7 +240,7 @@ namespace Nop.Web.Factories
                                     if (associatedProduct.HasTierPrices)
                                     {
                                         //calculate price for the maximum quantity if we have tier prices, and choose minimal
-                                        tmpMinPossiblePrice = Math.Min(tmpMinPossiblePrice, 
+                                        tmpMinPossiblePrice = Math.Min(tmpMinPossiblePrice,
                                             _priceCalculationService.GetFinalPrice(associatedProduct, _workContext.CurrentCustomer, quantity: int.MaxValue));
                                     }
 
@@ -341,10 +342,44 @@ namespace Nop.Web.Factories
                                 if (product.HasTierPrices)
                                 {
                                     //calculate price for the maximum quantity if we have tier prices, and choose minimal
-                                    minPossiblePrice = Math.Min(minPossiblePrice, 
+                                    minPossiblePrice = Math.Min(minPossiblePrice,
                                         _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, quantity: int.MaxValue));
                                 }
 
+                                //attributes "set"
+                                string attributesXml = "";
+                                var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+                                foreach (var attribute in attributes)
+                                {
+                                    if (attribute.ShouldHaveValues())
+                                    {
+                                        //values
+                                        var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
+
+                                        //creating XML for "read-only checkboxes" attributes
+                                        foreach (var selectedAttributeId in attributeValues
+                                        .Where(v => v.IsPreSelected)
+                                        .Select(v => v.Id)
+                                        .ToList())
+                                        {
+                                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                                attribute, selectedAttributeId.ToString());
+                                        }
+                                    }
+
+                                }
+                                //Get final price using attributes
+                                if (!string.IsNullOrEmpty(attributesXml))
+                                {
+                                    List<DiscountForCaching> scDiscounts;
+                                    decimal discountAmount;
+                                    minPossiblePrice = _priceCalculationService.GetUnitPrice(product,
+                                            _workContext.CurrentCustomer,
+                                            ShoppingCartType.ShoppingCart,
+                                            1, ref attributesXml, 0,
+                                            null, null,
+                                            true, out discountAmount, out scDiscounts);
+                                }
                                 decimal taxRate;
                                 decimal oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out taxRate);
                                 decimal finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
@@ -1192,7 +1227,7 @@ namespace Nop.Web.Factories
             {
                 model.ProductTags = PrepareProductTagModels(product);
             }
-            
+
            //pictures
             model.DefaultPictureZoomEnabled = _mediaSettings.DefaultPictureZoomEnabled;
             var pictureModels = PrepareProductDetailsPictureModel(product, isAssociatedProduct);
@@ -1233,7 +1268,8 @@ namespace Nop.Web.Factories
 
             //product attributes
             model.ProductAttributes = PrepareProductAttributeModels(product, updatecartitem);
-            
+
+
             //product specifications
             //do not prepare this model for the associated products. anyway it's not used
             if (!isAssociatedProduct)
@@ -1327,7 +1363,7 @@ namespace Nop.Web.Factories
 
             return model;
         }
-        
+
         public virtual CustomerProductReviewsModel PrepareCustomerProductReviewsModel(int? page)
         {
             var pageSize = _catalogSettings.ProductReviewsPageSizeOnAccountPage;
@@ -1447,7 +1483,6 @@ namespace Nop.Web.Factories
                 }).ToList()
             );
         }
-
         #endregion
     }
 }
