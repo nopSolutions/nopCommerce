@@ -133,7 +133,7 @@ namespace Nop.Admin.Controllers
 
             var model = new GiftCardModel();
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-
+           
             return View(model);
         }
 
@@ -177,6 +177,7 @@ namespace Nop.Admin.Controllers
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.PurchasedWithOrderNumber = giftCard.PurchasedWithOrderItem != null ? giftCard.PurchasedWithOrderItem.Order.CustomOrderNumber : null;
 
             return View(model);
         }
@@ -195,6 +196,7 @@ namespace Nop.Admin.Controllers
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.PurchasedWithOrderNumber = giftCard.PurchasedWithOrderItem != null ? giftCard.PurchasedWithOrderItem.Order.CustomOrderNumber : null;
 
             if (ModelState.IsValid)
             {
@@ -241,6 +243,7 @@ namespace Nop.Admin.Controllers
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.PurchasedWithOrderNumber = giftCard.PurchasedWithOrderItem != null ? giftCard.PurchasedWithOrderItem.Order.CustomOrderNumber : null;
 
             try
             {
@@ -316,7 +319,8 @@ namespace Nop.Admin.Controllers
                     Id = x.Id,
                     OrderId = x.UsedWithOrderId,
                     UsedValue = _priceFormatter.FormatPrice(x.UsedValue, true, false),
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
+                    CustomOrderNumber = x.UsedWithOrder.CustomOrderNumber
                 })
                 .ToList();
             var gridModel = new DataSourceResult

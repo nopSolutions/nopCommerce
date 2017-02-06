@@ -4,7 +4,7 @@
 
 @{
     //page title
-    ViewBag.Title = string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.OrderId);
+    ViewBag.Title = string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.CustomOrderNumber);
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Orders");
 
@@ -18,7 +18,7 @@
     @Html.AntiForgeryToken()
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.OrderId)
+            @string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.CustomOrderNumber)
             <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Orders.Shipments.BackToOrder").Text, "Edit", new { id = Model.OrderId })</small>
         </h1>
         <div class="pull-right">

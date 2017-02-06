@@ -10,8 +10,11 @@ namespace Nop.Admin.Models.Orders
         [NopResourceDisplayName("Admin.GiftCards.Fields.GiftCardType")]
         public int GiftCardTypeId { get; set; }
 
-        [NopResourceDisplayName("Admin.GiftCards.Fields.Order")]
+        [NopResourceDisplayName("Admin.GiftCards.Fields.OrderId")]
         public int? PurchasedWithOrderId { get; set; }
+
+        [NopResourceDisplayName("Admin.GiftCards.Fields.CustomOrderNumber")]
+        public string PurchasedWithOrderNumber { get; set; }
 
         [NopResourceDisplayName("Admin.GiftCards.Fields.Amount")]
         public decimal Amount { get; set; }
@@ -63,12 +66,14 @@ namespace Nop.Admin.Models.Orders
         {
             [NopResourceDisplayName("Admin.GiftCards.History.UsedValue")]
             public string UsedValue { get; set; }
-
-            [NopResourceDisplayName("Admin.GiftCards.History.Order")]
+            
             public int OrderId { get; set; }
 
             [NopResourceDisplayName("Admin.GiftCards.History.CreatedOn")]
             public DateTime CreatedOn { get; set; }
+
+            [NopResourceDisplayName("Admin.GiftCards.History.CustomOrderNumber")]
+            public string CustomOrderNumber { get; set; }
         }
 
         #endregion

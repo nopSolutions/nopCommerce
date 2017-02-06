@@ -10,7 +10,7 @@
 }
 <div class="page return-request-page">
     <div class="page-title">
-        <h1>@Html.Raw(string.Format(T("ReturnRequests.Title").Text, Url.RouteUrl("OrderDetails", new { orderId = Model.OrderId }), Model.OrderId))</h1>
+        <h1>@Html.Raw(string.Format(T("ReturnRequests.Title").Text, Url.RouteUrl("OrderDetails", new { orderId = Model.OrderId }), Model.CustomOrderNumber))</h1>
     </div>
     <div class="page-body">
         @if (!String.IsNullOrEmpty(Model.Result))

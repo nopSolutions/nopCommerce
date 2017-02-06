@@ -145,6 +145,33 @@
                 }
                 <div class="form-group advanced-setting">
                     <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.CustomOrderNumberMask_OverrideForStore, model => model.CustomOrderNumberMask, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.CustomOrderNumberMask)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomOrderNumberMask)
+                        @Html.ValidationMessageFor(model => model.CustomOrderNumberMask)
+                        <ul class="common-list">
+                            <li>
+                                @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.YYYY")
+                            </li>
+                            <li>
+                                @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.YY")
+                            </li>
+                            <li>
+                                @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.MM")
+                            </li>
+                            <li>
+                                @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.DD")
+                            </li>
+                            <li>
+                                @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.ID")
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.IsReOrderAllowed_OverrideForStore, model => model.IsReOrderAllowed, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.IsReOrderAllowed)
                     </div>

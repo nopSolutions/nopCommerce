@@ -681,6 +681,7 @@ namespace Nop.Web.Factories
                 {
                     OrderItemGuid = item.OrderItemGuid,
                     OrderId = item.OrderId,
+                    CustomOrderNumber = item.Order.CustomOrderNumber,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(item.Order.CreatedOnUtc, DateTimeKind.Utc),
                     ProductName = item.Product.GetLocalized(x => x.Name),
                     ProductSeName = item.Product.GetSeName(),

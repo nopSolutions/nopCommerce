@@ -434,7 +434,8 @@ namespace Nop.Web.Factories
             var model = new CheckoutCompletedModel
             {
                 OrderId = order.Id,
-                OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled
+                OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled,
+                CustomOrderNumber = order.CustomOrderNumber
             };
 
             return model;

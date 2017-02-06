@@ -335,6 +335,11 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
 
+        /// <summary>
+        /// Gets or sets the custom order number without prefix
+        /// </summary>
+        public string CustomOrderNumber { get; set; }
+
         #endregion
 
         #region Navigation properties

@@ -437,6 +437,7 @@ namespace Nop.Admin.Controllers
             model.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.OrderStatusId = order.OrderStatusId;
             model.OrderGuid = order.OrderGuid;
+            model.CustomOrderNumber = order.CustomOrderNumber;
             var store = _storeService.GetStoreById(order.StoreId);
             model.StoreName = store != null ? store.Name : "Unknown";
             model.CustomerId = order.CustomerId;
@@ -905,6 +906,7 @@ namespace Nop.Admin.Controllers
                 DeliveryDateUtc = shipment.DeliveryDateUtc,
                 CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue,
                 AdminComment = shipment.AdminComment,
+                CustomOrderNumber = shipment.Order.CustomOrderNumber
             };
 
             if (prepareProducts)
@@ -1061,7 +1063,7 @@ namespace Nop.Admin.Controllers
 
             //a vendor should have access only to orders with his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
-
+            
             return View(model);
         }
 
@@ -1127,7 +1129,8 @@ namespace Nop.Admin.Controllers
                         ShippingStatusId = x.ShippingStatusId,
                         CustomerEmail = x.BillingAddress.Email,
                         CustomerFullName = string.Format("{0} {1}", x.BillingAddress.FirstName, x.BillingAddress.LastName),
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
+                        CustomOrderNumber = x.CustomOrderNumber
                     };
                 }),
                 Total = orders.TotalCount
@@ -1179,15 +1182,16 @@ namespace Nop.Admin.Controllers
 				Data = gridModel
 			};
 		}
-        
+
         [HttpPost, ActionName("List")]
         [FormValueRequired("go-to-order-by-number")]
         public virtual ActionResult GoToOrderId(OrderListModel model)
         {
-            var order = _orderService.GetOrderById(model.GoDirectlyToNumber);
+            var order = _orderService.GetOrderByCustomOrderNumber(model.GoDirectlyToCustomOrderNumber);
+
             if (order == null)
                 return List();
-            
+
             return RedirectToAction("Edit", "Order", new { id = order.Id });
         }
 
@@ -3045,6 +3049,7 @@ namespace Nop.Admin.Controllers
             var model = new ShipmentModel
             {
                 OrderId = order.Id,
+                CustomOrderNumber = order.CustomOrderNumber
             };
 
             //measures
@@ -4334,7 +4339,9 @@ namespace Nop.Admin.Controllers
         [NonAction]
         protected virtual void LogEditOrder(int orderId)
         {
-            _customerActivityService.InsertActivity("EditOrder", _localizationService.GetResource("ActivityLog.EditOrder"), orderId);
+            var order = _orderService.GetOrderById(orderId);
+
+            _customerActivityService.InsertActivity("EditOrder", _localizationService.GetResource("ActivityLog.EditOrder"), order.CustomOrderNumber);
         }
 
         #endregion

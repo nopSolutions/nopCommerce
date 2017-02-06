@@ -259,7 +259,7 @@ namespace Nop.Services.Common
                 var anchor = new Anchor(store.Url.Trim(new [] { '/' }), font);
                 anchor.Reference = store.Url;
 
-                var cellHeader = new PdfPCell(new Phrase(String.Format(_localizationService.GetResource("PDFInvoice.Order#", lang.Id), order.Id), titleFont));
+                var cellHeader = new PdfPCell(new Phrase(String.Format(_localizationService.GetResource("PDFInvoice.Order#", lang.Id), order.CustomOrderNumber), titleFont));
                 cellHeader.Phrase.Add(new Phrase(Environment.NewLine));
                 cellHeader.Phrase.Add(new Phrase(anchor));
                 cellHeader.Phrase.Add(new Phrase(Environment.NewLine));
@@ -1031,7 +1031,7 @@ namespace Nop.Services.Common
                 addressTable.WidthPercentage = 100f;
 
                 addressTable.AddCell(new Paragraph(String.Format(_localizationService.GetResource("PDFPackagingSlip.Shipment", lang.Id), shipment.Id), titleFont));
-                addressTable.AddCell(new Paragraph(String.Format(_localizationService.GetResource("PDFPackagingSlip.Order", lang.Id), order.Id), titleFont));
+                addressTable.AddCell(new Paragraph(String.Format(_localizationService.GetResource("PDFPackagingSlip.Order", lang.Id), order.CustomOrderNumber), titleFont));
 
                 if (!order.PickUpInStore)
                 {

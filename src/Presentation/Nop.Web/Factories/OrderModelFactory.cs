@@ -124,7 +124,8 @@ namespace Nop.Web.Factories
                     OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
                     PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
                     ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
-                    IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order)
+                    IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order),
+                    CustomOrderNumber = order.CustomOrderNumber
                 };
                 var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
                 orderModel.OrderTotal = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage);
@@ -145,6 +146,7 @@ namespace Nop.Web.Factories
                     TotalCycles = recurringPayment.TotalCycles,
                     CyclesRemaining = recurringPayment.CyclesRemaining,
                     InitialOrderId = recurringPayment.InitialOrder.Id,
+                    InitialOrderNumber = recurringPayment.InitialOrder.CustomOrderNumber,
                     CanCancel = _orderProcessingService.CanCancelRecurringPayment(_workContext.CurrentCustomer, recurringPayment),
                     CanRetryLastPayment = _orderProcessingService.CanRetryLastRecurringPayment(_workContext.CurrentCustomer, recurringPayment)
                 };
@@ -167,6 +169,7 @@ namespace Nop.Web.Factories
             model.IsReOrderAllowed = _orderSettings.IsReOrderAllowed;
             model.IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order);
             model.PdfInvoiceDisabled = _pdfSettings.DisablePdfInvoicesForPendingOrders && order.OrderStatus == OrderStatus.Pending;
+            model.CustomOrderNumber = order.CustomOrderNumber;
 
             //shipping info
             model.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);

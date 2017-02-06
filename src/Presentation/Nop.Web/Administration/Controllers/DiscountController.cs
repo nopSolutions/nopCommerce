@@ -811,7 +811,8 @@ namespace Nop.Admin.Controllers
                         DiscountId = x.DiscountId,
                         OrderId = x.OrderId,
                         OrderTotal = order != null ? _priceFormatter.FormatPrice(order.OrderTotal, true, false) : "",
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
+                        CustomOrderNumber = x.Order.CustomOrderNumber
                     };
                     return duhModel;
                 }),

@@ -373,6 +373,8 @@ namespace Nop.Admin.Controllers
                         orderModel.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
                         orderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
                         orderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
+                        orderModel.CustomOrderNumber = order.CustomOrderNumber;
+
                         return orderModel;
                     }),
                 Total = orders.TotalCount

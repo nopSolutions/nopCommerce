@@ -83,6 +83,7 @@ namespace Nop.Admin.Controllers
                 model.ProductName = orderItem.Product.Name;
                 model.OrderId = orderItem.OrderId;
                 model.AttributeInfo = orderItem.AttributeDescription;
+                model.CustomOrderNumber = orderItem.Order.CustomOrderNumber;
             }
             model.Id = returnRequest.Id;
             model.CustomNumber = returnRequest.CustomNumber;

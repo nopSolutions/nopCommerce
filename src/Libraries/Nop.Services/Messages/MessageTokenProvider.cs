@@ -844,7 +844,7 @@ namespace Nop.Services.Messages
         /// <param name="vendorId">Vendor identifier</param>
         public virtual void AddOrderTokens(IList<Token> tokens, Order order, int languageId, int vendorId = 0)
         {
-            tokens.Add(new Token("Order.OrderNumber", order.Id));
+            tokens.Add(new Token("Order.OrderNumber", order.CustomOrderNumber));
 
             tokens.Add(new Token("Order.CustomerFullName", string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName)));
             tokens.Add(new Token("Order.CustomerEmail", order.BillingAddress.Email));

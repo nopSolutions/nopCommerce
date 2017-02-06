@@ -889,12 +889,12 @@
                                 type: "date",
                                 format: "{0:G}"
                             }, {
-                                field: "OrderId",
-                                title: "@T("Admin.Promotions.Discounts.History.Order")",
+                                field: "CustomOrderNumber",
+                                title: "@T("Admin.Promotions.Discounts.History.CustomOrderNumber")",
                                 width: 200,
                                 headerAttributes: { style: "text-align:center" },
                                 attributes: { style: "text-align:center" },
-                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#"><i class="fa fa-eye"></i>#=OrderId# - @T("Admin.Common.View")</a>'
+                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#"><i class="fa fa-eye"></i>#=CustomOrderNumber# - @T("Admin.Common.View")</a>'
                             }, {
                                 field: "OrderTotal",
                                 title: "@T("Admin.Promotions.Discounts.History.OrderTotal")",
