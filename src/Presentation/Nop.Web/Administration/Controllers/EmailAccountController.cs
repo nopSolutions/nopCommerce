@@ -42,7 +42,7 @@ namespace Nop.Admin.Controllers
             this._customerActivityService = customerActivityService;
         }
 
-		public ActionResult List()
+		public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
@@ -51,7 +51,7 @@ namespace Nop.Admin.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult List(DataSourceRequest command)
+		public virtual ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
@@ -74,7 +74,7 @@ namespace Nop.Admin.Controllers
 			};
 		}
 
-        public ActionResult MarkAsDefaultEmail(int id)
+        public virtual ActionResult MarkAsDefaultEmail(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
@@ -88,7 +88,7 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
-		public ActionResult Create()
+		public virtual ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
@@ -100,7 +100,7 @@ namespace Nop.Admin.Controllers
 		}
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-		public ActionResult Create(EmailAccountModel model, bool continueEditing)
+		public virtual ActionResult Create(EmailAccountModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
@@ -123,7 +123,7 @@ namespace Nop.Admin.Controllers
             return View(model);
 		}
 
-		public ActionResult Edit(int id)
+		public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
@@ -138,7 +138,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public ActionResult Edit(EmailAccountModel model, bool continueEditing)
+        public virtual ActionResult Edit(EmailAccountModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
@@ -166,7 +166,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("changepassword")]
-        public ActionResult ChangePassword(EmailAccountModel model)
+        public virtual ActionResult ChangePassword(EmailAccountModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
@@ -185,7 +185,7 @@ namespace Nop.Admin.Controllers
         
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("sendtestemail")]
-        public ActionResult SendTestEmail(EmailAccountModel model)
+        public virtual ActionResult SendTestEmail(EmailAccountModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
@@ -221,7 +221,7 @@ namespace Nop.Admin.Controllers
         }
 
 	    [HttpPost]
-	    public ActionResult Delete(int id)
+	    public virtual ActionResult Delete(int id)
 	    {
 	        if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
 	            return AccessDeniedView();

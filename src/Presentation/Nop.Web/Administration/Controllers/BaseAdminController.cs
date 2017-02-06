@@ -41,7 +41,7 @@ namespace Nop.Admin.Controllers
         /// Access denied view
         /// </summary>
         /// <returns>Access denied view</returns>
-        protected ActionResult AccessDeniedView()
+        protected virtual ActionResult AccessDeniedView()
         {
             //return new HttpUnauthorizedResult();
             return RedirectToAction("AccessDenied", "Security", new { pageUrl = this.Request.RawUrl });
@@ -52,7 +52,7 @@ namespace Nop.Admin.Controllers
         /// </summary>
         /// <param name="tabName">Tab name to save; empty to automatically detect it</param>
         /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request</param>
-        protected void SaveSelectedTabName(string tabName = "", bool persistForTheNextRequest = true)
+        protected virtual void SaveSelectedTabName(string tabName = "", bool persistForTheNextRequest = true)
         {
             //keep this method synchronized with
             //"GetSelectedTabName" method of \Nop.Web.Framework\HtmlExtensions.cs

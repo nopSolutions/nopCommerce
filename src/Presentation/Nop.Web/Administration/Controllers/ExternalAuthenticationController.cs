@@ -45,7 +45,7 @@ namespace Nop.Admin.Controllers
 
         #region Methods
 
-        public ActionResult Methods()
+        public virtual ActionResult Methods()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
@@ -54,7 +54,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Methods(DataSourceRequest command)
+        public virtual ActionResult Methods(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
@@ -78,7 +78,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult MethodUpdate([Bind(Exclude = "ConfigurationRouteValues")] AuthenticationMethodModel model)
+        public virtual ActionResult MethodUpdate([Bind(Exclude = "ConfigurationRouteValues")] AuthenticationMethodModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
@@ -111,7 +111,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public ActionResult ConfigureMethod(string systemName)
+        public virtual ActionResult ConfigureMethod(string systemName)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();

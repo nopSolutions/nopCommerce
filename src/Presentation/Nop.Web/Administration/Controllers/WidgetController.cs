@@ -45,12 +45,12 @@ namespace Nop.Admin.Controllers
         
         #region Methods
         
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
@@ -59,7 +59,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult List(DataSourceRequest command)
+        public virtual ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
@@ -83,7 +83,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult WidgetUpdate([Bind(Exclude = "ConfigurationRouteValues")] WidgetModel model)
+        public virtual ActionResult WidgetUpdate([Bind(Exclude = "ConfigurationRouteValues")] WidgetModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
@@ -117,7 +117,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
         
-        public ActionResult ConfigureWidget(string systemName)
+        public virtual ActionResult ConfigureWidget(string systemName)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
@@ -138,7 +138,7 @@ namespace Nop.Admin.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult WidgetsByZone(string widgetZone)
+        public virtual ActionResult WidgetsByZone(string widgetZone)
         {
             //model
             var model = new List<RenderWidgetModel>();

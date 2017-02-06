@@ -64,12 +64,12 @@ namespace Nop.Admin.Controllers
 
         #region Methods
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
                 return AccessDeniedView();
@@ -78,7 +78,7 @@ namespace Nop.Admin.Controllers
 		}
 
 		[HttpPost]
-        public ActionResult List(DataSourceRequest command)
+        public virtual ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
                 return AccessDeniedView();
@@ -96,7 +96,7 @@ namespace Nop.Admin.Controllers
 		}
 
         [HttpPost]
-        public ActionResult TaskUpdate(ScheduleTaskModel model)
+        public virtual ActionResult TaskUpdate(ScheduleTaskModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
                 return AccessDeniedView();
@@ -122,7 +122,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public ActionResult RunNow(int id)
+        public virtual ActionResult RunNow(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
                 return AccessDeniedView();

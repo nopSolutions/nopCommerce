@@ -40,7 +40,7 @@ namespace Nop.Admin.Controllers
 
         #region Activity log types
 
-        public ActionResult ListTypes()
+        public virtual ActionResult ListTypes()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
@@ -53,7 +53,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult SaveTypes(FormCollection form)
+        public virtual ActionResult SaveTypes(FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
@@ -76,10 +76,10 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Activity log
-        
-        public ActionResult ListLogs()
+
+        public virtual ActionResult ListLogs()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
@@ -104,7 +104,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ListLogs(DataSourceRequest command, ActivityLogSearchModel model)
+        public virtual ActionResult ListLogs(DataSourceRequest command, ActivityLogSearchModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
@@ -130,7 +130,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        public ActionResult AcivityLogDelete(int id)
+        public virtual ActionResult AcivityLogDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
@@ -148,7 +148,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public ActionResult ClearAll()
+        public virtual ActionResult ClearAll()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();

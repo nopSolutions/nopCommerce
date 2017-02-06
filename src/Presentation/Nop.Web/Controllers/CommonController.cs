@@ -101,7 +101,7 @@ namespace Nop.Web.Controllers
         #region Methods
 
         //page not found
-        public ActionResult PageNotFound()
+        public virtual ActionResult PageNotFound()
         {
             this.Response.StatusCode = 404;
             this.Response.TrySkipIisCustomErrors = true;
@@ -111,7 +111,7 @@ namespace Nop.Web.Controllers
 
         //logo
         [ChildActionOnly]
-        public ActionResult Logo()
+        public virtual ActionResult Logo()
         {
             var model = _commonModelFactory.PrepareLogoModel();
             return PartialView(model);
@@ -119,7 +119,7 @@ namespace Nop.Web.Controllers
 
         //language
         [ChildActionOnly]
-        public ActionResult LanguageSelector()
+        public virtual ActionResult LanguageSelector()
         {
             var model = _commonModelFactory.PrepareLanguageSelectorModel();
 
@@ -132,7 +132,7 @@ namespace Nop.Web.Controllers
         [StoreClosed(true)]
         //available even when navigation is not allowed
         [PublicStoreAllowNavigation(true)]
-        public ActionResult SetLanguage(int langid, string returnUrl = "")
+        public virtual ActionResult SetLanguage(int langid, string returnUrl = "")
         {
             var language = _languageService.GetLanguageById(langid);
             if (language != null && language.Published)
@@ -164,7 +164,7 @@ namespace Nop.Web.Controllers
 
         //currency
         [ChildActionOnly]
-        public ActionResult CurrencySelector()
+        public virtual ActionResult CurrencySelector()
         {
             var model = _commonModelFactory.PrepareCurrencySelectorModel();
             if (model.AvailableCurrencies.Count == 1)
@@ -174,7 +174,7 @@ namespace Nop.Web.Controllers
         }
         //available even when navigation is not allowed
         [PublicStoreAllowNavigation(true)]
-        public ActionResult SetCurrency(int customerCurrency, string returnUrl = "")
+        public virtual ActionResult SetCurrency(int customerCurrency, string returnUrl = "")
         {
             var currency = _currencyService.GetCurrencyById(customerCurrency);
             if (currency != null)
@@ -193,7 +193,7 @@ namespace Nop.Web.Controllers
 
         //tax type
         [ChildActionOnly]
-        public ActionResult TaxTypeSelector()
+        public virtual ActionResult TaxTypeSelector()
         {
             if (!_taxSettings.AllowCustomersToSelectTaxDisplayType)
                 return Content("");
@@ -203,7 +203,7 @@ namespace Nop.Web.Controllers
         }
         //available even when navigation is not allowed
         [PublicStoreAllowNavigation(true)]
-        public ActionResult SetTaxType(int customerTaxType, string returnUrl = "")
+        public virtual ActionResult SetTaxType(int customerTaxType, string returnUrl = "")
         {
             var taxDisplayType = (TaxDisplayType)Enum.ToObject(typeof(TaxDisplayType), customerTaxType);
             _workContext.TaxDisplayType = taxDisplayType;
@@ -221,7 +221,7 @@ namespace Nop.Web.Controllers
 
         //footer
         [ChildActionOnly]
-        public ActionResult JavaScriptDisabledWarning()
+        public virtual ActionResult JavaScriptDisabledWarning()
         {
             if (!_commonSettings.DisplayJavaScriptDisabledWarning)
                 return Content("");
@@ -231,13 +231,13 @@ namespace Nop.Web.Controllers
 
         //header links
         [ChildActionOnly]
-        public ActionResult HeaderLinks()
+        public virtual ActionResult HeaderLinks()
         {
             var model = _commonModelFactory.PrepareHeaderLinksModel();
             return PartialView(model);
         }
         [ChildActionOnly]
-        public ActionResult AdminHeaderLinks()
+        public virtual ActionResult AdminHeaderLinks()
         {
             var model = _commonModelFactory.PrepareAdminHeaderLinksModel();
             return PartialView(model);
@@ -246,7 +246,7 @@ namespace Nop.Web.Controllers
 
         //social
         [ChildActionOnly]
-        public ActionResult Social()
+        public virtual ActionResult Social()
         {
             var model = _commonModelFactory.PrepareSocialModel();
             return PartialView(model);
@@ -255,7 +255,7 @@ namespace Nop.Web.Controllers
 
         //footer
         [ChildActionOnly]
-        public ActionResult Footer()
+        public virtual ActionResult Footer()
         {
             var model = _commonModelFactory.PrepareFooterModel();
             return PartialView(model);
@@ -266,7 +266,7 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         //available even when a store is closed
         [StoreClosed(true)]
-        public ActionResult ContactUs()
+        public virtual ActionResult ContactUs()
         {
             var model = new ContactUsModel();
             model = _commonModelFactory.PrepareContactUsModel(model, false);
@@ -277,7 +277,7 @@ namespace Nop.Web.Controllers
         [CaptchaValidator]
         //available even when a store is closed
         [StoreClosed(true)]
-        public ActionResult ContactUsSend(ContactUsModel model, bool captchaValid)
+        public virtual ActionResult ContactUsSend(ContactUsModel model, bool captchaValid)
         {
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
@@ -346,7 +346,7 @@ namespace Nop.Web.Controllers
         }
         //contact vendor page
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult ContactVendor(int vendorId)
+        public virtual ActionResult ContactVendor(int vendorId)
         {
             if (!_vendorSettings.AllowCustomersToContactVendors)
                 return RedirectToRoute("HomePage");
@@ -362,7 +362,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("ContactVendor")]
         [PublicAntiForgery]
         [CaptchaValidator]
-        public ActionResult ContactVendorSend(ContactVendorModel model, bool captchaValid)
+        public virtual ActionResult ContactVendorSend(ContactVendorModel model, bool captchaValid)
         {
             if (!_vendorSettings.AllowCustomersToContactVendors)
                 return RedirectToRoute("HomePage");
@@ -438,7 +438,7 @@ namespace Nop.Web.Controllers
 
         //sitemap page
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult Sitemap()
+        public virtual ActionResult Sitemap()
         {
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
@@ -451,7 +451,7 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.No)]
         //available even when a store is closed
         [StoreClosed(true)]
-        public ActionResult SitemapXml()
+        public virtual ActionResult SitemapXml()
         {
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
@@ -462,7 +462,7 @@ namespace Nop.Web.Controllers
 
         //store theme
         [ChildActionOnly]
-        public ActionResult StoreThemeSelector()
+        public virtual ActionResult StoreThemeSelector()
         {
             if (!_storeInformationSettings.AllowCustomerToSelectTheme)
                 return Content("");
@@ -470,7 +470,7 @@ namespace Nop.Web.Controllers
             var model = _commonModelFactory.PrepareStoreThemeSelectorModel();
             return PartialView(model);
         }
-        public ActionResult SetStoreTheme(string themeName, string returnUrl = "")
+        public virtual ActionResult SetStoreTheme(string themeName, string returnUrl = "")
         {
             _themeContext.WorkingThemeName = themeName;
 
@@ -487,7 +487,7 @@ namespace Nop.Web.Controllers
 
         //favicon
         [ChildActionOnly]
-        public ActionResult Favicon()
+        public virtual ActionResult Favicon()
         {
             var model = _commonModelFactory.PrepareFaviconModel();
             if (String.IsNullOrEmpty(model.FaviconUrl))
@@ -498,7 +498,7 @@ namespace Nop.Web.Controllers
 
         //EU Cookie law
         [ChildActionOnly]
-        public ActionResult EuCookieLaw()
+        public virtual ActionResult EuCookieLaw()
         {
             if (!_storeInformationSettings.DisplayEuCookieLawWarning)
                 //disabled
@@ -524,7 +524,7 @@ namespace Nop.Web.Controllers
         [StoreClosed(true)]
         //available even when navigation is not allowed
         [PublicStoreAllowNavigation(true)]
-        public ActionResult EuCookieLawAccept()
+        public virtual ActionResult EuCookieLawAccept()
         {
             if (!_storeInformationSettings.DisplayEuCookieLawWarning)
                 //disabled
@@ -540,7 +540,7 @@ namespace Nop.Web.Controllers
         [StoreClosed(true)]
         //available even when navigation is not allowed
         [PublicStoreAllowNavigation(true)]
-        public ActionResult RobotsTextFile()
+        public virtual ActionResult RobotsTextFile()
         {
             var content = _commonModelFactory.PrepareRobotsTextFile();
             Response.ContentType = MimeTypes.TextPlain;
@@ -548,7 +548,7 @@ namespace Nop.Web.Controllers
             return null;
         }
 
-        public ActionResult GenericUrl()
+        public virtual ActionResult GenericUrl()
         {
             //seems that no entity was found
             return InvokeHttp404();
@@ -557,7 +557,7 @@ namespace Nop.Web.Controllers
         //store is closed
         //available even when a store is closed
         [StoreClosed(true)]
-        public ActionResult StoreClosed()
+        public virtual ActionResult StoreClosed()
         {
             return View();
         }

@@ -48,12 +48,12 @@ namespace Nop.Admin.Controllers
             this._importManager = importManager;
 		}
 
-		public ActionResult Index()
+		public virtual ActionResult Index()
 		{
 			return RedirectToAction("List");
 		}
 
-		public ActionResult List()
+		public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
@@ -91,7 +91,7 @@ namespace Nop.Admin.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult SubscriptionList(DataSourceRequest command, NewsLetterSubscriptionListModel model)
+		public virtual ActionResult SubscriptionList(DataSourceRequest command, NewsLetterSubscriptionListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
@@ -128,7 +128,7 @@ namespace Nop.Admin.Controllers
 		}
 
         [HttpPost]
-        public ActionResult SubscriptionUpdate([Bind(Exclude = "CreatedOn")] NewsLetterSubscriptionModel model)
+        public virtual ActionResult SubscriptionUpdate([Bind(Exclude = "CreatedOn")] NewsLetterSubscriptionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
@@ -147,7 +147,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult SubscriptionDelete(int id)
+        public virtual ActionResult SubscriptionDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
@@ -162,7 +162,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("exportcsv")]
-		public ActionResult ExportCsv(NewsLetterSubscriptionListModel model)
+		public virtual ActionResult ExportCsv(NewsLetterSubscriptionListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
@@ -188,7 +188,7 @@ namespace Nop.Admin.Controllers
 		}
 
         [HttpPost]
-        public ActionResult ImportCsv(FormCollection form)
+        public virtual ActionResult ImportCsv(FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();

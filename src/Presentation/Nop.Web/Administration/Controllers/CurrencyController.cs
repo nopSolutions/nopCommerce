@@ -126,12 +126,12 @@ namespace Nop.Admin.Controllers
 
         #region Methods
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult List(bool liveRates = false)
+        public virtual ActionResult List(bool liveRates = false)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
@@ -168,7 +168,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public ActionResult List(FormCollection formValues)
+        public virtual ActionResult List(FormCollection formValues)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
@@ -180,7 +180,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ListGrid(DataSourceRequest command)
+        public virtual ActionResult ListGrid(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
@@ -200,7 +200,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ApplyRate(string currencyCode, decimal rate)
+        public virtual ActionResult ApplyRate(string currencyCode, decimal rate)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
@@ -217,7 +217,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult MarkAsPrimaryExchangeRateCurrency(int id)
+        public virtual ActionResult MarkAsPrimaryExchangeRateCurrency(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
@@ -229,7 +229,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult MarkAsPrimaryStoreCurrency(int id)
+        public virtual ActionResult MarkAsPrimaryStoreCurrency(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
@@ -244,7 +244,7 @@ namespace Nop.Admin.Controllers
 
         #region Create / Edit / Delete
 
-        public ActionResult Create()
+        public virtual ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
@@ -261,7 +261,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Create(CurrencyModel model, bool continueEditing)
+        public virtual ActionResult Create(CurrencyModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
@@ -298,7 +298,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         
-        public ActionResult Edit(int id)
+        public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
@@ -322,7 +322,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Edit(CurrencyModel model, bool continueEditing)
+        public virtual ActionResult Edit(CurrencyModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
@@ -375,7 +375,7 @@ namespace Nop.Admin.Controllers
         }
         
         [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();

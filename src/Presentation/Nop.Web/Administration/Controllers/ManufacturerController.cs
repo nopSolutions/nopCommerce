@@ -286,12 +286,12 @@ namespace Nop.Admin.Controllers
         
         #region List
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
@@ -304,7 +304,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult List(DataSourceRequest command, ManufacturerListModel model)
+        public virtual ActionResult List(DataSourceRequest command, ManufacturerListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
@@ -324,7 +324,7 @@ namespace Nop.Admin.Controllers
 
         #region Create / Edit / Delete
 
-        public ActionResult Create()
+        public virtual ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
@@ -350,7 +350,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Create(ManufacturerModel model, bool continueEditing)
+        public virtual ActionResult Create(ManufacturerModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
@@ -409,7 +409,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult Edit(int id)
+        public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
@@ -443,7 +443,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Edit(ManufacturerModel model, bool continueEditing)
+        public virtual ActionResult Edit(ManufacturerModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
@@ -526,7 +526,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
@@ -549,7 +549,7 @@ namespace Nop.Admin.Controllers
 
         #region Export / Import
 
-        public ActionResult ExportXml()
+        public virtual ActionResult ExportXml()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
@@ -567,7 +567,7 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        public ActionResult ExportXlsx()
+        public virtual ActionResult ExportXlsx()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
@@ -586,7 +586,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ImportFromXlsx()
+        public virtual ActionResult ImportFromXlsx()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
@@ -622,7 +622,7 @@ namespace Nop.Admin.Controllers
         #region Products
 
         [HttpPost]
-        public ActionResult ProductList(DataSourceRequest command, int manufacturerId)
+        public virtual ActionResult ProductList(DataSourceRequest command, int manufacturerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
@@ -650,7 +650,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductUpdate(ManufacturerModel.ManufacturerProductModel model)
+        public virtual ActionResult ProductUpdate(ManufacturerModel.ManufacturerProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
@@ -667,7 +667,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductDelete(int id)
+        public virtual ActionResult ProductDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
@@ -682,7 +682,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public ActionResult ProductAddPopup(int manufacturerId)
+        public virtual ActionResult ProductAddPopup(int manufacturerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
@@ -719,7 +719,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductAddPopupList(DataSourceRequest command, ManufacturerModel.AddManufacturerProductModel model)
+        public virtual ActionResult ProductAddPopupList(DataSourceRequest command, ManufacturerModel.AddManufacturerProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
@@ -744,7 +744,7 @@ namespace Nop.Admin.Controllers
         
         [HttpPost]
         [FormValueRequired("save")]
-        public ActionResult ProductAddPopup(string btnId, string formId, ManufacturerModel.AddManufacturerProductModel model)
+        public virtual ActionResult ProductAddPopup(string btnId, string formId, ManufacturerModel.AddManufacturerProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();

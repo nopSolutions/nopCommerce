@@ -185,12 +185,12 @@ namespace Nop.Admin.Controllers
         #region Vendors
 
         //list
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
@@ -200,7 +200,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult List(DataSourceRequest command, VendorListModel model)
+        public virtual ActionResult List(DataSourceRequest command, VendorListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
@@ -221,7 +221,7 @@ namespace Nop.Admin.Controllers
         }
 
         //create
-        public ActionResult Create()
+        public virtual ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
@@ -244,7 +244,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public ActionResult Create(VendorModel model, bool continueEditing)
+        public virtual ActionResult Create(VendorModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
@@ -297,7 +297,7 @@ namespace Nop.Admin.Controllers
 
 
         //edit
-        public ActionResult Edit(int id)
+        public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
@@ -324,7 +324,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Edit(VendorModel model, bool continueEditing)
+        public virtual ActionResult Edit(VendorModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
@@ -407,7 +407,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
@@ -440,7 +440,7 @@ namespace Nop.Admin.Controllers
         #region Vendor notes
 
         [HttpPost]
-        public ActionResult VendorNotesSelect(int vendorId, DataSourceRequest command)
+        public virtual ActionResult VendorNotesSelect(int vendorId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
@@ -472,7 +472,7 @@ namespace Nop.Admin.Controllers
         }
 
         [ValidateInput(false)]
-        public ActionResult VendorNoteAdd(int vendorId, string message)
+        public virtual ActionResult VendorNoteAdd(int vendorId, string message)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
@@ -493,7 +493,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult VendorNoteDelete(int id, int vendorId)
+        public virtual ActionResult VendorNoteDelete(int id, int vendorId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();

@@ -39,7 +39,7 @@ namespace Nop.Web.Controllers
         #region Methods
 
         [ChildActionOnly]
-        public ActionResult PollBlock(string systemKeyword)
+        public virtual ActionResult PollBlock(string systemKeyword)
         {
             if (String.IsNullOrWhiteSpace(systemKeyword))
                 return Content("");
@@ -53,7 +53,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Vote(int pollAnswerId)
+        public virtual ActionResult Vote(int pollAnswerId)
         {
             var pollAnswer = _pollService.GetPollAnswerById(pollAnswerId);
             if (pollAnswer == null)
@@ -97,7 +97,7 @@ namespace Nop.Web.Controllers
         }
         
         [ChildActionOnly]
-        public ActionResult HomePagePolls()
+        public virtual ActionResult HomePagePolls()
         {
             var model = _pollModelFactory.PrepareHomePagePollModels();
             if (!model.Any())

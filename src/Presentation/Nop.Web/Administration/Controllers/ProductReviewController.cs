@@ -95,12 +95,12 @@ namespace Nop.Admin.Controllers
         #region Methods
 
         //list
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
@@ -123,7 +123,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult List(DataSourceRequest command, ProductReviewListModel model)
+        public virtual ActionResult List(DataSourceRequest command, ProductReviewListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
@@ -155,7 +155,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult Edit(int id)
+        public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
@@ -171,7 +171,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Edit(ProductReviewModel model, bool continueEditing)
+        public virtual ActionResult Edit(ProductReviewModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
@@ -214,7 +214,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
@@ -238,7 +238,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ApproveSelected(ICollection<int> selectedIds)
+        public virtual ActionResult ApproveSelected(ICollection<int> selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
@@ -264,7 +264,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DisapproveSelected(ICollection<int> selectedIds)
+        public virtual ActionResult DisapproveSelected(ICollection<int> selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
@@ -287,7 +287,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteSelected(ICollection<int> selectedIds)
+        public virtual ActionResult DeleteSelected(ICollection<int> selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
@@ -309,7 +309,7 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = true });
         }
 
-        public ActionResult ProductSearchAutoComplete(string term)
+        public virtual ActionResult ProductSearchAutoComplete(string term)
         {
             const int searchTermMinimumLength = 3;
             if (String.IsNullOrWhiteSpace(term) || term.Length < searchTermMinimumLength)

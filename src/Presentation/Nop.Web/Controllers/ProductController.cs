@@ -108,7 +108,7 @@ namespace Nop.Web.Controllers
         #region Product details page
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult ProductDetails(int productId, int updatecartitemid = 0)
+        public virtual ActionResult ProductDetails(int productId, int updatecartitemid = 0)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted)
@@ -185,7 +185,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult RelatedProducts(int productId, int? productThumbPictureSize)
+        public virtual ActionResult RelatedProducts(int productId, int? productThumbPictureSize)
         {
             //load and cache report
             var productIds = _cacheManager.Get(string.Format(ModelCacheEventConsumer.PRODUCTS_RELATED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
@@ -208,7 +208,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult ProductsAlsoPurchased(int productId, int? productThumbPictureSize)
+        public virtual ActionResult ProductsAlsoPurchased(int productId, int? productThumbPictureSize)
         {
             if (!_catalogSettings.ProductsAlsoPurchasedEnabled)
                 return Content("");
@@ -235,7 +235,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult CrossSellProducts(int? productThumbPictureSize)
+        public virtual ActionResult CrossSellProducts(int? productThumbPictureSize)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
@@ -268,7 +268,7 @@ namespace Nop.Web.Controllers
         #region Recently viewed products
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult RecentlyViewedProducts()
+        public virtual ActionResult RecentlyViewedProducts()
         {
             if (!_catalogSettings.RecentlyViewedProductsEnabled)
                 return Content("");
@@ -282,7 +282,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult RecentlyViewedProductsBlock(int? productThumbPictureSize, bool? preparePriceModel)
+        public virtual ActionResult RecentlyViewedProductsBlock(int? productThumbPictureSize, bool? preparePriceModel)
         {
             if (!_catalogSettings.RecentlyViewedProductsEnabled)
                 return Content("");
@@ -313,7 +313,7 @@ namespace Nop.Web.Controllers
         #region New (recently added) products page
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult NewProducts()
+        public virtual ActionResult NewProducts()
         {
             if (!_catalogSettings.NewProductsEnabled)
                 return Content("");
@@ -331,7 +331,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public ActionResult NewProductsRss()
+        public virtual ActionResult NewProductsRss()
         {
             var feed = new SyndicationFeed(
                                     string.Format("{0}: New products", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
@@ -376,7 +376,7 @@ namespace Nop.Web.Controllers
         #region Home page bestsellers and products
 
         [ChildActionOnly]
-        public ActionResult HomepageBestSellers(int? productThumbPictureSize)
+        public virtual ActionResult HomepageBestSellers(int? productThumbPictureSize)
         {
             if (!_catalogSettings.ShowBestsellersOnHomepage || _catalogSettings.NumberOfBestsellersOnHomepage == 0)
                 return Content("");
@@ -405,7 +405,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult HomepageProducts(int? productThumbPictureSize)
+        public virtual ActionResult HomepageProducts(int? productThumbPictureSize)
         {
             var products = _productService.GetAllProductsDisplayedOnHomePage();
             //ACL and store mapping
@@ -425,7 +425,7 @@ namespace Nop.Web.Controllers
         #region Product reviews
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult ProductReviews(int productId)
+        public virtual ActionResult ProductReviews(int productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
@@ -450,7 +450,7 @@ namespace Nop.Web.Controllers
         [PublicAntiForgery]
         [FormValueRequired("add-review")]
         [CaptchaValidator]
-        public ActionResult ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
+        public virtual ActionResult ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
@@ -528,7 +528,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult SetProductReviewHelpfulness(int productReviewId, bool washelpful)
+        public virtual ActionResult SetProductReviewHelpfulness(int productReviewId, bool washelpful)
         {
             var productReview = _productService.GetProductReviewById(productReviewId);
             if (productReview == null)
@@ -589,7 +589,7 @@ namespace Nop.Web.Controllers
             });
         }
 
-        public ActionResult CustomerProductReviews(int? page)
+        public virtual ActionResult CustomerProductReviews(int? page)
         {
             if (_workContext.CurrentCustomer.IsGuest())
                 return new HttpUnauthorizedResult();
@@ -608,7 +608,7 @@ namespace Nop.Web.Controllers
         #region Email a friend
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult ProductEmailAFriend(int productId)
+        public virtual ActionResult ProductEmailAFriend(int productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted || !product.Published || !_catalogSettings.EmailAFriendEnabled)
@@ -623,7 +623,7 @@ namespace Nop.Web.Controllers
         [PublicAntiForgery]
         [FormValueRequired("send-email")]
         [CaptchaValidator]
-        public ActionResult ProductEmailAFriendSend(ProductEmailAFriendModel model, bool captchaValid)
+        public virtual ActionResult ProductEmailAFriendSend(ProductEmailAFriendModel model, bool captchaValid)
         {
             var product = _productService.GetProductById(model.ProductId);
             if (product == null || product.Deleted || !product.Published || !_catalogSettings.EmailAFriendEnabled)
@@ -666,7 +666,7 @@ namespace Nop.Web.Controllers
         #region Comparing products
 
         [HttpPost]
-        public ActionResult AddProductToCompareList(int productId)
+        public virtual ActionResult AddProductToCompareList(int productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted || !product.Published)
@@ -697,7 +697,7 @@ namespace Nop.Web.Controllers
             });
         }
 
-        public ActionResult RemoveProductFromCompareList(int productId)
+        public virtual ActionResult RemoveProductFromCompareList(int productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -712,7 +712,7 @@ namespace Nop.Web.Controllers
         }
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult CompareProducts()
+        public virtual ActionResult CompareProducts()
         {
             if (!_catalogSettings.CompareProductsEnabled)
                 return RedirectToRoute("HomePage");
@@ -737,7 +737,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public ActionResult ClearCompareList()
+        public virtual ActionResult ClearCompareList()
         {
             if (!_catalogSettings.CompareProductsEnabled)
                 return RedirectToRoute("HomePage");

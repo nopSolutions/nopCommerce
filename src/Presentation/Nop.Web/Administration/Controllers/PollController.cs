@@ -64,12 +64,12 @@ namespace Nop.Admin.Controllers
 
         #region Polls
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
@@ -78,7 +78,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult List(DataSourceRequest command)
+        public virtual ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
@@ -102,7 +102,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        public ActionResult Create()
+        public virtual ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
@@ -117,7 +117,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Create(PollModel model, bool continueEditing)
+        public virtual ActionResult Create(PollModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
@@ -147,7 +147,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult Edit(int id)
+        public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
@@ -166,7 +166,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Edit(PollModel model, bool continueEditing)
+        public virtual ActionResult Edit(PollModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
@@ -201,7 +201,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
@@ -222,7 +222,7 @@ namespace Nop.Admin.Controllers
         #region Poll answer
 
         [HttpPost]
-        public ActionResult PollAnswers(int pollId, DataSourceRequest command)
+        public virtual ActionResult PollAnswers(int pollId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
@@ -251,7 +251,7 @@ namespace Nop.Admin.Controllers
 
 
         [HttpPost]
-        public ActionResult PollAnswerUpdate(PollAnswerModel model)
+        public virtual ActionResult PollAnswerUpdate(PollAnswerModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
@@ -273,7 +273,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult PollAnswerAdd(int pollId, [Bind(Exclude = "Id")] PollAnswerModel model)
+        public virtual ActionResult PollAnswerAdd(int pollId, [Bind(Exclude = "Id")] PollAnswerModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
@@ -299,7 +299,7 @@ namespace Nop.Admin.Controllers
 
 
         [HttpPost]
-        public ActionResult PollAnswerDelete(int id)
+        public virtual ActionResult PollAnswerDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();

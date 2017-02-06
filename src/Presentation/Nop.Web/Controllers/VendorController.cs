@@ -84,7 +84,7 @@ namespace Nop.Web.Controllers
         #region Methods
 
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult ApplyVendor()
+        public virtual ActionResult ApplyVendor()
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
                 return RedirectToRoute("HomePage");
@@ -100,7 +100,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("ApplyVendor")]
         [PublicAntiForgery]
         [CaptchaValidator]
-        public ActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, HttpPostedFileBase uploadedFile)
+        public virtual ActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, HttpPostedFileBase uploadedFile)
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
                 return RedirectToRoute("HomePage");
@@ -177,7 +177,7 @@ namespace Nop.Web.Controllers
         }
 
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult Info()
+        public virtual ActionResult Info()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
@@ -194,7 +194,7 @@ namespace Nop.Web.Controllers
         [PublicAntiForgery]
         [ValidateInput(false)]
         [FormValueRequired("save-info-button")]
-        public ActionResult Info(VendorInfoModel model, HttpPostedFileBase uploadedFile)
+        public virtual ActionResult Info(VendorInfoModel model, HttpPostedFileBase uploadedFile)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
@@ -258,7 +258,7 @@ namespace Nop.Web.Controllers
         [PublicAntiForgery]
         [ValidateInput(false)]
         [FormValueRequired("remove-picture")]
-        public ActionResult RemovePicture()
+        public virtual ActionResult RemovePicture()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();

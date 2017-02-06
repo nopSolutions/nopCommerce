@@ -259,12 +259,12 @@ namespace Nop.Admin.Controllers
 
         #region Methods
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
@@ -279,7 +279,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 	    [HttpPost]
-        public ActionResult ListSelect(DataSourceRequest command, PluginListModel model)
+        public virtual ActionResult ListSelect(DataSourceRequest command, PluginListModel model)
 	    {
 	        if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
 	            return AccessDeniedView();
@@ -299,7 +299,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("List")]
         [FormValueRequired(FormValueRequirement.StartsWith, "install-plugin-link-")]
         [ValidateInput(false)]
-        public ActionResult Install(FormCollection form)
+        public virtual ActionResult Install(FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
@@ -342,7 +342,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("List")]
         [FormValueRequired(FormValueRequirement.StartsWith, "uninstall-plugin-link-")]
         [ValidateInput(false)]
-        public ActionResult Uninstall(FormCollection form)
+        public virtual ActionResult Uninstall(FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
@@ -385,7 +385,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("plugin-reload-grid")]
-        public ActionResult ReloadList()
+        public virtual ActionResult ReloadList()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
@@ -395,7 +395,7 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
         
-        public ActionResult ConfigureMiscPlugin(string systemName)
+        public virtual ActionResult ConfigureMiscPlugin(string systemName)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
@@ -419,7 +419,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult EditPopup(string systemName)
+        public virtual ActionResult EditPopup(string systemName)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
@@ -434,7 +434,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult EditPopup(string btnId, string formId, PluginModel model)
+        public virtual ActionResult EditPopup(string btnId, string formId, PluginModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
@@ -612,7 +612,7 @@ namespace Nop.Admin.Controllers
         }
 
         //official feed
-        public ActionResult OfficialFeed()
+        public virtual ActionResult OfficialFeed()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
@@ -643,7 +643,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult OfficialFeedSelect(DataSourceRequest command, OfficialFeedListModel model)
+        public virtual ActionResult OfficialFeedSelect(DataSourceRequest command, OfficialFeedListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();

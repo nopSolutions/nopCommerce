@@ -46,7 +46,7 @@ namespace Nop.Admin.Controllers
 
         #region Methods
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -58,7 +58,7 @@ namespace Nop.Admin.Controllers
 
 
         [HttpPost]
-        public ActionResult Weights(DataSourceRequest command)
+        public virtual ActionResult Weights(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -78,7 +78,7 @@ namespace Nop.Admin.Controllers
 		}
 
         [HttpPost]
-        public ActionResult WeightUpdate(MeasureWeightModel model)
+        public virtual ActionResult WeightUpdate(MeasureWeightModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -99,7 +99,7 @@ namespace Nop.Admin.Controllers
         }
         
         [HttpPost]
-        public ActionResult WeightAdd([Bind(Exclude="Id")] MeasureWeightModel model)
+        public virtual ActionResult WeightAdd([Bind(Exclude="Id")] MeasureWeightModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -120,7 +120,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult WeightDelete(int id)
+        public virtual ActionResult WeightDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -143,7 +143,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult MarkAsPrimaryWeight(int id)
+        public virtual ActionResult MarkAsPrimaryWeight(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -163,7 +163,7 @@ namespace Nop.Admin.Controllers
         #region Dimensions
 
         [HttpPost]
-        public ActionResult Dimensions(DataSourceRequest command)
+        public virtual ActionResult Dimensions(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -183,7 +183,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DimensionUpdate(MeasureDimensionModel model)
+        public virtual ActionResult DimensionUpdate(MeasureDimensionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -204,7 +204,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DimensionAdd([Bind(Exclude = "Id")] MeasureDimensionModel model)
+        public virtual ActionResult DimensionAdd([Bind(Exclude = "Id")] MeasureDimensionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -225,7 +225,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DimensionDelete(int id)
+        public virtual ActionResult DimensionDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -248,7 +248,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult MarkAsPrimaryDimension(int id)
+        public virtual ActionResult MarkAsPrimaryDimension(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();

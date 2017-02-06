@@ -84,7 +84,7 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
-        public ActionResult List(BlogPagingFilteringModel command)
+        public virtual ActionResult List(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -92,7 +92,7 @@ namespace Nop.Web.Controllers
             var model = _blogModelFactory.PrepareBlogPostListModel(command);
             return View("List", model);
         }
-        public ActionResult BlogByTag(BlogPagingFilteringModel command)
+        public virtual ActionResult BlogByTag(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -100,7 +100,7 @@ namespace Nop.Web.Controllers
             var model = _blogModelFactory.PrepareBlogPostListModel(command);
             return View("List", model);
         }
-        public ActionResult BlogByMonth(BlogPagingFilteringModel command)
+        public virtual ActionResult BlogByMonth(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -109,7 +109,7 @@ namespace Nop.Web.Controllers
             return View("List", model);
         }
 
-        public ActionResult ListRss(int languageId)
+        public virtual ActionResult ListRss(int languageId)
         {
             var feed = new SyndicationFeed(
                 string.Format("{0}: Blog", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
@@ -132,7 +132,7 @@ namespace Nop.Web.Controllers
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
 
-        public ActionResult BlogPost(int blogPostId)
+        public virtual ActionResult BlogPost(int blogPostId)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -161,7 +161,7 @@ namespace Nop.Web.Controllers
         [PublicAntiForgery]
         [FormValueRequired("add-comment")]
         [CaptchaValidator]
-        public ActionResult BlogCommentAdd(int blogPostId, BlogPostModel model, bool captchaValid)
+        public virtual ActionResult BlogCommentAdd(int blogPostId, BlogPostModel model, bool captchaValid)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -220,7 +220,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult BlogTags()
+        public virtual ActionResult BlogTags()
         {
             if (!_blogSettings.Enabled)
                 return Content("");
@@ -230,7 +230,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult BlogMonths()
+        public virtual ActionResult BlogMonths()
         {
             if (!_blogSettings.Enabled)
                 return Content("");
@@ -240,7 +240,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult RssHeaderLink()
+        public virtual ActionResult RssHeaderLink()
         {
             if (!_blogSettings.Enabled || !_blogSettings.ShowHeaderRssUrl)
                 return Content("");

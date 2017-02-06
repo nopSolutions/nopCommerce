@@ -300,12 +300,12 @@ namespace Nop.Admin.Controllers
         
         #region List
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -318,7 +318,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult List(DataSourceRequest command, CategoryListModel model)
+        public virtual ActionResult List(DataSourceRequest command, CategoryListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -342,7 +342,7 @@ namespace Nop.Admin.Controllers
 
         #region Create / Edit / Delete
 
-        public ActionResult Create()
+        public virtual ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -371,7 +371,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Create(CategoryModel model, bool continueEditing)
+        public virtual ActionResult Create(CategoryModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -431,7 +431,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult Edit(int id)
+        public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -467,7 +467,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Edit(CategoryModel model, bool continueEditing)
+        public virtual ActionResult Edit(CategoryModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -551,7 +551,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -575,7 +575,7 @@ namespace Nop.Admin.Controllers
 
         #region Export / Import
 
-        public ActionResult ExportXml()
+        public virtual ActionResult ExportXml()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -592,7 +592,7 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        public ActionResult ExportXlsx()
+        public virtual ActionResult ExportXlsx()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -611,7 +611,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ImportFromXlsx()
+        public virtual ActionResult ImportFromXlsx()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -646,7 +646,7 @@ namespace Nop.Admin.Controllers
         #region Products
 
         [HttpPost]
-        public ActionResult ProductList(DataSourceRequest command, int categoryId)
+        public virtual ActionResult ProductList(DataSourceRequest command, int categoryId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -670,7 +670,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        public ActionResult ProductUpdate(CategoryModel.CategoryProductModel model)
+        public virtual ActionResult ProductUpdate(CategoryModel.CategoryProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -686,7 +686,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public ActionResult ProductDelete(int id)
+        public virtual ActionResult ProductDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -701,7 +701,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public ActionResult ProductAddPopup(int categoryId)
+        public virtual ActionResult ProductAddPopup(int categoryId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -738,7 +738,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductAddPopupList(DataSourceRequest command, CategoryModel.AddCategoryProductModel model)
+        public virtual ActionResult ProductAddPopupList(DataSourceRequest command, CategoryModel.AddCategoryProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -763,7 +763,7 @@ namespace Nop.Admin.Controllers
         
         [HttpPost]
         [FormValueRequired("save")]
-        public ActionResult ProductAddPopup(string btnId, string formId, CategoryModel.AddCategoryProductModel model)
+        public virtual ActionResult ProductAddPopup(string btnId, string formId, CategoryModel.AddCategoryProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();

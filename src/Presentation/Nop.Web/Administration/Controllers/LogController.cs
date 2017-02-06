@@ -34,12 +34,12 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
         }
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();
@@ -52,7 +52,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult LogList(DataSourceRequest command, LogListModel model)
+        public virtual ActionResult LogList(DataSourceRequest command, LogListModel model)
         {
 
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
@@ -93,7 +93,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("clearall")]
-        public ActionResult ClearAll()
+        public virtual ActionResult ClearAll()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();
@@ -104,7 +104,7 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public ActionResult View(int id)
+        public virtual ActionResult View(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();
@@ -132,7 +132,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();
@@ -150,7 +150,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteSelected(ICollection<int> selectedIds)
+        public virtual ActionResult DeleteSelected(ICollection<int> selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();

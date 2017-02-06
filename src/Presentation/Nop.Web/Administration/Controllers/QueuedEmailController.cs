@@ -36,12 +36,12 @@ namespace Nop.Admin.Controllers
             this._workContext = workContext;
 		}
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-		public ActionResult List()
+		public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
                 return AccessDeniedView();
@@ -55,7 +55,7 @@ namespace Nop.Admin.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult QueuedEmailList(DataSourceRequest command, QueuedEmailListModel model)
+		public virtual ActionResult QueuedEmailList(DataSourceRequest command, QueuedEmailListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
                 return AccessDeniedView();
@@ -96,7 +96,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("go-to-email-by-number")]
-        public ActionResult GoToEmailByNumber(QueuedEmailListModel model)
+        public virtual ActionResult GoToEmailByNumber(QueuedEmailListModel model)
         {
             var queuedEmail = _queuedEmailService.GetQueuedEmailById(model.GoDirectlyToNumber);
             if (queuedEmail == null)
@@ -105,7 +105,7 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Edit", "QueuedEmail", new { id = queuedEmail.Id });
         }
 
-		public ActionResult Edit(int id)
+		public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
                 return AccessDeniedView();
@@ -129,7 +129,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Edit")]
         [ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public ActionResult Edit(QueuedEmailModel model, bool continueEditing)
+        public virtual ActionResult Edit(QueuedEmailModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
                 return AccessDeniedView();
@@ -161,7 +161,7 @@ namespace Nop.Admin.Controllers
 		}
 
         [HttpPost, ActionName("Edit"), FormValueRequired("requeue")]
-        public ActionResult Requeue(QueuedEmailModel queuedEmailModel)
+        public virtual ActionResult Requeue(QueuedEmailModel queuedEmailModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
                 return AccessDeniedView();
@@ -199,7 +199,7 @@ namespace Nop.Admin.Controllers
         }
 
 	    [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
                 return AccessDeniedView();
@@ -216,7 +216,7 @@ namespace Nop.Admin.Controllers
 		}
 
         [HttpPost]
-        public ActionResult DeleteSelected(ICollection<int> selectedIds)
+        public virtual ActionResult DeleteSelected(ICollection<int> selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
                 return AccessDeniedView();
@@ -231,7 +231,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("delete-all")]
-        public ActionResult DeleteAll()
+        public virtual ActionResult DeleteAll()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
                 return AccessDeniedView();

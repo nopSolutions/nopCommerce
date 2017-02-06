@@ -146,12 +146,12 @@ namespace Nop.Admin.Controllers
         #region Discounts
 
         //list
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -164,7 +164,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult List(DiscountListModel model, DataSourceRequest command)
+        public virtual ActionResult List(DiscountListModel model, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -194,7 +194,7 @@ namespace Nop.Admin.Controllers
         }
         
         //create
-        public ActionResult Create()
+        public virtual ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -207,7 +207,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Create(DiscountModel model, bool continueEditing)
+        public virtual ActionResult Create(DiscountModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -238,7 +238,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult Edit(int id)
+        public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -254,7 +254,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Edit(DiscountModel model, bool continueEditing)
+        public virtual ActionResult Edit(DiscountModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -319,7 +319,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -350,7 +350,7 @@ namespace Nop.Admin.Controllers
         #region Discount requirements
 
         [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult GetDiscountRequirementConfigurationUrl(string systemName, int discountId, int? discountRequirementId)
+        public virtual ActionResult GetDiscountRequirementConfigurationUrl(string systemName, int discountId, int? discountRequirementId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -370,7 +370,7 @@ namespace Nop.Admin.Controllers
             return Json(new { url = url }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GetDiscountRequirementMetaInfo(int discountRequirementId, int discountId)
+        public virtual ActionResult GetDiscountRequirementMetaInfo(int discountRequirementId, int discountId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -393,7 +393,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteDiscountRequirement(int discountRequirementId, int discountId)
+        public virtual ActionResult DeleteDiscountRequirement(int discountRequirementId, int discountId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -416,7 +416,7 @@ namespace Nop.Admin.Controllers
         #region Applied to products
 
         [HttpPost]
-        public ActionResult ProductList(DataSourceRequest command, int discountId)
+        public virtual ActionResult ProductList(DataSourceRequest command, int discountId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -442,7 +442,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        public ActionResult ProductDelete(int discountId, int productId)
+        public virtual ActionResult ProductDelete(int discountId, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -465,7 +465,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public ActionResult ProductAddPopup(int discountId)
+        public virtual ActionResult ProductAddPopup(int discountId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -502,7 +502,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductAddPopupList(DataSourceRequest command, DiscountModel.AddProductToDiscountModel model)
+        public virtual ActionResult ProductAddPopupList(DataSourceRequest command, DiscountModel.AddProductToDiscountModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -527,7 +527,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public ActionResult ProductAddPopup(string btnId, string formId, DiscountModel.AddProductToDiscountModel model)
+        public virtual ActionResult ProductAddPopup(string btnId, string formId, DiscountModel.AddProductToDiscountModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -563,7 +563,7 @@ namespace Nop.Admin.Controllers
         #region Applied to categories
 
         [HttpPost]
-        public ActionResult CategoryList(DataSourceRequest command, int discountId)
+        public virtual ActionResult CategoryList(DataSourceRequest command, int discountId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -589,7 +589,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        public ActionResult CategoryDelete(int discountId, int categoryId)
+        public virtual ActionResult CategoryDelete(int discountId, int categoryId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -611,7 +611,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public ActionResult CategoryAddPopup(int discountId)
+        public virtual ActionResult CategoryAddPopup(int discountId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -621,7 +621,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult CategoryAddPopupList(DataSourceRequest command, DiscountModel.AddCategoryToDiscountModel model)
+        public virtual ActionResult CategoryAddPopupList(DataSourceRequest command, DiscountModel.AddCategoryToDiscountModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -644,7 +644,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public ActionResult CategoryAddPopup(string btnId, string formId, DiscountModel.AddCategoryToDiscountModel model)
+        public virtual ActionResult CategoryAddPopup(string btnId, string formId, DiscountModel.AddCategoryToDiscountModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -679,7 +679,7 @@ namespace Nop.Admin.Controllers
         #region Applied to manufacturers
 
         [HttpPost]
-        public ActionResult ManufacturerList(DataSourceRequest command, int discountId)
+        public virtual ActionResult ManufacturerList(DataSourceRequest command, int discountId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -705,7 +705,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        public ActionResult ManufacturerDelete(int discountId, int manufacturerId)
+        public virtual ActionResult ManufacturerDelete(int discountId, int manufacturerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -727,7 +727,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public ActionResult ManufacturerAddPopup(int discountId)
+        public virtual ActionResult ManufacturerAddPopup(int discountId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -737,7 +737,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ManufacturerAddPopupList(DataSourceRequest command, DiscountModel.AddManufacturerToDiscountModel model)
+        public virtual ActionResult ManufacturerAddPopupList(DataSourceRequest command, DiscountModel.AddManufacturerToDiscountModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -755,7 +755,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public ActionResult ManufacturerAddPopup(string btnId, string formId, DiscountModel.AddManufacturerToDiscountModel model)
+        public virtual ActionResult ManufacturerAddPopup(string btnId, string formId, DiscountModel.AddManufacturerToDiscountModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -790,7 +790,7 @@ namespace Nop.Admin.Controllers
         #region Discount usage history
         
         [HttpPost]
-        public ActionResult UsageHistoryList(int discountId, DataSourceRequest command)
+        public virtual ActionResult UsageHistoryList(int discountId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -822,7 +822,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult UsageHistoryDelete(int discountId, int id)
+        public virtual ActionResult UsageHistoryDelete(int discountId, int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
