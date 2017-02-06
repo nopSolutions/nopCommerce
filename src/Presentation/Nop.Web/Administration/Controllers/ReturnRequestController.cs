@@ -141,7 +141,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult List(DataSourceRequest command, ReturnRequestListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var rrs = model.ReturnRequestStatusId == -1 ? null : (ReturnRequestStatus?) model.ReturnRequestStatusId;
             

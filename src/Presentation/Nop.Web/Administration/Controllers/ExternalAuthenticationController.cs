@@ -57,7 +57,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult Methods(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var methodsModel = new List<AuthenticationMethodModel>();
             var methods = _openAuthenticationService.LoadAllExternalAuthenticationMethods();

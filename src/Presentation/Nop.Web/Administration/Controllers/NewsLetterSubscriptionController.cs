@@ -94,7 +94,7 @@ namespace Nop.Admin.Controllers
 		public virtual ActionResult SubscriptionList(DataSourceRequest command, NewsLetterSubscriptionListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             bool? isActive = null;
             if (model.ActiveId == 1)

@@ -71,7 +71,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
+                return ErrorForKendoGridJson("Access denied");
 
             var pickupPoints = _storePickupPointService.GetAllStorePickupPoints();
             var model = pickupPoints.Select(x =>

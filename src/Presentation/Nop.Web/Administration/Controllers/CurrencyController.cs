@@ -183,7 +183,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult ListGrid(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var currenciesModel = _currencyService.GetAllCurrencies(true).Select(x => x.ToModel()).ToList();
             foreach (var currency in currenciesModel)

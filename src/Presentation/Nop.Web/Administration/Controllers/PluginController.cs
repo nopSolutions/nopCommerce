@@ -282,7 +282,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult ListSelect(DataSourceRequest command, PluginListModel model)
 	    {
 	        if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-	            return AccessDeniedView();
+	            return AccessDeniedKendoGridJson();
 
 	        var loadMode = (LoadPluginsMode) model.SearchLoadModeId;
             var pluginDescriptors = _pluginFinder.GetPluginDescriptors(loadMode, group: model.SearchGroup).ToList();
@@ -646,7 +646,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult OfficialFeedSelect(DataSourceRequest command, OfficialFeedListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var plugins = _officialFeedManager.GetAllPlugins(categoryId: model.SearchCategoryId,
                 versionId: model.SearchVersionId,

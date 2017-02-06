@@ -56,7 +56,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult CategoryTemplates(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var templatesModel = _categoryTemplateService.GetAllCategoryTemplates()
                 .Select(x => x.ToModel())
@@ -139,7 +139,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult ManufacturerTemplates(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var templatesModel = _manufacturerTemplateService.GetAllManufacturerTemplates()
                 .Select(x => x.ToModel())
@@ -222,7 +222,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult ProductTemplates(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var templatesModel = _productTemplateService.GetAllProductTemplates()
                 .Select(x => x.ToModel())
@@ -308,7 +308,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult TopicTemplates(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var templatesModel = _topicTemplateService.GetAllTopicTemplates()
                 .Select(x => x.ToModel())

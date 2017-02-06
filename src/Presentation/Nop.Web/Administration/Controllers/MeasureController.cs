@@ -61,7 +61,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult Weights(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var weightsModel = _measureService.GetAllMeasureWeights()
                 .Select(x => x.ToModel())
@@ -166,7 +166,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult Dimensions(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var dimensionsModel = _measureService.GetAllMeasureDimensions()
                 .Select(x => x.ToModel())

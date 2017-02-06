@@ -48,7 +48,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult ForumGroupList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var forumGroups = _forumService.GetAllForumGroups();
             var gridModel = new DataSourceResult
@@ -69,7 +69,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult ForumList(int forumGroupId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var forumGroup = _forumService.GetForumGroupById(forumGroupId);
             if (forumGroup == null)

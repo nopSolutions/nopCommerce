@@ -1071,7 +1071,7 @@ namespace Nop.Admin.Controllers
 		public virtual ActionResult OrderList(DataSourceRequest command, OrderListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -2510,7 +2510,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult AddProductToOrder(DataSourceRequest command, OrderModel.AddOrderProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
@@ -2929,7 +2929,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult ShipmentListSelect(DataSourceRequest command, ShipmentListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
@@ -2969,7 +2969,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult ShipmentsByOrder(int orderId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
@@ -3003,7 +3003,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult ShipmentsItemsByShipmentId(int shipmentId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var shipment = _shipmentService.GetShipmentById(shipmentId);
             if (shipment == null)
@@ -3698,7 +3698,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult OrderNotesSelect(int orderId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
@@ -3842,7 +3842,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult BestsellersBriefReportByQuantityList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
+                return AccessDeniedKendoGridJson();
 
             var gridModel = GetBestsellersBriefReportModel(command.Page - 1,
                 command.PageSize, 1);
@@ -3860,7 +3860,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult BestsellersBriefReportByAmountList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
+                return AccessDeniedKendoGridJson();
 
             var gridModel = GetBestsellersBriefReportModel(command.Page - 1,
                 command.PageSize, 2);
@@ -3921,7 +3921,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult BestsellersReportList(DataSourceRequest command, BestsellersReportModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -4015,7 +4015,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult NeverSoldReportList(DataSourceRequest command, NeverSoldReportModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -4065,7 +4065,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult OrderAverageReportList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
+                return AccessDeniedKendoGridJson();
 
             //a vendor doesn't have access to this report
             if (_workContext.CurrentVendor != null)
@@ -4108,7 +4108,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult OrderIncompleteReportList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
+                return AccessDeniedKendoGridJson();
 
             //a vendor doesn't have access to this report
             if (_workContext.CurrentVendor != null)
@@ -4182,7 +4182,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult CountryReportList(DataSourceRequest command, CountryReportModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
-                return Content("");
+                return AccessDeniedKendoGridJson();
 
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);

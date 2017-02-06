@@ -106,7 +106,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
             var gridModel = new DataSourceResult
@@ -250,7 +250,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult ValueList(int customerAttributeId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var values = _customerAttributeService.GetCustomerAttributeValues(customerAttributeId);
             var gridModel = new DataSourceResult

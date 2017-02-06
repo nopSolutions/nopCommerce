@@ -165,7 +165,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult List(DataSourceRequest command, CampaignListModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var campaigns = _campaignService.GetAllCampaigns(searchModel.StoreId);
             var gridModel = new DataSourceResult

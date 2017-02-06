@@ -62,7 +62,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var widgetsModel = new List<WidgetModel>();
             var widgets = _widgetService.LoadAllWidgets();

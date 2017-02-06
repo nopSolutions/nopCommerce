@@ -321,7 +321,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult List(DataSourceRequest command, CategoryListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var categories = _categoryService.GetAllCategories(model.SearchCategoryName, 
                 model.SearchStoreId, command.Page - 1, command.PageSize, true);
@@ -649,7 +649,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult ProductList(DataSourceRequest command, int categoryId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var productCategories = _categoryService.GetProductCategoriesByCategoryId(categoryId,
                 command.Page - 1, command.PageSize, true);
@@ -741,7 +741,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult ProductAddPopupList(DataSourceRequest command, CategoryModel.AddCategoryProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var gridModel = new DataSourceResult();
             var products = _productService.SearchProducts(

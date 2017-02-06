@@ -280,7 +280,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes();
             var gridModel = new DataSourceResult
@@ -452,7 +452,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult ValueList(int checkoutAttributeId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var values = _checkoutAttributeService.GetCheckoutAttributeValues(checkoutAttributeId);
             var gridModel = new DataSourceResult

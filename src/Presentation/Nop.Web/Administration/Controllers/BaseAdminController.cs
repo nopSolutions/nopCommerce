@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 
@@ -45,6 +46,17 @@ namespace Nop.Admin.Controllers
         {
             //return new HttpUnauthorizedResult();
             return RedirectToAction("AccessDenied", "Security", new { pageUrl = this.Request.RawUrl });
+        }
+
+        /// <summary>
+        /// Access denied json data for kendo grid
+        /// </summary>
+        /// <returns>Access denied json data</returns>
+        protected JsonResult AccessDeniedKendoGridJson()
+        {
+            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+            
+            return ErrorForKendoGridJson(localizationService.GetResource("Admin.AccessDenied.Description"));
         }
 
         /// <summary>

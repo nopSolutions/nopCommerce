@@ -157,7 +157,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult List(DataSourceRequest command, NewsItemListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var news = _newsService.GetAllNews(0, model.SearchStoreId, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
@@ -356,7 +356,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult Comments(int? filterByNewsItemId, DataSourceRequest command, NewsCommentListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var createdOnFromValue = model.CreatedOnFrom == null ? null
                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);

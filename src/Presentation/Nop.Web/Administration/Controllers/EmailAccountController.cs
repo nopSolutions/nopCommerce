@@ -54,7 +54,7 @@ namespace Nop.Admin.Controllers
 		public virtual ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var emailAccountModels = _emailAccountService.GetAllEmailAccounts()
                                     .Select(x => x.ToModel())

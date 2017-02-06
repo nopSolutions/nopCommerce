@@ -104,7 +104,7 @@ namespace Nop.Admin.Controllers
 		public virtual ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
             
             var customerRoles = _customerService.GetAllCustomerRoles(true);
             var gridModel = new DataSourceResult
@@ -285,7 +285,7 @@ namespace Nop.Admin.Controllers
             CustomerRoleModel.AssociateProductToCustomerRoleModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)

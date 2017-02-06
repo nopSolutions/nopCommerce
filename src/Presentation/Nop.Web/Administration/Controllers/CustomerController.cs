@@ -800,7 +800,7 @@ namespace Nop.Admin.Controllers
         {
             //we use own own binder for searchCustomerRoleIds property 
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var searchDayOfBirth = 0;
             int searchMonthOfBirth = 0;
@@ -1633,7 +1633,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult RewardPointsHistorySelect(DataSourceRequest command, int customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
@@ -1687,7 +1687,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult AddressesSelect(int customerId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
@@ -1879,7 +1879,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult OrderList(int customerId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var orders = _orderService.SearchOrders(customerId: customerId);
 
@@ -1945,7 +1945,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult ReportBestCustomersByOrderTotalList(DataSourceRequest command, BestCustomersReportModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return Content("");
+                return AccessDeniedKendoGridJson();
 
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
@@ -1986,7 +1986,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult ReportBestCustomersByNumberOfOrdersList(DataSourceRequest command, BestCustomersReportModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return Content("");
+                return AccessDeniedKendoGridJson();
 
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
@@ -2037,7 +2037,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult ReportRegisteredCustomersList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return Content("");
+                return AccessDeniedKendoGridJson();
 
             var model = GetReportRegisteredCustomersModel();
             var gridModel = new DataSourceResult
@@ -2163,7 +2163,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult GetCartList(int customerId, int cartTypeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return Content("");
+                return AccessDeniedKendoGridJson();
 
             var customer = _customerService.GetCustomerById(customerId);
             var cart = customer.ShoppingCartItems.Where(x => x.ShoppingCartTypeId == cartTypeId).ToList();
@@ -2202,7 +2202,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult ListActivityLog(DataSourceRequest command, int customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return Content("");
+                return AccessDeniedKendoGridJson();
 
             var activityLog = _customerActivityService.GetAllActivities(null, null, customerId, 0, command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
@@ -2234,7 +2234,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult BackInStockSubscriptionList(DataSourceRequest command, int customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return Content("");
+                return AccessDeniedKendoGridJson();
 
             var subscriptions = _backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(customerId,
                 0, command.Page - 1, command.PageSize);

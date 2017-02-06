@@ -57,7 +57,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var customers = _customerService.GetOnlineCustomers(DateTime.UtcNow.AddMinutes(-_customerSettings.OnlineCustomerMinutes),
                 null, command.Page - 1, command.PageSize);

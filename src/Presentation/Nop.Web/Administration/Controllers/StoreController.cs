@@ -101,7 +101,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var storeModels = _storeService.GetAllStores()
                 .Select(x => x.ToModel())

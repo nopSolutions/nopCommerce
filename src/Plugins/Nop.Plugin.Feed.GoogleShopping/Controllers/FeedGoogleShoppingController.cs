@@ -169,7 +169,7 @@ namespace Nop.Plugin.Feed.GoogleShopping.Controllers
         public ActionResult GoogleProductList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return Content("Access denied");
+                return ErrorForKendoGridJson("Access denied");
 
             var products = _productService.SearchProducts(pageIndex: command.Page - 1,
                 pageSize: command.PageSize, showHidden: true);

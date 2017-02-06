@@ -81,7 +81,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var polls = _pollService.GetPolls(0, false, null, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
@@ -225,7 +225,7 @@ namespace Nop.Admin.Controllers
         public virtual ActionResult PollAnswers(int pollId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var poll = _pollService.GetPollById(pollId);
             if (poll == null)
