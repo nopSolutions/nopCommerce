@@ -1427,7 +1427,6 @@ set @resources='
   <LocaleResource Name="Plugins.Payments.PayPalStandard.RoundingWarning">
     <Value>It looks like you have "ShoppingCartSettings.RoundPricesDuringCalculation" setting disabled. Keep in mind that this can lead to a discrepancy of the order total amount, as PayPal only rounds to two decimals.</Value>
   </LocaleResource>
-  </LocaleResource> 
   <LocaleResource Name="Admin.Affiliates.Orders.Order">
     <Value></Value>
   </LocaleResource>  
