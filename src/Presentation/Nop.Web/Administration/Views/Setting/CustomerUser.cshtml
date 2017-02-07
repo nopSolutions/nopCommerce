@@ -27,7 +27,7 @@
     @Html.ValidationSummary(false)
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             bindBootstrapTabSelectEvent('customersettings-edit');
         });
     </script>
@@ -62,7 +62,7 @@
     }
 
     @*save selected tab name*@
-	<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
+    <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 }
 
 @helper TabCustomerSettings()
@@ -75,7 +75,7 @@
                         @Html.NopLabelFor(model => model.CustomerSettings.UserRegistrationType)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopDropDownListFor(model => model.CustomerSettings.UserRegistrationType, ((UserRegistrationType) Model.CustomerSettings.UserRegistrationType).ToSelectList())
+                        @Html.NopDropDownListFor(model => model.CustomerSettings.UserRegistrationType, ((UserRegistrationType)Model.CustomerSettings.UserRegistrationType).ToSelectList())
                         @Html.ValidationMessageFor(model => model.CustomerSettings.UserRegistrationType)
                     </div>
                 </div>
@@ -174,7 +174,7 @@
                         @Html.NopLabelFor(model => model.CustomerSettings.CustomerNameFormat)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopDropDownListFor(model => model.CustomerSettings.CustomerNameFormat, ((CustomerNameFormat) Model.CustomerSettings.CustomerNameFormat).ToSelectList())
+                        @Html.NopDropDownListFor(model => model.CustomerSettings.CustomerNameFormat, ((CustomerNameFormat)Model.CustomerSettings.CustomerNameFormat).ToSelectList())
                         @Html.ValidationMessageFor(model => model.CustomerSettings.CustomerNameFormat)
                     </div>
                 </div>
@@ -201,7 +201,7 @@
                         @Html.NopLabelFor(model => model.CustomerSettings.DefaultPasswordFormat)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopDropDownListFor(model => model.CustomerSettings.DefaultPasswordFormat, ((PasswordFormat) Model.CustomerSettings.DefaultPasswordFormat).ToSelectList())
+                        @Html.NopDropDownListFor(model => model.CustomerSettings.DefaultPasswordFormat, ((PasswordFormat)Model.CustomerSettings.DefaultPasswordFormat).ToSelectList())
                         @Html.ValidationMessageFor(model => model.CustomerSettings.DefaultPasswordFormat)
                     </div>
                 </div>
@@ -230,24 +230,6 @@
                     <div class="col-md-9">
                         @Html.NopEditorFor(model => model.CustomerSettings.FailedPasswordAllowedAttempts)
                         @Html.ValidationMessageFor(model => model.CustomerSettings.FailedPasswordAllowedAttempts)
-                        
-
-                        <script type="text/javascript">
-                            $(document).ready(function () {
-                                $("#@Html.FieldIdFor(model => model.CustomerSettings.FailedPasswordAllowedAttempts)").change(toggleFailedPasswordAllowedAttempts);
-
-                                toggleFailedPasswordAllowedAttempts();
-                            });
-
-                            function toggleFailedPasswordAllowedAttempts() {
-                                var failedPasswordAllowedAttempts = $("#@Html.FieldIdFor(model => model.CustomerSettings.FailedPasswordAllowedAttempts)").data("kendoNumericTextBox");
-                                if (failedPasswordAllowedAttempts.value($("#value").val()) > 0) {
-                                    $('#pnlFailedPasswordLockoutMinutes').show();
-                                } else {
-                                    $('#pnlFailedPasswordLockoutMinutes').hide();
-                                }
-                            }
-                        </script>
                     </div>
                 </div>
                 <div class="form-group advanced-setting" id="pnlFailedPasswordLockoutMinutes">
@@ -315,7 +297,7 @@
                 </div>
             </div>
             <script type="text/javascript">
-                $(document).ready(function() {
+                $(document).ready(function () {
                     $("#@Html.FieldIdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)").click(toggleAvatar);
                     $("#@Html.FieldIdFor(model => model.CustomerSettings.UsernamesEnabled)").click(toggleUsername);
 
@@ -397,7 +379,7 @@
             $("#@Html.FieldIdFor(model => model.CustomerSettings.FaxEnabled)").click(toggleCustomerRequiredFormField);
             $("#@Html.FieldIdFor(model => model.CustomerSettings.NewsletterEnabled)").click(toggleNewsletterEnabledField);
             $("#@Html.FieldIdFor(model => model.CustomerSettings.HideNewsletterBlock)").click(toggleHideNewsletterBlock);
-            
+
             toggleCustomerCountryFormField();
             toggleCustomerStateProvinceFormField();
             toggleCustomerRequiredFormField();
@@ -735,7 +717,7 @@
             </div>
         </div>
         @*render custom customer attributes*@
-        @Html.Action("ListBlock", "CustomerAttribute")      
+        @Html.Action("ListBlock", "CustomerAttribute")
     </div>
 }
 
