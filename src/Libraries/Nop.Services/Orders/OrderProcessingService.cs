@@ -1305,7 +1305,7 @@ namespace Nop.Services.Orders
                             RentalEndDateUtc = sc.RentalEndDateUtc
                         };
                         order.OrderItems.Add(orderItem);
-                        _orderService.UpdateOrder(order);
+                        _orderService.InsertOrderItem(orderItem);
 
                         //gift cards
                         if (sc.Product.IsGiftCard)
@@ -1768,7 +1768,7 @@ namespace Nop.Services.Orders
                             RentalEndDateUtc = orderItem.RentalEndDateUtc
                         };
                         order.OrderItems.Add(newOrderItem);
-                        _orderService.UpdateOrder(order);
+                        _orderService.InsertOrderItem(newOrderItem);
 
                         //gift cards
                         if (orderItem.Product.IsGiftCard)

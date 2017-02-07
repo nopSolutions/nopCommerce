@@ -2160,7 +2160,8 @@ namespace Nop.Admin.Controllers
                     orderItem.DiscountAmountExclTax = discountExclTax;
                     orderItem.PriceInclTax = priceInclTax;
                     orderItem.PriceExclTax = priceExclTax;
-                    _orderService.UpdateOrder(order);
+                    _orderService.UpdateOrderItem(orderItem);
+                    //_orderService.UpdateOrder(order);
                 }
 
                 //adjust inventory
@@ -2324,7 +2325,8 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             orderItem.DownloadCount = 0;
-            _orderService.UpdateOrder(order);
+            _orderService.UpdateOrderItem(orderItem);
+            //_orderService.UpdateOrder(order);
             LogEditOrder(order.Id);
 
             var model = new OrderModel();
@@ -2364,7 +2366,8 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             orderItem.IsDownloadActivated = !orderItem.IsDownloadActivated;
-            _orderService.UpdateOrder(order);
+            _orderService.UpdateOrderItem(orderItem);
+            //_orderService.UpdateOrder(order);
             LogEditOrder(order.Id);
 
             var model = new OrderModel();
@@ -2432,7 +2435,9 @@ namespace Nop.Admin.Controllers
                 orderItem.LicenseDownloadId = model.LicenseDownloadId;
             else
                 orderItem.LicenseDownloadId = null;
-            _orderService.UpdateOrder(order);
+
+            _orderService.UpdateOrderItem(orderItem);
+            //_orderService.UpdateOrder(order);
             LogEditOrder(order.Id);
 
             //success
@@ -2674,7 +2679,7 @@ namespace Nop.Admin.Controllers
                     RentalEndDateUtc = rentalEndDate
                 };
                 order.OrderItems.Add(orderItem);
-                _orderService.UpdateOrder(order);
+                _orderService.InsertOrderItem(orderItem);
 
                 //adjust inventory
                 _productService.AdjustInventory(orderItem.Product, -orderItem.Quantity, orderItem.AttributesXml,
