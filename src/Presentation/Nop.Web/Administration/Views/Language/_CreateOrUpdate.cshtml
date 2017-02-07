@@ -82,7 +82,7 @@
                         @Html.NopLabelFor(model => model.FlagImageFileName)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.FlagImageFileName, false)
+                        @Html.NopEditorFor(model => model.FlagImageFileName, renderFormControlClass: false)
                         @Html.ValidationMessageFor(model => model.FlagImageFileName)
                         <script>
                             $(function() {
