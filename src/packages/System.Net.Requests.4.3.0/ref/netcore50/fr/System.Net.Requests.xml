@@ -1,0 +1,530 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Net.Requests</name>
+  </assembly>
+  <members>
+    <member name="T:System.Net.HttpWebRequest">
+      <summary>Fournit une implémentation propre à HTTP de la classe <see cref="T:System.Net.WebRequest" />.</summary>
+    </member>
+    <member name="M:System.Net.HttpWebRequest.Abort">
+      <summary>Annule une requête adressée à une ressource Internet.</summary>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.Accept">
+      <summary>Obtient ou définit la valeur de l'en-tête HTTP Accept.</summary>
+      <returns>Valeur de l'en-tête HTTP Accept.La valeur par défaut est null.</returns>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.AllowReadStreamBuffering">
+      <summary>Obtient ou définit une valeur indiquant si les données reçues à partir de la ressource Internet doivent être mises en mémoire tampon.</summary>
+      <returns>truedans la mémoire tampon reçues à partir de la ressource Internet ; Sinon, false.true pour activer la mise en mémoire tampon des données lues à partir de la ressource Internet ; false pour désactiver la mise en mémoire tampon.La valeur par défaut est true.</returns>
+    </member>
+    <member name="M:System.Net.HttpWebRequest.BeginGetRequestStream(System.AsyncCallback,System.Object)">
+      <summary>Démarre une requête asynchrone d'un objet <see cref="T:System.IO.Stream" /> à utiliser pour écrire des données.</summary>
+      <returns>
+        <see cref="T:System.IAsyncResult" /> qui fait référence à la requête asynchrone.</returns>
+      <param name="callback">Délégué <see cref="T:System.AsyncCallback" />. </param>
+      <param name="state">Objet d'état de cette requête. </param>
+      <exception cref="T:System.Net.ProtocolViolationException">La propriété <see cref="P:System.Net.HttpWebRequest.Method" /> est GET ou HEAD.ou La propriété <see cref="P:System.Net.HttpWebRequest.KeepAlive" /> a la valeur true, la propriété <see cref="P:System.Net.HttpWebRequest.AllowWriteStreamBuffering" /> a la valeur false, la propriété <see cref="P:System.Net.HttpWebRequest.ContentLength" /> a la valeur -1, la propriété <see cref="P:System.Net.HttpWebRequest.SendChunked" /> a la valeur false et la propriété <see cref="P:System.Net.HttpWebRequest.Method" /> a la valeur POST ou PUT. </exception>
+      <exception cref="T:System.InvalidOperationException">Le flux est actuellement utilisé par un appel antérieur à <see cref="M:System.Net.HttpWebRequest.BeginGetRequestStream(System.AsyncCallback,System.Object)" />.ou Une valeur est affectée à la propriété <see cref="P:System.Net.HttpWebRequest.TransferEncoding" /> et la propriété <see cref="P:System.Net.HttpWebRequest.SendChunked" /> est false.ou Le pool de threads dispose d'un nombre insuffisant de threads. </exception>
+      <exception cref="T:System.NotSupportedException">Le validateur de cache de la requête a indiqué que la réponse à cette requête peut être fournie à partir du cache ; toutefois, les requêtes qui écrivent des données ne doivent pas utiliser le cache.Cette exception peut se produire si vous utilisez un validateur de cache personnalisé qui est implémenté de manière incorrecte.</exception>
+      <exception cref="T:System.Net.WebException">La méthode <see cref="M:System.Net.HttpWebRequest.Abort" /> a été appelée au préalable. </exception>
+      <exception cref="T:System.ObjectDisposedException">Dans une application .NET Compact Framework, un flux de requête avec une longueur de contenu nulle n'a pas été obtenu ni fermé correctement.Pour plus d'informations sur la gestion de requêtes avec une longueur de contenu nulle, consultez Network Programming in the .NET Compact Framework.</exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Net.DnsPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Net.WebPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Diagnostics.PerformanceCounterPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.HttpWebRequest.BeginGetResponse(System.AsyncCallback,System.Object)">
+      <summary>Démarre une requête asynchrone adressée à une ressource Internet.</summary>
+      <returns>
+        <see cref="T:System.IAsyncResult" /> qui fait référence à la requête asynchrone d'une réponse.</returns>
+      <param name="callback">Délégué <see cref="T:System.AsyncCallback" />. </param>
+      <param name="state">Objet d'état de cette requête. </param>
+      <exception cref="T:System.InvalidOperationException">Le flux est déjà utilisé par un appel antérieur à <see cref="M:System.Net.HttpWebRequest.BeginGetResponse(System.AsyncCallback,System.Object)" />.ou Une valeur est affectée à la propriété <see cref="P:System.Net.HttpWebRequest.TransferEncoding" /> et la propriété <see cref="P:System.Net.HttpWebRequest.SendChunked" /> est false.ou Le pool de threads dispose d'un nombre insuffisant de threads. </exception>
+      <exception cref="T:System.Net.ProtocolViolationException">La propriété <see cref="P:System.Net.HttpWebRequest.Method" /> a la valeur GET ou HEAD et la propriété <see cref="P:System.Net.HttpWebRequest.ContentLength" /> est supérieure à zéro ou la propriété <see cref="P:System.Net.HttpWebRequest.SendChunked" /> est true.ou La propriété <see cref="P:System.Net.HttpWebRequest.KeepAlive" /> a la valeur true, la propriété <see cref="P:System.Net.HttpWebRequest.AllowWriteStreamBuffering" /> a la valeur false et la propriété <see cref="P:System.Net.HttpWebRequest.ContentLength" /> a la valeur -1, la propriété <see cref="P:System.Net.HttpWebRequest.SendChunked" /> a la valeur false et la propriété <see cref="P:System.Net.HttpWebRequest.Method" /> a la valeur POST ou PUT.ou Le <see cref="T:System.Net.HttpWebRequest" /> a un corps d'entité, mais la méthode <see cref="M:System.Net.HttpWebRequest.BeginGetResponse(System.AsyncCallback,System.Object)" /> est appelée sans appeler la méthode <see cref="M:System.Net.HttpWebRequest.BeginGetRequestStream(System.AsyncCallback,System.Object)" />. ou Le <see cref="P:System.Net.HttpWebRequest.ContentLength" /> est supérieur à zéro, mais l'application n'écrit pas toutes les données promises.</exception>
+      <exception cref="T:System.Net.WebException">La méthode <see cref="M:System.Net.HttpWebRequest.Abort" /> a été appelée au préalable. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Net.DnsPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Net.WebPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Diagnostics.PerformanceCounterPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.ContentType">
+      <summary>Obtient ou définit la valeur de l'en-tête HTTP Content-type.</summary>
+      <returns>Valeur de l'en-tête HTTP Content-type.La valeur par défaut est null.</returns>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.ContinueTimeout">
+      <summary>Obtient ou définit le délai d'attente, en millisecondes, jusqu'à réception de la réponse 100-Continue depuis le serveur. </summary>
+      <returns>Délai d'attente, en millisecondes, jusqu'à réception de la réponse 100-Continue. </returns>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.CookieContainer">
+      <summary>Obtient ou définit les cookies associés à la requête.</summary>
+      <returns>
+        <see cref="T:System.Net.CookieContainer" /> contenant les cookies associés à cette requête.</returns>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.Credentials">
+      <summary>Obtient ou définit les informations d'authentification pour la requête.</summary>
+      <returns>
+        <see cref="T:System.Net.ICredentials" /> qui contient les informations d'authentification associées à la requête.La valeur par défaut est null.</returns>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.HttpWebRequest.EndGetRequestStream(System.IAsyncResult)">
+      <summary>Met fin à une requête asynchrone d'un objet <see cref="T:System.IO.Stream" /> à utiliser pour écrire des données.</summary>
+      <returns>
+        <see cref="T:System.IO.Stream" /> à utiliser pour écrire les données de la requête.</returns>
+      <param name="asyncResult">Requête d'un flux en attente. </param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="asyncResult" /> a la valeur null. </exception>
+      <exception cref="T:System.IO.IOException">La requête ne s'est pas achevée et aucun flux n'est disponible. </exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="asyncResult" /> n'a pas été retourné par l'instance actuelle à partir d'un appel à la méthode <see cref="M:System.Net.HttpWebRequest.BeginGetRequestStream(System.AsyncCallback,System.Object)" />. </exception>
+      <exception cref="T:System.InvalidOperationException">Cette méthode a été appelée au préalable à l'aide de <paramref name="asyncResult" />. </exception>
+      <exception cref="T:System.Net.WebException">La méthode <see cref="M:System.Net.HttpWebRequest.Abort" /> a été appelée au préalable.ou Une erreur s'est produite pendant le traitement de la requête. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.HttpWebRequest.EndGetResponse(System.IAsyncResult)">
+      <summary>Termine une requête asynchrone adressée à une ressource Internet.</summary>
+      <returns>
+        <see cref="T:System.Net.WebResponse" /> contenant la réponse de la ressource Internet.</returns>
+      <param name="asyncResult">Requête d'une réponse en attente. </param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="asyncResult" /> a la valeur null. </exception>
+      <exception cref="T:System.InvalidOperationException">Cette méthode a été appelée au préalable à l'aide de <paramref name="asyncResult." />ou La propriété <see cref="P:System.Net.HttpWebRequest.ContentLength" /> est supérieure à 0, mais les données n'ont pas été écrites dans le flux de requête. </exception>
+      <exception cref="T:System.Net.WebException">La méthode <see cref="M:System.Net.HttpWebRequest.Abort" /> a été appelée au préalable.ou Une erreur s'est produite pendant le traitement de la requête. </exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="asyncResult" /> n'a pas été retourné par l'instance actuelle à partir d'un appel à la méthode <see cref="M:System.Net.HttpWebRequest.BeginGetResponse(System.AsyncCallback,System.Object)" />. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.HaveResponse">
+      <summary>Obtient une valeur indiquant si une réponse a été reçue d'une ressource Internet.</summary>
+      <returns>true si une réponse a été reçue ; sinon, false.</returns>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.Headers">
+      <summary>Spécifie une collection de paires nom-valeur qui composent les en-têtes HTTP.</summary>
+      <returns>
+        <see cref="T:System.Net.WebHeaderCollection" /> contenant les paires nom-valeur qui composent les en-têtes de la requête HTTP.</returns>
+      <exception cref="T:System.InvalidOperationException">La requête a été lancée suite à l'appel de la méthode <see cref="M:System.Net.HttpWebRequest.GetRequestStream" />, <see cref="M:System.Net.HttpWebRequest.BeginGetRequestStream(System.AsyncCallback,System.Object)" />, <see cref="M:System.Net.HttpWebRequest.GetResponse" /> ou <see cref="M:System.Net.HttpWebRequest.BeginGetResponse(System.AsyncCallback,System.Object)" />. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.Method">
+      <summary>Obtient ou définit la méthode pour la requête.</summary>
+      <returns>Méthode de requête à utiliser pour contacter la ressource Internet.La valeur par défaut est GET.</returns>
+      <exception cref="T:System.ArgumentException">Aucune méthode n'est fournie.ou La chaîne de la méthode contient des caractères non valides. </exception>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.RequestUri">
+      <summary>Obtient l'URI (Uniform Resource Identifier) d'origine de la requête.</summary>
+      <returns>
+        <see cref="T:System.Uri" /> contenant l'URI de la ressource Internet passée à la méthode <see cref="M:System.Net.WebRequest.Create(System.String)" />.</returns>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.SupportsCookieContainer">
+      <summary>Obtient une valeur qui indique si la requête fournit une prise en charge pour une <see cref="T:System.Net.CookieContainer" />.</summary>
+      <returns>trueSi la demande prend en charge une <see cref="T:System.Net.CookieContainer" />; Sinon, false.true si un <see cref="T:System.Net.CookieContainer" /> est pris en charge ; sinon, false. </returns>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.UseDefaultCredentials">
+      <summary>Obtient ou définit une valeur <see cref="T:System.Boolean" /> qui contrôle si les informations d'identification par défaut sont envoyées avec les requêtes.</summary>
+      <returns>true si les informations d'identification par défaut sont utilisées ; sinon, false.La valeur par défaut est false.</returns>
+      <exception cref="T:System.InvalidOperationException">Vous avez essayé de définir cette propriété après l'envoi de la requête.</exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Read="USERNAME" />
+      </PermissionSet>
+    </member>
+    <member name="T:System.Net.HttpWebResponse">
+      <summary>Fournit une implémentation propre à HTTP de la classe <see cref="T:System.Net.WebResponse" />.</summary>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.ContentLength">
+      <summary>Obtient la longueur du contenu retourné par la demande.</summary>
+      <returns>Nombre d'octets retournés par la demande.La longueur de contenu n'inclut pas d'informations d'en-tête.</returns>
+      <exception cref="T:System.ObjectDisposedException">L'instance actuelle a été supprimée. </exception>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.ContentType">
+      <summary>Obtient le type de contenu de la réponse.</summary>
+      <returns>Chaîne qui contient le type de contenu de la réponse.</returns>
+      <exception cref="T:System.ObjectDisposedException">L'instance actuelle a été supprimée. </exception>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.Cookies">
+      <summary>Obtient ou définit les cookies qui sont associés à cette réponse.</summary>
+      <returns>
+        <see cref="T:System.Net.CookieCollection" /> qui contient les cookies associés à cette réponse.</returns>
+      <exception cref="T:System.ObjectDisposedException">L'instance actuelle a été supprimée. </exception>
+    </member>
+    <member name="M:System.Net.HttpWebResponse.Dispose(System.Boolean)">
+      <summary>Libère les ressources non managées utilisées par <see cref="T:System.Net.HttpWebResponse" /> et supprime éventuellement les ressources managées.</summary>
+      <param name="disposing">true pour libérer les ressources managées et non managées ; false pour libérer uniquement les ressources non managées. </param>
+    </member>
+    <member name="M:System.Net.HttpWebResponse.GetResponseStream">
+      <summary>Obtient le flux qui est utilisé pour lire le corps de la réponse du serveur.</summary>
+      <returns>
+        <see cref="T:System.IO.Stream" /> contenant le corps de la réponse.</returns>
+      <exception cref="T:System.Net.ProtocolViolationException">Il n'y a pas de flux de réponse. </exception>
+      <exception cref="T:System.ObjectDisposedException">L'instance actuelle a été supprimée. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.Headers">
+      <summary>Obtient du serveur les en-têtes qui sont associés à cette réponse.</summary>
+      <returns>
+        <see cref="T:System.Net.WebHeaderCollection" /> qui contient les informations d'en-tête retournées avec la réponse.</returns>
+      <exception cref="T:System.ObjectDisposedException">L'instance actuelle a été supprimée. </exception>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.Method">
+      <summary>Obtient la méthode qui est utilisée pour retourner la réponse.</summary>
+      <returns>Chaîne qui contient la méthode HTTP utilisée pour retourner la réponse.</returns>
+      <exception cref="T:System.ObjectDisposedException">L'instance actuelle a été supprimée. </exception>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.ResponseUri">
+      <summary>Obtient l'URI de la ressource Internet qui a répondu à la demande.</summary>
+      <returns>
+        <see cref="T:System.Uri" /> qui contient l'URI de la ressource Internet qui a répondu à la demande.</returns>
+      <exception cref="T:System.ObjectDisposedException">L'instance actuelle a été supprimée. </exception>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.StatusCode">
+      <summary>Obtient l'état de la réponse.</summary>
+      <returns>Une des valeurs de <see cref="T:System.Net.HttpStatusCode" />.</returns>
+      <exception cref="T:System.ObjectDisposedException">L'instance actuelle a été supprimée. </exception>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.StatusDescription">
+      <summary>Obtient la description d'état retournée avec la réponse.</summary>
+      <returns>Chaîne qui décrit l'état de la réponse.</returns>
+      <exception cref="T:System.ObjectDisposedException">L'instance actuelle a été supprimée. </exception>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.SupportsHeaders">
+      <summary>Obtient une valeur qui indique si les en-têtes sont pris en charge.</summary>
+      <returns>Retourne <see cref="T:System.Boolean" />.true si les en-têtes sont pris en charge ; sinon, false.</returns>
+    </member>
+    <member name="T:System.Net.IWebRequestCreate">
+      <summary>Fournit l'interface de base pour la création d'instances de <see cref="T:System.Net.WebRequest" />.</summary>
+    </member>
+    <member name="M:System.Net.IWebRequestCreate.Create(System.Uri)">
+      <summary>Crée une instance de <see cref="T:System.Net.WebRequest" />.</summary>
+      <returns>Instance de <see cref="T:System.Net.WebRequest" />.</returns>
+      <param name="uri">URI (Uniform Resource Identifier) de la ressource Web. </param>
+      <exception cref="T:System.NotSupportedException">Le schéma de demande spécifié dans <paramref name="uri" /> n'est pas pris en charge par cette instance de <see cref="T:System.Net.IWebRequestCreate" />. </exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="uri" /> a la valeur null. </exception>
+      <exception cref="T:System.UriFormatException">Dans les .NET pour applications Windows Store  ou la Bibliothèque de classes portable, intercepte l'exception de classe de base, <see cref="T:System.FormatException" />, sinon.L'URI spécifié dans <paramref name="uri" /> n'est pas un URI valide. </exception>
+    </member>
+    <member name="T:System.Net.ProtocolViolationException">
+      <summary>Exception levée en cas d'erreur durant l'utilisation d'un protocole réseau.</summary>
+    </member>
+    <member name="M:System.Net.ProtocolViolationException.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:System.Net.ProtocolViolationException" />.</summary>
+    </member>
+    <member name="M:System.Net.ProtocolViolationException.#ctor(System.String)">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:System.Net.ProtocolViolationException" /> avec le message spécifié.</summary>
+      <param name="message">Chaîne du message d'erreur. </param>
+    </member>
+    <member name="T:System.Net.WebException">
+      <summary>Exception levée en cas d'erreur lors de l'accès au réseau via un protocole enfichable.</summary>
+    </member>
+    <member name="M:System.Net.WebException.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:System.Net.WebException" />.</summary>
+    </member>
+    <member name="M:System.Net.WebException.#ctor(System.String)">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:System.Net.WebException" /> avec le message d'erreur spécifié.</summary>
+      <param name="message">Texte du message d'erreur. </param>
+    </member>
+    <member name="M:System.Net.WebException.#ctor(System.String,System.Exception)">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:System.Net.WebException" /> avec le message d'erreur et l'exception imbriquée spécifiés.</summary>
+      <param name="message">Texte du message d'erreur. </param>
+      <param name="innerException">Une exception imbriquée. </param>
+    </member>
+    <member name="M:System.Net.WebException.#ctor(System.String,System.Exception,System.Net.WebExceptionStatus,System.Net.WebResponse)">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:System.Net.WebException" /> avec le message d'erreur, l'exception imbriquée, l'état et la réponse spécifiés.</summary>
+      <param name="message">Texte du message d'erreur. </param>
+      <param name="innerException">Une exception imbriquée. </param>
+      <param name="status">Une des valeurs de <see cref="T:System.Net.WebExceptionStatus" />. </param>
+      <param name="response">Instance de <see cref="T:System.Net.WebResponse" /> qui contient la réponse de l'hôte distant. </param>
+    </member>
+    <member name="M:System.Net.WebException.#ctor(System.String,System.Net.WebExceptionStatus)">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:System.Net.WebException" /> avec le message d'erreur et l'état spécifiés.</summary>
+      <param name="message">Texte du message d'erreur. </param>
+      <param name="status">Une des valeurs de <see cref="T:System.Net.WebExceptionStatus" />. </param>
+    </member>
+    <member name="P:System.Net.WebException.Response">
+      <summary>Obtient la réponse retournée par l'hôte distant.</summary>
+      <returns>Instance de <see cref="T:System.Net.WebResponse" /> qui contient la réponse d'erreur issue d'une ressource Internet, lorsqu'une réponse est disponible à partir de cette ressource ; sinon, null.</returns>
+    </member>
+    <member name="P:System.Net.WebException.Status">
+      <summary>Obtient l'état de la réponse.</summary>
+      <returns>Une des valeurs de <see cref="T:System.Net.WebExceptionStatus" />.</returns>
+    </member>
+    <member name="T:System.Net.WebExceptionStatus">
+      <summary>Définit les codes d'état pour la classe <see cref="T:System.Net.WebException" />.</summary>
+    </member>
+    <member name="F:System.Net.WebExceptionStatus.ConnectFailure">
+      <summary>Le point de service distant n'a pas pu être contacté au niveau du transport.</summary>
+    </member>
+    <member name="F:System.Net.WebExceptionStatus.MessageLengthLimitExceeded">
+      <summary>Le message reçu dépassait la limite spécifiée lors de l'envoi d'une demande ou de la réception d'une réponse du serveur.</summary>
+    </member>
+    <member name="F:System.Net.WebExceptionStatus.Pending">
+      <summary>Une demande asynchrone interne est en attente.</summary>
+    </member>
+    <member name="F:System.Net.WebExceptionStatus.RequestCanceled">
+      <summary>La demande a été annulée, la méthode <see cref="M:System.Net.WebRequest.Abort" /> a été appelée ou une erreur inclassable s'est produite.C'est la valeur par défaut pour <see cref="P:System.Net.WebException.Status" />.</summary>
+    </member>
+    <member name="F:System.Net.WebExceptionStatus.SendFailure">
+      <summary>Une demande complète n'a pas pu être envoyée au serveur distant.</summary>
+    </member>
+    <member name="F:System.Net.WebExceptionStatus.Success">
+      <summary>Aucune erreur n'a été rencontrée.</summary>
+    </member>
+    <member name="F:System.Net.WebExceptionStatus.UnknownError">
+      <summary>Une exception d'un type inconnu s'est produite.</summary>
+    </member>
+    <member name="T:System.Net.WebRequest">
+      <summary>Effectue une demande à un URI (Uniform Resource Identifier).Il s'agit d'une classe abstract.</summary>
+    </member>
+    <member name="M:System.Net.WebRequest.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:System.Net.WebRequest" />.</summary>
+    </member>
+    <member name="M:System.Net.WebRequest.Abort">
+      <summary>Abandonne la demande. </summary>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to access the method, when the method is not overridden in a descendant class. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.WebRequest.BeginGetRequestStream(System.AsyncCallback,System.Object)">
+      <summary>En cas de substitution dans une classe descendante, fournit une version asynchrone de la méthode <see cref="M:System.Net.WebRequest.GetRequestStream" />.</summary>
+      <returns>Élément <see cref="T:System.IAsyncResult" /> qui référence la demande asynchrone.</returns>
+      <param name="callback">Délégué <see cref="T:System.AsyncCallback" />. </param>
+      <param name="state">Objet contenant les informations d'état de cette demande asynchrone. </param>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to access the method, when the method is not overridden in a descendant class. </exception>
+    </member>
+    <member name="M:System.Net.WebRequest.BeginGetResponse(System.AsyncCallback,System.Object)">
+      <summary>En cas de substitution dans une classe descendante, démarre une demande asynchrone pour une ressource Internet.</summary>
+      <returns>Élément <see cref="T:System.IAsyncResult" /> qui référence la demande asynchrone.</returns>
+      <param name="callback">Délégué <see cref="T:System.AsyncCallback" />. </param>
+      <param name="state">Objet contenant les informations d'état de cette demande asynchrone. </param>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to access the method, when the method is not overridden in a descendant class. </exception>
+    </member>
+    <member name="P:System.Net.WebRequest.ContentType">
+      <summary>En cas de substitution dans une classe descendante, obtient ou définit le type de contenu des données de demande envoyées.</summary>
+      <returns>Type de contenu des données de demande.</returns>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to get or set the property, when the property is not overridden in a descendant class. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.WebRequest.Create(System.String)">
+      <summary>Initialise une nouvelle instance de <see cref="T:System.Net.WebRequest" /> pour le modèle d'URI spécifié.</summary>
+      <returns>Descendant de <see cref="T:System.Net.WebRequest" /> pour le modèle d'URI spécifique.</returns>
+      <param name="requestUriString">URI qui identifie la ressource Internet. </param>
+      <exception cref="T:System.NotSupportedException">The request scheme specified in <paramref name="requestUriString" /> has not been registered. </exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="requestUriString" /> is null. </exception>
+      <exception cref="T:System.Security.SecurityException">The caller does not have permission to connect to the requested URI or a URI that the request is redirected to. </exception>
+      <exception cref="T:System.UriFormatException">In the .NET for Windows Store apps or the Portable Class Library, catch the base class exception, <see cref="T:System.FormatException" />, instead.The URI specified in <paramref name="requestUriString" /> is not a valid URI. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.WebRequest.Create(System.Uri)">
+      <summary>Initialise une nouvelle instance de <see cref="T:System.Net.WebRequest" /> pour le modèle d'URI spécifié.</summary>
+      <returns>Descendant de <see cref="T:System.Net.WebRequest" /> pour le modèle d'URI spécifié.</returns>
+      <param name="requestUri">Élément <see cref="T:System.Uri" /> contenant l'URI de la ressource demandée. </param>
+      <exception cref="T:System.NotSupportedException">The request scheme specified in <paramref name="requestUri" /> is not registered. </exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="requestUri" /> is null. </exception>
+      <exception cref="T:System.Security.SecurityException">The caller does not have permission to connect to the requested URI or a URI that the request is redirected to. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.WebRequest.CreateHttp(System.String)">
+      <summary>Initialise une nouvelle instance de <see cref="T:System.Net.HttpWebRequest" /> pour la chaîne d'URI spécifiée.</summary>
+      <returns>Retourne <see cref="T:System.Net.HttpWebRequest" />.Instance de <see cref="T:System.Net.HttpWebRequest" /> pour la chaîne d'URI spécifique.</returns>
+      <param name="requestUriString">Chaîne d'URI qui identifie la ressource Internet. </param>
+      <exception cref="T:System.NotSupportedException">The request scheme specified in <paramref name="requestUriString" /> is the http or https scheme. </exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="requestUriString" /> is null. </exception>
+      <exception cref="T:System.Security.SecurityException">The caller does not have permission to connect to the requested URI or a URI that the request is redirected to. </exception>
+      <exception cref="T:System.UriFormatException">The URI specified in <paramref name="requestUriString" /> is not a valid URI. </exception>
+    </member>
+    <member name="M:System.Net.WebRequest.CreateHttp(System.Uri)">
+      <summary>Initialise une nouvelle instance de <see cref="T:System.Net.HttpWebRequest" /> pour l'URI spécifié.</summary>
+      <returns>Retourne <see cref="T:System.Net.HttpWebRequest" />.Instance de <see cref="T:System.Net.HttpWebRequest" /> pour la chaîne d'URI spécifique.</returns>
+      <param name="requestUri">URI qui identifie la ressource Internet.</param>
+      <exception cref="T:System.NotSupportedException">The request scheme specified in <paramref name="requestUri" /> is the http or https scheme. </exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="requestUri" /> is null. </exception>
+      <exception cref="T:System.Security.SecurityException">The caller does not have permission to connect to the requested URI or a URI that the request is redirected to. </exception>
+      <exception cref="T:System.UriFormatException">The URI specified in <paramref name="requestUri" /> is not a valid URI. </exception>
+    </member>
+    <member name="P:System.Net.WebRequest.Credentials">
+      <summary>En cas de substitution dans une classe descendante, obtient ou définit les informations d'identification réseau utilisées pour authentifier la demande auprès de la ressource Internet.</summary>
+      <returns>Élément <see cref="T:System.Net.ICredentials" /> contenant les informations d'identification d'authentification associées à la demande.La valeur par défaut est null.</returns>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to get or set the property, when the property is not overridden in a descendant class. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebRequest.DefaultWebProxy">
+      <summary>Obtient ou définit le proxy HTTP global.</summary>
+      <returns>Élément <see cref="T:System.Net.IWebProxy" /> utilisé par chaque appel aux instances de <see cref="T:System.Net.WebRequest" />.</returns>
+    </member>
+    <member name="M:System.Net.WebRequest.EndGetRequestStream(System.IAsyncResult)">
+      <summary>En cas de remplacement dans une classe descendante, retourne un élément <see cref="T:System.IO.Stream" /> pour l'écriture de données dans la ressource Internet.</summary>
+      <returns>Élément <see cref="T:System.IO.Stream" /> dans lequel écrire des données.</returns>
+      <param name="asyncResult">Élément <see cref="T:System.IAsyncResult" /> qui référence une demande en attente pour un flux. </param>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to access the method, when the method is not overridden in a descendant class. </exception>
+    </member>
+    <member name="M:System.Net.WebRequest.EndGetResponse(System.IAsyncResult)">
+      <summary>En cas de remplacement dans une classe descendante, retourne un élément <see cref="T:System.Net.WebResponse" />.</summary>
+      <returns>Élément <see cref="T:System.Net.WebResponse" /> qui contient une réponse à la demande Internet.</returns>
+      <param name="asyncResult">Élément <see cref="T:System.IAsyncResult" /> qui référence une demande de réponse en attente. </param>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to access the method, when the method is not overridden in a descendant class. </exception>
+    </member>
+    <member name="M:System.Net.WebRequest.GetRequestStreamAsync">
+      <summary>En cas de remplacement dans une classe descendante, retourne un élément <see cref="T:System.IO.Stream" /> pour l'écriture de données dans la ressource Internet sous forme d'opération asynchrone.</summary>
+      <returns>Retourne <see cref="T:System.Threading.Tasks.Task`1" />.Objet de tâche représentant l'opération asynchrone.</returns>
+    </member>
+    <member name="M:System.Net.WebRequest.GetResponseAsync">
+      <summary>En cas de substitution dans une classe descendante, retourne une réponse à une demande Internet en tant qu'opération asynchrone.</summary>
+      <returns>Retourne <see cref="T:System.Threading.Tasks.Task`1" />.Objet de tâche représentant l'opération asynchrone.</returns>
+    </member>
+    <member name="P:System.Net.WebRequest.Headers">
+      <summary>En cas de substitution dans une classe descendante, obtient ou définit la collection de paires nom/valeur d'en-tête associées à la demande.</summary>
+      <returns>Élément <see cref="T:System.Net.WebHeaderCollection" /> qui contient les paires nom/valeur d'en-tête associées à cette demande.</returns>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to get or set the property, when the property is not overridden in a descendant class. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebRequest.Method">
+      <summary>En cas de substitution dans une classe descendante, obtient ou définit la méthode de protocole à utiliser dans cette demande.</summary>
+      <returns>Méthode de protocole utilisée dans cette demande.</returns>
+      <exception cref="T:System.NotImplementedException">If the property is not overridden in a descendant class, any attempt is made to get or set the property. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebRequest.Proxy">
+      <summary>En cas de substitution dans une classe descendante, obtient ou définit le proxy réseau à utiliser pour accéder à cette ressource Internet.</summary>
+      <returns>Élément <see cref="T:System.Net.IWebProxy" /> à utiliser pour accéder à la ressource Internet.</returns>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to get or set the property, when the property is not overridden in a descendant class. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.WebRequest.RegisterPrefix(System.String,System.Net.IWebRequestCreate)">
+      <summary>Inscrit un descendant de <see cref="T:System.Net.WebRequest" /> pour l'URI spécifié.</summary>
+      <returns>true si l'inscription a réussi ; sinon, false.</returns>
+      <param name="prefix">URI complet ou préfixe d'URI traité par le descendant de <see cref="T:System.Net.WebRequest" />. </param>
+      <param name="creator">Méthode de création appelée par l'élément <see cref="T:System.Net.WebRequest" /> pour créer le descendant de <see cref="T:System.Net.WebRequest" />. </param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="prefix" /> is null-or- <paramref name="creator" /> is null. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="ControlEvidence" />
+        <IPermission class="System.Net.WebPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebRequest.RequestUri">
+      <summary>En cas de substitution dans une classe descendante, obtient l'URI de la ressource Internet associée à la demande.</summary>
+      <returns>Élément <see cref="T:System.Uri" /> représentant la ressource associée à la demande. </returns>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to get or set the property, when the property is not overridden in a descendant class. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebRequest.UseDefaultCredentials">
+      <summary>En cas de remplacement dans une classe descendante, obtient ou définit une valeur <see cref="T:System.Boolean" /> qui détermine si les éléments <see cref="P:System.Net.CredentialCache.DefaultCredentials" /> sont envoyés avec les demandes.</summary>
+      <returns>true si les informations d'identification par défaut sont utilisées ; sinon, false.La valeur par défaut est false.</returns>
+      <exception cref="T:System.InvalidOperationException">You attempted to set this property after the request was sent.</exception>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to access the property, when the property is not overridden in a descendant class. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="T:System.Net.WebResponse">
+      <summary>Fournit une réponse provenant d'un URI (Uniform Resource Identifier).Il s'agit d'une classe abstract.</summary>
+    </member>
+    <member name="M:System.Net.WebResponse.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:System.Net.WebResponse" />.</summary>
+    </member>
+    <member name="P:System.Net.WebResponse.ContentLength">
+      <summary>En cas de substitution dans une classe dérivée, obtient ou définit la longueur du contenu des données reçues.</summary>
+      <returns>Nombre d'octets retournés par la ressource Internet.</returns>
+      <exception cref="T:System.NotSupportedException">Toutes les tentatives possibles sont effectuées pour obtenir ou définir la propriété si celle-ci n'est pas substituée dans une classe descendante. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebResponse.ContentType">
+      <summary>En cas de substitution dans une classe dérivée, obtient ou définit le type de contenu des données reçues.</summary>
+      <returns>Chaîne qui contient le type de contenu de la réponse.</returns>
+      <exception cref="T:System.NotSupportedException">Toutes les tentatives possibles sont effectuées pour obtenir ou définir la propriété si celle-ci n'est pas substituée dans une classe descendante. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.WebResponse.Dispose">
+      <summary>Libère les ressources non managées utilisées par l'objet <see cref="T:System.Net.WebResponse" />.</summary>
+    </member>
+    <member name="M:System.Net.WebResponse.Dispose(System.Boolean)">
+      <summary>Libère les ressources non managées utilisées par l'objet <see cref="T:System.Net.WebResponse" /> et supprime éventuellement les ressources managées.</summary>
+      <param name="disposing">true pour libérer les ressources managées et non managées ; false pour libérer uniquement les ressources non managées. </param>
+    </member>
+    <member name="M:System.Net.WebResponse.GetResponseStream">
+      <summary>En cas de substitution dans une classe dérivée, retourne le flux de données de la ressource Internet.</summary>
+      <returns>Instance de la classe <see cref="T:System.IO.Stream" /> pour la lecture de données de la ressource Internet.</returns>
+      <exception cref="T:System.NotSupportedException">Toutes les tentatives possibles sont effectuées pour accéder à la méthode si celle-ci n'est pas substituée dans une classe descendante. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebResponse.Headers">
+      <summary>En cas de substitution dans une classe dérivée, obtient une collection de paires nom-valeur d'en-tête associées à cette demande.</summary>
+      <returns>Instance de la classe <see cref="T:System.Net.WebHeaderCollection" /> qui contient les valeurs d'en-tête associées à cette réponse.</returns>
+      <exception cref="T:System.NotSupportedException">Toutes les tentatives possibles sont effectuées pour obtenir ou définir la propriété si celle-ci n'est pas substituée dans une classe descendante. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebResponse.ResponseUri">
+      <summary>En cas de substitution dans une classe dérivée, obtient l'URI de la ressource Internet qui a réellement répondu à la demande.</summary>
+      <returns>Instance de la classe <see cref="T:System.Uri" /> qui contient l'URI de la ressource Internet qui a réellement répondu à la demande.</returns>
+      <exception cref="T:System.NotSupportedException">Toutes les tentatives possibles sont effectuées pour obtenir ou définir la propriété si celle-ci n'est pas substituée dans une classe descendante. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebResponse.SupportsHeaders">
+      <summary>Obtient une valeur qui indique si les en-têtes sont pris en charge.</summary>
+      <returns>Retourne <see cref="T:System.Boolean" />.true si les en-têtes sont pris en charge ; sinon, false.</returns>
+    </member>
+  </members>
+</doc>

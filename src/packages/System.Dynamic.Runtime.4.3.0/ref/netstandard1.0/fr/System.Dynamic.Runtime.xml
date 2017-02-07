@@ -1,0 +1,1154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Dynamic.Runtime</name>
+  </assembly>
+  <members>
+    <member name="T:System.Dynamic.BinaryOperationBinder">
+      <summary>Représente l'opération dynamique binaire au site d'appel, en fournissant la sémantique de liaison et les détails de l'opération.</summary>
+    </member>
+    <member name="M:System.Dynamic.BinaryOperationBinder.#ctor(System.Linq.Expressions.ExpressionType)">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:System.Dynamic.BinaryOperationBinder" />.</summary>
+      <param name="operation">Type d'opération binaire.</param>
+    </member>
+    <member name="M:System.Dynamic.BinaryOperationBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>Exécute la liaison de l'opération binaire dynamique.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération dynamique.</param>
+      <param name="args">Tableau d'arguments de l'opération dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.BinaryOperationBinder.FallbackBinaryOperation(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>Effectue la liaison de l'opération dynamique binaire si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération binaire dynamique.</param>
+      <param name="arg">Opérande droit de l'opération binaire dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.BinaryOperationBinder.FallbackBinaryOperation(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>En cas de substitution dans la classe dérivée, exécute la liaison de l'opération dynamique binaire si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération binaire dynamique.</param>
+      <param name="arg">Opérande droit de l'opération binaire dynamique.</param>
+      <param name="errorSuggestion">Résultat de liaison si la liaison échoue, ou Null.</param>
+    </member>
+    <member name="P:System.Dynamic.BinaryOperationBinder.Operation">
+      <summary>Type d'opération binaire.</summary>
+      <returns>Objet <see cref="T:System.Linq.Expressions.ExpressionType" /> représentant le type d'opération binaire.</returns>
+    </member>
+    <member name="P:System.Dynamic.BinaryOperationBinder.ReturnType">
+      <summary>Type de résultat de l'opération.</summary>
+      <returns>Type de résultat de l'opération.</returns>
+    </member>
+    <member name="T:System.Dynamic.BindingRestrictions">
+      <summary>Représente un jeu de restrictions de liaison sur le <see cref="T:System.Dynamic.DynamicMetaObject" /> sous lequel la liaison dynamique est valide.</summary>
+    </member>
+    <member name="M:System.Dynamic.BindingRestrictions.Combine(System.Collections.Generic.IList{System.Dynamic.DynamicMetaObject})">
+      <summary>Combine les restrictions de liaison de la liste d'instances de <see cref="T:System.Dynamic.DynamicMetaObject" /> en un jeu de restrictions.</summary>
+      <returns>Nouveau jeu de restrictions de liaison.</returns>
+      <param name="contributingObjects">Liste des instances de <see cref="T:System.Dynamic.DynamicMetaObject" /> à partir desquelles combiner les restrictions.</param>
+    </member>
+    <member name="F:System.Dynamic.BindingRestrictions.Empty">
+      <summary>Représente un jeu de restrictions de liaison vide.Ce champ est en lecture seule.</summary>
+    </member>
+    <member name="M:System.Dynamic.BindingRestrictions.GetExpressionRestriction(System.Linq.Expressions.Expression)">
+      <summary>Crée la restriction de liaison qui vérifie si l'expression contient des propriétés immuables arbitraires.</summary>
+      <returns>Restrictions applicables à la nouvelle liaison.</returns>
+      <param name="expression">Expression qui représente les restrictions.</param>
+    </member>
+    <member name="M:System.Dynamic.BindingRestrictions.GetInstanceRestriction(System.Linq.Expressions.Expression,System.Object)">
+      <summary>Crée la restriction de liaison qui vérifie l'identité de l'instance de l'objet dans l'expression.</summary>
+      <returns>Restrictions applicables à la nouvelle liaison.</returns>
+      <param name="expression">Expression à tester.</param>
+      <param name="instance">Instance exacte de l'objet à tester.</param>
+    </member>
+    <member name="M:System.Dynamic.BindingRestrictions.GetTypeRestriction(System.Linq.Expressions.Expression,System.Type)">
+      <summary>Crée la restriction de liaison qui vérifie l'identité du type au moment de l'exécution dans l'expression.</summary>
+      <returns>Restrictions applicables à la nouvelle liaison.</returns>
+      <param name="expression">Expression à tester.</param>
+      <param name="type">Type exact à tester.</param>
+    </member>
+    <member name="M:System.Dynamic.BindingRestrictions.Merge(System.Dynamic.BindingRestrictions)">
+      <summary>Fusionne le jeu de restrictions de liaison avec les restrictions de liaison actuelles.</summary>
+      <returns>Nouveau jeu de restrictions de liaison.</returns>
+      <param name="restrictions">Jeu de restrictions à fusionner avec les restrictions de liaison actuelles.</param>
+    </member>
+    <member name="M:System.Dynamic.BindingRestrictions.ToExpression">
+      <summary>Crée le <see cref="T:System.Linq.Expressions.Expression" /> qui représente les restrictions de liaison.</summary>
+      <returns>Arborescence de l'expression qui représente les restrictions.</returns>
+    </member>
+    <member name="T:System.Dynamic.CallInfo">
+      <summary>Décrit des arguments dans le processus de liaison dynamique.</summary>
+    </member>
+    <member name="M:System.Dynamic.CallInfo.#ctor(System.Int32,System.Collections.Generic.IEnumerable{System.String})">
+      <summary>Crée un nouveau CallInfo qui représente des arguments dans le processus de liaison dynamique.</summary>
+      <param name="argCount">Nombre d'arguments.</param>
+      <param name="argNames">Noms d'arguments.</param>
+    </member>
+    <member name="M:System.Dynamic.CallInfo.#ctor(System.Int32,System.String[])">
+      <summary>Crée un PositionalArgumentInfo.</summary>
+      <param name="argCount">Nombre d'arguments.</param>
+      <param name="argNames">Noms d'arguments.</param>
+    </member>
+    <member name="P:System.Dynamic.CallInfo.ArgumentCount">
+      <summary>Nombre d'arguments.</summary>
+      <returns>Nombre d'arguments.</returns>
+    </member>
+    <member name="P:System.Dynamic.CallInfo.ArgumentNames">
+      <summary>Noms d'arguments.</summary>
+      <returns>Collection en lecture seule de noms d'arguments.</returns>
+    </member>
+    <member name="M:System.Dynamic.CallInfo.Equals(System.Object)">
+      <summary>Détermine si l'instance de CallInfo spécifiée est considérée comme étant égale à l'instance en cours.</summary>
+      <returns>True si l'instance spécifiée est égale à l'instance actuelle ; sinon, false.</returns>
+      <param name="obj">Instance de <see cref="T:System.Dynamic.CallInfo" /> à comparer avec l'instance actuelle.</param>
+    </member>
+    <member name="M:System.Dynamic.CallInfo.GetHashCode">
+      <summary>Sert de fonction de hachage pour le <see cref="T:System.Dynamic.CallInfo" /> actuel.</summary>
+      <returns>Code de hachage du <see cref="T:System.Dynamic.CallInfo" /> actuel.</returns>
+    </member>
+    <member name="T:System.Dynamic.ConvertBinder">
+      <summary>Représente l'opération de conversion dynamique au site d'appel, en fournissant la sémantique de liaison et les détails de l'opération.</summary>
+    </member>
+    <member name="M:System.Dynamic.ConvertBinder.#ctor(System.Type,System.Boolean)">
+      <summary>Initialise une nouvelle instance de l'<see cref="T:System.Dynamic.ConvertBinder" />.</summary>
+      <param name="type">Type dans lequel convertir.</param>
+      <param name="explicit">A la valeur true si la conversion doit prendre en compte les conversions de type explicite ; sinon, false.</param>
+    </member>
+    <member name="M:System.Dynamic.ConvertBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>Exécute la liaison de l'opération de conversion dynamique.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération de conversion dynamique.</param>
+      <param name="args">Tableau d'arguments de l'opération de conversion dynamique.</param>
+    </member>
+    <member name="P:System.Dynamic.ConvertBinder.Explicit">
+      <summary>Obtient la valeur qui indique si la conversion doit prendre en compte les conversions de type explicite.</summary>
+      <returns>True en cas de conversion de type explicite, sinon false.</returns>
+    </member>
+    <member name="M:System.Dynamic.ConvertBinder.FallbackConvert(System.Dynamic.DynamicMetaObject)">
+      <summary>Effectue la liaison de l'opération de conversion dynamique si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération de conversion dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.ConvertBinder.FallbackConvert(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>En cas de substitution dans la classe dérivée, exécute la liaison de l'opération de conversion dynamique si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération de conversion dynamique.</param>
+      <param name="errorSuggestion">Résultat de liaison à utiliser si la liaison échoue, ou Null.</param>
+    </member>
+    <member name="P:System.Dynamic.ConvertBinder.ReturnType">
+      <summary>Type de résultat de l'opération.</summary>
+      <returns>Objet <see cref="T:System.Type" /> représentant le type de résultat de l'opération.</returns>
+    </member>
+    <member name="P:System.Dynamic.ConvertBinder.Type">
+      <summary>Type dans lequel convertir.</summary>
+      <returns>Objet <see cref="T:System.Type" /> qui représente le type vers lequel effectuer la conversion.</returns>
+    </member>
+    <member name="T:System.Dynamic.CreateInstanceBinder">
+      <summary>Représente l'opération de création dynamique au site d'appel, en fournissant la sémantique de liaison et les détails de l'opération.</summary>
+    </member>
+    <member name="M:System.Dynamic.CreateInstanceBinder.#ctor(System.Dynamic.CallInfo)">
+      <summary>Initialise une nouvelle instance de <see cref="T:System.Dynamic.CreateInstanceBinder" />.</summary>
+      <param name="callInfo">Signature des arguments au site d'appel.</param>
+    </member>
+    <member name="M:System.Dynamic.CreateInstanceBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>Exécute la liaison de l'opération de création dynamique.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération de création dynamique.</param>
+      <param name="args">Tableau d'arguments de l'opération de création dynamique.</param>
+    </member>
+    <member name="P:System.Dynamic.CreateInstanceBinder.CallInfo">
+      <summary>Obtient la signature des arguments au site d'appel.</summary>
+      <returns>Signature des arguments au site d'appel.</returns>
+    </member>
+    <member name="M:System.Dynamic.CreateInstanceBinder.FallbackCreateInstance(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>Effectue la liaison de l'opération de création dynamique si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération de création dynamique.</param>
+      <param name="args">Arguments de l'opération de création dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.CreateInstanceBinder.FallbackCreateInstance(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>En cas de substitution dans la classe dérivée, exécute la liaison de l'opération de création dynamique si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération de création dynamique.</param>
+      <param name="args">Arguments de l'opération de création dynamique.</param>
+      <param name="errorSuggestion">Résultat de liaison à utiliser si la liaison échoue, ou Null.</param>
+    </member>
+    <member name="P:System.Dynamic.CreateInstanceBinder.ReturnType">
+      <summary>Type de résultat de l'opération.</summary>
+      <returns>Objet <see cref="T:System.Type" /> représentant le type de résultat de l'opération.</returns>
+    </member>
+    <member name="T:System.Dynamic.DeleteIndexBinder">
+      <summary>Représente l'opération de suppression d'index dynamique au site d'appel, en fournissant la sémantique de liaison et les détails de l'opération.</summary>
+    </member>
+    <member name="M:System.Dynamic.DeleteIndexBinder.#ctor(System.Dynamic.CallInfo)">
+      <summary>Initialise une nouvelle instance de l'<see cref="T:System.Dynamic.DeleteIndexBinder" />.</summary>
+      <param name="callInfo">Signature des arguments au site d'appel.</param>
+    </member>
+    <member name="M:System.Dynamic.DeleteIndexBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>Exécute la liaison de l'opération de suppression d'index dynamique.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération de suppression d'index dynamique.</param>
+      <param name="args">Tableau d'arguments de l'opération de suppression d'index dynamique.</param>
+    </member>
+    <member name="P:System.Dynamic.DeleteIndexBinder.CallInfo">
+      <summary>Obtient la signature des arguments au site d'appel.</summary>
+      <returns>Signature des arguments au site d'appel.</returns>
+    </member>
+    <member name="M:System.Dynamic.DeleteIndexBinder.FallbackDeleteIndex(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>Effectue la liaison de l'opération de suppression d'index dynamique si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération de suppression d'index dynamique.</param>
+      <param name="indexes">Arguments de l'opération de suppression d'index dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.DeleteIndexBinder.FallbackDeleteIndex(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>En cas de substitution dans la classe dérivée, exécute la liaison de l'opération de suppression d'index dynamique si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération de suppression d'index dynamique.</param>
+      <param name="indexes">Arguments de l'opération de suppression d'index dynamique.</param>
+      <param name="errorSuggestion">Résultat de liaison à utiliser si la liaison échoue, ou Null.</param>
+    </member>
+    <member name="P:System.Dynamic.DeleteIndexBinder.ReturnType">
+      <summary>Type de résultat de l'opération.</summary>
+      <returns>Objet <see cref="T:System.Type" /> représentant le type de résultat de l'opération.</returns>
+    </member>
+    <member name="T:System.Dynamic.DeleteMemberBinder">
+      <summary>Représente l'opération de suppression de membre dynamique au site d'appel, en fournissant la sémantique de liaison et les détails de l'opération.</summary>
+    </member>
+    <member name="M:System.Dynamic.DeleteMemberBinder.#ctor(System.String,System.Boolean)">
+      <summary>Initialise une nouvelle instance de l'<see cref="T:System.Dynamic.DeleteIndexBinder" />.</summary>
+      <param name="name">Nom du membre à supprimer.</param>
+      <param name="ignoreCase">True si la correspondance avec le nom doit ignorer la casse ; sinon, False.</param>
+    </member>
+    <member name="M:System.Dynamic.DeleteMemberBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>Exécute la liaison de l'opération de suppression de membre dynamique.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération de suppression de membre dynamique.</param>
+      <param name="args">Tableau d'arguments de l'opération de suppression de membre dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.DeleteMemberBinder.FallbackDeleteMember(System.Dynamic.DynamicMetaObject)">
+      <summary>Effectue la liaison de l'opération de suppression de membre dynamique si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération de suppression de membre dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.DeleteMemberBinder.FallbackDeleteMember(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>En cas de substitution dans la classe dérivée, exécute la liaison de l'opération de suppression de membre dynamique si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération de suppression de membre dynamique.</param>
+      <param name="errorSuggestion">Résultat de liaison à utiliser si la liaison échoue, ou Null.</param>
+    </member>
+    <member name="P:System.Dynamic.DeleteMemberBinder.IgnoreCase">
+      <summary>Obtient la valeur indiquant si la comparaison de chaîne doit ignorer la casse du nom du membre.</summary>
+      <returns>True si la comparaison de chaînes doit ignorer la casse, sinon false.</returns>
+    </member>
+    <member name="P:System.Dynamic.DeleteMemberBinder.Name">
+      <summary>Obtient le nom du membre à supprimer.</summary>
+      <returns>Nom du membre à supprimer.</returns>
+    </member>
+    <member name="P:System.Dynamic.DeleteMemberBinder.ReturnType">
+      <summary>Type de résultat de l'opération.</summary>
+      <returns>Objet <see cref="T:System.Type" /> représentant le type de résultat de l'opération.</returns>
+    </member>
+    <member name="T:System.Dynamic.DynamicMetaObject">
+      <summary>Représente la liaison dynamique et une logique de liaison d'un objet qui participe à la liaison dynamique.</summary>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.#ctor(System.Linq.Expressions.Expression,System.Dynamic.BindingRestrictions)">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:System.Dynamic.DynamicMetaObject" />.</summary>
+      <param name="expression">Expression représentant cet objet <see cref="T:System.Dynamic.DynamicMetaObject" /> durant le processus de liaison dynamique.</param>
+      <param name="restrictions">Ensemble de restrictions de liaisons sous lequel la liaison est valide.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.#ctor(System.Linq.Expressions.Expression,System.Dynamic.BindingRestrictions,System.Object)">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:System.Dynamic.DynamicMetaObject" />.</summary>
+      <param name="expression">Expression représentant cet objet <see cref="T:System.Dynamic.DynamicMetaObject" /> durant le processus de liaison dynamique.</param>
+      <param name="restrictions">Ensemble de restrictions de liaisons sous lequel la liaison est valide.</param>
+      <param name="value">Valeur d'exécution représentée par <see cref="T:System.Dynamic.DynamicMetaObject" />.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindBinaryOperation(System.Dynamic.BinaryOperationBinder,System.Dynamic.DynamicMetaObject)">
+      <summary>Exécute la liaison de l'opération binaire dynamique.</summary>
+      <returns>Nouveau <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="binder">Instance du <see cref="T:System.Dynamic.BinaryOperationBinder" /> qui représente les détails de l'opération dynamique.</param>
+      <param name="arg">Instance de <see cref="T:System.Dynamic.DynamicMetaObject" /> qui représente le côté droit de l'opération binaire.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindConvert(System.Dynamic.ConvertBinder)">
+      <summary>Exécute la liaison de l'opération de conversion dynamique.</summary>
+      <returns>Nouveau <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="binder">Instance de <see cref="T:System.Dynamic.ConvertBinder" /> qui représente les détails de l'opération dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindCreateInstance(System.Dynamic.CreateInstanceBinder,System.Dynamic.DynamicMetaObject[])">
+      <summary>Exécute la liaison de l'opération de création d'instance dynamique.</summary>
+      <returns>Nouveau <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="binder">Instance de <see cref="T:System.Dynamic.CreateInstanceBinder" /> qui représente les détails de l'opération dynamique.</param>
+      <param name="args">Tableau d'instances <see cref="T:System.Dynamic.DynamicMetaObject" />, arguments de l'opération de création d'instance.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindDeleteIndex(System.Dynamic.DeleteIndexBinder,System.Dynamic.DynamicMetaObject[])">
+      <summary>Exécute la liaison de l'opération de suppression d'index dynamique.</summary>
+      <returns>Nouveau <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="binder">Instance de <see cref="T:System.Dynamic.DeleteIndexBinder" /> qui représente les détails de l'opération dynamique.</param>
+      <param name="indexes">Tableau d'instances de <see cref="T:System.Dynamic.DynamicMetaObject" />, index pour l'opération de suppression d'index.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindDeleteMember(System.Dynamic.DeleteMemberBinder)">
+      <summary>Exécute la liaison de l'opération de suppression de membre dynamique.</summary>
+      <returns>Nouveau <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="binder">Instance de <see cref="T:System.Dynamic.DeleteMemberBinder" /> qui représente les détails de l'opération dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindGetIndex(System.Dynamic.GetIndexBinder,System.Dynamic.DynamicMetaObject[])">
+      <summary>Exécute la liaison de l'opération d'obtention d'index dynamique.</summary>
+      <returns>Nouveau <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="binder">Instance de <see cref="T:System.Dynamic.GetIndexBinder" /> qui représente les détails de l'opération dynamique.</param>
+      <param name="indexes">Tableau d'instances de <see cref="T:System.Dynamic.DynamicMetaObject" />, index pour l'opération d'obtention d'index.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindGetMember(System.Dynamic.GetMemberBinder)">
+      <summary>Exécute la liaison de l'opération d'obtention de membre dynamique.</summary>
+      <returns>Nouveau <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="binder">Instance de <see cref="T:System.Dynamic.GetMemberBinder" /> qui représente les détails de l'opération dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindInvoke(System.Dynamic.InvokeBinder,System.Dynamic.DynamicMetaObject[])">
+      <summary>Exécute la liaison de l'opération d'appel dynamique.</summary>
+      <returns>Nouveau <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="binder">Instance de <see cref="T:System.Dynamic.InvokeBinder" /> qui représente les détails de l'opération dynamique.</param>
+      <param name="args">Tableau d'instances <see cref="T:System.Dynamic.DynamicMetaObject" />, arguments de l'opération d'appel.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindInvokeMember(System.Dynamic.InvokeMemberBinder,System.Dynamic.DynamicMetaObject[])">
+      <summary>Exécute la liaison de l'opération d'appel de membre dynamique.</summary>
+      <returns>Nouveau <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="binder">Instance de <see cref="T:System.Dynamic.InvokeMemberBinder" /> qui représente les détails de l'opération dynamique.</param>
+      <param name="args">Tableau d'instances <see cref="T:System.Dynamic.DynamicMetaObject" />, arguments de l'opération d'appel de membres.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindSetIndex(System.Dynamic.SetIndexBinder,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>Exécute la liaison de l'opération de définition d'index dynamique.</summary>
+      <returns>Nouveau <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="binder">Instance du <see cref="T:System.Dynamic.SetIndexBinder" /> qui représente les détails de l'opération dynamique.</param>
+      <param name="indexes">Tableau d'instances de <see cref="T:System.Dynamic.DynamicMetaObject" />, index pour l'opération de définition d'index.</param>
+      <param name="value">
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant la valeur pour l'opération de définition d'index.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindSetMember(System.Dynamic.SetMemberBinder,System.Dynamic.DynamicMetaObject)">
+      <summary>Exécute la liaison de l'opération de définition de membre dynamique.</summary>
+      <returns>Nouveau <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="binder">Instance de <see cref="T:System.Dynamic.SetMemberBinder" /> qui représente les détails de l'opération dynamique.</param>
+      <param name="value">
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant la valeur pour l'opération de définition de membre.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindUnaryOperation(System.Dynamic.UnaryOperationBinder)">
+      <summary>Exécute la liaison de l'opération unaire dynamique.</summary>
+      <returns>Nouveau <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="binder">Instance de <see cref="T:System.Dynamic.UnaryOperationBinder" /> qui représente les détails de l'opération dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.Create(System.Object,System.Linq.Expressions.Expression)">
+      <summary>Crée un objet méta pour l'objet spécifié.</summary>
+      <returns>Si l'objet spécifié implémente <see cref="T:System.Dynamic.IDynamicMetaObjectProvider" /> et n'est pas un objet distant extérieur au AppDomain actuel, retourne l'objet méta spécifique à l'objet retourné par <see cref="M:System.Dynamic.IDynamicMetaObjectProvider.GetMetaObject(System.Linq.Expressions.Expression)" />.Sinon, un nouvel objet méta brut sans restrictions est créé et retourné.</returns>
+      <param name="value">Objet pour lequel obtenir un objet méta.</param>
+      <param name="expression">Expression représentant cet objet <see cref="T:System.Dynamic.DynamicMetaObject" /> durant le processus de liaison dynamique.</param>
+    </member>
+    <member name="F:System.Dynamic.DynamicMetaObject.EmptyMetaObjects">
+      <summary>Représente un tableau vide du type <see cref="T:System.Dynamic.DynamicMetaObject" />.Ce champ est en lecture seule.</summary>
+    </member>
+    <member name="P:System.Dynamic.DynamicMetaObject.Expression">
+      <summary>Expression représentant <see cref="T:System.Dynamic.DynamicMetaObject" /> durant le processus de liaison dynamique.</summary>
+      <returns>Expression représentant <see cref="T:System.Dynamic.DynamicMetaObject" /> durant le processus de liaison dynamique.</returns>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.GetDynamicMemberNames">
+      <summary>Retourne l'énumération de tous les noms de membres dynamiques.</summary>
+      <returns>Liste des noms de membres dynamiques.</returns>
+    </member>
+    <member name="P:System.Dynamic.DynamicMetaObject.HasValue">
+      <summary>Obtient une valeur indiquant si <see cref="T:System.Dynamic.DynamicMetaObject" /> a la valeur d'exécution.</summary>
+      <returns>True si <see cref="T:System.Dynamic.DynamicMetaObject" /> a la valeur d'exécution ; sinon false.</returns>
+    </member>
+    <member name="P:System.Dynamic.DynamicMetaObject.LimitType">
+      <summary>Obtient le type de limite de <see cref="T:System.Dynamic.DynamicMetaObject" />.</summary>
+      <returns>
+        <see cref="P:System.Dynamic.DynamicMetaObject.RuntimeType" /> si la valeur d'exécution est disponible, sinon type de <see cref="P:System.Dynamic.DynamicMetaObject.Expression" />.</returns>
+    </member>
+    <member name="P:System.Dynamic.DynamicMetaObject.Restrictions">
+      <summary>Ensemble de restrictions de liaisons sous lequel la liaison est valide.</summary>
+      <returns>Jeu des restrictions de liaison.</returns>
+    </member>
+    <member name="P:System.Dynamic.DynamicMetaObject.RuntimeType">
+      <summary>Obtient le <see cref="T:System.Type" /> de la valeur d'exécution ou null si <see cref="T:System.Dynamic.DynamicMetaObject" /> n'est associé à aucune valeur.</summary>
+      <returns>
+        <see cref="T:System.Type" /> de la valeur d'exécution ou null.</returns>
+    </member>
+    <member name="P:System.Dynamic.DynamicMetaObject.Value">
+      <summary>Valeur d'exécution représentée par <see cref="T:System.Dynamic.DynamicMetaObject" />.</summary>
+      <returns>Valeur d'exécution représentée par <see cref="T:System.Dynamic.DynamicMetaObject" />.</returns>
+    </member>
+    <member name="T:System.Dynamic.DynamicMetaObjectBinder">
+      <summary>Binder de site d'appel dynamique qui participe au protocole de liaison <see cref="T:System.Dynamic.DynamicMetaObject" />.</summary>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObjectBinder.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:System.Dynamic.DynamicMetaObjectBinder" />.</summary>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObjectBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>En cas de substitution dans la classe dérivée, exécute la liaison de l'opération dynamique.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération dynamique.</param>
+      <param name="args">Tableau d'arguments de l'opération dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObjectBinder.Bind(System.Object[],System.Collections.ObjectModel.ReadOnlyCollection{System.Linq.Expressions.ParameterExpression},System.Linq.Expressions.LabelTarget)">
+      <summary>Exécute la liaison au moment de l'exécution de l'opération dynamique sur un jeu d'arguments.</summary>
+      <returns>Expression qui exécute des tests sur les arguments d'opération dynamique, et exécute l'opération dynamique si les tests sont valides.Si les tests échouent sur les occurrences suivantes de l'opération dynamique, Bind est à nouveau appelé pour produire un nouveau <see cref="T:System.Linq.Expressions.Expression" /> pour les nouveaux types d'arguments.</returns>
+      <param name="args">Tableau d'arguments de l'opération dynamique.</param>
+      <param name="parameters">Tableau des instances <see cref="T:System.Linq.Expressions.ParameterExpression" /> qui représentent les paramètres du site d'appel dans le processus de liaison.</param>
+      <param name="returnLabel">LabelTarget utilisé pour retourner le résultat de la liaison dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObjectBinder.Defer(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>Diffère la liaison de l'opération jusqu'à ce que les valeurs d'exécution de tous les arguments d'opération dynamique soient calculées.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération dynamique.</param>
+      <param name="args">Tableau d'arguments de l'opération dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObjectBinder.Defer(System.Dynamic.DynamicMetaObject[])">
+      <summary>Diffère la liaison de l'opération jusqu'à ce que les valeurs d'exécution de tous les arguments d'opération dynamique soient calculées.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="args">Tableau d'arguments de l'opération dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObjectBinder.GetUpdateExpression(System.Type)">
+      <summary>Obtient une expression qui entraîne la mise à jour de la liaison.Indique que la liaison de l'expression n'est plus valide.Cela est utilisé en général lorsque la « version » d'un objet dynamique a changé.</summary>
+      <returns>Expression de mise à jour.</returns>
+      <param name="type">Propriété <see cref="P:System.Linq.Expressions.Expression.Type" /> de l'expression résultante ; tous les types sont autorisés.</param>
+    </member>
+    <member name="P:System.Dynamic.DynamicMetaObjectBinder.ReturnType">
+      <summary>Type de résultat de l'opération.</summary>
+      <returns>Objet <see cref="T:System.Type" /> représentant le type de résultat de l'opération.</returns>
+    </member>
+    <member name="T:System.Dynamic.DynamicObject">
+      <summary>Fournit une classe de base pour la spécification du comportement dynamique pendant l'exécution.Cette classe doit être héritée ;vous ne pouvez pas l'instancier directement.</summary>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.#ctor">
+      <summary>Permet aux types dérivés d'initialiser une nouvelle instance du type <see cref="T:System.Dynamic.DynamicObject" />.</summary>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.GetDynamicMemberNames">
+      <summary>Retourne l'énumération de tous les noms de membres dynamiques. </summary>
+      <returns>Séquence qui contient des noms de membre dynamiques.</returns>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.GetMetaObject(System.Linq.Expressions.Expression)">
+      <summary>Fournit un <see cref="T:System.Dynamic.DynamicMetaObject" /> qui distribue aux méthodes virtuelles dynamiques.L'objet peut être encapsulé dans un autre <see cref="T:System.Dynamic.DynamicMetaObject" /> pour définir un comportement personnalisé pour des actions individuelles.Cette méthode prend en charge l'infrastructure Dynamic Language Runtime pour les implémenteurs de langage et n'est pas conçue pour être utilisée directement dans votre code.</summary>
+      <returns>Objet de type <see cref="T:System.Dynamic.DynamicMetaObject" />.</returns>
+      <param name="parameter">Expression qui représente le <see cref="T:System.Dynamic.DynamicMetaObject" /> à distribuer aux méthodes virtuelles dynamiques.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryBinaryOperation(System.Dynamic.BinaryOperationBinder,System.Object,System.Object@)">
+      <summary>Fournit une implémentation pour les opérations binaires.Les classes dérivées de la classe <see cref="T:System.Dynamic.DynamicObject" /> peuvent substituer cette méthode afin de spécifier le comportement dynamique pour certaines opérations telles que l'addition et la multiplication.</summary>
+      <returns>true si l'opération réussit ; sinon, false.Si cette méthode retourne false, le binder d'exécution du langage détermine le comportement. (Dans la plupart des cas, une exception runtime spécifique au langage est levée.)</returns>
+      <param name="binder">Fournit des informations sur l'opération binaire.La propriété binder.Operation retourne un objet <see cref="T:System.Linq.Expressions.ExpressionType" />.Pour exemple, pour l'instruction sum = first + second où first et second sont dérivés de la classe DynamicObject, binder.Operation retourne ExpressionType.Add.</param>
+      <param name="arg">Opérande droit pour l'opération binaire.Par exemple, pour l'instruction sum = first + second, où first et second sont dérivés de la classe DynamicObject, <paramref name="arg" /> est égal à second.</param>
+      <param name="result">Résultat de l'opération binaire.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryConvert(System.Dynamic.ConvertBinder,System.Object@)">
+      <summary>Fournit l'implémentation pour les opérations de conversion de type.Les classes dérivées de la classe <see cref="T:System.Dynamic.DynamicObject" /> peuvent substituer cette méthode pour spécifier le comportement dynamique pour certaines opérations qui convertissent un objet d'un type en un autre.</summary>
+      <returns>true si l'opération réussit ; sinon, false.Si cette méthode retourne false, le binder d'exécution du langage détermine le comportement. (Dans la plupart des cas, une exception runtime spécifique au langage est levée.)</returns>
+      <param name="binder">Fournit des informations sur l'opération de conversion.La propriété binder.Type fournit le type en lequel l'objet doit être converti.Pour exemple, pour l'instruction (String)sampleObject en C# (CType(sampleObject, Type) en Visual Basic) où sampleObject est une instance de la classe dérivée de la classe <see cref="T:System.Dynamic.DynamicObject" />, binder.Type retourne le type <see cref="T:System.String" />.La propriété binder.Explicit fournit des informations sur le genre de conversion qui se produit.Elle retourne la valeur true pour la conversion explicite et la valeur false pour la conversion implicite.</param>
+      <param name="result">Résultat de l'opération de conversion de type.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryCreateInstance(System.Dynamic.CreateInstanceBinder,System.Object[],System.Object@)">
+      <summary>Fournit l'implémentation pour les opérations qui initialisent une nouvelle instance d'un objet dynamique.Cette méthode n'est pas destinée à être utilisée en C# ou en Visual Basic.</summary>
+      <returns>true si l'opération réussit ; sinon, false.Si cette méthode retourne false, le binder d'exécution du langage détermine le comportement. (Dans la plupart des cas, une exception runtime spécifique au langage est levée.)</returns>
+      <param name="binder">Fournit des informations sur l'opération d'initialisation.</param>
+      <param name="args">Arguments passés à l'objet pendant l'initialisation.Par exemple, pour l'opération new SampleType(100) où SampleType est le type dérivé de la classe <see cref="T:System.Dynamic.DynamicObject" />, <paramref name="args[0]" /> est égal à 100.</param>
+      <param name="result">Résultat de l'initialisation.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryDeleteIndex(System.Dynamic.DeleteIndexBinder,System.Object[])">
+      <summary>Fournit l'implémentation pour les opérations qui suppriment un objet par index.Cette méthode n'est pas destinée à être utilisée en C# ou en Visual Basic.</summary>
+      <returns>true si l'opération réussit ; sinon, false.Si cette méthode retourne false, le binder d'exécution du langage détermine le comportement. (Dans la plupart des cas, une exception runtime spécifique au langage est levée.)</returns>
+      <param name="binder">Fournit des informations sur la suppression.</param>
+      <param name="indexes">Index à supprimer.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryDeleteMember(System.Dynamic.DeleteMemberBinder)">
+      <summary>Fournit l'implémentation pour les opérations qui suppriment un membre objet.Cette méthode n'est pas destinée à être utilisée en C# ou en Visual Basic.</summary>
+      <returns>true si l'opération réussit ; sinon, false.Si cette méthode retourne false, le binder d'exécution du langage détermine le comportement. (Dans la plupart des cas, une exception runtime spécifique au langage est levée.)</returns>
+      <param name="binder">Fournit des informations sur la suppression.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryGetIndex(System.Dynamic.GetIndexBinder,System.Object[],System.Object@)">
+      <summary>Fournit l'implémentation pour les opérations qui obtiennent une valeur par index.Les classes dérivées de la classe <see cref="T:System.Dynamic.DynamicObject" /> peuvent substituer cette méthode afin de spécifier le comportement dynamique pour les opérations d'indexation.</summary>
+      <returns>true si l'opération réussit ; sinon, false.Si cette méthode retourne false, le binder d'exécution du langage détermine le comportement. (Dans la plupart des cas, une exception runtime est levée.)</returns>
+      <param name="binder">Fournit des informations sur l'opération. </param>
+      <param name="indexes">Index utilisés pendant l'opération.Par exemple, pour l'opération sampleObject[3] en C# (sampleObject(3) en Visual Basic) où sampleObject est dérivé de la classe DynamicObject, <paramref name="indexes[0]" /> est égal à 3.</param>
+      <param name="result">Résultat de l'opération d'indexation.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryGetMember(System.Dynamic.GetMemberBinder,System.Object@)">
+      <summary>Fournit l'implémentation pour les opérations qui obtiennent des valeurs de membre.Les classes dérivées de la classe <see cref="T:System.Dynamic.DynamicObject" /> peuvent substituer cette méthode afin de spécifier le comportement dynamique pour certaines opérations telles que l'obtention d'une valeur pour une propriété.</summary>
+      <returns>true si l'opération réussit ; sinon, false.Si cette méthode retourne false, le binder d'exécution du langage détermine le comportement. (Dans la plupart des cas, une exception runtime est levée.)</returns>
+      <param name="binder">Fournit des informations sur l'objet qui a appelé l'opération dynamique.La propriété binder.Name fournit le nom du membre sur lequel l'opération dynamique est exécutée.Par exemple, pour l'instruction Console.WriteLine(sampleObject.SampleProperty), où sampleObject est une instance de la classe dérivée de la classe <see cref="T:System.Dynamic.DynamicObject" />, binder.Name retourne « SampleProperty ».La propriété binder.IgnoreCase spécifie si le nom du membre respecte la casse.</param>
+      <param name="result">Résultat de l'opération d'extraction.Par exemple, si la méthode est appelée pour une propriété, vous pouvez assigner la valeur de la propriété à <paramref name="result" />.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryInvoke(System.Dynamic.InvokeBinder,System.Object[],System.Object@)">
+      <summary>Fournit l'implémentation pour les opérations qui appellent un objet.Les classes dérivées de la classe <see cref="T:System.Dynamic.DynamicObject" /> peuvent substituer cette méthode afin de spécifier le comportement dynamique pour certaines opérations telles que l'appel d'un objet ou d'un délégué.</summary>
+      <returns>true si l'opération réussit ; sinon, false.Si cette méthode retourne false, le binder d'exécution du langage détermine le comportement. (Dans la plupart des cas, une exception runtime spécifique au langage est levée.</returns>
+      <param name="binder">Fournit des informations sur l'opération d'appel.</param>
+      <param name="args">Arguments passés à l'objet pendant l'opération d'appel.Par exemple, pour l'opération sampleObject(100) où sampleObject est dérivé de la classe <see cref="T:System.Dynamic.DynamicObject" />, <paramref name="args[0]" /> est égal à 100.</param>
+      <param name="result">Résultat de l'appel de l'objet.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryInvokeMember(System.Dynamic.InvokeMemberBinder,System.Object[],System.Object@)">
+      <summary>Fournit l'implémentation pour les opérations qui appellent un membre.Les classes dérivées de la classe <see cref="T:System.Dynamic.DynamicObject" /> peuvent substituer cette méthode afin de spécifier le comportement dynamique pour certaines opérations telles que l'appel d'une méthode.</summary>
+      <returns>true si l'opération réussit ; sinon, false.Si cette méthode retourne false, le binder d'exécution du langage détermine le comportement. (Dans la plupart des cas, une exception runtime spécifique au langage est levée.)</returns>
+      <param name="binder">Fournit des informations sur l'opération dynamique.La propriété binder.Name fournit le nom du membre sur lequel l'opération dynamique est exécutée.Par exemple, pour l'instruction sampleObject.SampleMethod(100), où sampleObject est une instance de la classe dérivée de la classe <see cref="T:System.Dynamic.DynamicObject" />, binder.Name retourne "SampleMethod".La propriété binder.IgnoreCase spécifie si le nom du membre respecte la casse.</param>
+      <param name="args">Arguments passés au membre d'objet pendant l'opération d'appel.Par exemple, pour l'instruction sampleObject.SampleMethod(100) où sampleObject est dérivé de la classe <see cref="T:System.Dynamic.DynamicObject" />, <paramref name="args[0]" /> est égal à 100.</param>
+      <param name="result">Résultat de l'appel du membre.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TrySetIndex(System.Dynamic.SetIndexBinder,System.Object[],System.Object)">
+      <summary>Fournit l'implémentation pour les opérations qui définissent une valeur par index.Les classes dérivées de la classe <see cref="T:System.Dynamic.DynamicObject" /> peuvent substituer cette méthode pour spécifier le comportement dynamique pour certaines opérations qui accèdent aux objets par un index spécifié.</summary>
+      <returns>true si l'opération réussit ; sinon, false.Si cette méthode retourne false, le binder d'exécution du langage détermine le comportement. (Dans la plupart des cas, une exception runtime spécifique au langage est levée.</returns>
+      <param name="binder">Fournit des informations sur l'opération. </param>
+      <param name="indexes">Index utilisés pendant l'opération.Par exemple, pour l'opération sampleObject[3] = 10 en C# (sampleObject(3) = 10 en Visual Basic) où sampleObject est dérivé de la classe <see cref="T:System.Dynamic.DynamicObject" />, <paramref name="indexes[0]" /> est égal à 3.</param>
+      <param name="value">Valeur à définir pour l'objet qui a l'index spécifié.Par exemple, pour l'opération sampleObject[3] = 10 en C# (sampleObject(3) = 10 en Visual Basic) où sampleObject est dérivé de la classe <see cref="T:System.Dynamic.DynamicObject" />, <paramref name="value" /> est égal à 10.</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TrySetMember(System.Dynamic.SetMemberBinder,System.Object)">
+      <summary>Fournit l'implémentation pour les opérations qui définissent des valeurs de membre.Les classes dérivées de la classe <see cref="T:System.Dynamic.DynamicObject" /> peuvent substituer cette méthode afin de spécifier le comportement dynamique pour certaines opérations telles que la définition d'une valeur pour une propriété.</summary>
+      <returns>true si l'opération réussit ; sinon, false.Si cette méthode retourne false, le binder d'exécution du langage détermine le comportement. (Dans la plupart des cas, une exception runtime spécifique au langage est levée.)</returns>
+      <param name="binder">Fournit des informations sur l'objet qui a appelé l'opération dynamique.La propriété binder.Name fournit le nom du membre auquel la valeur est assignée.Par exemple, pour l'instruction sampleObject.SampleProperty = "Test", où sampleObject est une instance de la classe dérivée de la classe <see cref="T:System.Dynamic.DynamicObject" />, binder.Name retourne "SampleProperty".La propriété binder.IgnoreCase spécifie si le nom du membre respecte la casse.</param>
+      <param name="value">Valeur à affecter au membre.Par exemple, pour sampleObject.SampleProperty = "Test", où sampleObject est une instance de la classe dérivée de la classe <see cref="T:System.Dynamic.DynamicObject" />, <paramref name="value" /> est « Test ».</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryUnaryOperation(System.Dynamic.UnaryOperationBinder,System.Object@)">
+      <summary>Fournit l'implémentation pour les opérations unaires.Les classes dérivées de la classe <see cref="T:System.Dynamic.DynamicObject" /> peuvent substituer cette méthode afin de spécifier le comportement dynamique pour certaines opérations telles que la négation, l'incrémentation ou la décrémentation.</summary>
+      <returns>true si l'opération réussit ; sinon, false.Si cette méthode retourne false, le binder d'exécution du langage détermine le comportement. (Dans la plupart des cas, une exception runtime spécifique au langage est levée.)</returns>
+      <param name="binder">Fournit des informations sur l'opération unaire.La propriété binder.Operation retourne un objet <see cref="T:System.Linq.Expressions.ExpressionType" />.Par exemple, pour l'instruction negativeNumber = -number où number est dérivé de la classe DynamicObject, binder.Operation retourne "Negate".</param>
+      <param name="result">Résultat de l'opération unaire.</param>
+    </member>
+    <member name="T:System.Dynamic.ExpandoObject">
+      <summary>Représente un objet dont les membres peuvent être ajoutés et supprimés de manière dynamique au moment de l'exécution.</summary>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.#ctor">
+      <summary>Initialise un nouveau ExpandoObject qui n'a pas de membres.</summary>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#ICollection{T}#Add(System.Collections.Generic.KeyValuePair{System.String,System.Object})">
+      <summary>Ajoute la valeur spécifiée au <see cref="T:System.Collections.Generic.ICollection`1" /> ayant la clé spécifiée.</summary>
+      <param name="item">Structure <see cref="T:System.Collections.Generic.KeyValuePair`2" /> qui représente la clé et la valeur à ajouter à la collection.</param>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#ICollection{T}#Clear">
+      <summary>Supprime tous les éléments de la collection.</summary>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#ICollection{T}#Contains(System.Collections.Generic.KeyValuePair{System.String,System.Object})">
+      <summary>Détermine si <see cref="T:System.Collections.Generic.ICollection`1" /> contient une clé et une valeur spécifiques.</summary>
+      <returns>true si la collection contient une clé et une valeur spécifiques ; sinon, false.</returns>
+      <param name="item">Structure <see cref="T:System.Collections.Generic.KeyValuePair`2" /> à rechercher dans <see cref="T:System.Collections.Generic.ICollection`1" />.</param>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#ICollection{T}#CopyTo(System.Collections.Generic.KeyValuePair{System.String,System.Object}[],System.Int32)">
+      <summary>Copie les éléments de <see cref="T:System.Collections.Generic.ICollection`1" /> dans un tableau de type <see cref="T:System.Collections.Generic.KeyValuePair`2" />, en commençant au niveau de l'index de tableau spécifié.</summary>
+      <param name="array">Tableau unidimensionnel de type <see cref="T:System.Collections.Generic.KeyValuePair`2" /> constituant la destination des éléments <see cref="T:System.Collections.Generic.KeyValuePair`2" /> copiés à partir de <see cref="T:System.Collections.Generic.ICollection`1" />.Ce tableau doit avoir une indexation de base zéro.</param>
+      <param name="arrayIndex">Index de base zéro de <paramref name="array" /> à partir duquel la copie commence.</param>
+    </member>
+    <member name="P:System.Dynamic.ExpandoObject.System#Collections#Generic#ICollection{T}#Count">
+      <summary>Obtient le nombre d'éléments contenus dans <see cref="T:System.Collections.Generic.ICollection`1" />.</summary>
+      <returns>Nombre d'éléments dans le <see cref="T:System.Collections.Generic.ICollection`1" />.</returns>
+    </member>
+    <member name="P:System.Dynamic.ExpandoObject.System#Collections#Generic#ICollection{T}#IsReadOnly">
+      <summary>Obtient une valeur indiquant si <see cref="T:System.Collections.Generic.ICollection`1" /> est en lecture seule.</summary>
+      <returns>true si <see cref="T:System.Collections.Generic.ICollection`1" /> est en lecture seule ; sinon, false.</returns>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#ICollection{T}#Remove(System.Collections.Generic.KeyValuePair{System.String,System.Object})">
+      <summary>Supprime une clé et une valeur de la collection.</summary>
+      <returns>true si la recherche et la suppression de la clé et de la valeur réussissent ; sinon, false.Cette méthode renvoie false si la clé et la valeur sont introuvables dans <see cref="T:System.Collections.Generic.ICollection`1" />.</returns>
+      <param name="item">Structure <see cref="T:System.Collections.Generic.KeyValuePair`2" /> qui représente la clé et la valeur à supprimer de la collection.</param>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#IDictionary{TKey@TValue}#Add(System.String,System.Object)">
+      <summary>Ajoute la clé et la valeur spécifiées au dictionnaire.</summary>
+      <param name="key">Objet à utiliser comme clé.</param>
+      <param name="value">Objet à utiliser comme valeur.</param>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#IDictionary{TKey@TValue}#ContainsKey(System.String)">
+      <summary>Détermine si le dictionnaire contient la clé spécifiée.</summary>
+      <returns>true si le dictionnaire contient un élément qui possède la clé spécifiée ; sinon, false.</returns>
+      <param name="key">Clé à rechercher dans le dictionnaire.</param>
+    </member>
+    <member name="P:System.Dynamic.ExpandoObject.System#Collections#Generic#IDictionary{TKey@TValue}#Item(System.String)">
+      <summary>Obtient ou définit l'élément qui contient la clé spécifiée.</summary>
+      <returns>Élément qui contient la clé spécifiée.</returns>
+      <param name="key">Clé de l'élément à obtenir ou définir.</param>
+    </member>
+    <member name="P:System.Dynamic.ExpandoObject.System#Collections#Generic#IDictionary{TKey@TValue}#Keys">
+      <summary>Obtient un <see cref="T:System.Collections.Generic.ICollection`1" /> qui contient les clés de <see cref="T:System.Collections.Generic.IDictionary`2" />.</summary>
+      <returns>
+        <see cref="T:System.Collections.Generic.ICollection`1" /> qui contient les clés de l'objet qui implémente <see cref="T:System.Collections.Generic.IDictionary`2" />.</returns>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#IDictionary{TKey@TValue}#Remove(System.String)">
+      <summary>Supprime de <see cref="T:System.Collections.IDictionary" /> l'élément ayant la clé spécifiée.</summary>
+      <returns>true si la suppression de l'élément réussit ; sinon, false.Cette méthode retourne également false si <paramref name="key" /> est introuvable dans le <see cref="T:System.Collections.Generic.IDictionary`2" /> d'origine.</returns>
+      <param name="key">Clé de l'élément à supprimer.</param>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#IDictionary{TKey@TValue}#TryGetValue(System.String,System.Object@)">
+      <summary>Obtient la valeur associée à la clé spécifiée.</summary>
+      <returns>true si l'objet qui implémente <see cref="T:System.Collections.Generic.IDictionary`2" /> contient un élément comportant la clé spécifiée ; sinon, false.</returns>
+      <param name="key">Clé de la valeur à obtenir.</param>
+      <param name="value">Cette méthode retourne la valeur associée à la clé spécifiée, si la clé est trouvée ; sinon, retourne la valeur par défaut pour le type du paramètre <paramref name="value" />.Ce paramètre est passé sans être initialisé.</param>
+    </member>
+    <member name="P:System.Dynamic.ExpandoObject.System#Collections#Generic#IDictionary{TKey@TValue}#Values">
+      <summary>Obtient un <see cref="T:System.Collections.Generic.ICollection`1" /> qui contient les valeurs de <see cref="T:System.Collections.Generic.IDictionary`2" />.</summary>
+      <returns>
+        <see cref="T:System.Collections.Generic.ICollection`1" /> qui contient les valeurs de l'objet qui implémente <see cref="T:System.Collections.Generic.IDictionary`2" />.</returns>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#IEnumerable{T}#GetEnumerator">
+      <summary>Retourne un énumérateur qui itère au sein de la collection.</summary>
+      <returns>Objet <see cref="T:System.Collections.Generic.IEnumerator`1" /> qui peut être utilisé pour itérer au sein de la collection.</returns>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#IEnumerable#GetEnumerator">
+      <summary>Retourne un énumérateur qui itère au sein de la collection.</summary>
+      <returns>
+        <see cref="T:System.Collections.IEnumerator" /> qui peut être utilisé pour itérer la collection.</returns>
+    </member>
+    <member name="E:System.Dynamic.ExpandoObject.System#ComponentModel#INotifyPropertyChanged#PropertyChanged">
+      <summary>Se produit en cas de modification d'une valeur de propriété.</summary>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Dynamic#IDynamicMetaObjectProvider#GetMetaObject(System.Linq.Expressions.Expression)">
+      <summary>Le MetaObject fourni est distribué aux méthodes virtuelles dynamiques.L'objet peut être encapsulé dans un autre MetaObject pour définir un comportement personnalisé pour des actions individuelles.</summary>
+      <returns>Objet de type <see cref="T:System.Dynamic.DynamicMetaObject" />.</returns>
+      <param name="parameter">Expression qui représente le MetaObject à distribuer aux méthodes virtuelles dynamiques.</param>
+    </member>
+    <member name="T:System.Dynamic.GetIndexBinder">
+      <summary>Représente l'opération d'obtention d'index dynamique au site d'appel, en fournissant la sémantique de liaison et les détails de l'opération.</summary>
+    </member>
+    <member name="M:System.Dynamic.GetIndexBinder.#ctor(System.Dynamic.CallInfo)">
+      <summary>Initialise une nouvelle instance de l'<see cref="T:System.Dynamic.GetIndexBinder" />.</summary>
+      <param name="callInfo">Signature des arguments au site d'appel.</param>
+    </member>
+    <member name="M:System.Dynamic.GetIndexBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>Exécute la liaison de l'opération d'obtention d'index dynamique.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération d'obtention d'index dynamique.</param>
+      <param name="args">Tableau d'arguments de l'opération d'obtention d'index dynamique.</param>
+    </member>
+    <member name="P:System.Dynamic.GetIndexBinder.CallInfo">
+      <summary>Obtient la signature des arguments au site d'appel.</summary>
+      <returns>Signature des arguments au site d'appel.</returns>
+    </member>
+    <member name="M:System.Dynamic.GetIndexBinder.FallbackGetIndex(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>Effectue la liaison de l'opération d'obtention d'index dynamique si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération d'obtention d'index dynamique.</param>
+      <param name="indexes">Arguments de l'opération d'obtention d'index dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.GetIndexBinder.FallbackGetIndex(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>En cas de substitution dans la classe dérivée, exécute la liaison de l'opération d'obtention d'index dynamique si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération d'obtention d'index dynamique.</param>
+      <param name="indexes">Arguments de l'opération d'obtention d'index dynamique.</param>
+      <param name="errorSuggestion">Résultat de liaison à utiliser si la liaison échoue, ou Null.</param>
+    </member>
+    <member name="P:System.Dynamic.GetIndexBinder.ReturnType">
+      <summary>Type de résultat de l'opération.</summary>
+      <returns>Objet <see cref="T:System.Type" /> représentant le type de résultat de l'opération.</returns>
+    </member>
+    <member name="T:System.Dynamic.GetMemberBinder">
+      <summary>Représente l'opération d'obtention de membre dynamique au site d'appel, en fournissant la sémantique de liaison et les détails de l'opération.</summary>
+    </member>
+    <member name="M:System.Dynamic.GetMemberBinder.#ctor(System.String,System.Boolean)">
+      <summary>Initialise une nouvelle instance de l'<see cref="T:System.Dynamic.GetMemberBinder" />.</summary>
+      <param name="name">Nom du membre à obtenir.</param>
+      <param name="ignoreCase">True si la correspondance avec le nom doit ignorer la casse ; sinon, False.</param>
+    </member>
+    <member name="M:System.Dynamic.GetMemberBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>Exécute la liaison de l'opération d'obtention de membre dynamique.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération d'obtention de membre dynamique.</param>
+      <param name="args">Tableau d'arguments de l'opération d'obtention de membre dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.GetMemberBinder.FallbackGetMember(System.Dynamic.DynamicMetaObject)">
+      <summary>Effectue la liaison de l'opération d'obtention de membre dynamique si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération d'obtention de membre dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.GetMemberBinder.FallbackGetMember(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>En cas de substitution dans la classe dérivée, exécute la liaison de l'opération d'obtention de membre dynamique si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération d'obtention de membre dynamique.</param>
+      <param name="errorSuggestion">Résultat de liaison à utiliser si la liaison échoue, ou Null.</param>
+    </member>
+    <member name="P:System.Dynamic.GetMemberBinder.IgnoreCase">
+      <summary>Obtient la valeur indiquant si la comparaison de chaîne doit ignorer la casse du nom du membre.</summary>
+      <returns>True si la casse est ignorée ; sinon, False.</returns>
+    </member>
+    <member name="P:System.Dynamic.GetMemberBinder.Name">
+      <summary>Obtient le nom du membre à obtenir.</summary>
+      <returns>Nom du membre à obtenir.</returns>
+    </member>
+    <member name="P:System.Dynamic.GetMemberBinder.ReturnType">
+      <summary>Type de résultat de l'opération.</summary>
+      <returns>Objet <see cref="T:System.Type" /> représentant le type de résultat de l'opération.</returns>
+    </member>
+    <member name="T:System.Dynamic.IDynamicMetaObjectProvider">
+      <summary>Représente un objet dynamique, dont les opérations peuvent être liées pendant l'exécution.</summary>
+    </member>
+    <member name="M:System.Dynamic.IDynamicMetaObjectProvider.GetMetaObject(System.Linq.Expressions.Expression)">
+      <summary>Retourne le <see cref="T:System.Dynamic.DynamicMetaObject" /> responsable de la liaison des opérations effectuées sur cet objet.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> à lier à cet objet.</returns>
+      <param name="parameter">Représentation de l'arborescence de l'expression de la valeur d'exécution.</param>
+    </member>
+    <member name="T:System.Dynamic.IInvokeOnGetBinder">
+      <summary>Représente les informations relatives à une opération d'obtention de membre dynamique qui indique si l'obtention de membre doit appeler des propriétés lorsqu'elles exécutent l'opération d'extraction.</summary>
+    </member>
+    <member name="P:System.Dynamic.IInvokeOnGetBinder.InvokeOnGet">
+      <summary>Obtient la valeur indiquant si cette opération d'obtention de membre doit appeler des propriétés lorsqu'elles exécutent l'opération d'extraction.La valeur par défaut lorsque cette interface n'est pas présente est True.</summary>
+      <returns>True si cette opération d'obtention de membre doit appeler des propriétés lorsqu'elles exécutent l'opération d'extraction ; sinon, False.</returns>
+    </member>
+    <member name="T:System.Dynamic.InvokeBinder">
+      <summary>Représente l'opération d'appel dynamique au site d'appel, en fournissant la sémantique de liaison et les détails de l'opération.</summary>
+    </member>
+    <member name="M:System.Dynamic.InvokeBinder.#ctor(System.Dynamic.CallInfo)">
+      <summary>Initialise une nouvelle instance de l'<see cref="T:System.Dynamic.InvokeBinder" />.</summary>
+      <param name="callInfo">Signature des arguments au site d'appel.</param>
+    </member>
+    <member name="M:System.Dynamic.InvokeBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>Exécute la liaison de l'opération d'appel dynamique.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération d'appel dynamique.</param>
+      <param name="args">Tableau d'arguments de l'opération d'appel dynamique.</param>
+    </member>
+    <member name="P:System.Dynamic.InvokeBinder.CallInfo">
+      <summary>Obtient la signature des arguments au site d'appel.</summary>
+      <returns>Signature des arguments au site d'appel.</returns>
+    </member>
+    <member name="M:System.Dynamic.InvokeBinder.FallbackInvoke(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>Effectue la liaison de l'opération d'appel dynamique si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération d'appel dynamique.</param>
+      <param name="args">Arguments de l'opération d'appel dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.InvokeBinder.FallbackInvoke(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>Effectue la liaison de l'opération d'appel dynamique si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération d'appel dynamique.</param>
+      <param name="args">Arguments de l'opération d'appel dynamique.</param>
+      <param name="errorSuggestion">Résultat de liaison à utiliser si la liaison échoue, ou Null.</param>
+    </member>
+    <member name="P:System.Dynamic.InvokeBinder.ReturnType">
+      <summary>Type de résultat de l'opération.</summary>
+      <returns>Objet <see cref="T:System.Type" /> représentant le type de résultat de l'opération.</returns>
+    </member>
+    <member name="T:System.Dynamic.InvokeMemberBinder">
+      <summary>Représente l'opération d'appel de membre dynamique au site d'appel, en fournissant la sémantique de liaison et les détails de l'opération.</summary>
+    </member>
+    <member name="M:System.Dynamic.InvokeMemberBinder.#ctor(System.String,System.Boolean,System.Dynamic.CallInfo)">
+      <summary>Initialise une nouvelle instance de l'<see cref="T:System.Dynamic.InvokeMemberBinder" />.</summary>
+      <param name="name">Nom du membre à appeler.</param>
+      <param name="ignoreCase">True si la correspondance avec le nom doit ignorer la casse ; sinon, false.</param>
+      <param name="callInfo">Signature des arguments au site d'appel.</param>
+    </member>
+    <member name="M:System.Dynamic.InvokeMemberBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>Exécute la liaison de l'opération d'appel de membre dynamique.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération d'appel de membre dynamique.</param>
+      <param name="args">Tableau d'arguments de l'opération d'appel de membre dynamique.</param>
+    </member>
+    <member name="P:System.Dynamic.InvokeMemberBinder.CallInfo">
+      <summary>Obtient la signature des arguments au site d'appel.</summary>
+      <returns>Signature des arguments au site d'appel.</returns>
+    </member>
+    <member name="M:System.Dynamic.InvokeMemberBinder.FallbackInvoke(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>En cas de substitution dans la classe dérivée, exécute la liaison de l'opération d'appel dynamique si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération d'appel dynamique.</param>
+      <param name="args">Arguments de l'opération d'appel dynamique.</param>
+      <param name="errorSuggestion">Résultat de liaison à utiliser si la liaison échoue, ou Null.</param>
+    </member>
+    <member name="M:System.Dynamic.InvokeMemberBinder.FallbackInvokeMember(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>Effectue la liaison de l'opération d'appel de membre dynamique si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération d'appel de membre dynamique.</param>
+      <param name="args">Arguments de l'opération d'appel de membre dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.InvokeMemberBinder.FallbackInvokeMember(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>En cas de substitution dans la classe dérivée, exécute la liaison de l'opération d'appel de membre dynamique si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération d'appel de membre dynamique.</param>
+      <param name="args">Arguments de l'opération d'appel de membre dynamique.</param>
+      <param name="errorSuggestion">Résultat de liaison à utiliser si la liaison échoue, ou Null.</param>
+    </member>
+    <member name="P:System.Dynamic.InvokeMemberBinder.IgnoreCase">
+      <summary>Obtient la valeur indiquant si la comparaison de chaîne doit ignorer la casse du nom du membre.</summary>
+      <returns>True si la casse est ignorée ; sinon, False.</returns>
+    </member>
+    <member name="P:System.Dynamic.InvokeMemberBinder.Name">
+      <summary>Obtient le nom du membre à appeler.</summary>
+      <returns>Nom du membre à appeler.</returns>
+    </member>
+    <member name="P:System.Dynamic.InvokeMemberBinder.ReturnType">
+      <summary>Type de résultat de l'opération.</summary>
+      <returns>Objet <see cref="T:System.Type" /> représentant le type de résultat de l'opération.</returns>
+    </member>
+    <member name="T:System.Dynamic.SetIndexBinder">
+      <summary>Représente l'opération de définition d'index dynamique au site d'appel, en fournissant la sémantique de liaison et les détails de l'opération.</summary>
+    </member>
+    <member name="M:System.Dynamic.SetIndexBinder.#ctor(System.Dynamic.CallInfo)">
+      <summary>Initialise une nouvelle instance de l'<see cref="T:System.Dynamic.SetIndexBinder" />.</summary>
+      <param name="callInfo">Signature des arguments au site d'appel.</param>
+    </member>
+    <member name="M:System.Dynamic.SetIndexBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>Exécute la liaison de l'opération de définition d'index dynamique.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération de définition d'index dynamique.</param>
+      <param name="args">Tableau d'arguments de l'opération de définition d'index dynamique.</param>
+    </member>
+    <member name="P:System.Dynamic.SetIndexBinder.CallInfo">
+      <summary>Obtient la signature des arguments au site d'appel.</summary>
+      <returns>Signature des arguments au site d'appel.</returns>
+    </member>
+    <member name="M:System.Dynamic.SetIndexBinder.FallbackSetIndex(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>Effectue la liaison de l'opération de définition d'index dynamique si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération de définition d'index dynamique.</param>
+      <param name="indexes">Arguments de l'opération de définition d'index dynamique.</param>
+      <param name="value">Valeur à affecter à la collection.</param>
+    </member>
+    <member name="M:System.Dynamic.SetIndexBinder.FallbackSetIndex(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>En cas de substitution dans la classe dérivée, exécute la liaison de l'opération de définition d'index dynamique si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération de définition d'index dynamique.</param>
+      <param name="indexes">Arguments de l'opération de définition d'index dynamique.</param>
+      <param name="value">Valeur à affecter à la collection.</param>
+      <param name="errorSuggestion">Résultat de liaison à utiliser si la liaison échoue, ou Null.</param>
+    </member>
+    <member name="P:System.Dynamic.SetIndexBinder.ReturnType">
+      <summary>Type de résultat de l'opération.</summary>
+      <returns>Objet <see cref="T:System.Type" /> représentant le type de résultat de l'opération.</returns>
+    </member>
+    <member name="T:System.Dynamic.SetMemberBinder">
+      <summary>Représente l'opération de définition de membre dynamique au site d'appel, en fournissant la sémantique de liaison et les détails de l'opération.</summary>
+    </member>
+    <member name="M:System.Dynamic.SetMemberBinder.#ctor(System.String,System.Boolean)">
+      <summary>Initialise une nouvelle instance de l'<see cref="T:System.Dynamic.SetMemberBinder" />.</summary>
+      <param name="name">Nom du membre à obtenir.</param>
+      <param name="ignoreCase">True si la correspondance avec le nom doit ignorer la casse ; sinon, False.</param>
+    </member>
+    <member name="M:System.Dynamic.SetMemberBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>Exécute la liaison de l'opération de définition de membre dynamique.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération de définition de membre dynamique.</param>
+      <param name="args">Tableau d'arguments de l'opération de définition de membre dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.SetMemberBinder.FallbackSetMember(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>Effectue la liaison de l'opération de définition de membre dynamique si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération de définition de membre dynamique.</param>
+      <param name="value">Valeur à affecter au membre.</param>
+    </member>
+    <member name="M:System.Dynamic.SetMemberBinder.FallbackSetMember(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>Effectue la liaison de l'opération de définition de membre dynamique si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération de définition de membre dynamique.</param>
+      <param name="value">Valeur à affecter au membre.</param>
+      <param name="errorSuggestion">Résultat de liaison à utiliser si la liaison échoue, ou Null.</param>
+    </member>
+    <member name="P:System.Dynamic.SetMemberBinder.IgnoreCase">
+      <summary>Obtient la valeur indiquant si la comparaison de chaîne doit ignorer la casse du nom du membre.</summary>
+      <returns>True si la casse est ignorée ; sinon, False.</returns>
+    </member>
+    <member name="P:System.Dynamic.SetMemberBinder.Name">
+      <summary>Obtient le nom du membre à obtenir.</summary>
+      <returns>Nom du membre à obtenir.</returns>
+    </member>
+    <member name="P:System.Dynamic.SetMemberBinder.ReturnType">
+      <summary>Type de résultat de l'opération.</summary>
+      <returns>Objet <see cref="T:System.Type" /> représentant le type de résultat de l'opération.</returns>
+    </member>
+    <member name="T:System.Dynamic.UnaryOperationBinder">
+      <summary>Représente l'opération dynamique unaire au site d'appel, en fournissant la sémantique de liaison et les détails de l'opération.</summary>
+    </member>
+    <member name="M:System.Dynamic.UnaryOperationBinder.#ctor(System.Linq.Expressions.ExpressionType)">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:System.Dynamic.BinaryOperationBinder" />.</summary>
+      <param name="operation">Type d'opération unaire.</param>
+    </member>
+    <member name="M:System.Dynamic.UnaryOperationBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>Exécute la liaison de l'opération unaire dynamique.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération dynamique.</param>
+      <param name="args">Tableau d'arguments de l'opération dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.UnaryOperationBinder.FallbackUnaryOperation(System.Dynamic.DynamicMetaObject)">
+      <summary>Effectue la liaison de l'opération dynamique unaire si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération unaire dynamique.</param>
+    </member>
+    <member name="M:System.Dynamic.UnaryOperationBinder.FallbackUnaryOperation(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>Effectue la liaison de l'opération dynamique unaire si l'objet dynamique cible ne peut pas être lié.</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> représentant le résultat de la liaison.</returns>
+      <param name="target">Cible de l'opération unaire dynamique.</param>
+      <param name="errorSuggestion">Résultat de la liaison en cas d'échec, ou null.</param>
+    </member>
+    <member name="P:System.Dynamic.UnaryOperationBinder.Operation">
+      <summary>Type d'opération unaire.</summary>
+      <returns>Objet de <see cref="T:System.Linq.Expressions.ExpressionType" /> qui représente le type d'opération unaire.</returns>
+    </member>
+    <member name="P:System.Dynamic.UnaryOperationBinder.ReturnType">
+      <summary>Type de résultat de l'opération.</summary>
+      <returns>Objet <see cref="T:System.Type" /> représentant le type de résultat de l'opération.</returns>
+    </member>
+    <member name="T:System.Linq.Expressions.DynamicExpression">
+      <summary>Représente une opération dynamique.</summary>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Accept(System.Linq.Expressions.ExpressionVisitor)">
+      <summary>Distribue à la méthode de visite spécifique à ce type de nœud.Par exemple, <see cref="T:System.Linq.Expressions.MethodCallExpression" /> appelle <see cref="M:System.Linq.Expressions.ExpressionVisitor.VisitMethodCall(System.Linq.Expressions.MethodCallExpression)" />.</summary>
+      <returns>Résultat de la visite de ce nœud.</returns>
+      <param name="visitor">Visiteur avec lequel visiter ce nœud.</param>
+    </member>
+    <member name="P:System.Linq.Expressions.DynamicExpression.Arguments">
+      <summary>Obtient les arguments pour l'opération dynamique.</summary>
+      <returns>Collections en lecture seule qui contient les arguments de l'opération dynamique.</returns>
+    </member>
+    <member name="P:System.Linq.Expressions.DynamicExpression.Binder">
+      <summary>Obtient le <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" />, qui détermine le comportement au moment de l'exécution du site dynamique.</summary>
+      <returns>
+        <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" />, qui détermine le comportement au moment de l'exécution du site dynamique.</returns>
+    </member>
+    <member name="P:System.Linq.Expressions.DynamicExpression.DelegateType">
+      <summary>Obtient le type de délégué utilisé par <see cref="T:System.Runtime.CompilerServices.CallSite" />.</summary>
+      <returns>Objet <see cref="T:System.Type" /> représentant le type de délégué utilisé par <see cref="T:System.Runtime.CompilerServices.CallSite" />.</returns>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Dynamic(System.Runtime.CompilerServices.CallSiteBinder,System.Type,System.Collections.Generic.IEnumerable{System.Linq.Expressions.Expression})">
+      <summary>Crée un <see cref="T:System.Linq.Expressions.DynamicExpression" /> qui représente une opération dynamique liée par le <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> fourni.</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" /> dont <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> est égal à <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> et dont <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> et <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> ont les valeurs spécifiées.</returns>
+      <param name="binder">Classeur de runtime de l'opération dynamique.</param>
+      <param name="returnType">Type de résultat de l'expression dynamique.</param>
+      <param name="arguments">Arguments de l'opération dynamique.</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Dynamic(System.Runtime.CompilerServices.CallSiteBinder,System.Type,System.Linq.Expressions.Expression)">
+      <summary>Crée un <see cref="T:System.Linq.Expressions.DynamicExpression" /> qui représente une opération dynamique liée par le <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> fourni.</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" /> dont <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> est égal à <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> et dont <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> et <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> ont les valeurs spécifiées.</returns>
+      <param name="binder">Classeur de runtime de l'opération dynamique.</param>
+      <param name="returnType">Type de résultat de l'expression dynamique.</param>
+      <param name="arg0">Premier argument de l'opération dynamique.</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Dynamic(System.Runtime.CompilerServices.CallSiteBinder,System.Type,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression)">
+      <summary>Crée un <see cref="T:System.Linq.Expressions.DynamicExpression" /> qui représente une opération dynamique liée par le <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> fourni.</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" /> dont <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> est égal à <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> et dont <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> et <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> ont les valeurs spécifiées.</returns>
+      <param name="binder">Classeur de runtime de l'opération dynamique.</param>
+      <param name="returnType">Type de résultat de l'expression dynamique.</param>
+      <param name="arg0">Premier argument de l'opération dynamique.</param>
+      <param name="arg1">Deuxième argument de l'opération dynamique.</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Dynamic(System.Runtime.CompilerServices.CallSiteBinder,System.Type,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression)">
+      <summary>Crée un <see cref="T:System.Linq.Expressions.DynamicExpression" /> qui représente une opération dynamique liée par le <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> fourni.</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" /> dont <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> est égal à <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> et dont <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> et <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> ont les valeurs spécifiées.</returns>
+      <param name="binder">Classeur de runtime de l'opération dynamique.</param>
+      <param name="returnType">Type de résultat de l'expression dynamique.</param>
+      <param name="arg0">Premier argument de l'opération dynamique.</param>
+      <param name="arg1">Deuxième argument de l'opération dynamique.</param>
+      <param name="arg2">Troisième argument de l'opération dynamique.</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Dynamic(System.Runtime.CompilerServices.CallSiteBinder,System.Type,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression)">
+      <summary>Crée un <see cref="T:System.Linq.Expressions.DynamicExpression" /> qui représente une opération dynamique liée par le <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> fourni.</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" /> dont <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> est égal à <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> et dont <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> et <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> ont les valeurs spécifiées.</returns>
+      <param name="binder">Classeur de runtime de l'opération dynamique.</param>
+      <param name="returnType">Type de résultat de l'expression dynamique.</param>
+      <param name="arg0">Premier argument de l'opération dynamique.</param>
+      <param name="arg1">Deuxième argument de l'opération dynamique.</param>
+      <param name="arg2">Troisième argument de l'opération dynamique.</param>
+      <param name="arg3">Quatrième argument de l'opération dynamique.</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Dynamic(System.Runtime.CompilerServices.CallSiteBinder,System.Type,System.Linq.Expressions.Expression[])">
+      <summary>Crée un <see cref="T:System.Linq.Expressions.DynamicExpression" /> qui représente une opération dynamique liée par le <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> fourni.</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" /> dont <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> est égal à <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> et dont <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> et <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> ont les valeurs spécifiées.</returns>
+      <param name="binder">Classeur de runtime de l'opération dynamique.</param>
+      <param name="returnType">Type de résultat de l'expression dynamique.</param>
+      <param name="arguments">Arguments de l'opération dynamique.</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.MakeDynamic(System.Type,System.Runtime.CompilerServices.CallSiteBinder,System.Collections.Generic.IEnumerable{System.Linq.Expressions.Expression})">
+      <summary>Crée un <see cref="T:System.Linq.Expressions.DynamicExpression" /> qui représente une opération dynamique liée par le <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> fourni.</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" /> dont <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> est égal à <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> et dont <see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />, <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> et <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> ont les valeurs spécifiées.</returns>
+      <param name="delegateType">Type du délégué utilisé par l'objet <see cref="T:System.Runtime.CompilerServices.CallSite" />.</param>
+      <param name="binder">Classeur de runtime de l'opération dynamique.</param>
+      <param name="arguments">Arguments de l'opération dynamique.</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.MakeDynamic(System.Type,System.Runtime.CompilerServices.CallSiteBinder,System.Linq.Expressions.Expression)">
+      <summary>Crée un <see cref="T:System.Linq.Expressions.DynamicExpression" /> qui représente une opération dynamique liée par le <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> fourni et un argument.</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" /> dont <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> est égal à <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> et dont <see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />, <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> et <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> ont les valeurs spécifiées.</returns>
+      <param name="delegateType">Type du délégué utilisé par l'objet <see cref="T:System.Runtime.CompilerServices.CallSite" />.</param>
+      <param name="binder">Classeur de runtime de l'opération dynamique.</param>
+      <param name="arg0">Argument de l'opération dynamique.</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.MakeDynamic(System.Type,System.Runtime.CompilerServices.CallSiteBinder,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression)">
+      <summary>Crée un <see cref="T:System.Linq.Expressions.DynamicExpression" /> qui représente une opération dynamique liée par le <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> fourni et deux arguments.</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" /> dont <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> est égal à <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> et dont <see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />, <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> et <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> ont les valeurs spécifiées.</returns>
+      <param name="delegateType">Type du délégué utilisé par l'objet <see cref="T:System.Runtime.CompilerServices.CallSite" />.</param>
+      <param name="binder">Classeur de runtime de l'opération dynamique.</param>
+      <param name="arg0">Premier argument de l'opération dynamique.</param>
+      <param name="arg1">Deuxième argument de l'opération dynamique.</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.MakeDynamic(System.Type,System.Runtime.CompilerServices.CallSiteBinder,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression)">
+      <summary>Crée un <see cref="T:System.Linq.Expressions.DynamicExpression" /> qui représente une opération dynamique liée par le <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> fourni et trois arguments.</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" /> dont <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> est égal à <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> et dont <see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />, <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> et <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> ont les valeurs spécifiées.</returns>
+      <param name="delegateType">Type du délégué utilisé par l'objet <see cref="T:System.Runtime.CompilerServices.CallSite" />.</param>
+      <param name="binder">Classeur de runtime de l'opération dynamique.</param>
+      <param name="arg0">Premier argument de l'opération dynamique.</param>
+      <param name="arg1">Deuxième argument de l'opération dynamique.</param>
+      <param name="arg2">Troisième argument de l'opération dynamique.</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.MakeDynamic(System.Type,System.Runtime.CompilerServices.CallSiteBinder,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression)">
+      <summary>Crée un <see cref="T:System.Linq.Expressions.DynamicExpression" /> qui représente une opération dynamique liée par le <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> fourni et quatre arguments.</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" /> dont <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> est égal à <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> et dont <see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />, <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> et <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> ont les valeurs spécifiées.</returns>
+      <param name="delegateType">Type du délégué utilisé par l'objet <see cref="T:System.Runtime.CompilerServices.CallSite" />.</param>
+      <param name="binder">Classeur de runtime de l'opération dynamique.</param>
+      <param name="arg0">Premier argument de l'opération dynamique.</param>
+      <param name="arg1">Deuxième argument de l'opération dynamique.</param>
+      <param name="arg2">Troisième argument de l'opération dynamique.</param>
+      <param name="arg3">Quatrième argument de l'opération dynamique.</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.MakeDynamic(System.Type,System.Runtime.CompilerServices.CallSiteBinder,System.Linq.Expressions.Expression[])">
+      <summary>Crée un <see cref="T:System.Linq.Expressions.DynamicExpression" /> qui représente une opération dynamique liée par le <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> fourni.</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" /> dont <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> est égal à <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> et dont <see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />, <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> et <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> ont les valeurs spécifiées.</returns>
+      <param name="delegateType">Type du délégué utilisé par l'objet <see cref="T:System.Runtime.CompilerServices.CallSite" />.</param>
+      <param name="binder">Classeur de runtime de l'opération dynamique.</param>
+      <param name="arguments">Arguments de l'opération dynamique.</param>
+    </member>
+    <member name="P:System.Linq.Expressions.DynamicExpression.NodeType">
+      <summary>Retourne le type de nœud de cette expression.Les nœuds d'extension doivent retourner <see cref="F:System.Linq.Expressions.ExpressionType.Extension" /> lors de la substitution de cette méthode.</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.ExpressionType" /> de l'expression.</returns>
+    </member>
+    <member name="P:System.Linq.Expressions.DynamicExpression.System#Linq#Expressions#IArgumentProvider#ArgumentCount"></member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.System#Linq#Expressions#IArgumentProvider#GetArgument(System.Int32)"></member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.System#Linq#Expressions#IDynamicExpression#CreateCallSite"></member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.System#Linq#Expressions#IDynamicExpression#Rewrite(System.Linq.Expressions.Expression[])"></member>
+    <member name="P:System.Linq.Expressions.DynamicExpression.Type">
+      <summary>Obtient le type statique de l'expression que ce <see cref="T:System.Linq.Expressions.Expression" /> représente.</summary>
+      <returns>
+        <see cref="P:System.Linq.Expressions.DynamicExpression.Type" /> qui représente le type statique de l'expression.</returns>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Update(System.Collections.Generic.IEnumerable{System.Linq.Expressions.Expression})">
+      <summary>Compare la valeur envoyée au paramètre, arguments, à la propriété Arguments de l'instance actuelle de DynamicExpression.Si les valeurs du paramètre et de la propriété sont égales, l'instance actuelle est retournée.Si elles ne sont pas identiques, une nouvelle instance de DynamicExpression identique à l'instance actuelle est retournée, hormis le fait que la propriété Arguments a la valeur du paramètre arguments.</summary>
+      <returns>Cette expression si aucun enfant n'est modifié ou une expression avec les enfants mis à jour.</returns>
+      <param name="arguments">Propriété <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> du résultat.</param>
+    </member>
+    <member name="T:System.Linq.Expressions.DynamicExpressionVisitor">
+      <summary>Représente un visiteur ou un module de réécriture pour les arborescences d'expression dynamiques.</summary>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpressionVisitor.#ctor">
+      <summary>Initialise une nouvelle instance d'<see cref="T:System.Linq.Expressions.DynamicExpressionVisitor" />.</summary>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpressionVisitor.VisitDynamic(System.Linq.Expressions.DynamicExpression)">
+      <summary>Visite les enfants de <see cref="T:System.Linq.Expressions.DynamicExpression" />.</summary>
+      <returns>Retourne <see cref="T:System.Linq.Expressions.Expression" />, l'expression modifiée, si celle-ci ou toute sous-expression est modifiée ; sinon, retourne l'expression d'origine.</returns>
+      <param name="node">Expression à visiter.</param>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallSite">
+      <summary>Classe de base d'un site d'appel dynamique.Ce type est utilisé comme type de paramètre pour les cibles d'un site dynamique.</summary>
+    </member>
+    <member name="P:System.Runtime.CompilerServices.CallSite.Binder">
+      <summary>Classe responsable de la liaison des opérations dynamiques sur le site dynamique.</summary>
+      <returns>Objet <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> responsable de la liaison des opérations dynamiques.</returns>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CallSite.Create(System.Type,System.Runtime.CompilerServices.CallSiteBinder)">
+      <summary>Crée un site d'appel à l'aide du type délégué et du binder donnés.</summary>
+      <returns>Nouveau site d'appel.</returns>
+      <param name="delegateType">Type délégué du site d'appel.</param>
+      <param name="binder">Binder du site d'appel.</param>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallSite`1">
+      <summary>Type de site dynamique.</summary>
+      <typeparam name="T">Type délégué.</typeparam>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CallSite`1.Create(System.Runtime.CompilerServices.CallSiteBinder)">
+      <summary>Crée une instance du site d'appel dynamique, initialisée à l'aide du binder responsable de la liaison au moment de l'exécution des opérations dynamiques sur ce site d'appel.</summary>
+      <returns>Nouvelle instance du site d'appel dynamique.</returns>
+      <param name="binder">Binder responsable de la liaison au moment de l'exécution des opérations dynamiques sur ce site d'appel.</param>
+    </member>
+    <member name="F:System.Runtime.CompilerServices.CallSite`1.Target">
+      <summary>Cache de niveau 0 - Délégué spécialisé basé sur l'historique du site.</summary>
+    </member>
+    <member name="P:System.Runtime.CompilerServices.CallSite`1.Update">
+      <summary>Délégué de mise à jour.Appelée lorsque le site dynamique rencontre des échecs dans le cache.</summary>
+      <returns>Délégué de mise à jour.</returns>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallSiteBinder">
+      <summary>Classe responsable de la liaison au moment de l'exécution des opérations dynamiques sur le site d'appel dynamique.</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CallSiteBinder.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" />.</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CallSiteBinder.Bind(System.Object[],System.Collections.ObjectModel.ReadOnlyCollection{System.Linq.Expressions.ParameterExpression},System.Linq.Expressions.LabelTarget)">
+      <summary>Exécute la liaison au moment de l'exécution de l'opération dynamique sur un jeu d'arguments.</summary>
+      <returns>Expression qui exécute des tests sur les arguments d'opération dynamique, et exécute l'opération dynamique si les tests sont valides.Si les tests échouent sur les occurrences suivantes de l'opération dynamique, Bind est à nouveau appelé pour produire un nouveau <see cref="T:System.Linq.Expressions.Expression" /> pour les nouveaux types d'arguments.</returns>
+      <param name="args">Tableau d'arguments de l'opération dynamique.</param>
+      <param name="parameters">Tableau des instances <see cref="T:System.Linq.Expressions.ParameterExpression" /> qui représentent les paramètres du site d'appel dans le processus de liaison.</param>
+      <param name="returnLabel">LabelTarget utilisé pour retourner le résultat de la liaison dynamique.</param>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CallSiteBinder.BindDelegate``1(System.Runtime.CompilerServices.CallSite{``0},System.Object[])">
+      <summary>Fournit une prise en charge de bas niveau de la liaison au moment de l'exécution.Les classes peuvent substituer ceci et fournir un délégué direct pour l'implémentation de la règle.Cela permet d'enregistrer des règles sur disque, de disposer de règles spécialisées au moment de l'exécution ou de fournir une stratégie de mise en cache différente.</summary>
+      <returns>Nouveau délégué qui remplace la cible de CallSite.</returns>
+      <param name="site">CallSite pour lequel la liaison est exécutée.</param>
+      <param name="args">Arguments du binder.</param>
+      <typeparam name="T">Type cible de CallSite.</typeparam>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CallSiteBinder.CacheTarget``1(``0)">
+      <summary>Ajoute une cible au cache des cibles connues.Les cibles mises en cache sont analysées avant d'appeler BindDelegate pour produire la nouvelle règle.</summary>
+      <param name="target">Délégué cible à ajouter au cache.</param>
+      <typeparam name="T">Type de cible ajouté.</typeparam>
+    </member>
+    <member name="P:System.Runtime.CompilerServices.CallSiteBinder.UpdateLabel">
+      <summary>Obtient une étiquette qui peut être utilisée pour provoquer la mise à jour de la liaison.Indique que la liaison de l'expression n'est plus valide.Cela est utilisé en général lorsque la « version » d'un objet dynamique a changé.</summary>
+      <returns>Objet <see cref="T:System.Linq.Expressions.LabelTarget" /> représentant une étiquette qui peut être utilisée pour déclencher la mise à jour de la liaison.</returns>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallSiteHelpers">
+      <summary>Classe qui contient des méthodes d'assistance pour les CallSites DLR.</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CallSiteHelpers.IsInternalFrame(System.Reflection.MethodBase)">
+      <summary>Vérifie si <see cref="T:System.Reflection.MethodBase" /> est utilisé en interne par DLR et s'il ne doit pas être affiché dans la pile du code de langue.</summary>
+      <returns>True si le <see cref="T:System.Reflection.MethodBase" /> d'entrée est utilisé en interne par DLR et s'il ne doit pas être affiché dans la pile du code de langue.Sinon, false.</returns>
+      <param name="mb">
+        <see cref="T:System.Reflection.MethodBase" /> d'entrée.</param>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.DynamicAttribute">
+      <summary>Indique que l'utilisation de <see cref="T:System.Object" /> sur un membre doit être traitée en tant que type distribué dynamiquement.</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.DynamicAttribute.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:System.Runtime.CompilerServices.DynamicAttribute" />.</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.DynamicAttribute.#ctor(System.Boolean[])">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:System.Runtime.CompilerServices.DynamicAttribute" />.</summary>
+      <param name="transformFlags">Spécifie, dans le parcours d'un préfixe de la construction d'un type, que les occurrences de <see cref="T:System.Object" /> doivent être traitées en tant que type distribué dynamiquement.</param>
+    </member>
+    <member name="P:System.Runtime.CompilerServices.DynamicAttribute.TransformFlags">
+      <summary>Spécifie, dans le parcours d'un préfixe de la construction d'un type, que les occurrences de <see cref="T:System.Object" /> doivent être traitées en tant que type distribué dynamiquement.</summary>
+      <returns>Liste des occurrences de <see cref="T:System.Object" /> qui doivent être traitées en tant que type distribué dynamiquement.</returns>
+    </member>
+  </members>
+</doc>
