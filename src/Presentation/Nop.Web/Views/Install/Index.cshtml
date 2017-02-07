@@ -62,6 +62,7 @@
                     $(document).ready(function () {
                         $('#installation-form').submit(function () {
                             if ($('#installation-form').valid()) {
+                                $("html, body").animate({ scrollTop: 0 }, 400);
                                 window.setTimeout(function () {
                                     $(".throbber").show();
                                 }, 1000);
