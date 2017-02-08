@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using Autofac;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
+using Nop.Core.Infrastructure;
+using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Services.Catalog;
 using Nop.Services.Discounts;
 using Nop.Tests;
@@ -35,7 +39,8 @@ namespace Nop.Services.Tests.Catalog
         [SetUp]
         public new void SetUp()
         {
-            _workContext = null;
+            _workContext = MockRepository.GenerateMock<IWorkContext>();
+            _workContext.Expect(w => w.WorkingCurrency).Return(new Currency { RoundingType = RoundingType.Rounding001 });
 
             _store = new Store { Id = 1 };
             _storeContext = MockRepository.GenerateMock<IStoreContext>();
@@ -45,7 +50,6 @@ namespace Nop.Services.Tests.Catalog
             _categoryService = MockRepository.GenerateMock<ICategoryService>();
             _manufacturerService = MockRepository.GenerateMock<IManufacturerService>();
             _productService = MockRepository.GenerateMock<IProductService>();
-
 
             _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
 
@@ -64,6 +68,19 @@ namespace Nop.Services.Tests.Catalog
                 _cacheManager,
                 _shoppingCartSettings, 
                 _catalogSettings);
+
+            var nopEngine = MockRepository.GenerateMock<NopEngine>();
+            var containe = MockRepository.GenerateMock<IContainer>();
+            var containerManager = MockRepository.GenerateMock<ContainerManager>(containe);
+            nopEngine.Expect(x => x.ContainerManager).Return(containerManager);
+            containerManager.Expect(x => x.Resolve<IWorkContext>()).Return(_workContext);
+            EngineContext.Replace(nopEngine);
+        }
+
+        [OneTimeTearDown]
+        public void TearDown()
+        {
+            EngineContext.Replace(null);
         }
 
         [Test]

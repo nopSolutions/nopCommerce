@@ -118,6 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Catalog\ProductExtensionTests.cs" />
+    <Compile Include="Catalog\RoundingHelperTests.cs" />
     <Compile Include="Catalog\TierPriceExtensionTests.cs" />
     <Compile Include="Catalog\PriceCalculationServiceTests.cs" />
     <Compile Include="Catalog\ProductAttributeParserAndFormatterTests.cs" />
