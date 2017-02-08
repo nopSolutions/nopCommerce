@@ -9,8 +9,8 @@
     <p>
         @T("Admin.Catalog.Products.StockQuantityHistory.Hint")
     </p>
-
-    <div class="panel panel-default panel-search">
+    @*hide the entire search block if no elements are displayed*@
+    <div class="panel panel-default panel-search" @(Model.AvailableWarehouses.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
         <div class="panel-body">
             <div class="row">
                 <div class="col-md-6">
