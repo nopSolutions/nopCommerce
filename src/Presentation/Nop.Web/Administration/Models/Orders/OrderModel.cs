@@ -448,6 +448,14 @@ namespace Nop.Admin.Models.Orders
                 public string Name { get; set; }
 
                 public bool IsPreSelected { get; set; }
+
+                public string PriceAdjustment { get; set; }
+
+                public decimal PriceAdjustmentValue { get; set; }
+
+                public bool CustomerEntersQty { get; set; }
+
+                public int Quantity { get; set; }
             }
 
 

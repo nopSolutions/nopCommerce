@@ -813,6 +813,27 @@ td.k-state-focused.k-state-selected {
     padding: 8px 15px;
     margin-right: -20px !important;
 }
+    
+.form-group .attributes label{
+	font-weight: normal;
+}
+.form-horizontal .attributes select {
+    width: 300px !important;
+    max-width: 100%;
+    border-radius: 0;
+    border-color: #d2d6de;
+    height: 34px;
+}
+.form-group .attributes .qty-box {
+	width: 48px;
+    height: 34px;
+    border-radius: 0;
+    border-color: #d2d6de;
+    border-width: 1px;
+    border-style: solid;
+    text-align: center;
+}
+
 .form-horizontal .k-autocomplete, .form-horizontal .k-combobox, 
 .form-horizontal .k-numerictextbox, .form-horizontal .k-dropdown, 
 .form-horizontal .k-selectbox, .form-horizontal .k-textbox, 
