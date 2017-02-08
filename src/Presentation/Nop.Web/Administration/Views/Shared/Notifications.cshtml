@@ -21,6 +21,16 @@
     {
         errorMessages.AddRange(ViewData[string.Format("nop.notifications.{0}", NotifyType.Error)] as IList<string>);
     }
+
+
+    //warning messages
+    var warningMessages = new List<string>();
+    if (TempData[string.Format("nop.notifications.{0}", NotifyType.Warning)] != null) {
+        warningMessages.AddRange(TempData[string.Format("nop.notifications.{0}", NotifyType.Warning)] as IList<string>);
+    }
+    if (ViewData[string.Format("nop.notifications.{0}", NotifyType.Warning)] != null) {
+        warningMessages.AddRange(ViewData[string.Format("nop.notifications.{0}", NotifyType.Warning)] as IList<string>);
+    }
 }
 
 @foreach (var message in successMessages)
@@ -34,6 +44,13 @@
 @foreach (var message in errorMessages)
 {
     <div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        @message
+    </div>
+}
+
+@foreach (var message in warningMessages) {
+    <div class="alert alert-warning alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         @message
     </div>

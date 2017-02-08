@@ -489,6 +489,9 @@ label, label + * {
 .bar-notification.error {
 	background-color: #e4444c;
 }
+.bar-notification.warning {
+	background-color: #f39c12;
+}
 .bar-notification .content {
 	margin: 0 0 0 10px;
 }
