@@ -59,16 +59,28 @@
             @using (Html.BeginForm("Index", "Install", FormMethod.Post, new { id = "installation-form" }))
             {
                 <script type="text/javascript">
+                    function showThrobber(message) {
+                        $('.throbber-header').html(message);
+                        window.setTimeout(function () {
+                            $(".throbber").show();
+                        }, 1000);
+                    }
+
                     $(document).ready(function () {
                         $('#installation-form').submit(function () {
                             if ($('#installation-form').valid()) {
                                 $("html, body").animate({ scrollTop: 0 }, 400);
-                                window.setTimeout(function () {
-                                    $(".throbber").show();
-                                }, 1000);
-
+                                showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(ILS.GetResource("Installing")))');
                                 $('input[type=submit]', this).attr('disabled', 'disabled');
                             }
+                        });
+                    });
+
+                    $(document).ready(function () {
+                        $('#restart-form').submit(function () {
+                            $("html, body").animate({ scrollTop: 0 }, 400);
+                            showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode("Restarting..."))');
+                            $('input[type=submit]', this).attr('disabled', 'disabled');
                         });
                     });
 
@@ -355,25 +367,22 @@
             }
         </div>
         <div class="content-footer">
-            <div class="row">
-                <div class="col-xs-12 text-center">
-                    <a href="@Url.Action("RestartInstall", "Install")" title="@ILS.GetResource("RestartInstallationTooltip")" class="btn btn-md btn-default">
-                        @ILS.GetResource("RestartInstallation")
-                    </a>
+            @using (Html.BeginForm("RestartInstall", "Install", FormMethod.Post, new { id = "restart-form" }))
+            {
+                <div class="row">
+                    <div class="col-xs-12 text-center">
+                        <button type="submit" class="btn btn-md btn-default"  title="@ILS.GetResource("RestartInstallationTooltip")">@ILS.GetResource("RestartInstallation")</button>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
         <div class="throbber">
             <div class="curtain">
             </div>
             <div class="curtain-content">
                 <div>
-                    <h1 class="throbber-header">
-                        @ILS.GetResource("Installing")
-                    </h1>
-                    <p>
-                        <img src="@Url.Content("~/content/install/images/install-synchronizing.gif")" alt="" />
-                    </p>
+                    <h1 class="throbber-header">Wait...</h1>
+                    <p><img src="@Url.Content("~/content/install/images/install-synchronizing.gif")" alt="" /></p>
                 </div>
             </div>
         </div>

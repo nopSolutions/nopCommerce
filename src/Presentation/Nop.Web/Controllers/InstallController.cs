@@ -447,6 +447,7 @@ namespace Nop.Web.Controllers
             return RedirectToAction("Index", "Install");
         }
 
+        [HttpPost]
         public virtual ActionResult RestartInstall()
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
