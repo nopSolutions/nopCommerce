@@ -22,7 +22,7 @@
 
     //extend editor with additional settings
     //Sample setting value (below):
-    //settings.plugins.push('textcolor'); settings.toolbar += ' | forecolor backcolor';
+    //settings.plugins.push('print'); settings.toolbar += ' | print';
     var additionalEditorSettings = EngineContext.Current.Resolve<AdminAreaSettings>().RichEditorAdditionalSettings;
     //is java-script supported?
     var allowJavaScript = EngineContext.Current.Resolve<AdminAreaSettings>().RichEditorAllowJavaScript;
@@ -64,11 +64,11 @@
             autoresize_min_height: 200,
             autoresize_max_height: 200,
             plugins: [
-                "advlist autolink autoresize directionality lists link image charmap print preview anchor",
-                "searchreplace visualblocks code fullscreen",
+                "advlist autolink autoresize directionality lists link image charmap preview anchor",
+                "searchreplace visualblocks code fullscreen textcolor",
                 "insertdatetime media table contextmenu paste@(allowJbimages ? " jbimages" : null)@(enableFullPage ? " fullpage" : null)"
             ],
-            toolbar: "ltr rtl | insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image@(allowJbimages ? " jbimages" : null)",
+            toolbar: "ltr rtl | insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image@(allowJbimages ? " jbimages" : null)",
             //"relative_urls" required by jbimages plugin to be set to "false"
             relative_urls: false,
             @if (allowJavaScript)
