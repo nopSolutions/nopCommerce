@@ -2515,7 +2515,7 @@
     <Content Include="Views\Product\_CreateOrUpdateTierPrice.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Product\_StockQuantityHistory.cshtml" />
+    <Content Include="Views\Product\_CreateOrUpdate._StockQuantityHistory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_GridPagerMessages.cshtml" />
