@@ -41,6 +41,7 @@ namespace Nop.Web.Controllers
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IVendorService _vendorService;
+        private readonly IWorkflowMessageService _workflowMessageService;
 
         private readonly TaxSettings _taxSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
@@ -66,6 +67,7 @@ namespace Nop.Web.Controllers
             IGenericAttributeService genericAttributeService,
             ICustomerActivityService customerActivityService,
             IVendorService vendorService,
+            IWorkflowMessageService workflowMessageService,
             TaxSettings taxSettings,
             StoreInformationSettings storeInformationSettings,
             EmailAccountSettings emailAccountSettings,
@@ -86,6 +88,7 @@ namespace Nop.Web.Controllers
             this._genericAttributeService = genericAttributeService;
             this._customerActivityService = customerActivityService;
             this._vendorService = vendorService;
+            this._workflowMessageService = workflowMessageService;
 
             this._taxSettings = taxSettings;
             this._storeInformationSettings = storeInformationSettings;
@@ -289,50 +292,12 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                string email = model.Email.Trim();
-                string fullName = model.FullName;
-                string subject = _commonSettings.SubjectFieldOnContactUsForm ?
-                    model.Subject :
-                    string.Format(_localizationService.GetResource("ContactUs.EmailSubject"), _storeContext.CurrentStore.GetLocalized(x => x.Name));
-
-                var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
-                if (emailAccount == null)
-                    emailAccount = _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
-                if (emailAccount == null)
-                    throw new Exception("No email account could be loaded");
-
-                string from;
-                string fromName;
+                string subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
                 string body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
-                //required for some SMTP servers
-                if (_commonSettings.UseSystemEmailForContactUsForm)
-                {
-                    from = emailAccount.Email;
-                    fromName = emailAccount.DisplayName;
-                    body = string.Format("<strong>From</strong>: {0} - {1}<br /><br />{2}",
-                        Server.HtmlEncode(fullName),
-                        Server.HtmlEncode(email), body);
-                }
-                else
-                {
-                    from = email;
-                    fromName = fullName;
-                }
-                _queuedEmailService.InsertQueuedEmail(new QueuedEmail
-                {
-                    From = from,
-                    FromName = fromName,
-                    To = emailAccount.Email,
-                    ToName = emailAccount.DisplayName,
-                    ReplyTo = email,
-                    ReplyToName = fullName,
-                    Priority = QueuedEmailPriority.High,
-                    Subject = subject,
-                    Body = body,
-                    CreatedOnUtc = DateTime.UtcNow,
-                    EmailAccountId = emailAccount.Id
-                });
 
+                _workflowMessageService.SendContactUsMessage(_workContext.WorkingLanguage.Id,
+                    model.Email.Trim(), model.FullName, subject, body);
+                
                 model.SuccessfullySent = true;
                 model.Result = _localizationService.GetResource("ContactUs.YourEnquiryHasBeenSent");
 
@@ -381,52 +346,12 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                string email = model.Email.Trim();
-                string fullName = model.FullName;
-
-                string subject = _commonSettings.SubjectFieldOnContactUsForm ?
-                    model.Subject :
-                    string.Format(_localizationService.GetResource("ContactVendor.EmailSubject"), _storeContext.CurrentStore.GetLocalized(x => x.Name));
-
-
-                var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
-                if (emailAccount == null)
-                    emailAccount = _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
-                if (emailAccount == null)
-                    throw new Exception("No email account could be loaded");
-
-                string from;
-                string fromName;
+                string subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
                 string body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
-                //required for some SMTP servers
-                if (_commonSettings.UseSystemEmailForContactUsForm)
-                {
-                    from = emailAccount.Email;
-                    fromName = emailAccount.DisplayName;
-                    body = string.Format("<strong>From</strong>: {0} - {1}<br /><br />{2}",
-                        Server.HtmlEncode(fullName),
-                        Server.HtmlEncode(email), body);
-                }
-                else
-                {
-                    from = email;
-                    fromName = fullName;
-                }
-                _queuedEmailService.InsertQueuedEmail(new QueuedEmail
-                {
-                    From = from,
-                    FromName = fromName,
-                    To = vendor.Email,
-                    ToName = vendor.Name,
-                    ReplyTo = email,
-                    ReplyToName = fullName,
-                    Priority = QueuedEmailPriority.High,
-                    Subject = subject,
-                    Body = body,
-                    CreatedOnUtc = DateTime.UtcNow,
-                    EmailAccountId = emailAccount.Id
-                });
 
+                _workflowMessageService.SendContactVendorMessage(vendor, _workContext.WorkingLanguage.Id,
+                    model.Email.Trim(), model.FullName, subject, body);
+                
                 model.SuccessfullySent = true;
                 model.Result = _localizationService.GetResource("ContactVendor.YourEnquiryHasBeenSent");
 

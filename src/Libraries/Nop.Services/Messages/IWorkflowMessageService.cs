@@ -411,6 +411,30 @@ namespace Nop.Services.Messages
         int SendBackInStockNotification(BackInStockSubscription subscription, int languageId);
 
         /// <summary>
+        /// Sends "contact us" message
+        /// </summary>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="senderEmail">Sender email</param>
+        /// <param name="senderName">Sender name</param>
+        /// <param name="subject">Email subject. Pass null if you want a message template subject to be used.</param>
+        /// <param name="body">Email body</param>
+        /// <returns>Queued email identifier</returns>
+        int SendContactUsMessage(int languageId, string senderEmail, string senderName, string subject, string body);
+
+        /// <summary>
+        /// Sends "contact vendor" message
+        /// </summary>
+        /// <param name="vendor">Vendor</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="senderEmail">Sender email</param>
+        /// <param name="senderName">Sender name</param>
+        /// <param name="subject">Email subject. Pass null if you want a message template subject to be used.</param>
+        /// <param name="body">Email body</param>
+        /// <returns>Queued email identifier</returns>
+        int SendContactVendorMessage(Vendor vendor, int languageId, string senderEmail,
+            string senderName, string subject, string body);
+
+        /// <summary>
         /// Sends a test email
         /// </summary>
         /// <param name="messageTemplateId">Message template identifier</param>
@@ -418,8 +442,7 @@ namespace Nop.Services.Messages
         /// <param name="tokens">Tokens</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendTestEmail(int messageTemplateId, string sendToEmail,
-            List<Token> tokens, int languageId);
+        int SendTestEmail(int messageTemplateId, string sendToEmail, List<Token> tokens, int languageId);
 
         /// <summary>
         /// Send notification
@@ -434,12 +457,16 @@ namespace Nop.Services.Messages
         /// <param name="attachmentFileName">Attachment file name</param>
         /// <param name="replyToEmailAddress">"Reply to" email</param>
         /// <param name="replyToName">"Reply to" name</param>
+        /// <param name="fromEmail">Sender email. If specified, then it overrides passed "emailAccount" details</param>
+        /// <param name="fromName">Sender name. If specified, then it overrides passed "emailAccount" details</param>
+        /// <param name="subject">Subject. If specified, then it overrides subject of a message template</param>
         /// <returns>Queued email identifier</returns>
         int SendNotification(MessageTemplate messageTemplate,
             EmailAccount emailAccount, int languageId, IEnumerable<Token> tokens,
             string toEmailAddress, string toName,
             string attachmentFilePath = null, string attachmentFileName = null,
-            string replyToEmailAddress = null, string replyToName = null);
+            string replyToEmailAddress = null, string replyToName = null,
+            string fromEmail = null, string fromName = null, string subject = null);
 
         #endregion
     }

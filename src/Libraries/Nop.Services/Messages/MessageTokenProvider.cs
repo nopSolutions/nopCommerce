@@ -377,6 +377,22 @@ namespace Nop.Services.Messages
                     "%VatValidationResult.Address%"
                 });
 
+                //contact us tokens
+                _allowedTokens.Add(TokenGroupNames.ContactUsValidation, new[]
+                {
+                    "%ContactUs.SenderEmail%",
+                    "%ContactUs.SenderName%",
+                    "%ContactUs.Body%"
+                });
+
+                //contact vendor tokens
+                _allowedTokens.Add(TokenGroupNames.ContactVendorValidation, new[]
+                {
+                    "%ContactUs.SenderEmail%",
+                    "%ContactUs.SenderName%",
+                    "%ContactUs.Body%"
+                });
+
                 return _allowedTokens;
             }
         }

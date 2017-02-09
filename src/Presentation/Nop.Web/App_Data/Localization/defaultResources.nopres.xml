@@ -13212,9 +13212,6 @@
   <LocaleResource Name="ContactUs.Email.Required">
     <Value>Enter email</Value>
   </LocaleResource>
-  <LocaleResource Name="ContactUs.EmailSubject">
-    <Value>{0}. Contact us</Value>
-  </LocaleResource>
   <LocaleResource Name="ContactUs.Enquiry">
     <Value>Enquiry</Value>
   </LocaleResource>
@@ -13259,9 +13256,6 @@
   </LocaleResource>
   <LocaleResource Name="ContactVendor.Email.Required">
     <Value>Enter email</Value>
-  </LocaleResource>
-  <LocaleResource Name="ContactVendor.EmailSubject">
-    <Value>{0}. Contact us</Value>
   </LocaleResource>
   <LocaleResource Name="ContactVendor.Enquiry">
     <Value>Enquiry</Value>

@@ -5649,6 +5649,22 @@ namespace Nop.Services.Installation
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}Vendor %Vendor.Name% (%Vendor.Email%) has just changed information about itself.{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
                     EmailAccountId = eaGeneral.Id
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.ContactUsMessage,
+                    Subject = "%Store.Name%. Contact us",
+                    Body = string.Format("<p>{0}%ContactUs.Body%{0}</p>{0}", Environment.NewLine),
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.ContactVendorMessage,
+                    Subject = "%Store.Name%. Contact us",
+                    Body = string.Format("<p>{0}%ContactUs.Body%{0}</p>{0}", Environment.NewLine),
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
                 }
             };
             _messageTemplateRepository.Insert(messageTemplates);

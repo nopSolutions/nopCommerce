@@ -236,6 +236,15 @@ namespace Nop.Core.Domain.Messages
         /// </summary>
         public const string BackInStockNotification = "Customer.BackInStock";
 
+        /// <summary>
+        /// Represents system name of 'Contact us' message
+        /// </summary>
+        public const string ContactUsMessage = "Service.ContactUs";
+        /// <summary>
+        /// Represents system name of 'Contact vendor' message
+        /// </summary>
+        public const string ContactVendorMessage = "Service.ContactVendor";
+
         #endregion
     }
 }

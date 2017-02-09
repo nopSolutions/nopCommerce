@@ -1606,7 +1606,13 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.System.SeNames.Id">
     <Value>ID</Value>
-  </LocaleResource>  
+  </LocaleResource>
+  <LocaleResource Name="ContactUs.EmailSubject">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.EmailSubject">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -4112,3 +4118,22 @@ GO
 
 ALTER TABLE [CustomerRole] ALTER COLUMN [EnablePasswordLifetime] bit NOT NULL
 GO
+
+
+-- new message template
+ IF NOT EXISTS (SELECT 1 FROM [dbo].[MessageTemplate] WHERE [Name] = N'Service.ContactUs')
+ BEGIN
+    DECLARE @NewLine AS CHAR(2) = CHAR(13) + CHAR(10)
+	INSERT [dbo].[MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [AttachedDownloadId], [EmailAccountId], [LimitedToStores], [DelayPeriodId]) 
+	VALUES (N'Service.ContactUs', NULL, N'%Store.Name%. Contact us', N'<p>' + @NewLine + '%ContactUs.Body%' + @NewLine + '</p>' + @NewLine, 1, 0, 0, 0, 0)
+ END
+ GO
+
+-- new message template
+ IF NOT EXISTS (SELECT 1 FROM [dbo].[MessageTemplate] WHERE [Name] = N'Service.ContactVendor')
+ BEGIN
+    DECLARE @NewLine AS CHAR(2) = CHAR(13) + CHAR(10)
+	INSERT [dbo].[MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [AttachedDownloadId], [EmailAccountId], [LimitedToStores], [DelayPeriodId]) 
+	VALUES (N'Service.ContactVendor', NULL, N'%Store.Name%. Contact us', N'<p>' + @NewLine + '%ContactUs.Body%' + @NewLine + '</p>' + @NewLine, 1, 0, 0, 0, 0)
+ END
+ GO
