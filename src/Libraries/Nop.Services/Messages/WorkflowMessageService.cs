@@ -65,55 +65,6 @@ namespace Nop.Services.Messages
 
         #region Utilities
         
-        protected virtual int SendNotification(MessageTemplate messageTemplate, 
-            EmailAccount emailAccount, int languageId, IEnumerable<Token> tokens,
-            string toEmailAddress, string toName,
-            string attachmentFilePath = null, string attachmentFileName = null,
-            string replyToEmailAddress = null, string replyToName = null)
-        {
-            if (messageTemplate == null)
-                throw new ArgumentNullException("messageTemplate");
-            if (emailAccount == null)
-                throw new ArgumentNullException("emailAccount");
-
-            //retrieve localized message template data
-            var bcc = messageTemplate.GetLocalized(mt => mt.BccEmailAddresses, languageId);
-            var subject = messageTemplate.GetLocalized(mt => mt.Subject, languageId);
-            var body = messageTemplate.GetLocalized(mt => mt.Body, languageId);
-
-            //Replace subject and body tokens 
-            var subjectReplaced = _tokenizer.Replace(subject, tokens, false);
-            var bodyReplaced = _tokenizer.Replace(body, tokens, true);
-
-            //limit name length
-            toName = CommonHelper.EnsureMaximumLength(toName, 300);
-            
-            var email = new QueuedEmail
-            {
-                Priority = QueuedEmailPriority.High,
-                From = emailAccount.Email,
-                FromName = emailAccount.DisplayName,
-                To = toEmailAddress,
-                ToName = toName,
-                ReplyTo = replyToEmailAddress,
-                ReplyToName = replyToName,
-                CC = string.Empty,
-                Bcc = bcc,
-                Subject = subjectReplaced,
-                Body = bodyReplaced,
-                AttachmentFilePath = attachmentFilePath,
-                AttachmentFileName = attachmentFileName,
-                AttachedDownloadId = messageTemplate.AttachedDownloadId,
-                CreatedOnUtc = DateTime.UtcNow,
-                EmailAccountId = emailAccount.Id,
-                DontSendBeforeDateUtc = !messageTemplate.DelayBeforeSend.HasValue ? null
-                    : (DateTime?)(DateTime.UtcNow + TimeSpan.FromHours(messageTemplate.DelayPeriod.ToHours(messageTemplate.DelayBeforeSend.Value)))
-            };
-
-            _queuedEmailService.InsertQueuedEmail(email);
-            return email.Id;
-        }
-
         protected virtual MessageTemplate GetActiveMessageTemplate(string messageTemplateName, int storeId)
         {
             var messageTemplate = _messageTemplateService.GetMessageTemplateByName(messageTemplateName, storeId);
@@ -1762,6 +1713,69 @@ namespace Nop.Services.Messages
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
             return SendNotification(messageTemplate, emailAccount, languageId, tokens, sendToEmail, null);
+        }
+
+        /// <summary>
+        /// Send notification
+        /// </summary>
+        /// <param name="messageTemplate">Message template</param>
+        /// <param name="emailAccount">Email account</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <param name="tokens">Tokens</param>
+        /// <param name="toEmailAddress">Recipient email address</param>
+        /// <param name="toName">Recipient name</param>
+        /// <param name="attachmentFilePath">Attachment file path</param>
+        /// <param name="attachmentFileName">Attachment file name</param>
+        /// <param name="replyToEmailAddress">"Reply to" email</param>
+        /// <param name="replyToName">"Reply to" name</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendNotification(MessageTemplate messageTemplate,
+            EmailAccount emailAccount, int languageId, IEnumerable<Token> tokens,
+            string toEmailAddress, string toName,
+            string attachmentFilePath = null, string attachmentFileName = null,
+            string replyToEmailAddress = null, string replyToName = null)
+        {
+            if (messageTemplate == null)
+                throw new ArgumentNullException("messageTemplate");
+            if (emailAccount == null)
+                throw new ArgumentNullException("emailAccount");
+
+            //retrieve localized message template data
+            var bcc = messageTemplate.GetLocalized(mt => mt.BccEmailAddresses, languageId);
+            var subject = messageTemplate.GetLocalized(mt => mt.Subject, languageId);
+            var body = messageTemplate.GetLocalized(mt => mt.Body, languageId);
+
+            //Replace subject and body tokens 
+            var subjectReplaced = _tokenizer.Replace(subject, tokens, false);
+            var bodyReplaced = _tokenizer.Replace(body, tokens, true);
+
+            //limit name length
+            toName = CommonHelper.EnsureMaximumLength(toName, 300);
+
+            var email = new QueuedEmail
+            {
+                Priority = QueuedEmailPriority.High,
+                From = emailAccount.Email,
+                FromName = emailAccount.DisplayName,
+                To = toEmailAddress,
+                ToName = toName,
+                ReplyTo = replyToEmailAddress,
+                ReplyToName = replyToName,
+                CC = string.Empty,
+                Bcc = bcc,
+                Subject = subjectReplaced,
+                Body = bodyReplaced,
+                AttachmentFilePath = attachmentFilePath,
+                AttachmentFileName = attachmentFileName,
+                AttachedDownloadId = messageTemplate.AttachedDownloadId,
+                CreatedOnUtc = DateTime.UtcNow,
+                EmailAccountId = emailAccount.Id,
+                DontSendBeforeDateUtc = !messageTemplate.DelayBeforeSend.HasValue ? null
+                    : (DateTime?)(DateTime.UtcNow + TimeSpan.FromHours(messageTemplate.DelayPeriod.ToHours(messageTemplate.DelayBeforeSend.Value)))
+            };
+
+            _queuedEmailService.InsertQueuedEmail(email);
+            return email.Id;
         }
 
         #endregion
