@@ -12184,7 +12184,7 @@
     <Value>From name.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.Id">
-    <Value>Queued email ID</Value>
+    <Value>ID</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.Priority">
     <Value>Message Priority</Value>
@@ -12365,6 +12365,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.SeNames.EntityName">
     <Value>Entity name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Id">
+    <Value>ID</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SeNames.IsActive">
     <Value>Is active</Value>

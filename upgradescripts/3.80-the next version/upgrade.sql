@@ -1601,6 +1601,12 @@ set @resources='
   <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.EnablePasswordLifetime.Hint">
     <Value>Check to force customers to change their passwords after a specified time.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.Id">
+    <Value>ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Id">
+    <Value>ID</Value>
+  </LocaleResource>  
 </Language>
 '
 
