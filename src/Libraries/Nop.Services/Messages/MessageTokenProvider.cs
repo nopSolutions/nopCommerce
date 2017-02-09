@@ -378,7 +378,7 @@ namespace Nop.Services.Messages
                 });
 
                 //contact us tokens
-                _allowedTokens.Add(TokenGroupNames.ContactUsValidation, new[]
+                _allowedTokens.Add(TokenGroupNames.ContactUs, new[]
                 {
                     "%ContactUs.SenderEmail%",
                     "%ContactUs.SenderName%",
@@ -386,7 +386,7 @@ namespace Nop.Services.Messages
                 });
 
                 //contact vendor tokens
-                _allowedTokens.Add(TokenGroupNames.ContactVendorValidation, new[]
+                _allowedTokens.Add(TokenGroupNames.ContactVendor, new[]
                 {
                     "%ContactUs.SenderEmail%",
                     "%ContactUs.SenderName%",
