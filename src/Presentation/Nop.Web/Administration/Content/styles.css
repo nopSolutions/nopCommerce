@@ -170,6 +170,9 @@ table.adminContent {
     color: #444;
     border-color: #ddd;
 }
+.k-multiselect .k-button {
+    white-space: normal;
+}
 .k-button:hover, .k-button:focus, .k-button.k-state-focused {
     background-color: #e7e7e7;
     background-image: none;
