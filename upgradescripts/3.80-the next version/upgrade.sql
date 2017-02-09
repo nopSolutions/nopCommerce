@@ -1613,6 +1613,9 @@ set @resources='
   <LocaleResource Name="ContactVendor.EmailSubject">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderStatus.CancelledNotification">
+    <Value>This order is cancelled</Value>
+  </LocaleResource>
 </Language>
 '
 
