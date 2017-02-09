@@ -272,7 +272,7 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                                         width: 100,
                                         headerAttributes: { style: "text-align:center" },
                                         attributes: { style: "text-align:center" },
-                                        template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/ProductAttribute/PredefinedProductAttributeValueEditPopup/")#=Id#?btnId=btnRefresh&formId=productattribute-form', 800, 550, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
+                                        template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/ProductAttribute/PredefinedProductAttributeValueEditPopup/")#=Id#?btnId=btnRefresh&formId=productattribute-form', 1000, 550, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
                                     }, {
                                         command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                         title: "@T("Admin.Common.Delete")",
@@ -284,7 +284,7 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                     </script>
                 </div>
                 <div class="panel-footer">
-                    <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("PredefinedProductAttributeValueCreatePopup", "ProductAttribute", new {productAttributeId = Model.Id, btnId = "btnRefresh", formId = "productattribute-form"}))', 800, 550, true); return false;" class="btn btn-primary">
+                    <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("PredefinedProductAttributeValueCreatePopup", "ProductAttribute", new {productAttributeId = Model.Id, btnId = "btnRefresh", formId = "productattribute-form"}))', 1000, 550, true); return false;" class="btn btn-primary">
                         @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.AddNew")
                     </button>
                     <input type="submit" id="btnRefresh" style="display:none" />

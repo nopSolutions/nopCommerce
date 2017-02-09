@@ -28,6 +28,11 @@ namespace Nop.Core.Domain.Catalog
         public string Name { get; set; }
 
         /// <summary>
+        /// Gets or sets the product attribute description
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
         /// Gets or sets the color RGB value (used with "Color squares" attribute type)
         /// </summary>
         public string ColorSquaresRgb { get; set; }

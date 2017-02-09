@@ -48,7 +48,7 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Utilities
 
         [NonAction]
@@ -77,11 +77,16 @@ namespace Nop.Admin.Controllers
                                                                x => x.Name,
                                                                localized.Name,
                                                                localized.LanguageId);
+
+                _localizedEntityService.SaveLocalizedValue(ppav,
+                                                                x => x.Description,
+                                                                localized.Description,
+                                                                localized.LanguageId);
             }
         }
 
         #endregion
-        
+
         #region Methods
 
         #region Attribute list / create / edit / delete
@@ -116,7 +121,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-        
+
         //create
         public virtual ActionResult Create()
         {
@@ -193,7 +198,7 @@ namespace Nop.Admin.Controllers
             if (productAttribute == null)
                 //No product attribute found with the specified id
                 return RedirectToAction("List");
-            
+
             if (ModelState.IsValid)
             {
                 productAttribute = model.ToEntity(productAttribute);
@@ -271,7 +276,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-        
+
         #endregion
 
         #region Predefined values
@@ -292,6 +297,7 @@ namespace Nop.Admin.Controllers
                         Id = x.Id,
                         ProductAttributeId = x.ProductAttributeId,
                         Name = x.Name,
+                        Description = x.Description,
                         PriceAdjustment = x.PriceAdjustment,
                         PriceAdjustmentStr = x.PriceAdjustment.ToString("G29"),
                         WeightAdjustment = x.WeightAdjustment,
@@ -342,6 +348,7 @@ namespace Nop.Admin.Controllers
                 {
                     ProductAttributeId = model.ProductAttributeId,
                     Name = model.Name,
+                    Description = model.Description,
                     PriceAdjustment = model.PriceAdjustment,
                     WeightAdjustment = model.WeightAdjustment,
                     Cost = model.Cost,
@@ -376,6 +383,7 @@ namespace Nop.Admin.Controllers
             {
                 ProductAttributeId = ppav.ProductAttributeId,
                 Name = ppav.Name,
+                Description = ppav.Description,
                 PriceAdjustment = ppav.PriceAdjustment,
                 WeightAdjustment = ppav.WeightAdjustment,
                 Cost = ppav.Cost,
@@ -386,6 +394,7 @@ namespace Nop.Admin.Controllers
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = ppav.GetLocalized(x => x.Name, languageId, false, false);
+                locale.Description = ppav.GetLocalized(x => x.Description, languageId, false, false);
             });
             return View(model);
         }
@@ -403,6 +412,7 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 ppav.Name = model.Name;
+                ppav.Description = model.Description;
                 ppav.PriceAdjustment = model.PriceAdjustment;
                 ppav.WeightAdjustment = model.WeightAdjustment;
                 ppav.Cost = model.Cost;
