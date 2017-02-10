@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Services.Localization;
@@ -402,10 +403,16 @@ namespace Nop.Services.Catalog
                 _storeMappingService.InsertStoreMapping(productCopy, id);
             }
 
-
-            // product <-> attributes mappings
+            //product <-> attributes mappings
             var associatedAttributes = new Dictionary<int, int>();
             var associatedAttributeValues = new Dictionary<int, int>();
+
+            //attribute mapping with condition attributes
+            var oldCopyWithConditionAttributes = new List<ProductAttributeMapping>();
+
+            //all product attribute mapping copies
+            var productAttributeMappingCopies = new Dictionary<int, ProductAttributeMapping>();
+
             foreach (var productAttributeMapping in _productAttributeService.GetProductAttributeMappingsByProductId(product.Id))
             {
                 var productAttributeMappingCopy = new ProductAttributeMapping
@@ -420,10 +427,17 @@ namespace Nop.Services.Catalog
                     ValidationMaxLength = productAttributeMapping.ValidationMaxLength,
                     ValidationFileAllowedExtensions = productAttributeMapping.ValidationFileAllowedExtensions,
                     ValidationFileMaximumSize = productAttributeMapping.ValidationFileMaximumSize,
-                    DefaultValue = productAttributeMapping.DefaultValue,
-                    //UNDONE copy ConditionAttributeXml (we should replace attribute IDs with new values)
+                    DefaultValue = productAttributeMapping.DefaultValue
                 };
                 _productAttributeService.InsertProductAttributeMapping(productAttributeMappingCopy);
+
+                productAttributeMappingCopies.Add(productAttributeMappingCopy.Id, productAttributeMappingCopy);
+
+                if (!string.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml))
+                {
+                    oldCopyWithConditionAttributes.Add(productAttributeMapping);
+                }
+
                 //save associated value (used for combinations copying)
                 associatedAttributes.Add(productAttributeMapping.Id, productAttributeMappingCopy.Id);
 
@@ -469,7 +483,6 @@ namespace Nop.Services.Catalog
                         }
                     }
 
-
                     _productAttributeService.InsertProductAttributeValue(attributeValueCopy);
 
                     //save associated value (used for combinations copying)
@@ -484,6 +497,37 @@ namespace Nop.Services.Catalog
                     }
                 }
             }
+
+            //copy attribute conditions
+            foreach (var productAttributeMapping in oldCopyWithConditionAttributes)
+            {
+                var oldConditionAttributeMapping = _productAttributeParser.ParseProductAttributeMappings(productAttributeMapping.ConditionAttributeXml).FirstOrDefault();
+
+                if (oldConditionAttributeMapping == null)
+                    continue;
+
+                var oldConditionValues = _productAttributeParser.ParseProductAttributeValues(productAttributeMapping.ConditionAttributeXml, oldConditionAttributeMapping.Id);
+
+                if (!oldConditionValues.Any())
+                    continue;
+
+                var newAttributeMappingId = associatedAttributes[oldConditionAttributeMapping.Id];
+                var newConditionAttributeMapping = productAttributeMappingCopies[newAttributeMappingId];
+
+                var newConditionAttributeXml = string.Empty;
+
+                foreach (var oldConditionValue in oldConditionValues)
+                {
+                    newConditionAttributeXml = _productAttributeParser.AddProductAttribute(newConditionAttributeXml, newConditionAttributeMapping, associatedAttributeValues[oldConditionValue.Id].ToString());
+                }
+
+                var attributeMappingId = associatedAttributes[productAttributeMapping.Id];
+                var conditionAttribute = productAttributeMappingCopies[attributeMappingId];
+                conditionAttribute.ConditionAttributeXml = newConditionAttributeXml;
+
+                _productAttributeService.UpdateProductAttributeMapping(conditionAttribute);
+            }
+
             //attribute combinations
             foreach (var combination in _productAttributeService.GetAllProductAttributeCombinations(product.Id))
             {
@@ -565,12 +609,10 @@ namespace Nop.Services.Catalog
                 productCopy.AppliedDiscounts.Add(discount);
                 _productService.UpdateProduct(productCopy);
             }
-
-
+            
             //update "HasTierPrices" and "HasDiscountsApplied" properties
             _productService.UpdateHasTierPricesProperty(productCopy);
             _productService.UpdateHasDiscountsApplied(productCopy);
-
 
             //associated products
             if (copyAssociatedProducts)
