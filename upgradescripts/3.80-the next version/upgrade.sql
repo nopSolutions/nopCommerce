@@ -4140,3 +4140,29 @@ GO
 	VALUES (N'Service.ContactVendor', NULL, N'%Store.Name%. Contact us', N'<p>' + @NewLine + '%ContactUs.Body%' + @NewLine + '</p>' + @NewLine, 1, 0, 0, 0, 0)
  END
  GO
+
+ --now vendors have "Manage product reviews" permission
+IF EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord]
+		WHERE [SystemName] = N'ManageProductReviews')
+BEGIN
+	DECLARE @PermissionRecordId INT 
+	SET @PermissionRecordId = (SELECT [Id] FROM [dbo].[PermissionRecord] WHERE [SystemName] = N'ManageProductReviews')
+
+	--add it to vendor role by default
+	DECLARE @VendorCustomerRoleId int
+	SELECT @VendorCustomerRoleId = Id
+	FROM [CustomerRole]
+	WHERE IsSystemRole=1 and [SystemName] = N'Vendors'
+
+	IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord_Role_Mapping]
+		WHERE [PermissionRecord_Id] = @PermissionRecordId AND [CustomerRole_Id] = @VendorCustomerRoleId)
+	BEGIN
+		INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+		VALUES (@PermissionRecordId, @VendorCustomerRoleId)
+	END
+END
+GO
