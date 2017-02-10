@@ -17,20 +17,24 @@
     <h1 class="pull-left">
         @T("Admin.Catalog.ProductReviews")
     </h1>
-    <div class="pull-right">
-        <button type="button" id="approve-selected" class="btn bg-green">
-            <i class="fa fa-check-square-o"></i>
-            @T("Admin.Catalog.ProductReviews.ApproveSelected")
-        </button>
-        <button type="button" id="disapprove-selected" class="btn bg-navy">
-            <i class="fa fa-minus-square-o"></i>
-            @T("Admin.Catalog.ProductReviews.DisapproveSelected")
-        </button>
-        <button type="button" id="delete-selected" class="btn bg-red">
-            <i class="fa fa-trash-o"></i>
-            @T("Admin.Catalog.ProductReviews.DeleteSelected")
-        </button>
-    </div>
+    @if (!Model.IsLoggedInAsVendor)
+    {
+        //these buttons are not visible to vendors
+        <div class="pull-right">
+            <button type="button" id="approve-selected" class="btn bg-green">
+                <i class="fa fa-check-square-o"></i>
+                @T("Admin.Catalog.ProductReviews.ApproveSelected")
+            </button>
+            <button type="button" id="disapprove-selected" class="btn bg-navy">
+                <i class="fa fa-minus-square-o"></i>
+                @T("Admin.Catalog.ProductReviews.DisapproveSelected")
+            </button>
+            <button type="button" id="delete-selected" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Catalog.ProductReviews.DeleteSelected")
+            </button>
+        </div>
+    }
 </div>
 
 <div class="content">
@@ -172,6 +176,7 @@
                                 columns: [
                                     {
                                         field: "Id",
+                                        hidden: @(Model.IsLoggedInAsVendor ? "true" : "false"),
                                         headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
                                         headerAttributes: { style: "text-align:center" },
                                         attributes: { style: "text-align:center" },
