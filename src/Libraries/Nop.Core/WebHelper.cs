@@ -206,6 +206,12 @@ namespace Nop.Core
                 }
             }
             url = url.ToLowerInvariant();
+
+            if (useSsl && url.StartsWith("http://", StringComparison.Ordinal))
+            {
+                url = url.Replace("http://", "https://");
+            }
+
             return url;
         }
 
