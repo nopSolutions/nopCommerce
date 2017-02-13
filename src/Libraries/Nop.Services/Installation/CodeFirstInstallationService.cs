@@ -6289,6 +6289,7 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new TaxSettings
             {
                 TaxBasedOn = TaxBasedOn.BillingAddress,
+                TaxBasedOnPickupPointAddress = false,
                 TaxDisplayType = TaxDisplayType.ExcludingTax,
                 ActiveTaxProviderSystemName = "Tax.FixedOrByCountryStateZip",
                 DefaultTaxAddressId = 0,

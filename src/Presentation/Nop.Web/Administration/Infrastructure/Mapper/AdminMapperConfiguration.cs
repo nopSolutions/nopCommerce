@@ -682,6 +682,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.ForceTaxExclusionFromOrderSubtotal_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.DefaultTaxCategoryId_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.TaxBasedOn_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.TaxBasedOnPickupPointAddress_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.DefaultTaxAddress_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.ShippingIsTaxable_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.ShippingPriceIncludesTax_OverrideForStore, mo => mo.Ignore())

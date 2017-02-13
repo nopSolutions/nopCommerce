@@ -174,8 +174,9 @@ namespace Nop.Services.Tests.Orders
             _taxSettings.DefaultTaxAddressId = 10;
             _addressService = MockRepository.GenerateMock<IAddressService>();
             _addressService.Expect(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Return(new Address { Id = _taxSettings.DefaultTaxAddressId });
-            _taxService = new TaxService(_addressService, _workContext, _taxSettings,
-                pluginFinder, _geoLookupService, _countryService, _logger, _customerSettings, _addressSettings);
+            _taxService = new TaxService(_addressService, _workContext, _storeContext, _taxSettings,
+                pluginFinder, _geoLookupService, _countryService, _stateProvinceService, _logger,
+                _customerSettings, _shippingSettings, _addressSettings);
 
             _rewardPointService = MockRepository.GenerateMock<IRewardPointService>();
             _rewardPointsSettings = new RewardPointsSettings();

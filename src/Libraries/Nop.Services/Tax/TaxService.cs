@@ -8,6 +8,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
@@ -25,12 +26,15 @@ namespace Nop.Services.Tax
 
         private readonly IAddressService _addressService;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly TaxSettings _taxSettings;
         private readonly IPluginFinder _pluginFinder;
         private readonly IGeoLookupService _geoLookupService;
         private readonly ICountryService _countryService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly ILogger _logger;
         private readonly CustomerSettings _customerSettings;
+        private readonly ShippingSettings _shippingSettings;
         private readonly AddressSettings _addressSettings;
 
         #endregion
@@ -42,31 +46,40 @@ namespace Nop.Services.Tax
         /// </summary>
         /// <param name="addressService">Address service</param>
         /// <param name="workContext">Work context</param>
+        /// <param name="storeContext">Store context</param>
         /// <param name="taxSettings">Tax settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="geoLookupService">GEO lookup service</param>
         /// <param name="countryService">Country service</param>
+        /// <param name="stateProvinceService">State province service</param>
         /// <param name="logger">Logger service</param>
         /// <param name="customerSettings">Customer settings</param>
+        /// <param name="shippingSettings">Shipping settings</param>
         /// <param name="addressSettings">Address settings</param>
         public TaxService(IAddressService addressService,
             IWorkContext workContext,
+            IStoreContext storeContext,
             TaxSettings taxSettings,
             IPluginFinder pluginFinder,
             IGeoLookupService geoLookupService,
             ICountryService countryService,
+            IStateProvinceService stateProvinceService,
             ILogger logger,
             CustomerSettings customerSettings,
+            ShippingSettings shippingSettings,
             AddressSettings addressSettings)
         {
             this._addressService = addressService;
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._taxSettings = taxSettings;
             this._pluginFinder = pluginFinder;
             this._geoLookupService = geoLookupService;
             this._countryService = countryService;
+            this._stateProvinceService = stateProvinceService;
             this._logger = logger;
             this._customerSettings = customerSettings;
+            this._shippingSettings = shippingSettings;
             this._addressSettings = addressSettings;
         }
 
@@ -143,67 +156,69 @@ namespace Nop.Services.Tax
             {
                 Customer = customer,
                 Product = product,
-                Price = price
+                Price = price,
+                TaxCategoryId = taxCategoryId > 0 ? taxCategoryId : (product != null ? product.TaxCategoryId : 0)
             };
-            if (taxCategoryId > 0)
-            {
-                calculateTaxRequest.TaxCategoryId = taxCategoryId;
-            }
-            else
-            {
-                if (product != null)
-                    calculateTaxRequest.TaxCategoryId = product.TaxCategoryId;
-            }
 
             var basedOn = _taxSettings.TaxBasedOn;
+
             //new EU VAT rules starting January 1st 2015
             //find more info at http://ec.europa.eu/taxation_customs/taxation/vat/how_vat_works/telecom/index_en.htm#new_rules
-            //EU VAT enabled?
-            if (_taxSettings.EuVatEnabled)
+            var overridenBasedOn = _taxSettings.EuVatEnabled                                            //EU VAT enabled?
+                && product != null && product.IsTelecommunicationsOrBroadcastingOrElectronicServices    //telecommunications, broadcasting and electronic services?
+                && DateTime.UtcNow > new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc)                //January 1st 2015 passed?
+                && IsEuConsumer(customer);                                                              //Europe Union consumer?
+            if (overridenBasedOn)
             {
-                //telecommunications, broadcasting and electronic services?
-                if (product != null && product.IsTelecommunicationsOrBroadcastingOrElectronicServices)
+                //We must charge VAT in the EU country where the customer belongs (not where the business is based)
+                basedOn = TaxBasedOn.BillingAddress;
+            }
+
+            //tax is based on pickup point address
+            if (!overridenBasedOn && _taxSettings.TaxBasedOnPickupPointAddress && _shippingSettings.AllowPickUpInStore)
+            {
+                var pickupPoint = customer.GetAttribute<PickupPoint>(SystemCustomerAttributeNames.SelectedPickupPoint, _storeContext.CurrentStore.Id);
+                if (pickupPoint != null)
                 {
-                    //January 1st 2015 passed?
-                    if (DateTime.UtcNow > new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc))
+                    var country = _countryService.GetCountryByTwoLetterIsoCode(pickupPoint.CountryCode);
+                    var state = _stateProvinceService.GetStateProvinceByAbbreviation(pickupPoint.StateAbbreviation);
+
+                    calculateTaxRequest.Address = new Address
                     {
-                        //Europe Union consumer?
-                        if (IsEuConsumer(customer))
-                        {
-                            //We must charge VAT in the EU country where the customer belongs (not where the business is based)
-                            basedOn = TaxBasedOn.BillingAddress;
-                        }
-                    }
+                        Address1 = pickupPoint.Address,
+                        City = pickupPoint.City,
+                        Country = country,
+                        CountryId = country.Return(c => c.Id, 0),
+                        StateProvince = state,
+                        StateProvinceId = state.Return(sp => sp.Id, 0),
+                        ZipPostalCode = pickupPoint.ZipPostalCode,
+                        CreatedOnUtc = DateTime.UtcNow
+                    };
+
+                    return calculateTaxRequest;
                 }
             }
-            if (basedOn == TaxBasedOn.BillingAddress && customer.BillingAddress == null)
-                basedOn = TaxBasedOn.DefaultAddress;
-            if (basedOn == TaxBasedOn.ShippingAddress && customer.ShippingAddress == null)
-                basedOn = TaxBasedOn.DefaultAddress;
 
-            Address address;
+            if (basedOn == TaxBasedOn.BillingAddress && customer.BillingAddress == null ||
+                basedOn == TaxBasedOn.ShippingAddress && customer.ShippingAddress == null)
+            {
+                basedOn = TaxBasedOn.DefaultAddress;
+            }
 
             switch (basedOn)
             {
                 case TaxBasedOn.BillingAddress:
-                    {
-                        address = customer.BillingAddress;
-                    }
+                    calculateTaxRequest.Address = customer.BillingAddress;
                     break;
                 case TaxBasedOn.ShippingAddress:
-                    {
-                        address = customer.ShippingAddress;
-                    }
+                    calculateTaxRequest.Address = customer.ShippingAddress;
                     break;
                 case TaxBasedOn.DefaultAddress:
                 default:
-                    {
-                        address = _addressService.GetAddressById(_taxSettings.DefaultTaxAddressId);
-                    }
+                    calculateTaxRequest.Address = _addressService.GetAddressById(_taxSettings.DefaultTaxAddressId);
                     break;
             }
-
-            calculateTaxRequest.Address = address;
+            
             return calculateTaxRequest;
         }
 

@@ -7464,6 +7464,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Tax.TaxBasedOn.Hint">
     <Value>Tax based on.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.TaxBasedOnPickupPointAddress">
+    <Value>Tax based on pickup point address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.TaxBasedOnPickupPointAddress.Hint">
+    <Value>A value indicating whether to use pickup point address (when pickup point is chosen) for tax calculation.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.TaxCategories.None">
     <Value>[None]</Value>
   </LocaleResource>

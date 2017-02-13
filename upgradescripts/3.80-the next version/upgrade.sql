@@ -1616,7 +1616,6 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Fields.OrderStatus.CancelledNotification">
     <Value>This order is cancelled</Value>
   </LocaleResource>
-
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Blog.BlogComment">
 	<Value><![CDATA[This message template is used when a new blog comment to the certain blog post is created. The message is received by a store owner. You can set up this option by ticking the checkbox <strong>Notify about new blog comments</strong> in Configuration - Settings - Blog settings.]]></Value>
   </LocaleResource>
@@ -1745,6 +1744,12 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Wishlist.EmailAFriend">
 	<Value>This message template is used when a customer wants to share some product from the wishlist with a friend by sending an email. You can set up this option by ticking the checkbox <strong>Allow customers to email their wishlists</strong> in Configuration - Settings - Shopping cart settings.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.TaxBasedOnPickupPointAddress">
+    <Value>Tax based on pickup point address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.TaxBasedOnPickupPointAddress.Hint">
+    <Value>A value indicating whether to use pickup point address (when pickup point is chosen) for tax calculation.</Value>
   </LocaleResource>
 </Language>
 '
@@ -4294,5 +4299,13 @@ BEGIN
 		INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
 		VALUES (@PermissionRecordId, @VendorCustomerRoleId)
 	END
+END
+GO
+
+ --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'taxsettings.taxbasedonpickuppointaddress')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'taxsettings.taxbasedonpickuppointaddress', N'False', 0)
 END
 GO

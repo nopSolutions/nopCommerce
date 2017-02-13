@@ -4,6 +4,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
@@ -22,13 +23,16 @@ namespace Nop.Services.Tests.Tax
     {
         private IAddressService _addressService;
         private IWorkContext _workContext;
+        private IStoreContext _storeContext;
         private TaxSettings _taxSettings;
         private IEventPublisher _eventPublisher;
         private ITaxService _taxService;
         private IGeoLookupService _geoLookupService;
         private ICountryService _countryService;
+        private IStateProvinceService _stateProvinceService;
         private ILogger _logger;
         private CustomerSettings _customerSettings;
+        private ShippingSettings _shippingSettings;
         private AddressSettings _addressSettings;
 
         [SetUp]
@@ -38,6 +42,7 @@ namespace Nop.Services.Tests.Tax
             _taxSettings.DefaultTaxAddressId = 10;
 
             _workContext = null;
+            _storeContext = null;
 
             _addressService = MockRepository.GenerateMock<IAddressService>();
             //default tax address
@@ -50,13 +55,15 @@ namespace Nop.Services.Tests.Tax
 
             _geoLookupService = MockRepository.GenerateMock<IGeoLookupService>();
             _countryService = MockRepository.GenerateMock<ICountryService>();
+            _stateProvinceService = MockRepository.GenerateMock<IStateProvinceService>();
             _logger = MockRepository.GenerateMock<ILogger>();
             _customerSettings = new CustomerSettings();
+            _shippingSettings = new ShippingSettings();
             _addressSettings = new AddressSettings();
 
-            _taxService = new TaxService(_addressService, _workContext, _taxSettings,
-                pluginFinder, _geoLookupService, _countryService, _logger
-                , _customerSettings, _addressSettings);
+            _taxService = new TaxService(_addressService, _workContext, _storeContext, _taxSettings,
+                pluginFinder, _geoLookupService, _countryService, _stateProvinceService, _logger,
+                _customerSettings, _shippingSettings, _addressSettings);
         }
 
         [Test]
