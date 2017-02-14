@@ -191,7 +191,7 @@ ul.common-list {
 .requirement-container .requirement-messages-col {
     margin-left: 0;
 }
-.iteraction-type select{
+.interaction-type select{
     width: 70px;
     height: 26px;
     line-height: 25px;

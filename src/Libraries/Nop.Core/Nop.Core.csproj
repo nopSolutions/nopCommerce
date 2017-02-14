@@ -125,7 +125,7 @@
     <Compile Include="Domain\Customers\CustomerLoginResults.cs" />
     <Compile Include="Domain\Customers\Events.cs" />
     <Compile Include="Domain\Customers\RewardPointsActivatingDelayPeriod.cs" />
-    <Compile Include="Domain\Discounts\RequirementInteractionType.cs" />
+    <Compile Include="Domain\Discounts\RequirementGroupInteractionType.cs" />
     <Compile Include="Domain\Forums\ForumPostVote.cs" />
     <Compile Include="Domain\Messages\MessageDelayPeriod.cs" />
     <Compile Include="Domain\Messages\QueuedEmailPriority.cs" />

@@ -1781,16 +1781,13 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RequirementGroup.Hint">
     <Value>Choose the group you want the requirement group you’re creating to be assigned to</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RequirementGroup.None">
-    <Value>None</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RequirementGroup.Title">
     <Value>Group</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Discounts.RequirementInteractionType.And">
+  <LocaleResource Name="Enums.Nop.Core.Domain.Discounts.RequirementGroupInteractionType.And">
     <Value>AND</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Discounts.RequirementInteractionType.Or">
+  <LocaleResource Name="Enums.Nop.Core.Domain.Discounts.RequirementGroupInteractionType.Or">
     <Value>OR</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Remove">
@@ -1802,8 +1799,8 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.DefaultRequirementGroup">
     <Value>Default requirement group</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.IteractionTypeInGroup">
-    <Value>Iteraction type in this group is</Value>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.InteractionTypeInGroup">
+    <Value>Interaction type in this group is</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.GroupIsEmpty">
     <Value>The group is empty</Value>
@@ -4389,14 +4386,6 @@ BEGIN
 END
 GO
 
-UPDATE [DiscountRequirement]
-SET [InteractionTypeId] = 0
-WHERE [InteractionTypeId] IS NULL
-GO
-
-ALTER TABLE [DiscountRequirement] ALTER COLUMN [InteractionTypeId] int NOT NULL
-GO
-
 --new column
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[DiscountRequirement]') and NAME='ParentId')
 BEGIN
@@ -4419,4 +4408,33 @@ WHERE [IsGroup] IS NULL
 GO
 
 ALTER TABLE [DiscountRequirement] ALTER COLUMN [IsGroup] bit NOT NULL
+GO
+
+--add default requirement group for all discounts
+DECLARE cursor_defaultGroup CURSOR FOR SELECT Id FROM [Discount]
+DECLARE @discountId int
+
+OPEN cursor_defaultGroup
+FETCH NEXT FROM cursor_defaultGroup INTO @discountId
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM [DiscountRequirement] WHERE [DiscountId] = @discountId AND [ParentId] IS NULL AND [IsGroup] = 1)
+    BEGIN
+        INSERT INTO [DiscountRequirement]
+		    ([DiscountId], [DiscountRequirementRuleSystemName], [InteractionTypeId], [ParentId], [IsGroup])
+	    VALUES
+		    (@discountId, 'Default requirement group', 0, NULL, 1);
+
+        DECLARE @requirementId int = (SELECT SCOPE_IDENTITY());
+
+        UPDATE [DiscountRequirement]
+        SET [ParentId] = @requirementId, [InteractionTypeId] = NULL
+        WHERE [DiscountId] = @discountId AND [Id] <> @requirementId
+    END
+	FETCH NEXT FROM cursor_defaultGroup INTO @discountId
+END
+
+CLOSE cursor_defaultGroup
+DEALLOCATE cursor_defaultGroup
 GO

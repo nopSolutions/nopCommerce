@@ -1403,61 +1403,42 @@ namespace Nop.Web.Controllers
                     .ToList();
                 if (discounts.Any())
                 {
-                    string userError = "";
-                    bool anyValidDiscount = false;
-                    foreach (var discount in discounts)
+                    var userErrors = new List<string>();
+                    var anyValidDiscount = discounts.Any(discount =>
                     {
                         var validationResult = _discountService.ValidateDiscount(discount, _workContext.CurrentCustomer, new[] { discountcouponcode });
-                        if (validationResult.IsValid)
-                        {
-                            anyValidDiscount = true;
-                            break;
-                        }
-                        else
-                        {
-                            if (!String.IsNullOrEmpty(validationResult.UserError))
-                                userError = validationResult.UserError;
-                        }
-                    }
+                        userErrors.AddRange(validationResult.Errors);
+
+                        return validationResult.IsValid;
+                    });
 
                     if (anyValidDiscount)
                     {
                         //valid
                         _workContext.CurrentCustomer.ApplyDiscountCouponCode(discountcouponcode);
-                        model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.Applied");
+                        model.DiscountBox.Messages.Add(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.Applied"));
                         model.DiscountBox.IsApplied = true;
                     }
                     else
                     {
-                        if (!String.IsNullOrEmpty(userError))
-                        {
-                            //some user error
-                            model.DiscountBox.Message = userError;
-                            model.DiscountBox.IsApplied = false;
-                        }
+                        if (userErrors.Any())
+                            //some user errors
+                            model.DiscountBox.Messages = userErrors;
                         else
-                        {
                             //general error text
-                            model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount");
-                            model.DiscountBox.IsApplied = false;
-                        }
+                            model.DiscountBox.Messages.Add(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount"));
                     }
                 }
                 else
-                {
                     //discount cannot be found
-                    model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount");
-                    model.DiscountBox.IsApplied = false;
-                }
+                    model.DiscountBox.Messages.Add(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount"));
             }
             else
-            {
                 //empty coupon code
-                model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount");
-                model.DiscountBox.IsApplied = false;
-            }
+                model.DiscountBox.Messages.Add(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount"));
 
             model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
+
             return View(model);
         }
 

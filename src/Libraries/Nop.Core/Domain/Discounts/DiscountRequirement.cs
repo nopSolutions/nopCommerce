@@ -25,9 +25,9 @@ namespace Nop.Core.Domain.Discounts
         public int? ParentId { get; set; }
 
         /// <summary>
-        /// Gets or sets an interaction type identifier
+        /// Gets or sets an interaction type identifier (has a value for the group and null for the child requirements)
         /// </summary>
-        public int InteractionTypeId { get; set; }
+        public int? InteractionTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this requirement has any child requirements
@@ -37,10 +37,10 @@ namespace Nop.Core.Domain.Discounts
         /// <summary>
         /// Gets or sets an interaction type
         /// </summary>
-        public RequirementInteractionType InteractionType
+        public RequirementGroupInteractionType? InteractionType
         {
-            get { return (RequirementInteractionType)this.InteractionTypeId; }
-            set { this.InteractionTypeId = (int)value; }
+            get { return (RequirementGroupInteractionType?)this.InteractionTypeId; }
+            set { this.InteractionTypeId = (int?)value; }
         }
 
         /// <summary>

@@ -13,10 +13,10 @@
             <input name="discountcouponcode" type="text" class="discount-coupon-code" />
             <input type="submit" name="applydiscountcouponcode" value="@T("ShoppingCart.DiscountCouponCode.Button")" class="button-2 apply-discount-coupon-code-button" />
         </div>
-        @if (!String.IsNullOrEmpty(Model.Message))
+        @foreach (var message in Model.Messages)
         {
             <div class="@(Model.IsApplied ? "message-success" : "message-failure")">
-                @Model.Message
+                @message
             </div>
         }
         @foreach (var discount in Model.AppliedDiscountsWithCodes)

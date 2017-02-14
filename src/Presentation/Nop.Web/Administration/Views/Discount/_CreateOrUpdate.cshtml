@@ -285,23 +285,6 @@
             <p>
                 @T("Admin.Promotions.Discounts.Requirements.Description")
             </p>
-                    <div class="requirement-container requirement-group" id="editrequirement8">
-                        <div class="requirement-heading clearfix">
-                            <span class="pull-left margin-r-5">
-                                Group <i>@T("Admin.Promotions.Discounts.Requirements.DefaultRequirementGroup")</i>.
-                            </span>
-                            <div class="iteraction-type pull-left clearfix">
-                                <span class="pull-left margin-r-10">@T("Admin.Promotions.Discounts.Requirements.IteractionTypeInGroup")</span>
-                                @Html.NopDropDownList("DefaultGroupIteractionTypeId",
-                                        RequirementInteractionType.And.ToSelectList(false),
-                                        new { onchange = "changeInteraction(0, 0, this.value)", @class = "input-sm" })
-                            </div>
-                        </div>
-                        <div class="requirement-body">
-                            <!-- Template container -->
-                            <div id="discountRequirementContainer"></div>
-                        </div>
-                    </div>
 
             <script type="text/javascript">
                 $(document).ready(function() {
@@ -326,7 +309,7 @@
                     var ruleSystemName = $("#@Html.FieldIdFor(model => model.AddDiscountRequirement)").val();
                     if (ruleSystemName) {
                         var groupsElement = $("#@Html.FieldIdFor(model => model.RequirementGroupId)");
-                        if (groupsElement.find('option').length > 1) {
+                        if (groupsElement.find('option').length > 0) {
                             $("#pnlGroup").show();
                         }
                         else {
@@ -380,7 +363,7 @@
                         discountId: @Model.Id,
                         discountRequirementId: (typeof discountRequirementId === 'undefined' ? 0 : discountRequirementId),
                         parentId: (typeof parentId === 'undefined' ? null : parentId),
-                        interactionTypeId: (typeof interactionTypeId === 'undefined' ? 0 : interactionTypeId),
+                        interactionTypeId: (typeof interactionTypeId === 'undefined' ? null : interactionTypeId),
                         deleteRequirement: (typeof deleteRequirement === 'undefined' ? false : deleteRequirement)
                     };
 
@@ -407,9 +390,6 @@
                             else {
                                 $("#pnlGroup").hide();
                             }
-
-                            //set iteraction type for default group
-                            $("[name=DefaultGroupIteractionTypeId]").val(result.DefaultGroupIteractionTypeId);
                         },
                         error: function(xhr, ajaxOptions, thrownError) {
                             alert('Failed to load requirements info. Please refresh the page');
@@ -462,7 +442,7 @@
 
                 //delete requirement rule
                 function deleteRequirement(discountRequirementId) {
-                    loadRequirements(discountRequirementId, null, 0, true);
+                    loadRequirements(discountRequirementId, null, null, true);
                 };
 
                 //change interaction type
@@ -471,7 +451,10 @@
                 };
             </script>
 
-                    <!-- Discount requirement template -->
+            <!-- Template container -->
+            <div id="discountRequirementContainer"></div>
+
+            <!-- Discount requirement template -->
             <script id="discountRequirementTemplate" type="text/html">
                 <div class="requirement-container {{if IsGroup}}requirement-group{{/if}}" id="editrequirement{{= DiscountRequirementId }}">
                     <div class="requirement-heading clearfix">
@@ -480,12 +463,12 @@
                             @T("Admin.Promotions.Discounts.Requirements.RequirementGroup.Title")
                             <i>{{= RuleName }}</i>
                         </span>
-                        <div class="iteraction-type pull-left clearfix">
-                            <span class="pull-left margin-r-10">@T("Admin.Promotions.Discounts.Requirements.IteractionTypeInGroup")</span>
+                        <div class="interaction-type pull-left clearfix">
+                            <span class="pull-left margin-r-10">@T("Admin.Promotions.Discounts.Requirements.InteractionTypeInGroup")</span>
                             <select class="form-control input-sm pull-left" id="interactiontype{{= DiscountRequirementId }}" name="interactiontype{{= DiscountRequirementId }}"
                                     onchange="changeInteraction({{= DiscountRequirementId }}, ${ParentId ? ParentId : 'null'}, this.value)">
                                 {{each AvailableInteractionTypes}}
-                                <option value="${Value}" ${Selected==true ? 'selected' : '' }>${Text}</option>
+                                    <option value="${Value}" ${Selected == true ? 'selected' : '' }>${Text}</option>
                                 {{/each}}
                             </select>
                         </div>
@@ -495,27 +478,29 @@
                             <i>{{= RuleName }}</i>
                         </div>
                         {{/if}}
-                        <button type="button" class="btn btn-link" id="deleterequirement{{= DiscountRequirementId }}" onclick="deleteRequirement({{= DiscountRequirementId }})">
-                            <i class="fa fa-trash"></i>
-                            {{if IsGroup}}
-                                @T("Admin.Promotions.Discounts.Requirements.RemoveGroup")
-                            {{else}}
-                                @T("Admin.Promotions.Discounts.Requirements.RemoveRequirement")
-                            {{/if}}
-                        </button>
+                        {{if ParentId}}
+                            <button type="button" class="btn btn-link" id="deleterequirement{{= DiscountRequirementId }}" onclick="deleteRequirement({{= DiscountRequirementId }})">
+                                <i class="fa fa-trash"></i>
+                                {{if IsGroup}}
+                                    @T("Admin.Promotions.Discounts.Requirements.RemoveGroup")
+                                {{else}}
+                                    @T("Admin.Promotions.Discounts.Requirements.RemoveRequirement")
+                                {{/if}}
+                            </button>
+                        {{/if}}
                     </div>
                     <div class="requirement-body">
                         <div id="editrequirementplaceholder{{= DiscountRequirementId }}"></div>
                     </div>
                 </div>
                 {{if !IsLastInGroup}}
-                <div class="iteraction-type-label">
-                    {{each AvailableInteractionTypes}}
-                    {{if Value == InteractionTypeId}}
-                    ${Text}
-                    {{/if}}
-                    {{/each}}
-                </div>
+                    <div class="interaction-type-label">
+                        {{each AvailableInteractionTypes}}
+                            {{if Value == InteractionTypeId}}
+                                ${Text}
+                            {{/if}}
+                        {{/each}}
+                    </div>
                 {{/if}}
             </script>
 
@@ -918,8 +903,8 @@
 
 @helper TabHistory()
 {
-var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
     <div class="panel-group">
         <div class="panel panel-default">
