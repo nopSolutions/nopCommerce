@@ -1616,6 +1616,136 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Fields.OrderStatus.CancelledNotification">
     <Value>This order is cancelled</Value>
   </LocaleResource>
+
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Blog.BlogComment">
+	<Value><![CDATA[This message template is used when a new blog comment to the certain blog post is created. The message is received by a store owner. You can set up this option by ticking the checkbox <strong>Notify about new blog comments</strong> in Configuration - Settings - Blog settings.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.BackInStock">
+	<Value><![CDATA[This message template is used when the customer subscribed for the certain product which is unavailable at the moment to notify the customer about the product being back to stock again. You can set up this option by ticking the checkbox <strong>Allow back in stock subscriptions</strong> in Product info tab - Inventory section.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.EmailRevalidationMessage">
+	<Value>This message template is used when a customer changes an email address in his account. The customer receives a message to confirm an email address used when changing email address.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.EmailValidationMessage">
+	<Value>This message template is used the option Email notification from Registration method dropdown list in Configuration - Settings - Customer settings is selected. The customer receives a message to confirm an email address used when registering.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.NewOrderNote">
+	<Value>This message template is used when the customer gets a notification about a new order being placed from this account.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.NewPM">
+	<Value><![CDATA[This message template is used when the customer gets a notification about a new private message being received. You can set up this option by ticking the checkbox <strong>Show alert for PM</strong> in Configuration - Settings - Forum settings.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.PasswordRecovery">
+	<Value>This message template is used when a customer forgets a password needed to log in the account. The customer receives a message with a link for entering a new password.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.WelcomeMessage">
+	<Value>This message template is used to welcome a new customer after registration.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Forums.NewForumPost">
+	<Value>This message template is used when a new forum post in certain forum topic is created. The message is received by a store owner.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Forums.NewForumTopic">
+	<Value>This message template is used when a new forum topic is created. The message is received by a store owner.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.GiftCard.Notification">
+	<Value>This message template is used to send a notification to a customer about getting a gift card.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.NewCustomer.Notification">
+	<Value><![CDATA[This message template is used when a new customer is registered. The message is received by a store owner. You can set up this option by ticking the checkbox <strong>Notify about new customer registration</strong> in Configuration - Settings - Customer settings.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.NewReturnRequest.CustomerNotification">
+	<Value>This message template is used to notify a customer about a new return request submitted from his/her account.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.NewReturnRequest.StoreOwnerNotification">
+	<Value>This message template is used when a new return request is created. The message is received by a store owner.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.News.NewsComment">
+	<Value><![CDATA[This message template is used when a new comment to the certain news item is created. The message is received by a store owner. You can set up this option by ticking the checkbox <strong>Notify about new news comments</strong> in Configuration - Settings - News settings.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.NewsLetterSubscription.ActivationMessage">
+	<Value>This message template is used when a customer subscribes to the newsletter to confirm the subscription.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.NewsLetterSubscription.DeactivationMessage">
+	<Value><![CDATA[This message template is used when a customer unsubscribes to the newsletter to confirm the subscription deactivation. You can allow users to unsubscribe by ticking the checkbox <strong>Newsletter box. Allow to unsubscribe</strong> in Configuration - Settings - Customer settings.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.NewVATSubmitted.StoreOwnerNotification">
+	<Value><![CDATA[This message template is used when a new VAT is submitted. The message is received by a store owner. You can set up this option by clicking <strong>Notify admin when a new VAT number is submitted</strong> in Configuration - Settings - Tax settings.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderCancelled.CustomerNotification">
+	<Value>This message template is used to notify a customer that the certain order was canceled. The order can ba canceled by a customer on the account page or by store owner in Customers - Customers in Orders tab or in Sales - Orders.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderCompleted.CustomerNotification">
+	<Value>This message template is used to notify a customer that the certain order was completed. The order gets the order status Complete when it''s paid and delivered, or it can be changed manually to Complete in Sales - Orders.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPaid.CustomerNotification">
+	<Value>This message template is used to notify a customer that the certain order was paid. The order gets the payment status Paid when the amount was charged, or it can be changed manually Sales - Orders by clicking Mark as paid button in Payment status.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPaid.StoreOwnerNotification">
+	<Value>This message template is used to notify a store owner that the certain order was paid. The order gets the status Paid when the amount was charged, or it can be changed manually Sales - Orders by clicking Mark as paid button in Payment status.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPaid.VendorNotification">
+	<Value>This message template is used to notify a vendor that the certain order was paid. The order gets the status Paid when the amount was charged.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPlaced.CustomerNotification">
+	<Value>This message template is used to notify a customer that the certain order was placed. Orders can be viewed by a customer on the account page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPlaced.StoreOwnerNotification">
+	<Value>This message template is used to notify a store owner that the certain order was placed. Orders can be viewed by a store owner in Sales - Orders or in Customers menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPlaced.VendorNotification">
+	<Value>This message template is used to notify a vendor that the certain order was placed. Orders can be viewed by a vendor in Sales - Orders. You can allow them to access this part of Admin Area in Configuration - Access control list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderRefunded.CustomerNotification">
+	<Value>This message template is used to notify a customer that the certain order was refunded. The customer can submit to refund the order when the payment status is paid on the account page, or it can be done by a store owner in Sales - Orders by clicking "Refund" button.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderRefunded.StoreOwnerNotification">
+	<Value>This message template is used to notify a store owner that the certain order was refunded. The customer can submit to refund the order when the payment status is paid on the account page, or it can be done by a store owner in Sales - Orders by clicking "Refund" button.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Product.ProductReview">
+	<Value><![CDATA[This message template is used to notify a store owner that a new product review is created. You can set up this option by ticking the checkbox <strong>Notify about new product reviews</strong> in Configuration - Settings - Catalog settings.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.QuantityBelow.AttributeCombination.StoreOwnerNotification">
+	<Value>This message template is used to notify a store owner that the certain product attribute combination is getting low stock. You can set up the combination minimum quantity when creating or editing the product in Product attribute tab - Attributes combinations tab in Notify admin for quantity below field.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.QuantityBelow.StoreOwnerNotification">
+	<Value><![CDATA[This message template is used to notify a store owner that the certain product is getting low stock. You can set up the minimum  product quantity when creating or editing the product in Inventory section, <strong>Minimum stock qty field</strong>.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.RecurringPaymentCancelled.CustomerNotification">
+	<Value>This message template is used to notify a customer that the certain recurring payment is canceled. Payment can be canceled by a customer in the account page or by a store owner in Sales - Recurring payments in History tab by clicking "Cancel recurring payment" button.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.RecurringPaymentCancelled.StoreOwnerNotification">
+	<Value>This message template is used to notify a store owner that the certain recurring payment is canceled. Payment can be canceled by a customer in the account page or by a store owner in Sales - Recurring payments in History tab by clicking "Cancel recurring payment" button.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.RecurringPaymentFailed.CustomerNotification">
+	<Value>This message template is used to notify a customer that the certain recurring payment is failed. For example, the amount can''t be charged from the provided credit card.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.ReturnRequestStatusChanged.CustomerNotification">
+	<Value>This message template is used to notify a customer that the request status to the certain order is changed. You can set up this option in Sales - Return requests by clicking "Notify customer about status change" button.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Service.ContactUs">
+	<Value>This message template is used to notify a store owner about a message sent through the contact form.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Service.ContactVendor">
+	<Value>This message template is used to notify a vendor about a message sent through the contact form.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Service.EmailAFriend">
+	<Value>This message template is used to send "email a friend" message.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.ShipmentDelivered.CustomerNotification">
+	<Value><![CDATA[This message template is used to notify a customer that the shipping status of the certain order is set to delivered. You can set up this option in Configuration - Settings - Shipping settings by ticking the checkbox <strong>Display shipment events (customers)</strong>.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.ShipmentSent.CustomerNotification">
+	<Value><![CDATA[This message template is used to notify a customer that the shipping status of the certain order is sent. You can set up this option in Configuration - Settings - Shipping settings by ticking the checkbox <strong>Display shipment events (customers)</strong>.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.VendorAccountApply.StoreOwnerNotification">
+	<Value><![CDATA[This message template is used to notify a store owner that new user has applied for vendor account. You can allow customers to apply for vendor account in Configuration - Setting - Vendor settings by ticking the checkbox <strong>Allow customers to apply for vendor account</strong>.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.VendorInformationChange.StoreOwnerNotification">
+	<Value><![CDATA[This message template is used to notify a store owner that the vendor changed some vendor''s details. You can allow vendors to change info about themselves in Configuration - Setting - Vendor settings by ticking the checkbox <strong>Allow vendors to edit info</strong>.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Wishlist.EmailAFriend">
+	<Value>This message template is used when a customer wants to share some product from the wishlist with a friend by sending an email. You can set up this option by ticking the checkbox <strong>Allow customers to email their wishlists</strong> in Configuration - Settings - Shopping cart settings.</Value>
+  </LocaleResource>
 </Language>
 '
 
