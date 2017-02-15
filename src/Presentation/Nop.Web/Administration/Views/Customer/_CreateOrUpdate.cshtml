@@ -227,34 +227,27 @@
                     @Html.NopLabelFor(model => model.SelectedCustomerRoleIds)
                 </div>
                 <div class="col-md-9">
-                    <div class="row">
-                        <div class="col-md-4">
-                            @Html.EditorFor(model => model.SelectedCustomerRoleIds, new {SelectList = Model.AvailableCustomerRoles})
-                            <script>
-                                $(document).ready(function() {
-                                    var customerRolesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
-                                    customerRolesIdsInput.setOptions({
-                                        customerRolesIdsInput: false
-                                    });
+                    @Html.EditorFor(model => model.SelectedCustomerRoleIds, new {SelectList = Model.AvailableCustomerRoles})
+                    <script>
+                        $(document).ready(function() {
+                            var customerRolesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                            customerRolesIdsInput.setOptions({
+                                customerRolesIdsInput: false
+                            });
 
-                                    @if (Model.AvailableCustomerRoles.Count == 0)
-                                    {
-                                        <text>
-                                customerRolesIdsInput.setOptions({
-                                    enable: false,
-                                    placeholder: '@T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")'
-                                });
-                                customerRolesIdsInput._placeholder();
-                                customerRolesIdsInput._enable();
+                            @if (Model.AvailableCustomerRoles.Count == 0)
+                            {
+                                <text>
+                                    customerRolesIdsInput.setOptions({
+                                        enable: false,
+                                        placeholder: '@T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")'
+                                    });
+                                    customerRolesIdsInput._placeholder();
+                                    customerRolesIdsInput._enable();
                                 </text>
-                                    }
-                                });
-                            </script>
-                        </div>
-                        <div class="col-md-8">
-                            @Html.Action("AclDisabledWarning", "Common")
-                        </div>
-                    </div>
+                            }
+                        });
+                    </script>
                 </div>
             </div>
                 <div class="form-group">

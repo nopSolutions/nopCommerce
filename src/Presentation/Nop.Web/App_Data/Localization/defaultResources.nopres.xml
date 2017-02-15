@@ -10230,6 +10230,9 @@
   <LocaleResource Name="Admin.Orders.Fields.OrderStatus.Cancel">
     <Value>Cancel order</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderStatus.CancelledNotification">
+    <Value>This order is cancelled</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.OrderStatus.Change">
     <Value>Change status</Value>
   </LocaleResource>

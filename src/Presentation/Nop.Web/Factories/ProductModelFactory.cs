@@ -1376,8 +1376,10 @@ namespace Nop.Web.Factories
                 pageIndex = page.Value - 1;
             }
 
-            var list = _productService.GetAllProductReviews(_workContext.CurrentCustomer.Id, null,
-                            pageIndex: pageIndex, pageSize: pageSize);
+            var list = _productService.GetAllProductReviews(customerId: _workContext.CurrentCustomer.Id, 
+                approved: null, 
+                pageIndex: pageIndex, 
+                pageSize: pageSize);
 
             var productReviews = new List<CustomerProductReviewModel>();
 
