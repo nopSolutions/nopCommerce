@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -797,10 +797,15 @@ namespace Nop.Web.Controllers
             //do not prepare this model for the associated products. any it's not used
             if (!isAssociatedProduct)
             {
+                model.ProductSpecifications.Clear();  //Add weight and dimensions (Jason 2017-02-10)
+
                 model.ProductSpecifications = this.PrepareProductSpecificationModel(_workContext,
                     _specificationAttributeService,
                     _cacheManager,
                     product);
+
+                //Add weight and dimensions (Jason 2017-02-10)
+                AddWeightADimension(model.ProductSpecifications, product);
             }
 
             #endregion
@@ -888,6 +893,69 @@ namespace Nop.Web.Controllers
             #endregion
 
             return model;
+        }
+
+        /// <summary>
+        /// Add weight and dimensions (Jason 2017-02-10)
+        ///  Helper function
+        /// </summary>
+        private void AddWeightADimension(IList<ProductSpecificationModel> specs, Product product)
+        {
+            if (specs != null && specs.Count > 0)
+            {
+                //weight
+                int WEIGHT_ID = -1000;
+                int DIMENSION_ID = WEIGHT_ID - 1;
+                ProductSpecificationModel modelWeight = null;
+                ProductSpecificationModel modelDimension = null;
+
+                for (int i = specs.Count - 1; i >= 0; i--)
+                {
+                    if (specs[i].SpecificationAttributeId == WEIGHT_ID)
+                    {
+                        modelWeight = specs[i];
+                    }
+                    else if (specs[i].SpecificationAttributeId == DIMENSION_ID)
+                    {
+                        modelDimension = specs[i];
+                    }
+                }
+
+                if (modelWeight == null)
+                {
+                    modelWeight = new ProductSpecificationModel();
+                    modelWeight.SpecificationAttributeId = WEIGHT_ID;
+                    modelWeight.SpecificationAttributeName = "Weight";
+                    specs.Add(modelWeight);
+                }
+
+                if (product.Weight > 0)
+                {
+                    modelWeight.ValueRaw = product.Weight.ToString("#0.00") + " lbs";
+                }
+                else
+                {
+                    specs.Remove(modelWeight);
+                }
+
+                //dimension
+                if (modelDimension == null)
+                {
+                    modelDimension = new ProductSpecificationModel();
+                    modelDimension.SpecificationAttributeId = DIMENSION_ID;
+                    modelDimension.SpecificationAttributeName = "Dimensions";
+                    specs.Add(modelDimension);
+                }
+
+                if (product.Width > 0 && product.Height > 0 && product.Length > 0)
+                {
+                    modelDimension.ValueRaw = product.Length.ToString("#0.00") + "x" + product.Width.ToString("#0.00") + "x" + product.Height.ToString("#0.00") + " inches";
+                }
+                else
+                {
+                    specs.Remove(modelDimension);
+                }
+            }
         }
 
         [NonAction]
