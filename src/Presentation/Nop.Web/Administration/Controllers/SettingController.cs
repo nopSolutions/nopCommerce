@@ -7,6 +7,7 @@ using Nop.Admin.Models.Common;
 using Nop.Admin.Models.Settings;
 using Nop.Admin.Models.Stores;
 using Nop.Core;
+using Nop.Core.Configuration;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -74,10 +75,10 @@ namespace Nop.Admin.Controllers
         private readonly IReturnRequestService _returnRequestService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
-
+        private readonly NopConfig _config;
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public SettingController(ISettingService settingService,
             ICountryService countryService, 
@@ -101,7 +102,8 @@ namespace Nop.Admin.Controllers
             IGenericAttributeService genericAttributeService,
             IReturnRequestService returnRequestService,
             ILanguageService languageService,
-            ILocalizedEntityService localizedEntityService)
+            ILocalizedEntityService localizedEntityService,
+            NopConfig config)
         {
             this._settingService = settingService;
             this._countryService = countryService;
@@ -126,6 +128,7 @@ namespace Nop.Admin.Controllers
             this._returnRequestService = returnRequestService;
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
+            this._config = config;
         }
 
         #endregion
@@ -2269,6 +2272,18 @@ namespace Nop.Admin.Controllers
             _customerActivityService.InsertActivity("DeleteSetting", _localizationService.GetResource("ActivityLog.DeleteSetting"), setting.Name);
 
             return new NullJsonResult();
+        }
+
+        //action displaying notification (warning) to a store owner about a lot of traffic 
+        //between the Redis server and the application when LoadAllLocaleRecordsOnStartup seetting is set
+        [ValidateInput(false)]
+        public ActionResult RedisCacheHighTrafficWarning(bool loadAllLocaleRecordsOnStartup)
+        {
+            //LoadAllLocaleRecordsOnStartup is set and Redis cache is used, so display warning
+            if (_config.RedisCachingEnabled && loadAllLocaleRecordsOnStartup)
+                return Json(new { Result = _localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup.Warning") }, JsonRequestBehavior.AllowGet);
+
+            return Json(new { Result = string.Empty }, JsonRequestBehavior.AllowGet);
         }
 
         #endregion

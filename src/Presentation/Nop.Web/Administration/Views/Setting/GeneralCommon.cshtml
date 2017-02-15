@@ -26,7 +26,9 @@
         $(document).ready(function () {
             bindBootstrapTabSelectEvent('generalsettings-edit');
             $("#@Html.FieldIdFor(model => model.StoreInformationSettings.SitemapEnabled)").click(toggleSitemapSettings);
+            $("#@Html.FieldIdFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)").click(toggleLoadAllLocaleRecordsOnStartup);
             toggleSitemapSettings();
+            toggleLoadAllLocaleRecordsOnStartup();
         });
 
         function toggleSitemapSettings() {
@@ -36,6 +38,14 @@
             else {
                 $("#pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts").hide();
             }
+        }
+
+        function toggleLoadAllLocaleRecordsOnStartup() {
+            warningValidation('@Url.Action("RedisCacheHighTrafficWarning", "Setting")',
+                '@Html.FieldNameFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)',
+                {
+                    loadAllLocaleRecordsOnStartup: $('#@Html.FieldIdFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)').is(':checked')
+                });
         }
     </script>
 

@@ -1751,6 +1751,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Tax.TaxBasedOnPickupPointAddress.Hint">
     <Value>A value indicating whether to use pickup point address (when pickup point is chosen) for tax calculation.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup.Warning">
+    <Value>It seems that you use Redis server for caching, keep in mind that enabling this setting create a lot of traffic between the Redis server and the application because of the large number of locales.</Value>
+  </LocaleResource>
 </Language>
 '
 

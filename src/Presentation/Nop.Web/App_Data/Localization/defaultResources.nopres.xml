@@ -6204,6 +6204,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup.Hint">
     <Value>When enabled, all locale resources will be loaded on application startup. The application start will be slower, but then all pages could be opened much faster.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup.Warning">
+    <Value>It seems that you use Redis server for caching, keep in mind that enabling this setting create a lot of traffic between the Redis server and the application because of the large number of locales.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllLocalizedPropertiesOnStartup">
     <Value>Load all localized properties on startup</Value>
   </LocaleResource>
