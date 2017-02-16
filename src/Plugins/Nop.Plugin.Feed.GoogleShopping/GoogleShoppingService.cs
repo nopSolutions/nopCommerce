@@ -565,8 +565,10 @@ namespace Nop.Plugin.Feed.GoogleShopping
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.DefaultGoogleCategory", "Default Google category");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.DefaultGoogleCategory.Hint", "The default Google category to use if one is not specified.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.General", "General");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.GeneralInstructions", "<p><ul><li>At least two unique product identifiers are required. So each of your product shouldhave manufacturer (brand) and MPN (manufacturer part number) specified</li><li>Specify default tax values in your Google Merchant Center account settings</li><li>Specify default shipping values in your Google Merchant Center account settings</li><li>In order to get more info about required fields look at the following article <a href=\"http://www.google.com/support/merchants/bin/answer.py?answer=188494\" target=\"_blank\">http://www.google.com/support/merchants/bin/answer.py?answer=188494</a></li></ul></p>");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.Generate", "Generate feed");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.Override", "Override product settings");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.OverrideInstructions", "<p>You can download the list of allowed Google product category attributes <a href=\"http://www.google.com/support/merchants/bin/answer.py?answer=160081\" target=\"_blank\">here</a></p>");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.PassShippingInfoWeight", "Pass shipping info (weight)");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.PassShippingInfoWeight.Hint", "Check if you want to include shipping information (weight) in generated XML file.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.PassShippingInfoDimensions", "Pass shipping info (dimensions)");
@@ -585,7 +587,7 @@ namespace Nop.Plugin.Feed.GoogleShopping
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.SuccessResult", "Google Shopping feed has been successfully generated.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.StaticFilePath", "Generated file path (static)");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.StaticFilePath.Hint", "A file path of the generated file. It's static for your store and can be shared with the Google Shopping service.");
-
+            
             base.Install();
         }
 
@@ -608,8 +610,10 @@ namespace Nop.Plugin.Feed.GoogleShopping
             this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.DefaultGoogleCategory");
             this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.DefaultGoogleCategory.Hint");
             this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.General");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.GeneralInstructions");
             this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.Generate");
             this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.Override");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.OverrideInstructions");
             this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.PassShippingInfoWeight");
             this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.PassShippingInfoWeight.Hint");
             this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.PassShippingInfoDimensions");

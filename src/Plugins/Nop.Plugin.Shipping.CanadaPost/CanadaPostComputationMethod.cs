@@ -393,6 +393,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.CustomerNumber.Hint", "Specify customer number.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.UseSandbox", "Use Sandbox");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.UseSandbox.Hint", "Check to enable Sandbox (testing environment).");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Instructions", "<p>To configure plugin follow one of these steps:<br />1. If you are a Canada Post commercial customer, fill Customer number, Contract ID and API key below.<br />2. If you are a Solutions for Small Business customer, specify your Customer number and API key below.<br />3. If you are a non-contracted customer or you want to use the regular price of shipping paid by customers, fill the API key field only.<br /><br /><em>Note: Canada Post gateway returns shipping price in the CAD currency, ensure that you have correctly configured exchange rate from PrimaryStoreCurrency to CAD.</em></p>");
 
             base.Install();
         }
@@ -414,6 +415,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
             this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.CustomerNumber.Hint");
             this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.UseSandbox");
             this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.UseSandbox.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Instructions");
 
             base.Uninstall();
         }
