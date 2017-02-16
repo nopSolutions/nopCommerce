@@ -102,5 +102,9 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.CustomOrderNumberMask")]
         public string CustomOrderNumberMask { get; set; }
         public bool CustomOrderNumberMask_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.ExportWithProducts")]
+        public bool ExportWithProducts { get; set; }
+        public bool ExportWithProducts_OverrideForStore { get; set; }
     }
 }

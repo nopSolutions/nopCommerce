@@ -306,6 +306,16 @@
                         @Html.ValidationMessageFor(model => model.CompleteOrderWhenDelivered)
                     </div>
                 </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ExportWithProducts_OverrideForStore, model => model.ExportWithProducts, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ExportWithProducts)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.ExportWithProducts)
+                        @Html.ValidationMessageFor(model => model.ExportWithProducts)
+                    </div>
+                </div>
             </div>
         </div>
     </div>

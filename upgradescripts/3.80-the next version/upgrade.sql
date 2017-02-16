@@ -1754,6 +1754,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup.Warning">
     <Value>It seems that you use Redis server for caching, keep in mind that enabling this setting create a lot of traffic between the Redis server and the application because of the large number of locales.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ExportWithProducts">
+    <Value>Export orders with products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ExportWithProducts.Hint">
+    <Value>Check if orders should be exported with products.</Value>
+  </LocaleResource> 
 </Language>
 '
 
@@ -4310,5 +4316,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'taxsettings.taxbasedonpi
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'taxsettings.taxbasedonpickuppointaddress', N'False', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.exportwithproducts')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'ordersettings.exportwithproducts', N'True', 0)
 END
 GO

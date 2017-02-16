@@ -6564,6 +6564,27 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.CompleteOrderWhenDelivered.Hint">
     <Value>Check if an order status should be set to "Complete" only when its shipping status is "Delivered". Otherwise, "Shipped" status will be enough.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask">
+    <Value>Order number mask</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.DD">
+    <Value>{DD} - day of order creation date</Value>
+  </LocaleResource>   
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.ID">
+    <Value>{ID} -Order identifier</Value>
+  </LocaleResource>     
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.MM">
+    <Value>{MM} - month of order creation date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.YY">
+    <Value>{YY} - last two digits of year of order creation date</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.YYYY">
+    <Value>{YYYY} - year of order creation date</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Hint">
+    <Value>Order number mask, for creating custom order number. For example, RE-{YYYY}-{MM}. Leave this field empty if you don't want to use custom order numbers.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancellingOrder">
     <Value>Deactivate gift cards after cancelling of an order</Value>
   </LocaleResource>
@@ -6588,27 +6609,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.DisableOrderCompletedPage.Hint">
     <Value>When disabled, customers will be automatically redirected to the order details page.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask">
-    <Value>Order number mask</Value>
-  </LocaleResource> 
-  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.DD">
-    <Value>{DD} - day of order creation date</Value>
-  </LocaleResource>   
-  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.ID">
-    <Value>{ID} -Order identifier</Value>
-  </LocaleResource>     
-  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.MM">
-    <Value>{MM} - month of order creation date</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ExportWithProducts">
+    <Value>Export orders with products</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.YY">
-    <Value>{YY} - last two digits of year of order creation date</Value>
-  </LocaleResource> 
-  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.YYYY">
-    <Value>{YYYY} - year of order creation date</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ExportWithProducts.Hint">
+    <Value>Check if orders should be exported with products.</Value>
   </LocaleResource>  
-  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Hint">
-    <Value>Order number mask, for creating custom order number. For example, RE-{YYYY}-{MM}. Leave this field empty if you don't want to use custom order numbers.</Value>
-  </LocaleResource>      
   <LocaleResource Name="Admin.Configuration.Settings.Order.IsReOrderAllowed">
     <Value>Is re-order allowed</Value>
   </LocaleResource>
