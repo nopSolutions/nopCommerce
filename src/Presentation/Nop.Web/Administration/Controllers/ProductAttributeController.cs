@@ -251,13 +251,13 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedKendoGridJson();
 
-            var orders = _productService.GetProductsByProductAtributeId(
+            var products = _productService.GetProductsByProductAtributeId(
                 productAttributeId: productAttributeId,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
             var gridModel = new DataSourceResult
             {
-                Data = orders.Select(x =>
+                Data = products.Select(x =>
                 {
                     return new ProductAttributeModel.UsedByProductModel
                     {
@@ -266,7 +266,7 @@ namespace Nop.Admin.Controllers
                         Published = x.Published
                     };
                 }),
-                Total = orders.TotalCount
+                Total = products.TotalCount
             };
 
             return Json(gridModel);
