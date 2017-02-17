@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -21,8 +22,8 @@ using Nop.Web.Framework.Security;
 namespace Nop.Admin.Controllers
 {
     public partial class LanguageController : BaseAdminController
-	{
-		#region Fields
+    {
+        #region Fields
 
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -39,12 +40,12 @@ namespace Nop.Admin.Controllers
         public LanguageController(ILanguageService languageService,
             ILocalizationService localizationService,
             ICurrencyService currencyService,
-            IStoreService storeService, 
+            IStoreService storeService,
             IStoreMappingService storeMappingService,
             IPermissionService permissionService,
             ICustomerActivityService customerActivityService)
         {
-			this._localizationService = localizationService;
+            this._localizationService = localizationService;
             this._languageService = languageService;
             this._currencyService = currencyService;
             this._storeService = storeService;
@@ -53,21 +54,9 @@ namespace Nop.Admin.Controllers
             this._customerActivityService = customerActivityService;
         }
 
-		#endregion 
+        #endregion
 
         #region Utilities
-
-        [NonAction]
-        protected virtual void PrepareFlagsModel(LanguageModel model)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-            
-            model.FlagFileNames = Directory
-                .EnumerateFiles(CommonHelper.MapPath("~/Content/Images/flags/"), "*.png", SearchOption.TopDirectoryOnly)
-                .Select(Path.GetFileName)
-                .ToList();
-        }
 
         [NonAction]
         protected virtual void PrepareStoresMappingModel(LanguageModel model, Language language, bool excludeProperties)
@@ -98,10 +87,10 @@ namespace Nop.Admin.Controllers
 
             //templates
             model.AvailableCurrencies.Add(new SelectListItem
-                {
-                    Text = "---",
-                    Value = "0"
-                });
+            {
+                Text = "---",
+                Value = "0"
+            });
             var currencies = _currencyService.GetAllCurrencies(true);
             foreach (var currency in currencies)
             {
@@ -142,38 +131,38 @@ namespace Nop.Admin.Controllers
 
         #region Languages
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-		public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
-			return View();
-		}
+            return View();
+        }
 
-		[HttpPost]
-        public ActionResult List(DataSourceRequest command)
+        [HttpPost]
+        public virtual ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
-			var languages = _languageService.GetAllLanguages(true);
-			var gridModel = new DataSourceResult
-			{
-				Data = languages.Select(x => x.ToModel()),
-				Total = languages.Count()
-			};
-			return new JsonResult
-			{
-				Data = gridModel
-			};
-		}
-        
-        public ActionResult Create()
+            var languages = _languageService.GetAllLanguages(true);
+            var gridModel = new DataSourceResult
+            {
+                Data = languages.Select(x => x.ToModel()),
+                Total = languages.Count()
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+        public virtual ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -183,15 +172,13 @@ namespace Nop.Admin.Controllers
             PrepareStoresMappingModel(model, null, false);
             //currencies
             PrepareCurrenciesModel(model);
-            //flags
-            PrepareFlagsModel(model);
             //default values
             model.Published = true;
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Create(LanguageModel model, bool continueEditing)
+        public virtual ActionResult Create(LanguageModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -225,18 +212,16 @@ namespace Nop.Admin.Controllers
             PrepareStoresMappingModel(model, null, true);
             //currencies
             PrepareCurrenciesModel(model);
-            //flags
-            PrepareFlagsModel(model);
 
             return View(model);
         }
 
-		public ActionResult Edit(int id)
+        public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
-			var language = _languageService.GetLanguageById(id);
+            var language = _languageService.GetLanguageById(id);
             if (language == null)
                 //No language found with the specified id
                 return RedirectToAction("List");
@@ -244,19 +229,17 @@ namespace Nop.Admin.Controllers
             //set page timeout to 5 minutes
             this.Server.ScriptTimeout = 300;
 
-		    var model = language.ToModel();
+            var model = language.ToModel();
             //Stores
             PrepareStoresMappingModel(model, language, false);
             //currencies
             PrepareCurrenciesModel(model);
-            //flags
-            PrepareFlagsModel(model);
 
             return View(model);
-		}
+        }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-		public ActionResult Edit(LanguageModel model, bool continueEditing)
+        public virtual ActionResult Edit(LanguageModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -294,7 +277,7 @@ namespace Nop.Admin.Controllers
                     //selected tab
                     SaveSelectedTabName();
 
-                    return RedirectToAction("Edit", new {id = language.Id});
+                    return RedirectToAction("Edit", new { id = language.Id });
                 }
                 return RedirectToAction("List");
             }
@@ -305,14 +288,12 @@ namespace Nop.Admin.Controllers
             PrepareStoresMappingModel(model, language, true);
             //currencies
             PrepareCurrenciesModel(model);
-            //flags
-            PrepareFlagsModel(model);
 
             return View(model);
-		}
+        }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -329,7 +310,7 @@ namespace Nop.Admin.Controllers
                 ErrorNotification(_localizationService.GetResource("Admin.Configuration.Languages.PublishedLanguageRequired"));
                 return RedirectToAction("Edit", new { id = language.Id });
             }
-            
+
             //delete
             _languageService.DeleteLanguage(language);
 
@@ -341,18 +322,38 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
-		#endregion
+        [HttpPost]
+        public virtual JsonResult GetAvailableFlagFileNames()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
+                return Json("Access denied");
 
-		#region Resources
-        
+            var flagNames = Directory
+                .EnumerateFiles(CommonHelper.MapPath("~/Content/Images/flags/"), "*.png", SearchOption.TopDirectoryOnly)
+                .Select(Path.GetFileName)
+                .ToList();
+
+            var availableFlagFileNames = flagNames.Select(flagName => new SelectListItem
+            {
+                Text = flagName,
+                Value = flagName
+            }).ToList();
+
+            return Json(availableFlagFileNames);
+        }
+
+        #endregion
+
+        #region Resources
+
         [HttpPost]
         //do not validate request token (XSRF)
         //for some reasons it does not work with "filtering" support
-        [AdminAntiForgery(true)] 
-		public ActionResult Resources(int languageId, DataSourceRequest command, LanguageResourcesListModel model)
+        [AdminAntiForgery(true)]
+        public virtual ActionResult Resources(int languageId, DataSourceRequest command, LanguageResourcesListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var query = _localizationService
                 .GetAllResourceValues(languageId)
@@ -366,13 +367,13 @@ namespace Nop.Admin.Controllers
 
             var resources = query
                 .Select(x => new LanguageResourceModel
-                    {
-                        LanguageId = languageId,
-                        Id = x.Value.Key,
-                        Name = x.Key,
-                        Value = x.Value.Value,
-                    });
-            
+                {
+                    LanguageId = languageId,
+                    Id = x.Value.Key,
+                    Name = x.Key,
+                    Value = x.Value.Value,
+                });
+
             var gridModel = new DataSourceResult
             {
                 Data = resources.PagedForCommand(command),
@@ -380,10 +381,10 @@ namespace Nop.Admin.Controllers
             };
 
             return Json(gridModel);
-		}
+        }
 
         [HttpPost]
-        public ActionResult ResourceUpdate(LanguageResourceModel model)
+        public virtual ActionResult ResourceUpdate(LanguageResourceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -417,7 +418,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ResourceAdd(int languageId, [Bind(Exclude = "Id")] LanguageResourceModel model)
+        public virtual ActionResult ResourceAdd(int languageId, [Bind(Exclude = "Id")] LanguageResourceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -447,9 +448,9 @@ namespace Nop.Admin.Controllers
 
             return new NullJsonResult();
         }
-        
+
         [HttpPost]
-        public ActionResult ResourceDelete(int id)
+        public virtual ActionResult ResourceDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -463,10 +464,10 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Export / Import
 
-        public ActionResult ExportXml(int id)
+        public virtual ActionResult ExportXml(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -489,7 +490,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ImportXml(int id, FormCollection form)
+        public virtual ActionResult ImportXml(int id, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();

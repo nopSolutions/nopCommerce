@@ -1,5 +1,6 @@
 ﻿@model String
 
+@using Nop.Admin.Helpers
 @using Nop.Core
 @using Nop.Core.Domain.Common
 @using Nop.Services.Security
@@ -10,6 +11,10 @@
     Html.AddScriptParts("~/Administration/Content/tinymce/tinymce.min.js", true);
 
     var permissionService = EngineContext.Current.Resolve<IPermissionService>();
+
+    // tinyMCE language
+    var language = TinyMceHelper.GetTinyMceLanguage();
+
     var allowJbimages = false;
     var allowRoxyFileman = permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures);
     //TinyMCE picture browser does not work in a virtual category
@@ -17,12 +22,11 @@
     //allowJbimages = true;
     //allowRoxyFileman =false;
 
-
     var random = CommonHelper.GenerateRandomInteger();
 
     //extend editor with additional settings
     //Sample setting value (below):
-    //settings.plugins.push('textcolor'); settings.toolbar += ' | forecolor backcolor';
+    //settings.plugins.push('print'); settings.toolbar += ' | print';
     var additionalEditorSettings = EngineContext.Current.Resolve<AdminAreaSettings>().RichEditorAdditionalSettings;
     //is java-script supported?
     var allowJavaScript = EngineContext.Current.Resolve<AdminAreaSettings>().RichEditorAllowJavaScript;
@@ -64,11 +68,11 @@
             autoresize_min_height: 200,
             autoresize_max_height: 200,
             plugins: [
-                "advlist autolink autoresize directionality lists link image charmap print preview anchor",
-                "searchreplace visualblocks code fullscreen",
+                "advlist autolink autoresize directionality lists link image charmap preview anchor",
+                "searchreplace visualblocks code fullscreen textcolor",
                 "insertdatetime media table contextmenu paste@(allowJbimages ? " jbimages" : null)@(enableFullPage ? " fullpage" : null)"
             ],
-            toolbar: "ltr rtl | insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image@(allowJbimages ? " jbimages" : null)",
+            toolbar: "ltr rtl | insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image@(allowJbimages ? " jbimages" : null)",
             //"relative_urls" required by jbimages plugin to be set to "false"
             relative_urls: false,
             @if (allowJavaScript)
@@ -82,6 +86,13 @@
                 <text>
             //picture manager
             file_browser_callback: RoxyFileBrowser@(random),
+                </text>
+            }
+            @if (!string.IsNullOrEmpty(language))
+            {
+                <text>
+            //language
+            language: "@language",
                 </text>
             }
             //we should set "convert_urls" set to "false" (because of "relative_urls" requirement)

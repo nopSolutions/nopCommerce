@@ -62,6 +62,10 @@ namespace Nop.Admin.Models.Settings
         public bool TaxBasedOn_OverrideForStore { get; set; }
         public SelectList TaxBasedOnValues { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Tax.TaxBasedOnPickupPointAddress")]
+        public bool TaxBasedOnPickupPointAddress { get; set; }
+        public bool TaxBasedOnPickupPointAddress_OverrideForStore { get; set; }
+
         public AddressModel DefaultTaxAddress { get; set; }
         public bool DefaultTaxAddress_OverrideForStore { get; set; }
        

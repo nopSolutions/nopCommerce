@@ -1,0 +1,556 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Net.Requests</name>
+  </assembly>
+  <members>
+    <member name="T:System.Net.HttpWebRequest">
+      <summary>
+        <see cref="T:System.Net.WebRequest" /> 클래스의 HTTP 관련 구현을 제공합니다.</summary>
+    </member>
+    <member name="M:System.Net.HttpWebRequest.Abort">
+      <summary>인터넷 리소스에 대한 요청을 취소합니다.</summary>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.Accept">
+      <summary>Accept HTTP 헤더의 값을 가져오거나 설정합니다.</summary>
+      <returns>Accept HTTP 헤더의 값입니다.기본값은 null입니다.</returns>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.AllowReadStreamBuffering">
+      <summary>인터넷 리소스에서 받은 데이터를 버퍼링할지 여부를 나타내는 값을 가져오거나 설정합니다.</summary>
+      <returns>true인터넷 리소스에서 받은 버퍼에 그렇지 않은 경우 false.인터넷 리소스에서 받은 데이터를 버퍼링하려면 true이고, 버퍼링하지 않으려면 false입니다.기본값은 true입니다.</returns>
+    </member>
+    <member name="M:System.Net.HttpWebRequest.BeginGetRequestStream(System.AsyncCallback,System.Object)">
+      <summary>데이터를 쓰는 데 사용할 <see cref="T:System.IO.Stream" /> 개체에 대한 비동기 요청을 시작합니다.</summary>
+      <returns>비동기 요청을 참조하는 <see cref="T:System.IAsyncResult" />입니다.</returns>
+      <param name="callback">
+        <see cref="T:System.AsyncCallback" /> 대리자입니다. </param>
+      <param name="state">이 요청에 대한 상태 개체입니다. </param>
+      <exception cref="T:System.Net.ProtocolViolationException">
+        <see cref="P:System.Net.HttpWebRequest.Method" /> 속성이 GET 또는 HEAD인 경우또는 <see cref="P:System.Net.HttpWebRequest.KeepAlive" />가 true이고, <see cref="P:System.Net.HttpWebRequest.AllowWriteStreamBuffering" />이 false이고, <see cref="P:System.Net.HttpWebRequest.ContentLength" />가 -1이고, <see cref="P:System.Net.HttpWebRequest.SendChunked" />가 false이고, <see cref="P:System.Net.HttpWebRequest.Method" />가 POST 또는 PUT인 경우 </exception>
+      <exception cref="T:System.InvalidOperationException">스트림이 <see cref="M:System.Net.HttpWebRequest.BeginGetRequestStream(System.AsyncCallback,System.Object)" />에 대한 이전 호출에서 사용되고 있는 경우또는 <see cref="P:System.Net.HttpWebRequest.TransferEncoding" />이 값으로 설정되고 <see cref="P:System.Net.HttpWebRequest.SendChunked" />가 false인 경우또는 스레드 풀의 스레드를 모두 사용한 경우 </exception>
+      <exception cref="T:System.NotSupportedException">요청 캐시 유효성 검사기에서 이 요청에 대한 응답이 캐시에서 제공될 수 있지만 데이터를 쓰는 요청의 경우 캐시를 사용하지 않아야 함을 나타내는 경우.이 예외는 제대로 구현되지 않은 사용자 지정 캐시 유효성 검사기를 사용하려는 경우에 발생할 수 있습니다.</exception>
+      <exception cref="T:System.Net.WebException">
+        <see cref="M:System.Net.HttpWebRequest.Abort" />를 이미 호출한 경우 </exception>
+      <exception cref="T:System.ObjectDisposedException">.NET Compact Framework 응용 프로그램에서 콘텐츠 길이가 0인 요청 스트림을 올바르게 가져오고 닫지 않은 경우.콘텐츠 길이가 0인 요청을 처리하는 방법에 대한 자세한 내용은 Network Programming in the .NET Compact Framework을 참조하십시오.</exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Net.DnsPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Net.WebPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Diagnostics.PerformanceCounterPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.HttpWebRequest.BeginGetResponse(System.AsyncCallback,System.Object)">
+      <summary>인터넷 리소스에 대한 비동기 요청을 시작합니다.</summary>
+      <returns>응답에 대한 비동기 요청을 참조하는 <see cref="T:System.IAsyncResult" />입니다.</returns>
+      <param name="callback">
+        <see cref="T:System.AsyncCallback" /> 대리자 </param>
+      <param name="state">이 요청에 대한 상태 개체입니다. </param>
+      <exception cref="T:System.InvalidOperationException">스트림이 <see cref="M:System.Net.HttpWebRequest.BeginGetResponse(System.AsyncCallback,System.Object)" />에 대한 이전 호출에서 사용되고 있는 경우또는 <see cref="P:System.Net.HttpWebRequest.TransferEncoding" />이 값으로 설정되고 <see cref="P:System.Net.HttpWebRequest.SendChunked" />가 false인 경우또는 스레드 풀의 스레드를 모두 사용한 경우 </exception>
+      <exception cref="T:System.Net.ProtocolViolationException">
+        <see cref="P:System.Net.HttpWebRequest.Method" />가 GET 또는 HEAD이고, <see cref="P:System.Net.HttpWebRequest.ContentLength" />가 0보다 크거나 <see cref="P:System.Net.HttpWebRequest.SendChunked" />가 true인 경우또는 <see cref="P:System.Net.HttpWebRequest.KeepAlive" />가 true이고, <see cref="P:System.Net.HttpWebRequest.AllowWriteStreamBuffering" />이 false이고, <see cref="P:System.Net.HttpWebRequest.ContentLength" />가 -1이고, <see cref="P:System.Net.HttpWebRequest.SendChunked" />가 false이고, <see cref="P:System.Net.HttpWebRequest.Method" />가 POST 또는 PUT인 경우또는 <see cref="T:System.Net.HttpWebRequest" />에는 엔터티 본문이 있지만 <see cref="M:System.Net.HttpWebRequest.BeginGetResponse(System.AsyncCallback,System.Object)" /> 메서드는 <see cref="M:System.Net.HttpWebRequest.BeginGetRequestStream(System.AsyncCallback,System.Object)" /> 메서드를 호출하지 않고 호출됩니다. 또는 <see cref="P:System.Net.HttpWebRequest.ContentLength" />는 0보다 크지만 응용 프로그램은 약속된 모든 데이터를 쓰지 않습니다.</exception>
+      <exception cref="T:System.Net.WebException">
+        <see cref="M:System.Net.HttpWebRequest.Abort" />를 이미 호출한 경우 </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Net.DnsPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Net.WebPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Diagnostics.PerformanceCounterPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.ContentType">
+      <summary>Content-type HTTP 헤더의 값을 가져오거나 설정합니다.</summary>
+      <returns>Content-type HTTP 헤더의 값입니다.기본값은 null입니다.</returns>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.ContinueTimeout">
+      <summary>서버에서 100-Continue가 수신될 때까지 기다릴 제한 시간(밀리초)을 가져오거나 설정합니다. </summary>
+      <returns>100-Continue가 수신될 때까지 기다릴 제한 시간(밀리초)입니다. </returns>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.CookieContainer">
+      <summary>이 요청과 관련된 쿠키를 가져오거나 설정합니다.</summary>
+      <returns>이 요청과 관련된 쿠키가 들어 있는 <see cref="T:System.Net.CookieContainer" />입니다.</returns>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.Credentials">
+      <summary>요청에 대한 인증 정보를 가져오거나 설정합니다.</summary>
+      <returns>요청과 관련된 인증 자격 증명이 들어 있는 <see cref="T:System.Net.ICredentials" />입니다.기본값은 null입니다.</returns>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.HttpWebRequest.EndGetRequestStream(System.IAsyncResult)">
+      <summary>데이터를 쓰는 데 사용할 <see cref="T:System.IO.Stream" /> 개체에 대한 비동기 요청을 끝냅니다.</summary>
+      <returns>요청 데이터를 쓰는 데 사용할 <see cref="T:System.IO.Stream" />입니다.</returns>
+      <param name="asyncResult">스트림에 대한 보류 중인 요청입니다. </param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="asyncResult" />가 null인 경우 </exception>
+      <exception cref="T:System.IO.IOException">요청이 완료되지 않아서 스트림을 사용할 수 없는 경우 </exception>
+      <exception cref="T:System.ArgumentException">현재 인스턴스에서 <see cref="M:System.Net.HttpWebRequest.BeginGetRequestStream(System.AsyncCallback,System.Object)" />을 호출한 결과 <paramref name="asyncResult" />가 반환되지 않은 경우 </exception>
+      <exception cref="T:System.InvalidOperationException">이 메서드가 <paramref name="asyncResult" />를 사용하여 이미 호출된 경우 </exception>
+      <exception cref="T:System.Net.WebException">
+        <see cref="M:System.Net.HttpWebRequest.Abort" />를 이미 호출한 경우또는 요청을 처리하는 동안 오류가 발생한 경우 </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.HttpWebRequest.EndGetResponse(System.IAsyncResult)">
+      <summary>인터넷 리소스에 대한 비동기 요청을 종료합니다.</summary>
+      <returns>인터넷 리소스로부터의 응답이 들어 있는 <see cref="T:System.Net.WebResponse" />입니다.</returns>
+      <param name="asyncResult">응답에 대해 보류된 요청입니다. </param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="asyncResult" />가 null인 경우 </exception>
+      <exception cref="T:System.InvalidOperationException">이 메서드가 <paramref name="asyncResult." />를 사용하여 이미 호출되었습니다.또는 <see cref="P:System.Net.HttpWebRequest.ContentLength" /> 속성이 0보다 큰데 데이터를 요청 스트림에 쓰지 않은 경우 </exception>
+      <exception cref="T:System.Net.WebException">
+        <see cref="M:System.Net.HttpWebRequest.Abort" />를 이미 호출한 경우또는 요청을 처리하는 동안 오류가 발생한 경우 </exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="asyncResult" /> was not returned by the current instance from a call to <see cref="M:System.Net.HttpWebRequest.BeginGetResponse(System.AsyncCallback,System.Object)" />. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.HaveResponse">
+      <summary>인터넷 리소스로부터 응답을 받았는지 여부를 나타내는 값을 가져옵니다.</summary>
+      <returns>응답을 받았으면 true이고, 그렇지 않으면 false입니다.</returns>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.Headers">
+      <summary>HTTP 헤더를 구성하는 이름/값 쌍의 컬렉션을 지정합니다.</summary>
+      <returns>HTTP 요청의 헤더를 구성하는 이름/값 쌍이 들어 있는 <see cref="T:System.Net.WebHeaderCollection" />입니다.</returns>
+      <exception cref="T:System.InvalidOperationException">
+        <see cref="M:System.Net.HttpWebRequest.GetRequestStream" />, <see cref="M:System.Net.HttpWebRequest.BeginGetRequestStream(System.AsyncCallback,System.Object)" />, <see cref="M:System.Net.HttpWebRequest.GetResponse" /> 또는 <see cref="M:System.Net.HttpWebRequest.BeginGetResponse(System.AsyncCallback,System.Object)" /> 메서드를 호출하여 요청이 시작된 경우 </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.Method">
+      <summary>요청에 대한 메서드를 가져오거나 설정합니다.</summary>
+      <returns>인터넷 리소스에 접속하는 데 사용할 요청 메서드입니다.기본값은 GET입니다.</returns>
+      <exception cref="T:System.ArgumentException">메서드를 지정하지 않은 경우또는 메서드 문자열에 잘못된 문자가 들어 있는 경우 </exception>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.RequestUri">
+      <summary>요청의 원래 URI(Uniform Resource Identifier)를 가져옵니다.</summary>
+      <returns>
+        <see cref="M:System.Net.WebRequest.Create(System.String)" /> 메서드에 전달된 인터넷 리소스의 URI가 들어 있는 <see cref="T:System.Uri" />입니다.</returns>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.SupportsCookieContainer">
+      <summary>요청이 <see cref="T:System.Net.CookieContainer" />를 지원하는지 여부를 나타내는 값을 가져옵니다.</summary>
+      <returns>true요청에 대 한 지원을 제공 하는 경우는 <see cref="T:System.Net.CookieContainer" />; 그렇지 않은 경우 false.<see cref="T:System.Net.CookieContainer" />가 지원되면 true이고, 그렇지 않으면 false입니다. </returns>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.UseDefaultCredentials">
+      <summary>기본 자격 증명을 요청과 함께 보내는지 여부를 제어하는 <see cref="T:System.Boolean" /> 값을 가져오거나 설정합니다.</summary>
+      <returns>기본 자격 증명이 사용되면 true이고, 그렇지 않으면 false입니다.기본값은 false입니다.</returns>
+      <exception cref="T:System.InvalidOperationException">요청을 보낸 후에 이 속성을 설정하려고 한 경우</exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Read="USERNAME" />
+      </PermissionSet>
+    </member>
+    <member name="T:System.Net.HttpWebResponse">
+      <summary>
+        <see cref="T:System.Net.WebResponse" /> 클래스의 HTTP 관련 구현을 제공합니다.</summary>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.ContentLength">
+      <summary>요청이 반환하는 콘텐츠의 길이를 가져옵니다.</summary>
+      <returns>요청이 반환한 바이트 수입니다.콘텐츠 길이에는 헤더 정보가 포함되지 않습니다.</returns>
+      <exception cref="T:System.ObjectDisposedException">현재 인스턴스가 삭제된 경우 </exception>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.ContentType">
+      <summary>응답의 콘텐츠 형식을 가져옵니다.</summary>
+      <returns>응답의 콘텐츠 형식이 들어 있는 문자열입니다.</returns>
+      <exception cref="T:System.ObjectDisposedException">현재 인스턴스가 삭제된 경우 </exception>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.Cookies">
+      <summary>이 응답과 관련된 쿠키를 가져오거나 설정합니다.</summary>
+      <returns>이 응답과 관련된 쿠키가 들어 있는 <see cref="T:System.Net.CookieCollection" />입니다.</returns>
+      <exception cref="T:System.ObjectDisposedException">현재 인스턴스가 삭제된 경우 </exception>
+    </member>
+    <member name="M:System.Net.HttpWebResponse.Dispose(System.Boolean)">
+      <summary>
+        <see cref="T:System.Net.HttpWebResponse" />에서 사용하는 관리되지 않는 리소스를 해제하고, 관리되는 리소스를 선택적으로 삭제할 수 있습니다.</summary>
+      <param name="disposing">관리되는 리소스와 관리되지 않는 리소스를 모두 해제하려면 true, 관리되지 않는 리소스만 해제하려면 false입니다. </param>
+    </member>
+    <member name="M:System.Net.HttpWebResponse.GetResponseStream">
+      <summary>서버에서 응답 본문을 읽는 데 사용되는 스트림을 가져옵니다.</summary>
+      <returns>응답 본문을 포함하는 <see cref="T:System.IO.Stream" />입니다.</returns>
+      <exception cref="T:System.Net.ProtocolViolationException">응답 스트림이 없는 경우 </exception>
+      <exception cref="T:System.ObjectDisposedException">현재 인스턴스가 삭제된 경우 </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.Headers">
+      <summary>서버에서 이 응답과 관련된 헤더를 가져옵니다.</summary>
+      <returns>응답과 함께 반환되는 헤더 정보를 포함하는 <see cref="T:System.Net.WebHeaderCollection" />입니다.</returns>
+      <exception cref="T:System.ObjectDisposedException">현재 인스턴스가 삭제된 경우 </exception>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.Method">
+      <summary>응답을 반환하는 데 사용되는 메서드를 가져옵니다.</summary>
+      <returns>응답을 반환하는 데 사용되는 HTTP 메서드를 포함하는 문자열입니다.</returns>
+      <exception cref="T:System.ObjectDisposedException">현재 인스턴스가 삭제된 경우 </exception>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.ResponseUri">
+      <summary>요청에 응답한 인터넷 리소스의 URI를 가져옵니다.</summary>
+      <returns>요청에 응답한 인터넷 리소스의 URI를 포함하는 <see cref="T:System.Uri" />입니다.</returns>
+      <exception cref="T:System.ObjectDisposedException">현재 인스턴스가 삭제된 경우 </exception>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.StatusCode">
+      <summary>응답 상태를 가져옵니다.</summary>
+      <returns>
+        <see cref="T:System.Net.HttpStatusCode" /> 값 중 하나입니다.</returns>
+      <exception cref="T:System.ObjectDisposedException">현재 인스턴스가 삭제된 경우 </exception>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.StatusDescription">
+      <summary>응답과 함께 반환되는 상태 설명을 가져옵니다.</summary>
+      <returns>응답의 상태를 설명하는 문자열입니다.</returns>
+      <exception cref="T:System.ObjectDisposedException">현재 인스턴스가 삭제된 경우 </exception>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.SupportsHeaders">
+      <summary>헤더가 지원되는지 여부를 나타내는 값을 가져옵니다.</summary>
+      <returns>
+        <see cref="T:System.Boolean" />를 반환합니다.헤더가 지원되면 true이고, 지원되지 않으면 false입니다.</returns>
+    </member>
+    <member name="T:System.Net.IWebRequestCreate">
+      <summary>
+        <see cref="T:System.Net.WebRequest" /> 인스턴스를 만들기 위해 기본 인터페이스를 제공합니다.</summary>
+    </member>
+    <member name="M:System.Net.IWebRequestCreate.Create(System.Uri)">
+      <summary>
+        <see cref="T:System.Net.WebRequest" /> 인스턴스를 만듭니다.</summary>
+      <returns>
+        <see cref="T:System.Net.WebRequest" /> 인스턴스입니다.</returns>
+      <param name="uri">웹 리소스의 URI(Uniform Resource Identifier)입니다. </param>
+      <exception cref="T:System.NotSupportedException">
+        <paramref name="uri" />에 지정된 요청 체계가 이 <see cref="T:System.Net.IWebRequestCreate" /> 인스턴스에서 지원되지 않습니다. </exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="uri" />가 null입니다. </exception>
+      <exception cref="T:System.UriFormatException">Windows 스토어 앱용 .NET 또는 이식 가능한 클래스 라이브러리에서 대신 기본 클래스 예외 <see cref="T:System.FormatException" />를 catch합니다.<paramref name="uri" />에 지정된 URI가 유효하지 않은 경우 </exception>
+    </member>
+    <member name="T:System.Net.ProtocolViolationException">
+      <summary>네트워크 프로토콜을 사용하는 동안 오류가 발생하면 throw되는 예외입니다.</summary>
+    </member>
+    <member name="M:System.Net.ProtocolViolationException.#ctor">
+      <summary>
+        <see cref="T:System.Net.ProtocolViolationException" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:System.Net.ProtocolViolationException.#ctor(System.String)">
+      <summary>지정된 메시지를 사용하여 <see cref="T:System.Net.ProtocolViolationException" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+      <param name="message">오류 메시지 문자열입니다. </param>
+    </member>
+    <member name="T:System.Net.WebException">
+      <summary>플러그형 프로토콜로 네트워크에 액세스하는 동안 오류가 발생하면 throw되는 예외입니다.</summary>
+    </member>
+    <member name="M:System.Net.WebException.#ctor">
+      <summary>
+        <see cref="T:System.Net.WebException" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:System.Net.WebException.#ctor(System.String)">
+      <summary>지정된 오류 메시지를 사용하여 <see cref="T:System.Net.WebException" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+      <param name="message">오류 메시지 텍스트입니다. </param>
+    </member>
+    <member name="M:System.Net.WebException.#ctor(System.String,System.Exception)">
+      <summary>지정된 오류 메시지와 중첩된 예외를 사용하여 <see cref="T:System.Net.WebException" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+      <param name="message">오류 메시지 텍스트입니다. </param>
+      <param name="innerException">중첩된 예외입니다. </param>
+    </member>
+    <member name="M:System.Net.WebException.#ctor(System.String,System.Exception,System.Net.WebExceptionStatus,System.Net.WebResponse)">
+      <summary>지정된 오류 메시지, 중첩된 예외, 상태 및 응답을 사용하여 <see cref="T:System.Net.WebException" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+      <param name="message">오류 메시지 텍스트입니다. </param>
+      <param name="innerException">중첩된 예외입니다. </param>
+      <param name="status">
+        <see cref="T:System.Net.WebExceptionStatus" /> 값 중 하나입니다. </param>
+      <param name="response">원격 호스트에서 보낸 응답이 들어 있는 <see cref="T:System.Net.WebResponse" /> 인스턴스입니다. </param>
+    </member>
+    <member name="M:System.Net.WebException.#ctor(System.String,System.Net.WebExceptionStatus)">
+      <summary>지정된 오류 메시지와 상태를 사용하여 <see cref="T:System.Net.WebException" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+      <param name="message">오류 메시지 텍스트입니다. </param>
+      <param name="status">
+        <see cref="T:System.Net.WebExceptionStatus" /> 값 중 하나입니다. </param>
+    </member>
+    <member name="P:System.Net.WebException.Response">
+      <summary>원격 호스트에서 반환된 응답을 가져옵니다.</summary>
+      <returns>인터넷 리소스에서 응답을 가져올 수 있으면 인터넷 리소스의 오류 응답이 포함된 <see cref="T:System.Net.WebResponse" /> 인스턴스이고, 그렇지 않으면 null입니다.</returns>
+    </member>
+    <member name="P:System.Net.WebException.Status">
+      <summary>응답 상태를 가져옵니다.</summary>
+      <returns>
+        <see cref="T:System.Net.WebExceptionStatus" /> 값 중 하나입니다.</returns>
+    </member>
+    <member name="T:System.Net.WebExceptionStatus">
+      <summary>
+        <see cref="T:System.Net.WebException" /> 클래스에 대한 상태 코드를 정의합니다.</summary>
+    </member>
+    <member name="F:System.Net.WebExceptionStatus.ConnectFailure">
+      <summary>전송 수준에서 원격 서비스 지점에 접속할 수 없습니다.</summary>
+    </member>
+    <member name="F:System.Net.WebExceptionStatus.MessageLengthLimitExceeded">
+      <summary>서버에 요청을 보내거나 서버에서 응답을 받을 때 지정된 제한 시간을 초과했다는 메시지를 받았습니다.</summary>
+    </member>
+    <member name="F:System.Net.WebExceptionStatus.Pending">
+      <summary>내부 비동기 요청이 보류 중입니다.</summary>
+    </member>
+    <member name="F:System.Net.WebExceptionStatus.RequestCanceled">
+      <summary>요청이 취소되었거나, <see cref="M:System.Net.WebRequest.Abort" /> 메서드가 호출되었거나, 알 수 없는 오류가 발생했습니다.<see cref="P:System.Net.WebException.Status" />의 기본값입니다.</summary>
+    </member>
+    <member name="F:System.Net.WebExceptionStatus.SendFailure">
+      <summary>원격 서버에 전체 요청을 보낼 수 없습니다.</summary>
+    </member>
+    <member name="F:System.Net.WebExceptionStatus.Success">
+      <summary>오류가 발생하지 않았습니다.</summary>
+    </member>
+    <member name="F:System.Net.WebExceptionStatus.UnknownError">
+      <summary>알 수 없는 유형의 예외가 발생했습니다.</summary>
+    </member>
+    <member name="T:System.Net.WebRequest">
+      <summary>URI(Uniform Resource Identifier)에 대한 요청을 만듭니다.이 클래스는 abstract 클래스입니다.</summary>
+    </member>
+    <member name="M:System.Net.WebRequest.#ctor">
+      <summary>
+        <see cref="T:System.Net.WebRequest" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:System.Net.WebRequest.Abort">
+      <summary>요청을 중단합니다. </summary>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to access the method, when the method is not overridden in a descendant class. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.WebRequest.BeginGetRequestStream(System.AsyncCallback,System.Object)">
+      <summary>서브클래스에서 재정의될 때, <see cref="M:System.Net.WebRequest.GetRequestStream" /> 메서드의 비동기 버전을 제공합니다.</summary>
+      <returns>비동기 요청을 참조하는 <see cref="T:System.IAsyncResult" />입니다.</returns>
+      <param name="callback">
+        <see cref="T:System.AsyncCallback" /> 대리자입니다. </param>
+      <param name="state">이 비동기 요청에 대한 상태 정보가 들어 있는 개체입니다. </param>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to access the method, when the method is not overridden in a descendant class. </exception>
+    </member>
+    <member name="M:System.Net.WebRequest.BeginGetResponse(System.AsyncCallback,System.Object)">
+      <summary>하위 항목 클래스에서 재정의될 때, 인터넷 리소스에 대한 비동기 요청을 시작합니다.</summary>
+      <returns>비동기 요청을 참조하는 <see cref="T:System.IAsyncResult" />입니다.</returns>
+      <param name="callback">
+        <see cref="T:System.AsyncCallback" /> 대리자입니다. </param>
+      <param name="state">이 비동기 요청에 대한 상태 정보가 들어 있는 개체입니다. </param>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to access the method, when the method is not overridden in a descendant class. </exception>
+    </member>
+    <member name="P:System.Net.WebRequest.ContentType">
+      <summary>하위 항목 클래스에서 재정의될 때, 전송 중인 요청 데이터의 콘텐츠 형식을 가져오거나 설정합니다.</summary>
+      <returns>요청 데이터의 콘텐츠 형식입니다.</returns>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to get or set the property, when the property is not overridden in a descendant class. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.WebRequest.Create(System.String)">
+      <summary>지정된 URI 체계에 대한 새 <see cref="T:System.Net.WebRequest" /> 인스턴스를 초기화합니다.</summary>
+      <returns>특정 URI 체계에 대한 <see cref="T:System.Net.WebRequest" /> 하위 항목입니다.</returns>
+      <param name="requestUriString">인터넷 리소스를 식별하는 URI입니다. </param>
+      <exception cref="T:System.NotSupportedException">The request scheme specified in <paramref name="requestUriString" /> has not been registered. </exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="requestUriString" /> is null. </exception>
+      <exception cref="T:System.Security.SecurityException">The caller does not have permission to connect to the requested URI or a URI that the request is redirected to. </exception>
+      <exception cref="T:System.UriFormatException">In the .NET for Windows Store apps or the Portable Class Library, catch the base class exception, <see cref="T:System.FormatException" />, instead.The URI specified in <paramref name="requestUriString" /> is not a valid URI. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.WebRequest.Create(System.Uri)">
+      <summary>지정된 URI 체계에 대한 새 <see cref="T:System.Net.WebRequest" /> 인스턴스를 초기화합니다.</summary>
+      <returns>지정된 URI 체계에 대한 <see cref="T:System.Net.WebRequest" /> 하위 항목입니다.</returns>
+      <param name="requestUri">요청된 리소스의 URI가 포함된 <see cref="T:System.Uri" />입니다. </param>
+      <exception cref="T:System.NotSupportedException">The request scheme specified in <paramref name="requestUri" /> is not registered. </exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="requestUri" /> is null. </exception>
+      <exception cref="T:System.Security.SecurityException">The caller does not have permission to connect to the requested URI or a URI that the request is redirected to. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.WebRequest.CreateHttp(System.String)">
+      <summary>지정된 URI 문자열에 대한 새 <see cref="T:System.Net.HttpWebRequest" /> 인스턴스를 초기화합니다.</summary>
+      <returns>
+        <see cref="T:System.Net.HttpWebRequest" />를 반환합니다.지정된 URI 문자열에 대한 <see cref="T:System.Net.HttpWebRequest" /> 인스턴스입니다.</returns>
+      <param name="requestUriString">인터넷 리소스를 식별하는 URI 문자열입니다. </param>
+      <exception cref="T:System.NotSupportedException">The request scheme specified in <paramref name="requestUriString" /> is the http or https scheme. </exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="requestUriString" /> is null. </exception>
+      <exception cref="T:System.Security.SecurityException">The caller does not have permission to connect to the requested URI or a URI that the request is redirected to. </exception>
+      <exception cref="T:System.UriFormatException">The URI specified in <paramref name="requestUriString" /> is not a valid URI. </exception>
+    </member>
+    <member name="M:System.Net.WebRequest.CreateHttp(System.Uri)">
+      <summary>지정된 URI에 대한 새 <see cref="T:System.Net.HttpWebRequest" /> 인스턴스를 초기화합니다.</summary>
+      <returns>
+        <see cref="T:System.Net.HttpWebRequest" />를 반환합니다.지정된 URI 문자열에 대한 <see cref="T:System.Net.HttpWebRequest" /> 인스턴스입니다.</returns>
+      <param name="requestUri">인터넷 리소스를 식별하는 URI입니다.</param>
+      <exception cref="T:System.NotSupportedException">The request scheme specified in <paramref name="requestUri" /> is the http or https scheme. </exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="requestUri" /> is null. </exception>
+      <exception cref="T:System.Security.SecurityException">The caller does not have permission to connect to the requested URI or a URI that the request is redirected to. </exception>
+      <exception cref="T:System.UriFormatException">The URI specified in <paramref name="requestUri" /> is not a valid URI. </exception>
+    </member>
+    <member name="P:System.Net.WebRequest.Credentials">
+      <summary>하위 항목 클래스에서 재정의될 때, 인터넷 리소스를 사용하여 요청을 인증하는 데 사용되는 네트워크 자격 증명을 가져오거나 설정합니다.</summary>
+      <returns>요청과 연결된 인증 자격 증명이 들어 있는 <see cref="T:System.Net.ICredentials" />입니다.기본값은 null입니다.</returns>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to get or set the property, when the property is not overridden in a descendant class. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebRequest.DefaultWebProxy">
+      <summary>글로벌 HTTP 프록시를 가져오거나 설정합니다.</summary>
+      <returns>
+        <see cref="T:System.Net.WebRequest" />의 인스턴스를 호출할 때마다 사용되는 <see cref="T:System.Net.IWebProxy" />입니다.</returns>
+    </member>
+    <member name="M:System.Net.WebRequest.EndGetRequestStream(System.IAsyncResult)">
+      <summary>서브클래스에서 재정의될 때, 인터넷 리소스에 데이터를 쓰기 위해 <see cref="T:System.IO.Stream" />을 반환합니다.</summary>
+      <returns>데이터를 쓸 <see cref="T:System.IO.Stream" />입니다.</returns>
+      <param name="asyncResult">스트림에 대한 보류 요청을 참조하는 <see cref="T:System.IAsyncResult" />입니다. </param>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to access the method, when the method is not overridden in a descendant class. </exception>
+    </member>
+    <member name="M:System.Net.WebRequest.EndGetResponse(System.IAsyncResult)">
+      <summary>파생 클래스에서 재정의될 때, <see cref="T:System.Net.WebResponse" />를 반환합니다.</summary>
+      <returns>인터넷 요청에 대한 응답을 포함하는 <see cref="T:System.Net.WebResponse" />입니다.</returns>
+      <param name="asyncResult">응답에 대한 보류 요청을 참조하는 <see cref="T:System.IAsyncResult" />입니다. </param>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to access the method, when the method is not overridden in a descendant class. </exception>
+    </member>
+    <member name="M:System.Net.WebRequest.GetRequestStreamAsync">
+      <summary>서브클래스에서 재정의될 때, 인터넷 리소스에 비동기 작업으로 데이터를 쓰기 위해 <see cref="T:System.IO.Stream" />을 반환합니다.</summary>
+      <returns>
+        <see cref="T:System.Threading.Tasks.Task`1" />를 반환합니다.비동기 작업(operation)을 나타내는 작업(task) 개체입니다.</returns>
+    </member>
+    <member name="M:System.Net.WebRequest.GetResponseAsync">
+      <summary>하위 항목 클래스에 재정의될 때, 인터넷 요청에 대한 응답을 비동기 작업으로 반환합니다.</summary>
+      <returns>
+        <see cref="T:System.Threading.Tasks.Task`1" />를 반환합니다.비동기 작업(operation)을 나타내는 작업(task) 개체입니다.</returns>
+    </member>
+    <member name="P:System.Net.WebRequest.Headers">
+      <summary>하위 항목 클래스에서 재정의될 때, 요청과 연결된 헤더 이름/값 쌍의 컬렉션을 가져오거나 설정합니다.</summary>
+      <returns>요청과 연결된 헤더 이름/값 쌍이 들어 있는 <see cref="T:System.Net.WebHeaderCollection" />입니다.</returns>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to get or set the property, when the property is not overridden in a descendant class. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebRequest.Method">
+      <summary>하위 항목 클래스에서 재정의될 때, 이 요청에서 사용할 프로토콜 메서드를 가져오거나 설정합니다.</summary>
+      <returns>이 요청에서 사용할 프로토콜 메서드입니다.</returns>
+      <exception cref="T:System.NotImplementedException">If the property is not overridden in a descendant class, any attempt is made to get or set the property. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebRequest.Proxy">
+      <summary>하위 항목 클래스에서 재정의될 때, 이 인터넷 리소스에 액세스하기 위해 사용할 네트워크 프록시를 가져오거나 설정합니다.</summary>
+      <returns>인터넷 리소스에 액세스하기 위해 사용할 <see cref="T:System.Net.IWebProxy" />입니다.</returns>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to get or set the property, when the property is not overridden in a descendant class. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.WebRequest.RegisterPrefix(System.String,System.Net.IWebRequestCreate)">
+      <summary>지정된 URI에 대한 <see cref="T:System.Net.WebRequest" /> 하위 항목을 등록합니다.</summary>
+      <returns>등록이 성공하면 true이고, 그렇지 않으면 false입니다.</returns>
+      <param name="prefix">
+        <see cref="T:System.Net.WebRequest" /> 하위 항목이 서비스하는 완전한 URI나 URI 접두사입니다. </param>
+      <param name="creator">
+        <see cref="T:System.Net.WebRequest" /> 하위 항목을 만들기 위해 <see cref="T:System.Net.WebRequest" />가 호출하는 생성 메서드입니다. </param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="prefix" /> is null-or- <paramref name="creator" /> is null. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="ControlEvidence" />
+        <IPermission class="System.Net.WebPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebRequest.RequestUri">
+      <summary>하위 항목 클래스에서 재정의될 때, 요청과 연결된 인터넷 리소스의 URI를 가져옵니다.</summary>
+      <returns>요청과 연결된 리소스를 나타내는 <see cref="T:System.Uri" />입니다. </returns>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to get or set the property, when the property is not overridden in a descendant class. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebRequest.UseDefaultCredentials">
+      <summary>서브클래스에서 재정의된 경우 <see cref="P:System.Net.CredentialCache.DefaultCredentials" />를 요청과 함께 보낼지 여부를 제어하는 <see cref="T:System.Boolean" /> 값을 가져오거나 설정합니다.</summary>
+      <returns>기본 자격 증명이 사용되면 true이고, 그렇지 않으면 false입니다.기본값은 false입니다.</returns>
+      <exception cref="T:System.InvalidOperationException">You attempted to set this property after the request was sent.</exception>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to access the property, when the property is not overridden in a descendant class. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="T:System.Net.WebResponse">
+      <summary>URI(Uniform Resource Identifier)에서 응답을 제공합니다.이 클래스는 abstract 클래스입니다.</summary>
+    </member>
+    <member name="M:System.Net.WebResponse.#ctor">
+      <summary>
+        <see cref="T:System.Net.WebResponse" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="P:System.Net.WebResponse.ContentLength">
+      <summary>서브클래스에서 재정의되는 경우 수신 중인 데이터의 콘텐츠 길이를 가져오거나 설정합니다.</summary>
+      <returns>인터넷 리소스에서 반환된 바이트 수입니다.</returns>
+      <exception cref="T:System.NotSupportedException">속성이 서브클래스에서 재정의되지 않았는데 속성을 가져오거나 설정하려 할 경우 </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebResponse.ContentType">
+      <summary>파생 클래스에서 재정의되는 경우 수신 중인 데이터의 콘텐츠 형식을 가져오거나 설정합니다.</summary>
+      <returns>응답의 콘텐츠 형식이 들어 있는 문자열입니다.</returns>
+      <exception cref="T:System.NotSupportedException">속성이 서브클래스에서 재정의되지 않았는데 속성을 가져오거나 설정하려 할 경우 </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.WebResponse.Dispose">
+      <summary>
+        <see cref="T:System.Net.WebResponse" /> 개체에서 사용하는 관리되지 않는 리소스를 해제합니다.</summary>
+    </member>
+    <member name="M:System.Net.WebResponse.Dispose(System.Boolean)">
+      <summary>
+        <see cref="T:System.Net.WebResponse" /> 개체에서 사용하는 관리되지 않는 리소스를 해제하고 관리되는 리소스를 선택적으로 삭제할 수 있습니다.</summary>
+      <param name="disposing">관리되는 리소스와 관리되지 않는 리소스를 모두 해제하려면 true, 관리되지 않는 리소스만 해제하려면 false입니다. </param>
+    </member>
+    <member name="M:System.Net.WebResponse.GetResponseStream">
+      <summary>서브클래스에서 재정의되는 경우 인터넷 리소스에서 데이터 스트림을 반환합니다.</summary>
+      <returns>인터넷 리소스에서 데이터를 읽기 위한 <see cref="T:System.IO.Stream" /> 클래스의 인스턴스입니다.</returns>
+      <exception cref="T:System.NotSupportedException">메서드가 서브클래스에서 재정의되지 않았는데 메서드에 액세스하려 할 경우 </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebResponse.Headers">
+      <summary>파생 클래스에서 재정의되는 경우 요청과 연결된 헤더 이름/값 쌍의 컬렉션을 가져옵니다.</summary>
+      <returns>이 응답과 관련된 헤더 값을 포함하는 <see cref="T:System.Net.WebHeaderCollection" /> 클래스의 인스턴스입니다.</returns>
+      <exception cref="T:System.NotSupportedException">속성이 서브클래스에서 재정의되지 않았는데 속성을 가져오거나 설정하려 할 경우 </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebResponse.ResponseUri">
+      <summary>파생 클래스에서 재정의되는 경우 요청에 실제로 응답하는 인터넷 리소스의 URI를 가져옵니다.</summary>
+      <returns>요청에 실제로 응답하는 인터넷 리소스의 URI가 들어 있는 <see cref="T:System.Uri" /> 클래스의 인스턴스입니다.</returns>
+      <exception cref="T:System.NotSupportedException">속성이 서브클래스에서 재정의되지 않았는데 속성을 가져오거나 설정하려 할 경우 </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebResponse.SupportsHeaders">
+      <summary>헤더가 지원되는지 여부를 나타내는 값을 가져옵니다.</summary>
+      <returns>
+        <see cref="T:System.Boolean" />를 반환합니다.헤더가 지원되면 true이고, 지원되지 않으면 false입니다.</returns>
+    </member>
+  </members>
+</doc>

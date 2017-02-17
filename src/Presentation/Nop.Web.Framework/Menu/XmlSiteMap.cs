@@ -110,6 +110,14 @@ namespace Nop.Web.Framework.Menu
             {
                 siteMapNode.Visible = true;
             }
+
+            // Open URL in new tab
+            var openUrlInNewTabValue = GetStringValueFromAttribute(xmlNode, "OpenUrlInNewTab");
+            bool booleanResult;
+            if (!string.IsNullOrWhiteSpace(openUrlInNewTabValue) && bool.TryParse(openUrlInNewTabValue, out booleanResult))
+            {
+                siteMapNode.OpenUrlInNewTab = booleanResult;
+            }
         }
 
         private static string GetStringValueFromAttribute(XmlNode node, string attributeName)

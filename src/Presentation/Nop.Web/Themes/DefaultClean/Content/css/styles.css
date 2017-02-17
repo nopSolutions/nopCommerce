@@ -489,6 +489,9 @@ label, label + * {
 .bar-notification.error {
 	background-color: #e4444c;
 }
+.bar-notification.warning {
+	background-color: #f39c12;
+}
 .bar-notification .content {
 	margin: 0 10px 0 0;
 }
@@ -2865,12 +2868,16 @@ label, label + * {
     margin: 0 5px;
     font-size: 14px;
 }
+.customer-info-page .vat-status {
+    display: block;
+}
 .registration-page .vat-note,
 .customer-info-page .vat-note,
 .customer-info-page .email-to-revalidate-note {
     display: block;
     font-size: 14px;
-    margin-top: 5px;
+    margin-top: 7px;
+    white-space: normal;
 }
 .login-page .customer-blocks {
 	margin: 0 0 30px;
@@ -3017,6 +3024,9 @@ label, label + * {
 .delete-address-button,
 .cancel-recurring-order-button {
 	background: url('../images/remove.png') left center no-repeat;
+}
+.retry-recurring-order-button {
+	background: url('../images/retry.png') left center no-repeat;
 }
 .return-items-button {
 	background: url('../images/return.png') left center no-repeat;
@@ -6586,6 +6596,16 @@ pre {
 	text-align: left;
 }
 
+.registration-page .vat-note {
+    margin-left: 275px;
+}
+.customer-info-page .vat-note, 
+.customer-info-page .email-to-revalidate-note {
+    margin-left: 150px;
+}
+.customer-info-page .vat-status {
+    display: inline-block;
+}
 
 /*** SHOPPING CART ***/
 
@@ -6808,6 +6828,13 @@ pre {
 	width: 360px;
 }
 
+.registration-page .vat-note {
+    margin-left: 385px;
+}
+.customer-info-page .vat-note, 
+.customer-info-page .email-to-revalidate-note {
+    margin-left: 225px;
+}
 
 /*** SHOPPING CART ***/
 

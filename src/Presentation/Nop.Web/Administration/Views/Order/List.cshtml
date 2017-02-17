@@ -20,47 +20,43 @@
             @T("Admin.Orders")
         </h1>
         <div class="pull-right">
-            @if (!Model.IsLoggedInAsVendor)
-            {
-                //a vendor cannot export/import orders
-                <div class="btn-group">
-                    <button type="button" class="btn btn-success">
-                        <i class="fa fa-download"></i>
-                        @T("Admin.Common.Export")
-                    </button>
-                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <span class="caret"></span>
-                        <span class="sr-only">&nbsp;</span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                        <li>
-                            <button type="submit" name="exportxml-all">
-                                <i class="fa fa-file-code-o"></i>
-                                @T("Admin.Common.ExportToXml.All")
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" id="exportxml-selected">
-                                <i class="fa fa-file-code-o"></i>
-                                @T("Admin.Common.ExportToXml.Selected")
-                            </button>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <button type="submit" name="exportexcel-all">
-                                <i class="fa fa-file-excel-o"></i>
-                                @T("Admin.Common.ExportToExcel.All")
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" id="exportexcel-selected">
-                                <i class="fa fa-file-excel-o"></i>
-                                @T("Admin.Common.ExportToExcel.Selected")
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-            }
+            <div class="btn-group">
+                <button type="button" class="btn btn-success">
+                    <i class="fa fa-download"></i>
+                    @T("Admin.Common.Export")
+                </button>
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">&nbsp;</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li>
+                        <button type="submit" name="exportxml-all">
+                            <i class="fa fa-file-code-o"></i>
+                            @T("Admin.Common.ExportToXml.All")
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" id="exportxml-selected">
+                            <i class="fa fa-file-code-o"></i>
+                            @T("Admin.Common.ExportToXml.Selected")
+                        </button>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <button type="submit" name="exportexcel-all">
+                            <i class="fa fa-file-excel-o"></i>
+                            @T("Admin.Common.ExportToExcel.All")
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" id="exportexcel-selected">
+                            <i class="fa fa-file-excel-o"></i>
+                            @T("Admin.Common.ExportToExcel.Selected")
+                        </button>
+                    </li>
+                </ul>
+            </div>
             <div class="btn-group">
                 <button type="button" class="btn bg-purple">
                     <i class="fa fa-file-pdf-o"></i>
@@ -237,12 +233,12 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.GoDirectlyToNumber)
+                                        @Html.NopLabelFor(model => model.GoDirectlyToCustomOrderNumber)
                                     </div>
                                     <div class="col-md-8">
-                                        <div class="input-group input-group-short">
-                                            @Html.NopEditorFor(model => model.GoDirectlyToNumber)
-                                            <span class="input-group-btn">
+                                        <div class="custom-input-group input-group-short">
+                                            @Html.NopEditorFor(model => model.GoDirectlyToCustomOrderNumber)
+                                            <span class="custom-input-group-btn">
                                                 <button type="submit" id="go-to-order-by-number" name="go-to-order-by-number" class="btn btn-info btn-flat">
                                                     @T("Admin.Common.Go")
                                                 </button>
@@ -323,10 +319,9 @@
                                             attributes: { style: "text-align:center" },
                                             template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
                                             width: 50
-                                        },
-                                        {
-                                            field: "Id",
-                                            title: "@T("Admin.Orders.Fields.ID")",
+                                        }, {
+                                            field: "CustomOrderNumber",
+                                            title: "@T("Admin.Orders.Fields.CustomOrderNumber")",
                                             width: 80
                                         },
                                         @if (!Model.IsLoggedInAsVendor)
@@ -394,7 +389,9 @@
                                             field: "Id",
                                             title: "@T("Admin.Common.View")",
                                             width: 50,
-                                            template: '<a href="Edit/#=Id#">@T("Admin.Common.View")</a>'
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                            template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
                                         }
                                     ]
                                 } );
@@ -427,7 +424,7 @@
                                         }
                                     });
 
-                                $("#@Html.FieldIdFor(model => model.GoDirectlyToNumber)").keydown(function(event) {
+                                $("#@Html.FieldIdFor(model => model.GoDirectlyToCustomOrderNumber)").keydown(function(event) {
                                     if (event.keyCode === 13) {
                                         $("#go-to-order-by-number").click();
                                         return false;

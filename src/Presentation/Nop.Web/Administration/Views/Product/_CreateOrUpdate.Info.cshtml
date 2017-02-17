@@ -773,7 +773,7 @@
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.DownloadId)
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.DownloadId)
                             @Html.ValidationMessageFor(model => model.DownloadId)
                         </div>
@@ -845,7 +845,7 @@
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.SampleDownloadId)
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.SampleDownloadId)
                             @Html.ValidationMessageFor(model => model.SampleDownloadId)
                         </div>
@@ -939,7 +939,7 @@
                             @Html.NopLabelFor(model => model.Price)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.Price) [@Model.PrimaryStoreCurrencyCode]
+                            @Html.NopEditorFor(model => model.Price, Model.PrimaryStoreCurrencyCode)
                             @Html.ValidationMessageFor(model => model.Price)
                         </div>
                     </div>
@@ -948,7 +948,7 @@
                             @Html.NopLabelFor(model => model.OldPrice)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.OldPrice) [@Model.PrimaryStoreCurrencyCode]
+                            @Html.NopEditorFor(model => model.OldPrice, Model.PrimaryStoreCurrencyCode)
                             @Html.ValidationMessageFor(model => model.OldPrice)
                         </div>
                     </div>
@@ -957,7 +957,7 @@
                             @Html.NopLabelFor(model => model.ProductCost)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.ProductCost) [@Model.PrimaryStoreCurrencyCode]
+                            @Html.NopEditorFor(model => model.ProductCost, Model.PrimaryStoreCurrencyCode)
                             @Html.ValidationMessageFor(model => model.ProductCost)
                         </div>
                     </div>
@@ -1020,7 +1020,7 @@
                             @Html.NopLabelFor(model => model.MinimumCustomerEnteredPrice)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.MinimumCustomerEnteredPrice) [@Model.PrimaryStoreCurrencyCode]
+                            @Html.NopEditorFor(model => model.MinimumCustomerEnteredPrice, Model.PrimaryStoreCurrencyCode)
                             @Html.ValidationMessageFor(model => model.MinimumCustomerEnteredPrice)
                         </div>
                     </div>
@@ -1029,7 +1029,7 @@
                             @Html.NopLabelFor(model => model.MaximumCustomerEnteredPrice)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.MaximumCustomerEnteredPrice) [@Model.PrimaryStoreCurrencyCode]
+                            @Html.NopEditorFor(model => model.MaximumCustomerEnteredPrice, Model.PrimaryStoreCurrencyCode)
                             @Html.ValidationMessageFor(model => model.MaximumCustomerEnteredPrice)
                         </div>
                     </div>
@@ -1236,7 +1236,9 @@
                                         }, {
                                             field: "Id",
                                             title: "@T("Admin.Common.Edit")",
-                                            template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/TierPriceEditPopup/")#=Id#?btnId=btnRefreshTierPrices&formId=product-form', 800, 600, true); return false;\" class='btn btn-default' />"
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                            template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/TierPriceEditPopup/")#=Id#?btnId=btnRefreshTierPrices&formId=product-form', 800, 600, true); return false;\" class='btn btn-default'><i class='fa fa-pencil'></i>@T("Admin.Common.Edit")</button>"
                                         },{
                                             command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                             title: "@T("Admin.Common.Delete")"
@@ -1512,6 +1514,7 @@
                                                             }
                                                         }
                                                     </script>
+                                                </td>
                                                 <td style="width: 18%;">
                                                     <input id="warehouse_qty_@(item.WarehouseId)" name="warehouse_qty_@(item.WarehouseId)" type="text" value="@item.StockQuantity" class="form-control" />
                                                 </td>
@@ -1679,7 +1682,7 @@
                             @Html.NopLabelFor(model => model.Weight)
                         </div>
                         <div class="@rightColumnClass">
-                            @Html.NopEditorFor(model => model.Weight) [@Model.BaseWeightIn]
+                            @Html.NopEditorFor(model => model.Weight, Model.BaseWeightIn)
                             @Html.ValidationMessageFor(model => model.Weight)
                         </div>
                     </div>
@@ -1688,7 +1691,7 @@
                             @Html.NopLabelFor(model => model.Length)
                         </div>
                         <div class="@rightColumnClass">
-                            @Html.NopEditorFor(model => model.Length) [@Model.BaseDimensionIn]
+                            @Html.NopEditorFor(model => model.Length, Model.BaseDimensionIn)
                             @Html.ValidationMessageFor(model => model.Length)
                         </div>
                     </div>
@@ -1697,7 +1700,7 @@
                             @Html.NopLabelFor(model => model.Width)
                         </div>
                         <div class="@rightColumnClass">
-                            @Html.NopEditorFor(model => model.Width) [@Model.BaseDimensionIn]
+                            @Html.NopEditorFor(model => model.Width, Model.BaseDimensionIn)
                             @Html.ValidationMessageFor(model => model.Width)
                         </div>
                     </div>
@@ -1706,7 +1709,7 @@
                             @Html.NopLabelFor(model => model.Height)
                         </div>
                         <div class="@rightColumnClass">
-                            @Html.NopEditorFor(model => model.Height) [@Model.BaseDimensionIn]
+                            @Html.NopEditorFor(model => model.Height, Model.BaseDimensionIn)
                             @Html.ValidationMessageFor(model => model.Height)
                         </div>
                     </div>
@@ -1733,7 +1736,7 @@
                             @Html.NopLabelFor(model => model.AdditionalShippingCharge)
                         </div>
                         <div class="@rightColumnClass">
-                            @Html.NopEditorFor(model => model.AdditionalShippingCharge) [@Model.PrimaryStoreCurrencyCode]
+                            @Html.NopEditorFor(model => model.AdditionalShippingCharge, Model.PrimaryStoreCurrencyCode)
                             @Html.ValidationMessageFor(model => model.AdditionalShippingCharge)
                         </div>
                     </div>

@@ -150,11 +150,12 @@ namespace Nop.Web.Models.ShoppingCart
             public DiscountBoxModel()
             {
                 AppliedDiscountsWithCodes = new List<DiscountInfoModel>();
+                Messages = new List<string>();
             }
 
             public List<DiscountInfoModel> AppliedDiscountsWithCodes { get; set; }
             public bool Display { get; set; }
-            public string Message { get; set; }
+            public List<string> Messages { get; set; }
             public bool IsApplied { get; set; }
 
             public class DiscountInfoModel : BaseNopEntityModel

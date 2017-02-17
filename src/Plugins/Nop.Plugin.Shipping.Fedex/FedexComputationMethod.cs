@@ -478,7 +478,7 @@ namespace Nop.Plugin.Shipping.Fedex
             // Avoid oversize by using 25"
             // 25x25x25 = 15,625
 
-            // Which is less $  - multiple small pakages, or one large package using dimensional weight
+            // Which is less $  - multiple small packages, or one large package using dimensional weight
             //  15,625 / 5184 = 3.014 =  3 packages  
             // Ground for total weight:             60lbs     15lbs
             //  3 packages 17x17x17 (20 lbs each) = $66.21    39.39

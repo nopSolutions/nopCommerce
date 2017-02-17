@@ -81,6 +81,7 @@ namespace Nop.Services.Orders
         private readonly TaxSettings _taxSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CurrencySettings _currencySettings;
+        private readonly ICustomNumberFormatter _customNumberFormatter;
 
         #endregion
 
@@ -128,6 +129,7 @@ namespace Nop.Services.Orders
         /// <param name="taxSettings">Tax settings</param>
         /// <param name="localizationSettings">Localization settings</param>
         /// <param name="currencySettings">Currency settings</param>
+        /// <param name="customNumberFormatter">Custom number formatter</param>
         public OrderProcessingService(IOrderService orderService,
             IWebHelper webHelper,
             ILocalizationService localizationService,
@@ -167,7 +169,8 @@ namespace Nop.Services.Orders
             OrderSettings orderSettings,
             TaxSettings taxSettings,
             LocalizationSettings localizationSettings,
-            CurrencySettings currencySettings)
+            CurrencySettings currencySettings,
+            ICustomNumberFormatter customNumberFormatter)
         {
             this._orderService = orderService;
             this._webHelper = webHelper;
@@ -210,6 +213,7 @@ namespace Nop.Services.Orders
             this._taxSettings = taxSettings;
             this._localizationSettings = localizationSettings;
             this._currencySettings = currencySettings;
+            this._customNumberFormatter = customNumberFormatter;
         }
 
         #endregion
@@ -679,15 +683,21 @@ namespace Nop.Services.Orders
                 ShippingRateComputationMethodSystemName = details.ShippingRateComputationMethodSystemName,
                 CustomValuesXml = processPaymentRequest.SerializeCustomValues(),
                 VatNumber = details.VatNumber,
-                CreatedOnUtc = DateTime.UtcNow
+                CreatedOnUtc = DateTime.UtcNow,
+                CustomOrderNumber = string.Empty
             };
+
             _orderService.InsertOrder(order);
+
+            //generate and set custom order number
+            order.CustomOrderNumber = _customNumberFormatter.GenerateOrderCustomNumber(order);
+            _orderService.UpdateOrder(order);
 
             //reward points history
             if (details.RedeemedRewardPointsAmount > decimal.Zero)
             {
                 _rewardPointService.AddRewardPointsHistoryEntry(details.Customer, -details.RedeemedRewardPoints, order.StoreId,
-                    string.Format(_localizationService.GetResource("RewardPoints.Message.RedeemedForOrder", order.CustomerLanguageId), order.Id),
+                    string.Format(_localizationService.GetResource("RewardPoints.Message.RedeemedForOrder", order.CustomerLanguageId), order.CustomOrderNumber),
                     order, details.RedeemedRewardPointsAmount);
                 _customerService.UpdateCustomer(details.Customer);
             }
@@ -792,7 +802,7 @@ namespace Nop.Services.Orders
 
             //add reward points
             order.RewardPointsHistoryEntryId = _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, points, order.StoreId,
-                string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.Id), activatingDate: activatingDate);
+                string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.CustomOrderNumber), activatingDate: activatingDate);
 
             _orderService.UpdateOrder(order);
         }
@@ -823,7 +833,7 @@ namespace Nop.Services.Orders
             {
                 //or reduce reward points if the entry already exists
                 _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, -points, order.StoreId,
-                    string.Format(_localizationService.GetResource("RewardPoints.Message.ReducedForOrder"), order.Id));
+                    string.Format(_localizationService.GetResource("RewardPoints.Message.ReducedForOrder"), order.CustomOrderNumber));
             }
 
             _orderService.UpdateOrder(order);
@@ -841,7 +851,7 @@ namespace Nop.Services.Orders
 
             //return back
             _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, -order.RedeemedRewardPointsEntry.Points, order.StoreId,
-                string.Format(_localizationService.GetResource("RewardPoints.Message.ReturnedForOrder"), order.Id));
+                string.Format(_localizationService.GetResource("RewardPoints.Message.ReturnedForOrder"), order.CustomOrderNumber));
             _orderService.UpdateOrder(order);
         }
 
@@ -1649,7 +1659,8 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
         /// <param name="paymentResult">Process payment result (info about last payment for automatic recurring payments)</param>
-        public virtual void ProcessNextRecurringPayment(RecurringPayment recurringPayment, ProcessPaymentResult paymentResult = null)
+        /// <returns>Collection of errors</returns>
+        public virtual IEnumerable<string> ProcessNextRecurringPayment(RecurringPayment recurringPayment, ProcessPaymentResult paymentResult = null)
         {
             if (recurringPayment == null)
                 throw new ArgumentNullException("recurringPayment");
@@ -1818,6 +1829,9 @@ namespace Nop.Services.Orders
                     if (order.PaymentStatus == PaymentStatus.Paid)
                         ProcessOrderPaid(order);
 
+                    //last payment succeeded
+                    recurringPayment.LastPaymentFailed = false;
+
                     //next recurring payment
                     recurringPayment.RecurringPaymentHistory.Add(new RecurringPaymentHistory
                     {
@@ -1826,6 +1840,8 @@ namespace Nop.Services.Orders
                         OrderId = order.Id,
                     });
                     _orderService.UpdateRecurringPayment(recurringPayment);
+
+                    return new List<string>();
                 }
                 else
                 {
@@ -1833,6 +1849,27 @@ namespace Nop.Services.Orders
                     var logError = processPaymentResult.Errors.Aggregate("Error while processing recurring order. ",
                         (current, next) => string.Format("{0}Error {1}: {2}. ", current, processPaymentResult.Errors.IndexOf(next) + 1, next));
                     _logger.Error(logError, customer: customer);
+
+                    if (processPaymentResult.RecurringPaymentFailed)
+                    {
+                        //set flag that last payment failed
+                        recurringPayment.LastPaymentFailed = true;
+                        _orderService.UpdateRecurringPayment(recurringPayment);
+
+                        if (_paymentSettings.CancelRecurringPaymentsAfterFailedPayment)
+                        {
+                            //cancel recurring payment
+                            CancelRecurringPayment(recurringPayment).ToList().ForEach(error => _logger.Error(error));
+
+                            //notify a customer about cancelled payment
+                            _workflowMessageService.SendRecurringPaymentCancelledCustomerNotification(recurringPayment, initialOrder.CustomerLanguageId);
+                        }
+                        else
+                            //notify a customer about failed payment
+                            _workflowMessageService.SendRecurringPaymentFailedCustomerNotification(recurringPayment, initialOrder.CustomerLanguageId);
+                    }
+
+                    return processPaymentResult.Errors;
                 }
             }
             catch (Exception exc)
@@ -1955,6 +1992,29 @@ namespace Nop.Services.Orders
             return true;
         }
 
+
+        /// <summary>
+        /// Gets a value indicating whether a customer can retry last failed recurring payment
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="recurringPayment">Recurring Payment</param>
+        /// <returns>True if a customer can retry payment; otherwise false</returns>
+        public virtual bool CanRetryLastRecurringPayment(Customer customer, RecurringPayment recurringPayment)
+        {
+            if (recurringPayment == null || customer == null)
+                return false;
+
+            if (recurringPayment.InitialOrder == null || recurringPayment.InitialOrder.OrderStatus == OrderStatus.Cancelled)
+                return false;
+
+            if (!recurringPayment.LastPaymentFailed || _paymentService.GetRecurringPaymentType(recurringPayment.InitialOrder.PaymentMethodSystemName) != RecurringPaymentType.Manual)
+                return false;
+
+            if (recurringPayment.InitialOrder.Customer == null || (!customer.IsAdmin() && recurringPayment.InitialOrder.Customer.Id != customer.Id))
+                return false;
+
+            return true;
+        }
 
 
         /// <summary>

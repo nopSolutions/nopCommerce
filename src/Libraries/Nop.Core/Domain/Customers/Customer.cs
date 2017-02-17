@@ -22,7 +22,6 @@ namespace Nop.Core.Domain.Customers
         public Customer()
         {
             this.CustomerGuid = Guid.NewGuid();
-            this.PasswordFormat = PasswordFormat.Clear;
         }
 
         /// <summary>
@@ -42,27 +41,6 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the email that should be re-validated. Used in scenarios when a customer is already registered and wants to change an email address.
         /// </summary>
         public string EmailToRevalidate { get; set; }
-        /// <summary>
-        /// Gets or sets the password
-        /// </summary>
-        public string Password { get; set; }
-
-        /// <summary>
-        /// Gets or sets the password format
-        /// </summary>
-        public int PasswordFormatId { get; set; }
-        /// <summary>
-        /// Gets or sets the password format
-        /// </summary>
-        public PasswordFormat PasswordFormat
-        {
-            get { return (PasswordFormat)PasswordFormatId; }
-            set { this.PasswordFormatId = (int)value; }
-        }
-        /// <summary>
-        /// Gets or sets the password salt
-        /// </summary>
-        public string PasswordSalt { get; set; }
 
         /// <summary>
         /// Gets or sets the admin comment

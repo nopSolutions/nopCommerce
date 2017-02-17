@@ -13,6 +13,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
 using Nop.Plugin.Payments.PayPalStandard.Controllers;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -42,6 +43,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         private readonly HttpContextBase _httpContext;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICurrencyService _currencyService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ISettingService _settingService;
@@ -56,7 +58,8 @@ namespace Nop.Plugin.Payments.PayPalStandard
         public PayPalStandardPaymentProcessor(CurrencySettings currencySettings,
             HttpContextBase httpContext,
             ICheckoutAttributeParser checkoutAttributeParser,
-            ICurrencyService currencyService,           
+            ICurrencyService currencyService,
+            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IOrderTotalCalculationService orderTotalCalculationService,
             ISettingService settingService,
@@ -68,6 +71,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             this._httpContext = httpContext;
             this._checkoutAttributeParser = checkoutAttributeParser;
             this._currencyService = currencyService;
+            this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._settingService = settingService;
@@ -88,6 +92,16 @@ namespace Nop.Plugin.Payments.PayPalStandard
         {
             return _paypalStandardPaymentSettings.UseSandbox ? "https://www.sandbox.paypal.com/us/cgi-bin/webscr" :
                 "https://www.paypal.com/us/cgi-bin/webscr";
+        }
+
+        /// <summary>
+        /// Gets IPN Paypal URL
+        /// </summary>
+        /// <returns></returns>
+        private string GetIpnPaypalUrl()
+        {
+            return _paypalStandardPaymentSettings.UseSandbox ? "https://ipnpb.sandbox.paypal.com/cgi-bin/webscr" :
+                "https://ipnpb.paypal.com/cgi-bin/webscr";
         }
 
         /// <summary>
@@ -143,13 +157,13 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// <returns>Result</returns>
         public bool VerifyIpn(string formString, out Dictionary<string, string> values)
         {
-            var req = (HttpWebRequest)WebRequest.Create(GetPaypalUrl());
+            var req = (HttpWebRequest)WebRequest.Create(GetIpnPaypalUrl());
             req.Method = WebRequestMethods.Http.Post;
             req.ContentType = MimeTypes.ApplicationXWwwFormUrlencoded;
             //now PayPal requires user-agent. otherwise, we can get 403 error
             req.UserAgent = HttpContext.Current.Request.UserAgent;
 
-            string formContent = string.Format("{0}&cmd=_notify-validate", formString);
+            var formContent = string.Format("cmd=_notify-validate&{0}", formString);
             req.ContentLength = formContent.Length;
             
             using (var sw = new StreamWriter(req.GetRequestStream(), Encoding.ASCII))
@@ -195,6 +209,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
 
                 //get the items in the cart
                 decimal cartTotal = decimal.Zero;
+                var cartTotalRounded = decimal.Zero;
                 var cartItems = postProcessPaymentRequest.Order.OrderItems;
                 int x = 1;
                 foreach (var item in cartItems)
@@ -208,6 +223,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                     builder.AppendFormat("&quantity_" + x + "={0}", item.Quantity);
                     x++;
                     cartTotal += priceExclTax;
+                    cartTotalRounded += unitPriceExclTaxRounded * item.Quantity;
                 }
 
                 //the checkout attributes that have a dollar value and send them to Paypal as items to be paid for
@@ -228,6 +244,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                             builder.AppendFormat("&quantity_" + x + "={0}", 1); //quantity
                             x++;
                             cartTotal += attPrice;
+                            cartTotalRounded += attPriceRounded;
                         }
                     }
                 }
@@ -244,6 +261,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                     builder.AppendFormat("&quantity_" + x + "={0}", 1);
                     x++;
                     cartTotal += orderShippingExclTax;
+                    cartTotalRounded += orderShippingExclTaxRounded;
                 }
 
                 //payment method additional fee
@@ -256,6 +274,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                     builder.AppendFormat("&quantity_" + x + "={0}", 1);
                     x++;
                     cartTotal += paymentMethodAdditionalFeeExclTax;
+                    cartTotalRounded += paymentMethodAdditionalFeeExclTaxRounded;
                 }
 
                 //tax
@@ -271,6 +290,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                     builder.AppendFormat("&quantity_" + x + "={0}", 1); //quantity
 
                     cartTotal += orderTax;
+                    cartTotalRounded += orderTaxRounded;
                     x++;
                 }
 
@@ -281,9 +301,13 @@ namespace Nop.Plugin.Payments.PayPalStandard
                      */
                     decimal discountTotal = cartTotal - postProcessPaymentRequest.Order.OrderTotal;
                     discountTotal = Math.Round(discountTotal, 2);
+                    cartTotalRounded -= discountTotal;
                     //gift card or rewared point amount applied to cart in nopCommerce - shows in Paypal as "discount"
                     builder.AppendFormat("&discount_amount_cart={0}", discountTotal.ToString("0.00", CultureInfo.InvariantCulture));
                 }
+
+                //save order total that actually sent to PayPal (used for PDT order total validation)
+                _genericAttributeService.SaveAttribute(postProcessPaymentRequest.Order, "OrderTotalSentToPayPal", cartTotalRounded);
             }
             else
             {
@@ -291,6 +315,9 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 builder.AppendFormat("&item_name=Order Number {0}", postProcessPaymentRequest.Order.Id);
                 var orderTotal = Math.Round(postProcessPaymentRequest.Order.OrderTotal, 2);
                 builder.AppendFormat("&amount={0}", orderTotal.ToString("0.00", CultureInfo.InvariantCulture));
+
+                //save order total that actually sent to PayPal (used for PDT order total validation)
+                _genericAttributeService.SaveAttribute(postProcessPaymentRequest.Order, "OrderTotalSentToPayPal", orderTotal);
             }
 
             builder.AppendFormat("&custom={0}", postProcessPaymentRequest.Order.OrderGuid);
@@ -564,6 +591,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.UseSandbox", "Use Sandbox");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.UseSandbox.Hint", "Check to enable Sandbox (testing environment).");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.PaymentMethodDescription", "You will be redirected to PayPal site to complete the payment");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.RoundingWarning", "It looks like you have \"ShoppingCartSettings.RoundPricesDuringCalculation\" setting disabled. Keep in mind that this can lead to a discrepancy of the order total amount, as PayPal only rounds to two decimals.");
 
             base.Install();
         }
@@ -602,6 +630,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.UseSandbox");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.UseSandbox.Hint");         
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.PaymentMethodDescription");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.RoundingWarning");
 
             base.Uninstall();
         }

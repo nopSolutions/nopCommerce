@@ -1,0 +1,1281 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Linq.Queryable</name>
+  </assembly>
+  <members>
+    <member name="T:System.Linq.EnumerableExecutor">
+      <summary>Stellt eine Ausdrucksbaumstruktur dar und liefert die Funktionalität zur Ausführung der Ausdrucksbaumstruktur, nachdem sie umgeschrieben wurde.</summary>
+    </member>
+    <member name="M:System.Linq.EnumerableExecutor.#ctor">
+      <summary>Initialisiert eine neue Instanz der <see cref="T:System.Linq.EnumerableExecutor" />-Klasse.</summary>
+    </member>
+    <member name="T:System.Linq.EnumerableExecutor`1">
+      <summary>Stellt eine Ausdrucksbaumstruktur dar und liefert die Funktionalität zur Ausführung der Ausdrucksbaumstruktur, nachdem sie umgeschrieben wurde.</summary>
+      <typeparam name="T">Der Datentyp des Werts, der aus der Ausführung der Ausdrucksbaumstruktur resultiert.</typeparam>
+    </member>
+    <member name="M:System.Linq.EnumerableExecutor`1.#ctor(System.Linq.Expressions.Expression)">
+      <summary>Initialisiert eine neue Instanz der <see cref="T:System.Linq.EnumerableExecutor`1" />-Klasse.</summary>
+      <param name="expression">Eine Ausdrucksbaumstruktur, die mit der neuen Instanz verknüpft werden soll.</param>
+    </member>
+    <member name="T:System.Linq.EnumerableQuery">
+      <summary>Stellt <see cref="T:System.Collections.IEnumerable" /> als eine <see cref="T:System.Linq.EnumerableQuery" />-Datenquelle dar. </summary>
+    </member>
+    <member name="M:System.Linq.EnumerableQuery.#ctor">
+      <summary>Initialisiert eine neue Instanz der <see cref="T:System.Linq.EnumerableQuery" />-Klasse.</summary>
+    </member>
+    <member name="T:System.Linq.EnumerableQuery`1">
+      <summary>Stellt eine <see cref="T:System.Collections.Generic.IEnumerable`1" />-Auflistung als <see cref="T:System.Linq.IQueryable`1" />-Datenquelle dar.</summary>
+      <typeparam name="T">Der Datentyp in der Datenauflistung.</typeparam>
+    </member>
+    <member name="M:System.Linq.EnumerableQuery`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+      <summary>Initialisiert eine neue Instanz der <see cref="T:System.Linq.EnumerableQuery`1" />-Klasse und verknüpft sie mit einer <see cref="T:System.Collections.Generic.IEnumerable`1" />-Auflistung.</summary>
+      <param name="enumerable">Eine Auflistung, die mit der neuen  Instanz verknüpft werden soll.</param>
+    </member>
+    <member name="M:System.Linq.EnumerableQuery`1.#ctor(System.Linq.Expressions.Expression)">
+      <summary>Initialisiert eine neue Instanz der <see cref="T:System.Linq.EnumerableQuery`1" />-Klasse und verknüpft die Instanz mit einer Ausdrucksbaumstruktur.</summary>
+      <param name="expression">Eine Ausdrucksbaumstruktur, die mit der neuen Instanz verknüpft werden soll.</param>
+    </member>
+    <member name="M:System.Linq.EnumerableQuery`1.System#Collections#Generic#IEnumerable{T}#GetEnumerator">
+      <summary>Gibt einen Enumerator zurück, der die zugehörige <see cref="T:System.Collections.Generic.IEnumerable`1" />-Auflistung durchlaufen kann oder der, falls diese null ist, die Auflistung durchläuft, die von der Umschreibung der zugehörigen Ausdrucksbaumstruktur als Abfrage zu einer <see cref="T:System.Collections.Generic.IEnumerable`1" />-Datenquelle stammt und diese ausführt.</summary>
+      <returns>Ein Enumerator, mit dem die zugehörige Datenquelle durchlaufen werden kann.</returns>
+    </member>
+    <member name="M:System.Linq.EnumerableQuery`1.System#Collections#IEnumerable#GetEnumerator">
+      <summary>Gibt einen Enumerator zurück, der die zugehörige <see cref="T:System.Collections.Generic.IEnumerable`1" />-Auflistung durchlaufen kann oder der, falls diese null ist, die Auflistung durchläuft, die von der Umschreibung der zugehörigen Ausdrucksbaumstruktur als Abfrage zu einer <see cref="T:System.Collections.Generic.IEnumerable`1" />-Datenquelle stammt und diese ausführt.</summary>
+      <returns>Ein Enumerator, mit dem die zugehörige Datenquelle durchlaufen werden kann.</returns>
+    </member>
+    <member name="P:System.Linq.EnumerableQuery`1.System#Linq#IQueryable#ElementType">
+      <summary>Ruft den Datentyp in der Auflistung ab, die diese Instanz darstellt.</summary>
+      <returns>Der Datentyp in der Auflistung, die diese Instanz darstellt.</returns>
+    </member>
+    <member name="P:System.Linq.EnumerableQuery`1.System#Linq#IQueryable#Expression">
+      <summary>Ruft die Ausdrucksbaumstruktur ab, die mit dieser Instanz verknüpft ist oder diese Instanz darstellt.</summary>
+      <returns>Die Ausdrucksbaumstruktur, die mit dieser Instanz verknüpft ist oder diese Instanz darstellt.</returns>
+    </member>
+    <member name="P:System.Linq.EnumerableQuery`1.System#Linq#IQueryable#Provider">
+      <summary>Ruft den Abfrageanbieter ab, der mit dieser Instanz verknüpft ist.</summary>
+      <returns>Der Abfrageanbieter, der mit dieser Instanz verknüpft ist.</returns>
+    </member>
+    <member name="M:System.Linq.EnumerableQuery`1.System#Linq#IQueryProvider#CreateQuery``1(System.Linq.Expressions.Expression)">
+      <summary>Erstellt eine neues <see cref="T:System.Linq.EnumerableQuery`1" />-Objekt und verknüpft es mit einer angegebenen Ausdrucksbaumstruktur, die eine <see cref="T:System.Linq.IQueryable`1" />-Auflistung von Daten darstellt.</summary>
+      <returns>Ein EnumerableQuery-Objekt, das mit <paramref name="expression" /> verknüpft ist.</returns>
+      <param name="expression">Eine auszuführende Ausdrucksbaumstruktur.</param>
+      <typeparam name="S">Der Datentyp in der Auflistung, die <paramref name="expression" /> darstellt.</typeparam>
+    </member>
+    <member name="M:System.Linq.EnumerableQuery`1.System#Linq#IQueryProvider#CreateQuery(System.Linq.Expressions.Expression)">
+      <summary>Erstellt eine neues <see cref="T:System.Linq.EnumerableQuery`1" />-Objekt und verknüpft es mit einer angegebenen Ausdrucksbaumstruktur, die eine <see cref="T:System.Linq.IQueryable" />-Auflistung von Daten darstellt.</summary>
+      <returns>Ein <see cref="T:System.Linq.EnumerableQuery`1" />-Objekt, das mit diesem <paramref name="expression" /> verknüpft ist.</returns>
+      <param name="expression">Eine Ausdrucksbaumstruktur, die eine <see cref="T:System.Linq.IQueryable" />-Auflistung von Daten darstellt.</param>
+    </member>
+    <member name="M:System.Linq.EnumerableQuery`1.System#Linq#IQueryProvider#Execute``1(System.Linq.Expressions.Expression)">
+      <summary>Führt einen Ausdruck aus, nachdem dieser zum Aufrufen von <see cref="T:System.Linq.Enumerable" />-Methoden statt <see cref="T:System.Linq.Queryable" />-Methoden zu allen zählbaren Datenquellen umgeschrieben wurde, die nicht von <see cref="T:System.Linq.Queryable" />-Methoden abgefragt werden können.</summary>
+      <returns>Der Wert, der aus der Ausführung von <paramref name="expression" /> stammt.</returns>
+      <param name="expression">Eine auszuführende Ausdrucksbaumstruktur.</param>
+      <typeparam name="S">Der Datentyp in der Auflistung, die <paramref name="expression" /> darstellt.</typeparam>
+    </member>
+    <member name="M:System.Linq.EnumerableQuery`1.System#Linq#IQueryProvider#Execute(System.Linq.Expressions.Expression)">
+      <summary>Führt einen Ausdruck aus, nachdem dieser zum Aufrufen von <see cref="T:System.Linq.Enumerable" />-Methoden statt <see cref="T:System.Linq.Queryable" />-Methoden zu allen zählbaren Datenquellen umgeschrieben wurde, die nicht von <see cref="T:System.Linq.Queryable" />-Methoden abgefragt werden können.</summary>
+      <returns>Der Wert, der aus der Ausführung von <paramref name="expression" /> stammt.</returns>
+      <param name="expression">Eine auszuführende Ausdrucksbaumstruktur.</param>
+    </member>
+    <member name="M:System.Linq.EnumerableQuery`1.ToString">
+      <summary>Gibt eine Textdarstellung der zählbaren Auflistung zurück oder, wenn diese NULL ist, eine Darstellung der Ausdrucksbaumstruktur, die dieser Instanz zugeordnet ist.</summary>
+      <returns>Eine Textdarstellung der zählbaren Auflistung oder, wenn diese NULL ist, eine Darstellung der Ausdrucksbaumstruktur, die dieser Instanz zugeordnet ist.</returns>
+    </member>
+    <member name="T:System.Linq.Queryable">
+      <summary>Stellt einen Satz von static-Methoden (Shared-Methoden in Visual Basic) zum Abfragen von Datenstrukturen bereit, die <see cref="T:System.Linq.IQueryable`1" /> implementieren.</summary>
+    </member>
+    <member name="M:System.Linq.Queryable.Aggregate``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``0,``0}})">
+      <summary>Wendet eine Akkumulatorfunktion auf eine Sequenz an.</summary>
+      <returns>Der letzte Akkumulatorwert.</returns>
+      <param name="source">Eine Sequenz, die aggregiert werden soll.</param>
+      <param name="func">Eine Akkumulatorfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="func" /> ist null.</exception>
+      <exception cref="T:System.InvalidOperationException">
+        <paramref name="source" /> enthält keine Elemente.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Aggregate``2(System.Linq.IQueryable{``0},``1,System.Linq.Expressions.Expression{System.Func{``1,``0,``1}})">
+      <summary>Wendet eine Akkumulatorfunktion auf eine Sequenz an.Der angegebene Startwert wird als erster Akkumulatorwert verwendet.</summary>
+      <returns>Der letzte Akkumulatorwert.</returns>
+      <param name="source">Eine Sequenz, die aggregiert werden soll.</param>
+      <param name="seed">Der erste Akkumulatorwert.</param>
+      <param name="func">Eine Akkumulatorfunktion, die für jedes Element aufgerufen werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TAccumulate">Der Typ des Akkumulatorwerts.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="func" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Aggregate``3(System.Linq.IQueryable{``0},``1,System.Linq.Expressions.Expression{System.Func{``1,``0,``1}},System.Linq.Expressions.Expression{System.Func{``1,``2}})">
+      <summary>Wendet eine Akkumulatorfunktion auf eine Sequenz an.Der angegebene Startwert wird als erster Akkumulatorwert verwendet, und der Ergebniswert wird mit der angegebenen Funktion ausgewählt.</summary>
+      <returns>Der transformierte letzte Akkumulatorwert.</returns>
+      <param name="source">Eine Sequenz, die aggregiert werden soll.</param>
+      <param name="seed">Der erste Akkumulatorwert.</param>
+      <param name="func">Eine Akkumulatorfunktion, die für jedes Element aufgerufen werden soll.</param>
+      <param name="selector">Eine Funktion zum Transformieren des letzten Akkumulatorwerts in den Ergebniswert.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TAccumulate">Der Typ des Akkumulatorwerts.</typeparam>
+      <typeparam name="TResult">Der Typ des Ergebniswerts.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" />, <paramref name="func" /> oder <paramref name="selector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.All``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+      <summary>Bestimmt, ob alle Elemente einer Sequenz eine Bedingung erfüllen.</summary>
+      <returns>true, wenn jedes Element der Quellsequenz im angegebenen Prädikat erfolgreich überprüft wird oder wenn die Sequenz leer ist, andernfalls false.</returns>
+      <param name="source">Eine Sequenz, deren Elemente auf eine Bedingung überprüft werden sollen.</param>
+      <param name="predicate">Eine Funktion, mit der jedes Element auf eine Bedingung überprüft wird.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="predicate" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Any``1(System.Linq.IQueryable{``0})">
+      <summary>Bestimmt, ob eine Sequenz Elemente enthält.</summary>
+      <returns>true, wenn die Quellsequenz Elemente enthält, andernfalls false.</returns>
+      <param name="source">Eine Sequenz, für die überprüft werden soll, ob sie leer ist.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Any``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+      <summary>Bestimmt, ob ein Element einer Sequenz eine Bedingung erfüllt.</summary>
+      <returns>true, wenn Elemente der Quellsequenz im angegebenen Prädikat erfolgreich überprüft werden, andernfalls false.</returns>
+      <param name="source">Eine Sequenz, deren Elemente auf eine Bedingung überprüft werden sollen.</param>
+      <param name="predicate">Eine Funktion, mit der jedes Element auf eine Bedingung überprüft wird.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="predicate" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.AsQueryable``1(System.Collections.Generic.IEnumerable{``0})">
+      <summary>Konvertiert ein generisches <see cref="T:System.Collections.Generic.IEnumerable`1" /> in ein generisches <see cref="T:System.Linq.IQueryable`1" />.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, das die Eingabesequenz darstellt.</returns>
+      <param name="source">Eine zu konvertierende Sequenz.</param>
+      <typeparam name="TElement">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.AsQueryable(System.Collections.IEnumerable)">
+      <summary>Konvertiert einen <see cref="T:System.Collections.IEnumerable" /> in einen <see cref="T:System.Linq.IQueryable" />.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable" />, das die Eingabesequenz darstellt.</returns>
+      <param name="source">Eine zu konvertierende Sequenz.</param>
+      <exception cref="T:System.ArgumentException">Für einige <paramref name="T" /> wird <see cref="T:System.Collections.Generic.IEnumerable`1" /> von <paramref name="source" /> nicht implementiert.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Average(System.Linq.IQueryable{System.Decimal})">
+      <summary>Berechnet den Durchschnitt einer Sequenz von <see cref="T:System.Decimal" />-Werten.</summary>
+      <returns>Der Durchschnitt der Sequenz von Werten.</returns>
+      <param name="source">Eine Sequenz von <see cref="T:System.Decimal" />-Werten, deren Durchschnitt berechnet werden soll.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+      <exception cref="T:System.InvalidOperationException">
+        <paramref name="source" /> enthält keine Elemente.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Average(System.Linq.IQueryable{System.Double})">
+      <summary>Berechnet den Durchschnitt einer Sequenz von <see cref="T:System.Double" />-Werten.</summary>
+      <returns>Der Durchschnitt der Sequenz von Werten.</returns>
+      <param name="source">Eine Sequenz von <see cref="T:System.Double" />-Werten, deren Durchschnitt berechnet werden soll.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+      <exception cref="T:System.InvalidOperationException">
+        <paramref name="source" /> enthält keine Elemente.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Average(System.Linq.IQueryable{System.Int32})">
+      <summary>Berechnet den Durchschnitt einer Sequenz von <see cref="T:System.Int32" />-Werten.</summary>
+      <returns>Der Durchschnitt der Sequenz von Werten.</returns>
+      <param name="source">Eine Sequenz von <see cref="T:System.Int32" />-Werten, deren Durchschnitt berechnet werden soll.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+      <exception cref="T:System.InvalidOperationException">
+        <paramref name="source" /> enthält keine Elemente.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Average(System.Linq.IQueryable{System.Int64})">
+      <summary>Berechnet den Durchschnitt einer Sequenz von <see cref="T:System.Int64" />-Werten.</summary>
+      <returns>Der Durchschnitt der Sequenz von Werten.</returns>
+      <param name="source">Eine Sequenz von <see cref="T:System.Int64" />-Werten, deren Durchschnitt berechnet werden soll.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+      <exception cref="T:System.InvalidOperationException">
+        <paramref name="source" /> enthält keine Elemente.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Average(System.Linq.IQueryable{System.Nullable{System.Decimal}})">
+      <summary>Berechnet den Durchschnitt einer Sequenz von <see cref="T:System.Decimal" />-Werten, die NULL zulassen.</summary>
+      <returns>Der Durchschnitt der Sequenz von Werten oder null, wenn die Quellsequenz leer ist oder nur null-Werte enthält.</returns>
+      <param name="source">Eine Sequenz von <see cref="T:System.Decimal" />-Werten, die NULL zulassen und deren Durchschnitt berechnet werden soll.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Average(System.Linq.IQueryable{System.Nullable{System.Double}})">
+      <summary>Berechnet den Durchschnitt einer Sequenz von <see cref="T:System.Double" />-Werten, die NULL zulassen.</summary>
+      <returns>Der Durchschnitt der Sequenz von Werten oder null, wenn die Quellsequenz leer ist oder nur null-Werte enthält.</returns>
+      <param name="source">Eine Sequenz von <see cref="T:System.Double" />-Werten, die NULL zulassen und deren Durchschnitt berechnet werden soll.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Average(System.Linq.IQueryable{System.Nullable{System.Int32}})">
+      <summary>Berechnet den Durchschnitt einer Sequenz von <see cref="T:System.Int32" />-Werten, die NULL zulassen.</summary>
+      <returns>Der Durchschnitt der Sequenz von Werten oder null, wenn die Quellsequenz leer ist oder nur null-Werte enthält.</returns>
+      <param name="source">Eine Sequenz von <see cref="T:System.Int32" />-Werten, die NULL zulassen und deren Durchschnitt berechnet werden soll.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Average(System.Linq.IQueryable{System.Nullable{System.Int64}})">
+      <summary>Berechnet den Durchschnitt einer Sequenz von <see cref="T:System.Int64" />-Werten, die NULL zulassen.</summary>
+      <returns>Der Durchschnitt der Sequenz von Werten oder null, wenn die Quellsequenz leer ist oder nur null-Werte enthält.</returns>
+      <param name="source">Eine Sequenz von <see cref="T:System.Int64" />-Werten, die NULL zulassen und deren Durchschnitt berechnet werden soll.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Average(System.Linq.IQueryable{System.Nullable{System.Single}})">
+      <summary>Berechnet den Durchschnitt einer Sequenz von <see cref="T:System.Single" />-Werten, die NULL zulassen.</summary>
+      <returns>Der Durchschnitt der Sequenz von Werten oder null, wenn die Quellsequenz leer ist oder nur null-Werte enthält.</returns>
+      <param name="source">Eine Sequenz von <see cref="T:System.Single" />-Werten, die NULL zulassen und deren Durchschnitt berechnet werden soll.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Average(System.Linq.IQueryable{System.Single})">
+      <summary>Berechnet den Durchschnitt einer Sequenz von <see cref="T:System.Single" />-Werten.</summary>
+      <returns>Der Durchschnitt der Sequenz von Werten.</returns>
+      <param name="source">Eine Sequenz von <see cref="T:System.Single" />-Werten, deren Durchschnitt berechnet werden soll.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+      <exception cref="T:System.InvalidOperationException">
+        <paramref name="source" /> enthält keine Elemente.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Average``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Decimal}})">
+      <summary>Berechnet den Durchschnitt einer Sequenz von <see cref="T:System.Decimal" />-Werten, die durch den Aufruf einer Projektionsfunktion für jedes Element der Eingabesequenz ermittelt wird.</summary>
+      <returns>Der Durchschnitt der Sequenz von Werten.</returns>
+      <param name="source">Eine Sequenz von Werten, mit denen ein Durchschnittswert berechnet wird.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+      <exception cref="T:System.InvalidOperationException">
+        <paramref name="source" /> enthält keine Elemente.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Average``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Double}})">
+      <summary>Berechnet den Durchschnitt einer Sequenz von <see cref="T:System.Double" />-Werten, die durch den Aufruf einer Projektionsfunktion für jedes Element der Eingabesequenz ermittelt wird.</summary>
+      <returns>Der Durchschnitt der Sequenz von Werten.</returns>
+      <param name="source">Eine Sequenz von Werten, deren Durchschnitt berechnet werden soll.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+      <exception cref="T:System.InvalidOperationException">
+        <paramref name="source" /> enthält keine Elemente.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Average``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Int32}})">
+      <summary>Berechnet den Durchschnitt einer Sequenz von <see cref="T:System.Int32" />-Werten, die durch den Aufruf einer Projektionsfunktion für jedes Element der Eingabesequenz ermittelt wird.</summary>
+      <returns>Der Durchschnitt der Sequenz von Werten.</returns>
+      <param name="source">Eine Sequenz von Werten, deren Durchschnitt berechnet werden soll.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+      <exception cref="T:System.InvalidOperationException">
+        <paramref name="source" /> enthält keine Elemente.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Average``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Int64}})">
+      <summary>Berechnet den Durchschnitt einer Sequenz von <see cref="T:System.Int64" />-Werten, die durch den Aufruf einer Projektionsfunktion für jedes Element der Eingabesequenz ermittelt wird.</summary>
+      <returns>Der Durchschnitt der Sequenz von Werten.</returns>
+      <param name="source">Eine Sequenz von Werten, deren Durchschnitt berechnet werden soll.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+      <exception cref="T:System.InvalidOperationException">
+        <paramref name="source" /> enthält keine Elemente.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Average``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Nullable{System.Decimal}}})">
+      <summary>Berechnet den Durchschnitt einer Sequenz von <see cref="T:System.Decimal" />-Werten, die NULL zulassen, die durch den Aufruf einer Projektionsfunktion für jedes Element der Eingabesequenz ermittelt wird.</summary>
+      <returns>Der Durchschnitt der Sequenz von Werten oder null, wenn die <paramref name="source" />-Sequenz leer ist oder nur null-Werte enthält.</returns>
+      <param name="source">Eine Sequenz von Werten, deren Durchschnitt berechnet werden soll.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Average``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Nullable{System.Double}}})">
+      <summary>Berechnet den Durchschnitt einer Sequenz von <see cref="T:System.Double" />-Werten, die NULL zulassen, die durch den Aufruf einer Projektionsfunktion für jedes Element der Eingabesequenz ermittelt wird.</summary>
+      <returns>Der Durchschnitt der Sequenz von Werten oder null, wenn die <paramref name="source" />-Sequenz leer ist oder nur null-Werte enthält.</returns>
+      <param name="source">Eine Sequenz von Werten, deren Durchschnitt berechnet werden soll.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Average``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Nullable{System.Int32}}})">
+      <summary>Berechnet den Durchschnitt einer Sequenz von <see cref="T:System.Int32" />-Werten, die NULL zulassen, die durch den Aufruf einer Projektionsfunktion für jedes Element der Eingabesequenz ermittelt wird.</summary>
+      <returns>Der Durchschnitt der Sequenz von Werten oder null, wenn die <paramref name="source" />-Sequenz leer ist oder nur null-Werte enthält.</returns>
+      <param name="source">Eine Sequenz von Werten, deren Durchschnitt berechnet werden soll.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Average``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Nullable{System.Int64}}})">
+      <summary>Berechnet den Durchschnitt einer Sequenz von <see cref="T:System.Int64" />-Werten, die NULL zulassen, die durch den Aufruf einer Projektionsfunktion für jedes Element der Eingabesequenz ermittelt wird.</summary>
+      <returns>Der Durchschnitt der Sequenz von Werten oder null, wenn die <paramref name="source" />-Sequenz leer ist oder nur null-Werte enthält.</returns>
+      <param name="source">Eine Sequenz von Werten, deren Durchschnitt berechnet werden soll.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Average``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Nullable{System.Single}}})">
+      <summary>Berechnet den Durchschnitt einer Sequenz von <see cref="T:System.Single" />-Werten, die NULL zulassen, die durch den Aufruf einer Projektionsfunktion für jedes Element der Eingabesequenz ermittelt wird.</summary>
+      <returns>Der Durchschnitt der Sequenz von Werten oder null, wenn die <paramref name="source" />-Sequenz leer ist oder nur null-Werte enthält.</returns>
+      <param name="source">Eine Sequenz von Werten, deren Durchschnitt berechnet werden soll.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Average``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Single}})">
+      <summary>Berechnet den Durchschnitt einer Sequenz von <see cref="T:System.Single" />-Werten, die durch den Aufruf einer Projektionsfunktion für jedes Element der Eingabesequenz ermittelt wird.</summary>
+      <returns>Der Durchschnitt der Sequenz von Werten.</returns>
+      <param name="source">Eine Sequenz von Werten, deren Durchschnitt berechnet werden soll.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+      <exception cref="T:System.InvalidOperationException">
+        <paramref name="source" /> enthält keine Elemente.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Cast``1(System.Linq.IQueryable)">
+      <summary>Konvertiert die Elemente eines <see cref="T:System.Linq.IQueryable" /> in den angegebenen Typ.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, das jedes in den angegebenen Typ konvertierte Element der Quellsequenz enthält.</returns>
+      <param name="source">Das <see cref="T:System.Linq.IQueryable" />, das die zu konvertierenden Elemente enthält.</param>
+      <typeparam name="TResult">Der Typ, in den die Elemente von <paramref name="source" /> konvertiert werden sollen.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+      <exception cref="T:System.InvalidCastException">Ein Element in der Sequenz kann nicht in den Typ <paramref name="TResult" /> umgewandelt werden.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Concat``1(System.Linq.IQueryable{``0},System.Collections.Generic.IEnumerable{``0})">
+      <summary>Verkettet zwei Sequenzen.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, das die verketteten Elemente der beiden Eingabesequenzen enthält.</returns>
+      <param name="source1">Die erste zu verkettende Sequenz.</param>
+      <param name="source2">Die Sequenz, die mit der ersten Sequenz verkettet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente der Eingabesequenzen.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source1" /> oder <paramref name="source2" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Contains``1(System.Linq.IQueryable{``0},``0)">
+      <summary>Bestimmt mithilfe des Standardgleichheitsvergleichs, ob eine Sequenz ein angegebenes Element enthält.</summary>
+      <returns>true, wenn die Eingabesequenz ein Element mit dem angegebenen Wert enthält, andernfalls false.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, in dem <paramref name="item" /> gesucht werden soll.</param>
+      <param name="item">Das Objekt, das in der Sequenz gesucht werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Contains``1(System.Linq.IQueryable{``0},``0,System.Collections.Generic.IEqualityComparer{``0})">
+      <summary>Bestimmt mithilfe eines angegebenen <see cref="T:System.Collections.Generic.IEqualityComparer`1" />, ob eine Sequenz ein angegebenes Element enthält.</summary>
+      <returns>true, wenn die Eingabesequenz ein Element mit dem angegebenen Wert enthält, andernfalls false.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, in dem <paramref name="item" /> gesucht werden soll.</param>
+      <param name="item">Das Objekt, das in der Sequenz gesucht werden soll.</param>
+      <param name="comparer">Ein <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> zum Vergleichen von Werten.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Count``1(System.Linq.IQueryable{``0})">
+      <summary>Gibt die Anzahl der Elemente in einer Sequenz zurück.</summary>
+      <returns>Die Anzahl der Elemente in der Eingabesequenz.</returns>
+      <param name="source">Das <see cref="T:System.Linq.IQueryable`1" />, das die zu zählenden Elemente enthält.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+      <exception cref="T:System.OverflowException">Die Anzahl der Elemente in <paramref name="source" /> ist größer als <see cref="F:System.Int32.MaxValue" />.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Count``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+      <summary>Gibt die Anzahl der Elemente in der angegebenen Sequenz zurück, die eine Bedingung erfüllen.</summary>
+      <returns>Die Anzahl von Elementen in der Sequenz, die die Bedingung in der Prädikatfunktion erfüllen.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, das die zu zählenden Elemente enthält.</param>
+      <param name="predicate">Eine Funktion, mit der jedes Element auf eine Bedingung überprüft wird.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="predicate" /> ist null.</exception>
+      <exception cref="T:System.OverflowException">Die Anzahl der Elemente in <paramref name="source" /> ist größer als <see cref="F:System.Int32.MaxValue" />.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.DefaultIfEmpty``1(System.Linq.IQueryable{``0})">
+      <summary>Gibt die Elemente der angegebenen Sequenz zurück, oder den Standardwert des Typparameters in einer Singletonauflistung, wenn die Sequenz leer ist.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, das default(<paramref name="TSource" />) enthält, wenn <paramref name="source" /> leer ist, andernfalls <paramref name="source" />.</returns>
+      <param name="source">Das <see cref="T:System.Linq.IQueryable`1" />, für das ein Standardwert zurückgegeben soll, wenn die Sequenz leer ist.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.DefaultIfEmpty``1(System.Linq.IQueryable{``0},``0)">
+      <summary>Gibt die Elemente der angegebenen Sequenz zurück, oder den angegebenen Wert in einer Singletonauflistung, wenn die Sequenz leer ist.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, das <paramref name="defaultValue" /> enthält, wenn <paramref name="source" /> leer ist, andernfalls <paramref name="source" />.</returns>
+      <param name="source">Das <see cref="T:System.Linq.IQueryable`1" />, für das der angegebene Wert zurückgegeben soll, wenn die Sequenz leer ist.</param>
+      <param name="defaultValue">Der Wert, der zurückgegeben werden soll, wenn die Sequenz leer ist.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Distinct``1(System.Linq.IQueryable{``0})">
+      <summary>Gibt mithilfe des Standardgleichheitsvergleichs zum Vergleichen von Werten unterschiedliche Elemente aus einer Sequenz zurück.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, das unterschiedliche Elemente aus <paramref name="source" /> enthält.</returns>
+      <param name="source">Das <see cref="T:System.Linq.IQueryable`1" />, aus dem Duplikate entfernt werden sollen.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Distinct``1(System.Linq.IQueryable{``0},System.Collections.Generic.IEqualityComparer{``0})">
+      <summary>Gibt mithilfe eines angegebenen <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> zum Vergleichen von Werten unterschiedliche Elemente aus einer Sequenz zurück.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, das unterschiedliche Elemente aus <paramref name="source" /> enthält.</returns>
+      <param name="source">Das <see cref="T:System.Linq.IQueryable`1" />, aus dem Duplikate entfernt werden sollen.</param>
+      <param name="comparer">Ein <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> zum Vergleichen von Werten.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="comparer" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.ElementAt``1(System.Linq.IQueryable{``0},System.Int32)">
+      <summary>Gibt das Element an einem angegebenen Index in einer Sequenz zurück.</summary>
+      <returns>Das Element an der angegebenen Position in <paramref name="source" />.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, aus dem ein Element zurückgegeben werden soll.</param>
+      <param name="index">Der auf 0 (null) basierende Index des abzurufenden Elements.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="index" /> ist kleiner als 0.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.ElementAtOrDefault``1(System.Linq.IQueryable{``0},System.Int32)">
+      <summary>Gibt das Element an einem angegebenen Index in einer Sequenz oder einen Standardwert zurück, wenn der Index außerhalb des gültigen Bereichs liegt.</summary>
+      <returns>default(<paramref name="TSource" />), wenn <paramref name="index" /> außerhalb der Begrenzungen von <paramref name="source" /> liegt, andernfalls das Element an der angegebenen Position in <paramref name="source" />.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, aus dem ein Element zurückgegeben werden soll.</param>
+      <param name="index">Der auf 0 (null) basierende Index des abzurufenden Elements.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Except``1(System.Linq.IQueryable{``0},System.Collections.Generic.IEnumerable{``0})">
+      <summary>Erzeugt die Differenzmenge zweier Sequenzen mithilfe des Standardgleichheitsvergleichs zum Vergleichen von Werten.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, das die Differenzmenge der beiden Sequenzen enthält.</returns>
+      <param name="source1">Es wird ein <see cref="T:System.Linq.IQueryable`1" /> zurückgegeben, dessen Elemente nicht auch in <paramref name="source2" /> enthalten sind.</param>
+      <param name="source2">Die Rückgabesequenz enthält kein <see cref="T:System.Collections.Generic.IEnumerable`1" />, dessen Elemente auch in der ersten Sequenz vorhanden sind.</param>
+      <typeparam name="TSource">Der Typ der Elemente der Eingabesequenzen.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source1" /> oder <paramref name="source2" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Except``1(System.Linq.IQueryable{``0},System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0})">
+      <summary>Erzeugt mithilfe des angegebenen <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> zum Vergleichen von Werten die Differenzmenge zweier Sequenzen.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, das die Differenzmenge der beiden Sequenzen enthält.</returns>
+      <param name="source1">Es wird ein <see cref="T:System.Linq.IQueryable`1" /> zurückgegeben, dessen Elemente nicht auch in <paramref name="source2" /> enthalten sind.</param>
+      <param name="source2">Die Rückgabesequenz enthält kein <see cref="T:System.Collections.Generic.IEnumerable`1" />, dessen Elemente auch in der ersten Sequenz vorhanden sind.</param>
+      <param name="comparer">Ein <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> zum Vergleichen von Werten.</param>
+      <typeparam name="TSource">Der Typ der Elemente der Eingabesequenzen.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source1" /> oder <paramref name="source2" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.First``1(System.Linq.IQueryable{``0})">
+      <summary>Gibt das erste Element einer Sequenz zurück.</summary>
+      <returns>Das erste Element in <paramref name="source" />.</returns>
+      <param name="source">Das <see cref="T:System.Linq.IQueryable`1" />, dessen erstes Element zurückgegeben werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+      <exception cref="T:System.InvalidOperationException">Die Quellsequenz ist leer.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.First``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+      <summary>Gibt das erste Element einer Sequenz zurück, das eine angegebene Bedingung erfüllt.</summary>
+      <returns>Das erste Element in <paramref name="source" />, das in <paramref name="predicate" /> erfolgreich überprüft wird.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, aus dem ein Element zurückgegeben werden soll.</param>
+      <param name="predicate">Eine Funktion, mit der jedes Element auf eine Bedingung überprüft wird.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="predicate" /> ist null.</exception>
+      <exception cref="T:System.InvalidOperationException">Kein Element erfüllt die Bedingung in <paramref name="predicate" />.- oder -Die Quellsequenz ist leer.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.FirstOrDefault``1(System.Linq.IQueryable{``0})">
+      <summary>Gibt das erste Element einer Sequenz zurück, oder einen Standardwert, wenn die Sequenz keine Elemente enthält.</summary>
+      <returns>default(<paramref name="TSource" />), wenn <paramref name="source" /> leer ist, andernfalls das erste Element in <paramref name="source" />.</returns>
+      <param name="source">Das <see cref="T:System.Linq.IQueryable`1" />, dessen erstes Element zurückgegeben werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.FirstOrDefault``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+      <summary>Gibt das erste Element einer Sequenz zurück, das eine angegebene Bedingung erfüllt, oder einen Standardwert, wenn ein solches Element nicht gefunden wird.</summary>
+      <returns>default(<paramref name="TSource" />), wenn <paramref name="source" /> leer ist oder wenn kein Element die von <paramref name="predicate" /> angegebene Überprüfung besteht. Andernfalls das erste Element in <paramref name="source" />, das die von <paramref name="predicate" /> angegebene Überprüfung besteht.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, aus dem ein Element zurückgegeben werden soll.</param>
+      <param name="predicate">Eine Funktion, mit der jedes Element auf eine Bedingung überprüft wird.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="predicate" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.GroupBy``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+      <summary>Gruppiert die Elemente einer Sequenz entsprechend einer angegebenen Schlüsselauswahlfunktion.</summary>
+      <returns>Ein IQueryable&lt;IGrouping&lt;TKey, TSource&gt;&gt; in C# oder ein IQueryable(Of IGrouping(Of TKey, TSource)) in Visual Basic, wobei jedes <see cref="T:System.Linq.IGrouping`2" />-Objekt eine Sequenz von Objekten und einen Schlüssel enthält.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, dessen Elemente gruppiert werden sollen.</param>
+      <param name="keySelector">Eine Funktion zum Extrahieren des Schlüssels für jedes Element.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TKey">Der Typ des Schlüssels, der von der in <paramref name="keySelector" /> dargestellten Funktion zurückgegeben wird.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="keySelector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.GroupBy``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.IEqualityComparer{``1})">
+      <summary>Gruppiert die Elemente einer Sequenz entsprechend einer angegebenen Schlüsselauswahlfunktion und vergleicht die Schlüssel mithilfe eines angegebenen Vergleichs.</summary>
+      <returns>Ein IQueryable&lt;IGrouping&lt;TKey, TSource&gt;&gt; in C# oder ein IQueryable(Of IGrouping(Of TKey, TSource)) in Visual Basic, wobei jedes <see cref="T:System.Linq.IGrouping`2" /> eine Sequenz von Objekten und einen Schlüssel enthält.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, dessen Elemente gruppiert werden sollen.</param>
+      <param name="keySelector">Eine Funktion zum Extrahieren des Schlüssels für jedes Element.</param>
+      <param name="comparer">Ein <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> zum Vergleichen von Schlüsseln.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TKey">Der Typ des Schlüssels, der von der in <paramref name="keySelector" /> dargestellten Funktion zurückgegeben wird.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" />, <paramref name="keySelector" /> oder <paramref name="comparer" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.GroupBy``3(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Linq.Expressions.Expression{System.Func{``0,``2}})">
+      <summary>Gruppiert die Elemente einer Sequenz entsprechend einer angegebenen Schlüsselauswahlfunktion und projiziert die Elemente für jede Gruppe mithilfe einer angegebenen Funktion.</summary>
+      <returns>Ein IQueryable&lt;IGrouping&lt;TKey, TElement&gt;&gt; in C# oder ein IQueryable(Of IGrouping(Of TKey, TElement)) in Visual Basic, wobei jedes <see cref="T:System.Linq.IGrouping`2" /> eine Sequenz von Objekten vom Typ <paramref name="TElement" /> und einen Schlüssel enthält.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, dessen Elemente gruppiert werden sollen.</param>
+      <param name="keySelector">Eine Funktion zum Extrahieren des Schlüssels für jedes Element.</param>
+      <param name="elementSelector">Eine Funktion, mit der jedes Quellelement einem Element in einem <see cref="T:System.Linq.IGrouping`2" /> zugeordnet wird.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TKey">Der Typ des Schlüssels, der von der in <paramref name="keySelector" /> dargestellten Funktion zurückgegeben wird.</typeparam>
+      <typeparam name="TElement">Der Typ der Elemente in jedem <see cref="T:System.Linq.IGrouping`2" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" />, <paramref name="keySelector" /> oder <paramref name="elementSelector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.GroupBy``3(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Linq.Expressions.Expression{System.Func{``0,``2}},System.Collections.Generic.IEqualityComparer{``1})">
+      <summary>Gruppiert die Elemente einer Sequenz und projiziert die Elemente jeder Gruppe mithilfe einer angegebenen Funktion.Schlüsselwerte werden mithilfe eines angegebenen Vergleichs verglichen.</summary>
+      <returns>Ein IQueryable&lt;IGrouping&lt;TKey, TElement&gt;&gt; in C# oder ein IQueryable(Of IGrouping(Of TKey, TElement)) in Visual Basic, wobei jedes <see cref="T:System.Linq.IGrouping`2" /> eine Sequenz von Objekten vom Typ <paramref name="TElement" /> und einen Schlüssel enthält.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, dessen Elemente gruppiert werden sollen.</param>
+      <param name="keySelector">Eine Funktion zum Extrahieren des Schlüssels für jedes Element.</param>
+      <param name="elementSelector">Eine Funktion, mit der jedes Quellelement einem Element in einem <see cref="T:System.Linq.IGrouping`2" /> zugeordnet wird.</param>
+      <param name="comparer">Ein <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> zum Vergleichen von Schlüsseln.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TKey">Der Typ des Schlüssels, der von der in <paramref name="keySelector" /> dargestellten Funktion zurückgegeben wird.</typeparam>
+      <typeparam name="TElement">Der Typ der Elemente in jedem <see cref="T:System.Linq.IGrouping`2" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" />, <paramref name="keySelector" />, <paramref name="elementSelector" /> oder <paramref name="comparer" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.GroupBy``4(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Linq.Expressions.Expression{System.Func{``0,``2}},System.Linq.Expressions.Expression{System.Func{``1,System.Collections.Generic.IEnumerable{``2},``3}})">
+      <summary>Gruppiert die Elemente einer Sequenz entsprechend einer angegebenen Schlüsselauswahlfunktion und erstellt aus jeder Gruppe und ihrem Schlüssel einen Ergebniswert.Die Elemente jeder Gruppe werden mithilfe einer angegebenen Funktion projiziert.</summary>
+      <returns>Ein T:System.Linq.IQueryable`1, das über das Typargument <paramref name="TResult" /> verfügt und in dem jedes Element eine Projektion über einer Gruppe und ihrem Schlüssel darstellt.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, dessen Elemente gruppiert werden sollen.</param>
+      <param name="keySelector">Eine Funktion zum Extrahieren des Schlüssels für jedes Element.</param>
+      <param name="elementSelector">Eine Funktion, mit der jedes Quellelement einem Element in einem <see cref="T:System.Linq.IGrouping`2" /> zugeordnet wird.</param>
+      <param name="resultSelector">Eine Funktion, mit der aus jeder Gruppe ein Ergebniswert erstellt wird.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TKey">Der Typ des Schlüssels, der von der in <paramref name="keySelector" /> dargestellten Funktion zurückgegeben wird.</typeparam>
+      <typeparam name="TElement">Der Typ der Elemente in jedem <see cref="T:System.Linq.IGrouping`2" />.</typeparam>
+      <typeparam name="TResult">Der Typ des von <paramref name="resultSelector" /> zurückgegebenen Ergebniswerts.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" />, <paramref name="keySelector" />, <paramref name="elementSelector" /> oder <paramref name="resultSelector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.GroupBy``4(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Linq.Expressions.Expression{System.Func{``0,``2}},System.Linq.Expressions.Expression{System.Func{``1,System.Collections.Generic.IEnumerable{``2},``3}},System.Collections.Generic.IEqualityComparer{``1})">
+      <summary>Gruppiert die Elemente einer Sequenz entsprechend einer angegebenen Schlüsselauswahlfunktion und erstellt aus jeder Gruppe und ihrem Schlüssel einen Ergebniswert.Schlüssel werden mithilfe eines angegebenen Vergleichs verglichen, und die Elemente jeder Gruppe werden mithilfe einer angegebenen Funktion projiziert.</summary>
+      <returns>Ein T:System.Linq.IQueryable`1, das über das Typargument <paramref name="TResult" /> verfügt und in dem jedes Element eine Projektion über einer Gruppe und ihrem Schlüssel darstellt.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, dessen Elemente gruppiert werden sollen.</param>
+      <param name="keySelector">Eine Funktion zum Extrahieren des Schlüssels für jedes Element.</param>
+      <param name="elementSelector">Eine Funktion, mit der jedes Quellelement einem Element in einem <see cref="T:System.Linq.IGrouping`2" /> zugeordnet wird.</param>
+      <param name="resultSelector">Eine Funktion, mit der aus jeder Gruppe ein Ergebniswert erstellt wird.</param>
+      <param name="comparer">Ein <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> zum Vergleichen von Schlüsseln.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TKey">Der Typ des Schlüssels, der von der in <paramref name="keySelector" /> dargestellten Funktion zurückgegeben wird.</typeparam>
+      <typeparam name="TElement">Der Typ der Elemente in jedem <see cref="T:System.Linq.IGrouping`2" />.</typeparam>
+      <typeparam name="TResult">Der Typ des von <paramref name="resultSelector" /> zurückgegebenen Ergebniswerts.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" />, <paramref name="keySelector" />, <paramref name="elementSelector" />, <paramref name="resultSelector" /> oder <paramref name="comparer" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.GroupBy``3(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Linq.Expressions.Expression{System.Func{``1,System.Collections.Generic.IEnumerable{``0},``2}})">
+      <summary>Gruppiert die Elemente einer Sequenz entsprechend einer angegebenen Schlüsselauswahlfunktion und erstellt aus jeder Gruppe und ihrem Schlüssel einen Ergebniswert.</summary>
+      <returns>Ein T:System.Linq.IQueryable`1, das über das Typargument <paramref name="TResult" /> verfügt und in dem jedes Element eine Projektion über einer Gruppe und ihrem Schlüssel darstellt.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, dessen Elemente gruppiert werden sollen.</param>
+      <param name="keySelector">Eine Funktion zum Extrahieren des Schlüssels für jedes Element.</param>
+      <param name="resultSelector">Eine Funktion, mit der aus jeder Gruppe ein Ergebniswert erstellt wird.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TKey">Der Typ des Schlüssels, der von der in <paramref name="keySelector" /> dargestellten Funktion zurückgegeben wird.</typeparam>
+      <typeparam name="TResult">Der Typ des von <paramref name="resultSelector" /> zurückgegebenen Ergebniswerts.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" />, <paramref name="keySelector" /> oder <paramref name="resultSelector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.GroupBy``3(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Linq.Expressions.Expression{System.Func{``1,System.Collections.Generic.IEnumerable{``0},``2}},System.Collections.Generic.IEqualityComparer{``1})">
+      <summary>Gruppiert die Elemente einer Sequenz entsprechend einer angegebenen Schlüsselauswahlfunktion und erstellt aus jeder Gruppe und ihrem Schlüssel einen Ergebniswert.Schlüssel werden mithilfe eines angegebenen Vergleichs verglichen.</summary>
+      <returns>Ein T:System.Linq.IQueryable`1, das über das Typargument <paramref name="TResult" /> verfügt und in dem jedes Element eine Projektion über einer Gruppe und ihrem Schlüssel darstellt.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, dessen Elemente gruppiert werden sollen.</param>
+      <param name="keySelector">Eine Funktion zum Extrahieren des Schlüssels für jedes Element.</param>
+      <param name="resultSelector">Eine Funktion, mit der aus jeder Gruppe ein Ergebniswert erstellt wird.</param>
+      <param name="comparer">Ein <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> zum Vergleichen von Schlüsseln.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TKey">Der Typ des Schlüssels, der von der in <paramref name="keySelector" /> dargestellten Funktion zurückgegeben wird.</typeparam>
+      <typeparam name="TResult">Der Typ des von <paramref name="resultSelector" /> zurückgegebenen Ergebniswerts.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" />, <paramref name="keySelector" />, <paramref name="resultSelector" /> oder <paramref name="comparer" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.GroupJoin``4(System.Linq.IQueryable{``0},System.Collections.Generic.IEnumerable{``1},System.Linq.Expressions.Expression{System.Func{``0,``2}},System.Linq.Expressions.Expression{System.Func{``1,``2}},System.Linq.Expressions.Expression{System.Func{``0,System.Collections.Generic.IEnumerable{``1},``3}})">
+      <summary>Korreliert die Elemente von zwei Sequenzen anhand der Gleichheit der Schlüssel und gruppiert die Ergebnisse.Schlüssel werden mithilfe des Standardgleichheitsvergleichs verglichen.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, das Elemente vom Typ <paramref name="TResult" /> enthält, die durch Ausführen eines Gruppenjoins von zwei Sequenzen ermittelt werden.</returns>
+      <param name="outer">Die erste zu verknüpfende Sequenz.</param>
+      <param name="inner">Die Sequenz, die mit der ersten Sequenz verknüpft werden soll.</param>
+      <param name="outerKeySelector">Eine Funktion zum Extrahieren des Joinschlüssels aus jedem Element der ersten Sequenz.</param>
+      <param name="innerKeySelector">Eine Funktion zum Extrahieren des Joinschlüssels aus jedem Element der zweiten Sequenz.</param>
+      <param name="resultSelector">Eine Funktion zum Erstellen eines Ergebniselements anhand eines Elements aus der ersten Sequenz und einer Auflistung von übereinstimmenden Elementen aus der zweiten Sequenz.</param>
+      <typeparam name="TOuter">Der Typ der Elemente der ersten Sequenz.</typeparam>
+      <typeparam name="TInner">Der Typ der Elemente der zweiten Sequenz.</typeparam>
+      <typeparam name="TKey">Der Typ der von den Schlüsselauswahlfunktionen zurückgegebenen Schlüssel.</typeparam>
+      <typeparam name="TResult">Der Typ der Ergebniselemente.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="outer" />, <paramref name="inner" />, <paramref name="outerKeySelector" />, <paramref name="innerKeySelector" /> oder <paramref name="resultSelector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.GroupJoin``4(System.Linq.IQueryable{``0},System.Collections.Generic.IEnumerable{``1},System.Linq.Expressions.Expression{System.Func{``0,``2}},System.Linq.Expressions.Expression{System.Func{``1,``2}},System.Linq.Expressions.Expression{System.Func{``0,System.Collections.Generic.IEnumerable{``1},``3}},System.Collections.Generic.IEqualityComparer{``2})">
+      <summary>Korreliert die Elemente von zwei Sequenzen anhand der Gleichheit der Schlüssel und gruppiert die Ergebnisse.Schlüssel werden mithilfe eines angegebenen <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> verglichen.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, das Elemente vom Typ <paramref name="TResult" /> enthält, die durch Ausführen eines Gruppenjoins von zwei Sequenzen ermittelt werden.</returns>
+      <param name="outer">Die erste zu verknüpfende Sequenz.</param>
+      <param name="inner">Die Sequenz, die mit der ersten Sequenz verknüpft werden soll.</param>
+      <param name="outerKeySelector">Eine Funktion zum Extrahieren des Joinschlüssels aus jedem Element der ersten Sequenz.</param>
+      <param name="innerKeySelector">Eine Funktion zum Extrahieren des Joinschlüssels aus jedem Element der zweiten Sequenz.</param>
+      <param name="resultSelector">Eine Funktion zum Erstellen eines Ergebniselements anhand eines Elements aus der ersten Sequenz und einer Auflistung von übereinstimmenden Elementen aus der zweiten Sequenz.</param>
+      <param name="comparer">Ein Vergleich zum Hashen und Vergleichen von Schlüsseln.</param>
+      <typeparam name="TOuter">Der Typ der Elemente der ersten Sequenz.</typeparam>
+      <typeparam name="TInner">Der Typ der Elemente der zweiten Sequenz.</typeparam>
+      <typeparam name="TKey">Der Typ der von den Schlüsselauswahlfunktionen zurückgegebenen Schlüssel.</typeparam>
+      <typeparam name="TResult">Der Typ der Ergebniselemente.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="outer" />, <paramref name="inner" />, <paramref name="outerKeySelector" />, <paramref name="innerKeySelector" /> oder <paramref name="resultSelector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Intersect``1(System.Linq.IQueryable{``0},System.Collections.Generic.IEnumerable{``0})">
+      <summary>Erzeugt die Schnittmenge zweier Sequenzen mithilfe des Standardgleichheitsvergleichs zum Vergleichen von Werten.</summary>
+      <returns>Eine Sequenz, die die Schnittmenge der beiden Sequenzen enthält.</returns>
+      <param name="source1">Eine Sequenz, deren unterschiedliche Elemente, die auch in <paramref name="source2" /> vorhanden sind, zurückgegeben werden.</param>
+      <param name="source2">Eine Sequenz, deren unterschiedliche Elemente, die auch in der ersten Sequenz vorhanden sind, zurückgegeben werden.</param>
+      <typeparam name="TSource">Der Typ der Elemente der Eingabesequenzen.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source1" /> oder <paramref name="source2" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Intersect``1(System.Linq.IQueryable{``0},System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0})">
+      <summary>Erzeugt mithilfe des angegebenen <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> zum Vergleichen von Werten die Schnittmenge von zwei Sequenzen.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, das die Schnittmenge der beiden Sequenzen enthält.</returns>
+      <param name="source1">Ein <see cref="T:System.Linq.IQueryable`1" />, dessen unterschiedliche Elemente, die auch in <paramref name="source2" /> vorhanden sind, zurückgegeben werden.</param>
+      <param name="source2">Ein <see cref="T:System.Collections.Generic.IEnumerable`1" />, dessen unterschiedliche Elemente, die auch in der ersten Sequenz vorhanden sind, zurückgegeben werden.</param>
+      <param name="comparer">Ein <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> zum Vergleichen von Werten.</param>
+      <typeparam name="TSource">Der Typ der Elemente der Eingabesequenzen.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source1" /> oder <paramref name="source2" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Join``4(System.Linq.IQueryable{``0},System.Collections.Generic.IEnumerable{``1},System.Linq.Expressions.Expression{System.Func{``0,``2}},System.Linq.Expressions.Expression{System.Func{``1,``2}},System.Linq.Expressions.Expression{System.Func{``0,``1,``3}})">
+      <summary>Korreliert die Elemente von zwei Sequenzen auf der Grundlage von übereinstimmenden Schlüsseln.Schlüssel werden mithilfe des Standardgleichheitsvergleichs verglichen.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, für das Elemente vom Typ <paramref name="TResult" /> durch Ausführen eines inneren Joins von zwei Sequenzen ermittelt werden.</returns>
+      <param name="outer">Die erste zu verknüpfende Sequenz.</param>
+      <param name="inner">Die Sequenz, die mit der ersten Sequenz verknüpft werden soll.</param>
+      <param name="outerKeySelector">Eine Funktion zum Extrahieren des Joinschlüssels aus jedem Element der ersten Sequenz.</param>
+      <param name="innerKeySelector">Eine Funktion zum Extrahieren des Joinschlüssels aus jedem Element der zweiten Sequenz.</param>
+      <param name="resultSelector">Eine Funktion zum Erstellen eines Ergebniselements aus zwei übereinstimmenden Elementen.</param>
+      <typeparam name="TOuter">Der Typ der Elemente der ersten Sequenz.</typeparam>
+      <typeparam name="TInner">Der Typ der Elemente der zweiten Sequenz.</typeparam>
+      <typeparam name="TKey">Der Typ der von den Schlüsselauswahlfunktionen zurückgegebenen Schlüssel.</typeparam>
+      <typeparam name="TResult">Der Typ der Ergebniselemente.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="outer" />, <paramref name="inner" />, <paramref name="outerKeySelector" />, <paramref name="innerKeySelector" /> oder <paramref name="resultSelector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Join``4(System.Linq.IQueryable{``0},System.Collections.Generic.IEnumerable{``1},System.Linq.Expressions.Expression{System.Func{``0,``2}},System.Linq.Expressions.Expression{System.Func{``1,``2}},System.Linq.Expressions.Expression{System.Func{``0,``1,``3}},System.Collections.Generic.IEqualityComparer{``2})">
+      <summary>Korreliert die Elemente von zwei Sequenzen auf der Grundlage von übereinstimmenden Schlüsseln.Schlüssel werden mithilfe eines angegebenen <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> verglichen.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, für das Elemente vom Typ <paramref name="TResult" /> durch Ausführen eines inneren Joins von zwei Sequenzen ermittelt werden.</returns>
+      <param name="outer">Die erste zu verknüpfende Sequenz.</param>
+      <param name="inner">Die Sequenz, die mit der ersten Sequenz verknüpft werden soll.</param>
+      <param name="outerKeySelector">Eine Funktion zum Extrahieren des Joinschlüssels aus jedem Element der ersten Sequenz.</param>
+      <param name="innerKeySelector">Eine Funktion zum Extrahieren des Joinschlüssels aus jedem Element der zweiten Sequenz.</param>
+      <param name="resultSelector">Eine Funktion zum Erstellen eines Ergebniselements aus zwei übereinstimmenden Elementen.</param>
+      <param name="comparer">Ein <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> zum Hashen und Vergleichen von Schlüsseln.</param>
+      <typeparam name="TOuter">Der Typ der Elemente der ersten Sequenz.</typeparam>
+      <typeparam name="TInner">Der Typ der Elemente der zweiten Sequenz.</typeparam>
+      <typeparam name="TKey">Der Typ der von den Schlüsselauswahlfunktionen zurückgegebenen Schlüssel.</typeparam>
+      <typeparam name="TResult">Der Typ der Ergebniselemente.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="outer" />, <paramref name="inner" />, <paramref name="outerKeySelector" />, <paramref name="innerKeySelector" /> oder <paramref name="resultSelector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Last``1(System.Linq.IQueryable{``0})">
+      <summary>Gibt das letzte Element in einer Sequenz zurück.</summary>
+      <returns>Der Wert an der letzten Position <paramref name="source" />.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, dessen letztes Element zurückgegeben werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+      <exception cref="T:System.InvalidOperationException">Die Quellsequenz ist leer.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Last``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+      <summary>Gibt das letzte Element einer Sequenz zurück, das eine angegebene Bedingung erfüllt.</summary>
+      <returns>Das letzte Element in <paramref name="source" />, das die von <paramref name="predicate" /> angegebene Überprüfung besteht.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, aus dem ein Element zurückgegeben werden soll.</param>
+      <param name="predicate">Eine Funktion, mit der jedes Element auf eine Bedingung überprüft wird.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="predicate" /> ist null.</exception>
+      <exception cref="T:System.InvalidOperationException">Kein Element erfüllt die Bedingung in <paramref name="predicate" />.- oder -Die Quellsequenz ist leer.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.LastOrDefault``1(System.Linq.IQueryable{``0})">
+      <summary>Gibt das letzte Element in einer Sequenz zurück, oder einen Standardwert, wenn die Sequenz keine Elemente enthält.</summary>
+      <returns>default(<paramref name="TSource" />), wenn <paramref name="source" /> leer ist, andernfalls das letzte Element in <paramref name="source" />.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, dessen letztes Element zurückgegeben werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.LastOrDefault``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+      <summary>Gibt das letzte Element einer Sequenz zurück, das eine Bedingung erfüllt, oder einen Standardwert, wenn ein solches Element nicht gefunden wird.</summary>
+      <returns>default(<paramref name="TSource" />), wenn <paramref name="source" /> leer ist oder wenn keine Elemente von der Prädikatfunktion erfolgreich überprüft werden. Andernfalls das letzte Element von <paramref name="source" />, das von der Prädikatfunktion erfolgreich überprüft wird.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, aus dem ein Element zurückgegeben werden soll.</param>
+      <param name="predicate">Eine Funktion, mit der jedes Element auf eine Bedingung überprüft wird.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="predicate" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.LongCount``1(System.Linq.IQueryable{``0})">
+      <summary>Gibt ein <see cref="T:System.Int64" /> zurück, das die Gesamtanzahl der Elemente in einer Sequenz darstellt.</summary>
+      <returns>Die Anzahl der Elemente in <paramref name="source" />.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, das die zu zählenden Elemente enthält.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+      <exception cref="T:System.OverflowException">Die Anzahl der Elemente überschreitet <see cref="F:System.Int64.MaxValue" />.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.LongCount``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+      <summary>Gibt ein <see cref="T:System.Int64" /> zurück, das die Anzahl der Elemente in einer Sequenz darstellt, die eine Bedingung erfüllen.</summary>
+      <returns>Die Anzahl der Elemente in <paramref name="source" />, die die Bedingung in der Prädikatfunktion erfüllen.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, das die zu zählenden Elemente enthält.</param>
+      <param name="predicate">Eine Funktion, mit der jedes Element auf eine Bedingung überprüft wird.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="predicate" /> ist null.</exception>
+      <exception cref="T:System.OverflowException">Die Anzahl der übereinstimmenden Elemente überschreitet <see cref="F:System.Int64.MaxValue" />.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Max``1(System.Linq.IQueryable{``0})">
+      <summary>Gibt den Höchstwert in einem generischen <see cref="T:System.Linq.IQueryable`1" /> zurück.</summary>
+      <returns>Der Höchstwert in der Sequenz.</returns>
+      <param name="source">Eine Sequenz von Werten, deren Höchstwert bestimmt werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Max``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+      <summary>Ruft für jedes Element eines generischen <see cref="T:System.Linq.IQueryable`1" /> eine Projektionsfunktion auf und gibt den höchsten Ergebniswert zurück.</summary>
+      <returns>Der Höchstwert in der Sequenz.</returns>
+      <param name="source">Eine Sequenz von Werten, deren Höchstwert bestimmt werden soll.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TResult">Der Typ des Werts, der von der durch <paramref name="selector" /> dargestellten Funktion zurückgegeben wird.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Min``1(System.Linq.IQueryable{``0})">
+      <summary>Gibt den Mindestwert eines generischen <see cref="T:System.Linq.IQueryable`1" /> zurück.</summary>
+      <returns>Der Mindestwert in der Sequenz.</returns>
+      <param name="source">Eine Sequenz von Werten, deren Mindestwert bestimmt werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Min``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+      <summary>Ruft für jedes Element eines generischen <see cref="T:System.Linq.IQueryable`1" /> eine Projektionsfunktion auf und gibt den niedrigsten Ergebniswert zurück.</summary>
+      <returns>Der Mindestwert in der Sequenz.</returns>
+      <param name="source">Eine Sequenz von Werten, deren Mindestwert bestimmt werden soll.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TResult">Der Typ des Werts, der von der durch <paramref name="selector" /> dargestellten Funktion zurückgegeben wird.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.OfType``1(System.Linq.IQueryable)">
+      <summary>Filtert die Elemente eines <see cref="T:System.Linq.IQueryable" /> anhand eines angegebenen Typs.</summary>
+      <returns>Eine Auflistung, die die Elemente aus <paramref name="source" /> mit dem Typ <paramref name="TResult" /> enthält.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable" />, dessen Elemente gefiltert werden sollen.</param>
+      <typeparam name="TResult">Der Typ, nach dem die Elemente der Sequenz gefiltert werden sollen.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.OrderBy``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+      <summary>Sortiert die Elemente einer Sequenz in aufsteigender Reihenfolge nach einem Schlüssel.</summary>
+      <returns>Ein <see cref="T:System.Linq.IOrderedQueryable`1" />, dessen Elemente nach einem Schlüssel sortiert werden.</returns>
+      <param name="source">Eine Sequenz von anzuordnenden Werten.</param>
+      <param name="keySelector">Eine Funktion zum Extrahieren eines Schlüssels aus einem Element.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TKey">Der Typ des Schlüssels, der von der durch <paramref name="keySelector" /> dargestellten Funktion zurückgegeben wird.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="keySelector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.OrderBy``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.IComparer{``1})">
+      <summary>Sortiert die Elemente einer Sequenz mithilfe eines angegebenen Vergleichs in aufsteigender Reihenfolge.</summary>
+      <returns>Ein <see cref="T:System.Linq.IOrderedQueryable`1" />, dessen Elemente nach einem Schlüssel sortiert werden.</returns>
+      <param name="source">Eine Sequenz von anzuordnenden Werten.</param>
+      <param name="keySelector">Eine Funktion zum Extrahieren eines Schlüssels aus einem Element.</param>
+      <param name="comparer">Ein <see cref="T:System.Collections.Generic.IComparer`1" /> zum Vergleichen von Schlüsseln.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TKey">Der Typ des Schlüssels, der von der durch <paramref name="keySelector" /> dargestellten Funktion zurückgegeben wird.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" />, <paramref name="keySelector" /> oder <paramref name="comparer" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.OrderByDescending``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+      <summary>Sortiert die Elemente einer Sequenz in absteigender Reihenfolge nach einem Schlüssel.</summary>
+      <returns>Ein <see cref="T:System.Linq.IOrderedQueryable`1" />, dessen Elemente in absteigender Reihenfolge nach einem Schlüssel sortiert werden.</returns>
+      <param name="source">Eine Sequenz von anzuordnenden Werten.</param>
+      <param name="keySelector">Eine Funktion zum Extrahieren eines Schlüssels aus einem Element.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TKey">Der Typ des Schlüssels, der von der durch <paramref name="keySelector" /> dargestellten Funktion zurückgegeben wird.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="keySelector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.OrderByDescending``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.IComparer{``1})">
+      <summary>Sortiert die Elemente einer Sequenz mithilfe eines angegebenen Vergleichs in absteigender Reihenfolge.</summary>
+      <returns>Ein <see cref="T:System.Linq.IOrderedQueryable`1" />, dessen Elemente in absteigender Reihenfolge nach einem Schlüssel sortiert werden.</returns>
+      <param name="source">Eine Sequenz von anzuordnenden Werten.</param>
+      <param name="keySelector">Eine Funktion zum Extrahieren eines Schlüssels aus einem Element.</param>
+      <param name="comparer">Ein <see cref="T:System.Collections.Generic.IComparer`1" /> zum Vergleichen von Schlüsseln.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TKey">Der Typ des Schlüssels, der von der durch <paramref name="keySelector" /> dargestellten Funktion zurückgegeben wird.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" />, <paramref name="keySelector" /> oder <paramref name="comparer" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Reverse``1(System.Linq.IQueryable{``0})">
+      <summary>Kehrt die Reihenfolge der Elemente in einer Sequenz um.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, dessen Elemente den Elementen der Eingabesequenz in umgekehrter Reihenfolge entsprechen.</returns>
+      <param name="source">Eine umzukehrende Sequenz von Werten.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Select``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+      <summary>Projiziert jedes Element einer Sequenz in ein neues Format.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, dessen Elemente das Ergebnis des Aufrufs einer Projektionsfunktion für jedes Element von <paramref name="source" /> sind.</returns>
+      <param name="source">Eine Sequenz von zu projizierenden Werten.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TResult">Der Typ des Werts, der von der durch <paramref name="selector" /> dargestellten Funktion zurückgegeben wird.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Select``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Int32,``1}})">
+      <summary>Projiziert jedes Element einer Sequenz in ein neues Format, indem der Index des Elements integriert wird.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, dessen Elemente das Ergebnis des Aufrufs einer Projektionsfunktion für jedes Element von <paramref name="source" /> sind.</returns>
+      <param name="source">Eine Sequenz von zu projizierenden Werten.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TResult">Der Typ des Werts, der von der durch <paramref name="selector" /> dargestellten Funktion zurückgegeben wird.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.SelectMany``3(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Collections.Generic.IEnumerable{``1}}},System.Linq.Expressions.Expression{System.Func{``0,``1,``2}})">
+      <summary>Projiziert jedes Element einer Sequenz in ein <see cref="T:System.Collections.Generic.IEnumerable`1" /> und ruft für jedes Element darin eine Ergebnisauswahlfunktion auf.Die Ergebniswerte aus jeder Zwischensequenz werden zu einer einzigen eindimensionalen Sequenz zusammengefasst und zurückgegeben.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, dessen Elemente erzeugt werden, indem für jedes Element von <paramref name="source" /> die 1:n-Projektionsfunktion <paramref name="collectionSelector" /> aufgerufen wird und dann jedes so erzeugte Element der Sequenz und sein entsprechendes <paramref name="source" />-Element einem Ergebniselement zugeordnet werden.</returns>
+      <param name="source">Eine Sequenz von zu projizierenden Werten.</param>
+      <param name="collectionSelector">Eine Projektionsfunktion, die auf jedes Element der Eingabesequenz angewendet werden soll.</param>
+      <param name="resultSelector">Eine Projektionsfunktion, die auf jedes Element jeder Zwischensequenz angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TCollection">Der Typ der Zwischenelemente, die von der durch <paramref name="collectionSelector" /> dargestellten Funktion erfasst werden.</typeparam>
+      <typeparam name="TResult">Der Typ der Elemente in der resultierenden Sequenz.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" />, <paramref name="collectionSelector" /> oder <paramref name="resultSelector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.SelectMany``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Collections.Generic.IEnumerable{``1}}})">
+      <summary>Projiziert jedes Element einer Sequenz in ein <see cref="T:System.Collections.Generic.IEnumerable`1" /> und fasst die resultierenden Sequenzen in einer einzigen Sequenz zusammen.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, dessen Elemente das Ergebnis des Aufrufs einer 1:n-Projektionsfunktion für jedes Element der Eingabesequenz sind.</returns>
+      <param name="source">Eine Sequenz von zu projizierenden Werten.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TResult">Der Typ der Elemente der Sequenz, die von der durch <paramref name="selector" /> dargestellten Funktion zurückgegeben werden.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.SelectMany``3(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Int32,System.Collections.Generic.IEnumerable{``1}}},System.Linq.Expressions.Expression{System.Func{``0,``1,``2}})">
+      <summary>Projiziert jedes Element einer Sequenz in ein <see cref="T:System.Collections.Generic.IEnumerable`1" />, das den Index des Quellelements enthält, von dem es erzeugt wurde.Für jedes Element jeder Zwischensequenz wird eine Ergebnisauswahlfunktion aufgerufen, und die Ergebniswerte werden zu einer einzigen eindimensionale Sequenz zusammengefasst und zurückgegeben.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, dessen Elemente erzeugt werden, indem für jedes Element von <paramref name="source" /> die 1:n-Projektionsfunktion <paramref name="collectionSelector" /> aufgerufen wird und dann jedes so erzeugte Element der Sequenz und sein entsprechendes <paramref name="source" />-Element einem Ergebniselement zugeordnet werden.</returns>
+      <param name="source">Eine Sequenz von zu projizierenden Werten.</param>
+      <param name="collectionSelector">Eine Projektionsfunktion, die auf jedes Element der Eingabesequenz angewendet werden soll. Der zweite Parameter der Funktion stellt den Index des Quellelements dar.</param>
+      <param name="resultSelector">Eine Projektionsfunktion, die auf jedes Element jeder Zwischensequenz angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TCollection">Der Typ der Zwischenelemente, die von der durch <paramref name="collectionSelector" /> dargestellten Funktion erfasst werden.</typeparam>
+      <typeparam name="TResult">Der Typ der Elemente in der resultierenden Sequenz.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" />, <paramref name="collectionSelector" /> oder <paramref name="resultSelector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.SelectMany``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Int32,System.Collections.Generic.IEnumerable{``1}}})">
+      <summary>Projiziert jedes Element einer Sequenz in ein <see cref="T:System.Collections.Generic.IEnumerable`1" /> und fasst die resultierenden Sequenzen in einer einzigen Sequenz zusammen.Der Index jedes Quellelements wird im projizierten Format des jeweiligen Elements verwendet.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, dessen Elemente das Ergebnis des Aufrufs einer 1:n-Projektionsfunktion für jedes Element der Eingabesequenz sind.</returns>
+      <param name="source">Eine Sequenz von zu projizierenden Werten.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll. Der zweite Parameter der Funktion stellt den Index des Quellelements dar.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TResult">Der Typ der Elemente der Sequenz, die von der durch <paramref name="selector" /> dargestellten Funktion zurückgegeben werden.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.SequenceEqual``1(System.Linq.IQueryable{``0},System.Collections.Generic.IEnumerable{``0})">
+      <summary>Bestimmt mithilfe des Standardgleichheitsvergleichs zum Vergleichen von Elementen, ob zwei Sequenzen gleich sind.</summary>
+      <returns>true, wenn die zwei Quellsequenzen von gleicher Länge sind und ihre entsprechenden Elemente als gleich gelten, andernfalls false.</returns>
+      <param name="source1">Ein <see cref="T:System.Linq.IQueryable`1" /> dessen Elemente mit den Elementen von <paramref name="source2" /> verglichen werden sollen.</param>
+      <param name="source2">Ein <see cref="T:System.Collections.Generic.IEnumerable`1" />, dessen Elemente mit den Elementen der ersten Sequenz verglichen werden sollen.</param>
+      <typeparam name="TSource">Der Typ der Elemente der Eingabesequenzen.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source1" /> oder <paramref name="source2" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.SequenceEqual``1(System.Linq.IQueryable{``0},System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0})">
+      <summary>Bestimmt mithilfe eines angegebenen <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> zum Vergleichen von Elementen, ob zwei Sequenzen gleich sind.</summary>
+      <returns>true, wenn die zwei Quellsequenzen von gleicher Länge sind und ihre entsprechenden Elemente als gleich gelten, andernfalls false.</returns>
+      <param name="source1">Ein <see cref="T:System.Linq.IQueryable`1" /> dessen Elemente mit den Elementen von <paramref name="source2" /> verglichen werden sollen.</param>
+      <param name="source2">Ein <see cref="T:System.Collections.Generic.IEnumerable`1" />, dessen Elemente mit den Elementen der ersten Sequenz verglichen werden sollen.</param>
+      <param name="comparer">Ein <see cref="T:System.Collections.Generic.IEqualityComparer`1" />, der zum Vergleichen von Elementen verwendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente der Eingabesequenzen.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source1" /> oder <paramref name="source2" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Single``1(System.Linq.IQueryable{``0})">
+      <summary>Gibt das einzige Element einer Sequenz zurück und löst eine Ausnahme aus, wenn nicht genau ein Element in der Sequenz vorhanden ist.</summary>
+      <returns>Das einzige Element der Eingabesequenz.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, dessen einziges Element zurückgegeben werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+      <exception cref="T:System.InvalidOperationException">
+        <paramref name="source" /> hat mehr als ein Element.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Single``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+      <summary>Gibt das einzige Element einer Sequenz zurück, das eine angegebene Bedingung erfüllt, und löst eine Ausnahme aus, wenn mehrere solche Elemente vorhanden sind.</summary>
+      <returns>Das einzige Element der Eingabesequenz, das die Bedingung in <paramref name="predicate" /> erfüllt.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, aus dem ein einzelnes Element zurückgegeben werden soll.</param>
+      <param name="predicate">Eine Funktion zum Überprüfen eines Elements auf eine Bedingung.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="predicate" /> ist null.</exception>
+      <exception cref="T:System.InvalidOperationException">Kein Element erfüllt die Bedingung in <paramref name="predicate" />.- oder -Die Bedingung in <paramref name="predicate" /> wird von mehreren Elementen erfüllt - oder -Die Quellsequenz ist leer.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.SingleOrDefault``1(System.Linq.IQueryable{``0})">
+      <summary>Gibt das einzige Element einer Sequenz zurück oder einen Standardwert, wenn die Sequenz leer ist. Diese Methode löst eine Ausnahme aus, wenn mehrere Elemente in der Sequenz vorhanden sind.</summary>
+      <returns>Das einzige Element der Eingabesequenz oder default(<paramref name="TSource" />), wenn die Sequenz keine Elemente enthält.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, dessen einziges Element zurückgegeben werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+      <exception cref="T:System.InvalidOperationException">
+        <paramref name="source" /> hat mehr als ein Element.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.SingleOrDefault``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+      <summary>Gibt das einzige Element einer Sequenz zurück, das eine angegebene Bedingung erfüllt, oder einen Standardwert, wenn kein solches Element vorhanden ist. Diese Methode löst eine Ausnahme aus, wenn mehrere Elemente die Bedingung erfüllen.</summary>
+      <returns>Das einzige Element der Eingabesequenz, das die Bedingung in <paramref name="predicate" /> erfüllt, oder default(<paramref name="TSource" />), wenn ein solches Element nicht gefunden wird.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, aus dem ein einzelnes Element zurückgegeben werden soll.</param>
+      <param name="predicate">Eine Funktion zum Überprüfen eines Elements auf eine Bedingung.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="predicate" /> ist null.</exception>
+      <exception cref="T:System.InvalidOperationException">Die Bedingung in <paramref name="predicate" /> wird von mehreren Elementen erfüllt </exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Skip``1(System.Linq.IQueryable{``0},System.Int32)">
+      <summary>Umgeht eine festgelegte Anzahl von Elementen in einer Sequenz und gibt dann die übrigen Elemente zurück.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, das Elemente enthält, die nach dem angegebenen Index in der Eingabesequenz auftreten.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, aus dem Elemente zurückgegeben werden sollen.</param>
+      <param name="count">Die Anzahl der Elemente, die übersprungen werden sollen, bevor die übrigen Elemente zurückgegeben werden.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.SkipWhile``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+      <summary>Umgeht Elemente in einer Sequenz, solange eine angegebene Bedingung true ist, und gibt dann die übrigen Elemente zurück.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, das Elemente aus <paramref name="source" /> ab dem ersten Element in der linearen Reihe enthält, das die in <paramref name="predicate" /> angegebene Überprüfung nicht besteht.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, aus dem Elemente zurückgegeben werden sollen.</param>
+      <param name="predicate">Eine Funktion, mit der jedes Element auf eine Bedingung überprüft wird.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="predicate" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.SkipWhile``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Int32,System.Boolean}})">
+      <summary>Umgeht Elemente in einer Sequenz, solange eine angegebene Bedingung true ist, und gibt dann die übrigen Elemente zurück.In der Logik der Prädikatfunktion wird der Index des Elements verwendet.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, das Elemente aus <paramref name="source" /> ab dem ersten Element in der linearen Reihe enthält, das die in <paramref name="predicate" /> angegebene Überprüfung nicht besteht.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IQueryable`1" />, aus dem Elemente zurückgegeben werden sollen.</param>
+      <param name="predicate">Eine Funktion zum Überprüfen jedes Elements auf eine Bedingung. Der zweite Parameter der Funktion stellt den Index des Quellelements dar.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="predicate" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Sum(System.Linq.IQueryable{System.Decimal})">
+      <summary>Berechnet die Summe einer Sequenz von <see cref="T:System.Decimal" />-Werten.</summary>
+      <returns>Die Summe der Werte in der Sequenz.</returns>
+      <param name="source">Eine Sequenz von <see cref="T:System.Decimal" />-Werten, deren Summe berechnet werden soll.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+      <exception cref="T:System.OverflowException">Die Summe ist größer als <see cref="F:System.Decimal.MaxValue" />.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Sum(System.Linq.IQueryable{System.Double})">
+      <summary>Berechnet die Summe einer Sequenz von <see cref="T:System.Double" />-Werten.</summary>
+      <returns>Die Summe der Werte in der Sequenz.</returns>
+      <param name="source">Eine Sequenz von <see cref="T:System.Double" />-Werten, deren Summe berechnet werden soll.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Sum(System.Linq.IQueryable{System.Int32})">
+      <summary>Berechnet die Summe einer Sequenz von <see cref="T:System.Int32" />-Werten.</summary>
+      <returns>Die Summe der Werte in der Sequenz.</returns>
+      <param name="source">Eine Sequenz von <see cref="T:System.Int32" />-Werten, deren Summe berechnet werden soll.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+      <exception cref="T:System.OverflowException">Die Summe ist größer als <see cref="F:System.Int32.MaxValue" />.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Sum(System.Linq.IQueryable{System.Int64})">
+      <summary>Berechnet die Summe einer Sequenz von <see cref="T:System.Int64" />-Werten.</summary>
+      <returns>Die Summe der Werte in der Sequenz.</returns>
+      <param name="source">Eine Sequenz von <see cref="T:System.Int64" />-Werten, deren Summe berechnet werden soll.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+      <exception cref="T:System.OverflowException">Die Summe ist größer als <see cref="F:System.Int64.MaxValue" />.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Sum(System.Linq.IQueryable{System.Nullable{System.Decimal}})">
+      <summary>Berechnet die Summe einer Sequenz von <see cref="T:System.Decimal" />-Werten, die NULL zulassen.</summary>
+      <returns>Die Summe der Werte in der Sequenz.</returns>
+      <param name="source">Eine Sequenz von <see cref="T:System.Decimal" />-Werten, die NULL zulassen und deren Summe berechnet werden soll.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+      <exception cref="T:System.OverflowException">Die Summe ist größer als <see cref="F:System.Decimal.MaxValue" />.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Sum(System.Linq.IQueryable{System.Nullable{System.Double}})">
+      <summary>Berechnet die Summe einer Sequenz von <see cref="T:System.Double" />-Werten, die NULL zulassen.</summary>
+      <returns>Die Summe der Werte in der Sequenz.</returns>
+      <param name="source">Eine Sequenz von <see cref="T:System.Double" />-Werten, die NULL zulassen und deren Summe berechnet werden soll.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Sum(System.Linq.IQueryable{System.Nullable{System.Int32}})">
+      <summary>Berechnet die Summe einer Sequenz von <see cref="T:System.Int32" />-Werten, die NULL zulassen.</summary>
+      <returns>Die Summe der Werte in der Sequenz.</returns>
+      <param name="source">Eine Sequenz von <see cref="T:System.Int32" />-Werten, die NULL zulassen und deren Summe berechnet werden soll.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+      <exception cref="T:System.OverflowException">Die Summe ist größer als <see cref="F:System.Int32.MaxValue" />.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Sum(System.Linq.IQueryable{System.Nullable{System.Int64}})">
+      <summary>Berechnet die Summe einer Sequenz von <see cref="T:System.Int64" />-Werten, die NULL zulassen.</summary>
+      <returns>Die Summe der Werte in der Sequenz.</returns>
+      <param name="source">Eine Sequenz von <see cref="T:System.Int64" />-Werten, die NULL zulassen und deren Summe berechnet werden soll.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+      <exception cref="T:System.OverflowException">Die Summe ist größer als <see cref="F:System.Int64.MaxValue" />.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Sum(System.Linq.IQueryable{System.Nullable{System.Single}})">
+      <summary>Berechnet die Summe einer Sequenz von <see cref="T:System.Single" />-Werten, die NULL zulassen.</summary>
+      <returns>Die Summe der Werte in der Sequenz.</returns>
+      <param name="source">Eine Sequenz von <see cref="T:System.Single" />-Werten, die NULL zulassen und deren Summe berechnet werden soll.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Sum(System.Linq.IQueryable{System.Single})">
+      <summary>Berechnet die Summe einer Sequenz von <see cref="T:System.Single" />-Werten.</summary>
+      <returns>Die Summe der Werte in der Sequenz.</returns>
+      <param name="source">Eine Sequenz von <see cref="T:System.Single" />-Werten, deren Summe berechnet werden soll.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Sum``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Decimal}})">
+      <summary>Berechnet die Summe einer Sequenz von <see cref="T:System.Decimal" />-Werten, die durch den Aufruf einer Projektionsfunktion für jedes Element der Eingabesequenz ermittelt wird.</summary>
+      <returns>Die Summe der projizierten Werte.</returns>
+      <param name="source">Eine Sequenz von Werten des Typs <paramref name="TSource" />.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+      <exception cref="T:System.OverflowException">Die Summe ist größer als <see cref="F:System.Decimal.MaxValue" />.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Sum``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Double}})">
+      <summary>Berechnet die Summe einer Sequenz von <see cref="T:System.Double" />-Werten, die durch den Aufruf einer Projektionsfunktion für jedes Element der Eingabesequenz ermittelt wird.</summary>
+      <returns>Die Summe der projizierten Werte.</returns>
+      <param name="source">Eine Sequenz von Werten des Typs <paramref name="TSource" />.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Sum``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Int32}})">
+      <summary>Berechnet die Summe einer Sequenz von <see cref="T:System.Int32" />-Werten, die durch den Aufruf einer Projektionsfunktion für jedes Element der Eingabesequenz ermittelt wird.</summary>
+      <returns>Die Summe der projizierten Werte.</returns>
+      <param name="source">Eine Sequenz von Werten des Typs <paramref name="TSource" />.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+      <exception cref="T:System.OverflowException">Die Summe ist größer als <see cref="F:System.Int32.MaxValue" />.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Sum``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Int64}})">
+      <summary>Berechnet die Summe einer Sequenz von <see cref="T:System.Int64" />-Werten, die durch den Aufruf einer Projektionsfunktion für jedes Element der Eingabesequenz ermittelt wird.</summary>
+      <returns>Die Summe der projizierten Werte.</returns>
+      <param name="source">Eine Sequenz von Werten des Typs <paramref name="TSource" />.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+      <exception cref="T:System.OverflowException">Die Summe ist größer als <see cref="F:System.Int64.MaxValue" />.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Sum``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Nullable{System.Decimal}}})">
+      <summary>Berechnet die Summe einer Sequenz von <see cref="T:System.Decimal" />-Werten, die NULL zulassen, die durch den Aufruf einer Projektionsfunktion für jedes Element der Eingabesequenz ermittelt wird.</summary>
+      <returns>Die Summe der projizierten Werte.</returns>
+      <param name="source">Eine Sequenz von Werten des Typs <paramref name="TSource" />.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+      <exception cref="T:System.OverflowException">Die Summe ist größer als <see cref="F:System.Decimal.MaxValue" />.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Sum``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Nullable{System.Double}}})">
+      <summary>Berechnet die Summe einer Sequenz von <see cref="T:System.Double" />-Werten, die NULL zulassen, die durch den Aufruf einer Projektionsfunktion für jedes Element der Eingabesequenz ermittelt wird.</summary>
+      <returns>Die Summe der projizierten Werte.</returns>
+      <param name="source">Eine Sequenz von Werten des Typs <paramref name="TSource" />.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Sum``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Nullable{System.Int32}}})">
+      <summary>Berechnet die Summe einer Sequenz von <see cref="T:System.Int32" />-Werten, die NULL zulassen, die durch den Aufruf einer Projektionsfunktion für jedes Element der Eingabesequenz ermittelt wird.</summary>
+      <returns>Die Summe der projizierten Werte.</returns>
+      <param name="source">Eine Sequenz von Werten des Typs <paramref name="TSource" />.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+      <exception cref="T:System.OverflowException">Die Summe ist größer als <see cref="F:System.Int32.MaxValue" />.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Sum``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Nullable{System.Int64}}})">
+      <summary>Berechnet die Summe einer Sequenz von <see cref="T:System.Int64" />-Werten, die NULL zulassen, die durch den Aufruf einer Projektionsfunktion für jedes Element der Eingabesequenz ermittelt wird.</summary>
+      <returns>Die Summe der projizierten Werte.</returns>
+      <param name="source">Eine Sequenz von Werten des Typs <paramref name="TSource" />.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+      <exception cref="T:System.OverflowException">Die Summe ist größer als <see cref="F:System.Int64.MaxValue" />.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Sum``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Nullable{System.Single}}})">
+      <summary>Berechnet die Summe einer Sequenz von <see cref="T:System.Single" />-Werten, die NULL zulassen, die durch den Aufruf einer Projektionsfunktion für jedes Element der Eingabesequenz ermittelt wird.</summary>
+      <returns>Die Summe der projizierten Werte.</returns>
+      <param name="source">Eine Sequenz von Werten des Typs <paramref name="TSource" />.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Sum``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Single}})">
+      <summary>Berechnet die Summe einer Sequenz von <see cref="T:System.Single" />-Werten, die durch den Aufruf einer Projektionsfunktion für jedes Element der Eingabesequenz ermittelt wird.</summary>
+      <returns>Die Summe der projizierten Werte.</returns>
+      <param name="source">Eine Sequenz von Werten des Typs <paramref name="TSource" />.</param>
+      <param name="selector">Eine Projektionsfunktion, die auf jedes Element angewendet werden soll.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="selector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Take``1(System.Linq.IQueryable{``0},System.Int32)">
+      <summary>Gibt eine angegebene Anzahl von zusammenhängenden Elementen ab dem Anfang einer Sequenz zurück.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, das die angegebene Anzahl von Elementen ab dem Anfang von <paramref name="source" /> enthält.</returns>
+      <param name="source">Die Sequenz, aus der Elemente zurückgegeben werden sollen.</param>
+      <param name="count">Die Anzahl der zurückzugebenden Elemente.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.TakeWhile``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+      <summary>Gibt Elemente aus einer Sequenz zurück, solange eine angegebene Bedingung true ist.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, das Elemente aus der Eingabesequenz enthält, die vor dem Element auftreten, bei dem die von <paramref name="predicate" /> angegebene Überprüfung nicht mehr erfolgreich ist.</returns>
+      <param name="source">Die Sequenz, aus der Elemente zurückgegeben werden sollen.</param>
+      <param name="predicate">Eine Funktion, mit der jedes Element auf eine Bedingung überprüft wird.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="predicate" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.TakeWhile``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Int32,System.Boolean}})">
+      <summary>Gibt Elemente aus einer Sequenz zurück, solange eine angegebene Bedingung true ist.In der Logik der Prädikatfunktion wird der Index des Elements verwendet.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, das Elemente aus der Eingabesequenz enthält, die vor dem Element auftreten, bei dem die von <paramref name="predicate" /> angegebene Überprüfung nicht mehr erfolgreich ist.</returns>
+      <param name="source">Die Sequenz, aus der Elemente zurückgegeben werden sollen.</param>
+      <param name="predicate">Eine Funktion zum Überprüfen jedes Elements auf eine Bedingung. Der zweite Parameter der Funktion stellt den Index des Elements in der Quellsequenz dar.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="predicate" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.ThenBy``2(System.Linq.IOrderedQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+      <summary>Führt eine nachfolgende Sortierung der Elemente in einer Sequenz in aufsteigender Reihenfolge nach einem Schlüssel durch.</summary>
+      <returns>Ein <see cref="T:System.Linq.IOrderedQueryable`1" />, dessen Elemente nach einem Schlüssel sortiert werden.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IOrderedQueryable`1" /> mit den zu sortierenden Elementen.</param>
+      <param name="keySelector">Eine Funktion zum Extrahieren eines Schlüssels aus jedem Element.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TKey">Der Typ des Schlüssels, der von der von <paramref name="keySelector" /> dargestellten Funktion zurückgegeben wird.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="keySelector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.ThenBy``2(System.Linq.IOrderedQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.IComparer{``1})">
+      <summary>Führt mithilfe eines angegebenen Vergleichs eine nachfolgende Sortierung der Elemente in einer Sequenz in aufsteigender Reihenfolge durch.</summary>
+      <returns>Ein <see cref="T:System.Linq.IOrderedQueryable`1" />, dessen Elemente nach einem Schlüssel sortiert werden.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IOrderedQueryable`1" /> mit den zu sortierenden Elementen.</param>
+      <param name="keySelector">Eine Funktion zum Extrahieren eines Schlüssels aus jedem Element.</param>
+      <param name="comparer">Ein <see cref="T:System.Collections.Generic.IComparer`1" /> zum Vergleichen von Schlüsseln.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TKey">Der Typ des Schlüssels, der von der von <paramref name="keySelector" /> dargestellten Funktion zurückgegeben wird.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" />, <paramref name="keySelector" /> oder <paramref name="comparer" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.ThenByDescending``2(System.Linq.IOrderedQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+      <summary>Führt eine nachfolgende Sortierung der Elemente in einer Sequenz in absteigender Reihenfolge nach einem Schlüssel durch.</summary>
+      <returns>Ein <see cref="T:System.Linq.IOrderedQueryable`1" />, dessen Elemente in absteigender Reihenfolge nach einem Schlüssel sortiert werden.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IOrderedQueryable`1" /> mit den zu sortierenden Elementen.</param>
+      <param name="keySelector">Eine Funktion zum Extrahieren eines Schlüssels aus jedem Element.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TKey">Der Typ des Schlüssels, der von der von <paramref name="keySelector" /> dargestellten Funktion zurückgegeben wird.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="keySelector" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.ThenByDescending``2(System.Linq.IOrderedQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.IComparer{``1})">
+      <summary>Führt mithilfe eines angegebenen Vergleichs eine nachfolgende Sortierung der Elemente in einer Sequenz in absteigender Reihenfolge durch.</summary>
+      <returns>Eine Auflistung, deren Elemente in absteigender Reihenfolge nach einem Schlüssel sortiert werden.</returns>
+      <param name="source">Ein <see cref="T:System.Linq.IOrderedQueryable`1" /> mit den zu sortierenden Elementen.</param>
+      <param name="keySelector">Eine Funktion zum Extrahieren eines Schlüssels aus jedem Element.</param>
+      <param name="comparer">Ein <see cref="T:System.Collections.Generic.IComparer`1" /> zum Vergleichen von Schlüsseln.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <typeparam name="TKey">Der Typ des Schlüssels, der von der <paramref name="keySelector" />-Funktion zurückgegeben wird.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" />, <paramref name="keySelector" /> oder <paramref name="comparer" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Union``1(System.Linq.IQueryable{``0},System.Collections.Generic.IEnumerable{``0})">
+      <summary>Erzeugt die Vereinigungsmenge von zwei Sequenzen mithilfe des Standardgleichheitsvergleichs.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, das die Elemente aus beiden Eingabesequenzen ohne Duplikate enthält.</returns>
+      <param name="source1">Eine Sequenz, deren unterschiedliche Elemente den ersten Satz für die Gesamtmengenbildung darstellen.</param>
+      <param name="source2">Eine Sequenz, deren unterschiedliche Elemente den zweiten Satz für die Gesamtmengenbildung darstellen.</param>
+      <typeparam name="TSource">Der Typ der Elemente der Eingabesequenzen.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source1" /> oder <paramref name="source2" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Union``1(System.Linq.IQueryable{``0},System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0})">
+      <summary>Erzeugt mithilfe eines angegebenen <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> die Vereinigungsmenge von zwei Sequenzen.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, das die Elemente aus beiden Eingabesequenzen ohne Duplikate enthält.</returns>
+      <param name="source1">Eine Sequenz, deren unterschiedliche Elemente den ersten Satz für die Gesamtmengenbildung darstellen.</param>
+      <param name="source2">Eine Sequenz, deren unterschiedliche Elemente den zweiten Satz für die Gesamtmengenbildung darstellen.</param>
+      <param name="comparer">Ein <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> zum Vergleichen von Werten.</param>
+      <typeparam name="TSource">Der Typ der Elemente der Eingabesequenzen.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source1" /> oder <paramref name="source2" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Where``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+      <summary>Filtert eine Sequenz von Werten nach einem Prädikat.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" /> mit Elementen aus der Eingabesequenz, die die von <paramref name="predicate" /> angegebene Bedingung erfüllen.</returns>
+      <param name="source">Ein zu filterndes <see cref="T:System.Linq.IQueryable`1" />.</param>
+      <param name="predicate">Eine Funktion, mit der jedes Element auf eine Bedingung überprüft wird.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="predicate" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Where``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Int32,System.Boolean}})">
+      <summary>Filtert eine Sequenz von Werten nach einem Prädikat.In der Logik der Prädikatfunktion wird der Index der einzelnen Elemente verwendet.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" /> mit Elementen aus der Eingabesequenz, die die von <paramref name="predicate" /> angegebene Bedingung erfüllen.</returns>
+      <param name="source">Ein zu filterndes <see cref="T:System.Linq.IQueryable`1" />.</param>
+      <param name="predicate">Eine Funktion zum Überprüfen jedes Elements auf eine Bedingung. Der zweite Parameter der Funktion stellt den Index des Elements in der Quellsequenz dar.</param>
+      <typeparam name="TSource">Der Typ der Elemente von <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> oder <paramref name="predicate" /> ist null.</exception>
+    </member>
+    <member name="M:System.Linq.Queryable.Zip``3(System.Linq.IQueryable{``0},System.Collections.Generic.IEnumerable{``1},System.Linq.Expressions.Expression{System.Func{``0,``1,``2}})">
+      <summary>Führt zwei Sequenzen mit der angegebenen Prädikatfunktion zusammen.</summary>
+      <returns>Ein <see cref="T:System.Linq.IQueryable`1" />, das die zusammengeführten Elemente der beiden Eingabesequenzen enthält.</returns>
+      <param name="source1">Die erste Sequenz, die zusammengeführt werden soll.</param>
+      <param name="source2">Die zweite Sequenz, die zusammengeführt werden soll.</param>
+      <param name="resultSelector">Eine Funktion, die angibt, wie die Elemente der zwei Sequenzen zusammengeführt werden sollen.</param>
+      <typeparam name="TFirst">Der Typ der Elemente der ersten Eingabesequenz.</typeparam>
+      <typeparam name="TSecond">Der Typ der Elemente der zweiten Eingabesequenz.</typeparam>
+      <typeparam name="TResult">Der Typ der Elemente in der Ergebnissequenz.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source1" />oder <paramref name="source2 " />ist null.</exception>
+    </member>
+  </members>
+</doc>

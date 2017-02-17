@@ -79,6 +79,7 @@
     <Compile Include="Common\GenericAttributePersistenceTests.cs" />
     <Compile Include="Customers\CustomerAttributePersistenceTests.cs" />
     <Compile Include="Customers\CustomerAttributeValuePersistenceTests.cs" />
+    <Compile Include="Customers\CustomerPasswordPersistenceTests.cs" />
     <Compile Include="Orders\ReturnRequestReasonPersistenceTests.cs" />
     <Compile Include="Orders\RewardPointHistoryTests.cs" />
     <Compile Include="Orders\ReturnRequestActionPersistenceTests.cs" />

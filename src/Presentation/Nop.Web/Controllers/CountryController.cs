@@ -26,7 +26,7 @@ namespace Nop.Web.Controllers
         //available even when navigation is not allowed
         [PublicStoreAllowNavigation(true)]
         [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult GetStatesByCountryId(string countryId, bool addSelectStateItem)
+        public virtual ActionResult GetStatesByCountryId(string countryId, bool addSelectStateItem)
         {
             var model = _countryModelFactory.GetStatesByCountryId(countryId, addSelectStateItem);
             return Json(model, JsonRequestBehavior.AllowGet);

@@ -93,7 +93,7 @@ namespace Nop.Web.Controllers
         #region Categories
         
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult Category(int categoryId, CatalogPagingFilteringModel command)
+        public virtual ActionResult Category(int categoryId, CatalogPagingFilteringModel command)
         {
             var category = _categoryService.GetCategoryById(categoryId);
             if (category == null || category.Deleted)
@@ -133,21 +133,21 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult CategoryNavigation(int currentCategoryId, int currentProductId)
+        public virtual ActionResult CategoryNavigation(int currentCategoryId, int currentProductId)
         {
             var model = _catalogModelFactory.PrepareCategoryNavigationModel(currentCategoryId, currentProductId);
             return PartialView(model);
         }
 
         [ChildActionOnly]
-        public ActionResult TopMenu()
+        public virtual ActionResult TopMenu()
         {
             var model = _catalogModelFactory.PrepareTopMenuModel();
             return PartialView(model);
         }
         
         [ChildActionOnly]
-        public ActionResult HomepageCategories()
+        public virtual ActionResult HomepageCategories()
         {
             var model = _catalogModelFactory.PrepareHomepageCategoryModels();
             if (!model.Any())
@@ -161,7 +161,7 @@ namespace Nop.Web.Controllers
         #region Manufacturers
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult Manufacturer(int manufacturerId, CatalogPagingFilteringModel command)
+        public virtual ActionResult Manufacturer(int manufacturerId, CatalogPagingFilteringModel command)
         {
             var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
             if (manufacturer == null || manufacturer.Deleted)
@@ -201,14 +201,14 @@ namespace Nop.Web.Controllers
         }
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult ManufacturerAll()
+        public virtual ActionResult ManufacturerAll()
         {
             var model = _catalogModelFactory.PrepareManufacturerAllModels();
             return View(model);
         }
 
         [ChildActionOnly]
-        public ActionResult ManufacturerNavigation(int currentManufacturerId)
+        public virtual ActionResult ManufacturerNavigation(int currentManufacturerId)
         {
             if (_catalogSettings.ManufacturersBlockItemsToDisplay == 0)
                 return Content("");
@@ -226,7 +226,7 @@ namespace Nop.Web.Controllers
         #region Vendors
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult Vendor(int vendorId, CatalogPagingFilteringModel command)
+        public virtual ActionResult Vendor(int vendorId, CatalogPagingFilteringModel command)
         {
             var vendor = _vendorService.GetVendorById(vendorId);
             if (vendor == null || vendor.Deleted || !vendor.Active)
@@ -249,7 +249,7 @@ namespace Nop.Web.Controllers
         }
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult VendorAll()
+        public virtual ActionResult VendorAll()
         {
             //we don't allow viewing of vendors if "vendors" block is hidden
             if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
@@ -260,7 +260,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult VendorNavigation()
+        public virtual ActionResult VendorNavigation()
         {
             if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
                 return Content("");
@@ -277,7 +277,7 @@ namespace Nop.Web.Controllers
         #region Product tags
         
         [ChildActionOnly]
-        public ActionResult PopularProductTags()
+        public virtual ActionResult PopularProductTags()
         {
             var model = _catalogModelFactory.PreparePopularProductTagsModel();
 
@@ -288,7 +288,7 @@ namespace Nop.Web.Controllers
         }
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult ProductsByTag(int productTagId, CatalogPagingFilteringModel command)
+        public virtual ActionResult ProductsByTag(int productTagId, CatalogPagingFilteringModel command)
         {
             var productTag = _productTagService.GetProductTagById(productTagId);
             if (productTag == null)
@@ -299,7 +299,7 @@ namespace Nop.Web.Controllers
         }
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult ProductTagsAll()
+        public virtual ActionResult ProductTagsAll()
         {
             var model = _catalogModelFactory.PrepareProductTagsAllModel();
             return View(model);
@@ -311,7 +311,7 @@ namespace Nop.Web.Controllers
 
         [NopHttpsRequirement(SslRequirement.No)]
         [ValidateInput(false)]
-        public ActionResult Search(SearchModel model, CatalogPagingFilteringModel command)
+        public virtual ActionResult Search(SearchModel model, CatalogPagingFilteringModel command)
         {
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
@@ -327,14 +327,14 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult SearchBox()
+        public virtual ActionResult SearchBox()
         {
             var model = _catalogModelFactory.PrepareSearchBoxModel();
             return PartialView(model);
         }
 
         [ValidateInput(false)]
-        public ActionResult SearchTermAutoComplete(string term)
+        public virtual ActionResult SearchTermAutoComplete(string term)
         {
             if (String.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
                 return Content("");

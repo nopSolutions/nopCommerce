@@ -118,7 +118,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
         public ActionResult FixedRatesList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return Content("Access denied");
+                return ErrorForKendoGridJson("Access denied");
 
             var taxRateModels = _taxCategoryService.GetAllTaxCategories().Select(taxCategory => new FixedTaxRateModel
             {
@@ -159,7 +159,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
         public ActionResult RatesByCountryStateZipList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return Content("Access denied");
+                return ErrorForKendoGridJson("Access denied");
 
             var records = _taxRateService.GetAllTaxRates(command.Page - 1, command.PageSize);
             var taxRatesModel = records

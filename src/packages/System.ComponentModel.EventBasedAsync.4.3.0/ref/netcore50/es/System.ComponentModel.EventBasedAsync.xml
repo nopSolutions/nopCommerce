@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.ComponentModel.EventBasedAsync</name>
+  </assembly>
+  <members>
+    <member name="T:System.ComponentModel.AsyncCompletedEventArgs">
+      <summary>Proporciona datos para el evento Completed de nombreDeMétodo.</summary>
+    </member>
+    <member name="M:System.ComponentModel.AsyncCompletedEventArgs.#ctor(System.Exception,System.Boolean,System.Object)">
+      <summary>Inicializa una nueva instancia de la clase <see cref="T:System.ComponentModel.AsyncCompletedEventArgs" />. </summary>
+      <param name="error">Cualquier error que se haya producido durante la operación asincrónica.</param>
+      <param name="cancelled">Valor que indica si se canceló la operación asincrónica.</param>
+      <param name="userState">Objeto de estado opcional proporcionado por el usuario que se ha pasado al método <see cref="M:System.ComponentModel.BackgroundWorker.RunWorkerAsync(System.Object)" />.</param>
+    </member>
+    <member name="P:System.ComponentModel.AsyncCompletedEventArgs.Cancelled">
+      <summary>Obtiene un valor que indica si se ha cancelado una operación asincrónica.</summary>
+      <returns>Es true si se canceló la operación en segundo plano; en caso contrario, es false.El valor predeterminado es false.</returns>
+    </member>
+    <member name="P:System.ComponentModel.AsyncCompletedEventArgs.Error">
+      <summary>Obtiene un valor que indica el error que se produjo durante una operación asincrónica.</summary>
+      <returns>Instancia de <see cref="T:System.Exception" />, si se ha producido un error durante una operación asincrónica; de lo contrario, null.</returns>
+    </member>
+    <member name="M:System.ComponentModel.AsyncCompletedEventArgs.RaiseExceptionIfNecessary">
+      <summary>Genera una excepción proporcionada por el usuario si se ha producido un error en una operación asincrónica.</summary>
+      <exception cref="T:System.InvalidOperationException">La propiedad <see cref="P:System.ComponentModel.AsyncCompletedEventArgs.Cancelled" /> es true. </exception>
+      <exception cref="T:System.Reflection.TargetInvocationException">La operación asincrónica ha establecido la propiedad <see cref="P:System.ComponentModel.AsyncCompletedEventArgs.Error" />.La propiedad <see cref="P:System.Exception.InnerException" /> contiene una referencia a <see cref="P:System.ComponentModel.AsyncCompletedEventArgs.Error" />.</exception>
+    </member>
+    <member name="P:System.ComponentModel.AsyncCompletedEventArgs.UserState">
+      <summary>Obtiene el identificador único de la tarea asincrónica.</summary>
+      <returns>Referencia a un objeto que identifica de forma única la tarea asincrónica; de lo contrario, null si no se ha establecido ningún valor.</returns>
+    </member>
+    <member name="T:System.ComponentModel.AsyncCompletedEventHandler">
+      <summary>Representa el método que controlará el evento nombreDeMétodoCompleted de una operación asincrónica.</summary>
+      <param name="sender">Origen del evento. </param>
+      <param name="e">Objeto <see cref="T:System.ComponentModel.AsyncCompletedEventArgs" /> que contiene los datos del evento. </param>
+    </member>
+    <member name="T:System.ComponentModel.AsyncOperation">
+      <summary>Realiza un seguimiento de la duración de una operación asincrónica.</summary>
+    </member>
+    <member name="M:System.ComponentModel.AsyncOperation.Finalize">
+      <summary>Finaliza la operación asincrónica.</summary>
+    </member>
+    <member name="M:System.ComponentModel.AsyncOperation.OperationCompleted">
+      <summary>Pone fin a la duración de una operación asincrónica.</summary>
+      <exception cref="T:System.InvalidOperationException">
+        <see cref="M:System.ComponentModel.AsyncOperation.OperationCompleted" /> se ha llamado previamente para esta tarea. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.ComponentModel.AsyncOperation.Post(System.Threading.SendOrPostCallback,System.Object)">
+      <summary>Invoca un delegado en el subproceso o contexto adecuado para el modelo de aplicaciones.</summary>
+      <param name="d">Objeto <see cref="T:System.Threading.SendOrPostCallback" /> que contiene el delegado al que se va a llamar cuando finalice la operación. </param>
+      <param name="arg">Argumento del delegado incluido en el parámetro <paramref name="d" />. </param>
+      <exception cref="T:System.InvalidOperationException">El <see cref="M:System.ComponentModel.AsyncOperation.PostOperationCompleted(System.Threading.SendOrPostCallback,System.Object)" /> método se ha llamado previamente para esta tarea. </exception>
+      <exception cref="T:System.ArgumentNullException">El valor de <paramref name="d" /> es null. </exception>
+    </member>
+    <member name="M:System.ComponentModel.AsyncOperation.PostOperationCompleted(System.Threading.SendOrPostCallback,System.Object)">
+      <summary>Pone fin a la duración de una operación asincrónica.</summary>
+      <param name="d">Objeto <see cref="T:System.Threading.SendOrPostCallback" /> que contiene el delegado al que se va a llamar cuando finalice la operación. </param>
+      <param name="arg">Argumento del delegado incluido en el parámetro <paramref name="d" />. </param>
+      <exception cref="T:System.InvalidOperationException">
+        <see cref="M:System.ComponentModel.AsyncOperation.OperationCompleted" /> se ha llamado previamente para esta tarea. </exception>
+      <exception cref="T:System.ArgumentNullException">El valor de <paramref name="d" /> es null. </exception>
+    </member>
+    <member name="P:System.ComponentModel.AsyncOperation.SynchronizationContext">
+      <summary>Obtiene el objeto <see cref="T:System.Threading.SynchronizationContext" /> que se pasó al constructor.</summary>
+      <returns>Objeto <see cref="T:System.Threading.SynchronizationContext" /> que se pasó al constructor.</returns>
+    </member>
+    <member name="P:System.ComponentModel.AsyncOperation.UserSuppliedState">
+      <summary>Obtiene o establece un objeto que se usa para identificar de forma única una operación asincrónica.</summary>
+      <returns>Objeto de estado que se pasó a la invocación al método asincrónico.</returns>
+    </member>
+    <member name="T:System.ComponentModel.AsyncOperationManager">
+      <summary>Proporciona administración de simultaneidad para las clases que admiten llamadas de métodos asincrónicos.Esta clase no puede heredarse.</summary>
+    </member>
+    <member name="M:System.ComponentModel.AsyncOperationManager.CreateOperation(System.Object)">
+      <summary>Devuelve un objeto <see cref="T:System.ComponentModel.AsyncOperation" /> para realizar un seguimiento de la duración de una operación asincrónica determinada.</summary>
+      <returns>Objeto <see cref="T:System.ComponentModel.AsyncOperation" /> que se puede utilizar para realizar un seguimiento de la duración de una invocación a un método asincrónico.</returns>
+      <param name="userSuppliedState">Objeto que se utiliza para asociar un fragmento de estado del cliente, como un id. de tarea, a una operación asincrónica determinada. </param>
+    </member>
+    <member name="P:System.ComponentModel.AsyncOperationManager.SynchronizationContext">
+      <summary>Obtiene o establece el contexto de sincronización de la operación asincrónica.</summary>
+      <returns>Contexto de sincronización de la operación asincrónica.</returns>
+    </member>
+    <member name="T:System.ComponentModel.BackgroundWorker">
+      <summary>Ejecuta una operación en un subproceso distinto.</summary>
+    </member>
+    <member name="M:System.ComponentModel.BackgroundWorker.#ctor">
+      <summary>Inicializa una nueva instancia de la clase <see cref="T:System.ComponentModel.BackgroundWorker" />.</summary>
+    </member>
+    <member name="M:System.ComponentModel.BackgroundWorker.CancelAsync">
+      <summary>Solicita la cancelación de una operación en segundo plano pendiente.</summary>
+      <exception cref="T:System.InvalidOperationException">
+        <see cref="P:System.ComponentModel.BackgroundWorker.WorkerSupportsCancellation" /> es false. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.ComponentModel.BackgroundWorker.CancellationPending">
+      <summary>Obtiene un valor que indica si la aplicación ha solicitado la cancelación de una operación en segundo plano.</summary>
+      <returns>true si la aplicación ha solicitado la cancelación de una operación en segundo plano; de lo contrario, false.El valor predeterminado es false.</returns>
+    </member>
+    <member name="M:System.ComponentModel.BackgroundWorker.Dispose"></member>
+    <member name="M:System.ComponentModel.BackgroundWorker.Dispose(System.Boolean)"></member>
+    <member name="E:System.ComponentModel.BackgroundWorker.DoWork">
+      <summary>Se produce cuando se llama a <see cref="M:System.ComponentModel.BackgroundWorker.RunWorkerAsync" />.</summary>
+    </member>
+    <member name="P:System.ComponentModel.BackgroundWorker.IsBusy">
+      <summary>Obtiene un valor que indica si el objeto <see cref="T:System.ComponentModel.BackgroundWorker" /> está ejecutando una operación asincrónica.</summary>
+      <returns>true si <see cref="T:System.ComponentModel.BackgroundWorker" /> está ejecutando una operación asincrónica; de lo contrario, false.</returns>
+    </member>
+    <member name="M:System.ComponentModel.BackgroundWorker.OnDoWork(System.ComponentModel.DoWorkEventArgs)">
+      <summary>Genera el evento <see cref="E:System.ComponentModel.BackgroundWorker.DoWork" />. </summary>
+      <param name="e">Objeto <see cref="T:System.EventArgs" /> que contiene los datos del evento.</param>
+    </member>
+    <member name="M:System.ComponentModel.BackgroundWorker.OnProgressChanged(System.ComponentModel.ProgressChangedEventArgs)">
+      <summary>Genera el evento <see cref="E:System.ComponentModel.BackgroundWorker.ProgressChanged" />.</summary>
+      <param name="e">Objeto <see cref="T:System.EventArgs" /> que contiene los datos del evento. </param>
+    </member>
+    <member name="M:System.ComponentModel.BackgroundWorker.OnRunWorkerCompleted(System.ComponentModel.RunWorkerCompletedEventArgs)">
+      <summary>Genera el evento <see cref="E:System.ComponentModel.BackgroundWorker.RunWorkerCompleted" />.</summary>
+      <param name="e">Objeto <see cref="T:System.EventArgs" /> que contiene los datos del evento. </param>
+    </member>
+    <member name="E:System.ComponentModel.BackgroundWorker.ProgressChanged">
+      <summary>Se produce cuando se llama a <see cref="M:System.ComponentModel.BackgroundWorker.ReportProgress(System.Int32)" />.</summary>
+    </member>
+    <member name="M:System.ComponentModel.BackgroundWorker.ReportProgress(System.Int32)">
+      <summary>Genera el evento <see cref="E:System.ComponentModel.BackgroundWorker.ProgressChanged" />.</summary>
+      <param name="percentProgress">Porcentaje, de 0 a 100, de la operación en segundo plano que se ha completado. </param>
+      <exception cref="T:System.InvalidOperationException">La propiedad <see cref="P:System.ComponentModel.BackgroundWorker.WorkerReportsProgress" /> se establece en false. </exception>
+    </member>
+    <member name="M:System.ComponentModel.BackgroundWorker.ReportProgress(System.Int32,System.Object)">
+      <summary>Genera el evento <see cref="E:System.ComponentModel.BackgroundWorker.ProgressChanged" />.</summary>
+      <param name="percentProgress">Porcentaje, de 0 a 100, de la operación en segundo plano que se ha completado.</param>
+      <param name="userState">Objeto de estado que se ha pasado a <see cref="M:System.ComponentModel.BackgroundWorker.RunWorkerAsync(System.Object)" />.</param>
+      <exception cref="T:System.InvalidOperationException">La propiedad <see cref="P:System.ComponentModel.BackgroundWorker.WorkerReportsProgress" /> se establece en false. </exception>
+    </member>
+    <member name="M:System.ComponentModel.BackgroundWorker.RunWorkerAsync">
+      <summary>Inicia la ejecución de una operación en segundo plano.</summary>
+      <exception cref="T:System.InvalidOperationException">
+        <see cref="P:System.ComponentModel.BackgroundWorker.IsBusy" /> es true.</exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.ComponentModel.BackgroundWorker.RunWorkerAsync(System.Object)">
+      <summary>Inicia la ejecución de una operación en segundo plano.</summary>
+      <param name="argument">Parámetro que utiliza la operación en segundo plano que se va a ejecutar en el controlador de eventos <see cref="E:System.ComponentModel.BackgroundWorker.DoWork" />. </param>
+      <exception cref="T:System.InvalidOperationException">
+        <see cref="P:System.ComponentModel.BackgroundWorker.IsBusy" /> es true. </exception>
+    </member>
+    <member name="E:System.ComponentModel.BackgroundWorker.RunWorkerCompleted">
+      <summary>Se produce cuando la operación en segundo plano se ha completado, se ha cancelado o ha producido una excepción.</summary>
+    </member>
+    <member name="P:System.ComponentModel.BackgroundWorker.WorkerReportsProgress">
+      <summary>Obtiene o establece un valor que indica si <see cref="T:System.ComponentModel.BackgroundWorker" /> puede crear informes sobre las actualizaciones de progreso.</summary>
+      <returns>true si <see cref="T:System.ComponentModel.BackgroundWorker" /> admite las actualizaciones de progreso; de lo contrario, false.El valor predeterminado es false.</returns>
+    </member>
+    <member name="P:System.ComponentModel.BackgroundWorker.WorkerSupportsCancellation">
+      <summary>Obtiene o establece un valor que indica si <see cref="T:System.ComponentModel.BackgroundWorker" /> admite la cancelación asincrónica.</summary>
+      <returns>true si <see cref="T:System.ComponentModel.BackgroundWorker" /> admite la cancelación; de lo contrario, false.El valor predeterminado es false.</returns>
+    </member>
+    <member name="T:System.ComponentModel.DoWorkEventArgs">
+      <summary>Proporciona datos para el controlador de eventos <see cref="E:System.ComponentModel.BackgroundWorker.DoWork" />.</summary>
+    </member>
+    <member name="M:System.ComponentModel.DoWorkEventArgs.#ctor(System.Object)">
+      <summary>Inicializa una nueva instancia de la clase <see cref="T:System.ComponentModel.DoWorkEventArgs" />.</summary>
+      <param name="argument">Especifica un argumento para una operación asincrónica.</param>
+    </member>
+    <member name="P:System.ComponentModel.DoWorkEventArgs.Argument">
+      <summary>Obtiene un valor que representa el argumento de una operación asincrónica.</summary>
+      <returns>Objeto <see cref="T:System.Object" /> que representa el argumento de una operación asincrónica.</returns>
+    </member>
+    <member name="P:System.ComponentModel.DoWorkEventArgs.Cancel"></member>
+    <member name="P:System.ComponentModel.DoWorkEventArgs.Result">
+      <summary>Obtiene o establece un valor que representa el resultado de una operación asincrónica.</summary>
+      <returns>Objeto <see cref="T:System.Object" /> que representa el resultado de una operación asincrónica.</returns>
+    </member>
+    <member name="T:System.ComponentModel.DoWorkEventHandler">
+      <summary>Representa el método que controlará el evento <see cref="E:System.ComponentModel.BackgroundWorker.DoWork" />.Esta clase no puede heredarse.</summary>
+      <param name="sender">Origen del evento.</param>
+      <param name="e">
+        <see cref="T:System.ComponentModel.DoWorkEventArgs" /> que contiene los datos del evento.</param>
+    </member>
+    <member name="T:System.ComponentModel.ProgressChangedEventArgs">
+      <summary>Proporciona datos para el evento <see cref="E:System.ComponentModel.BackgroundWorker.ProgressChanged" />.</summary>
+    </member>
+    <member name="M:System.ComponentModel.ProgressChangedEventArgs.#ctor(System.Int32,System.Object)">
+      <summary>Inicializa una nueva instancia de la clase <see cref="T:System.ComponentModel.ProgressChangedEventArgs" />.</summary>
+      <param name="progressPercentage">Porcentaje completado hasta el momento de una tarea asincrónica.</param>
+      <param name="userState">Estado de usuario único.</param>
+    </member>
+    <member name="P:System.ComponentModel.ProgressChangedEventArgs.ProgressPercentage">
+      <summary>Obtiene el porcentaje de progreso de una tarea asincrónica.</summary>
+      <returns>Valor porcentual que indica el progreso de una tarea asincrónica.</returns>
+    </member>
+    <member name="P:System.ComponentModel.ProgressChangedEventArgs.UserState">
+      <summary>Obtiene un estado de usuario único.</summary>
+      <returns>Objeto <see cref="T:System.Object" /> único que indica el estado del usuario.</returns>
+    </member>
+    <member name="T:System.ComponentModel.ProgressChangedEventHandler">
+      <summary>Representa el método que controlará el evento <see cref="E:System.ComponentModel.BackgroundWorker.ProgressChanged" /> de la clase <see cref="T:System.ComponentModel.BackgroundWorker" />.Esta clase no puede heredarse.</summary>
+      <param name="sender">Origen del evento. </param>
+      <param name="e">
+        <see cref="T:System.ComponentModel.ProgressChangedEventArgs" /> que contiene los datos del evento. </param>
+    </member>
+    <member name="T:System.ComponentModel.RunWorkerCompletedEventArgs">
+      <summary>Proporciona datos para el evento Completed de nombreDeMétodo.</summary>
+    </member>
+    <member name="M:System.ComponentModel.RunWorkerCompletedEventArgs.#ctor(System.Object,System.Exception,System.Boolean)">
+      <summary>Inicializa una nueva instancia de la clase <see cref="T:System.ComponentModel.RunWorkerCompletedEventArgs" />.</summary>
+      <param name="result">Resultado de una operación asincrónica.</param>
+      <param name="error">Cualquier error que se haya producido durante la operación asincrónica.</param>
+      <param name="cancelled">Valor que indica si se canceló la operación asincrónica.</param>
+    </member>
+    <member name="P:System.ComponentModel.RunWorkerCompletedEventArgs.Result">
+      <summary>Obtiene un valor que representa el resultado de una operación asincrónica.</summary>
+      <returns>Objeto <see cref="T:System.Object" /> que representa el resultado de una operación asincrónica.</returns>
+      <exception cref="T:System.Reflection.TargetInvocationException">
+        <see cref="P:System.ComponentModel.AsyncCompletedEventArgs.Error" /> no es null.La propiedad <see cref="P:System.Exception.InnerException" /> contiene una referencia a <see cref="P:System.ComponentModel.AsyncCompletedEventArgs.Error" />.</exception>
+      <exception cref="T:System.InvalidOperationException">
+        <see cref="P:System.ComponentModel.AsyncCompletedEventArgs.Cancelled" /> es true.</exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.ComponentModel.RunWorkerCompletedEventArgs.UserState">
+      <summary>Obtiene un valor que representa el estado del usuario.</summary>
+      <returns>Objeto <see cref="T:System.Object" /> que representa el estado del usuario.</returns>
+    </member>
+    <member name="T:System.ComponentModel.RunWorkerCompletedEventHandler">
+      <summary>Representa el método que controlará el evento <see cref="E:System.ComponentModel.BackgroundWorker.RunWorkerCompleted" /> de una clase <see cref="T:System.ComponentModel.BackgroundWorker" />.</summary>
+      <param name="sender">Origen del evento. </param>
+      <param name="e">
+        <see cref="T:System.ComponentModel.RunWorkerCompletedEventArgs" /> que contiene los datos del evento. </param>
+    </member>
+  </members>
+</doc>

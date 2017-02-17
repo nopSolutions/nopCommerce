@@ -80,7 +80,7 @@ namespace Nop.Web.Controllers
         #region Methods
 
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult CustomerReturnRequests()
+        public virtual ActionResult CustomerReturnRequests()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
@@ -90,7 +90,7 @@ namespace Nop.Web.Controllers
         }
 
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult ReturnRequest(int orderId)
+        public virtual ActionResult ReturnRequest(int orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -107,7 +107,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("ReturnRequest")]
         [ValidateInput(false)]
         [PublicAntiForgery]
-        public ActionResult ReturnRequestSubmit(int orderId, SubmitReturnRequestModel model, FormCollection form)
+        public virtual ActionResult ReturnRequestSubmit(int orderId, SubmitReturnRequestModel model, FormCollection form)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -182,7 +182,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult UploadFileReturnRequest()
+        public virtual ActionResult UploadFileReturnRequest()
         {
             if (!_orderSettings.ReturnRequestsEnabled && !_orderSettings.ReturnRequestsAllowFiles)
             {

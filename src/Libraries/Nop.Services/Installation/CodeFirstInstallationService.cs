@@ -52,6 +52,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Language> _languageRepository;
         private readonly IRepository<Currency> _currencyRepository;
         private readonly IRepository<Customer> _customerRepository;
+        private readonly IRepository<CustomerPassword> _customerPasswordRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly IRepository<CheckoutAttribute> _checkoutAttributeRepository;
@@ -111,6 +112,7 @@ namespace Nop.Services.Installation
             IRepository<Language> languageRepository,
             IRepository<Currency> currencyRepository,
             IRepository<Customer> customerRepository,
+            IRepository<CustomerPassword> customerPasswordRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<CheckoutAttribute> checkoutAttributeRepository,
@@ -166,6 +168,7 @@ namespace Nop.Services.Installation
             this._languageRepository = languageRepository;
             this._currencyRepository = currencyRepository;
             this._customerRepository = customerRepository;
+            this._customerPasswordRepository = customerPasswordRepository;
             this._customerRoleRepository = customerRoleRepository;
             this._specificationAttributeRepository = specificationAttributeRepository;
             this._checkoutAttributeRepository = checkoutAttributeRepository;
@@ -4091,9 +4094,6 @@ namespace Nop.Services.Installation
                 CustomerGuid = Guid.NewGuid(),
                 Email = defaultUserEmail,
                 Username = defaultUserEmail,
-                Password = defaultUserPassword,
-                PasswordFormat = PasswordFormat.Clear,
-                PasswordSalt = "",
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
@@ -4119,14 +4119,20 @@ namespace Nop.Services.Installation
             adminUser.Addresses.Add(defaultAdminUserAddress);
             adminUser.BillingAddress = defaultAdminUserAddress;
             adminUser.ShippingAddress = defaultAdminUserAddress;
+
             adminUser.CustomerRoles.Add(crAdministrators);
             adminUser.CustomerRoles.Add(crForumModerators);
             adminUser.CustomerRoles.Add(crRegistered);
+
             _customerRepository.Insert(adminUser);
             //set default customer name
             _genericAttributeService.SaveAttribute(adminUser, SystemCustomerAttributeNames.FirstName, "John");
             _genericAttributeService.SaveAttribute(adminUser, SystemCustomerAttributeNames.LastName, "Smith");
 
+            //set hashed admin password
+            var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
+            customerRegistrationService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false,
+                 PasswordFormat.Hashed, defaultUserPassword));
 
             //second user
             var secondUserEmail = "steve_gates@nopCommerce.com";
@@ -4135,9 +4141,6 @@ namespace Nop.Services.Installation
                 CustomerGuid = Guid.NewGuid(),
                 Email = secondUserEmail,
                 Username = secondUserEmail,
-                Password = "123456",
-                PasswordFormat = PasswordFormat.Clear,
-                PasswordSalt = "",
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
@@ -4162,12 +4165,23 @@ namespace Nop.Services.Installation
             secondUser.Addresses.Add(defaultSecondUserAddress);
             secondUser.BillingAddress = defaultSecondUserAddress;
             secondUser.ShippingAddress = defaultSecondUserAddress;
+
             secondUser.CustomerRoles.Add(crRegistered);
+
             _customerRepository.Insert(secondUser);
             //set default customer name
             _genericAttributeService.SaveAttribute(secondUser, SystemCustomerAttributeNames.FirstName, defaultSecondUserAddress.FirstName);
             _genericAttributeService.SaveAttribute(secondUser, SystemCustomerAttributeNames.LastName, defaultSecondUserAddress.LastName);
 
+            //set customer password
+            _customerPasswordRepository.Insert(new CustomerPassword
+            {
+                Customer = secondUser,
+                Password = "123456",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            });
 
             //third user
             var thirdUserEmail = "arthur_holmes@nopCommerce.com";
@@ -4176,9 +4190,6 @@ namespace Nop.Services.Installation
                 CustomerGuid = Guid.NewGuid(),
                 Email = thirdUserEmail,
                 Username = thirdUserEmail,
-                Password = "123456",
-                PasswordFormat = PasswordFormat.Clear,
-                PasswordSalt = "",
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
@@ -4202,13 +4213,24 @@ namespace Nop.Services.Installation
             thirdUser.Addresses.Add(defaultThirdUserAddress);
             thirdUser.BillingAddress = defaultThirdUserAddress;
             thirdUser.ShippingAddress = defaultThirdUserAddress;
+
             thirdUser.CustomerRoles.Add(crRegistered);
+
             _customerRepository.Insert(thirdUser);
             //set default customer name
             _genericAttributeService.SaveAttribute(thirdUser, SystemCustomerAttributeNames.FirstName, defaultThirdUserAddress.FirstName);
             _genericAttributeService.SaveAttribute(thirdUser, SystemCustomerAttributeNames.LastName, defaultThirdUserAddress.LastName);
 
-            
+            //set customer password
+            _customerPasswordRepository.Insert(new CustomerPassword
+            {
+                Customer = thirdUser,
+                Password = "123456",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            });
+
             //fourth user
             var fourthUserEmail = "james_pan@nopCommerce.com";
             var fourthUser = new Customer
@@ -4216,9 +4238,6 @@ namespace Nop.Services.Installation
                 CustomerGuid = Guid.NewGuid(),
                 Email = fourthUserEmail,
                 Username = fourthUserEmail,
-                Password = "123456",
-                PasswordFormat = PasswordFormat.Clear,
-                PasswordSalt = "",
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
@@ -4242,12 +4261,23 @@ namespace Nop.Services.Installation
             fourthUser.Addresses.Add(defaultFourthUserAddress);
             fourthUser.BillingAddress = defaultFourthUserAddress;
             fourthUser.ShippingAddress = defaultFourthUserAddress;
+
             fourthUser.CustomerRoles.Add(crRegistered);
+
             _customerRepository.Insert(fourthUser);
             //set default customer name
             _genericAttributeService.SaveAttribute(fourthUser, SystemCustomerAttributeNames.FirstName, defaultFourthUserAddress.FirstName);
             _genericAttributeService.SaveAttribute(fourthUser, SystemCustomerAttributeNames.LastName, defaultFourthUserAddress.LastName);
 
+            //set customer password
+            _customerPasswordRepository.Insert(new CustomerPassword
+            {
+                Customer = fourthUser,
+                Password = "123456",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            });
 
             //fifth user
             var fifthUserEmail = "brenda_lindgren@nopCommerce.com";
@@ -4256,9 +4286,6 @@ namespace Nop.Services.Installation
                 CustomerGuid = Guid.NewGuid(),
                 Email = fifthUserEmail,
                 Username = fifthUserEmail,
-                Password = "123456",
-                PasswordFormat = PasswordFormat.Clear,
-                PasswordSalt = "",
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
@@ -4283,12 +4310,23 @@ namespace Nop.Services.Installation
             fifthUser.Addresses.Add(defaultFifthUserAddress);
             fifthUser.BillingAddress = defaultFifthUserAddress;
             fifthUser.ShippingAddress = defaultFifthUserAddress;
+
             fifthUser.CustomerRoles.Add(crRegistered);
+
             _customerRepository.Insert(fifthUser);
             //set default customer name
             _genericAttributeService.SaveAttribute(fifthUser, SystemCustomerAttributeNames.FirstName, defaultFifthUserAddress.FirstName);
             _genericAttributeService.SaveAttribute(fifthUser, SystemCustomerAttributeNames.LastName, defaultFifthUserAddress.LastName);
 
+            //set customer password
+            _customerPasswordRepository.Insert(new CustomerPassword
+            {
+                Customer = fifthUser,
+                Password = "123456",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            });
 
             //sixth user
             var sixthUserEmail = "victoria_victoria@nopCommerce.com";
@@ -4297,9 +4335,6 @@ namespace Nop.Services.Installation
                 CustomerGuid = Guid.NewGuid(),
                 Email = sixthUserEmail,
                 Username = sixthUserEmail,
-                Password = "123456",
-                PasswordFormat = PasswordFormat.Clear,
-                PasswordSalt = "",
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
@@ -4324,19 +4359,29 @@ namespace Nop.Services.Installation
             sixthUser.Addresses.Add(defaultSixthUserAddress);
             sixthUser.BillingAddress = defaultSixthUserAddress;
             sixthUser.ShippingAddress = defaultSixthUserAddress;
+
             sixthUser.CustomerRoles.Add(crRegistered);
+
             _customerRepository.Insert(sixthUser);
             //set default customer name
             _genericAttributeService.SaveAttribute(sixthUser, SystemCustomerAttributeNames.FirstName, defaultSixthUserAddress.FirstName);
             _genericAttributeService.SaveAttribute(sixthUser, SystemCustomerAttributeNames.LastName, defaultSixthUserAddress.LastName);
 
+            //set customer password
+            _customerPasswordRepository.Insert(new CustomerPassword
+            {
+                Customer = sixthUser,
+                Password = "123456",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            });
 
             //search engine (crawler) built-in user
             var searchEngineUser = new Customer
             {
                 Email = "builtin@search_engine_record.com",
                 CustomerGuid = Guid.NewGuid(),
-                PasswordFormat = PasswordFormat.Clear,
                 AdminComment = "Built-in system guest record used for requests from search engines.",
                 Active = true,
                 IsSystemAccount = true,
@@ -4354,7 +4399,6 @@ namespace Nop.Services.Installation
             {
                 Email = "builtin@background-task-record.com",
                 CustomerGuid = Guid.NewGuid(),
-                PasswordFormat = PasswordFormat.Clear,
                 AdminComment = "Built-in system record used for background tasks.",
                 Active = true,
                 IsSystemAccount = true,
@@ -4427,9 +4471,12 @@ namespace Nop.Services.Installation
                 ShippingRateComputationMethodSystemName = "Shipping.FixedOrByWeight",
                 CustomValuesXml = string.Empty,
                 VatNumber = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow
+                CreatedOnUtc = DateTime.UtcNow,
+                CustomOrderNumber = string.Empty
             };
             _orderRepository.Insert(firstOrder);
+            firstOrder.CustomOrderNumber = firstOrder.Id.ToString();
+            _orderRepository.Update(firstOrder);
 
             //item Apple iCam
             var firstOrderItem1 = new OrderItem()
@@ -4591,9 +4638,12 @@ namespace Nop.Services.Installation
                 ShippingRateComputationMethodSystemName = "Shipping.FixedOrByWeight",
                 CustomValuesXml = string.Empty,
                 VatNumber = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow
+                CreatedOnUtc = DateTime.UtcNow,
+                CustomOrderNumber = string.Empty
             };
             _orderRepository.Insert(secondOrder);
+            secondOrder.CustomOrderNumber = secondOrder.Id.ToString();
+            _orderRepository.Update(secondOrder);
 
             //order notes
             _orderNoteRepository.Insert(new OrderNote()
@@ -4707,9 +4757,12 @@ namespace Nop.Services.Installation
                 ShippingRateComputationMethodSystemName = string.Empty,
                 CustomValuesXml = string.Empty,
                 VatNumber = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow
+                CreatedOnUtc = DateTime.UtcNow,
+                CustomOrderNumber = string.Empty
             };
             _orderRepository.Insert(thirdOrder);
+            thirdOrder.CustomOrderNumber = thirdOrder.Id.ToString();
+            _orderRepository.Update(thirdOrder);
 
             //order notes
             _orderNoteRepository.Insert(new OrderNote()
@@ -4849,9 +4902,12 @@ namespace Nop.Services.Installation
                 ShippingRateComputationMethodSystemName = "Pickup.PickupInStore",
                 CustomValuesXml = string.Empty,
                 VatNumber = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow
+                CreatedOnUtc = DateTime.UtcNow,
+                CustomOrderNumber = string.Empty
             };
             _orderRepository.Insert(fourthOrder);
+            fourthOrder.CustomOrderNumber = fourthOrder.Id.ToString();
+            _orderRepository.Update(fourthOrder);
 
             //order notes
             _orderNoteRepository.Insert(new OrderNote()
@@ -5058,9 +5114,12 @@ namespace Nop.Services.Installation
                 ShippingRateComputationMethodSystemName = "Shipping.FixedOrByWeight",
                 CustomValuesXml = string.Empty,
                 VatNumber = string.Empty,
-                CreatedOnUtc = DateTime.UtcNow
+                CreatedOnUtc = DateTime.UtcNow,
+                CustomOrderNumber = string.Empty
             };
             _orderRepository.Insert(fifthOrder);
+            fifthOrder.CustomOrderNumber = fifthOrder.Id.ToString();
+            _orderRepository.Update(fifthOrder);
 
             //order notes
             _orderNoteRepository.Insert(new OrderNote()
@@ -5228,13 +5287,6 @@ namespace Nop.Services.Installation
                 Keyword = "gift",
                 StoreId = defaultStore.Id
             });
-        }
-
-        protected virtual void HashDefaultCustomerPassword(string defaultUserEmail, string defaultUserPassword)
-        {
-            var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
-            customerRegistrationService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false,
-                 PasswordFormat.Hashed, defaultUserPassword));
         }
 
         protected virtual void InstallEmailAccounts()
@@ -5508,7 +5560,23 @@ namespace Nop.Services.Installation
                 {
                     Name = MessageTemplateSystemNames.RecurringPaymentCancelledStoreOwnerNotification,
                     Subject = "%Store.Name%. Recurring payment cancelled",
-                    Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}%Customer.FullName% (%Customer.Email%) has just cancelled a recurring payment ID=%RecurringPayment.ID%.{0}</p>{0}", Environment.NewLine),
+                    Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}%if (%RecurringPayment.CancelAfterFailedPayment%) The last payment for the recurring payment ID=%RecurringPayment.ID% failed, so it was cancelled. endif% %if (!%RecurringPayment.CancelAfterFailedPayment%) %Customer.FullName% (%Customer.Email%) has just cancelled a recurring payment ID=%RecurringPayment.ID%. endif%{0}</p>{0}", Environment.NewLine),
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.RecurringPaymentCancelledCustomerNotification,
+                    Subject = "%Store.Name%. Recurring payment cancelled",
+                    Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}Hello %Customer.FullName%,{0}<br />{0}%if (%RecurringPayment.CancelAfterFailedPayment%) It appears your credit card didn't go through for this recurring payment (<a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a>){0}<br />{0}So your subscription has been canceled. endif% %if (!%RecurringPayment.CancelAfterFailedPayment%) The recurring payment ID=%RecurringPayment.ID% was cancelled. endif%{0}</p>{0}", Environment.NewLine),
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.RecurringPaymentFailedCustomerNotification,
+                    Subject = "%Store.Name%. Last recurring payment failed",
+                    Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}Hello %Customer.FullName%,{0}<br />{0}It appears your credit card didn't go through for this recurring payment (<a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a>){0}<br /> %if (%RecurringPayment.RecurringPaymentType% == \"Manual\") {0}You can recharge balance and manually retry payment or cancel it on the order history page. endif% %if (%RecurringPayment.RecurringPaymentType% == \"Automatic\") {0}You can recharge balance and wait, we will try to make the payment again, or you can cancel it on the order history page. endif%{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
                     EmailAccountId = eaGeneral.Id,
                 },
@@ -5581,6 +5649,22 @@ namespace Nop.Services.Installation
                     Body = string.Format("<p>{0}<a href=\"%Store.URL%\">%Store.Name%</a>{0}<br />{0}<br />{0}Vendor %Vendor.Name% (%Vendor.Email%) has just changed information about itself.{0}</p>{0}", Environment.NewLine),
                     IsActive = true,
                     EmailAccountId = eaGeneral.Id
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.ContactUsMessage,
+                    Subject = "%Store.Name%. Contact us",
+                    Body = string.Format("<p>{0}%ContactUs.Body%{0}</p>{0}", Environment.NewLine),
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.ContactVendorMessage,
+                    Subject = "%Store.Name%. Contact us",
+                    Body = string.Format("<p>{0}%ContactUs.Body%{0}</p>{0}", Environment.NewLine),
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
                 }
             };
             _messageTemplateRepository.Insert(messageTemplates);
@@ -5766,7 +5850,8 @@ namespace Nop.Services.Installation
                 Log404Errors = true,
                 BreadcrumbDelimiter = "/",
                 RenderXuaCompatible = false,
-                XuaCompatibleValue = "IE=edge"
+                XuaCompatibleValue = "IE=edge",
+                BbcodeEditorOpenLinksInNewWindow = false
             });
 
             settingService.SaveSetting(new SeoSettings
@@ -5874,7 +5959,7 @@ namespace Nop.Services.Installation
                 AllowProductSorting = true,
                 AllowProductViewModeChanging = true,
                 DefaultViewMode = "grid",
-                ShowProductsFromSubcategories = true,
+                ShowProductsFromSubcategories = false,
                 ShowCategoryProductNumber = false,
                 ShowCategoryProductNumberIncludingSubcategories = false,
                 CategoryBreadcrumbEnabled = true,
@@ -5956,7 +6041,9 @@ namespace Nop.Services.Installation
                 DefaultPasswordFormat = PasswordFormat.Hashed,
                 HashedPasswordFormat = "SHA1",
                 PasswordMinLength = 6,
+                UnduplicatedPasswordsNumber = 4,
                 PasswordRecoveryLinkDaysValid = 7,
+                PasswordLifetime = 90,
                 FailedPasswordAllowedAttempts = 0,
                 FailedPasswordLockoutMinutes = 30,
                 UserRegistrationType = UserRegistrationType.Standard,
@@ -6146,7 +6233,9 @@ namespace Nop.Services.Installation
                 ActivateGiftCardsAfterCompletingOrder = false,
                 DeactivateGiftCardsAfterCancellingOrder = false,
                 DeactivateGiftCardsAfterDeletingOrder = false,
-                CompleteOrderWhenDelivered = true
+                CompleteOrderWhenDelivered = true,
+                CustomOrderNumberMask = "{ID}",
+                ExportWithProducts = true
             });
 
             settingService.SaveSetting(new SecuritySettings
@@ -6194,12 +6283,14 @@ namespace Nop.Services.Installation
                 AllowRePostingPayments = true,
                 BypassPaymentMethodSelectionIfOnlyOne = true,
                 ShowPaymentMethodDescriptions = true,
-                SkipPaymentInfoStepForRedirectionPaymentMethods = false
+                SkipPaymentInfoStepForRedirectionPaymentMethods = false,
+                CancelRecurringPaymentsAfterFailedPayment = false
             });
 
             settingService.SaveSetting(new TaxSettings
             {
                 TaxBasedOn = TaxBasedOn.BillingAddress,
+                TaxBasedOnPickupPointAddress = false,
                 TaxDisplayType = TaxDisplayType.ExcludingTax,
                 ActiveTaxProviderSystemName = "Tax.FixedOrByCountryStateZip",
                 DefaultTaxAddressId = 0,
@@ -12095,7 +12186,6 @@ namespace Nop.Services.Installation
             InstallTopics();
             InstallLocaleResources();
             InstallActivityLogTypes();
-            HashDefaultCustomerPassword(defaultUserEmail, defaultUserPassword);
             InstallProductTemplates();
             InstallCategoryTemplates();
             InstallManufacturerTemplates();

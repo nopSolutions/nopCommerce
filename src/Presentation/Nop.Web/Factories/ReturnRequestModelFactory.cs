@@ -110,6 +110,7 @@ namespace Nop.Web.Factories
 
             model.OrderId = order.Id;
             model.AllowFiles = _orderSettings.ReturnRequestsAllowFiles;
+            model.CustomOrderNumber = order.CustomOrderNumber;
 
             //return reasons
             model.AvailableReturnReasons = _cacheManager.Get(string.Format(ModelCacheEventConsumer.RETURNREQUESTREASONS_MODEL_KEY, _workContext.WorkingLanguage.Id),

@@ -155,8 +155,8 @@
                                             template: '<b>#:FriendlyName#</b>' +
                                                 '# if(Description) {# <br />#:Description# #} #' +
                                                 //allow configuration only when a plugin has a configuration URL specified
-                                                '<br /> # if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="btn btn-primary" href="#=ConfigurationUrl#">@T("Admin.Configuration.Plugins.Fields.Configure")</a>&nbsp;&nbsp;&nbsp; #} #' +
-                                                '<a class="btn bg-aqua" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=#=SystemName#&btnId=btnRefresh&formId=plugins-form\', 800, 500, true);">@T("Admin.Common.Edit")</a>',
+                                                '<br /> # if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="btn btn-default margin-r-5" href="#=ConfigurationUrl#"><i class="fa fa-cog"></i>@T("Admin.Configuration.Plugins.Fields.Configure")</a>#} #' +
+                                                '<a class="btn btn-default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=#=SystemName#&btnId=btnRefresh&formId=plugins-form\', 800, 500, true);"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>',
                                             attributes: { style: "vertical-align:top;" },
                                             width: 400
                                         }, {

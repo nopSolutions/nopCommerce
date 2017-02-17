@@ -22,6 +22,7 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
+            @*hide the entire search block if no elements are displayed*@
             <div class="panel panel-default panel-search" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                 <div class="panel-body">
                     <div class="row">
@@ -109,7 +110,9 @@
                                         field: "Id",
                                         title: "@T("Admin.Common.Edit")",
                                         width: 100,
-                                        template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
                                     }
                                 ]
                             });

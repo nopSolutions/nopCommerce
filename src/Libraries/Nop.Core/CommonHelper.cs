@@ -302,6 +302,9 @@ namespace Nop.Core
                     result += " " + c.ToString();
                 else
                     result += c.ToString();
+
+            //ensure no spaces (e.g. when the first letter is upper case)
+            result = result.TrimStart();
             return result;
         }
 

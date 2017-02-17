@@ -14,6 +14,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
@@ -62,6 +63,7 @@ namespace Nop.Services.Messages
         private readonly TaxSettings _taxSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly ShippingSettings _shippingSettings;
+        private readonly PaymentSettings _paymentSettings;
 
         private readonly IEventPublisher _eventPublisher;
         private readonly StoreInformationSettings _storeInformationSettings;
@@ -89,6 +91,7 @@ namespace Nop.Services.Messages
             TaxSettings taxSettings,
             CurrencySettings currencySettings,
             ShippingSettings shippingSettings,
+            PaymentSettings paymentSettings,
             IEventPublisher eventPublisher,
             StoreInformationSettings storeInformationSettings)
         {
@@ -112,6 +115,7 @@ namespace Nop.Services.Messages
             this._taxSettings = taxSettings;
             this._currencySettings = currencySettings;
             this._shippingSettings = shippingSettings;
+            this._paymentSettings = paymentSettings;
             this._eventPublisher = eventPublisher;
             this._storeInformationSettings = storeInformationSettings;
         }
@@ -234,7 +238,9 @@ namespace Nop.Services.Messages
                 //recurring payment tokens
                 _allowedTokens.Add(TokenGroupNames.RecurringPaymentTokens, new[]
                 {
-                    "%RecurringPayment.ID%"
+                    "%RecurringPayment.ID%",
+                    "%RecurringPayment.CancelAfterFailedPayment%",
+                    "%RecurringPayment.RecurringPaymentType%"
                 });
 
                 //newsletter subscription tokens
@@ -369,6 +375,22 @@ namespace Nop.Services.Messages
                 {
                     "%VatValidationResult.Name%",
                     "%VatValidationResult.Address%"
+                });
+
+                //contact us tokens
+                _allowedTokens.Add(TokenGroupNames.ContactUs, new[]
+                {
+                    "%ContactUs.SenderEmail%",
+                    "%ContactUs.SenderName%",
+                    "%ContactUs.Body%"
+                });
+
+                //contact vendor tokens
+                _allowedTokens.Add(TokenGroupNames.ContactVendor, new[]
+                {
+                    "%ContactUs.SenderEmail%",
+                    "%ContactUs.SenderName%",
+                    "%ContactUs.Body%"
                 });
 
                 return _allowedTokens;
@@ -838,7 +860,7 @@ namespace Nop.Services.Messages
         /// <param name="vendorId">Vendor identifier</param>
         public virtual void AddOrderTokens(IList<Token> tokens, Order order, int languageId, int vendorId = 0)
         {
-            tokens.Add(new Token("Order.OrderNumber", order.Id));
+            tokens.Add(new Token("Order.OrderNumber", order.CustomOrderNumber));
 
             tokens.Add(new Token("Order.CustomerFullName", string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName)));
             tokens.Add(new Token("Order.CustomerEmail", order.BillingAddress.Email));
@@ -983,6 +1005,10 @@ namespace Nop.Services.Messages
         public virtual void AddRecurringPaymentTokens(IList<Token> tokens, RecurringPayment recurringPayment)
         {
             tokens.Add(new Token("RecurringPayment.ID", recurringPayment.Id));
+            tokens.Add(new Token("RecurringPayment.CancelAfterFailedPayment", 
+                recurringPayment.LastPaymentFailed && _paymentSettings.CancelRecurringPaymentsAfterFailedPayment));
+            if (recurringPayment.InitialOrder != null)
+                tokens.Add(new Token("RecurringPayment.RecurringPaymentType", _paymentService.GetRecurringPaymentType(recurringPayment.InitialOrder.PaymentMethodSystemName).ToString()));
 
             //event notification
             _eventPublisher.EntityTokensAdded(recurringPayment, tokens);

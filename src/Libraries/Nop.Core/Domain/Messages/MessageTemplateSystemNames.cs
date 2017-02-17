@@ -106,6 +106,16 @@ namespace Nop.Core.Domain.Messages
         /// </summary>
         public const string RecurringPaymentCancelledStoreOwnerNotification = "RecurringPaymentCancelled.StoreOwnerNotification";
 
+        /// <summary>
+        /// Represents system name of notification customer about cancelled recurring order
+        /// </summary>
+        public const string RecurringPaymentCancelledCustomerNotification = "RecurringPaymentCancelled.CustomerNotification";
+
+        /// <summary>
+        /// Represents system name of notification customer about failed payment for the recurring payments
+        /// </summary>
+        public const string RecurringPaymentFailedCustomerNotification = "RecurringPaymentFailed.CustomerNotification";
+
         #endregion
 
         #region Newsletter
@@ -225,6 +235,15 @@ namespace Nop.Core.Domain.Messages
         /// Represents system name of notification customer about product receipt
         /// </summary>
         public const string BackInStockNotification = "Customer.BackInStock";
+
+        /// <summary>
+        /// Represents system name of 'Contact us' message
+        /// </summary>
+        public const string ContactUsMessage = "Service.ContactUs";
+        /// <summary>
+        /// Represents system name of 'Contact vendor' message
+        /// </summary>
+        public const string ContactVendorMessage = "Service.ContactVendor";
 
         #endregion
     }

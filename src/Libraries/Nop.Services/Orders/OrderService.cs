@@ -76,6 +76,19 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// Gets an order
+        /// </summary>
+        /// <param name="customOrderNumber">The custom order number</param>
+        /// <returns>Order</returns>
+        public virtual Order GetOrderByCustomOrderNumber(string customOrderNumber)
+        {
+            if (string.IsNullOrEmpty(customOrderNumber))
+                return null;
+           
+            return _orderRepository.Table.FirstOrDefault(o => o.CustomOrderNumber == customOrderNumber);
+        }
+
+        /// <summary>
         /// Get orders by identifiers
         /// </summary>
         /// <param name="orderIds">Order identifiers</param>
@@ -281,7 +294,7 @@ namespace Nop.Services.Orders
         }
         
         #endregion
-        
+
         #region Orders items
 
         /// <summary>

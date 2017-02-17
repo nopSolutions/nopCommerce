@@ -176,7 +176,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
                 case "ca":
                     destinationCountry = new mailingscenarioDestinationDomestic
                     {
-                        postalcode = getShippingOptionRequest.ShippingAddress.ZipPostalCode
+                        postalcode = getShippingOptionRequest.ShippingAddress.ZipPostalCode.Replace(" ", string.Empty).ToUpperInvariant()
                     };
                     break;
                 default:
@@ -191,7 +191,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
             {
                 quotetype = mailingscenarioQuotetype.counter,
                 quotetypeSpecified = true,
-                originpostalcode = getShippingOptionRequest.ZipPostalCodeFrom,
+                originpostalcode = getShippingOptionRequest.ZipPostalCodeFrom.Replace(" ", string.Empty).ToUpperInvariant(),
                 destination = new mailingscenarioDestination
                 {
                     Item = destinationCountry

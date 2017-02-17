@@ -43,7 +43,7 @@ namespace Nop.Web.Controllers
         #region Methods
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult TopicDetails(int topicId)
+        public virtual ActionResult TopicDetails(int topicId)
         {
             var model = _topicModelFactory.PrepareTopicModelById(topicId);
             if (model == null)
@@ -58,7 +58,7 @@ namespace Nop.Web.Controllers
             return View(templateViewPath, model);
         }
 
-        public ActionResult TopicDetailsPopup(string systemName)
+        public virtual ActionResult TopicDetailsPopup(string systemName)
         {
             var model = _topicModelFactory.PrepareTopicModelBySystemName(systemName);
             if (model == null)
@@ -72,7 +72,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult TopicBlock(string systemName)
+        public virtual ActionResult TopicBlock(string systemName)
         {
             var model = _topicModelFactory.PrepareTopicModelBySystemName(systemName);
             if (model == null)
@@ -83,7 +83,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ValidateInput(false)]
         [PublicAntiForgery]
-        public ActionResult Authenticate(int id, string password)
+        public virtual ActionResult Authenticate(int id, string password)
         {
             var authResult = false;
             var title = string.Empty;

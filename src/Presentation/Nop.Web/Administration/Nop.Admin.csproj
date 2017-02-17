@@ -54,8 +54,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="Autofac, Version=4.2.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Autofac.4.2.1\lib\net45\Autofac.dll</HintPath>
+    <Reference Include="Autofac, Version=4.3.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Autofac.4.3.0\lib\net45\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="AutoMapper, Version=5.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
@@ -209,12 +209,14 @@
     <Compile Include="Controllers\QueuedEmailController.cs" />
     <Compile Include="Extensions\AttributeParserHelper.cs" />
     <Compile Include="Helpers\SelectListHelper.cs" />
+    <Compile Include="Helpers\TinyMceHelper.cs" />
     <Compile Include="Infrastructure\Mapper\AdminMapperConfiguration.cs" />
     <Compile Include="Infrastructure\Cache\ModelCacheEventConsumer.cs" />
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
     <Compile Include="Extensions\MappingExtensions.cs" />
     <Compile Include="Models\Affiliates\AffiliateListModel.cs" />
     <Compile Include="Models\Affiliates\AffiliatedOrderListModel.cs" />
+    <Compile Include="Models\Blogs\BlogCommentListModel.cs" />
     <Compile Include="Models\Catalog\ProductAttributeConditionModel.cs" />
     <Compile Include="Models\Catalog\AddProductAttributeCombinationModel.cs" />
     <Compile Include="Models\Catalog\LowStockProductModel.cs" />
@@ -244,6 +246,7 @@
     <Compile Include="Models\Localization\LanguageResourcesListModel.cs" />
     <Compile Include="Models\Messages\CampaignListModel.cs" />
     <Compile Include="Models\Messages\TestMessageTemplateModel.cs" />
+    <Compile Include="Models\News\NewsCommentListModel.cs" />
     <Compile Include="Models\Orders\CountryReportLineModel.cs" />
     <Compile Include="Models\Orders\CountryReportModel.cs" />
     <Compile Include="Models\Orders\ReturnRequestListModel.cs" />
@@ -484,6 +487,8 @@
     <Content Include="Content\adminLTE\skins\skin-yellow.min.css" />
     <Content Include="Content\adminLTE\skins\_all-skins.css" />
     <Content Include="Content\adminLTE\skins\_all-skins.min.css" />
+    <Content Include="Content\bootstrap-touchspin\jquery.bootstrap-touchspin.css" />
+    <Content Include="Content\bootstrap-touchspin\jquery.bootstrap-touchspin.min.css" />
     <Content Include="Content\bootstrap\css\bootstrap-theme.css" />
     <Content Include="Content\bootstrap\css\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap\css\bootstrap.css" />
@@ -1060,6 +1065,8 @@
     <Content Include="Scripts\admin.search.js" />
     <Content Include="Scripts\adminLTE\app.js" />
     <Content Include="Scripts\adminLTE\app.min.js" />
+    <Content Include="Scripts\bootstrap-touchspin\jquery.bootstrap-touchspin.js" />
+    <Content Include="Scripts\bootstrap-touchspin\jquery.bootstrap-touchspin.min.js" />
     <Content Include="Scripts\bootstrap\bootstrap.js" />
     <Content Include="Scripts\bootstrap\bootstrap.min.js" />
     <Content Include="Scripts\bootstrap\npm.js" />
@@ -2509,7 +2516,7 @@
     <Content Include="Views\Product\_CreateOrUpdateTierPrice.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Product\_StockQuantityHistory.cshtml" />
+    <Content Include="Views\Product\_CreateOrUpdate._StockQuantityHistory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_GridPagerMessages.cshtml" />

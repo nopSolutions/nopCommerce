@@ -66,14 +66,14 @@
         @if (!disableUrl)
         {
             <div class="form-group">
-                <div class="col-xs-6">
+                <div class="col-xs-4">
                     <div class="label-wrapper">
                         <label class="control-label">
                             @T("Admin.Download.UseDownloadURL")
                         </label>
                     </div>
                 </div>
-                <div class="col-xs-6">
+                <div class="col-xs-8">
                     <input type="checkbox" name="cbUseDownloadURL@(randomNumber)" id="cbUseDownloadURL@(randomNumber)"
                            @if (download != null && download.UseDownloadUrl) { <text> checked="checked" </text>        } />
                 </div>
@@ -81,34 +81,34 @@
         }
         <div id="pnlDownloadURL@(randomNumber)">
             <div class="form-group">
-                <div class="col-xs-6">
+                <div class="col-xs-4">
                     <div class="label-wrapper">
                         <label class="control-label">
                             @T("Admin.Download.DownloadURL")
                         </label>
                     </div>
                 </div>
-                <div class="col-xs-6">
+                <div class="col-xs-8">
                     <input type="text" class="form-control" name="downloadurl@(randomNumber)" id="downloadurl@(randomNumber)"
                            @if (download != null && !String.IsNullOrEmpty(download.DownloadUrl)) { <text> value="@(download.DownloadUrl)" </text>  } />
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-xs-6 col-xs-offset-6">
+                <div class="col-xs-8 col-xs-offset-4">
                     <button type="button" id="saveDownloadUrl@(randomNumber)" class="btn btn-primary">@T("Admin.Download.SaveDownloadURL")</button>
                     <div id="pnlDownloadURLResult@(randomNumber)" style="display: none;">@T("Admin.Download.DownloadURLSaved")</div>
                 </div>
             </div>
         </div>
         <div class="form-group" id="pnlDownloadFile@(randomNumber)">
-            <div class="col-xs-6">
+            <div class="col-xs-4">
                 <div class="label-wrapper">
                     <label class="control-label">
                         @T("Admin.Download.UploadFile")
                     </label>
                 </div>
             </div>
-            <div class="col-xs-6">
+            <div class="col-xs-8">
                 @*fine uploader container*@
                 <div id="@clientId">
                     <noscript>
@@ -160,7 +160,7 @@
                             template: "@(clientId)-qq-template",
                             multiple: false
                         }).on("complete", function (event, id, name, responseJSON, xhr) {
-                            $("#@(clientId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "'>@T("Admin.Download.DownloadUploadedFile")</a>");
+                            $("#@(clientId + "downloadurl")").html("<a class='btn btn-default margin-t-5' href='" + responseJSON.downloadUrl + "'><i class='fa fa-download'></i>@T("Admin.Download.DownloadUploadedFile")</a>");
                             $("#@(clientId + "value") input").val(responseJSON.downloadId);
                             $("#@(clientId + "remove")").show();
                         });
@@ -174,22 +174,23 @@
                     });
 
                 </script>
-
-                <div id="@(clientId + "downloadurl")">
-                    @if (download != null)
-                    {
-                        <a href="@(Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid, area = "Admin" }))">@T("Admin.Download.DownloadUploadedFile")</a>
-                    }
-                </div>
-                <div>
-                    @if (download != null)
-                    {
-                        <span id="@(clientId + "remove")" class="btn btn-default">@T("Admin.Download.RemoveDownload")</span>
-                    }
-                    else
-                    {
-                        <span id="@(clientId + "remove")" class="btn btn-default" style="display:none;">@T("Admin.Download.RemoveDownload")</span>
-                    }
+                <div style="clear: both;">
+                    <div id="@(clientId + "downloadurl")" class="pull-left margin-r-5">
+                        @if (download != null)
+                        {
+                            <a class='btn btn-default margin-t-5' href="@(Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid, area = "Admin" }))"><i class='fa fa-download'></i>@T("Admin.Download.DownloadUploadedFile")</a>
+                        }
+                    </div>
+                    <div class="pull-left">
+                        @if (download != null)
+                        {
+                            <span id="@(clientId + "remove")" class="btn btn-default margin-t-5"><i class="fa fa-trash"></i>@T("Admin.Download.RemoveDownload")</span>
+                        }
+                        else
+                        {
+                            <span id="@(clientId + "remove")" class="btn btn-default margin-t-5" style="display:none;"><i class="fa fa-trash"></i>@T("Admin.Download.RemoveDownload")</span>
+                        }
+                    </div>
                 </div>
             </div>
         </div>

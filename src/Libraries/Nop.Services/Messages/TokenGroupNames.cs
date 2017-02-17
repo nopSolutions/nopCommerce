@@ -123,6 +123,16 @@
         /// <summary>
         /// Represents tokens with information about validation of the VAT request
         /// </summary>
-        public const string VatValidation = "Vat validation tokens";
+        public const string VatValidation = "VAT validation tokens";
+
+        /// <summary>
+        /// Represents tokens with information about contact us
+        /// </summary>
+        public const string ContactUs = "Contact us tokens";
+
+        /// <summary>
+        /// Represents tokens with information about contact vendor
+        /// </summary>
+        public const string ContactVendor = "Contact vendor tokens";
     }
 }

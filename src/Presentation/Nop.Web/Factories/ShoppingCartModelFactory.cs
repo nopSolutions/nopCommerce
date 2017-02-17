@@ -609,7 +609,7 @@ namespace Nop.Web.Factories
             }
 
             //picture
-            if (_shoppingCartSettings.ShowProductImagesOnShoppingCart)
+            if (_shoppingCartSettings.ShowProductImagesOnWishList)
             {
                 cartItemModel.Picture = PrepareCartItemPictureModel(sci,
                     _mediaSettings.CartThumbPictureSize, true, cartItemModel.ProductName);
@@ -860,7 +860,7 @@ namespace Nop.Web.Factories
             var customer = cart.GetCustomer();
             model.CustomerGuid = customer.CustomerGuid;
             model.CustomerFullname = customer.GetFullName();
-            model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
+            model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnWishList;
             model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
             
             //cart warnings

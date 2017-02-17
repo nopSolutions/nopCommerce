@@ -170,7 +170,7 @@ namespace Nop.Plugin.Payments.Manual
                         return result;
                     }
             }
-            
+
             return result;
         }
 

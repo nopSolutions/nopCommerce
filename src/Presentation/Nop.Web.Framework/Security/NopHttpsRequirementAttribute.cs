@@ -47,7 +47,6 @@ namespace Nop.Web.Framework.Security
                             if (storeContext.CurrentStore.SslEnabled)
                             {
                                 //redirect to HTTPS version of page
-                                //string url = "https://" + filterContext.HttpContext.Request.Url.Host + filterContext.HttpContext.Request.RawUrl;
                                 string url = webHelper.GetThisPageUrl(true, true);
 
                                 //301 (permanent) redirection
@@ -63,7 +62,6 @@ namespace Nop.Web.Framework.Security
                         if (currentConnectionSecured)
                         {
                             //redirect to HTTP version of page
-                            //string url = "http://" + filterContext.HttpContext.Request.Url.Host + filterContext.HttpContext.Request.RawUrl;
                             string url = webHelper.GetThisPageUrl(true, false);
                             //301 (permanent) redirection
                             filterContext.Result = new RedirectResult(url, true);

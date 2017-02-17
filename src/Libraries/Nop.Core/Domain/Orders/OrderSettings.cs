@@ -120,6 +120,15 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether an order status should be set to "Complete" only when its shipping status is "Delivered". Otherwise, "Shipped" status will be enough.
         /// </summary>
         public bool CompleteOrderWhenDelivered { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets a custom order number mask
+        /// </summary>
+        public string CustomOrderNumberMask { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the orders need to be exported with their products
+        /// </summary>
+        public bool ExportWithProducts { get; set; }
     }
 }

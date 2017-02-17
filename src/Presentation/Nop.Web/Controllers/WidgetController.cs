@@ -24,7 +24,7 @@ namespace Nop.Web.Controllers
         #region Methods
 
         [ChildActionOnly]
-        public ActionResult WidgetsByZone(string widgetZone, object additionalData = null)
+        public virtual ActionResult WidgetsByZone(string widgetZone, object additionalData = null)
         {
             var model = _widgetModelFactory.GetRenderWidgetModels(widgetZone, additionalData);
 

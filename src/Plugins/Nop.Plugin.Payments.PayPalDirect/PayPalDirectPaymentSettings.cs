@@ -28,6 +28,11 @@ namespace Nop.Plugin.Payments.PayPalDirect
         public bool UseSandbox { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to pass info about purchased items to PayPal
+        /// </summary>
+        public bool PassPurchasedItems{ get; set; }
+
+        /// <summary>
         /// Gets or sets an additional fee
         /// </summary>
         public decimal AdditionalFee { get; set; }

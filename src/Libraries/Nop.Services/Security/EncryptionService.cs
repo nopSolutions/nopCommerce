@@ -134,7 +134,7 @@ namespace Nop.Services.Security
                 {
                     using (var sr = new StreamReader(cs, Encoding.Unicode))
                     {
-                        return sr.ReadLine();
+                        return sr.ReadToEnd();
                     }
                 }
             }

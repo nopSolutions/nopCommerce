@@ -47,6 +47,8 @@ namespace Nop.Services.Messages
                     return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderNoteTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens };
 
                 case MessageTemplateSystemNames.RecurringPaymentCancelledStoreOwnerNotification:
+                case MessageTemplateSystemNames.RecurringPaymentCancelledCustomerNotification:
+                case MessageTemplateSystemNames.RecurringPaymentFailedCustomerNotification:
                     return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.RecurringPaymentTokens };
 
                 case MessageTemplateSystemNames.NewsletterSubscriptionActivationMessage:
@@ -102,6 +104,12 @@ namespace Nop.Services.Messages
 
                 case MessageTemplateSystemNames.BackInStockNotification:
                     return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ProductBackInStockTokens };
+
+                case MessageTemplateSystemNames.ContactUsMessage:
+                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ContactUs };
+
+                case MessageTemplateSystemNames.ContactVendorMessage:
+                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ContactVendor };
 
                 default:
                     return new string[] { };

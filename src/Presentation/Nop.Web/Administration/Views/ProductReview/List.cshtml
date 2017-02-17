@@ -17,20 +17,24 @@
     <h1 class="pull-left">
         @T("Admin.Catalog.ProductReviews")
     </h1>
-    <div class="pull-right">
-        <button type="button" id="approve-selected" class="btn bg-green">
-            <i class="fa fa-check-square-o"></i>
-            @T("Admin.Catalog.ProductReviews.ApproveSelected")
-        </button>
-        <button type="button" id="disapprove-selected" class="btn bg-navy">
-            <i class="fa fa-minus-square-o"></i>
-            @T("Admin.Catalog.ProductReviews.DisapproveSelected")
-        </button>
-        <button type="button" id="delete-selected" class="btn bg-red">
-            <i class="fa fa-trash-o"></i>
-            @T("Admin.Catalog.ProductReviews.DeleteSelected")
-        </button>
-    </div>
+    @if (!Model.IsLoggedInAsVendor)
+    {
+        //these buttons are not visible to vendors
+        <div class="pull-right">
+            <button type="button" id="approve-selected" class="btn bg-green">
+                <i class="fa fa-check-square-o"></i>
+                @T("Admin.Catalog.ProductReviews.ApproveSelected")
+            </button>
+            <button type="button" id="disapprove-selected" class="btn bg-navy">
+                <i class="fa fa-minus-square-o"></i>
+                @T("Admin.Catalog.ProductReviews.DisapproveSelected")
+            </button>
+            <button type="button" id="delete-selected" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Catalog.ProductReviews.DeleteSelected")
+            </button>
+        </div>
+    }
 </div>
 
 <div class="content">
@@ -62,6 +66,14 @@
                                 </div>
                                 <div class="col-md-8">
                                     @Html.NopEditorFor(model => model.SearchText)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.SearchApprovedId)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopDropDownList("SearchApprovedId", Model.AvailableApprovedOptions)
                                 </div>
                             </div>
                             <div class="form-group">
@@ -164,6 +176,7 @@
                                 columns: [
                                     {
                                         field: "Id",
+                                        hidden: @(Model.IsLoggedInAsVendor ? "true" : "false"),
                                         headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
                                         headerAttributes: { style: "text-align:center" },
                                         attributes: { style: "text-align:center" },
@@ -221,7 +234,9 @@
                                         field: "Id",
                                         title: "@T("Admin.Common.Edit")",
                                         width: 50,
-                                        template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
                                     }
                                 ]
                             });
@@ -358,7 +373,8 @@
                                 CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
                                 SearchText: $('#@Html.FieldIdFor(model => model.SearchText)').val(),
                                 SearchStoreId: $('#@Html.FieldIdFor(model => model.SearchStoreId)').val(),
-                                SearchProductId: $('#@Html.FieldIdFor(model => model.SearchProductId)').val()
+                                SearchProductId: $('#@Html.FieldIdFor(model => model.SearchProductId)').val(),
+                                SearchApprovedId: $('#SearchApprovedId').val()
                             };
                             addAntiForgeryToken(data);
                             return data;

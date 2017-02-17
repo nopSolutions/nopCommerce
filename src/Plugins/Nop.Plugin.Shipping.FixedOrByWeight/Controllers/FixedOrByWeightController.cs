@@ -123,7 +123,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
         public ActionResult FixedShippingRateList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
+                return ErrorForKendoGridJson("Access denied");
 
             var rateModels = new List<FixedRateModel>();
             foreach (var shippingMethod in _shippingService.GetAllShippingMethods())
@@ -174,7 +174,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
         public ActionResult RateByWeightList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
+                return ErrorForKendoGridJson("Access denied");
 
             var records = _shippingByWeightService.GetAll(command.Page - 1, command.PageSize);
             var sbwModel = records.Select(x =>

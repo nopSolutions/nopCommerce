@@ -55,7 +55,7 @@ namespace Nop.Web.Controllers
         
         #region Methods
 
-        public ActionResult Index(int? page, string tab)
+        public virtual ActionResult Index(int? page, string tab)
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
@@ -73,7 +73,7 @@ namespace Nop.Web.Controllers
 
         //inbox tab
         [ChildActionOnly]
-        public ActionResult Inbox(int page, string tab)
+        public virtual ActionResult Inbox(int page, string tab)
         {
             var model = _privateMessagesModelFactory.PrepareInboxModel(page, tab);
             return PartialView(model);
@@ -81,7 +81,7 @@ namespace Nop.Web.Controllers
 
         //sent items tab
         [ChildActionOnly]
-        public ActionResult SentItems(int page, string tab)
+        public virtual ActionResult SentItems(int page, string tab)
         {
             var model = _privateMessagesModelFactory.PrepareSentModel(page, tab);
             return PartialView(model);
@@ -89,7 +89,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, FormValueRequired("delete-inbox"), ActionName("InboxUpdate")]
         [PublicAntiForgery]
-        public ActionResult DeleteInboxPM(FormCollection formCollection)
+        public virtual ActionResult DeleteInboxPM(FormCollection formCollection)
         {
             foreach (var key in formCollection.AllKeys)
             {
@@ -118,7 +118,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, FormValueRequired("mark-unread"), ActionName("InboxUpdate")]
         [PublicAntiForgery]
-        public ActionResult MarkUnread(FormCollection formCollection)
+        public virtual ActionResult MarkUnread(FormCollection formCollection)
         {
             foreach (var key in formCollection.AllKeys)
             {
@@ -148,7 +148,7 @@ namespace Nop.Web.Controllers
         //updates sent items (deletes PrivateMessages)
         [HttpPost, FormValueRequired("delete-sent"), ActionName("SentUpdate")]
         [PublicAntiForgery]
-        public ActionResult DeleteSentPM(FormCollection formCollection)
+        public virtual ActionResult DeleteSentPM(FormCollection formCollection)
         {
             foreach (var key in formCollection.AllKeys)
             {
@@ -176,7 +176,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("PrivateMessages", new {tab = "sent"});
         }
 
-        public ActionResult SendPM(int toCustomerId, int? replyToMessageId)
+        public virtual ActionResult SendPM(int toCustomerId, int? replyToMessageId)
         {
             if (!_forumSettings.AllowPrivateMessages)
                 return RedirectToRoute("HomePage");
@@ -201,7 +201,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        public ActionResult SendPM(SendPrivateMessageModel model)
+        public virtual ActionResult SendPM(SendPrivateMessageModel model)
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
@@ -289,7 +289,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public ActionResult ViewPM(int privateMessageId)
+        public virtual ActionResult ViewPM(int privateMessageId)
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
@@ -324,7 +324,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public ActionResult DeletePM(int privateMessageId)
+        public virtual ActionResult DeletePM(int privateMessageId)
         {
             if (!_forumSettings.AllowPrivateMessages)
             {

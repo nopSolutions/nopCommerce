@@ -4,9 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
 using Nop.Services.Common;
+using Nop.Services.Customers.Cache;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Customers
@@ -406,6 +408,46 @@ namespace Nop.Services.Customers
                .ToArray();
 
             return customerRolesIds;
+        }
+
+        /// <summary>
+        /// Check whether customer password is expired 
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>True if password is expired; otherwise false</returns>
+        public static bool PasswordIsExpired(this Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            //the guests don't have a password
+            if (customer.IsGuest())
+                return false;
+
+            //password lifetime is disabled for user
+            if (!customer.CustomerRoles.Any(role => role.Active && role.EnablePasswordLifetime))
+                return false;
+
+            //setting disabled for all
+            var customerSettings = EngineContext.Current.Resolve<CustomerSettings>();
+            if (customerSettings.PasswordLifetime == 0)
+                return false;
+
+            //cache result between HTTP requests 
+            var cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+            var cacheKey = string.Format(CustomerCacheEventConsumer.CUSTOMER_PASSWORD_LIFETIME, customer.Id);
+            //get current password usage time
+            var currentLifetime = cacheManager.Get(cacheKey, () =>
+            {
+                var customerPassword = EngineContext.Current.Resolve<ICustomerService>().GetCurrentPassword(customer.Id);
+                //password is not found, so return max value to force customer to change password
+                if (customerPassword == null)
+                    return int.MaxValue;
+
+                return (DateTime.UtcNow - customerPassword.CreatedOnUtc).Days;
+            });
+
+            return currentLifetime >= customerSettings.PasswordLifetime;
         }
     }
 }

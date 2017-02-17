@@ -88,8 +88,9 @@ namespace Nop.Services.Discounts
         /// Get all discount requirements
         /// </summary>
         /// <param name="discountId">Discont identifier</param>
+        /// <param name="topLevelOnly">Whether to load top-level requirements only (without parent identifier)</param>
         /// <returns>Requirements</returns>
-        IList<DiscountRequirement> GetAllDiscountRequirements(int discountId = 0);
+        IList<DiscountRequirement> GetAllDiscountRequirements(int discountId = 0, bool topLevelOnly = false);
 
         /// <summary>
         /// Delete discount requirement

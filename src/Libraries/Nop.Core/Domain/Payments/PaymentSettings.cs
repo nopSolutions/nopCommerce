@@ -34,5 +34,10 @@ namespace Nop.Core.Domain.Payments
         /// Gets or sets a value indicating whether we should skip 'payment info' page for redirection payment methods
         /// </summary>
         public bool SkipPaymentInfoStepForRedirectionPaymentMethods { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to cancel the recurring payment after failed last payment 
+        /// </summary>
+        public bool CancelRecurringPaymentsAfterFailedPayment { get; set; }
     }
 }

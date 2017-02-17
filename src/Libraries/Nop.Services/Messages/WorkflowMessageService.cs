@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Messages;
@@ -31,8 +33,10 @@ namespace Nop.Services.Messages
         private readonly IMessageTokenProvider _messageTokenProvider;
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
+        private readonly CommonSettings _commonSettings;
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly IEventPublisher _eventPublisher;
+        private readonly HttpContextBase _httpContext;
 
         #endregion
 
@@ -46,8 +50,10 @@ namespace Nop.Services.Messages
             IMessageTokenProvider messageTokenProvider,
             IStoreService storeService,
             IStoreContext storeContext,
+            CommonSettings commonSettings,
             EmailAccountSettings emailAccountSettings,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            HttpContextBase httpContext)
         {
             this._messageTemplateService = messageTemplateService;
             this._queuedEmailService = queuedEmailService;
@@ -57,63 +63,16 @@ namespace Nop.Services.Messages
             this._messageTokenProvider = messageTokenProvider;
             this._storeService = storeService;
             this._storeContext = storeContext;
+            this._commonSettings = commonSettings;
             this._emailAccountSettings = emailAccountSettings;
             this._eventPublisher = eventPublisher;
+            this._httpContext = httpContext;
         }
 
         #endregion
 
         #region Utilities
         
-        protected virtual int SendNotification(MessageTemplate messageTemplate, 
-            EmailAccount emailAccount, int languageId, IEnumerable<Token> tokens,
-            string toEmailAddress, string toName,
-            string attachmentFilePath = null, string attachmentFileName = null,
-            string replyToEmailAddress = null, string replyToName = null)
-        {
-            if (messageTemplate == null)
-                throw new ArgumentNullException("messageTemplate");
-            if (emailAccount == null)
-                throw new ArgumentNullException("emailAccount");
-
-            //retrieve localized message template data
-            var bcc = messageTemplate.GetLocalized(mt => mt.BccEmailAddresses, languageId);
-            var subject = messageTemplate.GetLocalized(mt => mt.Subject, languageId);
-            var body = messageTemplate.GetLocalized(mt => mt.Body, languageId);
-
-            //Replace subject and body tokens 
-            var subjectReplaced = _tokenizer.Replace(subject, tokens, false);
-            var bodyReplaced = _tokenizer.Replace(body, tokens, true);
-
-            //limit name length
-            toName = CommonHelper.EnsureMaximumLength(toName, 300);
-            
-            var email = new QueuedEmail
-            {
-                Priority = QueuedEmailPriority.High,
-                From = emailAccount.Email,
-                FromName = emailAccount.DisplayName,
-                To = toEmailAddress,
-                ToName = toName,
-                ReplyTo = replyToEmailAddress,
-                ReplyToName = replyToName,
-                CC = string.Empty,
-                Bcc = bcc,
-                Subject = subjectReplaced,
-                Body = bodyReplaced,
-                AttachmentFilePath = attachmentFilePath,
-                AttachmentFileName = attachmentFileName,
-                AttachedDownloadId = messageTemplate.AttachedDownloadId,
-                CreatedOnUtc = DateTime.UtcNow,
-                EmailAccountId = emailAccount.Id,
-                DontSendBeforeDateUtc = !messageTemplate.DelayBeforeSend.HasValue ? null
-                    : (DateTime?)(DateTime.UtcNow + TimeSpan.FromHours(messageTemplate.DelayPeriod.ToHours(messageTemplate.DelayBeforeSend.Value)))
-            };
-
-            _queuedEmailService.InsertQueuedEmail(email);
-            return email.Id;
-        }
-
         protected virtual MessageTemplate GetActiveMessageTemplate(string messageTemplateName, int storeId)
         {
             var messageTemplate = _messageTemplateService.GetMessageTemplateByName(messageTemplateName, storeId);
@@ -898,6 +857,82 @@ namespace Nop.Services.Messages
             return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
 
+        /// <summary>
+        /// Sends a "Recurring payment cancelled" notification to a customer
+        /// </summary>
+        /// <param name="recurringPayment">Recurring payment</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendRecurringPaymentCancelledCustomerNotification(RecurringPayment recurringPayment, int languageId)
+        {
+            if (recurringPayment == null)
+                throw new ArgumentNullException("recurringPayment");
+
+            var store = _storeService.GetStoreById(recurringPayment.InitialOrder.StoreId) ?? _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.RecurringPaymentCancelledCustomerNotification, store.Id);
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            //tokens
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            _messageTokenProvider.AddOrderTokens(tokens, recurringPayment.InitialOrder, languageId);
+            _messageTokenProvider.AddCustomerTokens(tokens, recurringPayment.InitialOrder.Customer);
+            _messageTokenProvider.AddRecurringPaymentTokens(tokens, recurringPayment);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var toEmail = recurringPayment.InitialOrder.BillingAddress.Email;
+            var toName = string.Format("{0} {1}", 
+                recurringPayment.InitialOrder.BillingAddress.FirstName, recurringPayment.InitialOrder.BillingAddress.LastName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+        }
+
+        /// <summary>
+        /// Sends a "Recurring payment failed" notification to a customer
+        /// </summary>
+        /// <param name="recurringPayment">Recurring payment</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendRecurringPaymentFailedCustomerNotification(RecurringPayment recurringPayment, int languageId)
+        {
+            if (recurringPayment == null)
+                throw new ArgumentNullException("recurringPayment");
+
+            var store = _storeService.GetStoreById(recurringPayment.InitialOrder.StoreId) ?? _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.RecurringPaymentFailedCustomerNotification, store.Id);
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            //tokens
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            _messageTokenProvider.AddOrderTokens(tokens, recurringPayment.InitialOrder, languageId);
+            _messageTokenProvider.AddCustomerTokens(tokens, recurringPayment.InitialOrder.Customer);
+            _messageTokenProvider.AddRecurringPaymentTokens(tokens, recurringPayment);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var toEmail = recurringPayment.InitialOrder.BillingAddress.Email;
+            var toName = string.Format("{0} {1}",
+                recurringPayment.InitialOrder.BillingAddress.FirstName, recurringPayment.InitialOrder.BillingAddress.LastName);
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+        }
+
         #endregion
 
         #region Newsletter workflow
@@ -1666,6 +1701,128 @@ namespace Nop.Services.Messages
         }
 
         /// <summary>
+        /// Sends "contact us" message
+        /// </summary>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="senderEmail">Sender email</param>
+        /// <param name="senderName">Sender name</param>
+        /// <param name="subject">Email subject. Pass null if you want a message template subject to be used.</param>
+        /// <param name="body">Email body</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendContactUsMessage(int languageId, string senderEmail,
+            string senderName, string subject, string body)
+        {
+            var store = _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.ContactUsMessage, store.Id);
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            string fromEmail;
+            string fromName;
+            //required for some SMTP servers
+            if (_commonSettings.UseSystemEmailForContactUsForm)
+            {
+                fromEmail = emailAccount.Email;
+                fromName = emailAccount.DisplayName;
+                body = string.Format("<strong>From</strong>: {0} - {1}<br /><br />{2}",
+                    _httpContext.Server.HtmlEncode(senderName), _httpContext.Server.HtmlEncode(senderEmail), body);
+            }
+            else
+            {
+                fromEmail = senderEmail;
+                fromName = senderName;
+            }
+
+            //tokens
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            tokens.Add(new Token("ContactUs.SenderEmail", senderEmail));
+            tokens.Add(new Token("ContactUs.SenderName", senderName));
+            tokens.Add(new Token("ContactUs.Body", body, true));
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var toEmail = emailAccount.Email;
+            var toName = emailAccount.DisplayName;
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                fromEmail: fromEmail,
+                fromName: fromName,
+                subject: subject,
+                replyToEmailAddress: senderEmail,
+                replyToName: senderName);
+        }
+
+        /// <summary>
+        /// Sends "contact vendor" message
+        /// </summary>
+        /// <param name="vendor">Vendor</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="senderEmail">Sender email</param>
+        /// <param name="senderName">Sender name</param>
+        /// <param name="subject">Email subject. Pass null if you want a message template subject to be used.</param>
+        /// <param name="body">Email body</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendContactVendorMessage(Vendor vendor, int languageId, string senderEmail,
+            string senderName, string subject, string body)
+        {
+            if (vendor == null)
+                throw new ArgumentNullException("vendor");
+
+            var store = _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = GetActiveMessageTemplate(MessageTemplateSystemNames.ContactVendorMessage, store.Id);
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            string fromEmail;
+            string fromName;
+            //required for some SMTP servers
+            if (_commonSettings.UseSystemEmailForContactUsForm)
+            {
+                fromEmail = emailAccount.Email;
+                fromName = emailAccount.DisplayName;
+                body = string.Format("<strong>From</strong>: {0} - {1}<br /><br />{2}",
+                    _httpContext.Server.HtmlEncode(senderName), _httpContext.Server.HtmlEncode(senderEmail), body);
+            }
+            else
+            {
+                fromEmail = senderEmail;
+                fromName = senderName;
+            }
+
+            //tokens
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            tokens.Add(new Token("ContactUs.SenderEmail", senderEmail));
+            tokens.Add(new Token("ContactUs.SenderName", senderName));
+            tokens.Add(new Token("ContactUs.Body", body, true));
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var toEmail = vendor.Email;
+            var toName = vendor.Name;
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                fromEmail: fromEmail,
+                fromName: fromName,
+                subject: subject,
+                replyToEmailAddress: senderEmail,
+                replyToName: senderName);
+        }
+
+        /// <summary>
         /// Sends a test email
         /// </summary>
         /// <param name="messageTemplateId">Message template identifier</param>
@@ -1686,6 +1843,75 @@ namespace Nop.Services.Messages
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
             return SendNotification(messageTemplate, emailAccount, languageId, tokens, sendToEmail, null);
+        }
+
+        /// <summary>
+        /// Send notification
+        /// </summary>
+        /// <param name="messageTemplate">Message template</param>
+        /// <param name="emailAccount">Email account</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <param name="tokens">Tokens</param>
+        /// <param name="toEmailAddress">Recipient email address</param>
+        /// <param name="toName">Recipient name</param>
+        /// <param name="attachmentFilePath">Attachment file path</param>
+        /// <param name="attachmentFileName">Attachment file name</param>
+        /// <param name="replyToEmailAddress">"Reply to" email</param>
+        /// <param name="replyToName">"Reply to" name</param>
+        /// <param name="fromEmail">Sender email. If specified, then it overrides passed "emailAccount" details</param>
+        /// <param name="fromName">Sender name. If specified, then it overrides passed "emailAccount" details</param>
+        /// <param name="subject">Subject. If specified, then it overrides subject of a message template</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendNotification(MessageTemplate messageTemplate,
+            EmailAccount emailAccount, int languageId, IEnumerable<Token> tokens,
+            string toEmailAddress, string toName,
+            string attachmentFilePath = null, string attachmentFileName = null,
+            string replyToEmailAddress = null, string replyToName = null,
+            string fromEmail = null, string fromName = null, string subject = null)
+        {
+            if (messageTemplate == null)
+                throw new ArgumentNullException("messageTemplate");
+
+            if (emailAccount == null)
+                throw new ArgumentNullException("emailAccount");
+
+            //retrieve localized message template data
+            var bcc = messageTemplate.GetLocalized(mt => mt.BccEmailAddresses, languageId);
+            if (String.IsNullOrEmpty(subject))
+                subject = messageTemplate.GetLocalized(mt => mt.Subject, languageId);
+            var body = messageTemplate.GetLocalized(mt => mt.Body, languageId);
+
+            //Replace subject and body tokens 
+            var subjectReplaced = _tokenizer.Replace(subject, tokens, false);
+            var bodyReplaced = _tokenizer.Replace(body, tokens, true);
+
+            //limit name length
+            toName = CommonHelper.EnsureMaximumLength(toName, 300);
+
+            var email = new QueuedEmail
+            {
+                Priority = QueuedEmailPriority.High,
+                From = !string.IsNullOrEmpty(fromEmail) ? fromEmail : emailAccount.Email,
+                FromName = !string.IsNullOrEmpty(fromName) ? fromName : emailAccount.DisplayName,
+                To = toEmailAddress,
+                ToName = toName,
+                ReplyTo = replyToEmailAddress,
+                ReplyToName = replyToName,
+                CC = string.Empty,
+                Bcc = bcc,
+                Subject = subjectReplaced,
+                Body = bodyReplaced,
+                AttachmentFilePath = attachmentFilePath,
+                AttachmentFileName = attachmentFileName,
+                AttachedDownloadId = messageTemplate.AttachedDownloadId,
+                CreatedOnUtc = DateTime.UtcNow,
+                EmailAccountId = emailAccount.Id,
+                DontSendBeforeDateUtc = !messageTemplate.DelayBeforeSend.HasValue ? null
+                    : (DateTime?)(DateTime.UtcNow + TimeSpan.FromHours(messageTemplate.DelayPeriod.ToHours(messageTemplate.DelayBeforeSend.Value)))
+            };
+
+            _queuedEmailService.InsertQueuedEmail(email);
+            return email.Id;
         }
 
         #endregion

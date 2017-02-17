@@ -43,7 +43,8 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
         /// <param name="paymentResult">Process payment result (info about last payment for automatic recurring payments)</param>
-        void ProcessNextRecurringPayment(RecurringPayment recurringPayment, ProcessPaymentResult paymentResult = null);
+        /// <returns>Collection of errors</returns>
+        IEnumerable<string> ProcessNextRecurringPayment(RecurringPayment recurringPayment, ProcessPaymentResult paymentResult = null);
 
         /// <summary>
         /// Cancels a recurring payment
@@ -59,8 +60,14 @@ namespace Nop.Services.Orders
         /// <returns>value indicating whether a customer can cancel recurring payment</returns>
         bool CanCancelRecurringPayment(Customer customerToValidate, RecurringPayment recurringPayment);
 
+        /// <summary>
+        /// Gets a value indicating whether a customer can retry last failed recurring payment
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="recurringPayment">Recurring Payment</param>
+        /// <returns>True if a customer can retry payment; otherwise false</returns>
+        bool CanRetryLastRecurringPayment(Customer customer, RecurringPayment recurringPayment);
 
-        
 
 
         /// <summary>

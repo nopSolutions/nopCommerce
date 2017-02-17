@@ -132,6 +132,16 @@
                                 @Html.ValidationMessageFor(model => model.TaxBasedOn)
                             </div>
                         </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.TaxBasedOnPickupPointAddress_OverrideForStore, model => model.TaxBasedOnPickupPointAddress, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.TaxBasedOnPickupPointAddress)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.TaxBasedOnPickupPointAddress)
+                                @Html.ValidationMessageFor(model => model.TaxBasedOnPickupPointAddress)
+                            </div>
+                        </div>
                     </div>
                     <script type="text/javascript">
                         $(document).ready(function () {

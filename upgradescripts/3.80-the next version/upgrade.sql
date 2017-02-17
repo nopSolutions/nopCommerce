@@ -1330,12 +1330,486 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.RegisteredInStore.Hint">
     <Value>Indicating in which store the customer is registered</Value>
-  </LocaleResource>    
+  </LocaleResource> 
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ConsiderAssociatedProductsDimensions">
     <Value>Consider associated products dimensions and weight</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ConsiderAssociatedProductsDimensions.Hint">
     <Value>Check to consider associated products dimensions and weight on shipping, uncheck for example if the main product already includes them.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.CreatedOnFrom">
+    <Value>Created from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.CreatedOnFrom.Hint">
+    <Value>The creation from date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.CreatedOnTo">
+    <Value>Created to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.CreatedOnTo.Hint">
+    <Value>The creation to date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchText">
+    <Value>Message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchText.Hint">
+    <Value>Search in title and comment text.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.CreatedOnFrom">
+    <Value>Created from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.CreatedOnFrom.Hint">
+    <Value>The creation from date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.CreatedOnTo">
+    <Value>Created to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.CreatedOnTo.Hint">
+    <Value>The creation to date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchText">
+    <Value>Message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchText.Hint">
+    <Value>Search in comment text.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerOrders.RecurringOrders.RetryLastPayment">
+    <Value>Retry last payment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.RecurringPayments.History.LastPaymentFailed">
+    <Value>Last payment failed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchApproved">
+    <Value>Approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchApproved.Hint">
+    <Value>Search by a "Approved" property.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchApproved.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchApproved.ApprovedOnly">
+    <Value>Approved only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchApproved.DisapprovedOnly">
+    <Value>Disapproved only</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchApproved">
+    <Value>Approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchApproved.Hint">
+    <Value>Search by a "Approved" property.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchApproved.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchApproved.ApprovedOnly">
+    <Value>Approved only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchApproved.DisapprovedOnly">
+    <Value>Disapproved only</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchApproved">
+    <Value>Approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchApproved.Hint">
+    <Value>Search by a "Approved" property.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchApproved.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchApproved.ApprovedOnly">
+    <Value>Approved only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.SearchApproved.DisapprovedOnly">
+    <Value>Disapproved only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.RoundingWarning">
+    <Value>It looks like you have "ShoppingCartSettings.RoundPricesDuringCalculation" setting disabled. Keep in mind that this can lead to a discrepancy of the order total amount, as PayPal only rounds to two decimals.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.Order">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Promotions.Discounts.History.Order">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.GiftCards.History.Order">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.RecurringPayments.History.Order">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.Order">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.Order.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.OrderId">
+    <Value>Order ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.CustomOrderNumber">
+    <Value>Order #</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Customers.Customers.Orders.CustomOrderNumber">
+    <Value>Order #</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.History.OrderId">
+    <Value>Order ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.History.CustomOrderNumber">
+    <Value>Order #</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.History.OrderId">
+    <Value>Order ID</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.GiftCards.History.CustomOrderNumber">
+    <Value>Order #</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Orders.Fields.CustomOrderNumber">
+    <Value>Order #</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.CustomOrderNumber.Hint">
+    <Value>The unique number of this order.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.RecurringPayments.History.OrderId">
+    <Value>Created order ID</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.RecurringPayments.History.CustomOrderNumber">
+    <Value>Created order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.OrderId">
+    <Value>Order ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.CustomOrderNumber">
+    <Value>Order #</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.OrderID">
+    <Value>Order ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.CustomOrderNumber">
+    <Value>Order #</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Orders.Shipments.CustomOrderNumber.Hint">
+    <Value>The order associated to this shipment.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask">
+    <Value>Order number mask</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Hint">
+    <Value>Order number mask, for creating custom order number. For example, RE-{YYYY}-{MM}. Leave this field empty if you don''t want to use custom order numbers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.DD">
+    <Value>{DD} - day of order creation date</Value>
+  </LocaleResource>   
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.ID">
+    <Value>{ID} -Order identifier</Value>
+  </LocaleResource>     
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.MM">
+    <Value>{MM} - month of order creation date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.YYYY">
+    <Value>{YYYY} - year of order creation date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.YY">
+    <Value>{YY} - last two digits of year of order creation date</Value>
+  </LocaleResource>    
+  <LocaleResource Name="Admin.GiftCards.Fields.Order">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.Fields.Order.Hint">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.GiftCards.Fields.OrderId">
+    <Value>Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.Fields.OrderId.Hint">
+    <Value>The gift card was purchased with this order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.Fields.CustomOrderNumber">
+    <Value>Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.Fields.CustomOrderNumber.Hint">
+    <Value>The gift card was purchased with this order.</Value>
+  </LocaleResource>   
+  <LocaleResource Name="ActivityLog.EditOrder">
+    <Value>Edited an order (Order number = {0}). See order notes for details</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Account.CustomerOrders.RecurringOrders.ViewInitialOrder">
+    <Value>View order (Order number - {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.CustomOrderNumber.Hint">
+    <Value>The unique number of the order.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Affiliates.Orders.OrderId">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Orders.ID">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Promotions.Discounts.History.OrderId">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.GiftCards.History.OrderId">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Orders.Fields.ID">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.ID.Hint">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.RecurringPayments.History.OrderId">
+    <Value></Value>
+  </LocaleResource>   
+  <LocaleResource Name="Admin.ReturnRequests.Fields.OrderId">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Orders.Shipments.OrderID">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.OrderID.Hint">
+    <Value></Value>
+  </LocaleResource>    
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.PassPurchasedItems">
+    <Value>Pass purchased items</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.PassPurchasedItems.Hint">
+    <Value>Check to pass information about purchased items to PayPal.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UnduplicatedPasswordsNumber">
+    <Value>Unduplicated passwords number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UnduplicatedPasswordsNumber.Hint">
+    <Value>Specify the number of customer passwords that mustn''t be the same as the previous one, enter 0 if the customer can use the same password time after time.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.ChangePassword.Errors.PasswordMatchesWithPrevious">
+    <Value>You entered the password that is the same as one of the last passwords you used. Please create a new password.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.ChangePassword.PasswordIsExpired">
+    <Value>Your password has expired, please create a new one</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordLifetime">
+    <Value>Password lifetime</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordLifetime.Hint">
+    <Value>Specify number of days for password expiration. Don''t forget to check "EnablePasswordLifetime" property on customer role edit page for those roles, who will have to change passwords.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.EnablePasswordLifetime">
+    <Value>Enable password lifetime</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.EnablePasswordLifetime.Hint">
+    <Value>Check to force customers to change their passwords after a specified time.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.Id">
+    <Value>ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Id">
+    <Value>ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactUs.EmailSubject">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.EmailSubject">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderStatus.CancelledNotification">
+    <Value>This order is cancelled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Blog.BlogComment">
+	<Value><![CDATA[This message template is used when a new blog comment to the certain blog post is created. The message is received by a store owner. You can set up this option by ticking the checkbox <strong>Notify about new blog comments</strong> in Configuration - Settings - Blog settings.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.BackInStock">
+	<Value><![CDATA[This message template is used when the customer subscribed for the certain product which is unavailable at the moment to notify the customer about the product being back to stock again. You can set up this option by ticking the checkbox <strong>Allow back in stock subscriptions</strong> in Product info tab - Inventory section.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.EmailRevalidationMessage">
+	<Value>This message template is used when a customer changes an email address in his account. The customer receives a message to confirm an email address used when changing email address.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.EmailValidationMessage">
+	<Value>This message template is used the option Email notification from Registration method dropdown list in Configuration - Settings - Customer settings is selected. The customer receives a message to confirm an email address used when registering.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.NewOrderNote">
+	<Value>This message template is used when the customer gets a notification about a new order being placed from this account.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.NewPM">
+	<Value><![CDATA[This message template is used when the customer gets a notification about a new private message being received. You can set up this option by ticking the checkbox <strong>Show alert for PM</strong> in Configuration - Settings - Forum settings.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.PasswordRecovery">
+	<Value>This message template is used when a customer forgets a password needed to log in the account. The customer receives a message with a link for entering a new password.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.WelcomeMessage">
+	<Value>This message template is used to welcome a new customer after registration.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Forums.NewForumPost">
+	<Value>This message template is used when a new forum post in certain forum topic is created. The message is received by a store owner.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Forums.NewForumTopic">
+	<Value>This message template is used when a new forum topic is created. The message is received by a store owner.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.GiftCard.Notification">
+	<Value>This message template is used to send a notification to a customer about getting a gift card.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.NewCustomer.Notification">
+	<Value><![CDATA[This message template is used when a new customer is registered. The message is received by a store owner. You can set up this option by ticking the checkbox <strong>Notify about new customer registration</strong> in Configuration - Settings - Customer settings.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.NewReturnRequest.CustomerNotification">
+	<Value>This message template is used to notify a customer about a new return request submitted from his/her account.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.NewReturnRequest.StoreOwnerNotification">
+	<Value>This message template is used when a new return request is created. The message is received by a store owner.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.News.NewsComment">
+	<Value><![CDATA[This message template is used when a new comment to the certain news item is created. The message is received by a store owner. You can set up this option by ticking the checkbox <strong>Notify about new news comments</strong> in Configuration - Settings - News settings.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.NewsLetterSubscription.ActivationMessage">
+	<Value>This message template is used when a customer subscribes to the newsletter to confirm the subscription.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.NewsLetterSubscription.DeactivationMessage">
+	<Value><![CDATA[This message template is used when a customer unsubscribes to the newsletter to confirm the subscription deactivation. You can allow users to unsubscribe by ticking the checkbox <strong>Newsletter box. Allow to unsubscribe</strong> in Configuration - Settings - Customer settings.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.NewVATSubmitted.StoreOwnerNotification">
+	<Value><![CDATA[This message template is used when a new VAT is submitted. The message is received by a store owner. You can set up this option by clicking <strong>Notify admin when a new VAT number is submitted</strong> in Configuration - Settings - Tax settings.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderCancelled.CustomerNotification">
+	<Value>This message template is used to notify a customer that the certain order was canceled. The order can ba canceled by a customer on the account page or by store owner in Customers - Customers in Orders tab or in Sales - Orders.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderCompleted.CustomerNotification">
+	<Value>This message template is used to notify a customer that the certain order was completed. The order gets the order status Complete when it''s paid and delivered, or it can be changed manually to Complete in Sales - Orders.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPaid.CustomerNotification">
+	<Value>This message template is used to notify a customer that the certain order was paid. The order gets the payment status Paid when the amount was charged, or it can be changed manually Sales - Orders by clicking Mark as paid button in Payment status.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPaid.StoreOwnerNotification">
+	<Value>This message template is used to notify a store owner that the certain order was paid. The order gets the status Paid when the amount was charged, or it can be changed manually Sales - Orders by clicking Mark as paid button in Payment status.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPaid.VendorNotification">
+	<Value>This message template is used to notify a vendor that the certain order was paid. The order gets the status Paid when the amount was charged.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPlaced.CustomerNotification">
+	<Value>This message template is used to notify a customer that the certain order was placed. Orders can be viewed by a customer on the account page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPlaced.StoreOwnerNotification">
+	<Value>This message template is used to notify a store owner that the certain order was placed. Orders can be viewed by a store owner in Sales - Orders or in Customers menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPlaced.VendorNotification">
+	<Value>This message template is used to notify a vendor that the certain order was placed. Orders can be viewed by a vendor in Sales - Orders. You can allow them to access this part of Admin Area in Configuration - Access control list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderRefunded.CustomerNotification">
+	<Value>This message template is used to notify a customer that the certain order was refunded. The customer can submit to refund the order when the payment status is paid on the account page, or it can be done by a store owner in Sales - Orders by clicking "Refund" button.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderRefunded.StoreOwnerNotification">
+	<Value>This message template is used to notify a store owner that the certain order was refunded. The customer can submit to refund the order when the payment status is paid on the account page, or it can be done by a store owner in Sales - Orders by clicking "Refund" button.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Product.ProductReview">
+	<Value><![CDATA[This message template is used to notify a store owner that a new product review is created. You can set up this option by ticking the checkbox <strong>Notify about new product reviews</strong> in Configuration - Settings - Catalog settings.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.QuantityBelow.AttributeCombination.StoreOwnerNotification">
+	<Value>This message template is used to notify a store owner that the certain product attribute combination is getting low stock. You can set up the combination minimum quantity when creating or editing the product in Product attribute tab - Attributes combinations tab in Notify admin for quantity below field.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.QuantityBelow.StoreOwnerNotification">
+	<Value><![CDATA[This message template is used to notify a store owner that the certain product is getting low stock. You can set up the minimum  product quantity when creating or editing the product in Inventory section, <strong>Minimum stock qty field</strong>.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.RecurringPaymentCancelled.CustomerNotification">
+	<Value>This message template is used to notify a customer that the certain recurring payment is canceled. Payment can be canceled by a customer in the account page or by a store owner in Sales - Recurring payments in History tab by clicking "Cancel recurring payment" button.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.RecurringPaymentCancelled.StoreOwnerNotification">
+	<Value>This message template is used to notify a store owner that the certain recurring payment is canceled. Payment can be canceled by a customer in the account page or by a store owner in Sales - Recurring payments in History tab by clicking "Cancel recurring payment" button.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.RecurringPaymentFailed.CustomerNotification">
+	<Value>This message template is used to notify a customer that the certain recurring payment is failed. For example, the amount can''t be charged from the provided credit card.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.ReturnRequestStatusChanged.CustomerNotification">
+	<Value>This message template is used to notify a customer that the request status to the certain order is changed. You can set up this option in Sales - Return requests by clicking "Notify customer about status change" button.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Service.ContactUs">
+	<Value>This message template is used to notify a store owner about a message sent through the contact form.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Service.ContactVendor">
+	<Value>This message template is used to notify a vendor about a message sent through the contact form.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Service.EmailAFriend">
+	<Value>This message template is used to send "email a friend" message.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.ShipmentDelivered.CustomerNotification">
+	<Value><![CDATA[This message template is used to notify a customer that the shipping status of the certain order is set to delivered. You can set up this option in Configuration - Settings - Shipping settings by ticking the checkbox <strong>Display shipment events (customers)</strong>.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.ShipmentSent.CustomerNotification">
+	<Value><![CDATA[This message template is used to notify a customer that the shipping status of the certain order is sent. You can set up this option in Configuration - Settings - Shipping settings by ticking the checkbox <strong>Display shipment events (customers)</strong>.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.VendorAccountApply.StoreOwnerNotification">
+	<Value><![CDATA[This message template is used to notify a store owner that new user has applied for vendor account. You can allow customers to apply for vendor account in Configuration - Setting - Vendor settings by ticking the checkbox <strong>Allow customers to apply for vendor account</strong>.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.VendorInformationChange.StoreOwnerNotification">
+	<Value><![CDATA[This message template is used to notify a store owner that the vendor changed some vendor''s details. You can allow vendors to change info about themselves in Configuration - Setting - Vendor settings by ticking the checkbox <strong>Allow vendors to edit info</strong>.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Wishlist.EmailAFriend">
+	<Value>This message template is used when a customer wants to share some product from the wishlist with a friend by sending an email. You can set up this option by ticking the checkbox <strong>Allow customers to email their wishlists</strong> in Configuration - Settings - Shopping cart settings.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.TaxBasedOnPickupPointAddress">
+    <Value>Tax based on pickup point address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.TaxBasedOnPickupPointAddress.Hint">
+    <Value>A value indicating whether to use pickup point address (when pickup point is chosen) for tax calculation.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup.Warning">
+    <Value>It seems that you use Redis server for caching, keep in mind that enabling this setting create a lot of traffic between the Redis server and the application because of the large number of locales.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ExportWithProducts">
+    <Value>Export orders with products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ExportWithProducts.Hint">
+    <Value>Check if orders should be exported with products.</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Description">
+    <Value><![CDATA[Set up requirements to a created discount if you want to limit it to certain user categories depending on a customer role, the amount spent, etc. You can use single requirement type, or group several types and apply them simultaneously.<br>Requirement group is a useful feature for creating discount requirement templates. You can create a requirement group just once and then use it every time you want this limitation to be applied. You can include one requirement group into another one if needed.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.DiscountRequirementType.AddGroup">
+    <Value>Add requirement group</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.DiscountRequirementType.Hint">
+    <Value>You can choose one of the following requirement types, or add a requirement group to use several requirement types simultaneously.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.GroupName">
+    <Value>Group name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.GroupName.Hint">
+    <Value>Specify name of the requirement group (e.g. "Permitted customer roles").</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RequirementGroup">
+    <Value>Add to group</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RequirementGroup.Hint">
+    <Value>Choose the group you want the requirement group you’re creating to be assigned to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RequirementGroup.Title">
+    <Value>Group</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Discounts.RequirementGroupInteractionType.And">
+    <Value>AND</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Discounts.RequirementGroupInteractionType.Or">
+    <Value>OR</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Remove">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Requirement.Title">
+    <Value>Requirement</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.DefaultRequirementGroup">
+    <Value>Default requirement group</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.InteractionTypeInGroup">
+    <Value>Interaction type in this group is</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.GroupIsEmpty">
+    <Value>The group is empty</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RemoveRequirement">
+    <Value>Remove requirement</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.RemoveGroup">
+    <Value>Remove group</Value>
   </LocaleResource>
 </Language>
 '
@@ -3674,4 +4148,293 @@ BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'shippingsettings.considerassociatedproductsdimensions', N'True', 0)
 END
+GO
+
+ --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.bbcodeeditoropenlinksinnewwindow')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'commonsettings.bbcodeeditoropenlinksinnewwindow', N'false', 0)
+END
+GO
+
+ --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'paymentsettings.cancelrecurringpaymentsafterfailedpayment')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'paymentsettings.cancelrecurringpaymentsafterfailedpayment', N'False', 0)
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[RecurringPayment]') and NAME='LastPaymentFailed')
+BEGIN
+	ALTER TABLE [RecurringPayment]
+	ADD [LastPaymentFailed] bit NULL
+END
+GO
+
+UPDATE [RecurringPayment]
+SET [LastPaymentFailed] = 0
+WHERE [LastPaymentFailed] IS NULL
+GO
+
+ALTER TABLE [RecurringPayment] ALTER COLUMN [LastPaymentFailed] bit NOT NULL
+GO
+
+-- new message template
+IF NOT EXISTS (SELECT 1 FROM [dbo].[MessageTemplate] WHERE [Name] = N'RecurringPaymentCancelled.CustomerNotification')
+BEGIN
+    DECLARE @NewLine AS CHAR(2) = CHAR(13) + CHAR(10)
+    INSERT [dbo].[MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [AttachedDownloadId], [EmailAccountId], [LimitedToStores], [DelayPeriodId]) 
+    VALUES (N'RecurringPaymentCancelled.CustomerNotification', NULL, N'%Store.Name%. Recurring payment cancelled', N'<p>' + @NewLine + '<a href=\"%Store.URL%\">%Store.Name%</a>' + @NewLine + '<br />' + @NewLine + '<br />' + @NewLine + 'Hello %Customer.FullName%,' + @NewLine + '<br />' + @NewLine + '%if (%RecurringPayment.CancelAfterFailedPayment%) It appears your credit card didn''t go through for this recurring payment (<a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a>)' + @NewLine + '<br />' + @NewLine + 'So your subscription has been canceled. endif% %if (!%RecurringPayment.CancelAfterFailedPayment%) The recurring payment ID=%RecurringPayment.ID% was cancelled. endif%' + @NewLine + '</p>' + @NewLine, 1, 0, 0, 0, 0)
+END
+GO
+
+-- new message template
+IF NOT EXISTS (SELECT 1 FROM [dbo].[MessageTemplate] WHERE [Name] = N'RecurringPaymentFailed.CustomerNotification')
+BEGIN
+    DECLARE @NewLine AS CHAR(2) = CHAR(13) + CHAR(10)
+    INSERT [dbo].[MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [AttachedDownloadId], [EmailAccountId], [LimitedToStores], [DelayPeriodId]) 
+    VALUES (N'RecurringPaymentFailed.CustomerNotification', NULL, N'%Store.Name%. Last recurring payment failed', N'<p>' + @NewLine + '<a href=\"%Store.URL%\">%Store.Name%</a>' + @NewLine + '<br />' + @NewLine + '<br />' + @NewLine + 'Hello %Customer.FullName%,' + @NewLine + '<br />' + @NewLine + 'It appears your credit card didn''t go through for this recurring payment (<a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a>)' + @NewLine + '<br /> %if (%RecurringPayment.RecurringPaymentType% == "Manual") ' + @NewLine + 'You can recharge balance and manually retry payment or cancel it on the order history page. endif% %if (%RecurringPayment.RecurringPaymentType% == "Automatic") ' + @NewLine + 'You can recharge balance and wait, we will try to make the payment again, or you can cancel it on the order history page. endif%' + @NewLine + '</p>' + @NewLine, 1, 0, 0, 0, 0)
+END
+GO
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='CustomOrderNumber')
+BEGIN
+	ALTER TABLE [Order]
+	ADD [CustomOrderNumber] nvarchar(MAX) NULL
+END
+GO
+
+UPDATE [Order]
+SET [CustomOrderNumber] = [id]
+WHERE [CustomOrderNumber] IS NULL
+GO
+
+ALTER TABLE [Order] ALTER COLUMN [CustomOrderNumber] nvarchar(MAX) NOT NULL
+GO
+
+ --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.customordernumbermask')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'ordersettings.customordernumbermask', N'{ID}', 0)
+END
+GO
+
+ --new table
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CustomerPassword]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[CustomerPassword]
+    (
+		[Id] int IDENTITY(1,1) NOT NULL,
+        [CustomerId] int NOT NULL,
+		[Password] NVARCHAR (MAX) NULL,
+        [PasswordFormatId] INT NOT NULL,
+        [PasswordSalt] NVARCHAR (MAX) NULL,
+		[CreatedOnUtc] datetime NOT NULL
+		PRIMARY KEY CLUSTERED 
+		(
+			[Id] ASC
+		) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+	)
+END
+GO
+
+IF EXISTS (SELECT 1 FROM sys.objects WHERE name = 'CustomerPassword_Customer' AND parent_object_id = Object_id('CustomerPassword') AND Objectproperty(object_id, N'IsForeignKey') = 1)
+BEGIN
+    ALTER TABLE [dbo].CustomerPassword
+    DROP CONSTRAINT CustomerPassword_Customer
+END
+GO
+
+ALTER TABLE [dbo].[CustomerPassword] WITH CHECK ADD CONSTRAINT [CustomerPassword_Customer] FOREIGN KEY([CustomerId])
+REFERENCES [dbo].[Customer] ([Id])
+ON DELETE CASCADE
+GO
+
+--move customer passwords into a new table
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and (NAME='Password' or NAME='PasswordFormatId' or NAME='PasswordSalt'))
+BEGIN
+    EXEC('
+        INSERT INTO [dbo].[CustomerPassword]([CustomerId], [Password], [PasswordFormatId], [PasswordSalt], [CreatedOnUtc])
+        SELECT [Id], [Password], [PasswordFormatId], [PasswordSalt], [CreatedOnUtc]
+        FROM [dbo].[Customer]')
+END
+GO
+
+--drop column
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='Password')
+BEGIN
+	ALTER TABLE [Customer] DROP COLUMN [Password]
+END
+GO
+
+--drop column
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='PasswordFormatId')
+BEGIN
+	ALTER TABLE [Customer] DROP COLUMN [PasswordFormatId]
+END
+GO
+
+--drop column
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='PasswordSalt')
+BEGIN
+	ALTER TABLE [Customer] DROP COLUMN [PasswordSalt]
+END
+GO
+
+ --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.unduplicatedpasswordsnumber')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.unduplicatedpasswordsnumber', N'4', 0)
+END
+GO
+
+ --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.passwordlifetime')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.passwordlifetime', N'90', 0)
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[CustomerRole]') and NAME='EnablePasswordLifetime')
+BEGIN
+	ALTER TABLE [CustomerRole]
+	ADD [EnablePasswordLifetime] bit NULL
+END
+GO
+
+UPDATE [CustomerRole]
+SET [EnablePasswordLifetime] = 0
+WHERE [EnablePasswordLifetime] IS NULL
+GO
+
+ALTER TABLE [CustomerRole] ALTER COLUMN [EnablePasswordLifetime] bit NOT NULL
+GO
+
+
+-- new message template
+ IF NOT EXISTS (SELECT 1 FROM [dbo].[MessageTemplate] WHERE [Name] = N'Service.ContactUs')
+ BEGIN
+    DECLARE @NewLine AS CHAR(2) = CHAR(13) + CHAR(10)
+	INSERT [dbo].[MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [AttachedDownloadId], [EmailAccountId], [LimitedToStores], [DelayPeriodId]) 
+	VALUES (N'Service.ContactUs', NULL, N'%Store.Name%. Contact us', N'<p>' + @NewLine + '%ContactUs.Body%' + @NewLine + '</p>' + @NewLine, 1, 0, 0, 0, 0)
+ END
+ GO
+
+-- new message template
+ IF NOT EXISTS (SELECT 1 FROM [dbo].[MessageTemplate] WHERE [Name] = N'Service.ContactVendor')
+ BEGIN
+    DECLARE @NewLine AS CHAR(2) = CHAR(13) + CHAR(10)
+	INSERT [dbo].[MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [AttachedDownloadId], [EmailAccountId], [LimitedToStores], [DelayPeriodId]) 
+	VALUES (N'Service.ContactVendor', NULL, N'%Store.Name%. Contact us', N'<p>' + @NewLine + '%ContactUs.Body%' + @NewLine + '</p>' + @NewLine, 1, 0, 0, 0, 0)
+ END
+ GO
+
+ --now vendors have "Manage product reviews" permission
+IF EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord]
+		WHERE [SystemName] = N'ManageProductReviews')
+BEGIN
+	DECLARE @PermissionRecordId INT 
+	SET @PermissionRecordId = (SELECT [Id] FROM [dbo].[PermissionRecord] WHERE [SystemName] = N'ManageProductReviews')
+
+	--add it to vendor role by default
+	DECLARE @VendorCustomerRoleId int
+	SELECT @VendorCustomerRoleId = Id
+	FROM [CustomerRole]
+	WHERE IsSystemRole=1 and [SystemName] = N'Vendors'
+
+	IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord_Role_Mapping]
+		WHERE [PermissionRecord_Id] = @PermissionRecordId AND [CustomerRole_Id] = @VendorCustomerRoleId)
+	BEGIN
+		INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+		VALUES (@PermissionRecordId, @VendorCustomerRoleId)
+	END
+END
+GO
+
+ --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'taxsettings.taxbasedonpickuppointaddress')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'taxsettings.taxbasedonpickuppointaddress', N'False', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.exportwithproducts')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'ordersettings.exportwithproducts', N'True', 0)
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[DiscountRequirement]') and NAME='InteractionTypeId')
+BEGIN
+	ALTER TABLE [DiscountRequirement]
+	ADD [InteractionTypeId] int NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[DiscountRequirement]') and NAME='ParentId')
+BEGIN
+	ALTER TABLE [DiscountRequirement]
+	ADD [ParentId] int NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[DiscountRequirement]') and NAME='IsGroup')
+BEGIN
+	ALTER TABLE [DiscountRequirement]
+	ADD [IsGroup] bit NULL
+END
+GO
+
+UPDATE [DiscountRequirement]
+SET [IsGroup] = 0
+WHERE [IsGroup] IS NULL
+GO
+
+ALTER TABLE [DiscountRequirement] ALTER COLUMN [IsGroup] bit NOT NULL
+GO
+
+--add default requirement group for all discounts
+DECLARE cursor_defaultGroup CURSOR FOR SELECT Id FROM [Discount]
+DECLARE @discountId int
+
+OPEN cursor_defaultGroup
+FETCH NEXT FROM cursor_defaultGroup INTO @discountId
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM [DiscountRequirement] WHERE [DiscountId] = @discountId AND [ParentId] IS NULL AND [IsGroup] = 1)
+    BEGIN
+        INSERT INTO [DiscountRequirement]
+		    ([DiscountId], [DiscountRequirementRuleSystemName], [InteractionTypeId], [ParentId], [IsGroup])
+	    VALUES
+		    (@discountId, 'Default requirement group', 0, NULL, 1);
+
+        DECLARE @requirementId int = (SELECT SCOPE_IDENTITY());
+
+        UPDATE [DiscountRequirement]
+        SET [ParentId] = @requirementId, [InteractionTypeId] = NULL
+        WHERE [DiscountId] = @discountId AND [Id] <> @requirementId
+    END
+	FETCH NEXT FROM cursor_defaultGroup INTO @discountId
+END
+
+CLOSE cursor_defaultGroup
+DEALLOCATE cursor_defaultGroup
 GO

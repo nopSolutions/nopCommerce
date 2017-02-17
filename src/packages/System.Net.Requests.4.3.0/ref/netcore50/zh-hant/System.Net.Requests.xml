@@ -1,0 +1,550 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Net.Requests</name>
+  </assembly>
+  <members>
+    <member name="T:System.Net.HttpWebRequest">
+      <summary>提供 <see cref="T:System.Net.WebRequest" /> 類別的 HTTP 特定實作。</summary>
+    </member>
+    <member name="M:System.Net.HttpWebRequest.Abort">
+      <summary>取消對網際網路資源的要求。</summary>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.Accept">
+      <summary>取得或設定 Accept HTTP 標頭的值。</summary>
+      <returns>Accept HTTP 標頭的值。預設值是 null。</returns>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.AllowReadStreamBuffering">
+      <summary>取得或設定值，這個值表示是否要緩衝處理從網際網路資源接收的資料。</summary>
+      <returns>true用來緩衝接收到來自網際網路資源。否則， false。true 表示啟用緩衝處理從網際網路資源收到的資料，false 表示停用緩衝。預設值為 true。</returns>
+    </member>
+    <member name="M:System.Net.HttpWebRequest.BeginGetRequestStream(System.AsyncCallback,System.Object)">
+      <summary>開始用來寫入資料之 <see cref="T:System.IO.Stream" /> 物件的非同步要求。</summary>
+      <returns>
+        <see cref="T:System.IAsyncResult" />，參考非同步要求。</returns>
+      <param name="callback">
+        <see cref="T:System.AsyncCallback" /> 委派。</param>
+      <param name="state">這個要求的狀態物件。</param>
+      <exception cref="T:System.Net.ProtocolViolationException">
+        <see cref="P:System.Net.HttpWebRequest.Method" /> 屬性是 GET 或 HEAD。-或- <see cref="P:System.Net.HttpWebRequest.KeepAlive" /> 是 true、<see cref="P:System.Net.HttpWebRequest.AllowWriteStreamBuffering" /> 是 false、<see cref="P:System.Net.HttpWebRequest.ContentLength" /> 是 -1、<see cref="P:System.Net.HttpWebRequest.SendChunked" /> 是 false，而且 <see cref="P:System.Net.HttpWebRequest.Method" /> 是 POST 或 PUT。</exception>
+      <exception cref="T:System.InvalidOperationException">資料流正在由先前對 <see cref="M:System.Net.HttpWebRequest.BeginGetRequestStream(System.AsyncCallback,System.Object)" /> 的呼叫所使用。-或- <see cref="P:System.Net.HttpWebRequest.TransferEncoding" /> 是設定為值，而且 <see cref="P:System.Net.HttpWebRequest.SendChunked" /> 為 false。-或-執行緒集區中的執行緒即將用盡。</exception>
+      <exception cref="T:System.NotSupportedException">要求的快取驗證程式表示，可以從快取提供對這個要求的回應，然而，寫入資料的要求不可以使用快取。如果您使用錯誤實作的自訂快取驗證程式，可能會發生這個例外狀況。</exception>
+      <exception cref="T:System.Net.WebException">先前已呼叫過 <see cref="M:System.Net.HttpWebRequest.Abort" />。</exception>
+      <exception cref="T:System.ObjectDisposedException">在 .NET Compact Framework 應用程式中，沒有正確取得並關閉內容長度為零的要求資料流。如需處理內容長度為零之要求的詳細資訊，請參閱 Network Programming in the .NET Compact Framework。</exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Net.DnsPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Net.WebPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Diagnostics.PerformanceCounterPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.HttpWebRequest.BeginGetResponse(System.AsyncCallback,System.Object)">
+      <summary>開始對網際網路資源的非同步要求。</summary>
+      <returns>
+        <see cref="T:System.IAsyncResult" />，參考回應的非同步要求。</returns>
+      <param name="callback">
+        <see cref="T:System.AsyncCallback" /> 委派</param>
+      <param name="state">這個要求的狀態物件。</param>
+      <exception cref="T:System.InvalidOperationException">資料流已經由先前對 <see cref="M:System.Net.HttpWebRequest.BeginGetResponse(System.AsyncCallback,System.Object)" /> 的呼叫使用。-或- <see cref="P:System.Net.HttpWebRequest.TransferEncoding" /> 是設定為值，而且 <see cref="P:System.Net.HttpWebRequest.SendChunked" /> 為 false。-或-執行緒集區中的執行緒即將用盡。 </exception>
+      <exception cref="T:System.Net.ProtocolViolationException">
+        <see cref="P:System.Net.HttpWebRequest.Method" /> 是 GET 或 HEAD，而且若不是 <see cref="P:System.Net.HttpWebRequest.ContentLength" /> 大於零，就是 <see cref="P:System.Net.HttpWebRequest.SendChunked" /> 為 true。-或- <see cref="P:System.Net.HttpWebRequest.KeepAlive" /> 是 true、<see cref="P:System.Net.HttpWebRequest.AllowWriteStreamBuffering" /> 是 false；若不是 <see cref="P:System.Net.HttpWebRequest.ContentLength" /> 為 -1，就是 <see cref="P:System.Net.HttpWebRequest.SendChunked" /> 為 false；而且 <see cref="P:System.Net.HttpWebRequest.Method" /> 是 POST 或 PUT。-或-<see cref="T:System.Net.HttpWebRequest" /> 具有實體本文，但是不會透過呼叫 <see cref="M:System.Net.HttpWebRequest.BeginGetRequestStream(System.AsyncCallback,System.Object)" /> 方法的方式來呼叫 <see cref="M:System.Net.HttpWebRequest.BeginGetResponse(System.AsyncCallback,System.Object)" /> 方法。-或-<see cref="P:System.Net.HttpWebRequest.ContentLength" /> 大於零，但應用程式不會寫入所有承諾的資料</exception>
+      <exception cref="T:System.Net.WebException">先前已呼叫過 <see cref="M:System.Net.HttpWebRequest.Abort" />。</exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Net.DnsPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Net.WebPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Diagnostics.PerformanceCounterPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.ContentType">
+      <summary>取得或設定 Content-type HTTP 標頭的值。</summary>
+      <returns>Content-type HTTP 標頭的值。預設值是 null。</returns>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.ContinueTimeout">
+      <summary>取得或設定要在收到伺服器的 100-Continue 以前等候的逾時 (以毫秒為單位)。</summary>
+      <returns>要在收到 100-Continue 以前等候的逾時 (以毫秒為單位)。</returns>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.CookieContainer">
+      <summary>取得或設定與要求相關的 Cookie。</summary>
+      <returns>
+        <see cref="T:System.Net.CookieContainer" />，包含與這個要求相關的 Cookie。</returns>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.Credentials">
+      <summary>取得或設定要求的驗證資訊。</summary>
+      <returns>
+        <see cref="T:System.Net.ICredentials" />，包含與要求相關的驗證認證。預設值為 null。</returns>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.HttpWebRequest.EndGetRequestStream(System.IAsyncResult)">
+      <summary>結束用來寫入資料之 <see cref="T:System.IO.Stream" /> 物件的非同步要求。</summary>
+      <returns>
+        <see cref="T:System.IO.Stream" />，用來寫入要求資料。</returns>
+      <param name="asyncResult">資料流的暫止要求。</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="asyncResult" /> 為 null。</exception>
+      <exception cref="T:System.IO.IOException">要求未完成，並且沒有資料流可以使用。 </exception>
+      <exception cref="T:System.ArgumentException">目前執行個體沒有在呼叫 <see cref="M:System.Net.HttpWebRequest.BeginGetRequestStream(System.AsyncCallback,System.Object)" /> 之後傳回 <paramref name="asyncResult" />。</exception>
+      <exception cref="T:System.InvalidOperationException">這個方法先前已使用 <paramref name="asyncResult" /> 呼叫過。 </exception>
+      <exception cref="T:System.Net.WebException">先前已呼叫過 <see cref="M:System.Net.HttpWebRequest.Abort" />。-或-處理要求時發生錯誤。</exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.HttpWebRequest.EndGetResponse(System.IAsyncResult)">
+      <summary>結束對網際網路資源的非同步要求。</summary>
+      <returns>
+        <see cref="T:System.Net.WebResponse" />，包含來自網際網路資源的回應。</returns>
+      <param name="asyncResult">回應的暫止要求。</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="asyncResult" /> 為 null。</exception>
+      <exception cref="T:System.InvalidOperationException">這個方法先前已使用 <paramref name="asyncResult." /> 呼叫過。-或-<see cref="P:System.Net.HttpWebRequest.ContentLength" /> 屬性大於 0，但是未將資料寫入至要求資料流。 </exception>
+      <exception cref="T:System.Net.WebException">先前已呼叫過 <see cref="M:System.Net.HttpWebRequest.Abort" />。-或-處理要求時發生錯誤。 </exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="asyncResult" /> was not returned by the current instance from a call to <see cref="M:System.Net.HttpWebRequest.BeginGetResponse(System.AsyncCallback,System.Object)" />.</exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.HaveResponse">
+      <summary>取得值，指出是否已經接收到來自網際網路資源的回應。</summary>
+      <returns>如果已經接收到回應，則為 true，否則為 false。</returns>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.Headers">
+      <summary>指定組成 HTTP 標頭的名稱/值組集合。</summary>
+      <returns>
+        <see cref="T:System.Net.WebHeaderCollection" />，包含組成 HTTP 要求標頭的名稱/值組。</returns>
+      <exception cref="T:System.InvalidOperationException">要求已經藉由呼叫 <see cref="M:System.Net.HttpWebRequest.GetRequestStream" />、<see cref="M:System.Net.HttpWebRequest.BeginGetRequestStream(System.AsyncCallback,System.Object)" />、<see cref="M:System.Net.HttpWebRequest.GetResponse" /> 或 <see cref="M:System.Net.HttpWebRequest.BeginGetResponse(System.AsyncCallback,System.Object)" /> 方法開始。</exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.Method">
+      <summary>取得或設定要求的方法。</summary>
+      <returns>用來連繫網際網路資源的要求方法。預設值為 GET。</returns>
+      <exception cref="T:System.ArgumentException">未提供方法。-或-方法字串含有無效字元。</exception>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.RequestUri">
+      <summary>取得要求的原始統一資源識別元 (URI)。</summary>
+      <returns>
+        <see cref="T:System.Uri" />，包含傳遞到 <see cref="M:System.Net.WebRequest.Create(System.String)" /> 方法的網際網路資源 URI。</returns>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.SupportsCookieContainer">
+      <summary>取得值，指出要求是否提供對 <see cref="T:System.Net.CookieContainer" /> 的支援。</summary>
+      <returns>true如果要求提供支援<see cref="T:System.Net.CookieContainer" />；否則， false。如果支援 <see cref="T:System.Net.CookieContainer" /> 則為 true，否則為 false。 </returns>
+    </member>
+    <member name="P:System.Net.HttpWebRequest.UseDefaultCredentials">
+      <summary>取得或設定 <see cref="T:System.Boolean" /> 值，控制是否隨著要求傳送預設認證。</summary>
+      <returns>如果使用預設認證則為 true，否則為 false。預設值是 false。</returns>
+      <exception cref="T:System.InvalidOperationException">在傳送要求後，您嘗試設定這個屬性。</exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Read="USERNAME" />
+      </PermissionSet>
+    </member>
+    <member name="T:System.Net.HttpWebResponse">
+      <summary>提供 <see cref="T:System.Net.WebResponse" /> 類別的 HTTP 特定實作。</summary>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.ContentLength">
+      <summary>取得由要求傳回的內容長度。</summary>
+      <returns>由要求傳回的位元組數目。內容長度不包含標頭資訊。</returns>
+      <exception cref="T:System.ObjectDisposedException">已經處置目前的執行個體。</exception>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.ContentType">
+      <summary>取得回應的內容類型。</summary>
+      <returns>字串，包含回應的內容類型。</returns>
+      <exception cref="T:System.ObjectDisposedException">已經處置目前的執行個體。</exception>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.Cookies">
+      <summary>取得或設定與這個回應關聯的 Cookie。</summary>
+      <returns>
+        <see cref="T:System.Net.CookieCollection" />，包含與這個回應關聯的 Cookie。</returns>
+      <exception cref="T:System.ObjectDisposedException">已經處置目前的執行個體。</exception>
+    </member>
+    <member name="M:System.Net.HttpWebResponse.Dispose(System.Boolean)">
+      <summary>釋放 <see cref="T:System.Net.HttpWebResponse" /> 所使用的 Unmanaged 資源，並選擇性處置 Managed 資源。</summary>
+      <param name="disposing">true 表示會同時釋放 Managed 和 Unmanaged 資源；false 則表示只釋放 Unmanaged 資源。</param>
+    </member>
+    <member name="M:System.Net.HttpWebResponse.GetResponseStream">
+      <summary>取得用來從伺服器讀取回應主體的資料流。</summary>
+      <returns>
+        <see cref="T:System.IO.Stream" />，包含回應的主體。</returns>
+      <exception cref="T:System.Net.ProtocolViolationException">沒有回應的資料流。</exception>
+      <exception cref="T:System.ObjectDisposedException">已經處置目前的執行個體。</exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.Headers">
+      <summary>取得與伺服器的這個回應關聯的標頭。</summary>
+      <returns>
+        <see cref="T:System.Net.WebHeaderCollection" />，包含隨回應傳回的標頭資訊。</returns>
+      <exception cref="T:System.ObjectDisposedException">已經處置目前的執行個體。</exception>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.Method">
+      <summary>取得用來傳回回應的方法。</summary>
+      <returns>字串，含有用來傳回回應的 HTTP 方法。</returns>
+      <exception cref="T:System.ObjectDisposedException">已經處置目前的執行個體。</exception>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.ResponseUri">
+      <summary>取得回應要求之網際網路資源的 URI。</summary>
+      <returns>
+        <see cref="T:System.Uri" />，包含回應要求之網際網路資源的 URI。</returns>
+      <exception cref="T:System.ObjectDisposedException">已經處置目前的執行個體。</exception>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.StatusCode">
+      <summary>取得回應的狀態。</summary>
+      <returns>其中一個 <see cref="T:System.Net.HttpStatusCode" /> 值。</returns>
+      <exception cref="T:System.ObjectDisposedException">已經處置目前的執行個體。</exception>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.StatusDescription">
+      <summary>取得隨回應傳回的狀態描述。</summary>
+      <returns>字串，描述回應的狀態。</returns>
+      <exception cref="T:System.ObjectDisposedException">已經處置目前的執行個體。</exception>
+    </member>
+    <member name="P:System.Net.HttpWebResponse.SupportsHeaders">
+      <summary>取得指出是否支援標頭的值。</summary>
+      <returns>傳回 <see cref="T:System.Boolean" />。如果支援標頭則為 true；否則為 false。</returns>
+    </member>
+    <member name="T:System.Net.IWebRequestCreate">
+      <summary>提供建立 <see cref="T:System.Net.WebRequest" /> 執行個體的基底介面。</summary>
+    </member>
+    <member name="M:System.Net.IWebRequestCreate.Create(System.Uri)">
+      <summary>建立 <see cref="T:System.Net.WebRequest" /> 執行個體。</summary>
+      <returns>
+        <see cref="T:System.Net.WebRequest" /> 執行個體。</returns>
+      <param name="uri">Web 資源的統一資源識別元 (URI)。</param>
+      <exception cref="T:System.NotSupportedException">此 <see cref="T:System.Net.IWebRequestCreate" /> 執行個體不支援 <paramref name="uri" /> 中指定的要求配置。</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="uri" /> 為 null。</exception>
+      <exception cref="T:System.UriFormatException">在適用於 Windows 市集應用程式的 .NET 或可攜式類別庫中，反而要攔截基底類別例外狀況 <see cref="T:System.FormatException" />。<paramref name="uri" /> 中指定的 URI 為無效的 URI。</exception>
+    </member>
+    <member name="T:System.Net.ProtocolViolationException">
+      <summary>當使用網路通訊協定 (Protocol) 發生錯誤時，所擲回的例外狀況。</summary>
+    </member>
+    <member name="M:System.Net.ProtocolViolationException.#ctor">
+      <summary>初始化 <see cref="T:System.Net.ProtocolViolationException" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:System.Net.ProtocolViolationException.#ctor(System.String)">
+      <summary>使用指定的訊息來初始化 <see cref="T:System.Net.ProtocolViolationException" /> 類別的新執行個體。</summary>
+      <param name="message">錯誤訊息字串。</param>
+    </member>
+    <member name="T:System.Net.WebException">
+      <summary>當透過可外掛式通訊協定 (Protocol) 存取網路發生錯誤時，所擲回的例外狀況。</summary>
+    </member>
+    <member name="M:System.Net.WebException.#ctor">
+      <summary>初始化 <see cref="T:System.Net.WebException" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:System.Net.WebException.#ctor(System.String)">
+      <summary>使用指定的錯誤訊息來初始化 <see cref="T:System.Net.WebException" /> 類別的新執行個體。</summary>
+      <param name="message">錯誤訊息的文字。</param>
+    </member>
+    <member name="M:System.Net.WebException.#ctor(System.String,System.Exception)">
+      <summary>使用指定的錯誤訊息和巢狀例外狀況來初始化 <see cref="T:System.Net.WebException" /> 類別的新執行個體。</summary>
+      <param name="message">錯誤訊息的文字。</param>
+      <param name="innerException">巢狀例外狀況。</param>
+    </member>
+    <member name="M:System.Net.WebException.#ctor(System.String,System.Exception,System.Net.WebExceptionStatus,System.Net.WebResponse)">
+      <summary>使用指定的錯誤訊息、巢狀例外狀況、狀態和回應來初始化 <see cref="T:System.Net.WebException" /> 類別的新執行個體。</summary>
+      <param name="message">錯誤訊息的文字。</param>
+      <param name="innerException">巢狀例外狀況。</param>
+      <param name="status">其中一個 <see cref="T:System.Net.WebExceptionStatus" /> 值。</param>
+      <param name="response">
+        <see cref="T:System.Net.WebResponse" /> 執行個體，含有遠端主機的回應。</param>
+    </member>
+    <member name="M:System.Net.WebException.#ctor(System.String,System.Net.WebExceptionStatus)">
+      <summary>使用指定的錯誤訊息和狀態來初始化 <see cref="T:System.Net.WebException" /> 類別的新執行個體。</summary>
+      <param name="message">錯誤訊息的文字。</param>
+      <param name="status">其中一個 <see cref="T:System.Net.WebExceptionStatus" /> 值。</param>
+    </member>
+    <member name="P:System.Net.WebException.Response">
+      <summary>取得遠端主機所傳回的回應。</summary>
+      <returns>如果可以從網際網路資源使用回應，則為包含來自網際網路資源之錯誤回應的 <see cref="T:System.Net.WebResponse" /> 執行個體，否則為 null。</returns>
+    </member>
+    <member name="P:System.Net.WebException.Status">
+      <summary>取得回應的狀態。</summary>
+      <returns>其中一個 <see cref="T:System.Net.WebExceptionStatus" /> 值。</returns>
+    </member>
+    <member name="T:System.Net.WebExceptionStatus">
+      <summary>定義 <see cref="T:System.Net.WebException" /> 類別的狀態碼。</summary>
+    </member>
+    <member name="F:System.Net.WebExceptionStatus.ConnectFailure">
+      <summary>無法在傳輸層級上連繫遠端服務點。</summary>
+    </member>
+    <member name="F:System.Net.WebExceptionStatus.MessageLengthLimitExceeded">
+      <summary>已在傳送要求或從伺服器接收回應時收到超過指定限制的訊息。</summary>
+    </member>
+    <member name="F:System.Net.WebExceptionStatus.Pending">
+      <summary>暫止內部非同步要求。</summary>
+    </member>
+    <member name="F:System.Net.WebExceptionStatus.RequestCanceled">
+      <summary>要求被取消、呼叫 <see cref="M:System.Net.WebRequest.Abort" /> 方法，或發生無法分類的錯誤。這是 <see cref="P:System.Net.WebException.Status" /> 的預設值。</summary>
+    </member>
+    <member name="F:System.Net.WebExceptionStatus.SendFailure">
+      <summary>完整要求無法送出至遠端伺服器。</summary>
+    </member>
+    <member name="F:System.Net.WebExceptionStatus.Success">
+      <summary>沒有遇到錯誤。</summary>
+    </member>
+    <member name="F:System.Net.WebExceptionStatus.UnknownError">
+      <summary>未知類型的例外狀況 (Exception) 已經發生。</summary>
+    </member>
+    <member name="T:System.Net.WebRequest">
+      <summary>對統一資源識別元 (URI) 提出要求。這是 abstract 類別。</summary>
+    </member>
+    <member name="M:System.Net.WebRequest.#ctor">
+      <summary>初始化 <see cref="T:System.Net.WebRequest" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:System.Net.WebRequest.Abort">
+      <summary>中止要求 </summary>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to access the method, when the method is not overridden in a descendant class. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.WebRequest.BeginGetRequestStream(System.AsyncCallback,System.Object)">
+      <summary>在子代類別中覆寫時，會提供 <see cref="M:System.Net.WebRequest.GetRequestStream" /> 方法的非同步版本。</summary>
+      <returns>參考非同步要求的 <see cref="T:System.IAsyncResult" />。</returns>
+      <param name="callback">
+        <see cref="T:System.AsyncCallback" /> 委派。</param>
+      <param name="state">物件，包含這個非同步要求的狀態資訊。</param>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to access the method, when the method is not overridden in a descendant class. </exception>
+    </member>
+    <member name="M:System.Net.WebRequest.BeginGetResponse(System.AsyncCallback,System.Object)">
+      <summary>在子代類別中覆寫時，開始網際網路資源的非同步要求。</summary>
+      <returns>參考非同步要求的 <see cref="T:System.IAsyncResult" />。</returns>
+      <param name="callback">
+        <see cref="T:System.AsyncCallback" /> 委派。</param>
+      <param name="state">物件，包含這個非同步要求的狀態資訊。</param>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to access the method, when the method is not overridden in a descendant class. </exception>
+    </member>
+    <member name="P:System.Net.WebRequest.ContentType">
+      <summary>在子代類別中覆寫時，取得或設定正在傳送要求資料的內容類型。</summary>
+      <returns>要求資料的內容類型。</returns>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to get or set the property, when the property is not overridden in a descendant class. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.WebRequest.Create(System.String)">
+      <summary>為指定的 URI 配置，初始化新的  <see cref="T:System.Net.WebRequest" /> 執行個體。</summary>
+      <returns>特定 URI 配置的 <see cref="T:System.Net.WebRequest" /> 子代。</returns>
+      <param name="requestUriString">識別網際網路資源的 URI。</param>
+      <exception cref="T:System.NotSupportedException">The request scheme specified in <paramref name="requestUriString" /> has not been registered. </exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="requestUriString" /> is null. </exception>
+      <exception cref="T:System.Security.SecurityException">The caller does not have permission to connect to the requested URI or a URI that the request is redirected to. </exception>
+      <exception cref="T:System.UriFormatException">In the .NET for Windows Store apps or the Portable Class Library, catch the base class exception, <see cref="T:System.FormatException" />, instead.The URI specified in <paramref name="requestUriString" /> is not a valid URI. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.WebRequest.Create(System.Uri)">
+      <summary>為指定的 URI 配置，初始化新的  <see cref="T:System.Net.WebRequest" /> 執行個體。</summary>
+      <returns>
+        <see cref="T:System.Net.WebRequest" /> 子代，屬於指定的 URI 配置。</returns>
+      <param name="requestUri">
+        <see cref="T:System.Uri" />，包含要求資源的 URI。</param>
+      <exception cref="T:System.NotSupportedException">The request scheme specified in <paramref name="requestUri" /> is not registered. </exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="requestUri" /> is null. </exception>
+      <exception cref="T:System.Security.SecurityException">The caller does not have permission to connect to the requested URI or a URI that the request is redirected to. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.WebRequest.CreateHttp(System.String)">
+      <summary>為指定的 URI 字串，初始化新的 <see cref="T:System.Net.HttpWebRequest" /> 執行個體。</summary>
+      <returns>傳回 <see cref="T:System.Net.HttpWebRequest" />。特定 URI 字串的 <see cref="T:System.Net.HttpWebRequest" /> 執行個體。</returns>
+      <param name="requestUriString">識別網際網路資源的 URI 字串。</param>
+      <exception cref="T:System.NotSupportedException">The request scheme specified in <paramref name="requestUriString" /> is the http or https scheme. </exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="requestUriString" /> is null. </exception>
+      <exception cref="T:System.Security.SecurityException">The caller does not have permission to connect to the requested URI or a URI that the request is redirected to. </exception>
+      <exception cref="T:System.UriFormatException">The URI specified in <paramref name="requestUriString" /> is not a valid URI. </exception>
+    </member>
+    <member name="M:System.Net.WebRequest.CreateHttp(System.Uri)">
+      <summary>為指定的 URI 配置，初始化新的 <see cref="T:System.Net.HttpWebRequest" /> 執行個體。</summary>
+      <returns>傳回 <see cref="T:System.Net.HttpWebRequest" />。特定 URI 字串的 <see cref="T:System.Net.HttpWebRequest" /> 執行個體。</returns>
+      <param name="requestUri">識別網際網路資源的 URI。</param>
+      <exception cref="T:System.NotSupportedException">The request scheme specified in <paramref name="requestUri" /> is the http or https scheme. </exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="requestUri" /> is null. </exception>
+      <exception cref="T:System.Security.SecurityException">The caller does not have permission to connect to the requested URI or a URI that the request is redirected to. </exception>
+      <exception cref="T:System.UriFormatException">The URI specified in <paramref name="requestUri" /> is not a valid URI. </exception>
+    </member>
+    <member name="P:System.Net.WebRequest.Credentials">
+      <summary>在子代類別中覆寫時，取得或設定使用網際網路資源驗證要求的網路認證。</summary>
+      <returns>
+        <see cref="T:System.Net.ICredentials" />，包含與要求相關聯的驗證認證。預設為 null。</returns>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to get or set the property, when the property is not overridden in a descendant class. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebRequest.DefaultWebProxy">
+      <summary>取得或設定全域 HTTP Proxy。</summary>
+      <returns>每個 <see cref="T:System.Net.WebRequest" /> 執行個體的呼叫所使用的 <see cref="T:System.Net.IWebProxy" />。</returns>
+    </member>
+    <member name="M:System.Net.WebRequest.EndGetRequestStream(System.IAsyncResult)">
+      <summary>在子代類別中覆寫時，傳回 <see cref="T:System.IO.Stream" />，以便將資料寫入至網際網路資源。</summary>
+      <returns>要將資料寫入的目標 <see cref="T:System.IO.Stream" />。</returns>
+      <param name="asyncResult">
+        <see cref="T:System.IAsyncResult" />，參考資料流的暫止要求。</param>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to access the method, when the method is not overridden in a descendant class. </exception>
+    </member>
+    <member name="M:System.Net.WebRequest.EndGetResponse(System.IAsyncResult)">
+      <summary>在子代類別中覆寫時，傳回 <see cref="T:System.Net.WebResponse" />。</summary>
+      <returns>
+        <see cref="T:System.Net.WebResponse" />，包含對網際網路要求的回應。</returns>
+      <param name="asyncResult">
+        <see cref="T:System.IAsyncResult" />，參考回應的暫止要求。</param>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to access the method, when the method is not overridden in a descendant class. </exception>
+    </member>
+    <member name="M:System.Net.WebRequest.GetRequestStreamAsync">
+      <summary>在子代類別中覆寫時，傳回以非同步作業方式將資料寫入網際網路資源的 <see cref="T:System.IO.Stream" />。</summary>
+      <returns>傳回 <see cref="T:System.Threading.Tasks.Task`1" />。工作物件，表示非同步作業。</returns>
+    </member>
+    <member name="M:System.Net.WebRequest.GetResponseAsync">
+      <summary>在子代類別中覆寫時，傳回對網際網路要求的回應，做為非同步作業。</summary>
+      <returns>傳回 <see cref="T:System.Threading.Tasks.Task`1" />。工作物件，表示非同步作業。</returns>
+    </member>
+    <member name="P:System.Net.WebRequest.Headers">
+      <summary>在子代類別中覆寫時，取得或設定與要求相關聯的標頭名稱/值組集合。</summary>
+      <returns>
+        <see cref="T:System.Net.WebHeaderCollection" />，包含與要求相關聯的標頭名稱/值組。</returns>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to get or set the property, when the property is not overridden in a descendant class. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebRequest.Method">
+      <summary>在子代類別中覆寫時，取得或設定這個要求中要使用的通訊協定方法。</summary>
+      <returns>這個要求中要使用的通訊協定方法。</returns>
+      <exception cref="T:System.NotImplementedException">If the property is not overridden in a descendant class, any attempt is made to get or set the property. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebRequest.Proxy">
+      <summary>在子代類別中覆寫時，取得或設定要用來存取這個網際網路資源的網路 Proxy。</summary>
+      <returns>用以存取網際網路資源的 <see cref="T:System.Net.IWebProxy" />。</returns>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to get or set the property, when the property is not overridden in a descendant class. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.WebRequest.RegisterPrefix(System.String,System.Net.IWebRequestCreate)">
+      <summary>註冊指定 URI 的 <see cref="T:System.Net.WebRequest" /> 子代。</summary>
+      <returns>如果登錄成功，則為 true，否則為 false。</returns>
+      <param name="prefix">
+        <see cref="T:System.Net.WebRequest" />  子代所服務的完整 URI 或 URI 前置詞。</param>
+      <param name="creator">
+        <see cref="T:System.Net.WebRequest" /> 呼叫以建立 <see cref="T:System.Net.WebRequest" /> 子代的建立方法。</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="prefix" /> is null-or- <paramref name="creator" /> is null. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="ControlEvidence" />
+        <IPermission class="System.Net.WebPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebRequest.RequestUri">
+      <summary>在子代類別中覆寫時，取得與要求相關聯的網際網路資源 URI。</summary>
+      <returns>
+        <see cref="T:System.Uri" />，代表與要求相關聯的資源。 </returns>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to get or set the property, when the property is not overridden in a descendant class. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebRequest.UseDefaultCredentials">
+      <summary>在子代類別中覆寫時，取得或設定 <see cref="T:System.Boolean" /> 值，控制 <see cref="P:System.Net.CredentialCache.DefaultCredentials" /> 是否隨著要求傳送。</summary>
+      <returns>如果使用預設認證，則為 true，否則為 false。預設值是 false。</returns>
+      <exception cref="T:System.InvalidOperationException">You attempted to set this property after the request was sent.</exception>
+      <exception cref="T:System.NotImplementedException">Any attempt is made to access the property, when the property is not overridden in a descendant class. </exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="T:System.Net.WebResponse">
+      <summary>提供來自統一資源識別元 (URI) 的回應。這是 abstract 類別。</summary>
+    </member>
+    <member name="M:System.Net.WebResponse.#ctor">
+      <summary>初始化 <see cref="T:System.Net.WebResponse" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="P:System.Net.WebResponse.ContentLength">
+      <summary>在子系類別中覆寫時，取得或設定正在接收資料的內容長度。</summary>
+      <returns>傳回自網際網路資源的位元組數。</returns>
+      <exception cref="T:System.NotSupportedException">當屬性在子代類別中未覆寫時，會嘗試取得或設定該屬性。</exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebResponse.ContentType">
+      <summary>在衍生類別中覆寫時，取得或設定正在接收資料的內容類型。</summary>
+      <returns>字串，包含回應的內容類型。</returns>
+      <exception cref="T:System.NotSupportedException">當屬性在子代類別中未覆寫時，會嘗試取得或設定該屬性。</exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="M:System.Net.WebResponse.Dispose">
+      <summary>釋放由 <see cref="T:System.Net.WebResponse" /> 物件使用的 Unmanaged 資源。</summary>
+    </member>
+    <member name="M:System.Net.WebResponse.Dispose(System.Boolean)">
+      <summary>釋放 <see cref="T:System.Net.WebResponse" /> 物件所使用的 Unmanaged 資源，並選擇性處置 Managed 資源。</summary>
+      <param name="disposing">true 表示會同時釋放 Managed 和 Unmanaged 資源；false 則表示只釋放 Unmanaged 資源。</param>
+    </member>
+    <member name="M:System.Net.WebResponse.GetResponseStream">
+      <summary>在子系類別中覆寫時，傳回來自網際網路資源的資料流。</summary>
+      <returns>
+        <see cref="T:System.IO.Stream" /> 類別的執行個體，從網際網路資源讀取資料。</returns>
+      <exception cref="T:System.NotSupportedException">當方法在子代類別中未覆寫時，會嘗試存取該方法。</exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebResponse.Headers">
+      <summary>在衍生類別中覆寫時，取得與這個要求相關聯的標頭名稱值配對集合。</summary>
+      <returns>
+        <see cref="T:System.Net.WebHeaderCollection" /> 類別的執行個體，包含與這個回應相關聯的標頭值。</returns>
+      <exception cref="T:System.NotSupportedException">當屬性在子代類別中未覆寫時，會嘗試取得或設定該屬性。</exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebResponse.ResponseUri">
+      <summary>在衍生類別中覆寫時，取得對要求實際回應的網際網路資源 URI。</summary>
+      <returns>
+        <see cref="T:System.Uri" /> 類別的執行個體，它包含對要求實際回應的網際網路資源 URI。</returns>
+      <exception cref="T:System.NotSupportedException">當屬性在子代類別中未覆寫時，會嘗試取得或設定該屬性。</exception>
+      <PermissionSet>
+        <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
+      </PermissionSet>
+    </member>
+    <member name="P:System.Net.WebResponse.SupportsHeaders">
+      <summary>取得指出是否支援標頭的值。</summary>
+      <returns>傳回 <see cref="T:System.Boolean" />。如果支援標頭則為 true；否則為 false。</returns>
+    </member>
+  </members>
+</doc>

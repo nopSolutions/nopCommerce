@@ -26,7 +26,7 @@
     if (!String.IsNullOrEmpty(url))
     {
         <li @(isActive ? Html.Raw("class=\"active current-active-item\"") : null)>
-            <a href="@url" class="menu-item-link">
+            <a href="@url" class="menu-item-link"@(item.OpenUrlInNewTab ? Html.Raw(" target=\"_blank\"") : null)>
                 @if (!String.IsNullOrEmpty(item.IconClass))
                 {
                     <text>

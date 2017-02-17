@@ -1,5 +1,6 @@
 ﻿using System;
 using Autofac;
+using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Infrastructure;
@@ -82,6 +83,9 @@ namespace Nop.Services.Tasks
 
             try
             {
+                //flag that task is already executed
+                var taskExecuted = false;
+
                 //task is run on one farm node at a time?
                 if (ensureRunOnOneWebFarmInstance)
                 {
@@ -100,33 +104,65 @@ namespace Nop.Services.Tasks
 
                         if (scheduleTask != null)
                         {
-                            //lease can't be aquired only if for a different machine and it has not expired
-                            if (scheduleTask.LeasedUntilUtc.HasValue &&
-                                scheduleTask.LeasedUntilUtc.Value >= DateTime.UtcNow &&
-                                scheduleTask.LeasedByMachineName != machineName)
-                                return;
+                            if (nopConfig.RedisCachingEnabled)
+                            {
+                                //get expiration time
+                                var expirationInSeconds = scheduleTask.Seconds <= 300 ? scheduleTask.Seconds - 1 : 300;
 
-                            //lease the task. so it's run on one farm node at a time
-                            scheduleTask.LeasedByMachineName = machineName;
-                            scheduleTask.LeasedUntilUtc = DateTime.UtcNow.AddMinutes(30);
-                            scheduleTaskService.UpdateTask(scheduleTask);
+                                var executeTaskAction = new Action(() =>
+                                {
+                                    //execute task
+                                    taskExecuted = true;
+                                    var task = this.CreateTask(scope);
+                                    if (task != null)
+                                    {
+                                        //update appropriate datetime properties
+                                        scheduleTask.LastStartUtc = DateTime.UtcNow;
+                                        scheduleTaskService.UpdateTask(scheduleTask);
+                                        task.Execute();
+                                        this.LastEndUtc = this.LastSuccessUtc = DateTime.UtcNow;
+                                    }
+                                });
+
+                                //execute task with lock
+                                var redisWrapper = EngineContext.Current.ContainerManager.Resolve<IRedisConnectionWrapper>(scope: scope);
+                                if (!redisWrapper.PerformActionWithLock(scheduleTask.Type, TimeSpan.FromSeconds(expirationInSeconds), executeTaskAction))
+                                    return;
+                            }
+                            else
+                            {
+                                //lease can't be acquired only if for a different machine and it has not expired
+                                if (scheduleTask.LeasedUntilUtc.HasValue &&
+                                    scheduleTask.LeasedUntilUtc.Value >= DateTime.UtcNow &&
+                                    scheduleTask.LeasedByMachineName != machineName)
+                                    return;
+
+                                //lease the task. so it's run on one farm node at a time
+                                scheduleTask.LeasedByMachineName = machineName;
+                                scheduleTask.LeasedUntilUtc = DateTime.UtcNow.AddMinutes(30);
+                                scheduleTaskService.UpdateTask(scheduleTask);
+                            }
                         }
                     }
                 }
 
-                //initialize and execute
-                var task = this.CreateTask(scope);
-                if (task != null)
+                //execute task in case if is not executed yet
+                if (!taskExecuted)
                 {
-                    this.LastStartUtc = DateTime.UtcNow;
-                    if (scheduleTask != null)
+                    //initialize and execute
+                    var task = this.CreateTask(scope);
+                    if (task != null)
                     {
-                        //update appropriate datetime properties
-                        scheduleTask.LastStartUtc = this.LastStartUtc;
-                        scheduleTaskService.UpdateTask(scheduleTask);
+                        this.LastStartUtc = DateTime.UtcNow;
+                        if (scheduleTask != null)
+                        {
+                            //update appropriate datetime properties
+                            scheduleTask.LastStartUtc = this.LastStartUtc;
+                            scheduleTaskService.UpdateTask(scheduleTask);
+                        }
+                        task.Execute();
+                        this.LastEndUtc = this.LastSuccessUtc = DateTime.UtcNow;
                     }
-                    task.Execute();
-                    this.LastEndUtc = this.LastSuccessUtc = DateTime.UtcNow;
                 }
             }
             catch (Exception exc)

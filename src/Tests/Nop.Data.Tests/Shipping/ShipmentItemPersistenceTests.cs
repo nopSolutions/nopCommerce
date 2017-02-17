@@ -73,7 +73,8 @@ namespace Nop.Data.Tests.Shipping
                     CreatedOnUtc = new DateTime(2010, 01, 01),
                 },
                 Deleted = true,
-                CreatedOnUtc = new DateTime(2010, 01, 01)
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                CustomOrderNumber = "1"
             };
         }
     }

@@ -227,34 +227,27 @@
                     @Html.NopLabelFor(model => model.SelectedCustomerRoleIds)
                 </div>
                 <div class="col-md-9">
-                    <div class="row">
-                        <div class="col-md-4">
-                            @Html.EditorFor(model => model.SelectedCustomerRoleIds, new {SelectList = Model.AvailableCustomerRoles})
-                            <script>
-                                $(document).ready(function() {
-                                    var customerRolesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
-                                    customerRolesIdsInput.setOptions({
-                                        customerRolesIdsInput: false
-                                    });
+                    @Html.EditorFor(model => model.SelectedCustomerRoleIds, new {SelectList = Model.AvailableCustomerRoles})
+                    <script>
+                        $(document).ready(function() {
+                            var customerRolesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                            customerRolesIdsInput.setOptions({
+                                customerRolesIdsInput: false
+                            });
 
-                                    @if (Model.AvailableCustomerRoles.Count == 0)
-                                    {
-                                        <text>
-                                customerRolesIdsInput.setOptions({
-                                    enable: false,
-                                    placeholder: '@T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")'
-                                });
-                                customerRolesIdsInput._placeholder();
-                                customerRolesIdsInput._enable();
+                            @if (Model.AvailableCustomerRoles.Count == 0)
+                            {
+                                <text>
+                                    customerRolesIdsInput.setOptions({
+                                        enable: false,
+                                        placeholder: '@T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")'
+                                    });
+                                    customerRolesIdsInput._placeholder();
+                                    customerRolesIdsInput._enable();
                                 </text>
-                                    }
-                                });
-                            </script>
-                        </div>
-                        <div class="col-md-8">
-                            @Html.Action("AclDisabledWarning", "Common")
-                        </div>
-                    </div>
+                            }
+                        });
+                    </script>
                 </div>
             </div>
                 <div class="form-group">
@@ -642,9 +635,9 @@
                             },
                             scrollable: false,
                             columns: [{
-                                field: "Id",
-                                title: "@T("Admin.Customers.Customers.Orders.ID")",
-                                width: 50
+                                field: "CustomOrderNumber",
+                                title: "@T("Admin.Customers.Customers.Orders.CustomOrderNumber")",
+                                width: 200
                             }, {
                                 field: "OrderTotal",
                                 title: "@T("Admin.Customers.Customers.Orders.OrderTotal")",
@@ -682,7 +675,9 @@
                                 field: "Id",
                                 title: "@T("Admin.Common.View")",
                                 width: 100,
-                                template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
                             }]
                         });
                     });
@@ -770,11 +765,15 @@
                                 field: "Id",
                                 title: "@T("Admin.Common.Edit")",
                                 width: 100,
-                                template: '<a href="@Url.Content("~/Admin/Customer/AddressEdit?customerId=")@Model.Id&addressid=#=Id#">@T("Admin.Common.Edit")</a>'
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Customer/AddressEdit?customerId=")@Model.Id&addressid=#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
                             }, {
                                 command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                 title: "@T("Admin.Common.Delete")",
-                                width: 100
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" }
                             }]
                         });
                     });

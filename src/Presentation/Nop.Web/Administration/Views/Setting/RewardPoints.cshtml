@@ -54,10 +54,11 @@
                                 @Html.NopLabelFor(model => model.ExchangeRate)
                             </div>
                             <div class="col-md-9">
-                                @T("Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2")
-                                @Html.NopEditorFor(model => model.ExchangeRate)
-                                @Model.PrimaryStoreCurrencyCode
-                                @Html.ValidationMessageFor(model => model.ExchangeRate)
+                                <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2")</div>
+                                <div class="pull-left">
+                                    @Html.NopEditorFor(model => model.ExchangeRate, Model.PrimaryStoreCurrencyCode)
+                                    @Html.ValidationMessageFor(model => model.ExchangeRate)
+                                </div>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
@@ -83,13 +84,11 @@
                                 @Html.NopLabelFor(model => model.PointsForPurchases_Amount)
                             </div>
                             <div class="col-md-9">
-                                @T("Admin.Configuration.Settings.RewardPoints.Earning.Hint1")
-                                @Html.NopEditorFor(model => model.PointsForPurchases_Amount)
-                                @Model.PrimaryStoreCurrencyCode
-                                &nbsp;
-                                @T("Admin.Configuration.Settings.RewardPoints.Earning.Hint2")
-                                @Html.NopEditorFor(model => model.PointsForPurchases_Points)
-                                @T("Admin.Configuration.Settings.RewardPoints.Earning.Hint3")
+                                <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint1")</div>
+                                <div class="pull-left margin-r-10">@Html.NopEditorFor(model => model.PointsForPurchases_Amount, Model.PrimaryStoreCurrencyCode)</div>
+                                <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint2")</div>
+                                <div class="pull-left margin-r-10">@Html.NopEditorFor(model => model.PointsForPurchases_Points)</div>
+                                <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint3")</div>
                                 @Html.ValidationMessageFor(model => model.PointsForPurchases_Amount)
                                 @Html.ValidationMessageFor(model => model.PointsForPurchases_Points)
                             </div>
@@ -161,7 +160,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <script type="text/javascript">
                         $(document).ready(function () {
                             $("#@Html.FieldIdFor(model => model.ActivatePointsImmediately)").click(activatePointsImmediately);

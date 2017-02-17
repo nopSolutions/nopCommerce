@@ -912,12 +912,12 @@ namespace Nop.Admin.Controllers
         #region Product list / create / edit / delete
 
         //list products
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -971,10 +971,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductList(DataSourceRequest command, ProductListModel model)
+        public virtual ActionResult ProductList(DataSourceRequest command, ProductListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1034,7 +1034,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("go-to-product-by-sku")]
-        public ActionResult GoToSku(ProductListModel model)
+        public virtual ActionResult GoToSku(ProductListModel model)
         {
             string sku = model.GoDirectlyToSku;
 
@@ -1059,7 +1059,7 @@ namespace Nop.Admin.Controllers
         }
 
         //create product
-        public ActionResult Create()
+        public virtual ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1087,7 +1087,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Create(ProductModel model, bool continueEditing)
+        public virtual ActionResult Create(ProductModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1171,7 +1171,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit product
-        public ActionResult Edit(int id)
+        public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1208,7 +1208,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Edit(ProductModel model, bool continueEditing)
+        public virtual ActionResult Edit(ProductModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1367,7 +1367,7 @@ namespace Nop.Admin.Controllers
 
         //delete product
         [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1391,7 +1391,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteSelected(ICollection<int> selectedIds)
+        public virtual ActionResult DeleteSelected(ICollection<int> selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1405,7 +1405,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult CopyProduct(ProductModel model)
+        public virtual ActionResult CopyProduct(ProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1437,7 +1437,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult LoadProductFriendlyNames(string productIds)
+        public virtual ActionResult LoadProductFriendlyNames(string productIds)
         {
             var result = "";
 
@@ -1471,7 +1471,7 @@ namespace Nop.Admin.Controllers
             return Json(new { Text = result });
         }
 
-        public ActionResult RequiredProductAddPopup(string btnId, string productIdsInput)
+        public virtual ActionResult RequiredProductAddPopup(string btnId, string productIdsInput)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1515,10 +1515,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult RequiredProductAddPopupList(DataSourceRequest command, ProductModel.AddRequiredProductModel model)
+        public virtual ActionResult RequiredProductAddPopupList(DataSourceRequest command, ProductModel.AddRequiredProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1549,10 +1549,10 @@ namespace Nop.Admin.Controllers
         #region Related products
 
         [HttpPost]
-        public ActionResult RelatedProductList(DataSourceRequest command, int productId)
+        public virtual ActionResult RelatedProductList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1586,7 +1586,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult RelatedProductUpdate(ProductModel.RelatedProductModel model)
+        public virtual ActionResult RelatedProductUpdate(ProductModel.RelatedProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1612,7 +1612,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult RelatedProductDelete(int id)
+        public virtual ActionResult RelatedProductDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1638,7 +1638,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public ActionResult RelatedProductAddPopup(int productId)
+        public virtual ActionResult RelatedProductAddPopup(int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1678,10 +1678,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult RelatedProductAddPopupList(DataSourceRequest command, ProductModel.AddRelatedProductModel model)
+        public virtual ActionResult RelatedProductAddPopupList(DataSourceRequest command, ProductModel.AddRelatedProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1709,7 +1709,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public ActionResult RelatedProductAddPopup(string btnId, string formId, ProductModel.AddRelatedProductModel model)
+        public virtual ActionResult RelatedProductAddPopup(string btnId, string formId, ProductModel.AddRelatedProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1753,10 +1753,10 @@ namespace Nop.Admin.Controllers
         #region Cross-sell products
 
         [HttpPost]
-        public ActionResult CrossSellProductList(DataSourceRequest command, int productId)
+        public virtual ActionResult CrossSellProductList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1789,7 +1789,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult CrossSellProductDelete(int id)
+        public virtual ActionResult CrossSellProductDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1815,7 +1815,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public ActionResult CrossSellProductAddPopup(int productId)
+        public virtual ActionResult CrossSellProductAddPopup(int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1855,10 +1855,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult CrossSellProductAddPopupList(DataSourceRequest command, ProductModel.AddCrossSellProductModel model)
+        public virtual ActionResult CrossSellProductAddPopupList(DataSourceRequest command, ProductModel.AddCrossSellProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1886,7 +1886,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public ActionResult CrossSellProductAddPopup(string btnId, string formId, ProductModel.AddCrossSellProductModel model)
+        public virtual ActionResult CrossSellProductAddPopup(string btnId, string formId, ProductModel.AddCrossSellProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1929,10 +1929,10 @@ namespace Nop.Admin.Controllers
         #region Associated products
 
         [HttpPost]
-        public ActionResult AssociatedProductList(DataSourceRequest command, int productId)
+        public virtual ActionResult AssociatedProductList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1973,7 +1973,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult AssociatedProductUpdate(ProductModel.AssociatedProductModel model)
+        public virtual ActionResult AssociatedProductUpdate(ProductModel.AssociatedProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1995,7 +1995,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult AssociatedProductDelete(int id)
+        public virtual ActionResult AssociatedProductDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2014,7 +2014,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public ActionResult AssociatedProductAddPopup(int productId)
+        public virtual ActionResult AssociatedProductAddPopup(int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2054,10 +2054,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult AssociatedProductAddPopupList(DataSourceRequest command, ProductModel.AddAssociatedProductModel model)
+        public virtual ActionResult AssociatedProductAddPopupList(DataSourceRequest command, ProductModel.AddAssociatedProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -2096,7 +2096,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public ActionResult AssociatedProductAddPopup(string btnId, string formId, ProductModel.AddAssociatedProductModel model)
+        public virtual ActionResult AssociatedProductAddPopup(string btnId, string formId, ProductModel.AddAssociatedProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2131,7 +2131,7 @@ namespace Nop.Admin.Controllers
         #region Product pictures
 
         [ValidateInput(false)]
-        public ActionResult ProductPictureAdd(int pictureId, int displayOrder,
+        public virtual ActionResult ProductPictureAdd(int pictureId, int displayOrder,
             string overrideAltAttribute, string overrideTitleAttribute,
             int productId)
         {
@@ -2173,10 +2173,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductPictureList(DataSourceRequest command, int productId)
+        public virtual ActionResult ProductPictureList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -2219,7 +2219,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductPictureUpdate(ProductModel.ProductPictureModel model)
+        public virtual ActionResult ProductPictureUpdate(ProductModel.ProductPictureModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2256,7 +2256,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductPictureDelete(int id)
+        public virtual ActionResult ProductPictureDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2292,7 +2292,7 @@ namespace Nop.Admin.Controllers
         #region Product specification attributes
 
         [ValidateInput(false)]
-        public ActionResult ProductSpecificationAttributeAdd(int attributeTypeId, int specificationAttributeOptionId,
+        public virtual ActionResult ProductSpecificationAttributeAdd(int attributeTypeId, int specificationAttributeOptionId,
             string customValue, bool allowFiltering, bool showOnProductPage,
             int displayOrder, int productId)
         {
@@ -2336,10 +2336,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductSpecAttrList(DataSourceRequest command, int productId)
+        public virtual ActionResult ProductSpecAttrList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -2401,7 +2401,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductSpecAttrUpdate(ProductSpecificationAttributeModel model)
+        public virtual ActionResult ProductSpecAttrUpdate(ProductSpecificationAttributeModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2439,7 +2439,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductSpecAttrDelete(int id)
+        public virtual ActionResult ProductSpecAttrDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2469,7 +2469,7 @@ namespace Nop.Admin.Controllers
 
         #region Product tags
 
-        public ActionResult ProductTags()
+        public virtual ActionResult ProductTags()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
                 return AccessDeniedView();
@@ -2478,10 +2478,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductTags(DataSourceRequest command)
+        public virtual ActionResult ProductTags(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var tags = _productTagService.GetAllProductTags()
                 //order by product count
@@ -2504,7 +2504,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductTagDelete(int id)
+        public virtual ActionResult ProductTagDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
                 return AccessDeniedView();
@@ -2518,7 +2518,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult EditProductTag(int id)
+        public virtual ActionResult EditProductTag(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
                 return AccessDeniedView();
@@ -2544,7 +2544,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditProductTag(string btnId, string formId, ProductTagModel model)
+        public virtual ActionResult EditProductTag(string btnId, string formId, ProductTagModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
                 return AccessDeniedView();
@@ -2576,10 +2576,10 @@ namespace Nop.Admin.Controllers
         #region Purchased with order
 
         [HttpPost]
-        public ActionResult PurchasedWithOrders(DataSourceRequest command, int productId)
+        public virtual ActionResult PurchasedWithOrders(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -2606,7 +2606,8 @@ namespace Nop.Admin.Controllers
                         PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
                         ShippingStatus = x.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
                         CustomerEmail = x.BillingAddress.Email,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
+                        CustomOrderNumber = x.CustomOrderNumber
                     };
                 }),
                 Total = orders.TotalCount
@@ -2621,7 +2622,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("download-catalog-pdf")]
-        public ActionResult DownloadCatalogAsPdf(ProductListModel model)
+        public virtual ActionResult DownloadCatalogAsPdf(ProductListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2678,7 +2679,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("exportxml-all")]
-        public ActionResult ExportXmlAll(ProductListModel model)
+        public virtual ActionResult ExportXmlAll(ProductListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2728,7 +2729,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ExportXmlSelected(string selectedIds)
+        public virtual ActionResult ExportXmlSelected(string selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2755,7 +2756,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("exportexcel-all")]
-        public ActionResult ExportExcelAll(ProductListModel model)
+        public virtual ActionResult ExportExcelAll(ProductListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2805,7 +2806,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ExportExcelSelected(string selectedIds)
+        public virtual ActionResult ExportExcelSelected(string selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2831,7 +2832,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ImportExcel()
+        public virtual ActionResult ImportExcel()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2867,7 +2868,7 @@ namespace Nop.Admin.Controllers
 
         #region Low stock reports
 
-        public ActionResult LowStockReport()
+        public virtual ActionResult LowStockReport()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2875,10 +2876,10 @@ namespace Nop.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult LowStockReportList(DataSourceRequest command)
+        public virtual ActionResult LowStockReportList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             int vendorId = 0;
             //a vendor should have access only to his products
@@ -2930,7 +2931,7 @@ namespace Nop.Admin.Controllers
 
         #region Bulk editing
 
-        public ActionResult BulkEdit()
+        public virtual ActionResult BulkEdit()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2956,10 +2957,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult BulkEditSelect(DataSourceRequest command, BulkEditListModel model)
+        public virtual ActionResult BulkEditSelect(DataSourceRequest command, BulkEditListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             int vendorId = 0;
             //a vendor should have access only to his products
@@ -3004,7 +3005,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult BulkEditUpdate(IEnumerable<BulkEditProductModel> products)
+        public virtual ActionResult BulkEditUpdate(IEnumerable<BulkEditProductModel> products)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3056,7 +3057,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult BulkEditDelete(IEnumerable<BulkEditProductModel> products)
+        public virtual ActionResult BulkEditDelete(IEnumerable<BulkEditProductModel> products)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3085,10 +3086,10 @@ namespace Nop.Admin.Controllers
         #region Tier prices
 
         [HttpPost]
-        public ActionResult TierPriceList(DataSourceRequest command, int productId)
+        public virtual ActionResult TierPriceList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -3133,7 +3134,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        public ActionResult TierPriceCreatePopup()
+        public virtual ActionResult TierPriceCreatePopup()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3155,7 +3156,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public ActionResult TierPriceCreatePopup(string btnId, string formId, ProductModel.TierPriceModel model)
+        public virtual ActionResult TierPriceCreatePopup(string btnId, string formId, ProductModel.TierPriceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3207,7 +3208,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult TierPriceEditPopup(int id)
+        public virtual ActionResult TierPriceEditPopup(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3249,7 +3250,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult TierPriceEditPopup(string btnId, string formId, ProductModel.TierPriceModel model)
+        public virtual ActionResult TierPriceEditPopup(string btnId, string formId, ProductModel.TierPriceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3299,7 +3300,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult TierPriceDelete(int id)
+        public virtual ActionResult TierPriceDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3329,10 +3330,10 @@ namespace Nop.Admin.Controllers
         #region Product attributes
 
         [HttpPost]
-        public ActionResult ProductAttributeMappingList(DataSourceRequest command, int productId)
+        public virtual ActionResult ProductAttributeMappingList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -3418,7 +3419,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductAttributeMappingInsert(ProductModel.ProductAttributeMappingModel model)
+        public virtual ActionResult ProductAttributeMappingInsert(ProductModel.ProductAttributeMappingModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3482,7 +3483,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductAttributeMappingUpdate(ProductModel.ProductAttributeMappingModel model)
+        public virtual ActionResult ProductAttributeMappingUpdate(ProductModel.ProductAttributeMappingModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3510,7 +3511,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductAttributeMappingDelete(int id)
+        public virtual ActionResult ProductAttributeMappingDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3538,7 +3539,7 @@ namespace Nop.Admin.Controllers
 
         #region Product attributes. Validation rules
 
-        public ActionResult ProductAttributeValidationRulesPopup(int id)
+        public virtual ActionResult ProductAttributeValidationRulesPopup(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3571,7 +3572,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult ProductAttributeValidationRulesPopup(string btnId, string formId, ProductModel.ProductAttributeMappingModel model)
+        public virtual ActionResult ProductAttributeValidationRulesPopup(string btnId, string formId, ProductModel.ProductAttributeMappingModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3614,7 +3615,7 @@ namespace Nop.Admin.Controllers
 
         #region Product attributes. Condition
 
-        public ActionResult ProductAttributeConditionPopup(string btnId, string formId, int productAttributeMappingId)
+        public virtual ActionResult ProductAttributeConditionPopup(string btnId, string formId, int productAttributeMappingId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3727,7 +3728,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductAttributeConditionPopup(string btnId, string formId,
+        public virtual ActionResult ProductAttributeConditionPopup(string btnId, string formId,
             ProductAttributeConditionModel model, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
@@ -3849,7 +3850,7 @@ namespace Nop.Admin.Controllers
         #region Product attribute values
 
         //list
-        public ActionResult EditAttributeValues(int productAttributeMappingId)
+        public virtual ActionResult EditAttributeValues(int productAttributeMappingId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3878,10 +3879,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductAttributeValueList(int productAttributeMappingId, DataSourceRequest command)
+        public virtual ActionResult ProductAttributeValueList(int productAttributeMappingId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var productAttributeMapping = _productAttributeService.GetProductAttributeMappingById(productAttributeMappingId);
             if (productAttributeMapping == null)
@@ -3940,7 +3941,7 @@ namespace Nop.Admin.Controllers
         }
 
         //create
-        public ActionResult ProductAttributeValueCreatePopup(int productAttributeMappingId)
+        public virtual ActionResult ProductAttributeValueCreatePopup(int productAttributeMappingId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3988,7 +3989,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductAttributeValueCreatePopup(string btnId, string formId, ProductModel.ProductAttributeValueModel model)
+        public virtual ActionResult ProductAttributeValueCreatePopup(string btnId, string formId, ProductModel.ProductAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4079,7 +4080,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult ProductAttributeValueEditPopup(int id)
+        public virtual ActionResult ProductAttributeValueEditPopup(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4145,7 +4146,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductAttributeValueEditPopup(string btnId, string formId, ProductModel.ProductAttributeValueModel model)
+        public virtual ActionResult ProductAttributeValueEditPopup(string btnId, string formId, ProductModel.ProductAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4232,7 +4233,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult ProductAttributeValueDelete(int id)
+        public virtual ActionResult ProductAttributeValueDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4258,7 +4259,7 @@ namespace Nop.Admin.Controllers
 
 
 
-        public ActionResult AssociateProductToAttributeValuePopup()
+        public virtual ActionResult AssociateProductToAttributeValuePopup()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4298,11 +4299,11 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult AssociateProductToAttributeValuePopupList(DataSourceRequest command,
+        public virtual ActionResult AssociateProductToAttributeValuePopupList(DataSourceRequest command,
             ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -4330,7 +4331,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public ActionResult AssociateProductToAttributeValuePopup(string productIdInput,
+        public virtual ActionResult AssociateProductToAttributeValuePopup(string productIdInput,
             string productNameInput, ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
@@ -4355,7 +4356,7 @@ namespace Nop.Admin.Controllers
 
         //action displaying notification (warning) to a store owner when associating some product
         [ValidateInput(false)]
-        public ActionResult AssociatedProductGetWarnings(int productId)
+        public virtual ActionResult AssociatedProductGetWarnings(int productId)
         {
             var associatedProduct = _productService.GetProductById(productId);
             if (associatedProduct != null)
@@ -4390,10 +4391,10 @@ namespace Nop.Admin.Controllers
         #region Product attribute combinations
 
         [HttpPost]
-        public ActionResult ProductAttributeCombinationList(DataSourceRequest command, int productId)
+        public virtual ActionResult ProductAttributeCombinationList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -4444,7 +4445,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductAttributeCombinationUpdate(ProductModel.ProductAttributeCombinationModel model)
+        public virtual ActionResult ProductAttributeCombinationUpdate(ProductModel.ProductAttributeCombinationModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4480,7 +4481,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductAttributeCombinationDelete(int id)
+        public virtual ActionResult ProductAttributeCombinationDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4502,7 +4503,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public ActionResult AddAttributeCombinationPopup(string btnId, string formId, int productId)
+        public virtual ActionResult AddAttributeCombinationPopup(string btnId, string formId, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4524,7 +4525,7 @@ namespace Nop.Admin.Controllers
         }
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult AddAttributeCombinationPopup(string btnId, string formId, int productId,
+        public virtual ActionResult AddAttributeCombinationPopup(string btnId, string formId, int productId,
             AddProductAttributeCombinationModel model, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
@@ -4719,7 +4720,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult GenerateAllAttributeCombinations(int productId)
+        public virtual ActionResult GenerateAllAttributeCombinations(int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4771,7 +4772,7 @@ namespace Nop.Admin.Controllers
         #region Product editor settings
 
         [HttpPost]
-        public ActionResult SaveProductEditorSettings(ProductModel model, string returnUrl = "")
+        public virtual ActionResult SaveProductEditorSettings(ProductModel model, string returnUrl = "")
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4798,10 +4799,10 @@ namespace Nop.Admin.Controllers
         #region Stock quantity history
 
         [HttpPost]
-        public ActionResult StockQuantityHistory(DataSourceRequest command, int productId, int warehouseId)
+        public virtual ActionResult StockQuantityHistory(DataSourceRequest command, int productId, int warehouseId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var product = _productService.GetProductById(productId);
             if (product == null)

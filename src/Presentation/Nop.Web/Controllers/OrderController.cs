@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Web.Mvc;
 using Nop.Core;
@@ -60,7 +61,7 @@ namespace Nop.Web.Controllers
 
         //My account / Orders
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult CustomerOrders()
+        public virtual ActionResult CustomerOrders()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
@@ -73,7 +74,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("CustomerOrders")]
         [PublicAntiForgery]
         [FormValueRequired(FormValueRequirement.StartsWith, "cancelRecurringPayment")]
-        public ActionResult CancelRecurringPayment(FormCollection form)
+        public virtual ActionResult CancelRecurringPayment(FormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
@@ -95,7 +96,7 @@ namespace Nop.Web.Controllers
                 var errors = _orderProcessingService.CancelRecurringPayment(recurringPayment);
 
                 var model = _orderModelFactory.PrepareCustomerOrderListModel();
-                model.CancelRecurringPaymentErrors = errors;
+                model.RecurringPaymentErrors = errors;
 
                 return View(model);
             }
@@ -105,9 +106,40 @@ namespace Nop.Web.Controllers
             }
         }
 
+        //My account / Orders / Retry last recurring order
+        [HttpPost, ActionName("CustomerOrders")]
+        [PublicAntiForgery]
+        [FormValueRequired(FormValueRequirement.StartsWith, "retryLastPayment")]
+        public virtual ActionResult RetryLastRecurringPayment(FormCollection form)
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return new HttpUnauthorizedResult();
+
+            //get recurring payment identifier
+            var recurringPaymentId = 0;
+            if (!form.AllKeys.Any(formValue => formValue.StartsWith("retryLastPayment", StringComparison.InvariantCultureIgnoreCase) &&
+                int.TryParse(formValue.Substring(formValue.IndexOf('_') + 1), out recurringPaymentId)))
+            {
+                return RedirectToRoute("CustomerOrders");
+            }
+
+            var recurringPayment = _orderService.GetRecurringPaymentById(recurringPaymentId);
+            if (recurringPayment == null)
+                return RedirectToRoute("CustomerOrders");
+
+            if (!_orderProcessingService.CanRetryLastRecurringPayment(_workContext.CurrentCustomer, recurringPayment))
+                return RedirectToRoute("CustomerOrders");
+
+            var errors = _orderProcessingService.ProcessNextRecurringPayment(recurringPayment);
+            var model = _orderModelFactory.PrepareCustomerOrderListModel();
+            model.RecurringPaymentErrors = errors.ToList();
+
+            return View(model);
+        }
+
         //My account / Reward points
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult CustomerRewardPoints(int? page)
+        public virtual ActionResult CustomerRewardPoints(int? page)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
@@ -121,7 +153,7 @@ namespace Nop.Web.Controllers
 
         //My account / Order details page
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult Details(int orderId)
+        public virtual ActionResult Details(int orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -133,7 +165,7 @@ namespace Nop.Web.Controllers
 
         //My account / Order details page / Print
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult PrintOrderDetails(int orderId)
+        public virtual ActionResult PrintOrderDetails(int orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -146,7 +178,7 @@ namespace Nop.Web.Controllers
         }
 
         //My account / Order details page / PDF invoice
-        public ActionResult GetPdfInvoice(int orderId)
+        public virtual ActionResult GetPdfInvoice(int orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -164,7 +196,7 @@ namespace Nop.Web.Controllers
         }
 
         //My account / Order details page / re-order
-        public ActionResult ReOrder(int orderId)
+        public virtual ActionResult ReOrder(int orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -178,7 +210,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("Details")]
         [PublicAntiForgery]
         [FormValueRequired("repost-payment")]
-        public ActionResult RePostPayment(int orderId)
+        public virtual ActionResult RePostPayment(int orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -206,7 +238,7 @@ namespace Nop.Web.Controllers
 
         //My account / Order details page / Shipment details page
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult ShipmentDetails(int shipmentId)
+        public virtual ActionResult ShipmentDetails(int shipmentId)
         {
             var shipment = _shipmentService.GetShipmentById(shipmentId);
             if (shipment == null)
