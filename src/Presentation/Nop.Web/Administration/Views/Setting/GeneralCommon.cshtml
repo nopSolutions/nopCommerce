@@ -47,6 +47,9 @@
 
             <div class="panel-group">
                 <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Common")
+                    </div>
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
@@ -61,7 +64,7 @@
                                             <label>
                                                 <span>
                                                     <input type="radio" name="@Html.FieldNameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.ThemeName"
-                                                           @if (theme.ThemeName == Model.StoreInformationSettings.DefaultStoreTheme) { <text> checked="checked" </text>  }>
+                                                           @if (theme.ThemeName == Model.StoreInformationSettings.DefaultStoreTheme) { <text> checked="checked" </text>    }>
                                                     @theme.ThemeTitle
                                                 </span>
                                                 <img src="@Url.Content(theme.PreviewImageUrl)" alt="@theme.PreviewText" title="@theme.PreviewText">
@@ -103,6 +106,44 @@
                                 @Html.ValidationMessageFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning)
                             </div>
                         </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.StoreClosed_OverrideForStore, model => model.StoreInformationSettings.StoreClosed, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.StoreInformationSettings.StoreClosed)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.StoreInformationSettings.StoreClosed)
+                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreClosed)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm_OverrideForStore, model => model.StoreInformationSettings.SubjectFieldOnContactUsForm, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm)
+                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore, model => model.StoreInformationSettings.UseSystemEmailForContactUsForm, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm)
+                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.SocialMedia")
+                    </div>
+                    <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.FacebookLink_OverrideForStore, model => model.StoreInformationSettings.FacebookLink, Model.ActiveStoreScopeConfiguration)
@@ -143,37 +184,15 @@
                                 @Html.ValidationMessageFor(model => model.StoreInformationSettings.GooglePlusLink)
                             </div>
                         </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.StoreClosed_OverrideForStore, model => model.StoreInformationSettings.StoreClosed, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.StoreInformationSettings.StoreClosed)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.StoreInformationSettings.StoreClosed)
-                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreClosed)
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm_OverrideForStore, model => model.StoreInformationSettings.SubjectFieldOnContactUsForm, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm)
-                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm)
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore, model => model.StoreInformationSettings.UseSystemEmailForContactUsForm, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm)
-                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm)
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
+                    </div>
+                </div>
+
+                <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Sitemap")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.SitemapEnabled_OverrideForStore, model => model.StoreInformationSettings.SitemapEnabled, Model.ActiveStoreScopeConfiguration)
                                 @Html.NopLabelFor(model => model.StoreInformationSettings.SitemapEnabled)
@@ -215,7 +234,11 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.SEO")
+                    </div>
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
@@ -360,6 +383,9 @@
                     </div>
                 </div>
                 <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Security")
+                    </div>
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
@@ -426,6 +452,9 @@
                     </div>
                 </div>
                 <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Captcha")
+                    </div>
                     <div class="panel-body">
                         <p>
                             A CAPTCHA is a program that can tell whether its user is a human or a computer.
@@ -554,7 +583,7 @@
                         </div>
                     </div>
                     <script type="text/javascript">
-                        $(document).ready(function() {
+                        $(document).ready(function () {
                             $("#@Html.FieldIdFor(model => model.CaptchaSettings.Enabled)").click(toggleReCaptcha);
                             toggleReCaptcha();
                         });
@@ -591,6 +620,9 @@
                     </script>
                 </div>
                 <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Pdf")
+                    </div>
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
@@ -645,6 +677,9 @@
                     </div>
                 </div>
                 <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Localization")
+                    </div>
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
@@ -703,6 +738,9 @@
                     </div>
                 </div>
                 <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.FullText")
+                    </div>
                     <div class="panel-body">
                         <p>
                             @if (Model.FullTextSettings.Supported)

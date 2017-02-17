@@ -69,6 +69,9 @@
 {
     <div class="panel-group">
         <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Registration")
+            </div>
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
@@ -117,47 +120,11 @@
                 </div>
                 <div class="form-group advanced-setting">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.AllowViewingProfiles)
+                        @Html.NopLabelFor(model => model.CustomerSettings.CustomerNameFormat)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerSettings.AllowViewingProfiles)
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.AllowViewingProfiles)
-                    </div>
-                </div>
-                <div class="form-group advanced-setting">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)
-                    </div>
-                </div>
-                <div class="form-group advanced-setting" id="pnlDefaultAvatarEnabled">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.DefaultAvatarEnabled)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerSettings.DefaultAvatarEnabled)
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.DefaultAvatarEnabled)
-                    </div>
-                </div>
-                <div class="form-group advanced-setting">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.ShowCustomersLocation)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerSettings.ShowCustomersLocation)
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.ShowCustomersLocation)
-                    </div>
-                </div>
-                <div class="form-group advanced-setting">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.ShowCustomersJoinDate)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerSettings.ShowCustomersJoinDate)
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.ShowCustomersJoinDate)
+                        @Html.NopDropDownListFor(model => model.CustomerSettings.CustomerNameFormat, ((CustomerNameFormat) Model.CustomerSettings.CustomerNameFormat).ToSelectList())
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.CustomerNameFormat)
                     </div>
                 </div>
                 <div class="form-group advanced-setting">
@@ -169,16 +136,14 @@
                         @Html.ValidationMessageFor(model => model.CustomerSettings.RequireRegistrationForDownloadableProducts)
                     </div>
                 </div>
-                <div class="form-group advanced-setting">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerSettings.CustomerNameFormat)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopDropDownListFor(model => model.CustomerSettings.CustomerNameFormat, ((CustomerNameFormat)Model.CustomerSettings.CustomerNameFormat).ToSelectList())
-                        @Html.ValidationMessageFor(model => model.CustomerSettings.CustomerNameFormat)
-                    </div>
-                </div>
-                <div class="form-group advanced-setting">
+            </div>
+        </div>
+        <div class="panel panel-default advanced-setting">
+            <div class="panel-heading">
+                @T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Password")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.PasswordMinLength)
                     </div>
@@ -187,7 +152,7 @@
                         @Html.ValidationMessageFor(model => model.CustomerSettings.PasswordMinLength)
                     </div>
                 </div>
-                <div class="form-group advanced-setting">
+                <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.UnduplicatedPasswordsNumber)
                     </div>
@@ -196,7 +161,7 @@
                         @Html.ValidationMessageFor(model => model.CustomerSettings.UnduplicatedPasswordsNumber)
                     </div>
                 </div>
-                <div class="form-group advanced-setting">
+                <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.DefaultPasswordFormat)
                     </div>
@@ -205,7 +170,7 @@
                         @Html.ValidationMessageFor(model => model.CustomerSettings.DefaultPasswordFormat)
                     </div>
                 </div>
-                <div class="form-group advanced-setting">
+                <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.PasswordLifetime)
                     </div>
@@ -214,7 +179,7 @@
                         @Html.ValidationMessageFor(model => model.CustomerSettings.PasswordLifetime)
                     </div>
                 </div>
-                <div class="form-group advanced-setting">
+                <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.PasswordRecoveryLinkDaysValid)
                     </div>
@@ -223,7 +188,7 @@
                         @Html.ValidationMessageFor(model => model.CustomerSettings.PasswordRecoveryLinkDaysValid)
                     </div>
                 </div>
-                <div class="form-group advanced-setting">
+                <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.FailedPasswordAllowedAttempts)
                     </div>
@@ -232,7 +197,7 @@
                         @Html.ValidationMessageFor(model => model.CustomerSettings.FailedPasswordAllowedAttempts)
                     </div>
                 </div>
-                <div class="form-group advanced-setting" id="pnlFailedPasswordLockoutMinutes">
+                <div class="form-group" id="pnlFailedPasswordLockoutMinutes">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.FailedPasswordLockoutMinutes)
                     </div>
@@ -241,7 +206,7 @@
                         @Html.ValidationMessageFor(model => model.CustomerSettings.FailedPasswordLockoutMinutes)
                     </div>
                 </div>
-                <div class="form-group advanced-setting">
+                <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.EnteringEmailTwice)
                     </div>
@@ -250,7 +215,32 @@
                         @Html.ValidationMessageFor(model => model.CustomerSettings.EnteringEmailTwice)
                     </div>
                 </div>
-                <div class="form-group advanced-setting">
+            </div>
+        </div>
+        <div class="panel panel-default advanced-setting">
+            <div class="panel-heading">
+                @T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Account")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlDefaultAvatarEnabled">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.DefaultAvatarEnabled)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.DefaultAvatarEnabled)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.DefaultAvatarEnabled)
+                    </div>
+                </div>
+                <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.HideDownloadableProductsTab)
                     </div>
@@ -259,7 +249,7 @@
                         @Html.ValidationMessageFor(model => model.CustomerSettings.HideDownloadableProductsTab)
                     </div>
                 </div>
-                <div class="form-group advanced-setting">
+                <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.HideBackInStockSubscriptionsTab)
                     </div>
@@ -268,7 +258,7 @@
                         @Html.ValidationMessageFor(model => model.CustomerSettings.HideBackInStockSubscriptionsTab)
                     </div>
                 </div>
-                <div class="form-group advanced-setting">
+                <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.HideNewsletterBlock)
                     </div>
@@ -277,7 +267,7 @@
                         @Html.ValidationMessageFor(model => model.CustomerSettings.HideNewsletterBlock)
                     </div>
                 </div>
-                <div class="form-group advanced-setting" id="pnlNewsletterBlockAllowToUnsubscribe">
+                <div class="form-group" id="pnlNewsletterBlockAllowToUnsubscribe">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.NewsletterBlockAllowToUnsubscribe)
                     </div>
@@ -286,13 +276,47 @@
                         @Html.ValidationMessageFor(model => model.CustomerSettings.NewsletterBlockAllowToUnsubscribe)
                     </div>
                 </div>
-                <div class="form-group advanced-setting">
+                <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerSettings.StoreLastVisitedPage)
                     </div>
                     <div class="col-md-9">
                         @Html.NopEditorFor(model => model.CustomerSettings.StoreLastVisitedPage)
                         @Html.ValidationMessageFor(model => model.CustomerSettings.StoreLastVisitedPage)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default advanced-setting">
+            <div class="panel-heading">
+                @T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Profile")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.AllowViewingProfiles)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.AllowViewingProfiles)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.AllowViewingProfiles)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.ShowCustomersLocation)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.ShowCustomersLocation)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.ShowCustomersLocation)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerSettings.ShowCustomersJoinDate)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerSettings.ShowCustomersJoinDate)
+                        @Html.ValidationMessageFor(model => model.CustomerSettings.ShowCustomersJoinDate)
                     </div>
                 </div>
             </div>
@@ -325,6 +349,9 @@
             </script>
         </div>
         <div class="panel panel-default advanced-setting">
+            <div class="panel-heading">
+                @T("Admin.Configuration.Settings.CustomerUser.BlockTitle.TimeZone")
+            </div>
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
@@ -347,6 +374,9 @@
             </div>
         </div>
         <div class="panel panel-default advanced-setting">
+            <div class="panel-heading">
+                @T("Admin.Configuration.Settings.CustomerUser.BlockTitle.ExternalAuthentication")
+            </div>
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
@@ -485,6 +515,9 @@
 
     <div class="panel-group">
         <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Admin.Configuration.Settings.CustomerUser.BlockTitle.DefaultFields")
+            </div>
             <div class="panel-body">
                 <p>
                     <em>@T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields.Description")</em>
@@ -801,6 +834,9 @@
 
     <div class="panel-group">
         <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Admin.Configuration.Settings.CustomerUser.BlockTitle.DefaultFields")
+            </div>
             <div class="panel-body">
                 <p>
                     <em>@T("Admin.Configuration.Settings.CustomerUser.AddressFormFields.Description")</em>

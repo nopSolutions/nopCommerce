@@ -31,6 +31,47 @@
 
             <div class="panel-group">
                 <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Tax.BlockTitle.Common")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.DefaultTaxCategoryId_OverrideForStore, model => model.DefaultTaxCategoryId, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.DefaultTaxCategoryId)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDropDownListFor(model => model.DefaultTaxCategoryId, Model.TaxCategories)
+                                @Html.ValidationMessageFor(model => model.DefaultTaxCategoryId)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.TaxBasedOn_OverrideForStore, model => model.TaxBasedOn, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.TaxBasedOn)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDropDownListFor(model => model.TaxBasedOn, Model.TaxBasedOnValues)
+                                @Html.ValidationMessageFor(model => model.TaxBasedOn)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @Html.OverrideStoreCheckboxFor(model => model.DefaultTaxAddress_OverrideForStore, "pnlDefaultTaxAddress", Model.ActiveStoreScopeConfiguration)
+                        @T("Admin.Configuration.Settings.Tax.DefaultTaxAddress")
+                    </div>
+                    <div class="panel-body">
+                        <div id="pnlDefaultTaxAddress">
+                            @Html.EditorFor(x => x.DefaultTaxAddress, "Address")
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Tax.BlockTitle.TaxDispaying")
+                    </div>
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
@@ -112,26 +153,6 @@
                                 @Html.ValidationMessageFor(model => model.ForceTaxExclusionFromOrderSubtotal)
                             </div>
                         </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.DefaultTaxCategoryId_OverrideForStore, model => model.DefaultTaxCategoryId, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.DefaultTaxCategoryId)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopDropDownListFor(model => model.DefaultTaxCategoryId, Model.TaxCategories)
-                                @Html.ValidationMessageFor(model => model.DefaultTaxCategoryId)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.TaxBasedOn_OverrideForStore, model => model.TaxBasedOn, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.TaxBasedOn)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopDropDownListFor(model => model.TaxBasedOn, Model.TaxBasedOnValues)
-                                @Html.ValidationMessageFor(model => model.TaxBasedOn)
-                            </div>
-                        </div>
                     </div>
                     <script type="text/javascript">
                         $(document).ready(function () {
@@ -149,18 +170,10 @@
 
                     </script>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        @Html.OverrideStoreCheckboxFor(model => model.DefaultTaxAddress_OverrideForStore, "pnlDefaultTaxAddress", Model.ActiveStoreScopeConfiguration)
-                        @T("Admin.Configuration.Settings.Tax.DefaultTaxAddress")
-                    </div>
-                    <div class="panel-body">
-                        <div id="pnlDefaultTaxAddress">
-                            @Html.EditorFor(x => x.DefaultTaxAddress, "Address")
-                        </div>
-                    </div>
-                </div>
                 <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Tax.BlockTitle.Shipping")
+                    </div>
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
@@ -212,6 +225,9 @@
                     </script>
                 </div>
                 <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Tax.BlockTitle.Payment")
+                    </div>
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
@@ -261,10 +277,12 @@
                                 $('#pnlPaymentMethodAdditionalFeeTaxClass').hide();
                             }
                         }
-
                     </script>
                 </div>
                 <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Tax.BlockTitle.VAT")
+                    </div>
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">

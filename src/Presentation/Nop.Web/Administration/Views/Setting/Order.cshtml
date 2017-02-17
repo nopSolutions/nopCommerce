@@ -23,7 +23,7 @@
     </div>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             bindBootstrapTabSelectEvent('ordersettings-edit');
         });
     </script>
@@ -80,7 +80,121 @@
     </script>
 
     <div class="panel-group">
+        <div class="panel panel-default advanced-setting">
+            <div class="panel-heading">
+                @T("Admin.Configuration.Settings.Order.BlockTitle.Common")
+            </div>
+            <div class="panel-body">
+                @if (Model.OrderIdent.HasValue)
+                {
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.OrderIdent)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.OrderIdent)
+                        </div>
+                    </div>
+                }
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.CustomOrderNumberMask_OverrideForStore, model => model.CustomOrderNumberMask, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.CustomOrderNumberMask)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomOrderNumberMask)
+                        @Html.ValidationMessageFor(model => model.CustomOrderNumberMask)
+                        <ul class="common-list">
+                            <li>
+                                @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.YYYY")
+                            </li>
+                            <li>
+                                @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.YY")
+                            </li>
+                            <li>
+                                @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.MM")
+                            </li>
+                            <li>
+                                @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.DD")
+                            </li>
+                            <li>
+                                @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.ID")
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.IsReOrderAllowed_OverrideForStore, model => model.IsReOrderAllowed, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.IsReOrderAllowed)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.IsReOrderAllowed)
+                        @Html.ValidationMessageFor(model => model.IsReOrderAllowed)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CompleteOrderWhenDelivered)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CompleteOrderWhenDelivered)
+                        @Html.ValidationMessageFor(model => model.CompleteOrderWhenDelivered)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default advanced-setting">
+            <div class="panel-heading">
+                @T("Admin.Configuration.Settings.Order.BlockTitle.OrderTotals")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.MinOrderSubtotalAmount_OverrideForStore, model => model.MinOrderSubtotalAmount, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.MinOrderSubtotalAmount)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.MinOrderSubtotalAmount, Model.PrimaryStoreCurrencyCode)
+                        @Html.ValidationMessageFor(model => model.MinOrderSubtotalAmount)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.MinOrderSubtotalAmountIncludingTax_OverrideForStore, model => model.MinOrderSubtotalAmountIncludingTax, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.MinOrderSubtotalAmountIncludingTax)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.MinOrderSubtotalAmountIncludingTax)
+                        @Html.ValidationMessageFor(model => model.MinOrderSubtotalAmountIncludingTax)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.MinOrderTotalAmount_OverrideForStore, model => model.MinOrderTotalAmount, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.MinOrderTotalAmount)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.MinOrderTotalAmount, Model.PrimaryStoreCurrencyCode)
+                        @Html.ValidationMessageFor(model => model.MinOrderTotalAmount)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AutoUpdateOrderTotalsOnEditingOrder_OverrideForStore, model => model.AutoUpdateOrderTotalsOnEditingOrder, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AutoUpdateOrderTotalsOnEditingOrder)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.AutoUpdateOrderTotalsOnEditingOrder)
+                        @Html.ValidationMessageFor(model => model.AutoUpdateOrderTotalsOnEditingOrder)
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Admin.Configuration.Settings.Order.BlockTitle.Checkout")
+            </div>
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
@@ -132,94 +246,6 @@
                         @Html.ValidationMessageFor(model => model.TermsOfServiceOnOrderConfirmPage)
                     </div>
                 </div>
-                @if (Model.OrderIdent.HasValue)
-                {
-                    <div class="form-group advanced-setting">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.OrderIdent)
-                        </div>
-                        <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.OrderIdent)
-                        </div>
-                    </div>
-                }
-                <div class="form-group advanced-setting">
-                    <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.CustomOrderNumberMask_OverrideForStore, model => model.CustomOrderNumberMask, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.CustomOrderNumberMask)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomOrderNumberMask)
-                        @Html.ValidationMessageFor(model => model.CustomOrderNumberMask)
-                        <ul class="common-list">
-                            <li>
-                                @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.YYYY")
-                            </li>
-                            <li>
-                                @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.YY")
-                            </li>
-                            <li>
-                                @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.MM")
-                            </li>
-                            <li>
-                                @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.DD")
-                            </li>
-                            <li>
-                                @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.ID")
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="form-group advanced-setting">
-                    <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.IsReOrderAllowed_OverrideForStore, model => model.IsReOrderAllowed, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.IsReOrderAllowed)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.IsReOrderAllowed)
-                        @Html.ValidationMessageFor(model => model.IsReOrderAllowed)
-                    </div>
-                </div>
-                <div class="form-group advanced-setting">
-                    <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.MinOrderSubtotalAmount_OverrideForStore, model => model.MinOrderSubtotalAmount, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.MinOrderSubtotalAmount)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.MinOrderSubtotalAmount, Model.PrimaryStoreCurrencyCode)
-                        @Html.ValidationMessageFor(model => model.MinOrderSubtotalAmount)
-                    </div>
-                </div>
-                <div class="form-group advanced-setting">
-                    <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.MinOrderSubtotalAmountIncludingTax_OverrideForStore, model => model.MinOrderSubtotalAmountIncludingTax, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.MinOrderSubtotalAmountIncludingTax)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.MinOrderSubtotalAmountIncludingTax)
-                        @Html.ValidationMessageFor(model => model.MinOrderSubtotalAmountIncludingTax)
-                    </div>
-                </div>
-                <div class="form-group advanced-setting">
-                    <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.MinOrderTotalAmount_OverrideForStore, model => model.MinOrderTotalAmount, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.MinOrderTotalAmount)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.MinOrderTotalAmount, Model.PrimaryStoreCurrencyCode)
-                        @Html.ValidationMessageFor(model => model.MinOrderTotalAmount)
-                    </div>
-                </div>
-                <div class="form-group advanced-setting">
-                    <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.AutoUpdateOrderTotalsOnEditingOrder_OverrideForStore, model => model.AutoUpdateOrderTotalsOnEditingOrder, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.AutoUpdateOrderTotalsOnEditingOrder)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.AutoUpdateOrderTotalsOnEditingOrder)
-                        @Html.ValidationMessageFor(model => model.AutoUpdateOrderTotalsOnEditingOrder)
-                    </div>
-                </div>
                 <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.DisableBillingAddressCheckoutStep_OverrideForStore, model => model.DisableBillingAddressCheckoutStep, Model.ActiveStoreScopeConfiguration)
@@ -240,7 +266,14 @@
                         @Html.ValidationMessageFor(model => model.DisableOrderCompletedPage)
                     </div>
                 </div>
-                <div class="form-group advanced-setting">
+            </div>
+        </div>
+        <div class="panel panel-default advanced-setting">
+            <div class="panel-heading">
+                @T("Admin.Configuration.Settings.Order.BlockTitle.PdfInvoice")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.AttachPdfInvoiceToOrderPlacedEmail_OverrideForStore, model => model.AttachPdfInvoiceToOrderPlacedEmail, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.AttachPdfInvoiceToOrderPlacedEmail)
@@ -250,7 +283,7 @@
                         @Html.ValidationMessageFor(model => model.AttachPdfInvoiceToOrderPlacedEmail)
                     </div>
                 </div>
-                <div class="form-group advanced-setting">
+                <div class="form-group">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.AttachPdfInvoiceToOrderPaidEmail_OverrideForStore, model => model.AttachPdfInvoiceToOrderPaidEmail, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.AttachPdfInvoiceToOrderPaidEmail)
@@ -260,7 +293,7 @@
                         @Html.ValidationMessageFor(model => model.AttachPdfInvoiceToOrderPaidEmail)
                     </div>
                 </div>
-                <div class="form-group advanced-setting">
+                <div class="form-group">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore, model => model.AttachPdfInvoiceToOrderCompletedEmail, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.AttachPdfInvoiceToOrderCompletedEmail)
@@ -270,7 +303,14 @@
                         @Html.ValidationMessageFor(model => model.AttachPdfInvoiceToOrderCompletedEmail)
                     </div>
                 </div>
-                <div class="form-group advanced-setting">
+            </div>
+        </div>
+        <div class="panel panel-default advanced-setting">
+            <div class="panel-heading">
+                @T("Admin.Configuration.Settings.Order.BlockTitle.GiftCards")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.ActivateGiftCardsAfterCompletingOrder)
                     </div>
@@ -279,7 +319,7 @@
                         @Html.ValidationMessageFor(model => model.ActivateGiftCardsAfterCompletingOrder)
                     </div>
                 </div>
-                <div class="form-group advanced-setting">
+                <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.DeactivateGiftCardsAfterCancellingOrder)
                     </div>
@@ -288,22 +328,13 @@
                         @Html.ValidationMessageFor(model => model.DeactivateGiftCardsAfterCancellingOrder)
                     </div>
                 </div>
-                <div class="form-group advanced-setting">
+                <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.DeactivateGiftCardsAfterDeletingOrder)
                     </div>
                     <div class="col-md-9">
                         @Html.NopEditorFor(model => model.DeactivateGiftCardsAfterDeletingOrder)
                         @Html.ValidationMessageFor(model => model.DeactivateGiftCardsAfterDeletingOrder)
-                    </div>
-                </div>
-                <div class="form-group advanced-setting">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CompleteOrderWhenDelivered)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CompleteOrderWhenDelivered)
-                        @Html.ValidationMessageFor(model => model.CompleteOrderWhenDelivered)
                     </div>
                 </div>
             </div>
@@ -315,6 +346,9 @@
 {
     <div class="panel-group">
         <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Admin.Configuration.Settings.Order.BlockTitle.Common")
+            </div>
             <div class="panel-body">
                 <ul class="common-list">
                     <li>

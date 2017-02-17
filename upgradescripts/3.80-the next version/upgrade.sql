@@ -249,6 +249,7 @@ set @resources='
     <Value>Edited a country (ID = {0})</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditCurrency">
+
     <Value>Edited a currency (ID = {0})</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditCustomerAttribute">
@@ -1615,6 +1616,183 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.OrderStatus.CancelledNotification">
     <Value>This order is cancelled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.BlockTitle.BlogComments">
+    <Value>Blog comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.AdditionalSections">
+    <Value>Additional sections</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Category">
+    <Value>Category page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Compare">
+    <Value>Compare products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.ExportImport">
+    <Value>Export/Import</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Performance">
+    <Value>Performance</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.ProductFields">
+    <Value>Product fields</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.ProductPage">
+    <Value>Product page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.ProductSorting">
+    <Value>Product sorting</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.ProductReviews">
+    <Value>Product reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Search">
+    <Value>Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Share">
+    <Value>Share</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Tax">
+    <Value>Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Tag">
+    <Value>Tag</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.Account">
+    <Value>Account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.DefaultFields">
+    <Value>Default fields</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.ExternalAuthentication">
+    <Value>External authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.Password">
+    <Value>Password and security</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.Profile">
+    <Value>Profile</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.Registration">
+    <Value>Registration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.TimeZone">
+    <Value>Time zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Forums.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Forums.BlockTitle.Feeds">
+    <Value>Feeds</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Forums.BlockTitle.PageSizes">
+    <Value>Page sizes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Forums.BlockTitle.Permissions">
+    <Value>Permissions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.FullText">
+    <Value>Full-Text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Captcha">
+    <Value>CAPTCHA</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Localization">
+    <Value>Localization</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Pdf">
+    <Value>Pdf</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Security">
+    <Value>Security</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.SEO">
+    <Value>SEO</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Sitemap">
+    <Value>Sitemap</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.SocialMedia">
+    <Value>Social media</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.BlockTitle.OtherPages">
+    <Value>Other pages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.BlockTitle.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.News.BlockTitle.BlogComments">
+    <Value>News comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.News.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.BlockTitle.Checkout">
+    <Value>Checkout</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.BlockTitle.GiftCards">
+    <Value>Gift cards</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.BlockTitle.OrderTotals">
+    <Value>Order totals</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.BlockTitle.PdfInvoice">
+    <Value>Pdf invoice</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.BlockTitle.Checkout">
+    <Value>Checkout</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.BlockTitle.Notifications">
+    <Value>Notifications</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.BlockTitle.MiniShoppingCart">
+    <Value>Mini shopping cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.BlockTitle.Wishlist">
+    <Value>Wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.BlockTitle.Payment">
+    <Value>Payment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.BlockTitle.Shipping">
+    <Value>Shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.BlockTitle.TaxDispaying">
+    <Value>Tax dispaying</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.BlockTitle.VAT">
+    <Value>VAT</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.BlockTitle.Catalog">
+    <Value>Catalog</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.BlockTitle.Common">
+    <Value>Common</Value>
   </LocaleResource>
 </Language>
 '
