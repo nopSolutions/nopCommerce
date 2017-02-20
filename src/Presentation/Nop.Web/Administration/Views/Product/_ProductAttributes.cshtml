@@ -10,18 +10,18 @@
         string controlId = string.Format("product_attribute_{0}", attribute.Id);
         string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
         <div class="form-group">
-            <div class="col-md-4">
-                    @if (attribute.IsRequired)
-                    {
-                        <span class="required">*</span>
-                    }
+            <div class="col-sm-4">
                 <div class="label-wrapper">
                     <label class="control-label">
                         @textPrompt
                     </label>
+                    @if (attribute.IsRequired)
+                    {
+                        <span class="required">*</span>
+                    }
                 </div>
             </div>
-            <div class="col-md-8">
+            <div class="col-sm-8">
                 @switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:

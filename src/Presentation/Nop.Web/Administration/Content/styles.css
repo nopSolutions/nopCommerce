@@ -1146,11 +1146,11 @@ span.grid-report-item.red {
     .form-horizontal .label-wrapper .ico-help {
         display: none;
     }
-    .form-horizontal .panel-popup .ico-help  {
-        display: block;
-    }
     .form-horizontal .panel-popup .form-group input[type=checkbox] {
         margin-top: 10px;
+    }
+    .form-horizontal .panel-popup .ico-help  {
+        display: block;
     }
     .form-control {
         margin-bottom: 3px;
@@ -1181,9 +1181,6 @@ span.grid-report-item.red {
     .form-horizontal .panel-popup .form-group input[type=checkbox] {
         margin-top: 10px;
     }
-    .form-horizontal span.required {
-        float: none;
-    }
     .form-group input[type=checkbox] {
         margin-top: 2px;
     }
@@ -1209,6 +1206,12 @@ span.grid-report-item.red {
 
     /* FORM ELEMENTS */
     .form-horizontal .panel-popup .label-wrapper {
-        float: left;
+        float: none;
+    }
+    .form-horizontal .panel-popup .ico-help  {
+        display: none;
+    }
+    .form-horizontal span.required {
+        float: none;
     }
 }
