@@ -257,7 +257,7 @@ namespace Nop.Web.Controllers
             };
 
             if (model.AvailableLanguages.Count == 1)
-                Content("");
+                return Content("");
 
             return PartialView(model);
         }
