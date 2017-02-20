@@ -683,6 +683,9 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.ShippingMethod">
     <Value>Shipping method</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.ShippingMethod.Hint">
+    <Value>Choose shipping method</Value>
+  </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.From">
     <Value>Order weight from</Value>
   </LocaleResource>
