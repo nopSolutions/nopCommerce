@@ -761,17 +761,23 @@
                 }
                 <script>
                     $(document).ready(function () {
-                        $('input[type=checkbox].select-all-fields').each(function (index, value) {
-                            if ($('input[type=checkbox]:checked', $(this).closest('.panel')).length > 0) {
-                                $(this).attr('checked', true);
-                            }
+                        updateAllFieldsCheckbox();
+                        $('#productsettings-window input[type=checkbox]').not('.select-all-fields').on('click', function () {
+                            updateAllFieldsCheckbox();
                         });
-
 
                         $('input[type=checkbox].select-all-fields').on('click', function () {
                             $('input[type=checkbox]', $(this).closest('.panel')).attr('checked', $(this).is(':checked'));
                         });
                     });
+
+                    function updateAllFieldsCheckbox() {
+                        $('input[type=checkbox].select-all-fields').each(function (index, value) {
+                            var numChkBoxes = $('input[type=checkbox]', $(this).closest('.panel')).not('.select-all-fields').length;
+                            var numChkBoxesChecked = $('input[type=checkbox]:checked', $(this).closest('.panel')).not('.select-all-fields').length;
+                            $(this).attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+                        });
+                    }
                 </script>
             </div>
         </div>
