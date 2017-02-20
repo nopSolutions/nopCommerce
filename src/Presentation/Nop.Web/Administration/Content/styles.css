@@ -813,12 +813,7 @@ td.k-state-focused.k-state-selected {
 }
 .form-group .attributes .qty-box {
 	width: 48px;
-    height: 34px;
-    border-radius: 0;
-    border-color: #d2d6de;
-    border-width: 1px;
-    border-style: solid;
-    text-align: center;
+    display: inline-block;
 }
 
 .form-horizontal .k-autocomplete, .form-horizontal .k-combobox, 
