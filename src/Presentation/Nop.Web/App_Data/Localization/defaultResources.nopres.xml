@@ -11682,6 +11682,9 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Updated">
     <Value>The discount has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.IgnoreDiscounts.Warning">
+    <Value>In order to use this functionality you have to disable the following setting: Configuration > Catalog settings > Ignore discounts (sitewide).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions">
     <Value>Newsletter subscribers</Value>
   </LocaleResource>

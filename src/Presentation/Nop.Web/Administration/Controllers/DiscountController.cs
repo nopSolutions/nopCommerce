@@ -41,6 +41,7 @@ namespace Nop.Admin.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IProductService _productService;
         private readonly CurrencySettings _currencySettings;
+        private readonly CatalogSettings _catalogSettings;
         private readonly IPermissionService _permissionService;
         private readonly IWorkContext _workContext;
         private readonly IManufacturerService _manufacturerService;
@@ -63,6 +64,7 @@ namespace Nop.Admin.Controllers
             IDateTimeHelper dateTimeHelper,
             ICustomerActivityService customerActivityService,
             CurrencySettings currencySettings,
+            CatalogSettings catalogSettings,
             IPermissionService permissionService,
             IWorkContext workContext,
             IManufacturerService manufacturerService,
@@ -81,6 +83,7 @@ namespace Nop.Admin.Controllers
             this._dateTimeHelper = dateTimeHelper;
             this._customerActivityService = customerActivityService;
             this._currencySettings = currencySettings;
+            this._catalogSettings = catalogSettings;
             this._permissionService = permissionService;
             this._workContext = workContext;
             this._manufacturerService = manufacturerService;
@@ -219,6 +222,9 @@ namespace Nop.Admin.Controllers
             var model = new DiscountListModel();
             model.AvailableDiscountTypes = DiscountType.AssignedToOrderTotal.ToSelectList(false).ToList();
             model.AvailableDiscountTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            if (_catalogSettings.IgnoreDiscounts)
+                WarningNotification(_localizationService.GetResource("Admin.Promotions.Discounts.IgnoreDiscounts.Warning"));
 
             return View(model);
         }

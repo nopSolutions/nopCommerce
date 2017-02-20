@@ -1994,6 +1994,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.BlockTitle.Common">
     <Value>Common</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.IgnoreDiscounts.Warning">
+    <Value>In order to use this functionality you have to disable the following setting: Configuration > Catalog settings > Ignore discounts (sitewide).</Value>
+  </LocaleResource>
 </Language>
 '
 
