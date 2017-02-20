@@ -1626,8 +1626,8 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.AdditionalSections">
     <Value>Additional sections</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Category">
-    <Value>Category page</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.CatalogPages">
+    <Value>Catalog pages</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Compare">
     <Value>Compare products</Value>
@@ -1659,11 +1659,14 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Tax">
     <Value>Tax</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Tag">
-    <Value>Tag</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Tags">
+    <Value>Tags</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.Account">
     <Value>Account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.Common">
+    <Value>Common</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.DefaultFields">
     <Value>Default fields</Value>
@@ -1676,9 +1679,6 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.Profile">
     <Value>Profile</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.Registration">
-    <Value>Registration</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.TimeZone">
     <Value>Time zone</Value>
