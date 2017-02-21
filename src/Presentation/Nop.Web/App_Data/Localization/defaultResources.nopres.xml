@@ -4962,6 +4962,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Blog.AllowNotRegisteredUsersToLeaveComments.Hint">
     <Value>Check to allow guests to leave comments.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.BlockTitle.BlogComments">
+    <Value>Blog comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Blog.BlogCommentsMustBeApproved">
     <Value>Blog comments must be approved</Value>
   </LocaleResource>
@@ -5036,6 +5042,45 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowViewUnpublishedProductPage.Hint">
     <Value>Check to allow viewing of unpublished product details page. This way SEO won't be affected by search crawlers when a product is temporary unpublished. Please note that a store owner always has access to unpublished products.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.AdditionalSections">
+    <Value>Additional sections</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.CatalogPages">
+    <Value>Catalog pages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Compare">
+    <Value>Compare products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.ExportImport">
+    <Value>Export/Import</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Performance">
+    <Value>Performance</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.ProductFields">
+    <Value>Product fields</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.ProductPage">
+    <Value>Product page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.ProductSorting">
+    <Value>Product sorting</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.ProductReviews">
+    <Value>Product reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Search">
+    <Value>Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Share">
+    <Value>Share</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Tax">
+    <Value>Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Tags">
+    <Value>Tags</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.CacheProductPrices">
     <Value>Cache product prices</Value>
@@ -5505,6 +5550,27 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowViewingProfiles.Hint">
     <Value>A value indicating whether the viewing of customer profiles is allowed.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.Account">
+    <Value>Account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.DefaultFields">
+    <Value>Default fields</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.ExternalAuthentication">
+    <Value>External authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.Password">
+    <Value>Password and security</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.Profile">
+    <Value>Profile</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.TimeZone">
+    <Value>Time zone</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CheckUsernameAvailabilityEnabled">
     <Value>Allow customers to check the availability of usernames</Value>
   </LocaleResource>
@@ -5865,6 +5931,18 @@
   <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowPrivateMessages.Hint">
     <Value>Determines whether to allow private messages.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Forums.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Forums.BlockTitle.Feeds">
+    <Value>Feeds</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Forums.BlockTitle.PageSizes">
+    <Value>Page sizes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Forums.BlockTitle.Permissions">
+    <Value>Permissions</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Forums.ForumEditor">
     <Value>Forum editor</Value>
   </LocaleResource>
@@ -5963,6 +6041,33 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AutomaticallyDetectLanguage.Hint">
     <Value>Check to automatically detect language based on a customer browser settings.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.FullText">
+    <Value>Full-Text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Captcha">
+    <Value>CAPTCHA</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Localization">
+    <Value>Localization</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Pdf">
+    <Value>Pdf</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Security">
+    <Value>Security</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.SEO">
+    <Value>SEO</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Sitemap">
+    <Value>Sitemap</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.SocialMedia">
+    <Value>Social media</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CanonicalUrlsEnabled">
     <Value>Enable canonical URLs</Value>
@@ -6366,6 +6471,15 @@
   <LocaleResource Name="Admin.Configuration.Settings.Media.AvatarPictureSize.Hint">
     <Value>The default size (pixels) for avatar images.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.BlockTitle.OtherPages">
+    <Value>Other pages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.BlockTitle.Product">
+    <Value>Product</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.CartThumbPictureSize">
     <Value>Cart/Wishlist thumbnail image size</Value>
   </LocaleResource>
@@ -6471,6 +6585,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.News.AllowNotRegisteredUsersToLeaveComments.Hint">
     <Value>Check to allow guests to leave comments.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.News.BlockTitle.BlogComments">
+    <Value>News comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.News.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.News.Enabled">
     <Value>News enabled</Value>
   </LocaleResource>
@@ -6557,6 +6677,21 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.AutoUpdateOrderTotalsOnEditingOrder.Hint">
     <Value>Check to automatically update order totals on editing an order in admin area. IMPORANT: currently this functionality is in BETA testing status.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.BlockTitle.Checkout">
+    <Value>Checkout</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.BlockTitle.GiftCards">
+    <Value>Gift cards</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.BlockTitle.OrderTotals">
+    <Value>Order totals</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.BlockTitle.PdfInvoice">
+    <Value>Pdf invoice</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.CompleteOrderWhenDelivered">
     <Value>Complete order when delivered</Value>
@@ -7044,6 +7179,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints">
     <Value>Reward points</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.Description">
     <Value>The Reward Points Program allows customers to earn points for certain actions they take on the site. Points are awarded based on making purchases and customer actions such as registration.</Value>
   </LocaleResource>
@@ -7130,6 +7268,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickUpInStore.Hint">
     <Value>A value indicating whether "Pick Up in Store" option is enabled during checkout. Please ensure that you have at least one active pickup point provider.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.BlockTitle.Checkout">
+    <Value>Checkout</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.BlockTitle.Notifications">
+    <Value>Notifications</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.BypassShippingMethodSelectionIfOnlyOne">
     <Value>Bypass shipping method page if there's only one</Value>
@@ -7238,6 +7385,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowOutOfStockItemsToBeAddedToWishlist.Hint">
     <Value>Check to allow 'out of stock' products to be added to wishlist.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.BlockTitle.MiniShoppingCart">
+    <Value>Mini shopping cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.BlockTitle.Wishlist">
+    <Value>Wishlist</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.CartsSharedBetweenStores">
     <Value>Carts shared between storest</Value>
@@ -7349,6 +7505,21 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.AllowCustomersToSelectTaxDisplayType.Hint">
     <Value>A value indicating whether customers are allowed to select tax display type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.BlockTitle.Payment">
+    <Value>Payment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.BlockTitle.Shipping">
+    <Value>Shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.BlockTitle.TaxDispaying">
+    <Value>Tax dispaying</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.BlockTitle.VAT">
+    <Value>VAT</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.DefaultTaxAddress">
     <Value>Default tax address (used for tax calculation)</Value>
@@ -7520,7 +7691,13 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowVendorsToImportProducts.Hint">
     <Value>Check if vendors are allowed to import products.</Value>
-  </LocaleResource>  
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.BlockTitle.Catalog">
+    <Value>Catalog</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.MaximumProductNumber">
     <Value>Maximum number of products</Value>
   </LocaleResource>
