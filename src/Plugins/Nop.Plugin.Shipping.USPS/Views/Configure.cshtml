@@ -1,0 +1,92 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Shipping.USPS.Models.USPSShippingModel
+@using Nop.Web.Framework;
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Url)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Url)
+                        @Html.ValidationMessageFor(model => model.Url)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Username)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Username)
+                        @Html.ValidationMessageFor(model => model.Username)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Password)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Password)
+                        @Html.ValidationMessageFor(model => model.Password)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.AdditionalHandlingCharge)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.AdditionalHandlingCharge)
+                        @Html.ValidationMessageFor(model => model.AdditionalHandlingCharge)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.AvailableCarrierServicesDomestic)
+                    </div>
+                    <div class="col-md-9">
+                        @foreach (var csd in Model.AvailableCarrierServicesDomestic)
+                        {
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="CheckedCarrierServicesDomestic" value="@(csd)" checked="@Model.CarrierServicesOfferedDomestic.Contains(csd)" />
+                                    @csd
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.AvailableCarrierServicesInternational)
+                    </div>
+                    <div class="col-md-9">
+                        @foreach (var csd in Model.AvailableCarrierServicesInternational)
+                        {
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="CheckedCarrierServicesInternational" value="@(csd)" checked="@Model.CarrierServicesOfferedInternational.Contains(csd)" />
+                                    @csd
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

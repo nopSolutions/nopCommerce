@@ -1,6 +1,7 @@
 ﻿@model ProductModel
 
 @using Nop.Core.Domain.Catalog
+@using Nop.Services
 
 <div class="panel-group">
     <p>
@@ -117,7 +118,8 @@
                             refresh: true,
                             numeric: false,
                             previousNext: false,
-                            info: false
+                            info: false,
+                            @Html.Partial("_GridPagerMessages")
                         },
                         toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
                         edit: function(e) {
@@ -135,7 +137,7 @@
                             }
                         },
                         editable: {
-                            confirmation: false,
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
                             mode: "inline"
                         },
                         scrollable: false,
@@ -357,10 +359,11 @@
                             refresh: true,
                             numeric: false,
                             previousNext: false,
-                            info: false
+                            info: false,
+                            @Html.Partial("_GridPagerMessages")
                         },
                         editable: {
-                            confirmation: false,
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
                             mode: "inline"
                         },
                         scrollable: false,

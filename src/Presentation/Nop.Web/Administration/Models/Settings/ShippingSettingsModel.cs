@@ -56,10 +56,18 @@ namespace Nop.Admin.Models.Settings
         public bool DisplayShipmentEventsToStoreOwner { get; set; }
         public bool DisplayShipmentEventsToStoreOwner_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.HideShippingTotal")]
+        public bool HideShippingTotal { get; set; }
+        public bool HideShippingTotal_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.BypassShippingMethodSelectionIfOnlyOne")]
         public bool BypassShippingMethodSelectionIfOnlyOne { get; set; }
         public bool BypassShippingMethodSelectionIfOnlyOne_OverrideForStore { get; set; }
-        
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.ConsiderAssociatedProductsDimensions")]
+        public bool ConsiderAssociatedProductsDimensions { get; set; }
+        public bool ConsiderAssociatedProductsDimensions_OverrideForStore { get; set; }
+
         public AddressModel ShippingOriginAddress { get; set; }
         public bool ShippingOriginAddress_OverrideForStore { get; set; }
     }

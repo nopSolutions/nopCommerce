@@ -23,14 +23,17 @@ namespace Nop.Admin.Models.Catalog
             AddSpecificationAttributeModel = new AddProductSpecificationAttributeModel();
             ProductWarehouseInventoryModels = new List<ProductWarehouseInventoryModel>();
             ProductEditorSettingsModel = new ProductEditorSettingsModel();
+            StockQuantityHistory = new StockQuantityHistoryModel();
 
             AvailableBasepriceUnits = new List<SelectListItem>();
             AvailableBasepriceBaseUnits = new List<SelectListItem>();
             AvailableProductTemplates = new List<SelectListItem>();
             AvailableTaxCategories = new List<SelectListItem>();
             AvailableDeliveryDates = new List<SelectListItem>();
+            AvailableProductAvailabilityRanges = new List<SelectListItem>();
             AvailableWarehouses = new List<SelectListItem>();
             AvailableProductAttributes = new List<SelectListItem>();
+            ProductsTypesSupportedByProductTemplates = new Dictionary<int, IList<SelectListItem>>();
 
             AvailableVendors = new List<SelectListItem>();
 
@@ -74,6 +77,8 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductTemplate")]
         public int ProductTemplateId { get; set; }
         public IList<SelectListItem> AvailableProductTemplates { get; set; }
+        //<product type ID, list of supported product template IDs>
+        public Dictionary<int, IList<SelectListItem>> ProductsTypesSupportedByProductTemplates { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
         [AllowHtml]
@@ -232,6 +237,10 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ManageInventoryMethod")]
         public int ManageInventoryMethodId { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductAvailabilityRange")]
+        public int ProductAvailabilityRangeId { get; set; }
+        public IList<SelectListItem> AvailableProductAvailabilityRanges { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.UseMultipleWarehouses")]
         public bool UseMultipleWarehouses { get; set; }
 
@@ -305,18 +314,6 @@ namespace Nop.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductCost")]
         public decimal ProductCost { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SpecialPrice")]
-        [UIHint("DecimalNullable")]
-        public decimal? SpecialPrice { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SpecialPriceStartDateTimeUtc")]
-        [UIHint("DateTimeNullable")]
-        public DateTime? SpecialPriceStartDateTimeUtc { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SpecialPriceEndDateTimeUtc")]
-        [UIHint("DateTimeNullable")]
-        public DateTime? SpecialPriceEndDateTimeUtc { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.CustomerEntersPrice")]
         public bool CustomerEntersPrice { get; set; }
@@ -448,6 +445,9 @@ namespace Nop.Admin.Models.Catalog
 
         //editor settings
         public ProductEditorSettingsModel ProductEditorSettingsModel { get; set; }
+
+        //stock quantity history
+        public StockQuantityHistoryModel StockQuantityHistory { get; set; }
 
         #region Nested classes
 
@@ -686,15 +686,22 @@ namespace Nop.Admin.Models.Catalog
 
         public partial class TierPriceModel : BaseNopEntityModel
         {
+            public TierPriceModel()
+            {
+                AvailableStores = new List<SelectListItem>();
+                AvailableCustomerRoles = new List<SelectListItem>();
+            }
+
             public int ProductId { get; set; }
 
-            public int CustomerRoleId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.CustomerRole")]
+            public int CustomerRoleId { get; set; }
+            public IList<SelectListItem> AvailableCustomerRoles { get; set; }
             public string CustomerRole { get; set; }
 
-
-            public int StoreId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Store")]
+            public int StoreId { get; set; }
+            public IList<SelectListItem> AvailableStores { get; set; }
             public string Store { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Quantity")]
@@ -702,6 +709,14 @@ namespace Nop.Admin.Models.Catalog
 
             [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Price")]
             public decimal Price { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.StartDateTimeUtc")]
+            [UIHint("DateTimeNullable")]
+            public DateTime? StartDateTimeUtc { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.EndDateTimeUtc")]
+            [UIHint("DateTimeNullable")]
+            public DateTime? EndDateTimeUtc { get; set; }
         }
 
         public partial class ProductWarehouseInventoryModel : BaseNopModel
@@ -835,6 +850,9 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Cost")]
             public decimal Cost { get; set; }
 
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.CustomerEntersQty")]
+            public bool CustomerEntersQty { get; set; }
+
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Quantity")]
             public int Quantity { get; set; }
 
@@ -935,6 +953,38 @@ namespace Nop.Admin.Models.Catalog
             public int NotifyAdminForQuantityBelow { get; set; }
 
         }
+
+        #region Stock quantity history
+
+        public partial class StockQuantityHistoryModel : BaseNopEntityModel
+        {
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchWarehouse")]
+            public int SearchWarehouseId { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.StockQuantityHistory.Fields.Warehouse")]
+            [AllowHtml]
+            public string WarehouseName { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.StockQuantityHistory.Fields.Combination")]
+            [AllowHtml]
+            public string AttributeCombination { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.StockQuantityHistory.Fields.QuantityAdjustment")]
+            public int QuantityAdjustment { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.StockQuantityHistory.Fields.StockQuantity")]
+            public int StockQuantity { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.StockQuantityHistory.Fields.Message")]
+            [AllowHtml]
+            public string Message { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.StockQuantityHistory.Fields.CreatedOn")]
+            [UIHint("DecimalNullable")]
+            public DateTime CreatedOn { get; set; }
+        }
+
+        #endregion
 
         #endregion
     }

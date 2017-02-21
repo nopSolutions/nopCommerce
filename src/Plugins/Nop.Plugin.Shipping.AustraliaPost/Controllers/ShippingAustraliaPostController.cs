@@ -29,7 +29,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost.Controllers
             model.ApiKey = _australiaPostSettings.ApiKey;
             model.AdditionalHandlingCharge = _australiaPostSettings.AdditionalHandlingCharge;
 
-            return View("~/Plugins/Shipping.AustraliaPost/Views/ShippingAustraliaPost/Configure.cshtml", model);
+            return View("~/Plugins/Shipping.AustraliaPost/Views/Configure.cshtml", model);
         }
 
         [HttpPost]

@@ -1,0 +1,1189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Dynamic.Runtime</name>
+  </assembly>
+  <members>
+    <member name="T:System.Dynamic.BinaryOperationBinder">
+      <summary>表示呼叫位置上的二元動態運算，並提供繫結語意和運算詳細資料。</summary>
+    </member>
+    <member name="M:System.Dynamic.BinaryOperationBinder.#ctor(System.Linq.Expressions.ExpressionType)">
+      <summary>初始化 <see cref="T:System.Dynamic.BinaryOperationBinder" /> 類別的新執行個體。</summary>
+      <param name="operation">二元運算類型。</param>
+    </member>
+    <member name="M:System.Dynamic.BinaryOperationBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>執行動態二元運算的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態作業的目標。</param>
+      <param name="args">動態運算的引數陣列。</param>
+    </member>
+    <member name="M:System.Dynamic.BinaryOperationBinder.FallbackBinaryOperation(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>如果目標動態物件無法繫結，則會執行二元動態運算的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態二元運算的目標。</param>
+      <param name="arg">動態二元運算的右運算元。</param>
+    </member>
+    <member name="M:System.Dynamic.BinaryOperationBinder.FallbackBinaryOperation(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>在衍生類別中覆寫時，如果目標動態物件無法繫結，則會執行二元動態運算的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態二元運算的目標。</param>
+      <param name="arg">動態二元運算的右運算元。</param>
+      <param name="errorSuggestion">如果繫結失敗，傳回繫結結果，否則為 null。</param>
+    </member>
+    <member name="P:System.Dynamic.BinaryOperationBinder.Operation">
+      <summary>二元運算類型。</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.ExpressionType" /> 物件，表示二元運算的類型。</returns>
+    </member>
+    <member name="P:System.Dynamic.BinaryOperationBinder.ReturnType">
+      <summary>作業的結果型別。</summary>
+      <returns>作業的結果型別。</returns>
+    </member>
+    <member name="T:System.Dynamic.BindingRestrictions">
+      <summary>表示 <see cref="T:System.Dynamic.DynamicMetaObject" /> 上的一組繫結限制，符合它的動態繫結即為有效的繫結。</summary>
+    </member>
+    <member name="M:System.Dynamic.BindingRestrictions.Combine(System.Collections.Generic.IList{System.Dynamic.DynamicMetaObject})">
+      <summary>將 <see cref="T:System.Dynamic.DynamicMetaObject" /> 執行個體清單上的繫結限制結合成一組限制。</summary>
+      <returns>一組新的繫結限制。</returns>
+      <param name="contributingObjects">
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> 執行個體的清單，要從中結合限制。</param>
+    </member>
+    <member name="F:System.Dynamic.BindingRestrictions.Empty">
+      <summary>表示一組空的繫結限制。這個欄位是唯讀的。</summary>
+    </member>
+    <member name="M:System.Dynamic.BindingRestrictions.GetExpressionRestriction(System.Linq.Expressions.Expression)">
+      <summary>建立繫結限制，該限制會檢查運算式中是否有任意不可變屬性。</summary>
+      <returns>新的繫結限制。</returns>
+      <param name="expression">表示限制的運算式。</param>
+    </member>
+    <member name="M:System.Dynamic.BindingRestrictions.GetInstanceRestriction(System.Linq.Expressions.Expression,System.Object)">
+      <summary>建立繫結限制，該限制會檢查運算式中是否有物件執行個體識別。</summary>
+      <returns>新的繫結限制。</returns>
+      <param name="expression">要測試的運算式。</param>
+      <param name="instance">要測試的確切物件執行個體。</param>
+    </member>
+    <member name="M:System.Dynamic.BindingRestrictions.GetTypeRestriction(System.Linq.Expressions.Expression,System.Type)">
+      <summary>建立繫結限制，該限制會檢查運算式中是否有執行階段型別識別。</summary>
+      <returns>新的繫結限制。</returns>
+      <param name="expression">要測試的運算式。</param>
+      <param name="type">要測試的確切型別。</param>
+    </member>
+    <member name="M:System.Dynamic.BindingRestrictions.Merge(System.Dynamic.BindingRestrictions)">
+      <summary>將此繫結限制集與目前的繫結限制合併。</summary>
+      <returns>一組新的繫結限制。</returns>
+      <param name="restrictions">與目前繫結限制合併的繫結限制集。</param>
+    </member>
+    <member name="M:System.Dynamic.BindingRestrictions.ToExpression">
+      <summary>建立表示繫結限制的 <see cref="T:System.Linq.Expressions.Expression" />。</summary>
+      <returns>表示限制的運算式樹狀架構。</returns>
+    </member>
+    <member name="T:System.Dynamic.CallInfo">
+      <summary>描述動態繫結處理序中的引數。</summary>
+    </member>
+    <member name="M:System.Dynamic.CallInfo.#ctor(System.Int32,System.Collections.Generic.IEnumerable{System.String})">
+      <summary>建立新的 CallInfo，表示動態繫結處理序中的引數。</summary>
+      <param name="argCount">引數數目。</param>
+      <param name="argNames">引數名稱。</param>
+    </member>
+    <member name="M:System.Dynamic.CallInfo.#ctor(System.Int32,System.String[])">
+      <summary>建立新的 PositionalArgumentInfo。</summary>
+      <param name="argCount">引數數目。</param>
+      <param name="argNames">引數名稱。</param>
+    </member>
+    <member name="P:System.Dynamic.CallInfo.ArgumentCount">
+      <summary>引數數目。</summary>
+      <returns>引數數目。</returns>
+    </member>
+    <member name="P:System.Dynamic.CallInfo.ArgumentNames">
+      <summary>引數名稱。</summary>
+      <returns>引數名稱的唯讀集合。</returns>
+    </member>
+    <member name="M:System.Dynamic.CallInfo.Equals(System.Object)">
+      <summary>判斷指定的 CallInfo 執行個體是否視為等於目前的執行個體。</summary>
+      <returns>如果指定的執行個體等於目前的執行個體，則為 true，否則為 false。</returns>
+      <param name="obj">要與目前執行個體比較的 <see cref="T:System.Dynamic.CallInfo" /> 執行個體。</param>
+    </member>
+    <member name="M:System.Dynamic.CallInfo.GetHashCode">
+      <summary>做為目前 <see cref="T:System.Dynamic.CallInfo" /> 的雜湊函式。</summary>
+      <returns>目前 <see cref="T:System.Dynamic.CallInfo" /> 的雜湊碼。</returns>
+    </member>
+    <member name="T:System.Dynamic.ConvertBinder">
+      <summary>表示呼叫位置上的轉換動態作業，並提供繫結語意和作業詳細資料。</summary>
+    </member>
+    <member name="M:System.Dynamic.ConvertBinder.#ctor(System.Type,System.Boolean)">
+      <summary>初始化 <see cref="T:System.Dynamic.ConvertBinder" /> 的新執行個體。</summary>
+      <param name="type">要轉換成的型別。</param>
+      <param name="explicit">如果轉換應該考慮明確轉換，則為 true，否則為 false。</param>
+    </member>
+    <member name="M:System.Dynamic.ConvertBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>執行動態轉換作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態轉換作業的目標。</param>
+      <param name="args">動態轉換作業的引數陣列。</param>
+    </member>
+    <member name="P:System.Dynamic.ConvertBinder.Explicit">
+      <summary>取得值，這個值表示轉換是否應該考慮明確轉換。</summary>
+      <returns>如果有明確轉換，則為 True，否則為 false。</returns>
+    </member>
+    <member name="M:System.Dynamic.ConvertBinder.FallbackConvert(System.Dynamic.DynamicMetaObject)">
+      <summary>如果目標動態物件無法繫結，則會執行動態轉換作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態轉換作業的目標。</param>
+    </member>
+    <member name="M:System.Dynamic.ConvertBinder.FallbackConvert(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>在衍生類別中覆寫時，如果目標動態物件無法繫結，則會執行動態轉換作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態轉換作業的目標。</param>
+      <param name="errorSuggestion">如果繫結失敗，傳回要使用的繫結結果，否則為 null。</param>
+    </member>
+    <member name="P:System.Dynamic.ConvertBinder.ReturnType">
+      <summary>作業的結果型別。</summary>
+      <returns>表示作業之結果類型的 <see cref="T:System.Type" /> 物件。</returns>
+    </member>
+    <member name="P:System.Dynamic.ConvertBinder.Type">
+      <summary>要轉換成的型別。</summary>
+      <returns>
+        <see cref="T:System.Type" /> 物件，表示要轉換成的型別。</returns>
+    </member>
+    <member name="T:System.Dynamic.CreateInstanceBinder">
+      <summary>表示呼叫位置上的動態建立作業，並提供繫結語意和作業詳細資料。</summary>
+    </member>
+    <member name="M:System.Dynamic.CreateInstanceBinder.#ctor(System.Dynamic.CallInfo)">
+      <summary>初始化 <see cref="T:System.Dynamic.CreateInstanceBinder" /> 的新執行個體。</summary>
+      <param name="callInfo">呼叫站台上的引數簽章。</param>
+    </member>
+    <member name="M:System.Dynamic.CreateInstanceBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>執行動態建立作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態建立作業的目標。</param>
+      <param name="args">動態建立作業的引數陣列。</param>
+    </member>
+    <member name="P:System.Dynamic.CreateInstanceBinder.CallInfo">
+      <summary>取得呼叫站台上之引數的簽章。</summary>
+      <returns>呼叫站台上的引數簽章。</returns>
+    </member>
+    <member name="M:System.Dynamic.CreateInstanceBinder.FallbackCreateInstance(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>如果目標動態物件無法繫結，則會執行動態建立作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態建立作業的目標。</param>
+      <param name="args">動態建立作業的引數。</param>
+    </member>
+    <member name="M:System.Dynamic.CreateInstanceBinder.FallbackCreateInstance(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>在衍生類別中覆寫時，如果目標動態物件無法繫結，則會執行動態建立作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態建立作業的目標。</param>
+      <param name="args">動態建立作業的引數。</param>
+      <param name="errorSuggestion">如果繫結失敗，傳回要使用的繫結結果，否則為 null。</param>
+    </member>
+    <member name="P:System.Dynamic.CreateInstanceBinder.ReturnType">
+      <summary>作業的結果型別。</summary>
+      <returns>表示作業之結果類型的 <see cref="T:System.Type" /> 物件。</returns>
+    </member>
+    <member name="T:System.Dynamic.DeleteIndexBinder">
+      <summary>表示呼叫位置上的動態刪除索引作業，並提供繫結語意和作業詳細資料。</summary>
+    </member>
+    <member name="M:System.Dynamic.DeleteIndexBinder.#ctor(System.Dynamic.CallInfo)">
+      <summary>初始化 <see cref="T:System.Dynamic.DeleteIndexBinder" /> 的新執行個體。</summary>
+      <param name="callInfo">呼叫站台上的引數簽章。</param>
+    </member>
+    <member name="M:System.Dynamic.DeleteIndexBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>執行動態刪除索引作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態刪除索引作業的目標。</param>
+      <param name="args">動態刪除索引作業的引數陣列。</param>
+    </member>
+    <member name="P:System.Dynamic.DeleteIndexBinder.CallInfo">
+      <summary>取得呼叫站台上之引數的簽章。</summary>
+      <returns>呼叫站台上的引數簽章。</returns>
+    </member>
+    <member name="M:System.Dynamic.DeleteIndexBinder.FallbackDeleteIndex(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>如果目標動態物件無法繫結，則會執行動態刪除索引作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態刪除索引作業的目標。</param>
+      <param name="indexes">動態刪除索引作業的引數。</param>
+    </member>
+    <member name="M:System.Dynamic.DeleteIndexBinder.FallbackDeleteIndex(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>在衍生類別中覆寫時，如果目標動態物件無法繫結，則會執行動態刪除索引作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態刪除索引作業的目標。</param>
+      <param name="indexes">動態刪除索引作業的引數。</param>
+      <param name="errorSuggestion">如果繫結失敗，傳回要使用的繫結結果，否則為 null。</param>
+    </member>
+    <member name="P:System.Dynamic.DeleteIndexBinder.ReturnType">
+      <summary>作業的結果型別。</summary>
+      <returns>表示作業之結果類型的 <see cref="T:System.Type" /> 物件。</returns>
+    </member>
+    <member name="T:System.Dynamic.DeleteMemberBinder">
+      <summary>表示呼叫位置上的動態刪除成員作業，並提供繫結語意和作業詳細資料。</summary>
+    </member>
+    <member name="M:System.Dynamic.DeleteMemberBinder.#ctor(System.String,System.Boolean)">
+      <summary>初始化 <see cref="T:System.Dynamic.DeleteIndexBinder" /> 的新執行個體。</summary>
+      <param name="name">要刪除的成員名稱。</param>
+      <param name="ignoreCase">如果名稱忽略大小寫後應該符合，則為 true，否則為 false。</param>
+    </member>
+    <member name="M:System.Dynamic.DeleteMemberBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>執行動態刪除成員作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態刪除成員作業的目標。</param>
+      <param name="args">動態刪除成員作業的引數陣列。</param>
+    </member>
+    <member name="M:System.Dynamic.DeleteMemberBinder.FallbackDeleteMember(System.Dynamic.DynamicMetaObject)">
+      <summary>如果目標動態物件無法繫結，則會執行動態刪除成員作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態刪除成員作業的目標。</param>
+    </member>
+    <member name="M:System.Dynamic.DeleteMemberBinder.FallbackDeleteMember(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>在衍生類別中覆寫時，如果目標動態物件無法繫結，則會執行動態刪除成員作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態刪除成員作業的目標。</param>
+      <param name="errorSuggestion">如果繫結失敗，傳回要使用的繫結結果，否則為 null。</param>
+    </member>
+    <member name="P:System.Dynamic.DeleteMemberBinder.IgnoreCase">
+      <summary>取得值，指出字串比較是否應該忽略成員名稱的大小寫。</summary>
+      <returns>如果字串比較應該忽略大小寫，則為 true，否則為 false。</returns>
+    </member>
+    <member name="P:System.Dynamic.DeleteMemberBinder.Name">
+      <summary>取得要刪除的成員名稱。</summary>
+      <returns>要刪除的成員名稱。</returns>
+    </member>
+    <member name="P:System.Dynamic.DeleteMemberBinder.ReturnType">
+      <summary>作業的結果型別。</summary>
+      <returns>表示作業之結果類型的 <see cref="T:System.Type" /> 物件。</returns>
+    </member>
+    <member name="T:System.Dynamic.DynamicMetaObject">
+      <summary>表示動態繫結以及參與動態繫結之物件的繫結邏輯。</summary>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.#ctor(System.Linq.Expressions.Expression,System.Dynamic.BindingRestrictions)">
+      <summary>初始化 <see cref="T:System.Dynamic.DynamicMetaObject" /> 類別的新執行個體。</summary>
+      <param name="expression">運算式，表示動態繫期過程中的這個 <see cref="T:System.Dynamic.DynamicMetaObject" />。</param>
+      <param name="restrictions">繫結限制集，符合它的繫結即為有效的繫結。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.#ctor(System.Linq.Expressions.Expression,System.Dynamic.BindingRestrictions,System.Object)">
+      <summary>初始化 <see cref="T:System.Dynamic.DynamicMetaObject" /> 類別的新執行個體。</summary>
+      <param name="expression">運算式，表示動態繫期過程中的這個 <see cref="T:System.Dynamic.DynamicMetaObject" />。</param>
+      <param name="restrictions">繫結限制集，符合它的繫結即為有效的繫結。</param>
+      <param name="value">由 <see cref="T:System.Dynamic.DynamicMetaObject" /> 表示的執行階段值。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindBinaryOperation(System.Dynamic.BinaryOperationBinder,System.Dynamic.DynamicMetaObject)">
+      <summary>執行動態二元運算的繫結。</summary>
+      <returns>新的 <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="binder">
+        <see cref="T:System.Dynamic.BinaryOperationBinder" /> 的執行個體，表示動態運算的詳細資料。</param>
+      <param name="arg">
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> 的執行個體，表示二元運算的右邊。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindConvert(System.Dynamic.ConvertBinder)">
+      <summary>執行動態轉換運算的繫結。</summary>
+      <returns>新的 <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="binder">
+        <see cref="T:System.Dynamic.ConvertBinder" /> 的執行個體，表示動態運算的詳細資料。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindCreateInstance(System.Dynamic.CreateInstanceBinder,System.Dynamic.DynamicMetaObject[])">
+      <summary>執行動態建立執行個體作業的繫結。</summary>
+      <returns>新的 <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="binder">
+        <see cref="T:System.Dynamic.CreateInstanceBinder" /> 的執行個體，表示動態運算的詳細資料。</param>
+      <param name="args">
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> 執行個體 (用於建立執行個體作業的引數) 的陣列。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindDeleteIndex(System.Dynamic.DeleteIndexBinder,System.Dynamic.DynamicMetaObject[])">
+      <summary>執行動態刪除索引作業的繫結。</summary>
+      <returns>新的 <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="binder">
+        <see cref="T:System.Dynamic.DeleteIndexBinder" /> 的執行個體，表示動態運算的詳細資料。</param>
+      <param name="indexes">
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> 執行個體 (用於刪除索引作業的索引) 的陣列。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindDeleteMember(System.Dynamic.DeleteMemberBinder)">
+      <summary>執行動態刪除成員作業的繫結。</summary>
+      <returns>新的 <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="binder">
+        <see cref="T:System.Dynamic.DeleteMemberBinder" /> 的執行個體，表示動態運算的詳細資料。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindGetIndex(System.Dynamic.GetIndexBinder,System.Dynamic.DynamicMetaObject[])">
+      <summary>執行動態取得索引作業的繫結。</summary>
+      <returns>新的 <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="binder">
+        <see cref="T:System.Dynamic.GetIndexBinder" /> 的執行個體，表示動態運算的詳細資料。</param>
+      <param name="indexes">
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> 執行個體 (用於取得索引作業的索引) 的陣列。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindGetMember(System.Dynamic.GetMemberBinder)">
+      <summary>執行動態取得成員作業的繫結。</summary>
+      <returns>新的 <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="binder">
+        <see cref="T:System.Dynamic.GetMemberBinder" /> 的執行個體，表示動態運算的詳細資料。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindInvoke(System.Dynamic.InvokeBinder,System.Dynamic.DynamicMetaObject[])">
+      <summary>執行動態叫用作業的繫結。</summary>
+      <returns>新的 <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="binder">
+        <see cref="T:System.Dynamic.InvokeBinder" /> 的執行個體，表示動態運算的詳細資料。</param>
+      <param name="args">
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> 執行個體 (用於叫用作業的引數) 的陣列。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindInvokeMember(System.Dynamic.InvokeMemberBinder,System.Dynamic.DynamicMetaObject[])">
+      <summary>執行動態叫用成員作業的繫結。</summary>
+      <returns>新的 <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="binder">
+        <see cref="T:System.Dynamic.InvokeMemberBinder" /> 的執行個體，表示動態運算的詳細資料。</param>
+      <param name="args">
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> 執行個體 (用於叫用成員作業的引數) 的陣列。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindSetIndex(System.Dynamic.SetIndexBinder,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>執行動態設定索引作業的繫結。</summary>
+      <returns>新的 <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="binder">
+        <see cref="T:System.Dynamic.SetIndexBinder" /> 的執行個體，表示動態運算的詳細資料。</param>
+      <param name="indexes">
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> 執行個體 (用於設定索引作業的索引) 的陣列。</param>
+      <param name="value">
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示設定索引作業的值。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindSetMember(System.Dynamic.SetMemberBinder,System.Dynamic.DynamicMetaObject)">
+      <summary>執行動態設定成員作業的繫結。</summary>
+      <returns>新的 <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="binder">
+        <see cref="T:System.Dynamic.SetMemberBinder" /> 的執行個體，表示動態運算的詳細資料。</param>
+      <param name="value">
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示設定成員作業的值。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindUnaryOperation(System.Dynamic.UnaryOperationBinder)">
+      <summary>執行動態一元運算的繫結。</summary>
+      <returns>新的 <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="binder">
+        <see cref="T:System.Dynamic.UnaryOperationBinder" /> 的執行個體，表示動態運算的詳細資料。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.Create(System.Object,System.Linq.Expressions.Expression)">
+      <summary>為指定的物件建立中繼物件。</summary>
+      <returns>如果指定的物件實作 <see cref="T:System.Dynamic.IDynamicMetaObjectProvider" /> 而且不是來自目前 AppDomain 之外的遠端物件，則傳回該物件的特定中繼物件 (由 <see cref="M:System.Dynamic.IDynamicMetaObjectProvider.GetMetaObject(System.Linq.Expressions.Expression)" /> 所傳回)。否則會建立及傳回不含任何限制的全新中繼物件。</returns>
+      <param name="value">要取得中繼物件的物件。</param>
+      <param name="expression">運算式，表示動態繫期過程中的這個 <see cref="T:System.Dynamic.DynamicMetaObject" />。</param>
+    </member>
+    <member name="F:System.Dynamic.DynamicMetaObject.EmptyMetaObjects">
+      <summary>表示 <see cref="T:System.Dynamic.DynamicMetaObject" /> 型別的空陣列。這個欄位是唯讀的。</summary>
+    </member>
+    <member name="P:System.Dynamic.DynamicMetaObject.Expression">
+      <summary>運算式，表示動態繫結處理序期間的 <see cref="T:System.Dynamic.DynamicMetaObject" />。</summary>
+      <returns>運算式，表示動態繫結處理序期間的 <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.GetDynamicMemberNames">
+      <summary>傳回所有動態成員名稱的列舉型別。</summary>
+      <returns>動態成員名稱的清單。</returns>
+    </member>
+    <member name="P:System.Dynamic.DynamicMetaObject.HasValue">
+      <summary>取得值，這個值表示 <see cref="T:System.Dynamic.DynamicMetaObject" /> 是否有執行階段值。</summary>
+      <returns>如果 <see cref="T:System.Dynamic.DynamicMetaObject" /> 有執行階段值，則為 true，否則為 false。</returns>
+    </member>
+    <member name="P:System.Dynamic.DynamicMetaObject.LimitType">
+      <summary>取得 <see cref="T:System.Dynamic.DynamicMetaObject" /> 的限制型別。</summary>
+      <returns>如果有執行階段值則為 <see cref="P:System.Dynamic.DynamicMetaObject.RuntimeType" />，否則為 <see cref="P:System.Dynamic.DynamicMetaObject.Expression" /> 型別。</returns>
+    </member>
+    <member name="P:System.Dynamic.DynamicMetaObject.Restrictions">
+      <summary>繫結限制集，符合它的繫結即為有效的繫結。</summary>
+      <returns>繫結限制集。</returns>
+    </member>
+    <member name="P:System.Dynamic.DynamicMetaObject.RuntimeType">
+      <summary>取得執行階段值的 <see cref="T:System.Type" />，如果 <see cref="T:System.Dynamic.DynamicMetaObject" /> 沒有相關值則為 null。</summary>
+      <returns>執行階段值的 <see cref="T:System.Type" /> 或 null。</returns>
+    </member>
+    <member name="P:System.Dynamic.DynamicMetaObject.Value">
+      <summary>由這個 <see cref="T:System.Dynamic.DynamicMetaObject" /> 表示的執行階段值。</summary>
+      <returns>由這個 <see cref="T:System.Dynamic.DynamicMetaObject" /> 表示的執行階段值。</returns>
+    </member>
+    <member name="T:System.Dynamic.DynamicMetaObjectBinder">
+      <summary>參與 <see cref="T:System.Dynamic.DynamicMetaObject" /> 繫結通訊協定的動態呼叫位置繫結器。</summary>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObjectBinder.#ctor">
+      <summary>初始化 <see cref="T:System.Dynamic.DynamicMetaObjectBinder" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObjectBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>在衍生類別中覆寫時，執行動態作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態作業的目標。</param>
+      <param name="args">動態運算的引數陣列。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObjectBinder.Bind(System.Object[],System.Collections.ObjectModel.ReadOnlyCollection{System.Linq.Expressions.ParameterExpression},System.Linq.Expressions.LabelTarget)">
+      <summary>在一組引數上執行動態作業的執行階段繫結。</summary>
+      <returns>運算式，在動態作業引數上執行測試，而且如果測試有效，則會執行動態作業。如果後續發生的動態作業測試失敗，則會重新呼叫繫結，為新引數型別產生新的 <see cref="T:System.Linq.Expressions.Expression" />。</returns>
+      <param name="args">動態作業的引數陣列。</param>
+      <param name="parameters">
+        <see cref="T:System.Linq.Expressions.ParameterExpression" /> 執行個體的陣列，表示繫結處理序中呼叫位置的參數。</param>
+      <param name="returnLabel">LabelTarget，用來傳回動態繫結的結果。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObjectBinder.Defer(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>延後到所有動態作業引數的執行階段值都計算出來時，才執行作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態作業的目標。</param>
+      <param name="args">動態運算的引數陣列。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObjectBinder.Defer(System.Dynamic.DynamicMetaObject[])">
+      <summary>延後到所有動態作業引數的執行階段值都計算出來時，才執行作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="args">動態運算的引數陣列。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObjectBinder.GetUpdateExpression(System.Type)">
+      <summary>取得會導致繫結更新的運算式。它表示運算式的繫結不再是有效。這通常用於在動態物件的「版本」已變更時。</summary>
+      <returns>更新的運算式。</returns>
+      <param name="type">產生之運算式的 <see cref="P:System.Linq.Expressions.Expression.Type" /> 屬性；允許任何型別。</param>
+    </member>
+    <member name="P:System.Dynamic.DynamicMetaObjectBinder.ReturnType">
+      <summary>作業的結果型別。</summary>
+      <returns>表示作業之結果類型的 <see cref="T:System.Type" /> 物件。</returns>
+    </member>
+    <member name="T:System.Dynamic.DynamicObject">
+      <summary>提供基底類別，以便指定在執行階段時的動態行為。此類別必須以讓其他類別繼承的方式使用，您無法直接將它執行個體化。</summary>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.#ctor">
+      <summary>讓衍生型別得以初始化 <see cref="T:System.Dynamic.DynamicObject" /> 型別的新執行個體。</summary>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.GetDynamicMemberNames">
+      <summary>傳回所有動態成員名稱的列舉型別。</summary>
+      <returns>包含動態成員名稱的序列。</returns>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.GetMetaObject(System.Linq.Expressions.Expression)">
+      <summary>提供分派給動態虛擬方法的 <see cref="T:System.Dynamic.DynamicMetaObject" />。此物件可以封裝在另一個 <see cref="T:System.Dynamic.DynamicMetaObject" /> 內部，以提供個別動作的自訂行為。這個方法支援語言實作者適用的動態語言執行階段基礎結構，但不建議直接在程式碼中使用。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> 型別的物件。</returns>
+      <param name="parameter">運算式，表示分派給動態虛擬方法的 <see cref="T:System.Dynamic.DynamicMetaObject" />。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryBinaryOperation(System.Dynamic.BinaryOperationBinder,System.Object,System.Object@)">
+      <summary>提供二進位運算的實作。衍生自 <see cref="T:System.Dynamic.DynamicObject" /> 類別的類別可以覆寫這個方法，以指定加法和乘法這類運算的動態行為。</summary>
+      <returns>如果作業成功，則為 true，否則為 false。如果這個方法傳回 false，語言的執行階段繫結器會決定行為。(在大多數情況下，將會擲回特定語言的執行階段例外狀況)。</returns>
+      <param name="binder">提供二進位運算的相關資訊。binder.Operation 屬性會傳回 <see cref="T:System.Linq.Expressions.ExpressionType" /> 物件。例如，對於 sum = first + second 陳述式 (其中 first 和 second 衍生自 DynamicObject 類別)，binder.Operation 會傳回 ExpressionType.Add。</param>
+      <param name="arg">二進位運算的右運算元。例如，在 first 與 second 是衍生自 DynamicObject 類別的 sum = first + second 陳述式中，<paramref name="arg" /> 等於 second。</param>
+      <param name="result">二進位運算的結果。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryConvert(System.Dynamic.ConvertBinder,System.Object@)">
+      <summary>提供型別轉換作業的實作。衍生自 <see cref="T:System.Dynamic.DynamicObject" /> 類別的類別可以覆寫這個方法，以指定物件型別轉換作業的動態行為。</summary>
+      <returns>如果作業成功，則為 true，否則為 false。如果這個方法傳回 false，語言的執行階段繫結器會決定行為。(在大多數情況下，將會擲回特定語言的執行階段例外狀況)。</returns>
+      <param name="binder">提供轉換作業的相關資訊。binder.Type 屬性提供物件必須轉換成的目標型別。例如，對於 C# 的 (String)sampleObject (在 Visual Basic 中是 CType(sampleObject, Type)) 陳述式 (其中 sampleObject 是自 <see cref="T:System.Dynamic.DynamicObject" /> 類別衍生之類別的執行個體)，binder.Type 會傳回 <see cref="T:System.String" /> 型別。binder.Explicit 屬性提供發生之轉換類型的相關資訊。如果是明確轉換則會傳回 true，如果是隱含轉換則會傳回 false。</param>
+      <param name="result">型別轉換作業的結果。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryCreateInstance(System.Dynamic.CreateInstanceBinder,System.Object[],System.Object@)">
+      <summary>提供作業的實作，這些作業會初始化動態物件的新執行個體。這個方法並不適用於 C# 或 Visual Basic。</summary>
+      <returns>如果作業成功，則為 true，否則為 false。如果這個方法傳回 false，語言的執行階段繫結器會決定行為。(在大多數情況下，將會擲回特定語言的執行階段例外狀況)。</returns>
+      <param name="binder">提供初始設定作業的相關資訊。</param>
+      <param name="args">在初始設定期間傳遞給物件的引數。例如，對於 new SampleType(100) 作業 (其中 SampleType 是衍生自 <see cref="T:System.Dynamic.DynamicObject" /> 類別的型別)，<paramref name="args[0]" /> 等於 100。</param>
+      <param name="result">初始設定的結果。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryDeleteIndex(System.Dynamic.DeleteIndexBinder,System.Object[])">
+      <summary>提供依索引刪除物件之作業的實作。這個方法並不適用於 C# 或 Visual Basic。</summary>
+      <returns>如果作業成功，則為 true，否則為 false。如果這個方法傳回 false，語言的執行階段繫結器會決定行為。(在大多數情況下，將會擲回特定語言的執行階段例外狀況)。</returns>
+      <param name="binder">提供刪除的相關資訊。</param>
+      <param name="indexes">要刪除的索引。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryDeleteMember(System.Dynamic.DeleteMemberBinder)">
+      <summary>提供刪除物件成員之作業的實作。這個方法並不適用於 C# 或 Visual Basic。</summary>
+      <returns>如果作業成功，則為 true，否則為 false。如果這個方法傳回 false，語言的執行階段繫結器會決定行為。(在大多數情況下，將會擲回特定語言的執行階段例外狀況)。</returns>
+      <param name="binder">提供刪除的相關資訊。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryGetIndex(System.Dynamic.GetIndexBinder,System.Object[],System.Object@)">
+      <summary>提供依索引取得值之作業的實作。衍生自 <see cref="T:System.Dynamic.DynamicObject" /> 類別的類別可以覆寫這個方法，以指定索引作業的動態行為。</summary>
+      <returns>如果作業成功，則為 true，否則為 false。如果這個方法傳回 false，語言的執行階段繫結器會決定行為。(在大部分情況下，會擲回執行階段例外狀況)。</returns>
+      <param name="binder">提供作業的相關資訊。</param>
+      <param name="indexes">用於作業的索引。例如，對於 C# 的 sampleObject[3] (在 Visual Basic 中是 sampleObject(3)) 作業 (其中 sampleObject 衍生自 DynamicObject 類別)，<paramref name="indexes[0]" /> 等於 3。</param>
+      <param name="result">索引作業的結果。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryGetMember(System.Dynamic.GetMemberBinder,System.Object@)">
+      <summary>提供取得成員值之作業的實作。衍生自 <see cref="T:System.Dynamic.DynamicObject" /> 類別的類別可以覆寫這個方法，以指定取得屬性值這類作業的動態行為。</summary>
+      <returns>如果作業成功，則為 true，否則為 false。如果這個方法傳回 false，語言的執行階段繫結器會決定行為。(在大部分情況下，會擲回執行階段例外狀況)。</returns>
+      <param name="binder">提供已呼叫動態作業之物件的相關資訊。binder.Name 屬性會提供其中執行動態作業之成員的名稱。例如，在 sampleObject 是衍生自 <see cref="T:System.Dynamic.DynamicObject" /> 類別之類別執行個體的 Console.WriteLine(sampleObject.SampleProperty) 陳述式中，binder.Name 會傳回 "SampleProperty"。binder.IgnoreCase 屬性會指定成員名稱是否區分大小寫。</param>
+      <param name="result">取得作業的結果。例如，如果是針對屬性呼叫這個方法，您可以將屬性值指派給 <paramref name="result" />。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryInvoke(System.Dynamic.InvokeBinder,System.Object[],System.Object@)">
+      <summary>提供叫用物件之作業的實作。衍生自 <see cref="T:System.Dynamic.DynamicObject" /> 類別的類別可以覆寫這個方法，以指定叫用物件或委派這類作業的動態行為。</summary>
+      <returns>如果作業成功，則為 true，否則為 false。如果這個方法傳回 false，語言的執行階段繫結器會決定行為。在大多數情況下，會擲回語言特有執行階段例外狀況。</returns>
+      <param name="binder">提供叫用作業的相關資訊。</param>
+      <param name="args">在叫用作業期間傳遞給物件的引數。例如，對於 sampleObject(100) 作業 (其中 sampleObject 是衍生自 <see cref="T:System.Dynamic.DynamicObject" /> 類別的型別)，<paramref name="args[0]" /> 等於 100。</param>
+      <param name="result">物件引動過程的結果。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryInvokeMember(System.Dynamic.InvokeMemberBinder,System.Object[],System.Object@)">
+      <summary>提供叫用成員之作業的實作。衍生自 <see cref="T:System.Dynamic.DynamicObject" /> 類別的類別可以覆寫這個方法，以指定呼叫方法這類作業的動態行為。</summary>
+      <returns>如果作業成功，則為 true，否則為 false。如果這個方法傳回 false，語言的執行階段繫結器會決定行為。(在大多數情況下，將會擲回特定語言的執行階段例外狀況)。</returns>
+      <param name="binder">提供動態作業的相關資訊。binder.Name 屬性會提供其中執行動態作業之成員的名稱。例如，對於 sampleObject.SampleMethod(100) 陳述式 (其中 sampleObject 是自 <see cref="T:System.Dynamic.DynamicObject" /> 類別衍生之類別的執行個體)，binder.Name 會傳回 "SampleMethod"。binder.IgnoreCase 屬性會指定成員名稱是否區分大小寫。</param>
+      <param name="args">在叫用作業期間傳遞給物件成員的引數。例如，對於 sampleObject.SampleMethod(100) 陳述式 (其中 sampleObject 衍生自 <see cref="T:System.Dynamic.DynamicObject" /> 類別)，<paramref name="args[0]" /> 等於 100。</param>
+      <param name="result">成員引動過程的結果。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TrySetIndex(System.Dynamic.SetIndexBinder,System.Object[],System.Object)">
+      <summary>提供依索引設定值之作業的實作。衍生自 <see cref="T:System.Dynamic.DynamicObject" /> 類別的類別可以覆寫這個方法，以指定依指定之索引存取物件之作業的動態行為。</summary>
+      <returns>如果作業成功，則為 true，否則為 false。如果這個方法傳回 false，語言的執行階段繫結器會決定行為。在大多數情況下，會擲回語言特有執行階段例外狀況。</returns>
+      <param name="binder">提供作業的相關資訊。</param>
+      <param name="indexes">用於作業的索引。例如，對於 C# 的 sampleObject[3] = 10 (在 Visual Basic 中是 sampleObject(3) = 10) 作業 (其中 sampleObject 衍生自 <see cref="T:System.Dynamic.DynamicObject" /> 類別)，<paramref name="indexes[0]" /> 等於 3。</param>
+      <param name="value">要設定給具有所指定索引之物件的值。例如，對於 C# 的 sampleObject[3] = 10 (在 Visual Basic 中是 sampleObject(3) = 10) 作業 (其中 sampleObject 衍生自 <see cref="T:System.Dynamic.DynamicObject" /> 類別)，<paramref name="value" /> 等於 10。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TrySetMember(System.Dynamic.SetMemberBinder,System.Object)">
+      <summary>提供設定成員值之作業的實作。衍生自 <see cref="T:System.Dynamic.DynamicObject" /> 類別的類別可以覆寫這個方法，以指定設定屬性值這類作業的動態行為。</summary>
+      <returns>如果作業成功，則為 true，否則為 false。如果這個方法傳回 false，語言的執行階段繫結器會決定行為。(在大多數情況下，將會擲回特定語言的執行階段例外狀況)。</returns>
+      <param name="binder">提供已呼叫動態作業之物件的相關資訊。binder.Name 屬性會提供指派獲得該值之成員的名稱。例如，對於 sampleObject.SampleProperty = "Test" 陳述式 (其中 sampleObject 是衍生自 <see cref="T:System.Dynamic.DynamicObject" /> 類別之類別的執行個體)，binder.Name 會傳回 "SampleProperty"。binder.IgnoreCase 屬性會指定成員名稱是否區分大小寫。</param>
+      <param name="value">要設定給成員的值。例如，在 sampleObject 是衍生自 <see cref="T:System.Dynamic.DynamicObject" /> 類別之類別執行個體的 sampleObject.SampleProperty = "Test" 中，<paramref name="value" /> 是 "Test"。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryUnaryOperation(System.Dynamic.UnaryOperationBinder,System.Object@)">
+      <summary>提供一元運算的實作。衍生自 <see cref="T:System.Dynamic.DynamicObject" /> 類別的類別可以覆寫這個方法，以指定負號、遞增或遞減這類運算的動態行為。</summary>
+      <returns>如果作業成功，則為 true，否則為 false。如果這個方法傳回 false，語言的執行階段繫結器會決定行為。(在大多數情況下，將會擲回特定語言的執行階段例外狀況)。</returns>
+      <param name="binder">提供一元運算的相關資訊。binder.Operation 屬性會傳回 <see cref="T:System.Linq.Expressions.ExpressionType" /> 物件。例如，對於 negativeNumber = -number 陳述式 (其中 number 衍生自 DynamicObject 類別)，binder.Operation 會傳回 "Negate"。</param>
+      <param name="result">一元運算的結果。</param>
+    </member>
+    <member name="T:System.Dynamic.ExpandoObject">
+      <summary>表示物件，此物件的成員可以在執行階段時動態加入和移除。</summary>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.#ctor">
+      <summary>初始化沒有成員的新 ExpandoObject。</summary>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#ICollection{T}#Add(System.Collections.Generic.KeyValuePair{System.String,System.Object})">
+      <summary>將指定的值加入至具有指定索引鍵的 <see cref="T:System.Collections.Generic.ICollection`1" />。</summary>
+      <param name="item">
+        <see cref="T:System.Collections.Generic.KeyValuePair`2" /> 結構，表示要加入至集合的索引鍵和值。</param>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#ICollection{T}#Clear">
+      <summary>將所有項目從集合中移除。</summary>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#ICollection{T}#Contains(System.Collections.Generic.KeyValuePair{System.String,System.Object})">
+      <summary>判斷 <see cref="T:System.Collections.Generic.ICollection`1" /> 是否包含特定索引鍵和值。</summary>
+      <returns>如果集合包含特定的索引鍵和值則為 true，否則為 false。</returns>
+      <param name="item">要在 <see cref="T:System.Collections.Generic.ICollection`1" /> 中尋找的 <see cref="T:System.Collections.Generic.KeyValuePair`2" /> 結構。</param>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#ICollection{T}#CopyTo(System.Collections.Generic.KeyValuePair{System.String,System.Object}[],System.Int32)">
+      <summary>從指定的陣列索引處開始，將 <see cref="T:System.Collections.Generic.ICollection`1" /> 的項目複製到型別 <see cref="T:System.Collections.Generic.KeyValuePair`2" /> 的陣列。</summary>
+      <param name="array">型別 <see cref="T:System.Collections.Generic.KeyValuePair`2" /> 的一維陣列，是從 <see cref="T:System.Collections.Generic.ICollection`1" /> 複製過來之 <see cref="T:System.Collections.Generic.KeyValuePair`2" /> 項目的目的端。陣列必須有以零起始的索引。</param>
+      <param name="arrayIndex">
+        <paramref name="array" /> 中以零起始的索引，位於複製開始的位置。</param>
+    </member>
+    <member name="P:System.Dynamic.ExpandoObject.System#Collections#Generic#ICollection{T}#Count">
+      <summary>取得 <see cref="T:System.Collections.Generic.ICollection`1" /> 中的項目數目。</summary>
+      <returns>
+        <see cref="T:System.Collections.Generic.ICollection`1" /> 中的元素數。</returns>
+    </member>
+    <member name="P:System.Dynamic.ExpandoObject.System#Collections#Generic#ICollection{T}#IsReadOnly">
+      <summary>取得值，指出 <see cref="T:System.Collections.Generic.ICollection`1" /> 是否唯讀。</summary>
+      <returns>如果 <see cref="T:System.Collections.Generic.ICollection`1" /> 是唯讀的則為 true，否則為 false。</returns>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#ICollection{T}#Remove(System.Collections.Generic.KeyValuePair{System.String,System.Object})">
+      <summary>從集合移除索引鍵和值。</summary>
+      <returns>如果成功找到並移除索引鍵和值則為 true，否則為 false。如果在 <see cref="T:System.Collections.Generic.ICollection`1" /> 中找不到索引鍵和值，這個方法會傳回 false。</returns>
+      <param name="item">
+        <see cref="T:System.Collections.Generic.KeyValuePair`2" /> 結構，表示要從集合移除的索引鍵和值。</param>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#IDictionary{TKey@TValue}#Add(System.String,System.Object)">
+      <summary>將指定的索引鍵和值加入字典。</summary>
+      <param name="key">要用做索引鍵的物件。</param>
+      <param name="value">要用做值的物件。</param>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#IDictionary{TKey@TValue}#ContainsKey(System.String)">
+      <summary>判斷字典是否包含指定的索引鍵。</summary>
+      <returns>如果字典中包含有指定之索引鍵的項目則為 true，否則為 false。</returns>
+      <param name="key">要在字典中尋找的索引鍵。</param>
+    </member>
+    <member name="P:System.Dynamic.ExpandoObject.System#Collections#Generic#IDictionary{TKey@TValue}#Item(System.String)">
+      <summary>取得或設定具有指定索引鍵的元素。</summary>
+      <returns>具有指定索引鍵的項目。</returns>
+      <param name="key">要取得或設定之項目的索引鍵。</param>
+    </member>
+    <member name="P:System.Dynamic.ExpandoObject.System#Collections#Generic#IDictionary{TKey@TValue}#Keys">
+      <summary>取得包含 <see cref="T:System.Collections.Generic.ICollection`1" /> 之索引鍵的 <see cref="T:System.Collections.Generic.IDictionary`2" />。</summary>
+      <returns>
+        <see cref="T:System.Collections.Generic.ICollection`1" />，包含實作 <see cref="T:System.Collections.Generic.IDictionary`2" /> 之物件的索引鍵。</returns>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#IDictionary{TKey@TValue}#Remove(System.String)">
+      <summary>從 <see cref="T:System.Collections.IDictionary" /> 移除具有指定之索引鍵的項目。</summary>
+      <returns>如果成功移除項目，則為 true，否則為 false。如果在原始的 <see cref="T:System.Collections.Generic.IDictionary`2" /> 中找不到 <paramref name="key" />，則這個方法也會傳回 false。</returns>
+      <param name="key">要移除之項目的名稱。</param>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#IDictionary{TKey@TValue}#TryGetValue(System.String,System.Object@)">
+      <summary>取得與指定索引鍵關聯的值。</summary>
+      <returns>如果實作 <see cref="T:System.Collections.Generic.IDictionary`2" /> 之物件包含具有指定之索引鍵的項目，則為 true，否則為 false。</returns>
+      <param name="key">要取得之值的索引鍵。</param>
+      <param name="value">如果找到索引鍵，則這個方法傳回時會包含與指定索引鍵關聯的值，否則會包含 <paramref name="value" /> 參數的型別預設值。這個參數會以未初始化的狀態傳遞。</param>
+    </member>
+    <member name="P:System.Dynamic.ExpandoObject.System#Collections#Generic#IDictionary{TKey@TValue}#Values">
+      <summary>取得 <see cref="T:System.Collections.Generic.ICollection`1" />，此集合包含 <see cref="T:System.Collections.Generic.IDictionary`2" /> 中的值。</summary>
+      <returns>
+        <see cref="T:System.Collections.Generic.ICollection`1" />，包含實作 <see cref="T:System.Collections.Generic.IDictionary`2" /> 之物件中的值。</returns>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#IEnumerable{T}#GetEnumerator">
+      <summary>傳回可逐一查看集合的列舉程式。</summary>
+      <returns>
+        <see cref="T:System.Collections.Generic.IEnumerator`1" /> 物件，用於逐一查看集合。</returns>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#IEnumerable#GetEnumerator">
+      <summary>傳回可逐一查看集合的列舉程式。</summary>
+      <returns>
+        <see cref="T:System.Collections.IEnumerator" />，可用於逐一查看集合。</returns>
+    </member>
+    <member name="E:System.Dynamic.ExpandoObject.System#ComponentModel#INotifyPropertyChanged#PropertyChanged">
+      <summary>當屬性值變更時發生。</summary>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Dynamic#IDynamicMetaObjectProvider#GetMetaObject(System.Linq.Expressions.Expression)">
+      <summary>提供的 MetaObject 將會分派給動態虛擬方法。此物件可以封裝在另一個 MetaObject 內部，以提供個別動作的自訂行為。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> 型別的物件。</returns>
+      <param name="parameter">運算式，表示分派給動態虛擬方法的 MetaObject。</param>
+    </member>
+    <member name="T:System.Dynamic.GetIndexBinder">
+      <summary>表示呼叫位置上的動態取得索引作業，並提供繫結語意和作業詳細資料。</summary>
+    </member>
+    <member name="M:System.Dynamic.GetIndexBinder.#ctor(System.Dynamic.CallInfo)">
+      <summary>初始化 <see cref="T:System.Dynamic.GetIndexBinder" /> 的新執行個體。</summary>
+      <param name="callInfo">呼叫站台上的引數簽章。</param>
+    </member>
+    <member name="M:System.Dynamic.GetIndexBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>執行動態取得索引作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態取得索引作業的目標。</param>
+      <param name="args">動態取得索引作業的引數陣列。</param>
+    </member>
+    <member name="P:System.Dynamic.GetIndexBinder.CallInfo">
+      <summary>取得呼叫站台上之引數的簽章。</summary>
+      <returns>呼叫站台上的引數簽章。</returns>
+    </member>
+    <member name="M:System.Dynamic.GetIndexBinder.FallbackGetIndex(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>如果目標動態物件無法繫結，則會執行動態取得索引作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態取得索引作業的目標。</param>
+      <param name="indexes">動態取得索引作業的引數。</param>
+    </member>
+    <member name="M:System.Dynamic.GetIndexBinder.FallbackGetIndex(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>在衍生類別中覆寫時，如果目標動態物件無法繫結，則會執行動態取得索引作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態取得索引作業的目標。</param>
+      <param name="indexes">動態取得索引作業的引數。</param>
+      <param name="errorSuggestion">如果繫結失敗，傳回要使用的繫結結果，否則為 null。</param>
+    </member>
+    <member name="P:System.Dynamic.GetIndexBinder.ReturnType">
+      <summary>作業的結果型別。</summary>
+      <returns>表示作業之結果類型的 <see cref="T:System.Type" /> 物件。</returns>
+    </member>
+    <member name="T:System.Dynamic.GetMemberBinder">
+      <summary>表示呼叫位置上的動態取得成員作業，並提供繫結語意和作業詳細資料。</summary>
+    </member>
+    <member name="M:System.Dynamic.GetMemberBinder.#ctor(System.String,System.Boolean)">
+      <summary>初始化 <see cref="T:System.Dynamic.GetMemberBinder" /> 的新執行個體。</summary>
+      <param name="name">要取得的成員名稱。</param>
+      <param name="ignoreCase">如果名稱忽略大小寫後應該符合，則為 true，否則為 false。</param>
+    </member>
+    <member name="M:System.Dynamic.GetMemberBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>執行動態取得成員作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態取得成員作業的目標。</param>
+      <param name="args">動態取得成員作業的引數陣列。</param>
+    </member>
+    <member name="M:System.Dynamic.GetMemberBinder.FallbackGetMember(System.Dynamic.DynamicMetaObject)">
+      <summary>如果目標動態物件無法繫結，則會執行動態取得成員作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態取得成員作業的目標。</param>
+    </member>
+    <member name="M:System.Dynamic.GetMemberBinder.FallbackGetMember(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>在衍生類別中覆寫時，如果目標動態物件無法繫結，則會執行動態取得成員作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態取得成員作業的目標。</param>
+      <param name="errorSuggestion">如果繫結失敗，傳回要使用的繫結結果，否則為 null。</param>
+    </member>
+    <member name="P:System.Dynamic.GetMemberBinder.IgnoreCase">
+      <summary>取得值，指出字串比較是否應該忽略成員名稱的大小寫。</summary>
+      <returns>如果要忽略大小寫，則為 true，否則為 false。</returns>
+    </member>
+    <member name="P:System.Dynamic.GetMemberBinder.Name">
+      <summary>取得要獲得的成員名稱。</summary>
+      <returns>要取得的成員名稱。</returns>
+    </member>
+    <member name="P:System.Dynamic.GetMemberBinder.ReturnType">
+      <summary>作業的結果型別。</summary>
+      <returns>表示作業之結果類型的 <see cref="T:System.Type" /> 物件。</returns>
+    </member>
+    <member name="T:System.Dynamic.IDynamicMetaObjectProvider">
+      <summary>表示可在執行階段繫結作業的動態物件。</summary>
+    </member>
+    <member name="M:System.Dynamic.IDynamicMetaObjectProvider.GetMetaObject(System.Linq.Expressions.Expression)">
+      <summary>傳回負責在此物件上執行繫結作業的 <see cref="T:System.Dynamic.DynamicMetaObject" />。</summary>
+      <returns>要繫結此物件的 <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="parameter">執行階段值的運算式樹狀架構表示。</param>
+    </member>
+    <member name="T:System.Dynamic.IInvokeOnGetBinder">
+      <summary>表示動態取得成員作業的相關資訊，這項資料表示該取得成員是否要在屬性執行取得作業時叫用這些屬性。</summary>
+    </member>
+    <member name="P:System.Dynamic.IInvokeOnGetBinder.InvokeOnGet">
+      <summary>取得值，這個值表示此取得成員作業是否應該在屬性執行取得作業時叫用這些屬性。當這個介面不存在時，預設值為 true。</summary>
+      <returns>如果此取得成員作業應該在屬性執行取得作業時叫用這些屬性，則為 true，否則 false。</returns>
+    </member>
+    <member name="T:System.Dynamic.InvokeBinder">
+      <summary>表示呼叫位置上的叫用動態作業，並提供繫結語意和作業詳細資料。</summary>
+    </member>
+    <member name="M:System.Dynamic.InvokeBinder.#ctor(System.Dynamic.CallInfo)">
+      <summary>初始化 <see cref="T:System.Dynamic.InvokeBinder" /> 的新執行個體。</summary>
+      <param name="callInfo">呼叫站台上的引數簽章。</param>
+    </member>
+    <member name="M:System.Dynamic.InvokeBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>執行動態叫用作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態叫用作業的目標。</param>
+      <param name="args">動態叫用作業的引數陣列。</param>
+    </member>
+    <member name="P:System.Dynamic.InvokeBinder.CallInfo">
+      <summary>取得呼叫站台上之引數的簽章。</summary>
+      <returns>呼叫站台上的引數簽章。</returns>
+    </member>
+    <member name="M:System.Dynamic.InvokeBinder.FallbackInvoke(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>如果目標動態物件無法繫結，則會執行動態叫用作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態叫用作業的目標。</param>
+      <param name="args">動態叫用作業的引數。</param>
+    </member>
+    <member name="M:System.Dynamic.InvokeBinder.FallbackInvoke(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>如果目標動態物件無法繫結，則會執行動態叫用作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態叫用作業的目標。</param>
+      <param name="args">動態叫用作業的引數。</param>
+      <param name="errorSuggestion">如果繫結失敗，傳回要使用的繫結結果，否則為 null。</param>
+    </member>
+    <member name="P:System.Dynamic.InvokeBinder.ReturnType">
+      <summary>作業的結果型別。</summary>
+      <returns>表示作業之結果類型的 <see cref="T:System.Type" /> 物件。</returns>
+    </member>
+    <member name="T:System.Dynamic.InvokeMemberBinder">
+      <summary>表示呼叫位置上的叫用成員動態作業，並提供繫結語意和作業詳細資料。</summary>
+    </member>
+    <member name="M:System.Dynamic.InvokeMemberBinder.#ctor(System.String,System.Boolean,System.Dynamic.CallInfo)">
+      <summary>初始化 <see cref="T:System.Dynamic.InvokeMemberBinder" /> 的新執行個體。</summary>
+      <param name="name">要叫用的成員名稱。</param>
+      <param name="ignoreCase">如果名稱比對應該忽略大小寫，則為 true，否則為 false。</param>
+      <param name="callInfo">呼叫站台上的引數簽章。</param>
+    </member>
+    <member name="M:System.Dynamic.InvokeMemberBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>執行動態叫用成員作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態叫用成員作業的目標。</param>
+      <param name="args">動態叫用成員作業的引數陣列。</param>
+    </member>
+    <member name="P:System.Dynamic.InvokeMemberBinder.CallInfo">
+      <summary>取得呼叫站台上之引數的簽章。</summary>
+      <returns>呼叫站台上的引數簽章。</returns>
+    </member>
+    <member name="M:System.Dynamic.InvokeMemberBinder.FallbackInvoke(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>在衍生類別中覆寫時，如果目標動態物件無法繫結，則會執行動態叫用作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態叫用作業的目標。</param>
+      <param name="args">動態叫用作業的引數。</param>
+      <param name="errorSuggestion">如果繫結失敗，傳回要使用的繫結結果，否則為 null。</param>
+    </member>
+    <member name="M:System.Dynamic.InvokeMemberBinder.FallbackInvokeMember(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>如果目標動態物件無法繫結，則會執行動態叫用成員作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態叫用成員作業的目標。</param>
+      <param name="args">動態叫用成員作業的引數。</param>
+    </member>
+    <member name="M:System.Dynamic.InvokeMemberBinder.FallbackInvokeMember(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>在衍生類別中覆寫時，如果目標動態物件無法繫結，則會執行動態叫用成員作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態叫用成員作業的目標。</param>
+      <param name="args">動態叫用成員作業的引數。</param>
+      <param name="errorSuggestion">如果繫結失敗，傳回要使用的繫結結果，否則為 null。</param>
+    </member>
+    <member name="P:System.Dynamic.InvokeMemberBinder.IgnoreCase">
+      <summary>取得值，指出字串比較是否應該忽略成員名稱的大小寫。</summary>
+      <returns>如果要忽略大小寫，則為 true，否則為 false。</returns>
+    </member>
+    <member name="P:System.Dynamic.InvokeMemberBinder.Name">
+      <summary>取得要叫用的成員名稱。</summary>
+      <returns>要叫用的成員名稱。</returns>
+    </member>
+    <member name="P:System.Dynamic.InvokeMemberBinder.ReturnType">
+      <summary>作業的結果型別。</summary>
+      <returns>表示作業之結果類型的 <see cref="T:System.Type" /> 物件。</returns>
+    </member>
+    <member name="T:System.Dynamic.SetIndexBinder">
+      <summary>表示呼叫位置上的動態設定索引作業，並提供繫結語意和作業詳細資料。</summary>
+    </member>
+    <member name="M:System.Dynamic.SetIndexBinder.#ctor(System.Dynamic.CallInfo)">
+      <summary>初始化 <see cref="T:System.Dynamic.SetIndexBinder" /> 的新執行個體。</summary>
+      <param name="callInfo">呼叫站台上的引數簽章。</param>
+    </member>
+    <member name="M:System.Dynamic.SetIndexBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>執行動態設定索引作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態定索引作業的目標。</param>
+      <param name="args">動態設定索引作業的引數陣列。</param>
+    </member>
+    <member name="P:System.Dynamic.SetIndexBinder.CallInfo">
+      <summary>取得呼叫站台上之引數的簽章。</summary>
+      <returns>呼叫站台上的引數簽章。</returns>
+    </member>
+    <member name="M:System.Dynamic.SetIndexBinder.FallbackSetIndex(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>如果目標動態物件無法繫結，則會執行動態設定索引作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態定索引作業的目標。</param>
+      <param name="indexes">動態設定索引作業的引數。</param>
+      <param name="value">要設定給集合的值。</param>
+    </member>
+    <member name="M:System.Dynamic.SetIndexBinder.FallbackSetIndex(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>在衍生類別中覆寫時，如果目標動態物件無法繫結，則會執行動態設定索引作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態定索引作業的目標。</param>
+      <param name="indexes">動態設定索引作業的引數。</param>
+      <param name="value">要設定給集合的值。</param>
+      <param name="errorSuggestion">如果繫結失敗，傳回要使用的繫結結果，否則為 null。</param>
+    </member>
+    <member name="P:System.Dynamic.SetIndexBinder.ReturnType">
+      <summary>作業的結果型別。</summary>
+      <returns>表示作業之結果類型的 <see cref="T:System.Type" /> 物件。</returns>
+    </member>
+    <member name="T:System.Dynamic.SetMemberBinder">
+      <summary>表示呼叫位置上的動態設定成員作業，並提供繫結語意和作業詳細資料。</summary>
+    </member>
+    <member name="M:System.Dynamic.SetMemberBinder.#ctor(System.String,System.Boolean)">
+      <summary>初始化 <see cref="T:System.Dynamic.SetMemberBinder" /> 的新執行個體。</summary>
+      <param name="name">要取得的成員名稱。</param>
+      <param name="ignoreCase">如果名稱忽略大小寫後應該符合，則為 true，否則為 false。</param>
+    </member>
+    <member name="M:System.Dynamic.SetMemberBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>執行動態設定成員作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態設定成員作業的目標。</param>
+      <param name="args">動態設定成員作業的引數陣列。</param>
+    </member>
+    <member name="M:System.Dynamic.SetMemberBinder.FallbackSetMember(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>如果目標動態物件無法繫結，則會執行動態組成員作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態設定成員作業的目標。</param>
+      <param name="value">要設定給成員的值。</param>
+    </member>
+    <member name="M:System.Dynamic.SetMemberBinder.FallbackSetMember(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>如果目標動態物件無法繫結，則會執行動態組成員作業的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態設定成員作業的目標。</param>
+      <param name="value">要設定給成員的值。</param>
+      <param name="errorSuggestion">如果繫結失敗，傳回要使用的繫結結果，否則為 null。</param>
+    </member>
+    <member name="P:System.Dynamic.SetMemberBinder.IgnoreCase">
+      <summary>取得值，指出字串比較是否應該忽略成員名稱的大小寫。</summary>
+      <returns>如果要忽略大小寫，則為 true，否則為 false。</returns>
+    </member>
+    <member name="P:System.Dynamic.SetMemberBinder.Name">
+      <summary>取得要獲得的成員名稱。</summary>
+      <returns>要取得的成員名稱。</returns>
+    </member>
+    <member name="P:System.Dynamic.SetMemberBinder.ReturnType">
+      <summary>作業的結果型別。</summary>
+      <returns>表示作業之結果類型的 <see cref="T:System.Type" /> 物件。</returns>
+    </member>
+    <member name="T:System.Dynamic.UnaryOperationBinder">
+      <summary>表示呼叫位置上的一元動態運算，並提供繫結語意和運算詳細資料。</summary>
+    </member>
+    <member name="M:System.Dynamic.UnaryOperationBinder.#ctor(System.Linq.Expressions.ExpressionType)">
+      <summary>初始化 <see cref="T:System.Dynamic.BinaryOperationBinder" /> 類別的新執行個體。</summary>
+      <param name="operation">一元運算類型。</param>
+    </member>
+    <member name="M:System.Dynamic.UnaryOperationBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>執行動態一元運算的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態作業的目標。</param>
+      <param name="args">動態運算的引數陣列。</param>
+    </member>
+    <member name="M:System.Dynamic.UnaryOperationBinder.FallbackUnaryOperation(System.Dynamic.DynamicMetaObject)">
+      <summary>如果目標動態物件無法繫結，則會執行一元動態運算的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態一元運算的目標。</param>
+    </member>
+    <member name="M:System.Dynamic.UnaryOperationBinder.FallbackUnaryOperation(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>如果目標動態物件無法繫結，則會執行一元動態運算的繫結。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" />，表示繫結結果。</returns>
+      <param name="target">動態一元運算的目標。</param>
+      <param name="errorSuggestion">如果繫結失敗，則傳回繫結結果，否則為 null。</param>
+    </member>
+    <member name="P:System.Dynamic.UnaryOperationBinder.Operation">
+      <summary>一元運算類型。</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.ExpressionType" /> 的物件，表示一元運算的類型。</returns>
+    </member>
+    <member name="P:System.Dynamic.UnaryOperationBinder.ReturnType">
+      <summary>作業的結果型別。</summary>
+      <returns>表示作業之結果類型的 <see cref="T:System.Type" /> 物件。</returns>
+    </member>
+    <member name="T:System.Linq.Expressions.DynamicExpression">
+      <summary>表示動態運算。</summary>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Accept(System.Linq.Expressions.ExpressionVisitor)">
+      <summary>分派給這個節點類型的特定 visit 方法。例如，<see cref="T:System.Linq.Expressions.MethodCallExpression" /> 會呼叫 <see cref="M:System.Linq.Expressions.ExpressionVisitor.VisitMethodCall(System.Linq.Expressions.MethodCallExpression)" />。</summary>
+      <returns>瀏覽這個節點的結果。</returns>
+      <param name="visitor">瀏覽這個節點的造訪者。</param>
+    </member>
+    <member name="P:System.Linq.Expressions.DynamicExpression.Arguments">
+      <summary>取得動態運算的引數。</summary>
+      <returns>包含動態運算引數的唯讀集合。</returns>
+    </member>
+    <member name="P:System.Linq.Expressions.DynamicExpression.Binder">
+      <summary>取得 <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" />，用來判斷動態網站的執行階段行為。</summary>
+      <returns>
+        <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" />，會判斷動態網站的執行階段行為。</returns>
+    </member>
+    <member name="P:System.Linq.Expressions.DynamicExpression.DelegateType">
+      <summary>取得 <see cref="T:System.Runtime.CompilerServices.CallSite" /> 所使用委派的型別。</summary>
+      <returns>
+        <see cref="T:System.Type" /> 物件，表示 <see cref="T:System.Runtime.CompilerServices.CallSite" /> 所使用委派的型別。</returns>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Dynamic(System.Runtime.CompilerServices.CallSiteBinder,System.Type,System.Collections.Generic.IEnumerable{System.Linq.Expressions.Expression})">
+      <summary>建立 <see cref="T:System.Linq.Expressions.DynamicExpression" />，表示指定之 <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> 所繫結的動態運算。</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" />，其 <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> 等於 <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" />，且 <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> 和 <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> 設定為指定的值。</returns>
+      <param name="binder">動態作業的執行階段繫結器。</param>
+      <param name="returnType">動態運算式的結果型別。</param>
+      <param name="arguments">動態作業的引數。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Dynamic(System.Runtime.CompilerServices.CallSiteBinder,System.Type,System.Linq.Expressions.Expression)">
+      <summary>建立 <see cref="T:System.Linq.Expressions.DynamicExpression" />，表示指定之 <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> 所繫結的動態運算。</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" />，其 <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> 等於 <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" />，且 <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> 和 <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> 設定為指定的值。</returns>
+      <param name="binder">動態作業的執行階段繫結器。</param>
+      <param name="returnType">動態運算式的結果型別。</param>
+      <param name="arg0">動態作業的第一個引數。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Dynamic(System.Runtime.CompilerServices.CallSiteBinder,System.Type,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression)">
+      <summary>建立 <see cref="T:System.Linq.Expressions.DynamicExpression" />，表示指定之 <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> 所繫結的動態運算。</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" />，其 <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> 等於 <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" />，且 <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> 和 <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> 設定為指定的值。</returns>
+      <param name="binder">動態作業的執行階段繫結器。</param>
+      <param name="returnType">動態運算式的結果型別。</param>
+      <param name="arg0">動態作業的第一個引數。</param>
+      <param name="arg1">傳遞至動態作業的第二個引數。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Dynamic(System.Runtime.CompilerServices.CallSiteBinder,System.Type,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression)">
+      <summary>建立 <see cref="T:System.Linq.Expressions.DynamicExpression" />，表示指定之 <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> 所繫結的動態運算。</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" />，其 <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> 等於 <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" />，且 <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> 和 <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> 設定為指定的值。</returns>
+      <param name="binder">動態作業的執行階段繫結器。</param>
+      <param name="returnType">動態運算式的結果型別。</param>
+      <param name="arg0">動態作業的第一個引數。</param>
+      <param name="arg1">傳遞至動態作業的第二個引數。</param>
+      <param name="arg2">傳遞至動態作業的第三個引數。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Dynamic(System.Runtime.CompilerServices.CallSiteBinder,System.Type,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression)">
+      <summary>建立 <see cref="T:System.Linq.Expressions.DynamicExpression" />，表示指定之 <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> 所繫結的動態運算。</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" />，其 <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> 等於 <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" />，且 <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> 和 <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> 設定為指定的值。</returns>
+      <param name="binder">動態作業的執行階段繫結器。</param>
+      <param name="returnType">動態運算式的結果型別。</param>
+      <param name="arg0">動態作業的第一個引數。</param>
+      <param name="arg1">傳遞至動態作業的第二個引數。</param>
+      <param name="arg2">傳遞至動態作業的第三個引數。</param>
+      <param name="arg3">傳遞至動態運算的第四個引數。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Dynamic(System.Runtime.CompilerServices.CallSiteBinder,System.Type,System.Linq.Expressions.Expression[])">
+      <summary>建立 <see cref="T:System.Linq.Expressions.DynamicExpression" />，表示指定之 <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> 所繫結的動態運算。</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" />，其 <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> 等於 <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" />，且 <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> 和 <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> 設定為指定的值。</returns>
+      <param name="binder">動態作業的執行階段繫結器。</param>
+      <param name="returnType">動態運算式的結果型別。</param>
+      <param name="arguments">動態作業的引數。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.MakeDynamic(System.Type,System.Runtime.CompilerServices.CallSiteBinder,System.Collections.Generic.IEnumerable{System.Linq.Expressions.Expression})">
+      <summary>建立 <see cref="T:System.Linq.Expressions.DynamicExpression" />，表示指定之 <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> 所繫結的動態運算。</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" />，其 <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> 等於 <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" />，且 <see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />、<see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> 和 <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> 設定為指定的值。</returns>
+      <param name="delegateType">
+        <see cref="T:System.Runtime.CompilerServices.CallSite" /> 所使用的委派型別。</param>
+      <param name="binder">動態作業的執行階段繫結器。</param>
+      <param name="arguments">動態作業的引數。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.MakeDynamic(System.Type,System.Runtime.CompilerServices.CallSiteBinder,System.Linq.Expressions.Expression)">
+      <summary>建立 <see cref="T:System.Linq.Expressions.DynamicExpression" />，表示指定之 <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> 和一個引數所繫結的動態運算。</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" />，其 <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> 等於 <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" />，且 <see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />、<see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> 和 <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> 設定為指定的值。</returns>
+      <param name="delegateType">
+        <see cref="T:System.Runtime.CompilerServices.CallSite" /> 所使用的委派型別。</param>
+      <param name="binder">動態作業的執行階段繫結器。</param>
+      <param name="arg0">動態運算的引數。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.MakeDynamic(System.Type,System.Runtime.CompilerServices.CallSiteBinder,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression)">
+      <summary>建立 <see cref="T:System.Linq.Expressions.DynamicExpression" />，表示指定之 <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> 和兩個引數所繫結的動態運算。</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" />，其 <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> 等於 <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" />，且 <see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />、<see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> 和 <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> 設定為指定的值。</returns>
+      <param name="delegateType">
+        <see cref="T:System.Runtime.CompilerServices.CallSite" /> 所使用的委派型別。</param>
+      <param name="binder">動態作業的執行階段繫結器。</param>
+      <param name="arg0">動態作業的第一個引數。</param>
+      <param name="arg1">傳遞至動態作業的第二個引數。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.MakeDynamic(System.Type,System.Runtime.CompilerServices.CallSiteBinder,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression)">
+      <summary>建立 <see cref="T:System.Linq.Expressions.DynamicExpression" />，表示指定之 <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> 和三個引數所繫結的動態運算。</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" />，其 <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> 等於 <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" />，且 <see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />、<see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> 和 <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> 設定為指定的值。</returns>
+      <param name="delegateType">
+        <see cref="T:System.Runtime.CompilerServices.CallSite" /> 所使用的委派型別。</param>
+      <param name="binder">動態作業的執行階段繫結器。</param>
+      <param name="arg0">動態作業的第一個引數。</param>
+      <param name="arg1">傳遞至動態作業的第二個引數。</param>
+      <param name="arg2">傳遞至動態作業的第三個引數。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.MakeDynamic(System.Type,System.Runtime.CompilerServices.CallSiteBinder,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression)">
+      <summary>建立 <see cref="T:System.Linq.Expressions.DynamicExpression" />，表示指定之 <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> 和四個引數所繫結的動態運算。</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" />，其 <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> 等於 <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" />，且 <see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />、<see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> 和 <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> 設定為指定的值。</returns>
+      <param name="delegateType">
+        <see cref="T:System.Runtime.CompilerServices.CallSite" /> 所使用的委派型別。</param>
+      <param name="binder">動態作業的執行階段繫結器。</param>
+      <param name="arg0">動態作業的第一個引數。</param>
+      <param name="arg1">傳遞至動態作業的第二個引數。</param>
+      <param name="arg2">傳遞至動態作業的第三個引數。</param>
+      <param name="arg3">傳遞至動態運算的第四個引數。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.MakeDynamic(System.Type,System.Runtime.CompilerServices.CallSiteBinder,System.Linq.Expressions.Expression[])">
+      <summary>建立 <see cref="T:System.Linq.Expressions.DynamicExpression" />，表示指定之 <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> 所繫結的動態運算。</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" />，其 <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> 等於 <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" />，且 <see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />、<see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> 和 <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> 設定為指定的值。</returns>
+      <param name="delegateType">
+        <see cref="T:System.Runtime.CompilerServices.CallSite" /> 所使用的委派型別。</param>
+      <param name="binder">動態作業的執行階段繫結器。</param>
+      <param name="arguments">動態作業的引數。</param>
+    </member>
+    <member name="P:System.Linq.Expressions.DynamicExpression.NodeType">
+      <summary>傳回這個運算式的節點型別。延伸節點覆寫這個方法時應該傳回 <see cref="F:System.Linq.Expressions.ExpressionType.Extension" />。</summary>
+      <returns>運算式的 <see cref="T:System.Linq.Expressions.ExpressionType" />。</returns>
+    </member>
+    <member name="P:System.Linq.Expressions.DynamicExpression.System#Linq#Expressions#IArgumentProvider#ArgumentCount"></member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.System#Linq#Expressions#IArgumentProvider#GetArgument(System.Int32)"></member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.System#Linq#Expressions#IDynamicExpression#CreateCallSite"></member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.System#Linq#Expressions#IDynamicExpression#Rewrite(System.Linq.Expressions.Expression[])"></member>
+    <member name="P:System.Linq.Expressions.DynamicExpression.Type">
+      <summary>取得 <see cref="T:System.Linq.Expressions.Expression" /> 表示之運算式的靜態型別。</summary>
+      <returns>
+        <see cref="P:System.Linq.Expressions.DynamicExpression.Type" />，表示運算式的靜態型別。</returns>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Update(System.Collections.Generic.IEnumerable{System.Linq.Expressions.Expression})">
+      <summary>將傳送至參數 arguments 的值與 DynamicExpression 目前執行個體的 Arguments 屬性相比較。如果參數值和屬性值相等，則會傳回目前執行個體。如果它們不相等，則會傳回新的 DynamicExpression 執行個體，這個執行個體與目前的執行個體完全相同，但 Arguments 屬性設定為參數 arguments 的值例外。</summary>
+      <returns>如果沒有變更任何子系，則為這個運算式，或是具有更新之子系的運算式。</returns>
+      <param name="arguments">結果的 <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> 屬性。</param>
+    </member>
+    <member name="T:System.Linq.Expressions.DynamicExpressionVisitor">
+      <summary>代表動態運算式樹狀架構的造訪者或重新寫入器。</summary>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpressionVisitor.#ctor">
+      <summary>初始化 <see cref="T:System.Linq.Expressions.DynamicExpressionVisitor" /> 的新執行個體。</summary>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpressionVisitor.VisitDynamic(System.Linq.Expressions.DynamicExpression)">
+      <summary>造訪 <see cref="T:System.Linq.Expressions.DynamicExpression" /> 的子系。</summary>
+      <returns>如果運算式本身或是任一子運算式已經修正，會傳回 <see cref="T:System.Linq.Expressions.Expression" />，修正的運算式，否則傳回原始運算式。</returns>
+      <param name="node">要造訪的運算式。</param>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallSite">
+      <summary>動態呼叫站台的基底類別。這個型別是做為動態站台目標的參數型別使用。</summary>
+    </member>
+    <member name="P:System.Runtime.CompilerServices.CallSite.Binder">
+      <summary>負責在動態站台上執行繫結動態作業的類別。</summary>
+      <returns>負責執行繫結動態作業的 <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> 物件。</returns>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CallSite.Create(System.Type,System.Runtime.CompilerServices.CallSiteBinder)">
+      <summary>使用指定的委派型別和繫結器，建立呼叫站台。</summary>
+      <returns>新的呼叫站台。</returns>
+      <param name="delegateType">呼叫站台的委派型別。</param>
+      <param name="binder">呼叫站台繫結器。</param>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallSite`1">
+      <summary>動態站台類型。</summary>
+      <typeparam name="T">委派型別。</typeparam>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CallSite`1.Create(System.Runtime.CompilerServices.CallSiteBinder)">
+      <summary>建立動態呼叫站台的執行個體，並以負責在此呼叫站台上執行動態作業之執行階段繫結的繫結器來初始化。</summary>
+      <returns>動態呼叫站台的新執行個體。</returns>
+      <param name="binder">負責在此呼叫站台上執行動態作業之執行階段繫結的繫結器。</param>
+    </member>
+    <member name="F:System.Runtime.CompilerServices.CallSite`1.Target">
+      <summary>層級 0 快取：根據站台記錄的特殊化委派。</summary>
+    </member>
+    <member name="P:System.Runtime.CompilerServices.CallSite`1.Update">
+      <summary>更新委派。當動態站台發生快取遺漏時呼叫。</summary>
+      <returns>更新委派。</returns>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallSiteBinder">
+      <summary>負責在動態呼叫位置上執行動態作業之執行階段繫結的類別。</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CallSiteBinder.#ctor">
+      <summary>初始化 <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CallSiteBinder.Bind(System.Object[],System.Collections.ObjectModel.ReadOnlyCollection{System.Linq.Expressions.ParameterExpression},System.Linq.Expressions.LabelTarget)">
+      <summary>在一組引數上執行動態作業的執行階段繫結。</summary>
+      <returns>運算式，在動態作業引數上執行測試，而且如果測試有效，則會執行動態作業。如果後續發生的動態作業測試失敗，則會重新呼叫繫結，為新引數型別產生新的 <see cref="T:System.Linq.Expressions.Expression" />。</returns>
+      <param name="args">動態作業的引數陣列。</param>
+      <param name="parameters">
+        <see cref="T:System.Linq.Expressions.ParameterExpression" /> 執行個體的陣列，表示繫結處理序中呼叫位置的參數。</param>
+      <param name="returnLabel">LabelTarget，用來傳回動態繫結的結果。</param>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CallSiteBinder.BindDelegate``1(System.Runtime.CompilerServices.CallSite{``0},System.Object[])">
+      <summary>提供低階執行階段繫結支援。類別可以將它覆寫，並為規則實作提供直接委派。如此可將規則儲存至磁碟、在執行階段使用特殊化規則，或提供不同的快取原則。</summary>
+      <returns>取代 CallSite 目標的新委派。</returns>
+      <param name="site">正在為其執行繫結的 CallSite。</param>
+      <param name="args">繫結器的引數。</param>
+      <typeparam name="T">CallSite 的目標型別。</typeparam>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CallSiteBinder.CacheTarget``1(``0)">
+      <summary>將目標加入至已知目標的快取。在呼叫 BindDelegate 產生新規則之前，會先掃描快取的目標。</summary>
+      <param name="target">要加入至快取的目標委派。</param>
+      <typeparam name="T">要加入的目標型別。</typeparam>
+    </member>
+    <member name="P:System.Runtime.CompilerServices.CallSiteBinder.UpdateLabel">
+      <summary>取得可導致繫結更新的標籤。它表示運算式的繫結不再是有效。這通常用於在動態物件的「版本」已變更時。</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.LabelTarget" /> 物件，表示可用來觸發繫結更新的標籤。</returns>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallSiteHelpers">
+      <summary>包含 DLR CallSites 之 Helper 方法的類別。</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CallSiteHelpers.IsInternalFrame(System.Reflection.MethodBase)">
+      <summary>檢查 <see cref="T:System.Reflection.MethodBase" /> 是否供 DLR 內部使用，而且不應在語言程式碼堆疊上顯示。</summary>
+      <returns>如果輸入的 <see cref="T:System.Reflection.MethodBase" /> 是供 DLR 內部使用，而且不應在語言程式碼堆疊上顯示，則為 true，否則為 false。</returns>
+      <param name="mb">輸入的 <see cref="T:System.Reflection.MethodBase" />。</param>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.DynamicAttribute">
+      <summary>表示成員上 <see cref="T:System.Object" /> 的使用將視為動態分派型別。</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.DynamicAttribute.#ctor">
+      <summary>初始化 <see cref="T:System.Runtime.CompilerServices.DynamicAttribute" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.DynamicAttribute.#ctor(System.Boolean[])">
+      <summary>初始化 <see cref="T:System.Runtime.CompilerServices.DynamicAttribute" /> 類別的新執行個體。</summary>
+      <param name="transformFlags">以型別建構的前置周遊方式，指定哪些 <see cref="T:System.Object" /> 相符項目將視為動態分派型別。</param>
+    </member>
+    <member name="P:System.Runtime.CompilerServices.DynamicAttribute.TransformFlags">
+      <summary>以型別建構的前置周遊方式，指定哪些 <see cref="T:System.Object" /> 相符項目將視為動態分派型別。</summary>
+      <returns>將視為動態分派型別 <see cref="T:System.Object" /> 相符項目清單。</returns>
+    </member>
+  </members>
+</doc>

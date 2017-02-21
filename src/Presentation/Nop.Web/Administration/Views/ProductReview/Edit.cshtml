@@ -24,12 +24,20 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            <span id="productreview-delete" class="btn bg-red">
-                <i class="fa fa-trash-o"></i>
-                @T("Admin.Common.Delete")
-            </span>
+            @if (!Model.IsLoggedInAsVendor)
+            {
+                //this button is not visible to vendors
+                <span id="productreview-delete" class="btn bg-red">
+                    <i class="fa fa-trash-o"></i>
+                    @T("Admin.Common.Delete")
+                </span>
+            }
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)
 }
-@Html.DeleteConfirmation("productreview-delete")
+@if (!Model.IsLoggedInAsVendor)
+{
+    //this button is not visible to vendors
+    @Html.DeleteConfirmation("productreview-delete")
+}

@@ -7,6 +7,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
@@ -22,27 +23,30 @@ namespace Nop.Admin.Controllers
         private readonly ISettingService _settingService;
         private readonly IPermissionService _permissionService;
         private readonly ILocalizationService _localizationService;
+        private readonly ICustomerActivityService _customerActivityService;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
         public MeasureController(IMeasureService measureService,
             MeasureSettings measureSettings, ISettingService settingService,
-            IPermissionService permissionService, ILocalizationService localizationService)
-		{
+            IPermissionService permissionService, ILocalizationService localizationService,
+            ICustomerActivityService customerActivityService)
+        {
             this._measureService = measureService;
             this._measureSettings = measureSettings;
             this._settingService = settingService;
             this._permissionService = permissionService;
             this._localizationService = localizationService;
-		}
+            this._customerActivityService = customerActivityService;
+        }
 
         #endregion
 
         #region Methods
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -54,10 +58,10 @@ namespace Nop.Admin.Controllers
 
 
         [HttpPost]
-        public ActionResult Weights(DataSourceRequest command)
+        public virtual ActionResult Weights(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var weightsModel = _measureService.GetAllMeasureWeights()
                 .Select(x => x.ToModel())
@@ -74,7 +78,7 @@ namespace Nop.Admin.Controllers
 		}
 
         [HttpPost]
-        public ActionResult WeightUpdate(MeasureWeightModel model)
+        public virtual ActionResult WeightUpdate(MeasureWeightModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -88,11 +92,14 @@ namespace Nop.Admin.Controllers
             weight = model.ToEntity(weight);
             _measureService.UpdateMeasureWeight(weight);
 
+            //activity log
+            _customerActivityService.InsertActivity("EditMeasureWeight", _localizationService.GetResource("ActivityLog.EditMeasureWeight"), weight.Id);
+
             return new NullJsonResult();
         }
         
         [HttpPost]
-        public ActionResult WeightAdd([Bind(Exclude="Id")] MeasureWeightModel model)
+        public virtual ActionResult WeightAdd([Bind(Exclude="Id")] MeasureWeightModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -106,11 +113,14 @@ namespace Nop.Admin.Controllers
             weight = model.ToEntity(weight);
             _measureService.InsertMeasureWeight(weight);
 
+            //activity log
+            _customerActivityService.InsertActivity("AddNewMeasureWeight", _localizationService.GetResource("ActivityLog.AddNewMeasureWeight"), weight.Id);
+
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public ActionResult WeightDelete(int id)
+        public virtual ActionResult WeightDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -126,11 +136,14 @@ namespace Nop.Admin.Controllers
 
             _measureService.DeleteMeasureWeight(weight);
 
+            //activity log
+            _customerActivityService.InsertActivity("DeleteMeasureWeight", _localizationService.GetResource("ActivityLog.DeleteMeasureWeight"), weight.Id);
+
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public ActionResult MarkAsPrimaryWeight(int id)
+        public virtual ActionResult MarkAsPrimaryWeight(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -150,10 +163,10 @@ namespace Nop.Admin.Controllers
         #region Dimensions
 
         [HttpPost]
-        public ActionResult Dimensions(DataSourceRequest command)
+        public virtual ActionResult Dimensions(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var dimensionsModel = _measureService.GetAllMeasureDimensions()
                 .Select(x => x.ToModel())
@@ -170,7 +183,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DimensionUpdate(MeasureDimensionModel model)
+        public virtual ActionResult DimensionUpdate(MeasureDimensionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -184,11 +197,14 @@ namespace Nop.Admin.Controllers
             dimension = model.ToEntity(dimension);
             _measureService.UpdateMeasureDimension(dimension);
 
+            //activity log
+            _customerActivityService.InsertActivity("EditMeasureDimension", _localizationService.GetResource("ActivityLog.EditMeasureDimension"), dimension.Id);
+
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public ActionResult DimensionAdd([Bind(Exclude = "Id")] MeasureDimensionModel model)
+        public virtual ActionResult DimensionAdd([Bind(Exclude = "Id")] MeasureDimensionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -202,11 +218,14 @@ namespace Nop.Admin.Controllers
             dimension = model.ToEntity(dimension);
             _measureService.InsertMeasureDimension(dimension);
 
+            //activity log
+            _customerActivityService.InsertActivity("AddNewMeasureDimension", _localizationService.GetResource("ActivityLog.AddNewMeasureDimension"), dimension.Id);
+
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public ActionResult DimensionDelete(int id)
+        public virtual ActionResult DimensionDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -222,11 +241,14 @@ namespace Nop.Admin.Controllers
 
             _measureService.DeleteMeasureDimension(dimension);
 
+            //activity log
+            _customerActivityService.InsertActivity("DeleteMeasureDimension", _localizationService.GetResource("ActivityLog.DeleteMeasureDimension"), dimension.Id);
+
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public ActionResult MarkAsPrimaryDimension(int id)
+        public virtual ActionResult MarkAsPrimaryDimension(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();

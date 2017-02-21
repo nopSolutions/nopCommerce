@@ -53,14 +53,6 @@
                 {
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.Id)
-                        </div>
-                        <div class="col-md-9">
-                            @Html.NopDisplayFor(model => model.Id)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Url)
                         </div>
                         <div class="col-md-9">
@@ -150,10 +142,11 @@
                             },
                             pageable: {
                                 refresh: true,
-                                pageSizes: [@(gridPageSizes)]
+                                pageSizes: [@(gridPageSizes)],
+                                @Html.Partial("_GridPagerMessages")
                             },
                             editable: {
-                                confirmation: false,
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                 mode: "inline"
                             },
                             scrollable: false,
@@ -170,7 +163,9 @@
                                 field: "Id",
                                 title: "@T("Admin.Common.View")",
                                 width: 100,
-                                template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Customer/Edit/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
                                 }
                             ]
                         });

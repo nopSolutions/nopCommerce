@@ -68,7 +68,7 @@ namespace Nop.Web.Framework
                         var iconUrl = urlHelper.Content("~/Content/images/flags/" + language.FlagImageFileName);
                         tabStrip.AppendLine(string.Format("<a data-tab-name=\"{0}-{1}-tab\" href=\"#{0}-{1}-tab\" data-toggle=\"tab\"><img alt='' src='{2}'>{3}</a>",
                                 name, 
-                                HttpUtility.HtmlEncode(language.Name).ToLower(),
+                                language.Id,
                                 iconUrl,
                                 HttpUtility.HtmlEncode(language.Name)));
 
@@ -88,8 +88,8 @@ namespace Nop.Web.Framework
                         var language = languageService.GetLanguageById(helper.ViewData.Model.Locales[i].LanguageId);
 
                         tabStrip.AppendLine(string.Format("<div class=\"tab-pane\" id=\"{0}-{1}-tab\">",
-                            name, 
-                            HttpUtility.HtmlEncode(language.Name).ToLower()));
+                            name,
+                            language.Id));
                         tabStrip.AppendLine(localizedTemplate(i).ToHtmlString());
                         tabStrip.AppendLine("</div>");
                     }
@@ -403,7 +403,7 @@ namespace Nop.Web.Framework
         }
 
         public static MvcHtmlString NopEditorFor<TModel, TValue>(this HtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression, bool? renderFormControlClass = null)
+            Expression<Func<TModel, TValue>> expression, string postfix = "", bool? renderFormControlClass = null)
         {
             var result = new StringBuilder();
 
@@ -413,7 +413,7 @@ namespace Nop.Web.Framework
                 (renderFormControlClass.HasValue && renderFormControlClass.Value))
                 htmlAttributes = new { @class = "form-control" };
 
-            result.Append(helper.EditorFor(expression, new { htmlAttributes }));
+            result.Append(helper.EditorFor(expression, new { htmlAttributes, postfix }));
 
             return MvcHtmlString.Create(result.ToString());
         }

@@ -8,6 +8,7 @@ using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Plugin.Payments.PayPalStandard.Models;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -26,12 +27,14 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         private readonly IPaymentService _paymentService;
         private readonly IOrderService _orderService;
         private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IStoreContext _storeContext;
         private readonly ILogger _logger;
         private readonly IWebHelper _webHelper;
         private readonly PaymentSettings _paymentSettings;
         private readonly PayPalStandardPaymentSettings _payPalStandardPaymentSettings;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
 
         public PaymentPayPalStandardController(IWorkContext workContext,
             IStoreService storeService, 
@@ -39,12 +42,14 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             IPaymentService paymentService, 
             IOrderService orderService, 
             IOrderProcessingService orderProcessingService,
+            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IStoreContext storeContext,
             ILogger logger, 
             IWebHelper webHelper,
             PaymentSettings paymentSettings,
-            PayPalStandardPaymentSettings payPalStandardPaymentSettings)
+            PayPalStandardPaymentSettings payPalStandardPaymentSettings,
+            ShoppingCartSettings shoppingCartSettings)
         {
             this._workContext = workContext;
             this._storeService = storeService;
@@ -52,12 +57,14 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             this._paymentService = paymentService;
             this._orderService = orderService;
             this._orderProcessingService = orderProcessingService;
+            this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._storeContext = storeContext;
             this._logger = logger;
             this._webHelper = webHelper;
             this._paymentSettings = paymentSettings;
             this._payPalStandardPaymentSettings = payPalStandardPaymentSettings;
+            this._shoppingCartSettings = shoppingCartSettings;
         }
         
         [AdminAuthorize]
@@ -97,7 +104,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, storeScope);
             }
 
-            return View("~/Plugins/Payments.PayPalStandard/Views/PaymentPayPalStandard/Configure.cshtml", model);
+            return View("~/Plugins/Payments.PayPalStandard/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -148,10 +155,21 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             return Configure();
         }
 
+        //action displaying notification (warning) to a store owner about inaccurate PayPal rounding
+        [ValidateInput(false)]
+        public ActionResult RoundingWarning(bool passProductNamesAndTotals)
+        {
+            //prices and total aren't rounded, so display warning
+            if (passProductNamesAndTotals && !_shoppingCartSettings.RoundPricesDuringCalculation)
+                return Json(new { Result = _localizationService.GetResource("Plugins.Payments.PayPalStandard.RoundingWarning") }, JsonRequestBehavior.AllowGet);
+
+            return Json(new { Result = string.Empty }, JsonRequestBehavior.AllowGet);
+        }
+
         [ChildActionOnly]
         public ActionResult PaymentInfo()
         {
-            return View("~/Plugins/Payments.PayPalStandard/Views/PaymentPayPalStandard/PaymentInfo.cshtml");
+            return View("~/Plugins/Payments.PayPalStandard/Views/PaymentInfo.cshtml");
         }
 
         [NonAction]
@@ -255,7 +273,8 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     var payPalStandardPaymentSettings = _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
 
                     //validate order total
-                    if (payPalStandardPaymentSettings.PdtValidateOrderTotal && !Math.Round(mc_gross, 2).Equals(Math.Round(order.OrderTotal, 2)))
+                    var orderTotalSentToPayPal = order.GetAttribute<decimal?>("OrderTotalSentToPayPal");
+                    if (payPalStandardPaymentSettings.PdtValidateOrderTotal && orderTotalSentToPayPal.HasValue && mc_gross != orderTotalSentToPayPal.Value)
                     {
                         string errorStr = string.Format("PayPal PDT. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.Id);
                         //log
@@ -271,6 +290,9 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
                         return RedirectToAction("Index", "Home", new { area = "" });
                     }
+                    //clear attribute
+                    if (orderTotalSentToPayPal.HasValue)
+                        _genericAttributeService.SaveAttribute<decimal?>(order, "OrderTotalSentToPayPal", null);
 
                     //mark order as paid
                     if (newPaymentStatus == PaymentStatus.Paid)
@@ -377,8 +399,8 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     case "recurring_payment_profile_created":
                         //do nothing here
                         break;
+                    #region Recurring payment
                     case "recurring_payment":
-                        #region Recurring payment
                         {
                             Guid orderNumberGuid = Guid.Empty;
                             try
@@ -427,6 +449,15 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                                 }
                                             }
                                             break;
+                                        case PaymentStatus.Voided:
+                                            //failed payment
+                                            var failedPaymentResult = new ProcessPaymentResult
+                                            {
+                                                Errors = new[] { string.Format("PayPal IPN. Recurring payment is {0} .", payment_status) },
+                                                RecurringPaymentFailed = true
+                                            };
+                                            _orderProcessingService.ProcessNextRecurringPayment(rp, failedPaymentResult);
+                                            break;
                                     }
                                 }
 
@@ -437,9 +468,23 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                             {
                                 _logger.Error("PayPal IPN. Order is not found", new NopException(sb.ToString()));
                             }
-                        }
-                        #endregion
+                        }                       
                         break;
+                    case "recurring_payment_failed":
+                        var orderGuid = Guid.Empty;
+                        if (Guid.TryParse(rp_invoice_id, out orderGuid))
+                        {
+                            var initialOrder = _orderService.GetOrderByGuid(orderGuid);
+                            if (initialOrder != null)
+                            {
+                                var recurringPayment = _orderService.SearchRecurringPayments(initialOrderId: initialOrder.Id).FirstOrDefault();
+                                //failed payment
+                                if (recurringPayment != null)
+                                    _orderProcessingService.ProcessNextRecurringPayment(recurringPayment, new ProcessPaymentResult { Errors = new[] { txn_type }, RecurringPaymentFailed = true });
+                            }
+                        }
+                        break;
+                    #endregion
                     default:
                         #region Standard payment
                         {

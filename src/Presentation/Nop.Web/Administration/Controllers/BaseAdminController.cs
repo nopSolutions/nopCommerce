@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 
@@ -41,10 +42,21 @@ namespace Nop.Admin.Controllers
         /// Access denied view
         /// </summary>
         /// <returns>Access denied view</returns>
-        protected ActionResult AccessDeniedView()
+        protected virtual ActionResult AccessDeniedView()
         {
             //return new HttpUnauthorizedResult();
             return RedirectToAction("AccessDenied", "Security", new { pageUrl = this.Request.RawUrl });
+        }
+
+        /// <summary>
+        /// Access denied json data for kendo grid
+        /// </summary>
+        /// <returns>Access denied json data</returns>
+        protected JsonResult AccessDeniedKendoGridJson()
+        {
+            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+            
+            return ErrorForKendoGridJson(localizationService.GetResource("Admin.AccessDenied.Description"));
         }
 
         /// <summary>
@@ -52,7 +64,7 @@ namespace Nop.Admin.Controllers
         /// </summary>
         /// <param name="tabName">Tab name to save; empty to automatically detect it</param>
         /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request</param>
-        protected void SaveSelectedTabName(string tabName = "", bool persistForTheNextRequest = true)
+        protected virtual void SaveSelectedTabName(string tabName = "", bool persistForTheNextRequest = true)
         {
             //keep this method synchronized with
             //"GetSelectedTabName" method of \Nop.Web.Framework\HtmlExtensions.cs

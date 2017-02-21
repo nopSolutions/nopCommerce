@@ -1,0 +1,211 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Widgets.NivoSlider.Models.ConfigurationModel
+@using Nop.Web.Framework;
+
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Plugins.Widgets.NivoSlider.Picture1")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.Picture1Id_OverrideForStore, model => model.Picture1Id, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.Picture1Id)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Picture1Id)
+                        @Html.ValidationMessageFor(model => model.Picture1Id)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.Text1_OverrideForStore, model => model.Text1, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.Text1)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Text1)
+                        @Html.ValidationMessageFor(model => model.Text1)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.Link1_OverrideForStore, model => model.Link1, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.Link1)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Link1)
+                        @Html.ValidationMessageFor(model => model.Link1)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Plugins.Widgets.NivoSlider.Picture2")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.Picture2Id_OverrideForStore, model => model.Picture2Id, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.Picture2Id)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Picture2Id)
+                        @Html.ValidationMessageFor(model => model.Picture2Id)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.Text2_OverrideForStore, model => model.Text2, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.Text2)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Text2)
+                        @Html.ValidationMessageFor(model => model.Text2)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.Link2_OverrideForStore, model => model.Link2, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.Link2)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Link2)
+                        @Html.ValidationMessageFor(model => model.Link2)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Plugins.Widgets.NivoSlider.Picture3")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.Picture3Id_OverrideForStore, model => model.Picture3Id, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.Picture3Id)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Picture3Id)
+                        @Html.ValidationMessageFor(model => model.Picture3Id)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.Text3_OverrideForStore, model => model.Text3, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.Text3)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Text3)
+                        @Html.ValidationMessageFor(model => model.Text3)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.Link3_OverrideForStore, model => model.Link3, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.Link3)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Link3)
+                        @Html.ValidationMessageFor(model => model.Link3)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Plugins.Widgets.NivoSlider.Picture4")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.Picture4Id_OverrideForStore, model => model.Picture4Id, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.Picture4Id)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Picture4Id)
+                        @Html.ValidationMessageFor(model => model.Picture4Id)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.Text4_OverrideForStore, model => model.Text4, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.Text4)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Text4)
+                        @Html.ValidationMessageFor(model => model.Text4)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.Link4_OverrideForStore, model => model.Link4, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.Link4)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Link4)
+                        @Html.ValidationMessageFor(model => model.Link4)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Plugins.Widgets.NivoSlider.Picture5")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.Picture5Id_OverrideForStore, model => model.Picture5Id, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.Picture5Id)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Picture5Id)
+                        @Html.ValidationMessageFor(model => model.Picture5Id)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.Text5_OverrideForStore, model => model.Text5, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.Text5)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Text5)
+                        @Html.ValidationMessageFor(model => model.Text5)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.Link5_OverrideForStore, model => model.Link5, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.Link5)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Link5)
+                        @Html.ValidationMessageFor(model => model.Link5)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

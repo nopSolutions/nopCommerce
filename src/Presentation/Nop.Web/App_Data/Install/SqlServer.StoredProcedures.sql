@@ -514,42 +514,14 @@ BEGIN
 	IF @PriceMin is not null
 	BEGIN
 		SET @sql = @sql + '
-		AND (
-				(
-					--special price (specified price and valid date range)
-					(p.SpecialPrice IS NOT NULL AND (getutcdate() BETWEEN isnull(p.SpecialPriceStartDateTimeUtc, ''1/1/1900'') AND isnull(p.SpecialPriceEndDateTimeUtc, ''1/1/2999'')))
-					AND
-					(p.SpecialPrice >= ' + CAST(@PriceMin AS nvarchar(max)) + ')
-				)
-				OR 
-				(
-					--regular price (price isnt specified or date range isnt valid)
-					(p.SpecialPrice IS NULL OR (getutcdate() NOT BETWEEN isnull(p.SpecialPriceStartDateTimeUtc, ''1/1/1900'') AND isnull(p.SpecialPriceEndDateTimeUtc, ''1/1/2999'')))
-					AND
-					(p.Price >= ' + CAST(@PriceMin AS nvarchar(max)) + ')
-				)
-			)'
+		AND (p.Price >= ' + CAST(@PriceMin AS nvarchar(max)) + ')'
 	END
 	
 	--max price
 	IF @PriceMax is not null
 	BEGIN
 		SET @sql = @sql + '
-		AND (
-				(
-					--special price (specified price and valid date range)
-					(p.SpecialPrice IS NOT NULL AND (getutcdate() BETWEEN isnull(p.SpecialPriceStartDateTimeUtc, ''1/1/1900'') AND isnull(p.SpecialPriceEndDateTimeUtc, ''1/1/2999'')))
-					AND
-					(p.SpecialPrice <= ' + CAST(@PriceMax AS nvarchar(max)) + ')
-				)
-				OR 
-				(
-					--regular price (price isnt specified or date range isnt valid)
-					(p.SpecialPrice IS NULL OR (getutcdate() NOT BETWEEN isnull(p.SpecialPriceStartDateTimeUtc, ''1/1/1900'') AND isnull(p.SpecialPriceEndDateTimeUtc, ''1/1/2999'')))
-					AND
-					(p.Price <= ' + CAST(@PriceMax AS nvarchar(max)) + ')
-				)
-			)'
+		AND (p.Price <= ' + CAST(@PriceMax AS nvarchar(max)) + ')'
 	END
 	
 	--show hidden and ACL
@@ -746,7 +718,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE [FullText_IsSupported]
+CREATE PROCEDURE [dbo].[FullText_IsSupported]
 AS
 BEGIN	
 	EXEC('
@@ -763,7 +735,7 @@ GO
 
 
 
-CREATE PROCEDURE [FullText_Enable]
+CREATE PROCEDURE [dbo].[FullText_Enable]
 AS
 BEGIN
 	--create catalog
@@ -795,7 +767,7 @@ GO
 
 
 
-CREATE PROCEDURE [FullText_Disable]
+CREATE PROCEDURE [dbo].[FullText_Disable]
 AS
 BEGIN
 	EXEC('
@@ -823,10 +795,11 @@ END
 GO
 
 
-CREATE PROCEDURE [LanguagePackImport]
+CREATE PROCEDURE [dbo].[LanguagePackImport]
 (
 	@LanguageId int,
-	@XmlPackage xml
+	@XmlPackage xml,
+	@UpdateExistingResources bit
 )
 AS
 BEGIN
@@ -839,24 +812,27 @@ BEGIN
 				[ResourceValue] [nvarchar](MAX) NOT NULL
 			)
 
-		INSERT INTO #LocaleStringResourceTmp (LanguageID, ResourceName, ResourceValue)
+		INSERT INTO #LocaleStringResourceTmp (LanguageId, ResourceName, ResourceValue)
 		SELECT	@LanguageId, nref.value('@Name', 'nvarchar(200)'), nref.value('Value[1]', 'nvarchar(MAX)')
 		FROM	@XmlPackage.nodes('//Language/LocaleResource') AS R(nref)
 
 		DECLARE @ResourceName nvarchar(200)
 		DECLARE @ResourceValue nvarchar(MAX)
 		DECLARE cur_localeresource CURSOR FOR
-		SELECT LanguageID, ResourceName, ResourceValue
+		SELECT LanguageId, ResourceName, ResourceValue
 		FROM #LocaleStringResourceTmp
 		OPEN cur_localeresource
 		FETCH NEXT FROM cur_localeresource INTO @LanguageId, @ResourceName, @ResourceValue
 		WHILE @@FETCH_STATUS = 0
 		BEGIN
-			IF (EXISTS (SELECT 1 FROM [LocaleStringResource] WHERE LanguageID=@LanguageId AND ResourceName=@ResourceName))
+			IF (EXISTS (SELECT 1 FROM [LocaleStringResource] WHERE LanguageId=@LanguageId AND ResourceName=@ResourceName))
 			BEGIN
-				UPDATE [LocaleStringResource]
-				SET [ResourceValue]=@ResourceValue
-				WHERE LanguageID=@LanguageId AND ResourceName=@ResourceName
+				IF (@UpdateExistingResources = 1)
+				BEGIN
+					UPDATE [LocaleStringResource]
+					SET [ResourceValue]=@ResourceValue
+					WHERE LanguageId=@LanguageId AND ResourceName=@ResourceName
+				END
 			END
 			ELSE 
 			BEGIN
@@ -886,7 +862,6 @@ END
 GO
 
 
---new stored procedure
 CREATE PROCEDURE [dbo].[DeleteGuests]
 (
 	@OnlyWithoutShoppingCart bit = 1,
@@ -942,11 +917,11 @@ BEGIN
 	
 	--delete guests
 	DELETE [Customer]
-	WHERE [Id] IN (SELECT [CustomerID] FROM #tmp_guests)
+	WHERE [Id] IN (SELECT [CustomerId] FROM #tmp_guests)
 	
 	--delete attributes
 	DELETE [GenericAttribute]
-	WHERE ([EntityID] IN (SELECT [CustomerID] FROM #tmp_guests))
+	WHERE ([EntityId] IN (SELECT [CustomerId] FROM #tmp_guests))
 	AND
 	([KeyGroup] = N'Customer')
 	

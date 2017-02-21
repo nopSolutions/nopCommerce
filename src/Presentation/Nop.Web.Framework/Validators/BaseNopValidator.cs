@@ -1,6 +1,6 @@
 using System.Linq;
+using System.Linq.Dynamic;
 using FluentValidation;
-using Nop.Core;
 using Nop.Data;
 
 namespace Nop.Web.Framework.Validators

@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Orders;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
+using Nop.Services;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
@@ -29,9 +31,9 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly LocalizationSettings _localizationSettings;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPermissionService _permissionService;
+        private readonly IDownloadService _downloadService;
 
         #endregion Fields
 
@@ -44,9 +46,9 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
-            LocalizationSettings localizationSettings,
             ICustomerActivityService customerActivityService, 
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            IDownloadService downloadService)
         {
             this._returnRequestService = returnRequestService;
             this._orderService = orderService;
@@ -55,9 +57,9 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
             this._customerActivityService = customerActivityService;
             this._permissionService = permissionService;
+            this._downloadService = downloadService;
         }
 
         #endregion
@@ -65,7 +67,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected virtual bool PrepareReturnRequestModel(ReturnRequestModel model,
+        protected virtual void PrepareReturnRequestModel(ReturnRequestModel model,
             ReturnRequest returnRequest, bool excludeProperties)
         {
             if (model == null)
@@ -75,19 +77,24 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentNullException("returnRequest");
 
             var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
-            if (orderItem == null)
-                return false;
-
+            if (orderItem != null)
+            {
+                model.ProductId = orderItem.ProductId;
+                model.ProductName = orderItem.Product.Name;
+                model.OrderId = orderItem.OrderId;
+                model.AttributeInfo = orderItem.AttributeDescription;
+                model.CustomOrderNumber = orderItem.Order.CustomOrderNumber;
+            }
             model.Id = returnRequest.Id;
             model.CustomNumber = returnRequest.CustomNumber;
-            model.ProductId = orderItem.ProductId;
-            model.ProductName = orderItem.Product.Name;
-            model.OrderId = orderItem.OrderId;
             model.CustomerId = returnRequest.CustomerId;
             var customer = returnRequest.Customer;
             model.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
             model.Quantity = returnRequest.Quantity;
             model.ReturnRequestStatusStr = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext);
+
+            var download = _downloadService.GetDownloadById(returnRequest.UploadedFileId);
+            model.UploadedFileGuid = download != null ? download.DownloadGuid : Guid.Empty;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
             if (!excludeProperties)
             {
@@ -97,8 +104,6 @@ namespace Nop.Admin.Controllers
                 model.StaffNotes = returnRequest.StaffNotes;
                 model.ReturnRequestStatusId = returnRequest.ReturnRequestStatusId;
             }
-            //model is successfully prepared
-            return true;
         }
 
         #endregion
@@ -106,32 +111,53 @@ namespace Nop.Admin.Controllers
         #region Methods
 
         //list
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
 
-            return View();
+            var model = new ReturnRequestListModel
+            {
+                ReturnRequestStatusList = ReturnRequestStatus.Cancelled.ToSelectList(false).ToList(),
+                ReturnRequestStatusId = -1
+            };
+
+            model.ReturnRequestStatusList.Insert(0, new SelectListItem
+            {
+                Value = "-1",
+                Text = _localizationService.GetResource("Admin.ReturnRequests.SearchReturnRequestStatus.All"),
+                Selected = true
+            });
+
+            return View(model);
         }
 
         [HttpPost]
-        public ActionResult List(DataSourceRequest command)
+        public virtual ActionResult List(DataSourceRequest command, ReturnRequestListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
-            var returnRequests = _returnRequestService.SearchReturnRequests(0, 0, 0, null, command.Page - 1, command.PageSize);
+            var rrs = model.ReturnRequestStatusId == -1 ? null : (ReturnRequestStatus?) model.ReturnRequestStatusId;
+            
+            var startDateValue = model.StartDate == null ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+
+            var endDateValue = model.EndDate == null ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            var returnRequests = _returnRequestService.SearchReturnRequests(0, 0, 0, model.CustomNumber, rrs, startDateValue, endDateValue, command.Page - 1, command.PageSize);
             var returnRequestModels = new List<ReturnRequestModel>();
             foreach (var rr in returnRequests)
             {
                 var m = new ReturnRequestModel();
-                if (PrepareReturnRequestModel(m, rr, false))
-                    returnRequestModels.Add(m);
+                PrepareReturnRequestModel(m, rr, false);
+                returnRequestModels.Add(m);
             }
             var gridModel = new DataSourceResult
             {
@@ -143,7 +169,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult Edit(int id)
+        public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
@@ -160,7 +186,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public ActionResult Edit(ReturnRequestModel model, bool continueEditing)
+        public virtual ActionResult Edit(ReturnRequestModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
@@ -196,7 +222,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("notify-customer")]
-        public ActionResult NotifyCustomer(ReturnRequestModel model)
+        public virtual ActionResult NotifyCustomer(ReturnRequestModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
@@ -206,9 +232,14 @@ namespace Nop.Admin.Controllers
                 //No return request found with the specified id
                 return RedirectToAction("List");
 
-            //var customer = returnRequest.Customer;
             var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
-            int queuedEmailId = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, _localizationSettings.DefaultAdminLanguageId);
+            if (orderItem == null)
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.ReturnRequests.OrderItemDeleted"));
+                return RedirectToAction("Edit", new { id = returnRequest.Id });
+            }
+            
+            int queuedEmailId = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, orderItem.Order.CustomerLanguageId);
             if (queuedEmailId > 0)
                 SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Notified"));
             return RedirectToAction("Edit",  new {id = returnRequest.Id});
@@ -216,7 +247,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();

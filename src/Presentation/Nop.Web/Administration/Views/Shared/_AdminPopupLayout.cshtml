@@ -26,6 +26,7 @@
     Html.AppendCssFileParts(string.Format("~/Administration/Content/kendo/{0}/kendo.common.min.css", kendoVersion));
     Html.AppendCssFileParts("~/Administration/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
     Html.AppendCssFileParts("~/Administration/Content/fontAwesome/css/font-awesome-4.6.3.min.css");
+    Html.AppendCssFileParts("~/Administration/Content/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css");
     <!-- AdminLTE Skins (choose a skin from the css/skins) -->
     Html.AppendCssFileParts("~/Administration/Content/adminLTE/skins/_all-skins.min.css");
 
@@ -38,8 +39,9 @@
     Html.AppendScriptParts("~/Administration/Scripts/jquery.validate.min.js");
     Html.AppendScriptParts("~/Administration/Scripts/adminLTE/app.min.js");
     Html.AppendScriptParts("~/Administration/Scripts/bootstrap/bootstrap.min.js");
+    Html.AppendScriptParts("~/Administration/Scripts/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js");
     Html.AppendScriptParts("~/Administration/Scripts/jquery-1.10.2.min.js");
-    
+
     //page title
     string adminPageTitle = !String.IsNullOrWhiteSpace(ViewBag.Title) ? ViewBag.Title + " / " : "";
     adminPageTitle += T("Admin.PageTitle").Text;

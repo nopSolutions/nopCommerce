@@ -73,20 +73,23 @@ namespace Nop.Services.Orders
 
             return _returnRequestRepository.GetById(returnRequestId);
         }
-
+        
         /// <summary>
         /// Search return requests
         /// </summary>
         /// <param name="storeId">Store identifier; 0 to load all entries</param>
-        /// <param name="customerId">Customer identifier; null to load all entries</param>
+        /// <param name="customerId">Customer identifier; 0 to load all entries</param>
         /// <param name="orderItemId">Order item identifier; 0 to load all entries</param>
+        /// <param name="customNumber">Custom number; null or empty to load all entries</param>
         /// <param name="rs">Return request status; null to load all entries</param>
+        /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Return requests</returns>
-        public virtual IPagedList<ReturnRequest> SearchReturnRequests(int storeId = 0, int customerId = 0,
-            int orderItemId = 0, ReturnRequestStatus? rs = null,
-            int pageIndex = 0, int pageSize = int.MaxValue)
+        public IPagedList<ReturnRequest> SearchReturnRequests(int storeId = 0, int customerId = 0,
+            int orderItemId = 0, string customNumber = "", ReturnRequestStatus? rs = null,  DateTime? createdFromUtc = null,
+            DateTime? createdToUtc = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _returnRequestRepository.Table;
             if (storeId > 0)
@@ -100,6 +103,14 @@ namespace Nop.Services.Orders
             }
             if (orderItemId > 0)
                 query = query.Where(rr => rr.OrderItemId == orderItemId);
+
+            if(!string.IsNullOrEmpty(customNumber))
+                query = query.Where(rr => rr.CustomNumber == customNumber);
+
+            if (createdFromUtc.HasValue)
+                query = query.Where(rr => createdFromUtc.Value <= rr.CreatedOnUtc);
+            if (createdToUtc.HasValue)
+                query = query.Where(rr => createdToUtc.Value >= rr.CreatedOnUtc);
 
             query = query.OrderByDescending(rr => rr.CreatedOnUtc).ThenByDescending(rr=>rr.Id);
 

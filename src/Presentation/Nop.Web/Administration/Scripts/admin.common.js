@@ -37,7 +37,7 @@ function checkOverriddenStoreValue(obj, selector) {
         $(selector).attr('disabled', true);
         //Kendo UI elements are enabled/disabled some other way
         $.each(elementsArray, function(key, value) {
-            var kenoduiElement = $(value).data("kendoNumericTextBox");
+            var kenoduiElement = $(value).data("kendoNumericTextBox") || $(value).data("kendoMultiSelect");
             if (kenoduiElement !== undefined && kenoduiElement !== null) {
                 kenoduiElement.enable(false);
             }
@@ -47,7 +47,7 @@ function checkOverriddenStoreValue(obj, selector) {
         $(selector).removeAttr('disabled');
         //Kendo UI elements are enabled/disabled some other way
         $.each(elementsArray, function(key, value) {
-            var kenoduiElement = $(value).data("kendoNumericTextBox");
+            var kenoduiElement = $(value).data("kendoNumericTextBox") || $(value).data("kendoMultiSelect");
             if (kenoduiElement !== undefined && kenoduiElement !== null) {
                 kenoduiElement.enable();
             }
@@ -116,6 +116,28 @@ function saveUserPreferences(url, name, value) {
         dataType: 'json',
         error: function(xhr, ajaxOptions, thrownError) {
             alert('Failed to save preferences.');
+        }
+    });
+};
+
+function warningValidation(validationUrl, warningElementName, passedParameters) {
+    addAntiForgeryToken(passedParameters);
+    $.ajax({
+        cache: false,
+        url: validationUrl,
+        type: 'post',
+        dataType: "json",
+        data: passedParameters,
+        success: function (data) {
+            var element = $('[data-valmsg-for="' + warningElementName + '"]');
+            if (data.Result) {
+                element.addClass("warning");
+                element.html(data.Result);
+            }
+            else {
+                element.removeClass("warning");
+                element.html('');
+            }
         }
     });
 };

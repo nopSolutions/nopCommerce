@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 
@@ -21,9 +22,9 @@ namespace Nop.Services.ExportImport.Help
         /// Ctor
         /// </summary>
         /// <param name="properties">All acsess properties</param>
-        public PropertyManager(PropertyByName<T>[] properties)
+        public PropertyManager(IEnumerable<PropertyByName<T>> properties)
         {
-            _properties=new Dictionary<string, PropertyByName<T>>();
+            _properties = new Dictionary<string, PropertyByName<T>>();
 
             var poz = 1;
             foreach (var propertyByName in properties)
@@ -70,32 +71,74 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Write object data to XLSX worksheet
         /// </summary>
-        /// <param name="worksheet">worksheet</param>
+        /// <param name="worksheet">Data worksheet</param>
         /// <param name="row">Row index</param>
-        public void WriteToXlsx(ExcelWorksheet worksheet, int row)
+        /// <param name="exportImportUseDropdownlistsForAssociatedEntities">Indicating whether need create dropdown list for export</param>
+        /// <param name="cellOffset">Cell offset</param>
+        /// <param name="fWorksheet">Filters worksheet</param>
+        public void WriteToXlsx(ExcelWorksheet worksheet, int row, bool exportImportUseDropdownlistsForAssociatedEntities, int cellOffset = 0, ExcelWorksheet fWorksheet=null)
         {
             if (CurrentObject == null)
                 return;
-
+            
             foreach (var prop in _properties.Values)
             {
-                worksheet.Cells[row, prop.PropertyOrderPosition].Value = prop.GetProperty(CurrentObject);
+                var cell = worksheet.Cells[row, prop.PropertyOrderPosition + cellOffset];
+                if (prop.IsDropDownCell)
+                {
+                    var dropDownElements = prop.GetDropDownElements();
+                    if (!dropDownElements.Any())
+                    {
+                        cell.Value = string.Empty;
+                        continue;
+                    }
+
+                    cell.Value = prop.GetItemText(prop.GetProperty(CurrentObject));
+
+                    if(!exportImportUseDropdownlistsForAssociatedEntities)
+                        continue;
+
+                    var validator = cell.DataValidation.AddListDataValidation();
+                    
+                    validator.AllowBlank = prop.AllowBlank;
+
+                    if(fWorksheet == null)
+                        continue;
+
+                    var fRow = 1;
+                    foreach (var dropDownElement in dropDownElements)
+                    {
+                        var fCell = fWorksheet.Cells[fRow++, prop.PropertyOrderPosition];
+
+                        if (fCell.Value != null && fCell.Value.ToString() == dropDownElement)
+                            break;
+                        
+                        fCell.Value = dropDownElement;
+                    }
+
+                    validator.Formula.ExcelFormula = string.Format("{0}!{1}:{2}", fWorksheet.Name, fWorksheet.Cells[1, prop.PropertyOrderPosition].Address, fWorksheet.Cells[dropDownElements.Length, prop.PropertyOrderPosition].Address);
+                }
+                else
+                {
+                    cell.Value = prop.GetProperty(CurrentObject);
+                }
             }
         }
-
+        
         /// <summary>
         /// Read object data from XLSX worksheet
         /// </summary>
         /// <param name="worksheet">worksheet</param>
         /// <param name="row">Row index</param>
-        public void ReadFromXlsx(ExcelWorksheet worksheet, int row)
+        /// /// <param name="cellOffset">Cell offset</param>
+        public void ReadFromXlsx(ExcelWorksheet worksheet, int row, int cellOffset = 0)
         {
             if (worksheet == null || worksheet.Cells == null)
                 return;
 
             foreach (var prop in _properties.Values)
             {
-                prop.PropertyValue = worksheet.Cells[row, prop.PropertyOrderPosition].Value;
+                prop.PropertyValue = worksheet.Cells[row, prop.PropertyOrderPosition + cellOffset].Value;
             }
         }
 
@@ -104,15 +147,16 @@ namespace Nop.Services.ExportImport.Help
         /// </summary>
         /// <param name="worksheet">worksheet</param>
         /// <param name="setStyle">Detection of cell style</param>
-        public void WriteCaption(ExcelWorksheet worksheet, Action<ExcelStyle> setStyle)
+        /// <param name="row">Row num</param>
+        /// <param name="cellOffset">Cell offset</param>
+        public void WriteCaption(ExcelWorksheet worksheet, Action<ExcelStyle> setStyle, int row = 1, int cellOffset = 0)
         {
             foreach (var caption in _properties.Values)
             {
-                var cell = worksheet.Cells[1, caption.PropertyOrderPosition];
+                var cell = worksheet.Cells[row, caption.PropertyOrderPosition + cellOffset];
                 cell.Value = caption;
                 setStyle(cell.Style);
             }
-            
         }
 
         /// <summary>
@@ -133,13 +177,25 @@ namespace Nop.Services.ExportImport.Help
             return _properties.ContainsKey(propertyName) ? _properties[propertyName] : null;
         }
 
-
         /// <summary>
         /// Get property array
         /// </summary>
         public PropertyByName<T>[] GetProperties
         {
             get { return _properties.Values.ToArray(); }
+        }
+
+
+        public void SetSelectList(string propertyName, SelectList list)
+        {
+            var tempProperty = GetProperty(propertyName);
+            if (tempProperty != null)
+                tempProperty.DropDownElements = list;
+        }
+        
+        public bool IsCaption
+        {
+            get { return _properties.Values.All(p => p.IsCaption); }
         }
     }
 }

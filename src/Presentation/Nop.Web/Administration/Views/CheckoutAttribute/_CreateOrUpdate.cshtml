@@ -1,5 +1,6 @@
 ﻿@model CheckoutAttributeModel
 @using Nop.Core.Domain.Catalog;
+@using Nop.Services
 
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
@@ -12,6 +13,13 @@
 
 <div class="content">
     <div class="form-horizontal">
+        <div class="row">
+            <div class="col-md-12 clearfix">
+                <div class="pull-left">
+                    @Html.Action("Mode", "Setting", new { modeName = "checkoutattribute-advanced-mode" })
+                </div>
+            </div>
+        </div>
         <div id="checkoutattribute-edit" class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Catalog.Attributes.CheckoutAttributes.Info"), true)
@@ -68,31 +76,44 @@
 
         function toggleAttributeControlType() {
             var selectedAttributeControlTypeId = $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").val();
+            //validation
             if (selectedAttributeControlTypeId == @(((int) AttributeControlType.TextBox).ToString())) {
                 $('#pnlValidationMinLength').show();
-            $('#pnlValidationMaxLength').show();
-            $('#pnlValidationFileMaximumSize').hide();
-            $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValue').show();
-        } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
-            $('#pnlValidationMinLength').show();
-            $('#pnlValidationMaxLength').show();
-            $('#pnlValidationFileMaximumSize').hide();
-            $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValue').show();
-        } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.FileUpload).ToString())) {
-            $('#pnlValidationMinLength').hide();
-            $('#pnlValidationMaxLength').hide();
-            $('#pnlValidationFileMaximumSize').show();
-            $('#pnlValidationFileAllowedExtensions').show();
-            $('#pnlDefaultValue').hide();
-        } else {
+                $('#pnlValidationMaxLength').show();
+                $('#pnlValidationFileMaximumSize').hide();
+                $('#pnlValidationFileAllowedExtensions').hide();
+                $('#pnlDefaultValue').show();
+            } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
+                $('#pnlValidationMinLength').show();
+                $('#pnlValidationMaxLength').show();
+                $('#pnlValidationFileMaximumSize').hide();
+                $('#pnlValidationFileAllowedExtensions').hide();
+                $('#pnlDefaultValue').show();
+            } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.FileUpload).ToString())) {
                 $('#pnlValidationMinLength').hide();
-        $('#pnlValidationMaxLength').hide();
-        $('#pnlValidationFileMaximumSize').hide();
-        $('#pnlValidationFileAllowedExtensions').hide();
-        $('#pnlDefaultValue').hide();
-        }
+                $('#pnlValidationMaxLength').hide();
+                $('#pnlValidationFileMaximumSize').show();
+                $('#pnlValidationFileAllowedExtensions').show();
+                $('#pnlDefaultValue').hide();
+            } else {
+                $('#pnlValidationMinLength').hide();
+                $('#pnlValidationMaxLength').hide();
+                $('#pnlValidationFileMaximumSize').hide();
+                $('#pnlValidationFileAllowedExtensions').hide();
+                $('#pnlDefaultValue').hide();
+            }
+
+            //values
+            if (selectedAttributeControlTypeId == @(((int) AttributeControlType.DropdownList).ToString()) ||
+                selectedAttributeControlTypeId == @(((int) AttributeControlType.RadioList).ToString()) ||
+                selectedAttributeControlTypeId == @(((int) AttributeControlType.Checkboxes).ToString()) ||
+                selectedAttributeControlTypeId == @(((int) AttributeControlType.ColorSquares).ToString()) ||
+                selectedAttributeControlTypeId == @(((int) AttributeControlType.ImageSquares).ToString()) ||
+                selectedAttributeControlTypeId == @(((int) AttributeControlType.ReadonlyCheckboxes).ToString())) {
+                 $('[data-tab-name=tab-values]').show();
+            } else {
+                $('[data-tab-name=tab-values]').hide();
+            }
         }
     </script>
 
@@ -110,7 +131,7 @@
                             @Html.ValidationMessageFor(model => model.Locales[item].Name)
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group advanced-setting">
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Locales[item].TextPrompt)
                         </div>
@@ -132,7 +153,7 @@
                             @Html.ValidationMessageFor(model => model.Name)
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group advanced-setting">
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.TextPrompt)
                         </div>
@@ -152,7 +173,7 @@
                         @Html.ValidationMessageFor(model => model.IsRequired)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.ShippableProductRequired)
                     </div>
@@ -161,7 +182,7 @@
                         @Html.ValidationMessageFor(model => model.ShippableProductRequired)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IsTaxExempt)
                     </div>
@@ -170,7 +191,7 @@
                         @Html.ValidationMessageFor(model => model.IsTaxExempt)
                     </div>
                 </div>
-                <div class="form-group" id="pnlTaxCategory">
+                <div class="form-group advanced-setting" id="pnlTaxCategory">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.TaxCategoryId)
                     </div>
@@ -203,7 +224,7 @@
                         @Html.ValidationMessageFor(model => model.DisplayOrder)
                     </div>
                 </div>
-                <div class="form-group" id="pnlValidationMinLength">
+                <div class="form-group advanced-setting" id="pnlValidationMinLength">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.ValidationMinLength)
                     </div>
@@ -212,7 +233,7 @@
                         @Html.ValidationMessageFor(model => model.ValidationMinLength)
                     </div>
                 </div>
-                <div class="form-group" id="pnlValidationMaxLength">
+                <div class="form-group advanced-setting" id="pnlValidationMaxLength">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.ValidationMaxLength)
                     </div>
@@ -221,7 +242,7 @@
                         @Html.ValidationMessageFor(model => model.ValidationMaxLength)
                     </div>
                 </div>
-                <div class="form-group" id="pnlValidationFileAllowedExtensions">
+                <div class="form-group advanced-setting" id="pnlValidationFileAllowedExtensions">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.ValidationFileAllowedExtensions)
                     </div>
@@ -230,7 +251,7 @@
                         @Html.ValidationMessageFor(model => model.ValidationFileAllowedExtensions)
                     </div>
                 </div>
-                <div class="form-group" id="pnlValidationFileMaximumSize">
+                <div class="form-group advanced-setting" id="pnlValidationFileMaximumSize">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.ValidationFileMaximumSize)
                     </div>
@@ -239,7 +260,7 @@
                         @Html.ValidationMessageFor(model => model.ValidationFileMaximumSize)
                     </div>
                 </div>
-                <div class="form-group" id="pnlDefaultValue">
+                <div class="form-group advanced-setting" id="pnlDefaultValue">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.DefaultValue)
                     </div>
@@ -248,7 +269,7 @@
                         @Html.ValidationMessageFor(model => model.DefaultValue)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.SelectedStoreIds)
                     </div>
@@ -340,10 +361,11 @@
                                     refresh: true,
                                     numeric: false,
                                     previousNext: false,
-                                    info: false
+                                    info: false,
+                                    @Html.Partial("_GridPagerMessages")
                                 },
                                 editable: {
-                                    confirmation: false,
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                     mode: "inline"
                                 },
                                 scrollable: false,
@@ -372,10 +394,14 @@
                                 },{
                                     field: "Id",
                                     title: "@T("Admin.Common.Edit")",
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
                                     width: 100,
-                                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/CheckoutAttribute/ValueEditPopup/")#=Id#?btnId=btnRefresh&formId=checkoutattribute-form', 800, 500, true); return false;\" class='btn btn-default' />"
+                                    template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/CheckoutAttribute/ValueEditPopup/")#=Id#?btnId=btnRefresh&formId=checkoutattribute-form', 800, 500, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
                                 }, {
                                     command: {name: "destroy", text: "@T("Admin.Common.Delete")"},
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
                                     title: "@T("Admin.Common.Delete")",
                                     width: 100
                                 }]

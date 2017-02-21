@@ -7,6 +7,7 @@ using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Services.Common;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
@@ -24,6 +25,7 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IPermissionService _permissionService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion
 
@@ -34,7 +36,8 @@ namespace Nop.Admin.Controllers
             ILocalizedEntityService localizedEntityService,
             ILocalizationService localizationService,
             IWorkContext workContext,
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            ICustomerActivityService customerActivityService)
         {
             this._addressAttributeService = addressAttributeService;
             this._languageService = languageService;
@@ -42,6 +45,7 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._permissionService = permissionService;
+            this._customerActivityService = customerActivityService;
         }
 
         #endregion
@@ -61,7 +65,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected  virtual void UpdateValueLocales(AddressAttributeValue addressAttributeValue, AddressAttributeValueModel model)
+        protected virtual void UpdateValueLocales(AddressAttributeValue addressAttributeValue, AddressAttributeValueModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -73,20 +77,20 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Address attributes
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult ListBlock()
+        public virtual ActionResult ListBlock()
         {
             return PartialView("ListBlock");
         }
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -99,10 +103,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult List(DataSourceRequest command)
+        public virtual ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var addressAttributes = _addressAttributeService.GetAllAddressAttributes();
             var gridModel = new DataSourceResult
@@ -117,9 +121,9 @@ namespace Nop.Admin.Controllers
             };
             return Json(gridModel);
         }
-        
+
         //create
-        public ActionResult Create()
+        public virtual ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -131,7 +135,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Create(AddressAttributeModel model, bool continueEditing)
+        public virtual ActionResult Create(AddressAttributeModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -140,6 +144,10 @@ namespace Nop.Admin.Controllers
             {
                 var addressAttribute = model.ToEntity();
                 _addressAttributeService.InsertAddressAttribute(addressAttribute);
+
+                //activity log
+                _customerActivityService.InsertActivity("AddNewAddressAttribute", _localizationService.GetResource("ActivityLog.AddNewAddressAttribute"), addressAttribute.Id);
+
                 //locales
                 UpdateAttributeLocales(addressAttribute, model);
 
@@ -160,7 +168,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult Edit(int id)
+        public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -180,7 +188,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Edit(AddressAttributeModel model, bool continueEditing)
+        public virtual ActionResult Edit(AddressAttributeModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -194,6 +202,10 @@ namespace Nop.Admin.Controllers
             {
                 addressAttribute = model.ToEntity(addressAttribute);
                 _addressAttributeService.UpdateAddressAttribute(addressAttribute);
+
+                //activity log
+                _customerActivityService.InsertActivity("EditAddressAttribute", _localizationService.GetResource("ActivityLog.EditAddressAttribute"), addressAttribute.Id);
+
                 //locales
                 UpdateAttributeLocales(addressAttribute, model);
 
@@ -214,13 +226,16 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             var addressAttribute = _addressAttributeService.GetAddressAttributeById(id);
             _addressAttributeService.DeleteAddressAttribute(addressAttribute);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteAddressAttribute", _localizationService.GetResource("ActivityLog.DeleteAddressAttribute"), addressAttribute.Id);
 
             SuccessNotification(_localizationService.GetResource("Admin.Address.AddressAttributes.Deleted"));
             return RedirectToAction("List");
@@ -232,10 +247,10 @@ namespace Nop.Admin.Controllers
 
         //list
         [HttpPost]
-        public ActionResult ValueList(int addressAttributeId, DataSourceRequest command)
+        public virtual ActionResult ValueList(int addressAttributeId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var values = _addressAttributeService.GetAddressAttributeValues(addressAttributeId);
             var gridModel = new DataSourceResult
@@ -254,7 +269,7 @@ namespace Nop.Admin.Controllers
         }
 
         //create
-        public ActionResult ValueCreatePopup(int addressAttributeId)
+        public virtual ActionResult ValueCreatePopup(int addressAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -272,7 +287,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ValueCreatePopup(string btnId, string formId, AddressAttributeValueModel model)
+        public virtual ActionResult ValueCreatePopup(string btnId, string formId, AddressAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -293,6 +308,10 @@ namespace Nop.Admin.Controllers
                 };
 
                 _addressAttributeService.InsertAddressAttributeValue(cav);
+
+                //activity log
+                _customerActivityService.InsertActivity("AddNewAddressAttributeValue", _localizationService.GetResource("ActivityLog.AddNewAddressAttributeValue"), cav.Id);
+                
                 UpdateValueLocales(cav, model);
 
                 ViewBag.RefreshPage = true;
@@ -306,7 +325,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult ValueEditPopup(int id)
+        public virtual ActionResult ValueEditPopup(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -334,7 +353,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ValueEditPopup(string btnId, string formId, AddressAttributeValueModel model)
+        public virtual ActionResult ValueEditPopup(string btnId, string formId, AddressAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -353,6 +372,9 @@ namespace Nop.Admin.Controllers
 
                 UpdateValueLocales(cav, model);
 
+                //activity log
+                _customerActivityService.InsertActivity("EditAddressAttributeValue", _localizationService.GetResource("ActivityLog.EditAddressAttributeValue"), cav.Id);
+                
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
                 ViewBag.formId = formId;
@@ -365,7 +387,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult ValueDelete(int id)
+        public virtual ActionResult ValueDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -374,10 +396,12 @@ namespace Nop.Admin.Controllers
             if (cav == null)
                 throw new ArgumentException("No address attribute value found with the specified id");
             _addressAttributeService.DeleteAddressAttributeValue(cav);
-
+            
+            //activity log
+            _customerActivityService.InsertActivity("DeleteAddressAttributeValue", _localizationService.GetResource("ActivityLog.DeleteAddressAttributeValue"), cav.Id);
+            
             return new NullJsonResult();
         }
-
 
         #endregion
     }

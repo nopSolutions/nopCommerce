@@ -25,7 +25,7 @@
             </div>
             <div class="details">
                 <div class="order-number">
-                    <strong>@T("Checkout.OrderNumber"): @Model.OrderId</strong>
+                    <strong>@T("Checkout.OrderNumber"): @Model.CustomOrderNumber</strong>
                 </div>
                 <div class="details-link">
                     <a href="@Url.RouteUrl("OrderDetails", new { orderID = Model.OrderId })">@T("Checkout.PlacedOrderDetails")</a>

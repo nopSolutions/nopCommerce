@@ -1,6 +1,7 @@
-﻿@model CustomerModel
+﻿@using Nop.Core.Domain.Orders;
+@using Nop.Services.Stores
+@model CustomerModel
 
-@using Nop.Core.Domain.Orders;
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 
@@ -103,30 +104,15 @@
             <div class="panel-body">
                 @if (Model.UsernamesEnabled)
                 {
-                    if (Model.Id == 0 || Model.AllowUsersToChangeUsernames)
-                    {
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.Username)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.Username)
-                                @Html.ValidationMessageFor(model => model.Username)
-                            </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Username)
                         </div>
-                    }
-                    else
-                    {
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.Username)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopDisplayFor(model => model.Username)
-                                @Html.HiddenFor(model => model.Username)
-                            </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Username)
+                            @Html.ValidationMessageFor(model => model.Username)
                         </div>
-                    }
+                    </div>
                 }
                 <div class="form-group">
                     <div class="col-md-3">
@@ -143,7 +129,7 @@
                     </div>
                     <div class="col-md-9">
                         <div class="input-group">
-                            @Html.TextBoxFor(model => model.Password, new { autocomplete = "off", @class = "text-box single-line form-control" })
+                            @Html.NopEditorFor(model => model.Password)
                             <div class="input-group-btn">
                                 @if (Model.Id > 0)
                                 {
@@ -210,7 +196,8 @@
                                             refresh: true,
                                             numeric: false,
                                             previousNext: false,
-                                            info: false
+                                            info: false,
+                                            @Html.Partial("_GridPagerMessages")
                                         },
                                         scrollable: false,
                                         columns: [
@@ -240,34 +227,27 @@
                     @Html.NopLabelFor(model => model.SelectedCustomerRoleIds)
                 </div>
                 <div class="col-md-9">
-                    <div class="row">
-                        <div class="col-md-4">
-                            @Html.EditorFor(model => model.SelectedCustomerRoleIds, new {SelectList = Model.AvailableCustomerRoles})
-                            <script>
-                                $(document).ready(function() {
-                                    var customerRolesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
-                                    customerRolesIdsInput.setOptions({
-                                        customerRolesIdsInput: false
-                                    });
+                    @Html.EditorFor(model => model.SelectedCustomerRoleIds, new {SelectList = Model.AvailableCustomerRoles})
+                    <script>
+                        $(document).ready(function() {
+                            var customerRolesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                            customerRolesIdsInput.setOptions({
+                                customerRolesIdsInput: false
+                            });
 
-                                    @if (Model.AvailableCustomerRoles.Count == 0)
-                                    {
-                                        <text>
-                                customerRolesIdsInput.setOptions({
-                                    enable: false,
-                                    placeholder: '@T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")'
-                                });
-                                customerRolesIdsInput._placeholder();
-                                customerRolesIdsInput._enable();
+                            @if (Model.AvailableCustomerRoles.Count == 0)
+                            {
+                                <text>
+                                    customerRolesIdsInput.setOptions({
+                                        enable: false,
+                                        placeholder: '@T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")'
+                                    });
+                                    customerRolesIdsInput._placeholder();
+                                    customerRolesIdsInput._enable();
                                 </text>
-                                    }
-                                });
-                            </script>
-                        </div>
-                        <div class="col-md-8">
-                            @Html.Action("AclDisabledWarning", "Common")
-                        </div>
-                    </div>
+                            }
+                        });
+                    </script>
                 </div>
             </div>
                 <div class="form-group">
@@ -545,6 +525,17 @@
                         @Html.ValidationMessageFor(model => model.Active)
                     </div>
                 </div>
+                @if (Model.Id > 0 && !string.IsNullOrEmpty(Model.RegisteredInStore))
+                {
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.RegisteredInStore)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDisplayFor(model => model.RegisteredInStore)
+                        </div>
+                    </div>
+                }
                 @if (Model.Id > 0)
                 {
                     <div class="form-group">
@@ -598,6 +589,7 @@
 {
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
 
     <div class="panel-group">
         <div class="panel panel-default">
@@ -634,17 +626,18 @@
                             },
                             pageable: {
                                 refresh: true,
-                                pageSizes: [@(gridPageSizes)]
+                                pageSizes: [@(gridPageSizes)],
+                                @Html.Partial("_GridPagerMessages")
                             },
                             editable: {
-                                confirmation: false,
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                 mode: "inline"
                             },
                             scrollable: false,
                             columns: [{
-                                field: "Id",
-                                title: "@T("Admin.Customers.Customers.Orders.ID")",
-                                width: 50
+                                field: "CustomOrderNumber",
+                                title: "@T("Admin.Customers.Customers.Orders.CustomOrderNumber")",
+                                width: 200
                             }, {
                                 field: "OrderTotal",
                                 title: "@T("Admin.Customers.Customers.Orders.OrderTotal")",
@@ -667,8 +660,9 @@
                                 field: "ShippingStatus",
                                 title: "@T("Admin.Customers.Customers.Orders.ShippingStatus")",
                                 width: 200
-                            }, {
+                            },{
                                 field: "StoreName",
+                                hidden: @(stores.Count > 1 ? "false" : "true"),
                                 title: "@T("Admin.Customers.Customers.Orders.Store")",
                                 width: 200
                             }, {
@@ -681,7 +675,9 @@
                                 field: "Id",
                                 title: "@T("Admin.Common.View")",
                                 width: 100,
-                                template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
                             }]
                         });
                     });
@@ -738,10 +734,11 @@
                                 refresh: true,
                                 numeric: false,
                                 previousNext: false,
-                                info: false
+                                info: false,
+                                @Html.Partial("_GridPagerMessages")
                             },
                             editable: {
-                                confirmation: true,
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                 mode: "inline"
                             },
                             scrollable: false,
@@ -768,11 +765,15 @@
                                 field: "Id",
                                 title: "@T("Admin.Common.Edit")",
                                 width: 100,
-                                template: '<a href="@Url.Content("~/Admin/Customer/AddressEdit?customerId=")@Model.Id&addressid=#=Id#">@T("Admin.Common.Edit")</a>'
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Customer/AddressEdit?customerId=")@Model.Id&addressid=#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
                             }, {
                                 command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                 title: "@T("Admin.Common.Delete")",
-                                width: 100
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" }
                             }]
                         });
                     });
@@ -789,6 +790,8 @@
 
 @helper TabCurrentShoppingCart()
 {
+    var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
+
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -825,10 +828,11 @@
                                 refresh: true,
                                 numeric: false,
                                 previousNext: false,
-                                info: false
+                                info: false,
+                                @Html.Partial("_GridPagerMessages")
                             },
                             editable: {
-                                confirmation: false,
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                 mode: "inline"
                             },
                             scrollable: false,
@@ -852,6 +856,7 @@
                                 width:200
                             },{
                                 field: "Store",
+                                hidden: @(stores.Count > 1 ? "false" : "true"),
                                 title: "@T("Admin.CurrentCarts.Store")",
                                 width:200
                             },{
@@ -871,6 +876,8 @@
 
 @helper TabCurrentWishlist()
 {
+    var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
+
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -907,10 +914,11 @@
                                 refresh: true,
                                 numeric: false,
                                 previousNext: false,
-                                info: false
+                                info: false,
+                                @Html.Partial("_GridPagerMessages")
                             },
                             editable: {
-                                confirmation: false,
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                 mode: "inline"
                             },
                             scrollable: false,
@@ -934,6 +942,7 @@
                                 width:200
                             },{
                                 field: "Store",
+                                hidden: @(stores.Count > 1 ? "false" : "true"),
                                 title: "@T("Admin.CurrentCarts.Store")",
                                 width:200
                             },{
@@ -991,10 +1000,11 @@
                             },
                             pageable: {
                                 refresh: true,
-                                pageSizes: [@(gridPageSizes)]
+                                pageSizes: [@(gridPageSizes)],
+                                @Html.Partial("_GridPagerMessages")
                             },
                             editable: {
-                                confirmation: false,
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                 mode: "inline"
                             },
                             scrollable: false,
@@ -1046,6 +1056,7 @@
 {
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
 
     <div class="panel-group">
         <div class="panel panel-default">
@@ -1082,15 +1093,17 @@
                             },
                             pageable: {
                                 refresh: true,
-                                pageSizes: [@(gridPageSizes)]
+                                pageSizes: [@(gridPageSizes)],
+                                @Html.Partial("_GridPagerMessages")
                             },
                             editable: {
-                                confirmation: false,
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                 mode: "inline"
                             },
                             scrollable: false,
                             columns: [{
                                 field: "StoreName",
+                                hidden: @(stores.Count > 1 ? "false" : "true"),
                                 title: "@T("Admin.Customers.Customers.BackInStockSubscriptions.Store")",
                                 width: 200,
                             }, {
@@ -1117,6 +1130,7 @@
 {
 var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
 var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
 
     <div class="panel-group">
         <div class="panel panel-default">
@@ -1153,17 +1167,19 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                             },
                             pageable: {
                                 refresh: true,
-                                pageSizes: [@(gridPageSizes)]
+                                pageSizes: [@(gridPageSizes)],
+                                @Html.Partial("_GridPagerMessages")
                             },
                             editable: {
-                                confirmation: false,
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                 mode: "inline"
                             },
                             scrollable: false,
                             columns: [
                             {
                                 field: "StoreName",
-                                title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Store")"
+                                title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Store")",
+                                hidden: @(stores.Count > 1 ? "false" : "true"),
                             }, {
                                 field: "Points",
                                 title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Points")"
@@ -1210,7 +1226,7 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                         @Html.ValidationMessageFor(model => model.AddRewardPointsMessage)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" @(Model.RewardPointsAvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AddRewardPointsStoreId)
                     </div>

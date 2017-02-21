@@ -1,0 +1,1158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Dynamic.Runtime</name>
+  </assembly>
+  <members>
+    <member name="T:System.Dynamic.BinaryOperationBinder">
+      <summary>呼び出しサイトでの動的二項演算を表し、バインディングのセマンティクスと、操作に関する詳細な情報を提供します。</summary>
+    </member>
+    <member name="M:System.Dynamic.BinaryOperationBinder.#ctor(System.Linq.Expressions.ExpressionType)">
+      <summary>
+        <see cref="T:System.Dynamic.BinaryOperationBinder" /> クラスの新しいインスタンスを初期化します。</summary>
+      <param name="operation">二項演算の種類。</param>
+    </member>
+    <member name="M:System.Dynamic.BinaryOperationBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>動的二項演算のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的操作のターゲット。</param>
+      <param name="args">動的操作の引数の配列。</param>
+    </member>
+    <member name="M:System.Dynamic.BinaryOperationBinder.FallbackBinaryOperation(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>ターゲットの動的オブジェクトがバインドできない場合に、動的二項演算のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的二項演算のターゲット。</param>
+      <param name="arg">動的二項演算の右側のオペランド。</param>
+    </member>
+    <member name="M:System.Dynamic.BinaryOperationBinder.FallbackBinaryOperation(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>派生クラスでオーバーライドされた場合、ターゲットの動的オブジェクトがバインドできない場合に、動的二項演算のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的二項演算のターゲット。</param>
+      <param name="arg">動的二項演算の右側のオペランド。</param>
+      <param name="errorSuggestion">バインディングに失敗した場合のバインディングの結果または null。</param>
+    </member>
+    <member name="P:System.Dynamic.BinaryOperationBinder.Operation">
+      <summary>二項演算の種類。</summary>
+      <returns>二項演算の種類を表す <see cref="T:System.Linq.Expressions.ExpressionType" /> オブジェクト。</returns>
+    </member>
+    <member name="P:System.Dynamic.BinaryOperationBinder.ReturnType">
+      <summary>操作の結果型。</summary>
+      <returns>操作の結果型。</returns>
+    </member>
+    <member name="T:System.Dynamic.BindingRestrictions">
+      <summary>動的バインディングが有効となる、<see cref="T:System.Dynamic.DynamicMetaObject" /> に対するバインディング制限のセットを表します。</summary>
+    </member>
+    <member name="M:System.Dynamic.BindingRestrictions.Combine(System.Collections.Generic.IList{System.Dynamic.DynamicMetaObject})">
+      <summary>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> インスタンスのリストに含まれているバインディング制限を 1 つのセットにまとめます。</summary>
+      <returns>新しいバインディング制限のセット。</returns>
+      <param name="contributingObjects">結合する制限を含んでいる <see cref="T:System.Dynamic.DynamicMetaObject" /> インスタンスのリスト。</param>
+    </member>
+    <member name="F:System.Dynamic.BindingRestrictions.Empty">
+      <summary>空のバインディング制限のセットを表します。このフィールドは読み取り専用です。</summary>
+    </member>
+    <member name="M:System.Dynamic.BindingRestrictions.GetExpressionRestriction(System.Linq.Expressions.Expression)">
+      <summary>任意の不変のプロパティに関して式をチェックするバインディング制限を作成します。</summary>
+      <returns>新しいバインディング制限。</returns>
+      <param name="expression">制限を表す式。</param>
+    </member>
+    <member name="M:System.Dynamic.BindingRestrictions.GetInstanceRestriction(System.Linq.Expressions.Expression,System.Object)">
+      <summary>オブジェクト インスタンス ID に関して式をチェックするバインディング制限を作成します。</summary>
+      <returns>新しいバインディング制限。</returns>
+      <param name="expression">テストする式。</param>
+      <param name="instance">テストする実際のオブジェクト インスタンス。</param>
+    </member>
+    <member name="M:System.Dynamic.BindingRestrictions.GetTypeRestriction(System.Linq.Expressions.Expression,System.Type)">
+      <summary>ランタイム型 ID に関して式をチェックするバインディング制限を作成します。</summary>
+      <returns>新しいバインディング制限。</returns>
+      <param name="expression">テストする式。</param>
+      <param name="type">テストする実際の型。</param>
+    </member>
+    <member name="M:System.Dynamic.BindingRestrictions.Merge(System.Dynamic.BindingRestrictions)">
+      <summary>バインディング制限のセットを現在のバインディング制限にマージします。</summary>
+      <returns>新しいバインディング制限のセット。</returns>
+      <param name="restrictions">現在のバインディング制限にマージするバインディング制限のセット。</param>
+    </member>
+    <member name="M:System.Dynamic.BindingRestrictions.ToExpression">
+      <summary>バインディング制限を表す <see cref="T:System.Linq.Expressions.Expression" /> を作成します。</summary>
+      <returns>制限を表す式ツリー。</returns>
+    </member>
+    <member name="T:System.Dynamic.CallInfo">
+      <summary>動的バインディング プロセスの引数を定義します。</summary>
+    </member>
+    <member name="M:System.Dynamic.CallInfo.#ctor(System.Int32,System.Collections.Generic.IEnumerable{System.String})">
+      <summary>動的バインディング プロセスの引数を表す新しい CallInfo を作成します。</summary>
+      <param name="argCount">引数の数。</param>
+      <param name="argNames">引数の名前。</param>
+    </member>
+    <member name="M:System.Dynamic.CallInfo.#ctor(System.Int32,System.String[])">
+      <summary>新しい PositionalArgumentInfo を作成します。</summary>
+      <param name="argCount">引数の数。</param>
+      <param name="argNames">引数の名前。</param>
+    </member>
+    <member name="P:System.Dynamic.CallInfo.ArgumentCount">
+      <summary>引数の数。</summary>
+      <returns>引数の数。</returns>
+    </member>
+    <member name="P:System.Dynamic.CallInfo.ArgumentNames">
+      <summary>引数の名前。</summary>
+      <returns>引数名の読み取り専用コレクション。</returns>
+    </member>
+    <member name="M:System.Dynamic.CallInfo.Equals(System.Object)">
+      <summary>指定された CallInfo インスタンスが現在のインスタンスと等しいかどうかを判断します。</summary>
+      <returns>指定したインスタンスが現在のインスタンスと等しい場合は true。それ以外の場合は false。</returns>
+      <param name="obj">現在のインスタンスと比較する <see cref="T:System.Dynamic.CallInfo" /> のインスタンス。</param>
+    </member>
+    <member name="M:System.Dynamic.CallInfo.GetHashCode">
+      <summary>現在の <see cref="T:System.Dynamic.CallInfo" /> のハッシュ関数として機能します。</summary>
+      <returns>現在の <see cref="T:System.Dynamic.CallInfo" /> のハッシュ コード。</returns>
+    </member>
+    <member name="T:System.Dynamic.ConvertBinder">
+      <summary>呼び出しサイトでの動的変換操作を表し、バインディングのセマンティクスと、操作に関する詳細な情報を提供します。</summary>
+    </member>
+    <member name="M:System.Dynamic.ConvertBinder.#ctor(System.Type,System.Boolean)">
+      <summary>
+        <see cref="T:System.Dynamic.ConvertBinder" />の新しいインスタンスを初期化します。</summary>
+      <param name="type">変換後の型。</param>
+      <param name="explicit">明示的な変換を考慮する必要がある場合は true。それ以外の場合は false。</param>
+    </member>
+    <member name="M:System.Dynamic.ConvertBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>動的変換操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的変換操作のターゲット。</param>
+      <param name="args">動的変換操作の引数の配列。</param>
+    </member>
+    <member name="P:System.Dynamic.ConvertBinder.Explicit">
+      <summary>明示的な変換を考慮する必要があるかどうかを示す値を取得します。</summary>
+      <returns>明示的な変換が存在する場合は True。それ以外の場合は false。</returns>
+    </member>
+    <member name="M:System.Dynamic.ConvertBinder.FallbackConvert(System.Dynamic.DynamicMetaObject)">
+      <summary>ターゲットの動的オブジェクトがバインドできない場合に、動的変換操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的変換操作のターゲット。</param>
+    </member>
+    <member name="M:System.Dynamic.ConvertBinder.FallbackConvert(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>派生クラスでオーバーライドされた場合、ターゲットの動的オブジェクトがバインドできない場合に、動的変換操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的変換操作のターゲット。</param>
+      <param name="errorSuggestion">バインディングに失敗した場合に使用するバインディングの結果または null。</param>
+    </member>
+    <member name="P:System.Dynamic.ConvertBinder.ReturnType">
+      <summary>操作の結果型。</summary>
+      <returns>操作の結果型を表す <see cref="T:System.Type" /> オブジェクト。</returns>
+    </member>
+    <member name="P:System.Dynamic.ConvertBinder.Type">
+      <summary>変換後の型。</summary>
+      <returns>変換後の型を表す <see cref="T:System.Type" /> オブジェクト。</returns>
+    </member>
+    <member name="T:System.Dynamic.CreateInstanceBinder">
+      <summary>呼び出しサイトでの動的作成操作を表し、バインディングのセマンティクスと、操作に関する詳細な情報を提供します。</summary>
+    </member>
+    <member name="M:System.Dynamic.CreateInstanceBinder.#ctor(System.Dynamic.CallInfo)">
+      <summary>
+        <see cref="T:System.Dynamic.CreateInstanceBinder" /> の新しいインスタンスを初期化します。</summary>
+      <param name="callInfo">呼び出しサイトの引数のシグネチャ。</param>
+    </member>
+    <member name="M:System.Dynamic.CreateInstanceBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>動的作成操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的作成操作のターゲット。</param>
+      <param name="args">動的作成操作の引数の配列。</param>
+    </member>
+    <member name="P:System.Dynamic.CreateInstanceBinder.CallInfo">
+      <summary>呼び出しサイトの引数のシグネチャを取得します。</summary>
+      <returns>呼び出しサイトの引数のシグネチャ。</returns>
+    </member>
+    <member name="M:System.Dynamic.CreateInstanceBinder.FallbackCreateInstance(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>ターゲットの動的オブジェクトがバインドできない場合に、動的作成操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的作成操作のターゲット。</param>
+      <param name="args">動的作成操作の引数。</param>
+    </member>
+    <member name="M:System.Dynamic.CreateInstanceBinder.FallbackCreateInstance(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>派生クラスでオーバーライドされた場合、ターゲットの動的オブジェクトがバインドできない場合に、動的作成操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的作成操作のターゲット。</param>
+      <param name="args">動的作成操作の引数。</param>
+      <param name="errorSuggestion">バインディングに失敗した場合に使用するバインディングの結果または null。</param>
+    </member>
+    <member name="P:System.Dynamic.CreateInstanceBinder.ReturnType">
+      <summary>操作の結果型。</summary>
+      <returns>操作の結果型を表す <see cref="T:System.Type" /> オブジェクト。</returns>
+    </member>
+    <member name="T:System.Dynamic.DeleteIndexBinder">
+      <summary>呼び出しサイトでの動的インデックス削除操作を表し、バインディングのセマンティクスと、操作に関する詳細な情報を提供します。</summary>
+    </member>
+    <member name="M:System.Dynamic.DeleteIndexBinder.#ctor(System.Dynamic.CallInfo)">
+      <summary>
+        <see cref="T:System.Dynamic.DeleteIndexBinder" />の新しいインスタンスを初期化します。</summary>
+      <param name="callInfo">呼び出しサイトの引数のシグネチャ。</param>
+    </member>
+    <member name="M:System.Dynamic.DeleteIndexBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>動的インデックス削除操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的インデックス削除操作のターゲット。</param>
+      <param name="args">動的インデックス削除操作の引数の配列。</param>
+    </member>
+    <member name="P:System.Dynamic.DeleteIndexBinder.CallInfo">
+      <summary>呼び出しサイトの引数のシグネチャを取得します。</summary>
+      <returns>呼び出しサイトの引数のシグネチャ。</returns>
+    </member>
+    <member name="M:System.Dynamic.DeleteIndexBinder.FallbackDeleteIndex(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>ターゲットの動的オブジェクトがバインドできない場合に、動的インデックス削除操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的インデックス削除操作のターゲット。</param>
+      <param name="indexes">動的インデックス削除操作の引数。</param>
+    </member>
+    <member name="M:System.Dynamic.DeleteIndexBinder.FallbackDeleteIndex(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>派生クラスでオーバーライドされた場合、ターゲットの動的オブジェクトがバインドできない場合に、動的インデックス削除操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的インデックス削除操作のターゲット。</param>
+      <param name="indexes">動的インデックス削除操作の引数。</param>
+      <param name="errorSuggestion">バインディングに失敗した場合に使用するバインディングの結果または null。</param>
+    </member>
+    <member name="P:System.Dynamic.DeleteIndexBinder.ReturnType">
+      <summary>操作の結果型。</summary>
+      <returns>操作の結果型を表す <see cref="T:System.Type" /> オブジェクト。</returns>
+    </member>
+    <member name="T:System.Dynamic.DeleteMemberBinder">
+      <summary>呼び出しサイトでの動的メンバー削除操作を表し、バインディングのセマンティクスと、操作に関する詳細な情報を提供します。</summary>
+    </member>
+    <member name="M:System.Dynamic.DeleteMemberBinder.#ctor(System.String,System.Boolean)">
+      <summary>
+        <see cref="T:System.Dynamic.DeleteIndexBinder" />の新しいインスタンスを初期化します。</summary>
+      <param name="name">削除するメンバーの名前。</param>
+      <param name="ignoreCase">名前のマッチングで大文字と小文字の区別を無視する場合は true。それ以外の場合は false。</param>
+    </member>
+    <member name="M:System.Dynamic.DeleteMemberBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>動的メンバー削除操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的メンバー削除操作のターゲット。</param>
+      <param name="args">動的メンバー削除操作の引数の配列。</param>
+    </member>
+    <member name="M:System.Dynamic.DeleteMemberBinder.FallbackDeleteMember(System.Dynamic.DynamicMetaObject)">
+      <summary>ターゲットの動的オブジェクトがバインドできない場合に、動的メンバー削除操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的メンバー削除操作のターゲット。</param>
+    </member>
+    <member name="M:System.Dynamic.DeleteMemberBinder.FallbackDeleteMember(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>派生クラスでオーバーライドされた場合、ターゲットの動的オブジェクトがバインドできない場合に、動的メンバー削除操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的メンバー削除操作のターゲット。</param>
+      <param name="errorSuggestion">バインディングに失敗した場合に使用するバインディングの結果または null。</param>
+    </member>
+    <member name="P:System.Dynamic.DeleteMemberBinder.IgnoreCase">
+      <summary>文字列比較でメンバー名の大文字と小文字を区別するかどうかを示す値を取得します。</summary>
+      <returns>文字列比較で大文字と小文字を区別しない場合は true、それ以外の場合は false。</returns>
+    </member>
+    <member name="P:System.Dynamic.DeleteMemberBinder.Name">
+      <summary>削除するメンバーの名前を取得します。</summary>
+      <returns>削除するメンバーの名前。</returns>
+    </member>
+    <member name="P:System.Dynamic.DeleteMemberBinder.ReturnType">
+      <summary>操作の結果型。</summary>
+      <returns>操作の結果型を表す <see cref="T:System.Type" /> オブジェクト。</returns>
+    </member>
+    <member name="T:System.Dynamic.DynamicMetaObject">
+      <summary>動的バインディングと、動的バインディングに参加しているオブジェクトのバインディング ロジックを表します。</summary>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.#ctor(System.Linq.Expressions.Expression,System.Dynamic.BindingRestrictions)">
+      <summary>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> クラスの新しいインスタンスを初期化します。</summary>
+      <param name="expression">動的バインディング プロセスにおいてこの <see cref="T:System.Dynamic.DynamicMetaObject" /> を表す式。</param>
+      <param name="restrictions">バインディングが有効となるバインディング制限のセット。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.#ctor(System.Linq.Expressions.Expression,System.Dynamic.BindingRestrictions,System.Object)">
+      <summary>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> クラスの新しいインスタンスを初期化します。</summary>
+      <param name="expression">動的バインディング プロセスにおいてこの <see cref="T:System.Dynamic.DynamicMetaObject" /> を表す式。</param>
+      <param name="restrictions">バインディングが有効となるバインディング制限のセット。</param>
+      <param name="value">
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> が表すランタイム値。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindBinaryOperation(System.Dynamic.BinaryOperationBinder,System.Dynamic.DynamicMetaObject)">
+      <summary>動的二項演算のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す新しい <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="binder">動的操作の詳細を表す <see cref="T:System.Dynamic.BinaryOperationBinder" /> のインスタンス。</param>
+      <param name="arg">二項演算の右項を表す <see cref="T:System.Dynamic.DynamicMetaObject" /> のインスタンス。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindConvert(System.Dynamic.ConvertBinder)">
+      <summary>動的変換操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す新しい <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="binder">動的操作の詳細を表す <see cref="T:System.Dynamic.ConvertBinder" /> のインスタンス。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindCreateInstance(System.Dynamic.CreateInstanceBinder,System.Dynamic.DynamicMetaObject[])">
+      <summary>動的インスタンス作成操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す新しい <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="binder">動的操作の詳細を表す <see cref="T:System.Dynamic.CreateInstanceBinder" /> のインスタンス。</param>
+      <param name="args">
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> のインスタンスの配列 (インスタンス作成操作に対する引数)。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindDeleteIndex(System.Dynamic.DeleteIndexBinder,System.Dynamic.DynamicMetaObject[])">
+      <summary>動的インデックス削除操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す新しい <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="binder">動的操作の詳細を表す <see cref="T:System.Dynamic.DeleteIndexBinder" /> のインスタンス。</param>
+      <param name="indexes">
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> のインスタンスの配列 (インデックス削除操作のインデックス)。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindDeleteMember(System.Dynamic.DeleteMemberBinder)">
+      <summary>動的メンバー削除操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す新しい <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="binder">動的操作の詳細を表す <see cref="T:System.Dynamic.DeleteMemberBinder" /> のインスタンス。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindGetIndex(System.Dynamic.GetIndexBinder,System.Dynamic.DynamicMetaObject[])">
+      <summary>動的インデックス取得操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す新しい <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="binder">動的操作の詳細を表す <see cref="T:System.Dynamic.GetIndexBinder" /> のインスタンス。</param>
+      <param name="indexes">
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> のインスタンスの配列 (インデックス取得操作のインデックス)。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindGetMember(System.Dynamic.GetMemberBinder)">
+      <summary>動的メンバー取得操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す新しい <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="binder">動的操作の詳細を表す <see cref="T:System.Dynamic.GetMemberBinder" /> のインスタンス。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindInvoke(System.Dynamic.InvokeBinder,System.Dynamic.DynamicMetaObject[])">
+      <summary>動的呼び出し操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す新しい <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="binder">動的操作の詳細を表す <see cref="T:System.Dynamic.InvokeBinder" /> のインスタンス。</param>
+      <param name="args">
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> のインスタンスの配列 (呼び出し操作に対する引数)。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindInvokeMember(System.Dynamic.InvokeMemberBinder,System.Dynamic.DynamicMetaObject[])">
+      <summary>動的メンバー呼び出し操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す新しい <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="binder">動的操作の詳細を表す <see cref="T:System.Dynamic.InvokeMemberBinder" /> のインスタンス。</param>
+      <param name="args">
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> のインスタンスの配列 (メンバーの呼び出し操作に対する引数)。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindSetIndex(System.Dynamic.SetIndexBinder,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>動的インデックス設定操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す新しい <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="binder">動的操作の詳細を表す <see cref="T:System.Dynamic.SetIndexBinder" /> のインスタンス。</param>
+      <param name="indexes">
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> のインスタンスの配列 (インデックス設定操作のインデックス)。</param>
+      <param name="value">インデックス設定操作の値を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindSetMember(System.Dynamic.SetMemberBinder,System.Dynamic.DynamicMetaObject)">
+      <summary>動的メンバー設定操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す新しい <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="binder">動的操作の詳細を表す <see cref="T:System.Dynamic.SetMemberBinder" /> のインスタンス。</param>
+      <param name="value">メンバー設定操作の値を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.BindUnaryOperation(System.Dynamic.UnaryOperationBinder)">
+      <summary>動的単項演算のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す新しい <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="binder">動的操作の詳細を表す <see cref="T:System.Dynamic.UnaryOperationBinder" /> のインスタンス。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.Create(System.Object,System.Linq.Expressions.Expression)">
+      <summary>指定されたオブジェクトのメタオブジェクトを作成します。</summary>
+      <returns>指定されたオブジェクトが <see cref="T:System.Dynamic.IDynamicMetaObjectProvider" /> を実装し、なおかつ (現在の AppDomain 外の) リモート オブジェクトではない場合、<see cref="M:System.Dynamic.IDynamicMetaObjectProvider.GetMetaObject(System.Linq.Expressions.Expression)" /> が返すオブジェクトの固有のメタオブジェクトが返されます。それ以外の場合は、制限のない通常のメタオブジェクトが新たに作成されて、返されます。</returns>
+      <param name="value">メタオブジェクトの取得対象となるオブジェクト。</param>
+      <param name="expression">動的バインディング プロセスにおいてこの <see cref="T:System.Dynamic.DynamicMetaObject" /> を表す式。</param>
+    </member>
+    <member name="F:System.Dynamic.DynamicMetaObject.EmptyMetaObjects">
+      <summary>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> 型の空の配列を表します。このフィールドは読み取り専用です。</summary>
+    </member>
+    <member name="P:System.Dynamic.DynamicMetaObject.Expression">
+      <summary>動的バインディング プロセスにおいて <see cref="T:System.Dynamic.DynamicMetaObject" /> を表す式。</summary>
+      <returns>動的バインディング プロセスにおいて <see cref="T:System.Dynamic.DynamicMetaObject" /> を表す式。</returns>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObject.GetDynamicMemberNames">
+      <summary>すべての動的メンバー名の列挙値を返します。</summary>
+      <returns>動的メンバー名のリスト。</returns>
+    </member>
+    <member name="P:System.Dynamic.DynamicMetaObject.HasValue">
+      <summary>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> にランタイム値が存在するかどうかを示す値を取得します。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> にランタイム値が存在する場合は true。それ以外の場合は false。</returns>
+    </member>
+    <member name="P:System.Dynamic.DynamicMetaObject.LimitType">
+      <summary>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> の制限型を取得します。</summary>
+      <returns>ランタイム値が利用できる場合は <see cref="P:System.Dynamic.DynamicMetaObject.RuntimeType" />。それ以外の場合は <see cref="P:System.Dynamic.DynamicMetaObject.Expression" /> の型。</returns>
+    </member>
+    <member name="P:System.Dynamic.DynamicMetaObject.Restrictions">
+      <summary>バインディングが有効となるバインディング制限のセット。</summary>
+      <returns>バインディング制限のセット。</returns>
+    </member>
+    <member name="P:System.Dynamic.DynamicMetaObject.RuntimeType">
+      <summary>ランタイム値の <see cref="T:System.Type" /> を取得します。<see cref="T:System.Dynamic.DynamicMetaObject" /> に値が関連付けられていない場合は null です。</summary>
+      <returns>ランタイム値の <see cref="T:System.Type" /> または null。</returns>
+    </member>
+    <member name="P:System.Dynamic.DynamicMetaObject.Value">
+      <summary>この <see cref="T:System.Dynamic.DynamicMetaObject" /> が表すランタイム値。</summary>
+      <returns>この <see cref="T:System.Dynamic.DynamicMetaObject" /> が表すランタイム値。</returns>
+    </member>
+    <member name="T:System.Dynamic.DynamicMetaObjectBinder">
+      <summary>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> バインディング プロトコルに参加する動的呼び出しサイトのバインダー。</summary>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObjectBinder.#ctor">
+      <summary>
+        <see cref="T:System.Dynamic.DynamicMetaObjectBinder" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObjectBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>派生クラスでオーバーライドされた場合、動的操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的操作のターゲット。</param>
+      <param name="args">動的操作の引数の配列。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObjectBinder.Bind(System.Object[],System.Collections.ObjectModel.ReadOnlyCollection{System.Linq.Expressions.ParameterExpression},System.Linq.Expressions.LabelTarget)">
+      <summary>引数のセットに対して動的操作の実行時バインディングを実行します。</summary>
+      <returns>動的操作の引数に対してテストを実行し、テストが有効な場合に動的操作を実行する Expression。後続の動的操作でテストが失敗すると、Bind が再び呼び出され、新しい引数の型に対する新しい <see cref="T:System.Linq.Expressions.Expression" /> が生成されます。</returns>
+      <param name="args">動的操作の引数の配列。</param>
+      <param name="parameters">バインディング プロセスでの呼び出しサイトのパラメーターを表す <see cref="T:System.Linq.Expressions.ParameterExpression" /> インスタンスの配列。</param>
+      <param name="returnLabel">動的バインディングの結果を返すために使用される LabelTarget。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObjectBinder.Defer(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>動的操作の引数のランタイム値がすべて計算されるまで、操作のバインディングを保留します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的操作のターゲット。</param>
+      <param name="args">動的操作の引数の配列。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObjectBinder.Defer(System.Dynamic.DynamicMetaObject[])">
+      <summary>動的操作の引数のランタイム値がすべて計算されるまで、操作のバインディングを保留します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="args">動的操作の引数の配列。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicMetaObjectBinder.GetUpdateExpression(System.Type)">
+      <summary>バインディングを更新する式を取得します。これは、式のバインディングが有効でなくなったことを示します。通常は、動的オブジェクトの "バージョン" が変更された場合に使用します。</summary>
+      <returns>更新式。</returns>
+      <param name="type">結果として得られる式の <see cref="P:System.Linq.Expressions.Expression.Type" /> プロパティ。任意の型を使用できます。</param>
+    </member>
+    <member name="P:System.Dynamic.DynamicMetaObjectBinder.ReturnType">
+      <summary>操作の結果型。</summary>
+      <returns>操作の結果型を表す <see cref="T:System.Type" /> オブジェクト。</returns>
+    </member>
+    <member name="T:System.Dynamic.DynamicObject">
+      <summary>実行時の動的な動作を指定するための基本クラスを提供します。このクラスは継承する必要があり、直接インスタンス化することはできません。</summary>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.#ctor">
+      <summary>派生型で <see cref="T:System.Dynamic.DynamicObject" /> 型の新しいインスタンスを初期化できるようにします。</summary>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.GetDynamicMemberNames">
+      <summary>すべての動的メンバー名の列挙値を返します。</summary>
+      <returns>動的メンバー名を含むシーケンス。</returns>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.GetMetaObject(System.Linq.Expressions.Expression)">
+      <summary>動的仮想メソッドにディスパッチされる <see cref="T:System.Dynamic.DynamicMetaObject" /> を提供します。このオブジェクトを別の <see cref="T:System.Dynamic.DynamicMetaObject" /> の内部にカプセル化することにより、個々のアクションのカスタム動作を指定することができます。このメソッドは言語実装者向けの DLR (動的言語ランタイム) インフラストラクチャをサポートします。コードから直接使用するためのものではありません。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> 型のオブジェクト。</returns>
+      <param name="parameter">動的仮想メソッドにディスパッチされる <see cref="T:System.Dynamic.DynamicMetaObject" /> を表す式。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryBinaryOperation(System.Dynamic.BinaryOperationBinder,System.Object,System.Object@)">
+      <summary>二項演算の実装を提供します。<see cref="T:System.Dynamic.DynamicObject" /> クラスの派生クラスでこのメソッドをオーバーライドして、加算や乗算などの演算の動的な動作を指定できます。</summary>
+      <returns>操作が正常に終了した場合は true。それ以外の場合は false。このメソッドが false を返す場合、言語のランタイム バインダーによって動作が決まります (ほとんどの場合、言語固有の実行時例外がスローされます)。</returns>
+      <param name="binder">二項演算に関する情報を提供します。binder.Operation プロパティは、<see cref="T:System.Linq.Expressions.ExpressionType" /> オブジェクトを返します。たとえば、first および second が DynamicObject クラスから派生している sum = first + second ステートメントの場合、binder.Operation は ExpressionType.Add を返します。</param>
+      <param name="arg">二項演算の右オペランド。たとえば、first および second が DynamicObject クラスから派生している sum = first + second ステートメントの場合、<paramref name="arg" /> と second は等価です。</param>
+      <param name="result">二項演算の結果。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryConvert(System.Dynamic.ConvertBinder,System.Object@)">
+      <summary>型変換演算の実装を提供します。<see cref="T:System.Dynamic.DynamicObject" /> クラスの派生クラスでこのメソッドをオーバーライドして、オブジェクトの型を別の型に変換する演算の動的な動作を指定できます。</summary>
+      <returns>操作が正常に終了した場合は true。それ以外の場合は false。このメソッドが false を返す場合、言語のランタイム バインダーによって動作が決まります (ほとんどの場合、言語固有の実行時例外がスローされます)。</returns>
+      <param name="binder">変換演算に関する情報を提供します。binder.Type プロパティは、オブジェクトの変換後の型を提供します。たとえば、sampleObject が <see cref="T:System.Dynamic.DynamicObject" /> クラスから派生したクラスのインスタンスである C# の (String)sampleObject ステートメント (Visual Basic では CType(sampleObject, Type)) の場合、binder.Type は <see cref="T:System.String" /> 型を返します。binder.Explicit プロパティは、行われる変換の種類に関する情報を提供します。このプロパティは、明示的な変換の場合は true、暗黙の変換の場合は false を返します。</param>
+      <param name="result">型変換演算の結果。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryCreateInstance(System.Dynamic.CreateInstanceBinder,System.Object[],System.Object@)">
+      <summary>動的オブジェクトの新しいインスタンスを初期化する演算の実装を提供します。このメソッドは、C# または Visual Basic で使用するためのものではありません。</summary>
+      <returns>操作が正常に終了した場合は true。それ以外の場合は false。このメソッドが false を返す場合、言語のランタイム バインダーによって動作が決まります (ほとんどの場合、言語固有の実行時例外がスローされます)。</returns>
+      <param name="binder">初期化演算に関する情報を提供します。</param>
+      <param name="args">初期化中にオブジェクトに渡される引数。たとえば、SampleType が <see cref="T:System.Dynamic.DynamicObject" /> クラスから派生している型である new SampleType(100) 演算の場合、<paramref name="args[0]" /> と 100 は等価です。</param>
+      <param name="result">初期化の結果。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryDeleteIndex(System.Dynamic.DeleteIndexBinder,System.Object[])">
+      <summary>インデックスを使用してオブジェクトを削除する演算の実装を提供します。このメソッドは、C# または Visual Basic で使用するためのものではありません。</summary>
+      <returns>操作が正常に終了した場合は true。それ以外の場合は false。このメソッドが false を返す場合、言語のランタイム バインダーによって動作が決まります (ほとんどの場合、言語固有の実行時例外がスローされます)。</returns>
+      <param name="binder">削除に関する情報を提供します。</param>
+      <param name="indexes">削除するインデックス。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryDeleteMember(System.Dynamic.DeleteMemberBinder)">
+      <summary>オブジェクト メンバーを削除する演算の実装を提供します。このメソッドは、C# または Visual Basic で使用するためのものではありません。</summary>
+      <returns>操作が正常に終了した場合は true。それ以外の場合は false。このメソッドが false を返す場合、言語のランタイム バインダーによって動作が決まります (ほとんどの場合、言語固有の実行時例外がスローされます)。</returns>
+      <param name="binder">削除に関する情報を提供します。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryGetIndex(System.Dynamic.GetIndexBinder,System.Object[],System.Object@)">
+      <summary>インデックスを使用して値を取得する演算の実装を提供します。<see cref="T:System.Dynamic.DynamicObject" /> クラスの派生クラスでこのメソッドをオーバーライドして、インデックス演算の動的な動作を指定できます。</summary>
+      <returns>操作が正常に終了した場合は true。それ以外の場合は false。このメソッドが false を返す場合、言語のランタイム バインダーによって動作が決まります (ほとんどの場合、実行時例外がスローされます)。</returns>
+      <param name="binder">演算に関する情報を提供します。</param>
+      <param name="indexes">演算に使用されるインデックス。たとえば、sampleObject が DynamicObject クラスから派生している型である C# の sampleObject[3] 演算 (Visual Basic では sampleObject(3)) の場合、<paramref name="indexes[0]" /> と 3 は等価です。</param>
+      <param name="result">インデックス演算の結果。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryGetMember(System.Dynamic.GetMemberBinder,System.Object@)">
+      <summary>メンバー値を取得する演算の実装を提供します。<see cref="T:System.Dynamic.DynamicObject" /> クラスの派生クラスでこのメソッドをオーバーライドして、プロパティ値の取得などの演算の動的な動作を指定できます。</summary>
+      <returns>操作が正常に終了した場合は true。それ以外の場合は false。このメソッドが false を返す場合、言語のランタイム バインダーによって動作が決まります (ほとんどの場合、実行時例外がスローされます)。</returns>
+      <param name="binder">動的演算を呼び出したオブジェクトに関する情報を提供します。binder.Name プロパティは、動的演算の対象であるメンバーの名前を提供します。たとえば、sampleObject が <see cref="T:System.Dynamic.DynamicObject" /> クラスから派生したクラスのインスタンスである Console.WriteLine(sampleObject.SampleProperty) ステートメントの場合、binder.Name は "SampleProperty" を返します。メンバー名で大文字と小文字を区別するかどうかを binder.IgnoreCase プロパティで指定します。</param>
+      <param name="result">取得操作の結果。たとえば、このメソッドがプロパティに対して呼び出された場合、プロパティ値を <paramref name="result" /> に割り当てることができます。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryInvoke(System.Dynamic.InvokeBinder,System.Object[],System.Object@)">
+      <summary>オブジェクトを呼び出す演算の実装を提供します。<see cref="T:System.Dynamic.DynamicObject" /> クラスの派生クラスでこのメソッドをオーバーライドして、オブジェクトやデリゲートの呼び出しなどの演算の動的な動作を指定できます。</summary>
+      <returns>操作が正常に終了した場合は true。それ以外の場合は false。このメソッドが false を返す場合、言語のランタイム バインダーによって動作が決まります (ほとんどの場合、言語固有の実行時例外がスローされます)。</returns>
+      <param name="binder">呼び出し演算に関する情報を提供します。</param>
+      <param name="args">呼び出し演算でオブジェクトに渡される引数。たとえば、sampleObject が <see cref="T:System.Dynamic.DynamicObject" /> クラスから派生している sampleObject(100) 演算の場合、<paramref name="args[0]" /> と 100 は等価です。</param>
+      <param name="result">オブジェクト呼び出しの結果。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryInvokeMember(System.Dynamic.InvokeMemberBinder,System.Object[],System.Object@)">
+      <summary>メンバーを呼び出す演算の実装を提供します。<see cref="T:System.Dynamic.DynamicObject" /> クラスの派生クラスでこのメソッドをオーバーライドして、メソッドの呼び出しなどの演算の動的な動作を指定できます。</summary>
+      <returns>操作が正常に終了した場合は true。それ以外の場合は false。このメソッドが false を返す場合、言語のランタイム バインダーによって動作が決まります (ほとんどの場合、言語固有の実行時例外がスローされます)。</returns>
+      <param name="binder">動的な演算に関する情報を提供します。binder.Name プロパティは、動的演算の対象であるメンバーの名前を提供します。たとえば、sampleObject が <see cref="T:System.Dynamic.DynamicObject" /> クラスから派生したクラスのインスタンスである sampleObject.SampleMethod(100) ステートメントの場合、binder.Name は "SampleMethod" を返します。メンバー名で大文字と小文字を区別するかどうかを binder.IgnoreCase プロパティで指定します。</param>
+      <param name="args">呼び出し演算でオブジェクト メンバーに渡される引数。たとえば、sampleObject が <see cref="T:System.Dynamic.DynamicObject" /> クラスから派生している sampleObject.SampleMethod(100) ステートメントの場合、<paramref name="args[0]" /> と 100 は等価です。</param>
+      <param name="result">メンバー呼び出しの結果。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TrySetIndex(System.Dynamic.SetIndexBinder,System.Object[],System.Object)">
+      <summary>インデックスを使用して値を設定する演算の実装を提供します。<see cref="T:System.Dynamic.DynamicObject" /> クラスの派生クラスでこのメソッドをオーバーライドして、指定したインデックスを使用してオブジェクトにアクセスする演算の動的な動作を指定できます。</summary>
+      <returns>操作が正常に終了した場合は true。それ以外の場合は false。このメソッドが false を返す場合、言語のランタイム バインダーによって動作が決まります (ほとんどの場合、言語固有の実行時例外がスローされます)。</returns>
+      <param name="binder">演算に関する情報を提供します。</param>
+      <param name="indexes">演算に使用されるインデックス。たとえば、sampleObject が <see cref="T:System.Dynamic.DynamicObject" /> クラスから派生している型である C# の sampleObject[3] = 10 演算 (Visual Basic では sampleObject(3) = 10) の場合、<paramref name="indexes[0]" /> と 3 は等価です。</param>
+      <param name="value">指定したインデックスのオブジェクトに設定する値。たとえば、sampleObject が <see cref="T:System.Dynamic.DynamicObject" /> クラスから派生している型である C# の sampleObject[3] = 10 演算 (Visual Basic では sampleObject(3) = 10) の場合、<paramref name="value" /> と 10 は等価です。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TrySetMember(System.Dynamic.SetMemberBinder,System.Object)">
+      <summary>メンバー値を設定する演算の実装を提供します。<see cref="T:System.Dynamic.DynamicObject" /> クラスの派生クラスでこのメソッドをオーバーライドして、プロパティ値の設定などの演算の動的な動作を指定できます。</summary>
+      <returns>操作が正常に終了した場合は true。それ以外の場合は false。このメソッドが false を返す場合、言語のランタイム バインダーによって動作が決まります (ほとんどの場合、言語固有の実行時例外がスローされます)。</returns>
+      <param name="binder">動的演算を呼び出したオブジェクトに関する情報を提供します。binder.Name プロパティは、値の割り当て先のメンバーの名前を提供します。たとえば、sampleObject が <see cref="T:System.Dynamic.DynamicObject" /> クラスから派生したクラスのインスタンスである sampleObject.SampleProperty = "Test" ステートメントの場合、binder.Name は "SampleProperty" を返します。メンバー名で大文字と小文字を区別するかどうかを binder.IgnoreCase プロパティで指定します。</param>
+      <param name="value">メンバーに設定する値。たとえば、sampleObject が <see cref="T:System.Dynamic.DynamicObject" /> クラスから派生したクラスのインスタンスである sampleObject.SampleProperty = "Test" の場合、<paramref name="value" /> は "Test" です。</param>
+    </member>
+    <member name="M:System.Dynamic.DynamicObject.TryUnaryOperation(System.Dynamic.UnaryOperationBinder,System.Object@)">
+      <summary>単項演算の実装を提供します。<see cref="T:System.Dynamic.DynamicObject" /> クラスの派生クラスでこのメソッドをオーバーライドして、否定、インクリメント、デクリメントなどの演算の動的な動作を指定できます。</summary>
+      <returns>操作が正常に終了した場合は true。それ以外の場合は false。このメソッドが false を返す場合、言語のランタイム バインダーによって動作が決まります (ほとんどの場合、言語固有の実行時例外がスローされます)。</returns>
+      <param name="binder">単項演算に関する情報を提供します。binder.Operation プロパティは、<see cref="T:System.Linq.Expressions.ExpressionType" /> オブジェクトを返します。たとえば、number が DynamicObject クラスから派生している negativeNumber = -number ステートメントの場合、binder.Operation は "Negate" を返します。</param>
+      <param name="result">単項演算の結果。</param>
+    </member>
+    <member name="T:System.Dynamic.ExpandoObject">
+      <summary>実行時にメンバーを動的に追加および削除できるオブジェクトを表します。</summary>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.#ctor">
+      <summary>メンバーを持たない新しい ExpandoObject を初期化します。</summary>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#ICollection{T}#Add(System.Collections.Generic.KeyValuePair{System.String,System.Object})">
+      <summary>指定したキーを持つ <see cref="T:System.Collections.Generic.ICollection`1" /> に指定した値を追加します。</summary>
+      <param name="item">コレクションに追加するキーと値を表す <see cref="T:System.Collections.Generic.KeyValuePair`2" /> 構造体。</param>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#ICollection{T}#Clear">
+      <summary>コレクションからすべての項目を削除します。</summary>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#ICollection{T}#Contains(System.Collections.Generic.KeyValuePair{System.String,System.Object})">
+      <summary>
+        <see cref="T:System.Collections.Generic.ICollection`1" /> に特定のキーと値が格納されているかどうかを判断します。</summary>
+      <returns>特定のキーと値がコレクションに格納されている場合は true。それ以外の場合は false。</returns>
+      <param name="item">
+        <see cref="T:System.Collections.Generic.ICollection`1" /> 内で検索される <see cref="T:System.Collections.Generic.KeyValuePair`2" /> 構造体。</param>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#ICollection{T}#CopyTo(System.Collections.Generic.KeyValuePair{System.String,System.Object}[],System.Int32)">
+      <summary>指定した配列インデックスを開始位置として、<see cref="T:System.Collections.Generic.KeyValuePair`2" /> 型の配列に <see cref="T:System.Collections.Generic.ICollection`1" /> の要素をコピーします。</summary>
+      <param name="array">
+        <see cref="T:System.Collections.Generic.ICollection`1" /> からコピーされる <see cref="T:System.Collections.Generic.KeyValuePair`2" /> 要素のコピー先である <see cref="T:System.Collections.Generic.KeyValuePair`2" /> 型の 1 次元配列。配列では 0 から始まるインデックスを使用する必要があります。</param>
+      <param name="arrayIndex">コピーの開始位置となる、<paramref name="array" /> の 0 から始まるインデックス。</param>
+    </member>
+    <member name="P:System.Dynamic.ExpandoObject.System#Collections#Generic#ICollection{T}#Count">
+      <summary>
+        <see cref="T:System.Collections.Generic.ICollection`1" /> にある要素の数を取得します。</summary>
+      <returns>
+        <see cref="T:System.Collections.Generic.ICollection`1" /> にある要素の数。</returns>
+    </member>
+    <member name="P:System.Dynamic.ExpandoObject.System#Collections#Generic#ICollection{T}#IsReadOnly">
+      <summary>
+        <see cref="T:System.Collections.Generic.ICollection`1" /> が読み取り専用かどうかを示す値を取得します。</summary>
+      <returns>
+        <see cref="T:System.Collections.Generic.ICollection`1" /> が読み取り専用である場合は true。それ以外の場合は false。</returns>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#ICollection{T}#Remove(System.Collections.Generic.KeyValuePair{System.String,System.Object})">
+      <summary>コレクションからキーと値を削除します。</summary>
+      <returns>キーと値が見つかり、正常に削除された場合は true。それ以外の場合は false。このメソッドは、キーと値が <see cref="T:System.Collections.Generic.ICollection`1" /> で見つからなかった場合にも false を返します。</returns>
+      <param name="item">コレクションから削除するキーと値を表す <see cref="T:System.Collections.Generic.KeyValuePair`2" /> 構造体。</param>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#IDictionary{TKey@TValue}#Add(System.String,System.Object)">
+      <summary>指定したキーと値をディクショナリに追加します。</summary>
+      <param name="key">キーとして使用するオブジェクト。</param>
+      <param name="value">値として使用するオブジェクト。</param>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#IDictionary{TKey@TValue}#ContainsKey(System.String)">
+      <summary>指定したキーがディクショナリに格納されているかどうかを確認します。</summary>
+      <returns>指定したキーを持つ要素がディクショナリに格納されている場合は true。それ以外の場合は false。</returns>
+      <param name="key">ディクショナリ内で検索するキー。</param>
+    </member>
+    <member name="P:System.Dynamic.ExpandoObject.System#Collections#Generic#IDictionary{TKey@TValue}#Item(System.String)">
+      <summary>指定したキーを持つ要素を取得または設定します。</summary>
+      <returns>指定したキーを持つ要素。</returns>
+      <param name="key">取得または設定する要素のキー。</param>
+    </member>
+    <member name="P:System.Dynamic.ExpandoObject.System#Collections#Generic#IDictionary{TKey@TValue}#Keys">
+      <summary>
+        <see cref="T:System.Collections.Generic.IDictionary`2" /> のキーが格納されている <see cref="T:System.Collections.Generic.ICollection`1" /> を取得します。</summary>
+      <returns>
+        <see cref="T:System.Collections.Generic.IDictionary`2" /> を実装するオブジェクトのキーを格納している <see cref="T:System.Collections.Generic.ICollection`1" /> を返します。</returns>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#IDictionary{TKey@TValue}#Remove(System.String)">
+      <summary>指定したキーを持つ要素を <see cref="T:System.Collections.IDictionary" /> から削除します。</summary>
+      <returns>要素が正常に削除された場合は true。それ以外の場合は false。このメソッドは、<paramref name="key" /> が元の <see cref="T:System.Collections.Generic.IDictionary`2" /> に見つからなかった場合にも false を返します。</returns>
+      <param name="key">削除する要素のキー。</param>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#IDictionary{TKey@TValue}#TryGetValue(System.String,System.Object@)">
+      <summary>指定したキーに関連付けられている値を取得します。</summary>
+      <returns>指定されたキーを持つ要素が、<see cref="T:System.Collections.Generic.IDictionary`2" /> を実装するオブジェクトに格納されている場合は true。それ以外の場合は false。</returns>
+      <param name="key">取得する値のキー。</param>
+      <param name="value">このメソッドが返されるときに、キーが見つかった場合は、指定したキーに関連付けられている値を格納します。それ以外の場合は <paramref name="value" /> パラメーターの型の既定値を格納します。このパラメーターは初期化せずに渡されます。</param>
+    </member>
+    <member name="P:System.Dynamic.ExpandoObject.System#Collections#Generic#IDictionary{TKey@TValue}#Values">
+      <summary>
+        <see cref="T:System.Collections.Generic.IDictionary`2" /> 内の値を格納している <see cref="T:System.Collections.Generic.ICollection`1" /> を取得します。</summary>
+      <returns>
+        <see cref="T:System.Collections.Generic.IDictionary`2" /> を実装するオブジェクトの値を格納している <see cref="T:System.Collections.Generic.ICollection`1" /> を返します。</returns>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#Generic#IEnumerable{T}#GetEnumerator">
+      <summary>コレクションを反復処理する列挙子を返します。</summary>
+      <returns>コレクションを反復処理するために使用できる <see cref="T:System.Collections.Generic.IEnumerator`1" /> オブジェクト。</returns>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Collections#IEnumerable#GetEnumerator">
+      <summary>コレクションを反復処理する列挙子を返します。</summary>
+      <returns>コレクションを反復処理するために使用できる <see cref="T:System.Collections.IEnumerator" />。</returns>
+    </member>
+    <member name="E:System.Dynamic.ExpandoObject.System#ComponentModel#INotifyPropertyChanged#PropertyChanged">
+      <summary>プロパティ値が変更するときに発生します。</summary>
+    </member>
+    <member name="M:System.Dynamic.ExpandoObject.System#Dynamic#IDynamicMetaObjectProvider#GetMetaObject(System.Linq.Expressions.Expression)">
+      <summary>指定された MetaObject は動的仮想メソッドにディスパッチされます。このオブジェクトを別の MetaObject の内部にカプセル化することにより、個々のアクションのカスタム動作を指定することができます。</summary>
+      <returns>
+        <see cref="T:System.Dynamic.DynamicMetaObject" /> 型のオブジェクト。</returns>
+      <param name="parameter">動的仮想メソッドにディスパッチされる MetaObject を表す式。</param>
+    </member>
+    <member name="T:System.Dynamic.GetIndexBinder">
+      <summary>呼び出しサイトでの動的インデックス取得操作を表し、バインディングのセマンティクスと、操作に関する詳細な情報を提供します。</summary>
+    </member>
+    <member name="M:System.Dynamic.GetIndexBinder.#ctor(System.Dynamic.CallInfo)">
+      <summary>
+        <see cref="T:System.Dynamic.GetIndexBinder" />の新しいインスタンスを初期化します。</summary>
+      <param name="callInfo">呼び出しサイトの引数のシグネチャ。</param>
+    </member>
+    <member name="M:System.Dynamic.GetIndexBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>動的インデックス取得操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的インデックス取得操作のターゲット。</param>
+      <param name="args">動的インデックス取得操作の引数の配列。</param>
+    </member>
+    <member name="P:System.Dynamic.GetIndexBinder.CallInfo">
+      <summary>呼び出しサイトの引数のシグネチャを取得します。</summary>
+      <returns>呼び出しサイトの引数のシグネチャ。</returns>
+    </member>
+    <member name="M:System.Dynamic.GetIndexBinder.FallbackGetIndex(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>ターゲットの動的オブジェクトがバインドできない場合に、動的インデックス取得操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的インデックス取得操作のターゲット。</param>
+      <param name="indexes">動的インデックス取得操作の引数。</param>
+    </member>
+    <member name="M:System.Dynamic.GetIndexBinder.FallbackGetIndex(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>派生クラスでオーバーライドされた場合、ターゲットの動的オブジェクトがバインドできない場合に、動的インデックス取得操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的インデックス取得操作のターゲット。</param>
+      <param name="indexes">動的インデックス取得操作の引数。</param>
+      <param name="errorSuggestion">バインディングに失敗した場合に使用するバインディングの結果または null。</param>
+    </member>
+    <member name="P:System.Dynamic.GetIndexBinder.ReturnType">
+      <summary>操作の結果型。</summary>
+      <returns>操作の結果型を表す <see cref="T:System.Type" /> オブジェクト。</returns>
+    </member>
+    <member name="T:System.Dynamic.GetMemberBinder">
+      <summary>呼び出しサイトでの動的メンバー取得操作を表し、バインディングのセマンティクスと、操作に関する詳細な情報を提供します。</summary>
+    </member>
+    <member name="M:System.Dynamic.GetMemberBinder.#ctor(System.String,System.Boolean)">
+      <summary>
+        <see cref="T:System.Dynamic.GetMemberBinder" />の新しいインスタンスを初期化します。</summary>
+      <param name="name">取得するメンバーの名前。</param>
+      <param name="ignoreCase">名前のマッチングで大文字と小文字の区別を無視する場合は true。それ以外の場合は false。</param>
+    </member>
+    <member name="M:System.Dynamic.GetMemberBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>動的メンバー取得操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的メンバー取得操作のターゲット。</param>
+      <param name="args">動的メンバー取得操作の引数の配列。</param>
+    </member>
+    <member name="M:System.Dynamic.GetMemberBinder.FallbackGetMember(System.Dynamic.DynamicMetaObject)">
+      <summary>ターゲットの動的オブジェクトがバインドできない場合に、動的メンバー取得操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的メンバー取得操作のターゲット。</param>
+    </member>
+    <member name="M:System.Dynamic.GetMemberBinder.FallbackGetMember(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>派生クラスでオーバーライドされた場合、ターゲットの動的オブジェクトがバインドできない場合に、動的メンバー取得操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的メンバー取得操作のターゲット。</param>
+      <param name="errorSuggestion">バインディングに失敗した場合に使用するバインディングの結果または null。</param>
+    </member>
+    <member name="P:System.Dynamic.GetMemberBinder.IgnoreCase">
+      <summary>文字列比較でメンバー名の大文字と小文字を区別するかどうかを示す値を取得します。</summary>
+      <returns>大文字と小文字が区別されない場合は true。それ以外の場合は false。</returns>
+    </member>
+    <member name="P:System.Dynamic.GetMemberBinder.Name">
+      <summary>取得するメンバーの名前を取得します。</summary>
+      <returns>取得するメンバーの名前。</returns>
+    </member>
+    <member name="P:System.Dynamic.GetMemberBinder.ReturnType">
+      <summary>操作の結果型。</summary>
+      <returns>操作の結果型を表す <see cref="T:System.Type" /> オブジェクト。</returns>
+    </member>
+    <member name="T:System.Dynamic.IDynamicMetaObjectProvider">
+      <summary>実行時に操作をバインドすることのできる動的オブジェクトを表します。</summary>
+    </member>
+    <member name="M:System.Dynamic.IDynamicMetaObjectProvider.GetMetaObject(System.Linq.Expressions.Expression)">
+      <summary>このオブジェクトに対して実行される操作をバインドする <see cref="T:System.Dynamic.DynamicMetaObject" /> を返します。</summary>
+      <returns>このオブジェクトをバインドする <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="parameter">ランタイム値の式ツリー表現。</param>
+    </member>
+    <member name="T:System.Dynamic.IInvokeOnGetBinder">
+      <summary>プロパティが取得操作を実行するときにメンバー取得がプロパティを呼び出す必要があるかどうかを示す、動的メンバー取得操作についての情報を表します。</summary>
+    </member>
+    <member name="P:System.Dynamic.IInvokeOnGetBinder.InvokeOnGet">
+      <summary>プロパティが取得操作を実行するときにこのメンバー取得操作がプロパティを呼び出す必要があるかどうかを示す値を取得します。このインターフェイスがないときの既定値は true です。</summary>
+      <returns>プロパティが取得操作を実行するときにこのメンバー取得操作がプロパティを呼び出す必要がある場合は True。それ以外の場合は false。</returns>
+    </member>
+    <member name="T:System.Dynamic.InvokeBinder">
+      <summary>呼び出しサイトでの動的呼び出し操作を表し、バインディングのセマンティクスと、操作に関する詳細な情報を提供します。</summary>
+    </member>
+    <member name="M:System.Dynamic.InvokeBinder.#ctor(System.Dynamic.CallInfo)">
+      <summary>
+        <see cref="T:System.Dynamic.InvokeBinder" />の新しいインスタンスを初期化します。</summary>
+      <param name="callInfo">呼び出しサイトの引数のシグネチャ。</param>
+    </member>
+    <member name="M:System.Dynamic.InvokeBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>動的呼び出し操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的呼び出し操作のターゲット。</param>
+      <param name="args">動的呼び出し操作の引数の配列。</param>
+    </member>
+    <member name="P:System.Dynamic.InvokeBinder.CallInfo">
+      <summary>呼び出しサイトの引数のシグネチャを取得します。</summary>
+      <returns>呼び出しサイトの引数のシグネチャ。</returns>
+    </member>
+    <member name="M:System.Dynamic.InvokeBinder.FallbackInvoke(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>ターゲットの動的オブジェクトがバインドできない場合に、動的呼び出し操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的呼び出し操作のターゲット。</param>
+      <param name="args">動的呼び出し操作の引数。</param>
+    </member>
+    <member name="M:System.Dynamic.InvokeBinder.FallbackInvoke(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>ターゲットの動的オブジェクトがバインドできない場合に、動的呼び出し操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的呼び出し操作のターゲット。</param>
+      <param name="args">動的呼び出し操作の引数。</param>
+      <param name="errorSuggestion">バインディングに失敗した場合に使用するバインディングの結果または null。</param>
+    </member>
+    <member name="P:System.Dynamic.InvokeBinder.ReturnType">
+      <summary>操作の結果型。</summary>
+      <returns>操作の結果型を表す <see cref="T:System.Type" /> オブジェクト。</returns>
+    </member>
+    <member name="T:System.Dynamic.InvokeMemberBinder">
+      <summary>呼び出しサイトでの動的メンバー呼び出し操作を表し、バインディングのセマンティクスと、操作に関する詳細な情報を提供します。</summary>
+    </member>
+    <member name="M:System.Dynamic.InvokeMemberBinder.#ctor(System.String,System.Boolean,System.Dynamic.CallInfo)">
+      <summary>
+        <see cref="T:System.Dynamic.InvokeMemberBinder" />の新しいインスタンスを初期化します。</summary>
+      <param name="name">呼び出されるメンバーの名前。</param>
+      <param name="ignoreCase">名前のマッチングで大文字と小文字の区別を無視する場合は true。それ以外の場合は false。</param>
+      <param name="callInfo">呼び出しサイトの引数のシグネチャ。</param>
+    </member>
+    <member name="M:System.Dynamic.InvokeMemberBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>動的メンバー呼び出し操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的メンバー呼び出し操作のターゲット。</param>
+      <param name="args">動的メンバー呼び出し操作の引数の配列。</param>
+    </member>
+    <member name="P:System.Dynamic.InvokeMemberBinder.CallInfo">
+      <summary>呼び出しサイトの引数のシグネチャを取得します。</summary>
+      <returns>呼び出しサイトの引数のシグネチャ。</returns>
+    </member>
+    <member name="M:System.Dynamic.InvokeMemberBinder.FallbackInvoke(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>派生クラスでオーバーライドされた場合、ターゲットの動的オブジェクトがバインドできない場合に、動的呼び出し操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的呼び出し操作のターゲット。</param>
+      <param name="args">動的呼び出し操作の引数。</param>
+      <param name="errorSuggestion">バインディングに失敗した場合に使用するバインディングの結果または null。</param>
+    </member>
+    <member name="M:System.Dynamic.InvokeMemberBinder.FallbackInvokeMember(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>ターゲットの動的オブジェクトがバインドできない場合に、動的メンバー呼び出し操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的メンバー呼び出し操作のターゲット。</param>
+      <param name="args">動的メンバー呼び出し操作の引数。</param>
+    </member>
+    <member name="M:System.Dynamic.InvokeMemberBinder.FallbackInvokeMember(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>派生クラスでオーバーライドされた場合、ターゲットの動的オブジェクトがバインドできない場合に、動的メンバー呼び出し操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的メンバー呼び出し操作のターゲット。</param>
+      <param name="args">動的メンバー呼び出し操作の引数。</param>
+      <param name="errorSuggestion">バインディングに失敗した場合に使用するバインディングの結果または null。</param>
+    </member>
+    <member name="P:System.Dynamic.InvokeMemberBinder.IgnoreCase">
+      <summary>文字列比較でメンバー名の大文字と小文字を区別するかどうかを示す値を取得します。</summary>
+      <returns>大文字と小文字が区別されない場合は true。それ以外の場合は false。</returns>
+    </member>
+    <member name="P:System.Dynamic.InvokeMemberBinder.Name">
+      <summary>呼び出すメンバーの名前を取得します。</summary>
+      <returns>呼び出されるメンバーの名前。</returns>
+    </member>
+    <member name="P:System.Dynamic.InvokeMemberBinder.ReturnType">
+      <summary>操作の結果型。</summary>
+      <returns>操作の結果型を表す <see cref="T:System.Type" /> オブジェクト。</returns>
+    </member>
+    <member name="T:System.Dynamic.SetIndexBinder">
+      <summary>呼び出しサイトでの動的インデックス設定操作を表し、バインディングのセマンティクスと、操作に関する詳細な情報を提供します。</summary>
+    </member>
+    <member name="M:System.Dynamic.SetIndexBinder.#ctor(System.Dynamic.CallInfo)">
+      <summary>
+        <see cref="T:System.Dynamic.SetIndexBinder" />の新しいインスタンスを初期化します。</summary>
+      <param name="callInfo">呼び出しサイトの引数のシグネチャ。</param>
+    </member>
+    <member name="M:System.Dynamic.SetIndexBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>動的インデックス設定操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的インデックス設定操作のターゲット。</param>
+      <param name="args">動的インデックス設定操作の引数の配列。</param>
+    </member>
+    <member name="P:System.Dynamic.SetIndexBinder.CallInfo">
+      <summary>呼び出しサイトの引数のシグネチャを取得します。</summary>
+      <returns>呼び出しサイトの引数のシグネチャ。</returns>
+    </member>
+    <member name="M:System.Dynamic.SetIndexBinder.FallbackSetIndex(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject)">
+      <summary>ターゲットの動的オブジェクトがバインドできない場合に、動的インデックス設定操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的インデックス設定操作のターゲット。</param>
+      <param name="indexes">動的インデックス設定操作の引数。</param>
+      <param name="value">コレクションに設定する値。</param>
+    </member>
+    <member name="M:System.Dynamic.SetIndexBinder.FallbackSetIndex(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[],System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>派生クラスでオーバーライドされた場合、ターゲットの動的オブジェクトがバインドできない場合に、動的インデックス設定操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的インデックス設定操作のターゲット。</param>
+      <param name="indexes">動的インデックス設定操作の引数。</param>
+      <param name="value">コレクションに設定する値。</param>
+      <param name="errorSuggestion">バインディングに失敗した場合に使用するバインディングの結果または null。</param>
+    </member>
+    <member name="P:System.Dynamic.SetIndexBinder.ReturnType">
+      <summary>操作の結果型。</summary>
+      <returns>操作の結果型を表す <see cref="T:System.Type" /> オブジェクト。</returns>
+    </member>
+    <member name="T:System.Dynamic.SetMemberBinder">
+      <summary>呼び出しサイトでの動的メンバー設定操作を表し、バインディングのセマンティクスと、操作に関する詳細な情報を提供します。</summary>
+    </member>
+    <member name="M:System.Dynamic.SetMemberBinder.#ctor(System.String,System.Boolean)">
+      <summary>
+        <see cref="T:System.Dynamic.SetMemberBinder" />の新しいインスタンスを初期化します。</summary>
+      <param name="name">取得するメンバーの名前。</param>
+      <param name="ignoreCase">名前のマッチングで大文字と小文字の区別を無視する場合は true。それ以外の場合は false。</param>
+    </member>
+    <member name="M:System.Dynamic.SetMemberBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>動的メンバー設定操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的メンバー設定操作のターゲット。</param>
+      <param name="args">動的メンバー設定操作の引数の配列。</param>
+    </member>
+    <member name="M:System.Dynamic.SetMemberBinder.FallbackSetMember(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>ターゲットの動的オブジェクトがバインドできない場合に、動的メンバー設定操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的メンバー設定操作のターゲット。</param>
+      <param name="value">メンバーに設定する値。</param>
+    </member>
+    <member name="M:System.Dynamic.SetMemberBinder.FallbackSetMember(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>ターゲットの動的オブジェクトがバインドできない場合に、動的メンバー設定操作のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的メンバー設定操作のターゲット。</param>
+      <param name="value">メンバーに設定する値。</param>
+      <param name="errorSuggestion">バインディングに失敗した場合に使用するバインディングの結果または null。</param>
+    </member>
+    <member name="P:System.Dynamic.SetMemberBinder.IgnoreCase">
+      <summary>文字列比較でメンバー名の大文字と小文字を区別するかどうかを示す値を取得します。</summary>
+      <returns>大文字と小文字が区別されない場合は true。それ以外の場合は false。</returns>
+    </member>
+    <member name="P:System.Dynamic.SetMemberBinder.Name">
+      <summary>取得するメンバーの名前を取得します。</summary>
+      <returns>取得するメンバーの名前。</returns>
+    </member>
+    <member name="P:System.Dynamic.SetMemberBinder.ReturnType">
+      <summary>操作の結果型。</summary>
+      <returns>操作の結果型を表す <see cref="T:System.Type" /> オブジェクト。</returns>
+    </member>
+    <member name="T:System.Dynamic.UnaryOperationBinder">
+      <summary>呼び出しサイトでの動的単項演算を表し、バインディングのセマンティクスと、操作に関する詳細な情報を提供します。</summary>
+    </member>
+    <member name="M:System.Dynamic.UnaryOperationBinder.#ctor(System.Linq.Expressions.ExpressionType)">
+      <summary>
+        <see cref="T:System.Dynamic.BinaryOperationBinder" /> クラスの新しいインスタンスを初期化します。</summary>
+      <param name="operation">単項演算の種類。</param>
+    </member>
+    <member name="M:System.Dynamic.UnaryOperationBinder.Bind(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject[])">
+      <summary>動的単項演算のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的操作のターゲット。</param>
+      <param name="args">動的操作の引数の配列。</param>
+    </member>
+    <member name="M:System.Dynamic.UnaryOperationBinder.FallbackUnaryOperation(System.Dynamic.DynamicMetaObject)">
+      <summary>ターゲットの動的オブジェクトがバインドできない場合に、動的単項演算のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的単項演算のターゲット。</param>
+    </member>
+    <member name="M:System.Dynamic.UnaryOperationBinder.FallbackUnaryOperation(System.Dynamic.DynamicMetaObject,System.Dynamic.DynamicMetaObject)">
+      <summary>ターゲットの動的オブジェクトがバインドできない場合に、動的単項演算のバインディングを実行します。</summary>
+      <returns>バインディングの結果を表す <see cref="T:System.Dynamic.DynamicMetaObject" />。</returns>
+      <param name="target">動的単項演算のターゲット。</param>
+      <param name="errorSuggestion">バインディングに失敗した場合のバインディングの結果または null。</param>
+    </member>
+    <member name="P:System.Dynamic.UnaryOperationBinder.Operation">
+      <summary>単項演算の種類。</summary>
+      <returns>単項演算の種類を表す <see cref="T:System.Linq.Expressions.ExpressionType" /> のオブジェクト。</returns>
+    </member>
+    <member name="P:System.Dynamic.UnaryOperationBinder.ReturnType">
+      <summary>操作の結果型。</summary>
+      <returns>操作の結果型を表す <see cref="T:System.Type" /> オブジェクト。</returns>
+    </member>
+    <member name="T:System.Linq.Expressions.DynamicExpression">
+      <summary>動的操作を表します。</summary>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Accept(System.Linq.Expressions.ExpressionVisitor)">
+      <summary>このノード型の特定の Visit メソッドにデスパッチします。たとえば、<see cref="T:System.Linq.Expressions.MethodCallExpression" /> は、<see cref="M:System.Linq.Expressions.ExpressionVisitor.VisitMethodCall(System.Linq.Expressions.MethodCallExpression)" /> を呼び出します。</summary>
+      <returns>このノードの走査結果。</returns>
+      <param name="visitor">このノードを走査するビジター。</param>
+    </member>
+    <member name="P:System.Linq.Expressions.DynamicExpression.Arguments">
+      <summary>動的操作の引数を取得します。</summary>
+      <returns>動的操作の引数を格納する読み取り専用コレクション。</returns>
+    </member>
+    <member name="P:System.Linq.Expressions.DynamicExpression.Binder">
+      <summary>動的サイトの実行時の動作を決定する <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> を取得します。</summary>
+      <returns>動的サイトの実行時の動作を決定する <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" />。</returns>
+    </member>
+    <member name="P:System.Linq.Expressions.DynamicExpression.DelegateType">
+      <summary>
+        <see cref="T:System.Runtime.CompilerServices.CallSite" /> によって使用されるデリゲートの型を取得します。</summary>
+      <returns>
+        <see cref="T:System.Runtime.CompilerServices.CallSite" /> によって使用されるデリゲートの型を表す <see cref="T:System.Type" /> オブジェクト。</returns>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Dynamic(System.Runtime.CompilerServices.CallSiteBinder,System.Type,System.Collections.Generic.IEnumerable{System.Linq.Expressions.Expression})">
+      <summary>指定された <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> によってバインドされる動的操作を表す <see cref="T:System.Linq.Expressions.DynamicExpression" /> を作成します。</summary>
+      <returns>
+        <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> と等しい <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> と、指定した値に設定された <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> および <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> を含む <see cref="T:System.Linq.Expressions.DynamicExpression" />。</returns>
+      <param name="binder">動的操作の実行時バインダー。</param>
+      <param name="returnType">動的な式の結果の型。</param>
+      <param name="arguments">動的操作の引数。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Dynamic(System.Runtime.CompilerServices.CallSiteBinder,System.Type,System.Linq.Expressions.Expression)">
+      <summary>指定された <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> によってバインドされる動的操作を表す <see cref="T:System.Linq.Expressions.DynamicExpression" /> を作成します。</summary>
+      <returns>
+        <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> と等しい <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> と、指定した値に設定された <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> および <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> を含む <see cref="T:System.Linq.Expressions.DynamicExpression" />。</returns>
+      <param name="binder">動的操作の実行時バインダー。</param>
+      <param name="returnType">動的な式の結果の型。</param>
+      <param name="arg0">動的操作の 1 番目の引数。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Dynamic(System.Runtime.CompilerServices.CallSiteBinder,System.Type,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression)">
+      <summary>指定された <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> によってバインドされる動的操作を表す <see cref="T:System.Linq.Expressions.DynamicExpression" /> を作成します。</summary>
+      <returns>
+        <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> が <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> に等しく、<see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> および <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> が指定した値に設定された、<see cref="T:System.Linq.Expressions.DynamicExpression" />。</returns>
+      <param name="binder">動的操作の実行時バインダー。</param>
+      <param name="returnType">動的な式の結果の型。</param>
+      <param name="arg0">動的操作の 1 番目の引数。</param>
+      <param name="arg1">動的操作の 2 番目の引数。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Dynamic(System.Runtime.CompilerServices.CallSiteBinder,System.Type,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression)">
+      <summary>指定された <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> によってバインドされる動的操作を表す <see cref="T:System.Linq.Expressions.DynamicExpression" /> を作成します。</summary>
+      <returns>
+        <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> が <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> に等しく、<see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> および <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> が指定した値に設定された、<see cref="T:System.Linq.Expressions.DynamicExpression" />。</returns>
+      <param name="binder">動的操作の実行時バインダー。</param>
+      <param name="returnType">動的な式の結果の型。</param>
+      <param name="arg0">動的操作の 1 番目の引数。</param>
+      <param name="arg1">動的操作の 2 番目の引数。</param>
+      <param name="arg2">動的操作の 3 番目の引数。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Dynamic(System.Runtime.CompilerServices.CallSiteBinder,System.Type,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression)">
+      <summary>指定された <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> によってバインドされる動的操作を表す <see cref="T:System.Linq.Expressions.DynamicExpression" /> を作成します。</summary>
+      <returns>
+        <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> が <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> に等しく、<see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> および <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> が指定した値に設定された、<see cref="T:System.Linq.Expressions.DynamicExpression" />。</returns>
+      <param name="binder">動的操作の実行時バインダー。</param>
+      <param name="returnType">動的な式の結果の型。</param>
+      <param name="arg0">動的操作の 1 番目の引数。</param>
+      <param name="arg1">動的操作の 2 番目の引数。</param>
+      <param name="arg2">動的操作の 3 番目の引数。</param>
+      <param name="arg3">動的操作の 4 番目の引数。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Dynamic(System.Runtime.CompilerServices.CallSiteBinder,System.Type,System.Linq.Expressions.Expression[])">
+      <summary>指定された <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> によってバインドされる動的操作を表す <see cref="T:System.Linq.Expressions.DynamicExpression" /> を作成します。</summary>
+      <returns>
+        <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> が <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> に等しく、<see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> および <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> が指定した値に設定された、<see cref="T:System.Linq.Expressions.DynamicExpression" />。</returns>
+      <param name="binder">動的操作の実行時バインダー。</param>
+      <param name="returnType">動的な式の結果の型。</param>
+      <param name="arguments">動的操作の引数。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.MakeDynamic(System.Type,System.Runtime.CompilerServices.CallSiteBinder,System.Collections.Generic.IEnumerable{System.Linq.Expressions.Expression})">
+      <summary>指定された <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> によってバインドされる動的操作を表す <see cref="T:System.Linq.Expressions.DynamicExpression" /> を作成します。</summary>
+      <returns>
+        <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> が <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> に等しく、<see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />、<see cref="P:System.Linq.Expressions.DynamicExpression.Binder" />、および <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> が指定した値に設定された、<see cref="T:System.Linq.Expressions.DynamicExpression" />。</returns>
+      <param name="delegateType">
+        <see cref="T:System.Runtime.CompilerServices.CallSite" /> によって使用されるデリゲートの型。</param>
+      <param name="binder">動的操作の実行時バインダー。</param>
+      <param name="arguments">動的操作の引数。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.MakeDynamic(System.Type,System.Runtime.CompilerServices.CallSiteBinder,System.Linq.Expressions.Expression)">
+      <summary>指定された <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> および 1 つの引数によってバインドされる動的操作を表す <see cref="T:System.Linq.Expressions.DynamicExpression" /> を作成します。</summary>
+      <returns>
+        <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> が <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> に等しく、<see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />、<see cref="P:System.Linq.Expressions.DynamicExpression.Binder" />、および <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> が指定した値に設定された、<see cref="T:System.Linq.Expressions.DynamicExpression" />。</returns>
+      <param name="delegateType">
+        <see cref="T:System.Runtime.CompilerServices.CallSite" /> によって使用されるデリゲートの型。</param>
+      <param name="binder">動的操作の実行時バインダー。</param>
+      <param name="arg0">動的操作の引数。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.MakeDynamic(System.Type,System.Runtime.CompilerServices.CallSiteBinder,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression)">
+      <summary>指定された <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> および 2 つの引数によってバインドされる動的操作を表す <see cref="T:System.Linq.Expressions.DynamicExpression" /> を作成します。</summary>
+      <returns>
+        <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> が <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> に等しく、<see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />、<see cref="P:System.Linq.Expressions.DynamicExpression.Binder" />、および <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> が指定した値に設定された、<see cref="T:System.Linq.Expressions.DynamicExpression" />。</returns>
+      <param name="delegateType">
+        <see cref="T:System.Runtime.CompilerServices.CallSite" /> によって使用されるデリゲートの型。</param>
+      <param name="binder">動的操作の実行時バインダー。</param>
+      <param name="arg0">動的操作の 1 番目の引数。</param>
+      <param name="arg1">動的操作の 2 番目の引数。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.MakeDynamic(System.Type,System.Runtime.CompilerServices.CallSiteBinder,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression)">
+      <summary>指定された <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> および 3 つの引数によってバインドされる動的操作を表す <see cref="T:System.Linq.Expressions.DynamicExpression" /> を作成します。</summary>
+      <returns>
+        <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> が <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> に等しく、<see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />、<see cref="P:System.Linq.Expressions.DynamicExpression.Binder" />、および <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> が指定した値に設定された、<see cref="T:System.Linq.Expressions.DynamicExpression" />。</returns>
+      <param name="delegateType">
+        <see cref="T:System.Runtime.CompilerServices.CallSite" /> によって使用されるデリゲートの型。</param>
+      <param name="binder">動的操作の実行時バインダー。</param>
+      <param name="arg0">動的操作の 1 番目の引数。</param>
+      <param name="arg1">動的操作の 2 番目の引数。</param>
+      <param name="arg2">動的操作の 3 番目の引数。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.MakeDynamic(System.Type,System.Runtime.CompilerServices.CallSiteBinder,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression)">
+      <summary>指定された <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> および 4 つの引数によってバインドされる動的操作を表す <see cref="T:System.Linq.Expressions.DynamicExpression" /> を作成します。</summary>
+      <returns>
+        <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> が <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> に等しく、<see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />、<see cref="P:System.Linq.Expressions.DynamicExpression.Binder" />、および <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> が指定した値に設定された、<see cref="T:System.Linq.Expressions.DynamicExpression" />。</returns>
+      <param name="delegateType">
+        <see cref="T:System.Runtime.CompilerServices.CallSite" /> によって使用されるデリゲートの型。</param>
+      <param name="binder">動的操作の実行時バインダー。</param>
+      <param name="arg0">動的操作の 1 番目の引数。</param>
+      <param name="arg1">動的操作の 2 番目の引数。</param>
+      <param name="arg2">動的操作の 3 番目の引数。</param>
+      <param name="arg3">動的操作の 4 番目の引数。</param>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.MakeDynamic(System.Type,System.Runtime.CompilerServices.CallSiteBinder,System.Linq.Expressions.Expression[])">
+      <summary>指定された <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> によってバインドされる動的操作を表す <see cref="T:System.Linq.Expressions.DynamicExpression" /> を作成します。</summary>
+      <returns>
+        <see cref="P:System.Linq.Expressions.DynamicExpression.NodeType" /> が <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> に等しく、<see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />、<see cref="P:System.Linq.Expressions.DynamicExpression.Binder" />、および <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> が指定した値に設定された、<see cref="T:System.Linq.Expressions.DynamicExpression" />。</returns>
+      <param name="delegateType">
+        <see cref="T:System.Runtime.CompilerServices.CallSite" /> によって使用されるデリゲートの型。</param>
+      <param name="binder">動的操作の実行時バインダー。</param>
+      <param name="arguments">動的操作の引数。</param>
+    </member>
+    <member name="P:System.Linq.Expressions.DynamicExpression.NodeType">
+      <summary>この式のノード型を返します。拡張ノードは、このメソッドをオーバーライドするとき、<see cref="F:System.Linq.Expressions.ExpressionType.Extension" /> を返す必要があります。</summary>
+      <returns>式の <see cref="T:System.Linq.Expressions.ExpressionType" />。</returns>
+    </member>
+    <member name="P:System.Linq.Expressions.DynamicExpression.System#Linq#Expressions#IArgumentProvider#ArgumentCount"></member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.System#Linq#Expressions#IArgumentProvider#GetArgument(System.Int32)"></member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.System#Linq#Expressions#IDynamicExpression#CreateCallSite"></member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.System#Linq#Expressions#IDynamicExpression#Rewrite(System.Linq.Expressions.Expression[])"></member>
+    <member name="P:System.Linq.Expressions.DynamicExpression.Type">
+      <summary>この <see cref="T:System.Linq.Expressions.Expression" /> が表す式の静的な型を取得します。</summary>
+      <returns>式の静的な型を表す <see cref="P:System.Linq.Expressions.DynamicExpression.Type" />。</returns>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpression.Update(System.Collections.Generic.IEnumerable{System.Linq.Expressions.Expression})">
+      <summary>パラメーター arguments に送信される値を、Arguments の現在のインスタンスの DynamicExpression プロパティと比較します。パラメーターとプロパティの値が等しければ、現在のインスタンスが返されます。それらが等しくない場合は、新しい DynamicExpression インスタンスが返されます。そのインスタンスは現在のインスタンスと同一ですが、Arguments プロパティがパラメーター arguments の値に設定されている点が異なります。</summary>
+      <returns>更新された子を使用した式。子が変更されていない場合はこの式。</returns>
+      <param name="arguments">結果の <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> プロパティ。</param>
+    </member>
+    <member name="T:System.Linq.Expressions.DynamicExpressionVisitor">
+      <summary>動的式ツリーのビジターまたはリライターを表します。</summary>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpressionVisitor.#ctor">
+      <summary>
+        <see cref="T:System.Linq.Expressions.DynamicExpressionVisitor" /> の新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:System.Linq.Expressions.DynamicExpressionVisitor.VisitDynamic(System.Linq.Expressions.DynamicExpression)">
+      <summary>
+        <see cref="T:System.Linq.Expressions.DynamicExpression" /> の子を走査します。</summary>
+      <returns>
+        <see cref="T:System.Linq.Expressions.Expression" /> (式またはいずれかの部分式が変更された場合は変更された式、それ以外の場合は元の式) を返します。</returns>
+      <param name="node">走査する式。</param>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallSite">
+      <summary>動的呼び出しサイトの基本クラス。この型は、動的呼び出しサイトのターゲットのパラメーター型として使用されます。</summary>
+    </member>
+    <member name="P:System.Runtime.CompilerServices.CallSite.Binder">
+      <summary>動的サイトで動的操作のバインディングを行うクラス。</summary>
+      <returns>動的操作のバインディングを行う <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> オブジェクト。</returns>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CallSite.Create(System.Type,System.Runtime.CompilerServices.CallSiteBinder)">
+      <summary>指定したデリゲート型とバインダーを使用して呼び出しサイトを作成します。</summary>
+      <returns>新しい呼び出しサイト。</returns>
+      <param name="delegateType">呼び出しサイトのデリゲート型。</param>
+      <param name="binder">呼び出しサイトのバインダー。</param>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallSite`1">
+      <summary>動的サイト型。</summary>
+      <typeparam name="T">デリゲート型。</typeparam>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CallSite`1.Create(System.Runtime.CompilerServices.CallSiteBinder)">
+      <summary>この呼び出しサイトでの動的操作の実行時バインディングを行うバインダーによって初期化される、動的呼び出しサイトのインスタンスを作成します。</summary>
+      <returns>動的呼び出しサイトの新しいインスタンス。</returns>
+      <param name="binder">この呼び出しサイトでの動的操作の実行時バインディングを行うバインダー。</param>
+    </member>
+    <member name="F:System.Runtime.CompilerServices.CallSite`1.Target">
+      <summary>レベル 0 キャッシュ。サイト履歴に基づいて特化されたデリゲートです。</summary>
+    </member>
+    <member name="P:System.Runtime.CompilerServices.CallSite`1.Update">
+      <summary>更新デリゲート。動的サイトでキャッシュ ミスが発生したときに呼び出されます。</summary>
+      <returns>更新デリゲート。</returns>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallSiteBinder">
+      <summary>動的呼び出しサイトで動的操作の実行時バインディングを行うクラス。</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CallSiteBinder.#ctor">
+      <summary>
+        <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CallSiteBinder.Bind(System.Object[],System.Collections.ObjectModel.ReadOnlyCollection{System.Linq.Expressions.ParameterExpression},System.Linq.Expressions.LabelTarget)">
+      <summary>引数のセットに対して動的操作の実行時バインディングを実行します。</summary>
+      <returns>動的操作の引数に対してテストを実行し、テストが有効な場合に動的操作を実行する Expression。後続の動的操作でテストが失敗すると、Bind が再び呼び出され、新しい引数の型に対する新しい <see cref="T:System.Linq.Expressions.Expression" /> が生成されます。</returns>
+      <param name="args">動的操作の引数の配列。</param>
+      <param name="parameters">バインディング プロセスでの呼び出しサイトのパラメーターを表す <see cref="T:System.Linq.Expressions.ParameterExpression" /> インスタンスの配列。</param>
+      <param name="returnLabel">動的バインディングの結果を返すために使用される LabelTarget。</param>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CallSiteBinder.BindDelegate``1(System.Runtime.CompilerServices.CallSite{``0},System.Object[])">
+      <summary>低水準の実行時バインディング サポートを提供します。クラスでこれをオーバーライドし、規則の実装に対する直接のデリゲートを提供できます。これにより、規則をディスクに保存したり、実行時に特別な規則を使用できるようになります。また、異なるキャッシュ ポリシーを提供することもできます。</summary>
+      <returns>CallSite のターゲットを置き換える新しいデリゲート。</returns>
+      <param name="site">バインドの対象の CallSite。</param>
+      <param name="args">バインダーの引数。</param>
+      <typeparam name="T">CallSite のターゲットの型。</typeparam>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CallSiteBinder.CacheTarget``1(``0)">
+      <summary>既知のターゲットのキャッシュにターゲットを追加します。BindDelegate を呼び出して新しい規則を生成する前に、キャッシュされたターゲットのスキャンが行われます。</summary>
+      <param name="target">キャッシュに追加されるターゲット デリゲート。</param>
+      <typeparam name="T">追加されるターゲットの型。</typeparam>
+    </member>
+    <member name="P:System.Runtime.CompilerServices.CallSiteBinder.UpdateLabel">
+      <summary>バインディングを更新するために使用できるラベルを取得します。これは、式のバインディングが有効でなくなったことを示します。通常は、動的オブジェクトの "バージョン" が変更された場合に使用します。</summary>
+      <returns>バインディングの更新を発生させるために使用できるラベルを表す <see cref="T:System.Linq.Expressions.LabelTarget" /> オブジェクト。</returns>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CallSiteHelpers">
+      <summary>DLR CallSite のためのヘルパー メソッドを格納するクラス。</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CallSiteHelpers.IsInternalFrame(System.Reflection.MethodBase)">
+      <summary>
+        <see cref="T:System.Reflection.MethodBase" /> が DLR によって内部的に使用され、言語コードのスタックに表示されないかどうかを調べます。</summary>
+      <returns>入力 <see cref="T:System.Reflection.MethodBase" /> が DLR によって内部的に使用され、言語コードのスタックに表示されない場合は true。それ以外の場合は false を返します。</returns>
+      <param name="mb">入力 <see cref="T:System.Reflection.MethodBase" />。</param>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.DynamicAttribute">
+      <summary>メンバーでの <see cref="T:System.Object" /> の使用を動的ディスパッチ型として処理することを示します。</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.DynamicAttribute.#ctor">
+      <summary>
+        <see cref="T:System.Runtime.CompilerServices.DynamicAttribute" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.DynamicAttribute.#ctor(System.Boolean[])">
+      <summary>
+        <see cref="T:System.Runtime.CompilerServices.DynamicAttribute" /> クラスの新しいインスタンスを初期化します。</summary>
+      <param name="transformFlags">型の構築のプレフィックス走査において、どの <see cref="T:System.Object" /> のオカレンスを動的ディスパッチ型として処理するかを指定します。</param>
+    </member>
+    <member name="P:System.Runtime.CompilerServices.DynamicAttribute.TransformFlags">
+      <summary>型の構築のプレフィックス走査において、どの <see cref="T:System.Object" /> のオカレンスを動的ディスパッチ型として処理するかを指定します。</summary>
+      <returns>動的ディスパッチ型として処理する <see cref="T:System.Object" /> のオカレンスのリスト。</returns>
+    </member>
+  </members>
+</doc>

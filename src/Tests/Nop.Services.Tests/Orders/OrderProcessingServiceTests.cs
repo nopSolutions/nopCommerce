@@ -60,7 +60,6 @@ namespace Nop.Services.Tests.Orders
         private ShippingSettings _shippingSettings;
         private ILogger _logger;
         private IRepository<ShippingMethod> _shippingMethodRepository;
-        private IRepository<DeliveryDate> _deliveryDateRepository;
         private IRepository<Warehouse> _warehouseRepository;
         private IOrderService _orderService;
         private IWebHelper _webHelper;
@@ -91,8 +90,10 @@ namespace Nop.Services.Tests.Orders
 
         private IGeoLookupService _geoLookupService;
         private ICountryService _countryService;
+        private IStateProvinceService _stateProvinceService;
         private CustomerSettings _customerSettings;
         private AddressSettings _addressSettings;
+        private ICustomNumberFormatter _customNumberFormatter;
 
         private Store _store;
 
@@ -135,11 +136,9 @@ namespace Nop.Services.Tests.Orders
             _shippingSettings.ActiveShippingRateComputationMethodSystemNames = new List<string>();
             _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add("FixedRateTestShippingRateComputationMethod");
             _shippingMethodRepository = MockRepository.GenerateMock<IRepository<ShippingMethod>>();
-            _deliveryDateRepository = MockRepository.GenerateMock<IRepository<DeliveryDate>>();
             _warehouseRepository = MockRepository.GenerateMock<IRepository<Warehouse>>();
             _logger = new NullLogger();
-            _shippingService = new ShippingService(_shippingMethodRepository, 
-                _deliveryDateRepository,
+            _shippingService = new ShippingService(_shippingMethodRepository,
                 _warehouseRepository,
                 _logger,
                 _productService,
@@ -164,6 +163,7 @@ namespace Nop.Services.Tests.Orders
 
             _geoLookupService = MockRepository.GenerateMock<IGeoLookupService>();
             _countryService = MockRepository.GenerateMock<ICountryService>();
+            _stateProvinceService = MockRepository.GenerateMock<IStateProvinceService>();
             _customerSettings = new CustomerSettings();
             _addressSettings = new AddressSettings();
 
@@ -174,8 +174,9 @@ namespace Nop.Services.Tests.Orders
             _taxSettings.DefaultTaxAddressId = 10;
             _addressService = MockRepository.GenerateMock<IAddressService>();
             _addressService.Expect(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Return(new Address { Id = _taxSettings.DefaultTaxAddressId });
-            _taxService = new TaxService(_addressService, _workContext, _taxSettings,
-                pluginFinder, _geoLookupService, _countryService, _logger, _customerSettings, _addressSettings);
+            _taxService = new TaxService(_addressService, _workContext, _storeContext, _taxSettings,
+                pluginFinder, _geoLookupService, _countryService, _stateProvinceService, _logger,
+                _customerSettings, _shippingSettings, _addressSettings);
 
             _rewardPointService = MockRepository.GenerateMock<IRewardPointService>();
             _rewardPointsSettings = new RewardPointsSettings();
@@ -201,6 +202,7 @@ namespace Nop.Services.Tests.Orders
             _affiliateService = MockRepository.GenerateMock<IAffiliateService>();
             _vendorService = MockRepository.GenerateMock<IVendorService>();
             _pdfService = MockRepository.GenerateMock<IPdfService>();
+            _customNumberFormatter = MockRepository.GenerateMock<ICustomNumberFormatter>();
 
             _paymentSettings = new PaymentSettings
             {
@@ -232,10 +234,10 @@ namespace Nop.Services.Tests.Orders
                 _customerActivityService, _currencyService, _affiliateService,
                 _eventPublisher,_pdfService, _rewardPointService,
                 _genericAttributeService,
-                _countryService,
+                _countryService, _stateProvinceService,
                 _shippingSettings, _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings,
-                _currencySettings);
+                _currencySettings, _customNumberFormatter);
         }
         
         [Test]

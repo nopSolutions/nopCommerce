@@ -89,7 +89,7 @@ namespace Nop.Services.Tax
             return _cacheManager.Get(key, () =>
             {
                 var query = from tc in _taxCategoryRepository.Table
-                            orderby tc.DisplayOrder
+                            orderby tc.DisplayOrder, tc.Id
                             select tc;
                 var taxCategories = query.ToList();
                 return taxCategories;

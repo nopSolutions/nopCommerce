@@ -11,6 +11,11 @@ namespace Nop.Plugin.Shipping.CanadaPost
         public string CustomerNumber { get; set; }
 
         /// <summary>
+        /// Gets or sets contract identifier
+        /// </summary>
+        public string ContractId { get; set; }
+
+        /// <summary>
         /// Gets or sets the API key
         /// </summary>
         public string ApiKey { get; set; }

@@ -361,7 +361,7 @@ namespace Nop.Web.Framework.UI
 
                 if (partsToBundle.Length > 0)
                 {
-                    //IMPORTANT: Do not use CSS bundling in virtual categories
+                    //IMPORTANT: Do not use CSS bundling in virtual directories
                     string bundleVirtualPath = GetBundleVirtualPath("~/bundles/styles/", ".css", partsToBundle);
 
                     //create bundle

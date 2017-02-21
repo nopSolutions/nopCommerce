@@ -26,8 +26,14 @@ namespace Nop.Admin.Models.News
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.CommentText")]
         public string CommentText { get; set; }
 
+        [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.IsApproved")]
+        public bool IsApproved { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.StoreName")]
+        public int StoreId { get; set; }
+        public string StoreName { get; set; }
+
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
-
     }
 }

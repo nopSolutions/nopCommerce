@@ -353,7 +353,8 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="language">Language</param>
         /// <param name="xml">XML</param>
-        public virtual void ImportResourcesFromXml(Language language, string xml)
+        /// <param name="updateExistingResources">A value indicating whether to update existing resources</param>
+        public virtual void ImportResourcesFromXml(Language language, string xml, bool updateExistingResources = true)
         {
             if (language == null)
                 throw new ArgumentNullException("language");
@@ -388,8 +389,14 @@ namespace Nop.Services.Localization
                 pXmlPackage.Value = xml;
                 pXmlPackage.DbType = DbType.Xml;
 
+                var pUpdateExistingResources = _dataProvider.GetParameter();
+                pUpdateExistingResources.ParameterName = "UpdateExistingResources";
+                pUpdateExistingResources.Value = updateExistingResources;
+                pUpdateExistingResources.DbType = DbType.Boolean;
+
                 //long-running query. specify timeout (600 seconds)
-                _dbContext.ExecuteSqlCommand("EXEC [LanguagePackImport] @LanguageId, @XmlPackage", false, 600, pLanguageId, pXmlPackage);
+                _dbContext.ExecuteSqlCommand("EXEC [LanguagePackImport] @LanguageId, @XmlPackage, @UpdateExistingResources", 
+                    false, 600, pLanguageId, pXmlPackage, pUpdateExistingResources);
             }
             else
             {
@@ -413,7 +420,12 @@ namespace Nop.Services.Localization
                     //let's bulk insert
                     var resource = language.LocaleStringResources.FirstOrDefault(x => x.ResourceName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
                     if (resource != null)
-                        resource.ResourceValue = value;
+                    {
+                        if (updateExistingResources)
+                        {
+                            resource.ResourceValue = value;
+                        }
+                    }
                     else
                     {
                         language.LocaleStringResources.Add(

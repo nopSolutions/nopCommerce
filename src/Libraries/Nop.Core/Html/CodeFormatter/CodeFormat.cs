@@ -109,11 +109,11 @@ namespace Nop.Core.Html.CodeFormatter
 			regAll.Append(CommentRegex);
 			regAll.Append(")|(");
 			regAll.Append(StringRegex);
-			if (regPreproc.Length > 0)
-			{
+			//if (regPreproc.Length > 0)
+			//{
 				regAll.Append(")|(");
 				regAll.Append(regPreproc);
-			}
+			//}
 			regAll.Append(")|(");
 			regAll.Append(regKeyword);
 			regAll.Append(")");

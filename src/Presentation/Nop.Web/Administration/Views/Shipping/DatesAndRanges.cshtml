@@ -1,0 +1,179 @@
+﻿@{    
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Shipping.DatesAndRanges").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Dates and ranges");
+}
+
+@Html.AntiForgeryToken()
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Configuration.Shipping.DatesAndRanges")
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @T("Admin.Configuration.Shipping.DeliveryDates")
+                </div>
+                <div class="panel-body">
+                    <p>
+                        <em>@T("Admin.Configuration.Shipping.DeliveryDates.Hint")</em>
+                    </p>
+                    <div id="deliverydate-grid"></div>
+
+                    <script>
+                        $(document).ready(function() {
+                            $("#deliverydate-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("DeliveryDates", "Shipping"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false,
+                                    @Html.Partial("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                {
+                                    field: "Name",
+                                    title: "@T("Admin.Configuration.Shipping.DeliveryDates.Fields.Name")",
+                                    width: 300
+                                }, {
+                                    field: "DisplayOrder",
+                                    title: "@T("Admin.Configuration.Shipping.DeliveryDates.Fields.DisplayOrder")",
+                                    width: 100
+                                }, {
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Edit")",
+                                    width: 80,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-default" href="EditDeliveryDate/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+                <div class="panel-footer">
+                    <a href="@Url.Action("CreateDeliveryDate")" class="btn btn-primary">
+                        <i class="fa fa-plus-square"></i>
+                        @T("Admin.Common.AddNew")
+                    </a>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @T("Admin.Configuration.Shipping.ProductAvailabilityRanges")
+                </div>
+                <div class="panel-body">
+                    <p>
+                        <em>@T("Admin.Configuration.Shipping.ProductAvailabilityRanges.Hint")</em>
+                    </p>
+                    <div id="productavailabilityrange-grid"></div>
+
+                    <script>
+                        $(document).ready(function() {
+                            $("#productavailabilityrange-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ProductAvailabilityRanges", "Shipping"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false,
+                                    @Html.Partial("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                {
+                                    field: "Name",
+                                    title: "@T("Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.Name")",
+                                    width: 300
+                                }, {
+                                    field: "DisplayOrder",
+                                    title: "@T("Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.DisplayOrder")",
+                                    width: 100
+                                }, {
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Edit")",
+                                    width: 80,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-default" href="EditProductAvailabilityRange/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+                <div class="panel-footer">
+                    <a href="@Url.Action("CreateProductAvailabilityRange")" class="btn btn-primary">
+                        <i class="fa fa-plus-square"></i>
+                        @T("Admin.Common.AddNew")
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

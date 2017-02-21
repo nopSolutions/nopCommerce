@@ -21,6 +21,16 @@
     {
         errorMessages.AddRange(ViewData[string.Format("nop.notifications.{0}", NotifyType.Error)] as IList<string>);
     }
+
+
+    //warning messages
+    var warningMessages = new List<string>();
+    if (TempData[string.Format("nop.notifications.{0}", NotifyType.Warning)] != null) {
+        errorMessages.AddRange(TempData[string.Format("nop.notifications.{0}", NotifyType.Warning)] as IList<string>);
+    }
+    if (ViewData[string.Format("nop.notifications.{0}", NotifyType.Warning)] != null) {
+        errorMessages.AddRange(ViewData[string.Format("nop.notifications.{0}", NotifyType.Warning)] as IList<string>);
+    }
 }
 @foreach (var message in successMessages)
 {
@@ -38,11 +48,21 @@
         });
     </script>
 }
+@foreach (var message in warningMessages)
+{
+    <script type="text/javascript">
+            $(document).ready(function () {
+                displayPopupNotification('@Html.Raw(HttpUtility.JavaScriptStringEncode(message))', 'warning', false);
+            });
+    </script>
+}
 <div class="ajax-loading-block-window" style="display: none">
 </div>
 <div id="dialog-notifications-success" title="@T("Common.Notification")" style="display:none;">
 </div>
 <div id="dialog-notifications-error" title="@T("Common.Error")" style="display:none;">
+</div>
+<div id="dialog-notifications-warning" title="@T("Common.Warning")" style="display:none;">
 </div>
 <div id="bar-notification" class="bar-notification">
     <span class="close" title="@T("Common.Close")">&nbsp;</span>

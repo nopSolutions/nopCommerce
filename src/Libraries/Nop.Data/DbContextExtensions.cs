@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core.EntityClient;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using Nop.Core;
-using System.Data.Entity.Core.EntityClient;
 
 namespace Nop.Data 
 {

@@ -47,7 +47,7 @@ namespace Nop.Data.Tests.Orders
                 OrderDiscount = 11.1M,
                 OrderTotal = 12.1M,
                 RefundedAmount  = 13.1M,
-                RewardPointsWereAdded = true,
+                RewardPointsHistoryEntryId = 1,
                 CheckoutAttributeDescription = "CheckoutAttributeDescription1",
                 CheckoutAttributesXml = "CheckoutAttributesXml1",
                 CustomerLanguageId = 14,
@@ -75,7 +75,8 @@ namespace Nop.Data.Tests.Orders
                 PickUpInStore = true,
                 CustomValuesXml = "CustomValuesXml1",
                 Deleted = false,
-                CreatedOnUtc = new DateTime(2010, 01, 04)
+                CreatedOnUtc = new DateTime(2010, 01, 04),
+                CustomOrderNumber = "1"
             };
 
             var fromDb = SaveAndLoadEntity(order);
@@ -103,7 +104,7 @@ namespace Nop.Data.Tests.Orders
             fromDb.OrderDiscount.ShouldEqual(11.1M);
             fromDb.OrderTotal.ShouldEqual(12.1M);
             fromDb.RefundedAmount.ShouldEqual(13.1M);
-            fromDb.RewardPointsWereAdded.ShouldEqual(true);
+            fromDb.RewardPointsHistoryEntryId.ShouldEqual(1);
             fromDb.CheckoutAttributeDescription.ShouldEqual("CheckoutAttributeDescription1");
             fromDb.CheckoutAttributesXml.ShouldEqual("CheckoutAttributesXml1");
             fromDb.CustomerLanguageId.ShouldEqual(14);
@@ -134,6 +135,7 @@ namespace Nop.Data.Tests.Orders
             fromDb.CustomValuesXml.ShouldEqual("CustomValuesXml1");
             fromDb.Deleted.ShouldEqual(false);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 04));
+            fromDb.CustomOrderNumber.ShouldEqual("1");
         }
 
         [Test]
@@ -145,7 +147,8 @@ namespace Nop.Data.Tests.Orders
                 Customer = GetTestCustomer(),
                 BillingAddress = GetTestBillingAddress(),
                 ShippingAddress = GetTestShippingAddress(),
-                CreatedOnUtc = new DateTime(2010, 01, 04)
+                CreatedOnUtc = new DateTime(2010, 01, 04),
+                CustomOrderNumber = "1"
             };
 
             var fromDb = SaveAndLoadEntity(order);
@@ -172,7 +175,8 @@ namespace Nop.Data.Tests.Orders
                     CreatedOnUtc = new DateTime(2010, 01, 01)
                 },
                 BillingAddress = GetTestBillingAddress(),
-                CreatedOnUtc = new DateTime(2010, 01, 01)
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                CustomOrderNumber = "1"
             };
 
             var fromDb = SaveAndLoadEntity(order);
@@ -193,7 +197,8 @@ namespace Nop.Data.Tests.Orders
                 OrderGuid = Guid.NewGuid(),
                 Customer = testCustomer,
                 BillingAddress = GetTestBillingAddress(),
-                CreatedOnUtc = new DateTime(2010, 01, 01)
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                CustomOrderNumber = "1"
             };
             order.DiscountUsageHistory.Add
                 (
@@ -221,7 +226,8 @@ namespace Nop.Data.Tests.Orders
                 OrderGuid = Guid.NewGuid(),
                 Customer = testCustomer,
                 BillingAddress = GetTestBillingAddress(),
-                CreatedOnUtc = new DateTime(2010, 01, 01)
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                CustomOrderNumber = "1"
             };
             order.GiftCardUsageHistory.Add
                 (
@@ -248,7 +254,8 @@ namespace Nop.Data.Tests.Orders
                 OrderGuid = Guid.NewGuid(),
                 Customer = GetTestCustomer(),
                 BillingAddress = GetTestBillingAddress(),
-                CreatedOnUtc = new DateTime(2010, 01, 01)
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                CustomOrderNumber = "1"
             };
             order.OrderNotes.Add
                 (
@@ -274,7 +281,8 @@ namespace Nop.Data.Tests.Orders
                 OrderGuid = Guid.NewGuid(),
                 Customer = GetTestCustomer(),
                 BillingAddress = GetTestBillingAddress(),
-                CreatedOnUtc = new DateTime(2010, 01, 01)
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                CustomOrderNumber = "1"
             };
             order.OrderItems.Add
                 (
@@ -300,7 +308,8 @@ namespace Nop.Data.Tests.Orders
                 OrderGuid = Guid.NewGuid(),
                 Customer = GetTestCustomer(),
                 BillingAddress = GetTestBillingAddress(),
-                CreatedOnUtc = new DateTime(2010, 01, 01)
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                CustomOrderNumber = "1"
             };
             order.Shipments.Add
                 (

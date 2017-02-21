@@ -76,6 +76,19 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// Gets an order
+        /// </summary>
+        /// <param name="customOrderNumber">The custom order number</param>
+        /// <returns>Order</returns>
+        public virtual Order GetOrderByCustomOrderNumber(string customOrderNumber)
+        {
+            if (string.IsNullOrEmpty(customOrderNumber))
+                return null;
+           
+            return _orderRepository.Table.FirstOrDefault(o => o.CustomOrderNumber == customOrderNumber);
+        }
+
+        /// <summary>
         /// Get orders by identifiers
         /// </summary>
         /// <param name="orderIds">Order identifiers</param>
@@ -86,7 +99,7 @@ namespace Nop.Services.Orders
                 return new List<Order>();
 
             var query = from o in _orderRepository.Table
-                        where orderIds.Contains(o.Id)
+                        where orderIds.Contains(o.Id) && !o.Deleted
                         select o;
             var orders = query.ToList();
             //sort by passed identifiers
@@ -128,6 +141,9 @@ namespace Nop.Services.Orders
 
             order.Deleted = true;
             UpdateOrder(order);
+
+            //event notification
+            _eventPublisher.EntityDeleted(order);
         }
 
         /// <summary>
@@ -278,7 +294,7 @@ namespace Nop.Services.Orders
         }
         
         #endregion
-        
+
         #region Orders items
 
         /// <summary>
@@ -396,6 +412,9 @@ namespace Nop.Services.Orders
 
             recurringPayment.Deleted = true;
             UpdateRecurringPayment(recurringPayment);
+
+            //event notification
+            _eventPublisher.EntityDeleted(recurringPayment);
         }
 
         /// <summary>

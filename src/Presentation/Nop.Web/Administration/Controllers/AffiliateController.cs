@@ -10,15 +10,16 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
+using Nop.Services;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Security;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 
@@ -39,6 +40,7 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly IOrderService _orderService;
         private readonly IPermissionService _permissionService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion
 
@@ -49,7 +51,8 @@ namespace Nop.Admin.Controllers
             ICountryService countryService, IStateProvinceService stateProvinceService,
             IPriceFormatter priceFormatter, IAffiliateService affiliateService,
             ICustomerService customerService, IOrderService orderService,
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            ICustomerActivityService customerActivityService)
         {
             this._localizationService = localizationService;
             this._workContext = workContext;
@@ -62,6 +65,7 @@ namespace Nop.Admin.Controllers
             this._customerService = customerService;
             this._orderService = orderService;
             this._permissionService = permissionService;
+            this._customerActivityService = customerActivityService;
         }
 
         #endregion
@@ -98,6 +102,7 @@ namespace Nop.Admin.Controllers
                 model.Address.EmailRequired = true;
                 model.Address.CompanyEnabled = true;
                 model.Address.CountryEnabled = true;
+                model.Address.CountryRequired = true;
                 model.Address.StateProvinceEnabled = true;
                 model.Address.CityEnabled = true;
                 model.Address.CityRequired = true;
@@ -125,18 +130,18 @@ namespace Nop.Admin.Controllers
                     model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
             }
         }
-        
+
         #endregion
 
         #region Methods
 
         //list
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
@@ -146,10 +151,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult List(DataSourceRequest command, AffiliateListModel model)
+        public virtual ActionResult List(DataSourceRequest command, AffiliateListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var affiliates = _affiliateService.GetAllAffiliates(model.SearchFriendlyUrlName,
                 model.SearchFirstName, model.SearchLastName,
@@ -170,7 +175,7 @@ namespace Nop.Admin.Controllers
         }
 
         //create
-        public ActionResult Create()
+        public virtual ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
@@ -182,7 +187,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public ActionResult Create(AffiliateModel model, bool continueEditing)
+        public virtual ActionResult Create(AffiliateModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
@@ -205,6 +210,9 @@ namespace Nop.Admin.Controllers
                     affiliate.Address.StateProvinceId = null;
                 _affiliateService.InsertAffiliate(affiliate);
 
+                //activity log
+                _customerActivityService.InsertActivity("AddNewAffiliate", _localizationService.GetResource("ActivityLog.AddNewAffiliate"), affiliate.Id);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Affiliates.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = affiliate.Id }) : RedirectToAction("List");
             }
@@ -217,7 +225,7 @@ namespace Nop.Admin.Controllers
 
 
         //edit
-        public ActionResult Edit(int id)
+        public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
@@ -233,7 +241,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Edit(AffiliateModel model, bool continueEditing)
+        public virtual ActionResult Edit(AffiliateModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
@@ -258,6 +266,9 @@ namespace Nop.Admin.Controllers
                     affiliate.Address.StateProvinceId = null;
                 _affiliateService.UpdateAffiliate(affiliate);
 
+                //activity log
+                _customerActivityService.InsertActivity("EditAffiliate", _localizationService.GetResource("ActivityLog.EditAffiliate"), affiliate.Id);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Affiliates.Updated"));
                 if (continueEditing)
                 {
@@ -276,7 +287,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
@@ -287,12 +298,16 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             _affiliateService.DeleteAffiliate(affiliate);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteAffiliate", _localizationService.GetResource("ActivityLog.DeleteAffiliate"), affiliate.Id);
+
             SuccessNotification(_localizationService.GetResource("Admin.Affiliates.Deleted"));
             return RedirectToAction("List");
         }
 
         [ChildActionOnly]
-        public ActionResult AffiliatedOrderList(int affiliateId)
+        public virtual ActionResult AffiliatedOrderList(int affiliateId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return Content("");
@@ -318,10 +333,10 @@ namespace Nop.Admin.Controllers
             return PartialView(model);
         }
         [HttpPost]
-        public ActionResult AffiliatedOrderListGrid(DataSourceRequest command, AffiliatedOrderListModel model)
+        public virtual ActionResult AffiliatedOrderListGrid(DataSourceRequest command, AffiliatedOrderListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var affiliate = _affiliateService.GetAffiliateById(model.AffliateId);
             if (affiliate == null)
@@ -358,6 +373,8 @@ namespace Nop.Admin.Controllers
                         orderModel.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
                         orderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
                         orderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
+                        orderModel.CustomOrderNumber = order.CustomOrderNumber;
+
                         return orderModel;
                     }),
                 Total = orders.TotalCount
@@ -368,10 +385,10 @@ namespace Nop.Admin.Controllers
 
 
         [HttpPost]
-        public ActionResult AffiliatedCustomerList(int affiliateId, DataSourceRequest command)
+        public virtual ActionResult AffiliatedCustomerList(int affiliateId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var affiliate = _affiliateService.GetAffiliateById(affiliateId);
             if (affiliate == null)

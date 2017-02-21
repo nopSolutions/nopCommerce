@@ -142,12 +142,15 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="thumbFilePath">Thumb file path</param>
         /// <param name="thumbFileName">Thumb file name</param>
+        /// <param name="mimeType">MIME type</param>
         /// <param name="binary">Picture binary</param>
-        protected override void SaveThumb(string thumbFilePath, string thumbFileName, byte[] binary)
+        protected override void SaveThumb(string thumbFilePath, string thumbFileName, string mimeType, byte[] binary)
         {
             CloudBlockBlob blockBlob = container_thumb.GetBlockBlobReference(thumbFileName);
+            //set mime type
+            if (!String.IsNullOrEmpty(mimeType))
+                blockBlob.Properties.ContentType = mimeType;
             blockBlob.UploadFromByteArray(binary, 0, binary.Length);
-
         }
 
         #endregion

@@ -228,6 +228,22 @@ namespace Nop.Services.Catalog
             _eventPublisher.EntityUpdated(productAttribute);
         }
 
+        /// <summary>
+        /// Returns a list of IDs of not existing attributes
+        /// </summary>
+        /// <param name="attributeId">The IDs of the attributes to check</param>
+        /// <returns>List of IDs not existing attributes</returns>
+        public virtual int[] GetNotExistingAttributes(int[] attributeId)
+        {
+            if (attributeId == null)
+                throw new ArgumentNullException("attributeId");
+
+            var query = _productAttributeRepository.Table;
+            var queryFilter = attributeId.Distinct().ToArray();
+            var filter = query.Select(a => a.Id).Where(m => queryFilter.Contains(m)).ToList();
+            return queryFilter.Except(filter).ToArray();
+        }
+
         #endregion
 
         #region Product attributes mappings
@@ -265,7 +281,7 @@ namespace Nop.Services.Catalog
             return _cacheManager.Get(key, () =>
             {
                 var query = from pam in _productAttributeMappingRepository.Table
-                            orderby pam.DisplayOrder
+                            orderby pam.DisplayOrder, pam.Id
                             where pam.ProductId == productId
                             select pam;
                 var productAttributeMappings = query.ToList();
@@ -365,7 +381,7 @@ namespace Nop.Services.Catalog
             return _cacheManager.Get(key, () =>
             {
                 var query = from pav in _productAttributeValueRepository.Table
-                            orderby pav.DisplayOrder
+                            orderby pav.DisplayOrder, pav.Id
                             where pav.ProductAttributeMappingId == productAttributeMappingId
                             select pav;
                 var productAttributeValues = query.ToList();
@@ -462,7 +478,7 @@ namespace Nop.Services.Catalog
         public virtual IList<PredefinedProductAttributeValue> GetPredefinedProductAttributeValues(int productAttributeId)
         {
             var query = from ppav in _predefinedProductAttributeValueRepository.Table
-                        orderby ppav.DisplayOrder
+                        orderby ppav.DisplayOrder, ppav.Id
                         where ppav.ProductAttributeId == productAttributeId
                         select ppav;
             var values = query.ToList();

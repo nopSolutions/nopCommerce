@@ -3,9 +3,9 @@ using System.Text;
 using System.Web.Mvc;
 using Nop.Plugin.Shipping.Fedex.Domain;
 using Nop.Plugin.Shipping.Fedex.Models;
+using Nop.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Shipping.Fedex.Controllers
@@ -56,14 +56,14 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
                 foreach (string service in services.Services)
                 {
                     string serviceId = FedexServices.GetServiceId(service);
-                    if (!String.IsNullOrEmpty(serviceId) && !String.IsNullOrEmpty(carrierServicesOfferedDomestic))
+                    if (!String.IsNullOrEmpty(serviceId))
                     {
                         if (carrierServicesOfferedDomestic.Contains(serviceId))
                             model.CarrierServicesOffered.Add(service);
                     }
                 }
 
-            return View("~/Plugins/Shipping.Fedex/Views/ShippingFedex/Configure.cshtml", model);
+            return View("~/Plugins/Shipping.Fedex/Views/Configure.cshtml", model);
         }
 
         [HttpPost]

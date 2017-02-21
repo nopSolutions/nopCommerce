@@ -14,6 +14,7 @@ namespace Nop.Admin.Models.Settings
             StoreInformationSettings = new StoreInformationSettingsModel();
             SeoSettings = new SeoSettingsModel();
             SecuritySettings = new SecuritySettingsModel();
+            CaptchaSettings = new CaptchaSettingsModel();
             PdfSettings = new PdfSettingsModel();
             LocalizationSettings = new LocalizationSettingsModel();
             FullTextSettings = new FullTextSettingsModel();
@@ -22,6 +23,7 @@ namespace Nop.Admin.Models.Settings
         public StoreInformationSettingsModel StoreInformationSettings { get; set; }
         public SeoSettingsModel SeoSettings { get; set; }
         public SecuritySettingsModel SecuritySettings { get; set; }
+        public CaptchaSettingsModel CaptchaSettings { get; set; }
         public PdfSettingsModel PdfSettings { get; set; }
         public LocalizationSettingsModel LocalizationSettings { get; set; }
         public FullTextSettingsModel FullTextSettings { get; set; }
@@ -188,11 +190,6 @@ namespace Nop.Admin.Models.Settings
 
         public partial class SecuritySettingsModel : BaseNopModel
         {
-            public SecuritySettingsModel()
-            {
-                this.AvailableReCaptchaVersions = new List<SelectListItem>();
-            }
-
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EncryptionKey")]
             [AllowHtml]
             public string EncryptionKey { get; set; }
@@ -211,36 +208,44 @@ namespace Nop.Admin.Models.Settings
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled")]
             public bool HoneypotEnabled { get; set; }
+        }
+
+        public partial class CaptchaSettingsModel : BaseNopModel
+        {
+            public CaptchaSettingsModel()
+            {
+                this.AvailableReCaptchaVersions = new List<SelectListItem>();
+            }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaEnabled")]
-            public bool CaptchaEnabled { get; set; }
+            public bool Enabled { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnLoginPage")]
-            public bool CaptchaShowOnLoginPage { get; set; }
+            public bool ShowOnLoginPage { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnRegistrationPage")]
-            public bool CaptchaShowOnRegistrationPage { get; set; }
+            public bool ShowOnRegistrationPage { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnContactUsPage")]
-            public bool CaptchaShowOnContactUsPage { get; set; }
+            public bool ShowOnContactUsPage { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnEmailWishlistToFriendPage")]
-            public bool CaptchaShowOnEmailWishlistToFriendPage { get; set; }
+            public bool ShowOnEmailWishlistToFriendPage { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnEmailProductToFriendPage")]
-            public bool CaptchaShowOnEmailProductToFriendPage { get; set; }
+            public bool ShowOnEmailProductToFriendPage { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnBlogCommentPage")]
-            public bool CaptchaShowOnBlogCommentPage { get; set; }
+            public bool ShowOnBlogCommentPage { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnNewsCommentPage")]
-            public bool CaptchaShowOnNewsCommentPage { get; set; }
+            public bool ShowOnNewsCommentPage { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnProductReviewPage")]
-            public bool CaptchaShowOnProductReviewPage { get; set; }
+            public bool ShowOnProductReviewPage { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnApplyVendorPage")]
-            public bool CaptchaShowOnApplyVendorPage { get; set; }
+            public bool ShowOnApplyVendorPage { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPublicKey")]
             [AllowHtml]

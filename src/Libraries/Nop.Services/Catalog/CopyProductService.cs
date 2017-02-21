@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Services.Localization;
@@ -20,6 +21,7 @@ namespace Nop.Services.Catalog
         private readonly IProductAttributeService _productAttributeService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly ILocalizationService _localizationService;
         private readonly IPictureService _pictureService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
@@ -37,6 +39,7 @@ namespace Nop.Services.Catalog
             IProductAttributeService productAttributeService,
             ILanguageService languageService,
             ILocalizedEntityService localizedEntityService, 
+            ILocalizationService localizationService,
             IPictureService pictureService,
             ICategoryService categoryService, 
             IManufacturerService manufacturerService,
@@ -50,6 +53,7 @@ namespace Nop.Services.Catalog
             this._productAttributeService = productAttributeService;
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
+            this._localizationService = localizationService;
             this._pictureService = pictureService;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -127,6 +131,9 @@ namespace Nop.Services.Catalog
                 }
             }
 
+            var newSku = !String.IsNullOrWhiteSpace(product.Sku)
+                ? string.Format(_localizationService.GetResource("Admin.Catalog.Products.Copy.SKU.New"), product.Sku) :
+                product.Sku;
             // product
             var productCopy = new Product
             {
@@ -145,7 +152,7 @@ namespace Nop.Services.Catalog
                 MetaTitle = product.MetaTitle,
                 AllowCustomerReviews = product.AllowCustomerReviews,
                 LimitedToStores = product.LimitedToStores,
-                Sku = product.Sku,
+                Sku = newSku,
                 ManufacturerPartNumber = product.ManufacturerPartNumber,
                 Gtin = product.Gtin,
                 IsGiftCard = product.IsGiftCard,
@@ -180,6 +187,7 @@ namespace Nop.Services.Catalog
                 TaxCategoryId = product.TaxCategoryId,
                 IsTelecommunicationsOrBroadcastingOrElectronicServices = product.IsTelecommunicationsOrBroadcastingOrElectronicServices,
                 ManageInventoryMethod = product.ManageInventoryMethod,
+                ProductAvailabilityRangeId = product.ProductAvailabilityRangeId,
                 UseMultipleWarehouses = product.UseMultipleWarehouses,
                 WarehouseId = product.WarehouseId,
                 StockQuantity = product.StockQuantity,
@@ -194,6 +202,7 @@ namespace Nop.Services.Catalog
                 OrderMaximumQuantity = product.OrderMaximumQuantity,
                 AllowedQuantities = product.AllowedQuantities,
                 AllowAddingOnlyExistingAttributeCombinations = product.AllowAddingOnlyExistingAttributeCombinations,
+                NotReturnable = product.NotReturnable,
                 DisableBuyButton = product.DisableBuyButton,
                 DisableWishlistButton = product.DisableWishlistButton,
                 AvailableForPreOrder = product.AvailableForPreOrder,
@@ -202,9 +211,6 @@ namespace Nop.Services.Catalog
                 Price = product.Price,
                 OldPrice = product.OldPrice,
                 ProductCost = product.ProductCost,
-                SpecialPrice = product.SpecialPrice,
-                SpecialPriceStartDateTimeUtc = product.SpecialPriceStartDateTimeUtc,
-                SpecialPriceEndDateTimeUtc = product.SpecialPriceEndDateTimeUtc,
                 CustomerEntersPrice = product.CustomerEntersPrice,
                 MinimumCustomerEnteredPrice = product.MinimumCustomerEnteredPrice,
                 MaximumCustomerEnteredPrice = product.MaximumCustomerEnteredPrice,
@@ -299,6 +305,10 @@ namespace Nop.Services.Catalog
                 }
             }
 
+            //quantity change history
+            _productService.AddStockQuantityHistoryEntry(productCopy, product.StockQuantity, product.StockQuantity, product.WarehouseId,
+                string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id));
+
             // product <-> warehouses mappings
             foreach (var pwi in product.ProductWarehouseInventory)
             {
@@ -311,6 +321,11 @@ namespace Nop.Services.Catalog
                 };
 
                 productCopy.ProductWarehouseInventory.Add(pwiCopy);
+
+                //quantity change history
+                var message = string.Format("{0} {1}", _localizationService.GetResource("Admin.StockQuantityHistory.Messages.MultipleWarehouses"),
+                    string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id));
+                _productService.AddStockQuantityHistoryEntry(productCopy, pwi.StockQuantity, pwi.StockQuantity, pwi.WarehouseId, message);
             }
             _productService.UpdateProduct(productCopy);
 
@@ -388,10 +403,16 @@ namespace Nop.Services.Catalog
                 _storeMappingService.InsertStoreMapping(productCopy, id);
             }
 
-
-            // product <-> attributes mappings
+            //product <-> attributes mappings
             var associatedAttributes = new Dictionary<int, int>();
             var associatedAttributeValues = new Dictionary<int, int>();
+
+            //attribute mapping with condition attributes
+            var oldCopyWithConditionAttributes = new List<ProductAttributeMapping>();
+
+            //all product attribute mapping copies
+            var productAttributeMappingCopies = new Dictionary<int, ProductAttributeMapping>();
+
             foreach (var productAttributeMapping in _productAttributeService.GetProductAttributeMappingsByProductId(product.Id))
             {
                 var productAttributeMappingCopy = new ProductAttributeMapping
@@ -406,10 +427,17 @@ namespace Nop.Services.Catalog
                     ValidationMaxLength = productAttributeMapping.ValidationMaxLength,
                     ValidationFileAllowedExtensions = productAttributeMapping.ValidationFileAllowedExtensions,
                     ValidationFileMaximumSize = productAttributeMapping.ValidationFileMaximumSize,
-                    DefaultValue = productAttributeMapping.DefaultValue,
-                    //UNDONE copy ConditionAttributeXml (we should replace attribute IDs with new values)
+                    DefaultValue = productAttributeMapping.DefaultValue
                 };
                 _productAttributeService.InsertProductAttributeMapping(productAttributeMappingCopy);
+
+                productAttributeMappingCopies.Add(productAttributeMappingCopy.Id, productAttributeMappingCopy);
+
+                if (!string.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml))
+                {
+                    oldCopyWithConditionAttributes.Add(productAttributeMapping);
+                }
+
                 //save associated value (used for combinations copying)
                 associatedAttributes.Add(productAttributeMapping.Id, productAttributeMappingCopy.Id);
 
@@ -432,6 +460,7 @@ namespace Nop.Services.Catalog
                         PriceAdjustment = productAttributeValue.PriceAdjustment,
                         WeightAdjustment = productAttributeValue.WeightAdjustment,
                         Cost = productAttributeValue.Cost,
+                        CustomerEntersQty = productAttributeValue.CustomerEntersQty,
                         Quantity = productAttributeValue.Quantity,
                         IsPreSelected = productAttributeValue.IsPreSelected,
                         DisplayOrder = productAttributeValue.DisplayOrder,
@@ -454,7 +483,6 @@ namespace Nop.Services.Catalog
                         }
                     }
 
-
                     _productAttributeService.InsertProductAttributeValue(attributeValueCopy);
 
                     //save associated value (used for combinations copying)
@@ -469,6 +497,37 @@ namespace Nop.Services.Catalog
                     }
                 }
             }
+
+            //copy attribute conditions
+            foreach (var productAttributeMapping in oldCopyWithConditionAttributes)
+            {
+                var oldConditionAttributeMapping = _productAttributeParser.ParseProductAttributeMappings(productAttributeMapping.ConditionAttributeXml).FirstOrDefault();
+
+                if (oldConditionAttributeMapping == null)
+                    continue;
+
+                var oldConditionValues = _productAttributeParser.ParseProductAttributeValues(productAttributeMapping.ConditionAttributeXml, oldConditionAttributeMapping.Id);
+
+                if (!oldConditionValues.Any())
+                    continue;
+
+                var newAttributeMappingId = associatedAttributes[oldConditionAttributeMapping.Id];
+                var newConditionAttributeMapping = productAttributeMappingCopies[newAttributeMappingId];
+
+                var newConditionAttributeXml = string.Empty;
+
+                foreach (var oldConditionValue in oldConditionValues)
+                {
+                    newConditionAttributeXml = _productAttributeParser.AddProductAttribute(newConditionAttributeXml, newConditionAttributeMapping, associatedAttributeValues[oldConditionValue.Id].ToString());
+                }
+
+                var attributeMappingId = associatedAttributes[productAttributeMapping.Id];
+                var conditionAttribute = productAttributeMappingCopies[attributeMappingId];
+                conditionAttribute.ConditionAttributeXml = newConditionAttributeXml;
+
+                _productAttributeService.UpdateProductAttributeMapping(conditionAttribute);
+            }
+
             //attribute combinations
             foreach (var combination in _productAttributeService.GetAllProductAttributeCombinations(product.Id))
             {
@@ -522,6 +581,10 @@ namespace Nop.Services.Catalog
                     NotifyAdminForQuantityBelow = combination.NotifyAdminForQuantityBelow
                 };
                 _productAttributeService.InsertProductAttributeCombination(combinationCopy);
+
+                //quantity change history
+                _productService.AddStockQuantityHistoryEntry(productCopy, combination.StockQuantity, combination.StockQuantity,
+                    message: string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id), combinationId: combination.Id);
             }
 
             //tier prices
@@ -534,7 +597,9 @@ namespace Nop.Services.Catalog
                         StoreId = tierPrice.StoreId,
                         CustomerRoleId = tierPrice.CustomerRoleId,
                         Quantity = tierPrice.Quantity,
-                        Price = tierPrice.Price
+                        Price = tierPrice.Price,
+                        StartDateTimeUtc = tierPrice.StartDateTimeUtc,
+                        EndDateTimeUtc = tierPrice.EndDateTimeUtc
                     });
             }
 
@@ -544,12 +609,10 @@ namespace Nop.Services.Catalog
                 productCopy.AppliedDiscounts.Add(discount);
                 _productService.UpdateProduct(productCopy);
             }
-
-
+            
             //update "HasTierPrices" and "HasDiscountsApplied" properties
             _productService.UpdateHasTierPricesProperty(productCopy);
             _productService.UpdateHasDiscountsApplied(productCopy);
-
 
             //associated products
             if (copyAssociatedProducts)

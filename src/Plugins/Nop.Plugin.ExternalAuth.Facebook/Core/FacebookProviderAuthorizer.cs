@@ -151,10 +151,6 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
         {
             string url = string.Format("{0}plugins/externalauthFacebook/logincallback/", _webHelper.GetStoreLocation());
             return new Uri(url);
-            //var builder = new UriBuilder(_httpContext.Request.Url.GetLeftPart(UriPartial.Authority));
-            //var path = _httpContext.Request.ApplicationPath + "/Plugins/ExternalAuthFacebook/LoginCallback/";
-            //builder.Path = path.Replace(@"//", @"/");
-            //return builder.Uri;
         }
 
         private Uri GenerateServiceLoginUrl()

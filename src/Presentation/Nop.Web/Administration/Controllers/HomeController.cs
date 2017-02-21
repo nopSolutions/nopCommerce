@@ -64,7 +64,7 @@ namespace Nop.Admin.Controllers
 
         #region Methods
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             var model = new DashboardModel();
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
@@ -72,7 +72,7 @@ namespace Nop.Admin.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult NopCommerceNews()
+        public virtual ActionResult NopCommerceNews()
         {
             try
             {
@@ -137,7 +137,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult NopCommerceNewsHideAdv()
+        public virtual ActionResult NopCommerceNewsHideAdv()
         {
             _adminAreaSettings.HideAdvertisementsOnAdminArea = !_adminAreaSettings.HideAdvertisementsOnAdminArea;
             _settingService.SaveSetting(_adminAreaSettings);
@@ -145,7 +145,7 @@ namespace Nop.Admin.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult CommonStatistics()
+        public virtual ActionResult CommonStatistics()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) ||
                 !_permissionService.Authorize(StandardPermissionProvider.ManageOrders) ||

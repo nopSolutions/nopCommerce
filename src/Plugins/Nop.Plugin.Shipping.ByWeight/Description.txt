@@ -1,9 +1,0 @@
-﻿Group: Shipping rate computation
-FriendlyName: Shipping by weight
-SystemName: Shipping.ByWeight
-Version: 1.45
-SupportedVersions: 3.80
-Author: nopCommerce team
-DisplayOrder: 1
-FileName: Nop.Plugin.Shipping.ByWeight.dll
-Description: This plugin enables shipping rates to be calculated by weight

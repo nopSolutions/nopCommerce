@@ -20,6 +20,13 @@ namespace Nop.Services.Orders
         Order GetOrderById(int orderId);
 
         /// <summary>
+        /// Gets an order
+        /// </summary>
+        /// <param name="customOrderNumber">The custom order number</param>
+        /// <returns>Order</returns>
+        Order GetOrderByCustomOrderNumber(string customOrderNumber);
+
+        /// <summary>
         /// Get orders by identifiers
         /// </summary>
         /// <param name="orderIds">Order identifiers</param>
@@ -89,11 +96,11 @@ namespace Nop.Services.Orders
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>Order</returns>
         Order GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId, string paymentMethodSystemName);
-        
+
         #endregion
 
         #region Orders items
-        
+
         /// <summary>
         /// Gets an order item
         /// </summary>

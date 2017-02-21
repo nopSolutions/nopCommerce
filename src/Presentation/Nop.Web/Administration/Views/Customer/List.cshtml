@@ -137,7 +137,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                }
+                                                }
                             </div>
                             <div class="col-md-7">
                                 @if (Model.CompanyEnabled)
@@ -186,7 +186,7 @@
                                         @Html.NopLabelFor(model => model.SearchCustomerRoleIds)
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.EditorFor(model => model.SearchCustomerRoleIds, new {SelectList = Model.AvailableCustomerRoles})
+                                        @Html.EditorFor(model => model.SearchCustomerRoleIds, new { SelectList = Model.AvailableCustomerRoles })
                                         <script>
                                             $(document).ready(function() {
                                                 var rolesIdsInput = $('#@Html.FieldIdFor(model => model.SearchCustomerRoleIds)').data("kendoMultiSelect");
@@ -197,13 +197,13 @@
                                                 @if (Model.AvailableCustomerRoles.Count == 0)
                                                 {
                                                     <text>
-                                                        rolesIdsInput.setOptions({
-                                                            enable: false,
-                                                            placeholder: '@T("Admin.Catalog.Products.CustomerRoles.NoCustomerRolesAvailable")'
-                                                        });
-                                                        rolesIdsInput._placeholder();
-                                                        rolesIdsInput._enable();
-                                                    </text>
+                                                rolesIdsInput.setOptions({
+                                                    enable: false,
+                                                    placeholder: '@T("Admin.Catalog.Products.CustomerRoles.NoCustomerRolesAvailable")'
+                                                });
+                                                rolesIdsInput._placeholder();
+                                                rolesIdsInput._enable();
+                                                </text>
                                                 }
                                             });
                                         </script>
@@ -256,7 +256,8 @@
                                     },
                                     pageable: {
                                         refresh: true,
-                                        pageSizes: [@(gridPageSizes)]
+                                        pageSizes: [@(gridPageSizes)],
+                                        @Html.Partial("_GridPagerMessages")
                                     },
                                     scrollable: false,
                                     dataBound: onDataBound,
@@ -267,10 +268,6 @@
                                             headerAttributes: { style: "text-align:center" },
                                             attributes: { style: "text-align:center" },
                                             template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
-                                            width: 50
-                                        }, {
-                                            field: "Id",
-                                            title: "ID",
                                             width: 50
                                         }, {
                                             field: "Email",
@@ -344,7 +341,9 @@
                                             field: "Id",
                                             title: "@T("Admin.Common.Edit")",
                                             width: 50,
-                                            template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                            template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
                                         }
                                     ]
                                 });
@@ -385,7 +384,7 @@
                                 });
 
                                 //wire up checkboxes.
-                                $('#customers-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function(e) {
+                                $('#customers-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
                                     var $check = $(this);
                                     if ($check.is(":checked") == true) {
                                         var checked = jQuery.inArray($check.val(), selectedIds);
@@ -407,7 +406,7 @@
                             });
 
                             function onDataBound(e) {
-                                $('#customers-grid input[type=checkbox][id!=mastercheckbox]').each(function() {
+                                $('#customers-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function() {
                                     var currentId = $(this).val();
                                     var checked = jQuery.inArray(currentId, selectedIds);
                                     //set checked based on if current checkbox's value is in selectedIds.
@@ -418,8 +417,8 @@
                             }
 
                             function updateMasterCheckbox() {
-                                var numChkBoxes = $('#customers-grid input[type=checkbox][id!=mastercheckbox]').length;
-                                var numChkBoxesChecked = $('#customers-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
+                                var numChkBoxes = $('#customers-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
+                                var numChkBoxesChecked = $('#customers-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
                                 $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
                             }
 

@@ -73,7 +73,7 @@
                             @Html.NopLabelFor(model => model.PriceAdjustment)
                         </div>
                         <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.PriceAdjustment) [@Model.PrimaryStoreCurrencyCode]
+                            @Html.NopEditorFor(model => model.PriceAdjustment, Model.PrimaryStoreCurrencyCode)
                             @Html.ValidationMessageFor(model => model.PriceAdjustment)
                         </div>
                     </div>
@@ -82,7 +82,7 @@
                             @Html.NopLabelFor(model => model.WeightAdjustment)
                         </div>
                         <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.WeightAdjustment) [@Model.BaseWeightIn]
+                            @Html.NopEditorFor(model => model.WeightAdjustment, Model.BaseWeightIn)
                             @Html.ValidationMessageFor(model => model.WeightAdjustment)
                         </div>
                     </div>

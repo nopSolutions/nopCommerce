@@ -217,12 +217,12 @@ namespace Nop.Admin.Controllers
         
         #region List
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
@@ -237,18 +237,15 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult List(DataSourceRequest command, TopicListModel model)
+        public virtual ActionResult List(DataSourceRequest command, TopicListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var topicModels = _topicService.GetAllTopics(model.SearchStoreId, true, true)
                 .Select(x =>x.ToModel())
                 .ToList();
-            //little hack here:
-            //we don't have paging supported for topic list page
-            //now ensure that topic bodies are not returned. otherwise, we can get the following error:
-            //"Error during serialization or deserialization using the JSON JavaScriptSerializer. The length of the string exceeds the value set on the maxJsonLength property. "
+            //little performance optimization: ensure that "Body" is not returned
             foreach (var topic in topicModels)
             {
                 topic.Body = "";
@@ -266,7 +263,7 @@ namespace Nop.Admin.Controllers
 
         #region Create / Edit / Delete
 
-        public ActionResult Create()
+        public virtual ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
@@ -289,7 +286,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Create(TopicModel model, bool continueEditing)
+        public virtual ActionResult Create(TopicModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
@@ -340,7 +337,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult Edit(int id)
+        public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
@@ -373,7 +370,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Edit(TopicModel model, bool continueEditing)
+        public virtual ActionResult Edit(TopicModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
@@ -431,7 +428,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();

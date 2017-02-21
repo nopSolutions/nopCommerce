@@ -72,7 +72,8 @@
                                     refresh: true,
                                     numeric: false,
                                     previousNext: false,
-                                    info: false
+                                    info: false,
+                                    @Html.Partial("_GridPagerMessages")
                                 },
                                 scrollable: false,
                                 dataBound: onDataBound,
@@ -140,7 +141,9 @@
                                         field: "Id",
                                         title: "@T("Admin.Common.Edit")",
                                         width: 50,
-                                        template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
                                     }
                                 ]
                             });
@@ -210,7 +213,7 @@
                             });
 
                             //wire up checkboxes.
-                            $('#countries-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function (e) {
+                            $('#countries-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
                                 var $check = $(this);
                                 if ($check.is(":checked") == true) {
                                     var checked = jQuery.inArray($check.val(), selectedIds);
@@ -233,7 +236,7 @@
 
                         function onDataBound(e) {
 
-                            $('#countries-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
+                            $('#countries-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function () {
                                 var currentId = $(this).val();
                                 var checked = jQuery.inArray(currentId, selectedIds);
                                 //set checked based on if current checkbox's value is in selectedIds.
@@ -244,8 +247,8 @@
                         }
 
                         function updateMasterCheckbox() {
-                            var numChkBoxes = $('#countries-grid input[type=checkbox][id!=mastercheckbox]').length;
-                            var numChkBoxesChecked = $('#countries-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
+                            var numChkBoxes = $('#countries-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
+                            var numChkBoxesChecked = $('#countries-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
                             $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
                         }
                     </script>
@@ -268,6 +271,14 @@
                 <div class="form-horizontal">
                     <div class="modal-body">
                         @Html.AntiForgeryToken()
+                        <ul class="common-list">
+                            <li>
+                                <em>@T("Admin.Configuration.Countries.ImportTip")</em>
+                            </li>
+                            <li>
+                                <em><a href="http://www.nopcommerce.com/p/1622/all-states-provinces-package.aspx?utm_source=admin-panel&utm_medium=countries&utm_campaign=admin-panel" target="_blank">http://www.nopcommerce.com/p/1622/all-states-provinces-package.aspx</a></em>
+                            </li>
+                        </ul>
                         <div class="form-group">
                             <div class="col-md-2">
                                 <div class="label-wrapper">

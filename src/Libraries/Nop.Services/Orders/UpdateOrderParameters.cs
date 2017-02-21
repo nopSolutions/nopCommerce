@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Services.Discounts;
 
 namespace Nop.Services.Orders
 {
@@ -13,7 +13,7 @@ namespace Nop.Services.Orders
         public UpdateOrderParameters()
         {
             Warnings = new List<string>();
-            AppliedDiscounts = new List<Discount>();
+            AppliedDiscounts = new List<DiscountForCaching>();
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Applied discounts
         /// </summary>
-        public List<Discount> AppliedDiscounts { get; set; }
+        public List<DiscountForCaching> AppliedDiscounts { get; set; }
 
         /// <summary>
         /// Pickup point

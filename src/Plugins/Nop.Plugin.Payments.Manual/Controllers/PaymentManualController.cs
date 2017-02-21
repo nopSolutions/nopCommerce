@@ -5,11 +5,11 @@ using System.Web.Mvc;
 using Nop.Core;
 using Nop.Plugin.Payments.Manual.Models;
 using Nop.Plugin.Payments.Manual.Validators;
+using Nop.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
 using Nop.Services.Stores;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Payments.Manual.Controllers
@@ -54,7 +54,7 @@ namespace Nop.Plugin.Payments.Manual.Controllers
                 model.AdditionalFeePercentage_OverrideForStore = _settingService.SettingExists(manualPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
             }
 
-            return View("~/Plugins/Payments.Manual/Views/PaymentManual/Configure.cshtml", model);
+            return View("~/Plugins/Payments.Manual/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -154,7 +154,7 @@ namespace Nop.Plugin.Payments.Manual.Controllers
             if (selectedYear != null)
                 selectedYear.Selected = true;
 
-            return View("~/Plugins/Payments.Manual/Views/PaymentManual/PaymentInfo.cshtml", model);
+            return View("~/Plugins/Payments.Manual/Views/PaymentInfo.cshtml", model);
         }
 
         [NonAction]

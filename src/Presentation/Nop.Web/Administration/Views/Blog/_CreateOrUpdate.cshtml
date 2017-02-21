@@ -77,7 +77,7 @@
                     source: initialBlogTags
                 },
                 delimiter: ',',
-                placeholder: 'Enter tags ...'
+                placeholder: '@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Tags.Placeholder")'
             });
         });
     </script>
@@ -119,6 +119,15 @@
                     <div class="col-md-9">
                         @Html.NopTextAreaFor(model => model.BodyOverview)
                         @Html.ValidationMessageFor(model => model.BodyOverview)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Tags)
+                    </div>
+                    <div class="col-md-9">
+                       @Html.NopEditorFor(model => model.Tags)
+                       @Html.ValidationMessageFor(model => model.Tags)
                     </div>
                 </div>
                 <div class="form-group">
@@ -222,6 +231,18 @@
                         @Html.ValidationMessageFor(model => model.SeName)
                     </div>
                 </div>
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#@Html.FieldIdFor(model => model.SeName)').on('input propertychange paste', function () {
+                            var parameters = {
+                                entityId: '@Model.Id',
+                                entityName: 'BlogPost',
+                                seName: $(this).val()
+                            };
+                            warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.FieldNameFor(model => model.SeName)', parameters);
+                        });
+                    });
+                </script>
             </div>
         </div>
     </div>

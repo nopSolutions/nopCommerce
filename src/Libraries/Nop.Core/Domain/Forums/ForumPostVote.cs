@@ -1,5 +1,4 @@
 ﻿using System;
-using Nop.Core.Domain.Customers;
 
 namespace Nop.Core.Domain.Forums
 {
@@ -32,10 +31,5 @@ namespace Nop.Core.Domain.Forums
         /// Gets the post
         /// </summary>
         public virtual ForumPost ForumPost { get; set; }
-
-        /// <summary>
-        /// Gets the customer
-        /// </summary>
-        public virtual Customer Customer { get; set; }
     }
 }

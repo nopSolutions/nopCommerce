@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Nop.Admin.Infrastructure.Mapper;
 using Nop.Admin.Models.Blogs;
 using Nop.Admin.Models.Catalog;
 using Nop.Admin.Models.Cms;
@@ -44,6 +43,7 @@ using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Infrastructure.Mapper;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
 using Nop.Services.Cms;
@@ -52,6 +52,7 @@ using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
+using Nop.Web.Framework.Security.Captcha;
 
 namespace Nop.Admin.Extensions
 {
@@ -539,7 +540,26 @@ namespace Nop.Admin.Extensions
         }
 
         #endregion
-        
+
+        #region Product availability ranges
+
+        public static ProductAvailabilityRangeModel ToModel(this ProductAvailabilityRange entity)
+        {
+            return entity.MapTo<ProductAvailabilityRange, ProductAvailabilityRangeModel>();
+        }
+
+        public static ProductAvailabilityRange ToEntity(this ProductAvailabilityRangeModel model)
+        {
+            return model.MapTo<ProductAvailabilityRangeModel, ProductAvailabilityRange>();
+        }
+
+        public static ProductAvailabilityRange ToEntity(this ProductAvailabilityRangeModel model, ProductAvailabilityRange destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
         #region Payment methods
 
         public static PaymentMethodModel ToModel(this IPaymentMethod entity)
@@ -1012,6 +1032,20 @@ namespace Nop.Admin.Extensions
         {
             return model.MapTo(destination);
         }
+
+
+
+        //general (captcha) settings
+        public static GeneralCommonSettingsModel.CaptchaSettingsModel ToModel(this CaptchaSettings entity)
+        {
+            return entity.MapTo<CaptchaSettings, GeneralCommonSettingsModel.CaptchaSettingsModel>();
+        }
+        public static CaptchaSettings ToEntity(this GeneralCommonSettingsModel.CaptchaSettingsModel model, CaptchaSettings destination)
+        {
+            return model.MapTo(destination);
+        }
+
+
 
         //product editor settings
         public static ProductEditorSettingsModel ToModel(this ProductEditorSettings entity)

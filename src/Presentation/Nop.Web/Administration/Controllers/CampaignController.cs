@@ -10,6 +10,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Stores;
@@ -31,6 +32,7 @@ namespace Nop.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IPermissionService _permissionService;
 	    private readonly ICustomerService _customerService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         public CampaignController(ICampaignService campaignService,
             IDateTimeHelper dateTimeHelper, 
@@ -42,7 +44,8 @@ namespace Nop.Admin.Controllers
             IStoreContext storeContext,
             IStoreService storeService,
             IPermissionService permissionService, 
-            ICustomerService customerService)
+            ICustomerService customerService,
+            ICustomerActivityService customerActivityService)
 		{
             this._campaignService = campaignService;
             this._dateTimeHelper = dateTimeHelper;
@@ -55,22 +58,8 @@ namespace Nop.Admin.Controllers
             this._storeService = storeService;
             this._permissionService = permissionService;
             this._customerService = customerService;
+            this._customerActivityService = customerActivityService;
 		}
-
-        [NonAction]
-        protected virtual string FormatTokens(string[] tokens)
-        {
-            var sb = new StringBuilder();
-            for (int i = 0; i < tokens.Length; i++)
-            {
-                string token = tokens[i];
-                sb.Append(token);
-                if (i != tokens.Length - 1)
-                    sb.Append(", ");
-            }
-
-            return sb.ToString();
-        }
 
         [NonAction]
         protected virtual void PrepareStoresModel(CampaignModel model)
@@ -116,12 +105,37 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        public ActionResult Index()
+        [NonAction]
+        protected virtual void PrepareEmailAccountsModel(CampaignModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableEmailAccounts = _emailAccountService.GetAllEmailAccounts().Select(emailAccount => new SelectListItem
+            {
+                Value = emailAccount.Id.ToString(),
+                Text = string.Format("{0} ({1})", emailAccount.DisplayName, emailAccount.Email)
+            }).ToList();
+        }
+
+        [NonAction]
+        protected virtual EmailAccount GetEmailAccount(int emailAccountId)
+        {
+            var emailAccount = _emailAccountService.GetEmailAccountById(emailAccountId)
+                ?? _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
+
+            if (emailAccount == null)
+                throw new NopException("Email account could not be loaded");
+
+            return emailAccount;
+        }
+
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-		public ActionResult List()
+		public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
@@ -148,10 +162,10 @@ namespace Nop.Admin.Controllers
 		}
 
         [HttpPost]
-        public ActionResult List(DataSourceRequest command, CampaignListModel searchModel)
+        public virtual ActionResult List(DataSourceRequest command, CampaignListModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var campaigns = _campaignService.GetAllCampaigns(searchModel.StoreId);
             var gridModel = new DataSourceResult
@@ -169,22 +183,26 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        public ActionResult Create()
+        public virtual ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
 
             var model = new CampaignModel();
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            model.AllowedTokens = string.Join(", ", _messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
             //customer roles
             PrepareCustomerRolesModel(model);
+            //email accounts
+            PrepareEmailAccountsModel(model);
+            model.EmailAccountId = _emailAccountSettings.DefaultEmailAccountId;
+
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Create(CampaignModel model, bool continueEditing)
+        public virtual ActionResult Create(CampaignModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
@@ -197,20 +215,26 @@ namespace Nop.Admin.Controllers
                     (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DontSendBeforeDate.Value) : null;
                 _campaignService.InsertCampaign(campaign);
 
+                //activity log
+                _customerActivityService.InsertActivity("AddNewCampaign", _localizationService.GetResource("ActivityLog.AddNewCampaign"), campaign.Id);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = campaign.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            model.AllowedTokens = string.Join(", ", _messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
             //customer roles
             PrepareCustomerRolesModel(model);
+            //email accounts
+            PrepareEmailAccountsModel(model);
+
             return View(model);
         }
 
-		public ActionResult Edit(int id)
+		public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
@@ -223,18 +247,22 @@ namespace Nop.Admin.Controllers
             var model = campaign.ToModel();
             if (campaign.DontSendBeforeDateUtc.HasValue)
                 model.DontSendBeforeDate = _dateTimeHelper.ConvertToUserTime(campaign.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            model.AllowedTokens = string.Join(", ", _messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
             //customer roles
             PrepareCustomerRolesModel(model);
+            //email accounts
+            PrepareEmailAccountsModel(model);
+            model.EmailAccountId = _emailAccountSettings.DefaultEmailAccountId;
+
             return View(model);
 		}
 
         [HttpPost]
         [ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public ActionResult Edit(CampaignModel model, bool continueEditing)
+        public virtual ActionResult Edit(CampaignModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
@@ -251,22 +279,28 @@ namespace Nop.Admin.Controllers
                     (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DontSendBeforeDate.Value) : null;
                 _campaignService.UpdateCampaign(campaign);
 
+                //activity log
+                _customerActivityService.InsertActivity("EditCampaign", _localizationService.GetResource("ActivityLog.EditCampaign"), campaign.Id);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = campaign.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            model.AllowedTokens = string.Join(", ", _messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
             //customer roles
             PrepareCustomerRolesModel(model);
+            //email accounts
+            PrepareEmailAccountsModel(model);
+
             return View(model);
 		}
 
         [HttpPost,ActionName("Edit")]
         [FormValueRequired("send-test-email")]
-        public ActionResult SendTestEmail(CampaignModel model)
+        public virtual ActionResult SendTestEmail(CampaignModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
@@ -276,11 +310,13 @@ namespace Nop.Admin.Controllers
                 //No campaign found with the specified id
                 return RedirectToAction("List");
             
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            model.AllowedTokens = string.Join(", ", _messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
             //customer roles
             PrepareCustomerRolesModel(model);
+            //email accounts
+            PrepareEmailAccountsModel(model);
 
             if (!CommonHelper.IsValidEmail(model.TestEmail))
             {
@@ -290,11 +326,8 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
-                if (emailAccount == null)
-                    throw new NopException("Email account could not be loaded");
 
-
+                var emailAccount = GetEmailAccount(model.EmailAccountId);
                 var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(model.TestEmail, _storeContext.CurrentStore.Id);
                 if (subscription != null)
                 {
@@ -323,7 +356,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("send-mass-email")]
-        public ActionResult SendMassEmail(CampaignModel model)
+        public virtual ActionResult SendMassEmail(CampaignModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
@@ -333,18 +366,17 @@ namespace Nop.Admin.Controllers
                 //No campaign found with the specified id
                 return RedirectToAction("List");
 
-
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            model.AllowedTokens = string.Join(", ", _messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
             //customer roles
             PrepareCustomerRolesModel(model);
+            //email accounts
+            PrepareEmailAccountsModel(model);
 
             try
             {
-                var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
-                if (emailAccount == null)
-                    throw new NopException("Email account could not be loaded");
+                var emailAccount = GetEmailAccount(model.EmailAccountId);
 
                 //subscribers of certain store?
                 var store = _storeService.GetStoreById(campaign.StoreId);
@@ -366,7 +398,7 @@ namespace Nop.Admin.Controllers
         }
 
 		[HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
@@ -378,7 +410,11 @@ namespace Nop.Admin.Controllers
 
             _campaignService.DeleteCampaign(campaign);
 
+            //activity log
+            _customerActivityService.InsertActivity("DeleteCampaign", _localizationService.GetResource("ActivityLog.DeleteCampaign"), campaign.Id);
+
             SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Deleted"));
+
 			return RedirectToAction("List");
 		}
 	}

@@ -181,7 +181,7 @@ namespace Nop.Services.Seo
         /// <param name="entity">Entity</param>
         /// <param name="seName">Search engine name to validate</param>
         /// <param name="name">User-friendly name used to generate sename</param>
-        /// <param name="ensureNotEmpty">Ensreu that sename is not empty</param>
+        /// <param name="ensureNotEmpty">Ensure that sename is not empty</param>
         /// <returns>Valid sename</returns>
         public static string ValidateSeName<T>(this T entity, string seName, string name, bool ensureNotEmpty)
              where T : BaseEntity, ISlugSupported
@@ -189,6 +189,20 @@ namespace Nop.Services.Seo
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
+            return ValidateSeName(entity.Id, typeof(T).Name, seName, name, ensureNotEmpty);
+        }
+
+        /// <summary>
+        /// Validate search engine name
+        /// </summary>
+        /// <param name="entityId">Entity identifier</param>
+        /// <param name="entityName">Entity name</param>
+        /// <param name="seName">Search engine name to validate</param>
+        /// <param name="name">User-friendly name used to generate sename</param>
+        /// <param name="ensureNotEmpty">Ensure that sename is not empty</param>
+        /// <returns>Valid sename</returns>
+        public static string ValidateSeName(int entityId, string entityName, string seName, string name, bool ensureNotEmpty)
+        {
             //use name if sename is not specified
             if (String.IsNullOrWhiteSpace(seName) && !String.IsNullOrWhiteSpace(name))
                 seName = name;
@@ -207,7 +221,7 @@ namespace Nop.Services.Seo
                 if (ensureNotEmpty)
                 {
                     //use entity identifier as sename if empty
-                    seName = entity.Id.ToString();
+                    seName = entityId.ToString();
                 }
                 else
                 {
@@ -217,7 +231,6 @@ namespace Nop.Services.Seo
             }
 
             //ensure this sename is not reserved yet
-            string entityName = typeof(T).Name;
             var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
             var seoSettings = EngineContext.Current.Resolve<SeoSettings>();
             int i = 2;
@@ -226,7 +239,7 @@ namespace Nop.Services.Seo
             {
                 //check whether such slug already exists (and that is not the current entity)
                 var urlRecord = urlRecordService.GetBySlug(tempSeName);
-                var reserved1 = urlRecord != null && !(urlRecord.EntityId == entity.Id && urlRecord.EntityName.Equals(entityName, StringComparison.InvariantCultureIgnoreCase));
+                var reserved1 = urlRecord != null && !(urlRecord.EntityId == entityId && urlRecord.EntityName.Equals(entityName, StringComparison.InvariantCultureIgnoreCase));
                 //and it's not in the list of reserved slugs
                 var reserved2 = seoSettings.ReservedUrlRecordSlugs.Contains(tempSeName, StringComparer.InvariantCultureIgnoreCase);
                 if (!reserved1 && !reserved2)

@@ -54,12 +54,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    <Reference Include="Autofac, Version=4.3.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Autofac.4.3.0\lib\net45\Autofac.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="AutoMapper, Version=5.0.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\AutoMapper.5.0.2\lib\net45\AutoMapper.dll</HintPath>
+    <Reference Include="AutoMapper, Version=5.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\AutoMapper.5.2.0\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FluentValidation, Version=6.2.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -209,13 +209,14 @@
     <Compile Include="Controllers\QueuedEmailController.cs" />
     <Compile Include="Extensions\AttributeParserHelper.cs" />
     <Compile Include="Helpers\SelectListHelper.cs" />
-    <Compile Include="Infrastructure\Mapper\AutoMapperConfiguration.cs" />
+    <Compile Include="Helpers\TinyMceHelper.cs" />
+    <Compile Include="Infrastructure\Mapper\AdminMapperConfiguration.cs" />
     <Compile Include="Infrastructure\Cache\ModelCacheEventConsumer.cs" />
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
     <Compile Include="Extensions\MappingExtensions.cs" />
-    <Compile Include="Infrastructure\Mapper\AutoMapperStartupTask.cs" />
     <Compile Include="Models\Affiliates\AffiliateListModel.cs" />
     <Compile Include="Models\Affiliates\AffiliatedOrderListModel.cs" />
+    <Compile Include="Models\Blogs\BlogCommentListModel.cs" />
     <Compile Include="Models\Catalog\ProductAttributeConditionModel.cs" />
     <Compile Include="Models\Catalog\AddProductAttributeCombinationModel.cs" />
     <Compile Include="Models\Catalog\LowStockProductModel.cs" />
@@ -245,8 +246,10 @@
     <Compile Include="Models\Localization\LanguageResourcesListModel.cs" />
     <Compile Include="Models\Messages\CampaignListModel.cs" />
     <Compile Include="Models\Messages\TestMessageTemplateModel.cs" />
+    <Compile Include="Models\News\NewsCommentListModel.cs" />
     <Compile Include="Models\Orders\CountryReportLineModel.cs" />
     <Compile Include="Models\Orders\CountryReportModel.cs" />
+    <Compile Include="Models\Orders\ReturnRequestListModel.cs" />
     <Compile Include="Models\Payments\PaymentMethodRestrictionModel.cs" />
     <Compile Include="Models\Plugins\OfficialFeedListModel.cs" />
     <Compile Include="Models\Plugins\PluginListModel.cs" />
@@ -257,6 +260,7 @@
     <Compile Include="Models\Settings\ReturnRequestReasonModel.cs" />
     <Compile Include="Models\Settings\SortOptionModel.cs" />
     <Compile Include="Models\Settings\VendorSettingsModel.cs" />
+    <Compile Include="Models\Shipping\ProductAvailabilityRangeModel.cs" />
     <Compile Include="Models\Shipping\PickupPointProviderModel.cs" />
     <Compile Include="Models\Shipping\WarehouseModel.cs" />
     <Compile Include="Models\Shipping\DeliveryDateModel.cs" />
@@ -375,6 +379,7 @@
     <Compile Include="Validators\Orders\ReturnRequestValidator.cs" />
     <Compile Include="Validators\Settings\ReturnRequestActionValidator.cs" />
     <Compile Include="Validators\Settings\ReturnRequestReasonValidator.cs" />
+    <Compile Include="Validators\Shipping\ProductAvailabilityRangeValidator.cs" />
     <Compile Include="Validators\Templates\TopicTemplateValidator.cs" />
     <Compile Include="Validators\Templates\ProductTemplateValidator.cs" />
     <Compile Include="Validators\Templates\ManufacturerTemplateValidator.cs" />
@@ -397,9 +402,7 @@
     <Compile Include="Validators\Plugins\PluginValidator.cs" />
     <Compile Include="Validators\Polls\PollAnswerValidator.cs" />
     <Compile Include="Validators\Polls\PollValidator.cs" />
-    <Compile Include="Validators\Settings\OrderSettingsValidator.cs" />
     <Compile Include="Validators\Settings\SettingValidator.cs" />
-    <Compile Include="Validators\Settings\RewardPointsSettingsValidator.cs" />
     <Compile Include="Validators\Topics\TopicValidator.cs" />
     <Compile Include="Validators\News\NewsItemValidator.cs" />
     <Compile Include="Validators\Messages\MessageTemplateValidator.cs" />
@@ -484,6 +487,8 @@
     <Content Include="Content\adminLTE\skins\skin-yellow.min.css" />
     <Content Include="Content\adminLTE\skins\_all-skins.css" />
     <Content Include="Content\adminLTE\skins\_all-skins.min.css" />
+    <Content Include="Content\bootstrap-touchspin\jquery.bootstrap-touchspin.css" />
+    <Content Include="Content\bootstrap-touchspin\jquery.bootstrap-touchspin.min.css" />
     <Content Include="Content\bootstrap\css\bootstrap-theme.css" />
     <Content Include="Content\bootstrap\css\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap\css\bootstrap.css" />
@@ -1060,6 +1065,8 @@
     <Content Include="Scripts\admin.search.js" />
     <Content Include="Scripts\adminLTE\app.js" />
     <Content Include="Scripts\adminLTE\app.min.js" />
+    <Content Include="Scripts\bootstrap-touchspin\jquery.bootstrap-touchspin.js" />
+    <Content Include="Scripts\bootstrap-touchspin\jquery.bootstrap-touchspin.min.js" />
     <Content Include="Scripts\bootstrap\bootstrap.js" />
     <Content Include="Scripts\bootstrap\bootstrap.min.js" />
     <Content Include="Scripts\bootstrap\npm.js" />
@@ -2139,7 +2146,7 @@
     <Content Include="Views\Product\_CreateOrUpdate.PurchasedWithOrders.cshtml" />
     <Content Include="Views\Common\AclDisabledWarning.cshtml" />
     <Content Include="Views\Common\MultistoreDisabledWarning.cshtml" />
-    <None Include="Views\Product\_ProductAttributes.cshtml" />
+    <Content Include="Views\Product\_ProductAttributes.cshtml" />
     <Content Include="Views\Setting\_ReturnRequestReasons.cshtml" />
     <Content Include="Views\Setting\ReturnRequestReasonEdit.cshtml" />
     <Content Include="Views\Setting\ReturnRequestReasonCreate.cshtml" />
@@ -2350,7 +2357,7 @@
     <Content Include="Views\Shipping\EditDeliveryDate.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shipping\DeliveryDates.cshtml" />
+    <Content Include="Views\Shipping\DatesAndRanges.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shipping\_CreateOrUpdateDeliveryDate.cshtml" />
@@ -2489,6 +2496,30 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Roxy_Fileman\tmp\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shipping\EditProductAvailabilityRange.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shipping\CreateProductAvailabilityRange.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shipping\_CreateOrUpdateProductAvailabilityRange.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\TierPriceCreatePopup.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\TierPriceEditPopup.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\_CreateOrUpdateTierPrice.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\_CreateOrUpdate._StockQuantityHistory.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_GridPagerMessages.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
