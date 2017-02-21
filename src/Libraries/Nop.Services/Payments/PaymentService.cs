@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
@@ -22,6 +23,7 @@ namespace Nop.Services.Payments
         private readonly IPluginFinder _pluginFinder;
         private readonly ISettingService _settingService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly CatalogSettings _catalogSettings;
 
         #endregion
 
@@ -37,12 +39,13 @@ namespace Nop.Services.Payments
         public PaymentService(PaymentSettings paymentSettings, 
             IPluginFinder pluginFinder,
             ISettingService settingService,
-            ShoppingCartSettings shoppingCartSettings)
+            ShoppingCartSettings shoppingCartSettings, CatalogSettings catalogSettings)
         {
             this._paymentSettings = paymentSettings;
             this._pluginFinder = pluginFinder;
             this._settingService = settingService;
             this._shoppingCartSettings = shoppingCartSettings;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -242,7 +245,7 @@ namespace Nop.Services.Payments
                 result = decimal.Zero;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
             {
-                result = RoundingHelper.RoundPrice(result);
+                result = RoundingHelper.RoundPrice(result, _catalogSettings);
             }
             return result;
         }

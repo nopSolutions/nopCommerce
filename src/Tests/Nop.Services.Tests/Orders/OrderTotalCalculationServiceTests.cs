@@ -120,7 +120,7 @@ namespace Nop.Services.Tests.Orders
                 _storeContext,
                 _eventPublisher, 
                 _shoppingCartSettings,
-                cacheManager);
+                cacheManager, _catalogSettings);
             
 
             _paymentService = MockRepository.GenerateMock<IPaymentService>();

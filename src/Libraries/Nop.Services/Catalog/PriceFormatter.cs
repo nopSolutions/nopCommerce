@@ -22,6 +22,7 @@ namespace Nop.Services.Catalog
         private readonly ILocalizationService _localizationService;
         private readonly TaxSettings _taxSettings;
         private readonly CurrencySettings _currencySettings;
+        private readonly CatalogSettings _catalogSettings;
 
         #endregion
 
@@ -31,13 +32,14 @@ namespace Nop.Services.Catalog
             ICurrencyService currencyService,
             ILocalizationService localizationService,
             TaxSettings taxSettings,
-            CurrencySettings currencySettings)
+            CurrencySettings currencySettings, CatalogSettings catalogSettings)
         {
             this._workContext = workContext;
             this._currencyService = currencyService;
             this._localizationService = localizationService;
             this._taxSettings = taxSettings;
             this._currencySettings = currencySettings;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -77,14 +79,34 @@ namespace Nop.Services.Catalog
             {
                 if (!String.IsNullOrEmpty(targetCurrency.DisplayLocale))
                 {
-                    //default behavior
-                    result = amount.ToString("C", new CultureInfo(targetCurrency.DisplayLocale));
+                    if (_catalogSettings.UseRoundingPrecisionForPriceDisplay)
+                    {
+                        NumberFormatInfo nfi = new CultureInfo(targetCurrency.DisplayLocale, false).NumberFormat;
+                        nfi.CurrencyDecimalDigits = _catalogSettings.RoundingPrecision;
+                        result = amount.ToString("C", nfi);
+                    }
+                    else
+                    {
+                        //default behavior
+                        result = amount.ToString("C");
+                    }
                 }
                 else
                 {
                     //not possible because "DisplayLocale" should be always specified
                     //but anyway let's just handle this behavior
-                    result = String.Format("{0} ({1})", amount.ToString("N"), targetCurrency.CurrencyCode);
+                    if (_catalogSettings.UseRoundingPrecisionForPriceDisplay)
+                    {
+                        NumberFormatInfo nfi = new CultureInfo(targetCurrency.DisplayLocale, false).NumberFormat;
+                        nfi.CurrencyDecimalDigits = _catalogSettings.RoundingPrecision;
+                        result = String.Format("{0} ({1})", amount.ToString("N", nfi), targetCurrency.CurrencyCode);
+                    }
+                    else
+                    {
+                        //default behavior
+                        result = String.Format("{0:N} ({1})", amount, targetCurrency.CurrencyCode);
+                    }
+                   
                     return result;
                 }
             }
@@ -207,7 +229,7 @@ namespace Nop.Services.Catalog
             Currency targetCurrency, Language language, bool priceIncludesTax, bool showTax)
         {
             //we should round it no matter of "ShoppingCartSettings.RoundPricesDuringCalculation" setting
-            price = RoundingHelper.RoundPrice(price);
+            price = RoundingHelper.RoundPrice(price, _catalogSettings);
             
             string currencyString = GetCurrencyString(price, showCurrency, targetCurrency);
             if (showTax)

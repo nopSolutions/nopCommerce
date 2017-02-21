@@ -103,33 +103,33 @@
                         </div>
                     </div>
                     <script type="text/javascript">
-                    $(document).ready(function() {
-                        $("#@Html.FieldIdFor(model => model.SearchPageAllowCustomersToSelectPageSize)").click(toggleSearchPagePageSize);
-                        $("#@Html.FieldIdFor(model => model.ProductSearchAutoCompleteEnabled)").click(toggleProductSearchAutoComplete);
+                        $(document).ready(function () {
+                            $("#@Html.FieldIdFor(model => model.SearchPageAllowCustomersToSelectPageSize)").click(toggleSearchPagePageSize);
+                            $("#@Html.FieldIdFor(model => model.ProductSearchAutoCompleteEnabled)").click(toggleProductSearchAutoComplete);
 
-                        toggleSearchPagePageSize();
-                        toggleProductSearchAutoComplete();
-                    });
+                            toggleSearchPagePageSize();
+                            toggleProductSearchAutoComplete();
+                        });
 
-                    function toggleSearchPagePageSize() {
-                        if ($('#@Html.FieldIdFor(model => model.SearchPageAllowCustomersToSelectPageSize)').is(':checked')) {
-                            $('#pnlSearchPageProductsPerPage').hide();
-                            $('#pnlSearchPagePageSizeOptions').show();
-                        } else {
-                            $('#pnlSearchPageProductsPerPage').show();
-                            $('#pnlSearchPagePageSizeOptions').hide();
+                        function toggleSearchPagePageSize() {
+                            if ($('#@Html.FieldIdFor(model => model.SearchPageAllowCustomersToSelectPageSize)').is(':checked')) {
+                                $('#pnlSearchPageProductsPerPage').hide();
+                                $('#pnlSearchPagePageSizeOptions').show();
+                            } else {
+                                $('#pnlSearchPageProductsPerPage').show();
+                                $('#pnlSearchPagePageSizeOptions').hide();
+                            }
                         }
-                    }
 
-                    function toggleProductSearchAutoComplete() {
-                        if ($('#@Html.FieldIdFor(model => model.ProductSearchAutoCompleteEnabled)').is(':checked')) {
-                            $('#pnlProductSearchAutoCompleteNumberOfProducts').show();
-                            $('#pnlShowProductImagesInSearchAutoComplete').show();
-                        } else {
-                            $('#pnlProductSearchAutoCompleteNumberOfProducts').hide();
-                            $('#pnlShowProductImagesInSearchAutoComplete').hide();
+                        function toggleProductSearchAutoComplete() {
+                            if ($('#@Html.FieldIdFor(model => model.ProductSearchAutoCompleteEnabled)').is(':checked')) {
+                                $('#pnlProductSearchAutoCompleteNumberOfProducts').show();
+                                $('#pnlShowProductImagesInSearchAutoComplete').show();
+                            } else {
+                                $('#pnlProductSearchAutoCompleteNumberOfProducts').hide();
+                                $('#pnlShowProductImagesInSearchAutoComplete').hide();
+                            }
                         }
-                    }
                     </script>
                 </div>
 
@@ -207,19 +207,19 @@
                         </div>
                     </div>
                     <script type="text/javascript">
-                $(document).ready(function() {
-                    $("#@Html.FieldIdFor(model => model.ShowProductReviewsTabOnAccountPage)").click(toggleProductReviewsPageSizeOnAccountPage);
+                        $(document).ready(function () {
+                            $("#@Html.FieldIdFor(model => model.ShowProductReviewsTabOnAccountPage)").click(toggleProductReviewsPageSizeOnAccountPage);
 
-                    toggleProductReviewsPageSizeOnAccountPage();
-                });
+                            toggleProductReviewsPageSizeOnAccountPage();
+                        });
 
-                function toggleProductReviewsPageSizeOnAccountPage() {
-                    if ($('#@Html.FieldIdFor(model => model.ShowProductReviewsTabOnAccountPage)').is(':checked')) {
-                        $('#pnlProductReviewsPageSizeOnAccountPage').show();
-                    } else {
-                        $('#pnlProductReviewsPageSizeOnAccountPage').hide();
-                    }
-                }
+                        function toggleProductReviewsPageSizeOnAccountPage() {
+                            if ($('#@Html.FieldIdFor(model => model.ShowProductReviewsTabOnAccountPage)').is(':checked')) {
+                                $('#pnlProductReviewsPageSizeOnAccountPage').show();
+                            } else {
+                                $('#pnlProductReviewsPageSizeOnAccountPage').hide();
+                            }
+                        }
                     </script>
                 </div>
 
@@ -296,7 +296,7 @@
                             </div>
                         </div>
                         <script type="text/javascript">
-                            $(document).ready(function() {
+                            $(document).ready(function () {
                                 $("#@Html.FieldIdFor(model => model.ShowShareButton)").click(togglePageShareCode);
                                 togglePageShareCode();
                             });
@@ -345,7 +345,7 @@
                             </div>
                         </div>
                         <script type="text/javascript">
-                            $(document).ready(function() {
+                            $(document).ready(function () {
                                 $("#@Html.FieldIdFor(model => model.CompareProductsEnabled)").click(toggleCompareProductsEnabled);
                                 toggleCompareProductsEnabled();
                             });
@@ -638,7 +638,7 @@
                     </div>
 
                     <script type="text/javascript">
-                        $(document).ready(function() {
+                        $(document).ready(function () {
                             $("#@Html.FieldIdFor(model => model.ShowCategoryProductNumber)").click(toggleShowCategoryProductNumberIncludingSubcategories);
                             $("#@Html.FieldIdFor(model => model.EmailAFriendEnabled)").click(toggleEmailAFriend);
                             $("#@Html.FieldIdFor(model => model.RecentlyViewedProductsEnabled)").click(toggleRecentlyViewedProducts);
@@ -782,10 +782,45 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="panel panel-default advanced-setting">
                     <div class="panel-body">
-                        
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.RoundingPrecision_OverrideForStore, model => model.RoundingPrecision, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.RoundingPrecision)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.RoundingPrecision)
+                                @Html.ValidationMessageFor(model => model.RoundingPrecision)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.UseRoundingPrecisionForPriceDisplay_OverrideForStore, model => model.UseRoundingPrecisionForPriceDisplay, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.UseRoundingPrecisionForPriceDisplay)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.UseRoundingPrecisionForPriceDisplay)
+                                @Html.ValidationMessageFor(model => model.UseRoundingPrecisionForPriceDisplay)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.RoundAwayFromZero_OverrideForStore, model => model.RoundAwayFromZero, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.RoundAwayFromZero)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.RoundAwayFromZero)
+                                @Html.ValidationMessageFor(model => model.RoundAwayFromZero)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default advanced-setting">
+                    <div class="panel-body">
+
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.ExportImportProductAttributes_OverrideForStore, model => model.ExportImportProductAttributes, Model.ActiveStoreScopeConfiguration)
@@ -801,7 +836,7 @@
 
                 <div class="panel panel-default advanced-setting">
                     <div class="panel-body">
-                        
+
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 @Html.OverrideStoreCheckboxFor(model => model.AllowProductSorting_OverrideForStore, model => model.AllowProductSorting, Model.ActiveStoreScopeConfiguration)
@@ -815,7 +850,7 @@
                         <div id="sortoptions-grid"></div>
 
                         <script>
-                            $(document).ready(function() {
+                            $(document).ready(function () {
                                 $("#sortoptions-grid").kendoGrid({
                                     dataSource: {
                                         type: "json",
@@ -846,12 +881,12 @@
                                                 }
                                             }
                                         },
-                                        requestEnd: function(e) {
+                                        requestEnd: function (e) {
                                             if (e.type == "update") {
                                                 this.read();
                                             }
                                         },
-                                        error: function(e) {
+                                        error: function (e) {
                                             display_kendoui_grid_error(e);
                                             // Cancel the changes
                                             this.cancelChanges();

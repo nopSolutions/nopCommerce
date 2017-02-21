@@ -1,4 +1,6 @@
 using System;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Catalog
 {
@@ -11,8 +13,9 @@ namespace Nop.Services.Catalog
         /// Round a product or order total
         /// </summary>
         /// <param name="value">Value to round</param>
+        /// <param name="catalogSettings">Optional CatalogSettings for determining rounding options</param>
         /// <returns>Rounded value</returns>
-        public static decimal RoundPrice(decimal value)
+        public static decimal RoundPrice(decimal value, CatalogSettings catalogSettings = null)
         {
             //we use this method because some currencies (e.g. Gungarian Forint or Swiss Franc) use non-standard rules for rounding
             //you can implement any rounding logic here
@@ -20,9 +23,9 @@ namespace Nop.Services.Catalog
 
             //using Swiss Franc (CHF)? just uncomment the line below
             //return Math.Round(value * 20, 0) / 20;
-
-            //default round
-            return Math.Round(value, 2);
+            catalogSettings = catalogSettings ?? EngineContext.Current.Resolve<CatalogSettings>();
+            var roundingPrecision = catalogSettings.RoundingPrecision;
+            return catalogSettings.RoundAwayFromZero ?  Math.Round(value, roundingPrecision, MidpointRounding.AwayFromZero) : Math.Round(value, roundingPrecision);
         }
     }
 }
