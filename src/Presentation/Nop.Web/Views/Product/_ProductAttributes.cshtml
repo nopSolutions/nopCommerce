@@ -449,7 +449,9 @@
                         if (data.pictureFullSizeUrl) {
                             $('#main-product-img-lightbox-anchor-@productId').attr("href", data.pictureFullSizeUrl);
                         }
-
+                        if (data.message) {
+                            alert(data.message);
+                        }
                         $.event.trigger({ type: "product_attributes_changed", changedData: data });
                     }
                 });

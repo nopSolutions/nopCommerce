@@ -270,9 +270,10 @@ namespace Nop.Web.Controllers
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="form">Form</param>
+        /// <param name="errors">Errors</param>
         /// <returns>Parsed attributes</returns>
         [NonAction]
-        protected virtual string ParseProductAttributes(Product product, FormCollection form)
+        protected virtual string ParseProductAttributes(Product product, FormCollection form, List<string> errors)
         {
             string attributesXml = "";
 
@@ -292,12 +293,18 @@ namespace Nop.Web.Controllers
                             var ctrlAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
-                                int quantity;
                                 int selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, selectedAttributeId.ToString(),
-                                        int.TryParse(form[string.Format("product_attribute_{0}_{1}_qty", attribute.Id, selectedAttributeId)], out quantity) && quantity > 1 ? (int?)quantity : null);
+                                {
+                                    //get quantity entered by customer
+                                    var quantity = 1;
+                                    var quantityStr = form[string.Format("product_attribute_{0}_{1}_qty", attribute.Id, selectedAttributeId)];
+                                    if (quantityStr != null && (!int.TryParse(quantityStr, out quantity) || quantity < 1))
+                                        errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
+
+                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml, 
+                                        attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
+                                }
                             }
                         }
                         break;
@@ -308,12 +315,18 @@ namespace Nop.Web.Controllers
                             {
                                 foreach (var item in ctrlAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
-                                    int quantity;
                                     int selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
+                                    {
+                                        //get quantity entered by customer
+                                        var quantity = 1;
+                                        var quantityStr = form[string.Format("product_attribute_{0}_{1}_qty", attribute.Id, item)];
+                                        if (quantityStr != null && (!int.TryParse(quantityStr, out quantity) || quantity < 1))
+                                            errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
+
                                         attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString(),
-                                            int.TryParse(form[string.Format("product_attribute_{0}_{1}_qty", attribute.Id, item)], out quantity) && quantity > 1 ? (int?)quantity : null);
+                                            attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
+                                    }
                                 }
                             }
                         }
@@ -327,10 +340,14 @@ namespace Nop.Web.Controllers
                                 .Select(v => v.Id)
                                 .ToList())
                             {
-                                int quantity;
+                                //get quantity entered by customer
+                                var quantity = 1;
+                                var quantityStr = form[string.Format("product_attribute_{0}_{1}_qty", attribute.Id, selectedAttributeId)];
+                                if (quantityStr != null && (!int.TryParse(quantityStr, out quantity) || quantity < 1))
+                                    errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
+
                                 attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, selectedAttributeId.ToString(),
-                                    int.TryParse(form[string.Format("product_attribute_{0}_{1}_qty", attribute.Id, selectedAttributeId)], out quantity) && quantity > 1 ? (int?)quantity : null);
+                                    attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
                             }
                         }
                         break;
@@ -768,8 +785,10 @@ namespace Nop.Web.Controllers
 
             #endregion
 
+            var addToCartWarnings = new List<string>();
+
             //product and gift card attributes
-            string attributes = ParseProductAttributes(product, form);
+            string attributes = ParseProductAttributes(product, form, addToCartWarnings);
             
             //rental attributes
             DateTime? rentalStartDate = null;
@@ -784,7 +803,6 @@ namespace Nop.Web.Controllers
                 updatecartitem.ShoppingCartType;
 
             //save item
-            var addToCartWarnings = new List<string>();
             if (updatecartitem == null)
             {
                 //add to the cart
@@ -916,7 +934,8 @@ namespace Nop.Web.Controllers
             if (product == null)
                 return new NullJsonResult();
 
-            string attributeXml = ParseProductAttributes(product, form);
+            var errors = new List<string>();
+            string attributeXml = ParseProductAttributes(product, form, errors);
 
             //rental attributes
             DateTime? rentalStartDate = null;
@@ -1016,7 +1035,8 @@ namespace Nop.Web.Controllers
                 enabledattributemappingids = enabledAttributeMappingIds.ToArray(),
                 disabledattributemappingids = disabledAttributeMappingIds.ToArray(),
                 pictureFullSizeUrl = pictureFullSizeUrl,
-                pictureDefaultSizeUrl = pictureDefaultSizeUrl
+                pictureDefaultSizeUrl = pictureDefaultSizeUrl,
+                message = errors.Any() ? errors.ToArray() : null
             });
         }
 

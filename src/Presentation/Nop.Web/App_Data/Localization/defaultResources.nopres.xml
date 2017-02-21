@@ -15532,7 +15532,7 @@
     <Value> per item</Value>
   </LocaleResource>
   <LocaleResource Name="Products.ProductAttributes.PriceAdjustment.Quantity">
-    <Value>Enter quantity</Value>
+    <Value>Enter quantity:</Value>
   </LocaleResource>
   <LocaleResource Name="Products.ProductHasBeenAddedToCompareList">
     <Value>The product has been added to your product comparison</Value>

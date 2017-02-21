@@ -378,7 +378,7 @@ set @resources='
     <Value> per item</Value>
   </LocaleResource>
   <LocaleResource Name="Products.ProductAttributes.PriceAdjustment.Quantity">
-    <Value>Enter quantity</Value>
+    <Value>Enter quantity:</Value>
   </LocaleResource>  
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.EmailAccount">
     <Value>Email account</Value>
