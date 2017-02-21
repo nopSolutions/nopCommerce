@@ -472,28 +472,33 @@ td.k-state-focused.k-state-selected {
     border-color: #DEDEDE;
     background-color: #FFFFFF;
 }
-.form-horizontal .form-group .k-dropdown{
+.form-horizontal .form-group .k-dropdown, 
+.k-grid .k-dropdown{
     cursor: default;
     width: 100% !important;
     height: 32px;
 }
-.form-horizontal .form-group .k-dropdown .k-dropdown-wrap {
+.form-horizontal .form-group .k-dropdown .k-dropdown-wrap, 
+.k-grid .k-dropdown .k-dropdown-wrap {
     background: #fff;
     box-shadow: none;
     padding: 0 8px;
     border: 1px solid #d2d6de;
     border-radius: 0;
 }
-.form-horizontal .form-group .k-dropdown .k-dropdown-wrap .k-select{
+.form-horizontal .form-group .k-dropdown .k-dropdown-wrap .k-select, 
+.k-grid .k-dropdown .k-dropdown-wrap .k-select{
     right: auto;
     left: 0;
     border-width: 0 1px 0 0;
     width: 20px;
 }
-.form-horizontal .form-group .k-dropdown .k-dropdown-wrap.k-state-border-down {
+.form-horizontal .form-group .k-dropdown .k-dropdown-wrap.k-state-border-down,
+.k-grid .k-dropdown .k-dropdown-wrap.k-state-border-down  {
     border-color: #3c8dbc !important;
 }
-.form-horizontal .form-group .k-dropdown .k-dropdown-wrap .k-input {
+.form-horizontal .form-group .k-dropdown .k-dropdown-wrap .k-input,
+.k-grid .k-dropdown .k-dropdown-wrap .k-input {
     height: 32px;
     line-height: 32px;
     display: block;
@@ -826,10 +831,17 @@ td.k-state-focused.k-state-selected {
     height: 34px;
 }
 .k-grid-edit-row>td>.k-numerictextbox {
-    width: auto !important;
+    width: 100% !important;
+    min-width: 150px !important;
 }
 .k-grid .k-dropdown{
-    width: auto !important;
+    width: 100% !important;
+    min-width: 120px !important;
+    background: none;
+}
+.k-grid .k-textbox{
+    width: 100% !important;
+    min-width: 150px !important;
 }
 .tag-editor {
     border: 1px solid #d2d6de !important;
