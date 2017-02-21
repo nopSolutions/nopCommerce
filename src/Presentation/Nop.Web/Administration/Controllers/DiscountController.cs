@@ -132,17 +132,6 @@ namespace Nop.Admin.Controllers
 
             //get available requirement groups
             var requirementGroups = discount.DiscountRequirements.Where(requirement => requirement.IsGroup);
-            if (!requirementGroups.Any())
-            {
-                //create default group if not exists
-                discount.DiscountRequirements.Add(new DiscountRequirement
-                {
-                    IsGroup = true,
-                    InteractionType = RequirementGroupInteractionType.And,
-                    DiscountRequirementRuleSystemName = _localizationService.GetResource("Admin.Promotions.Discounts.Requirements.DefaultRequirementGroup")
-                });
-                _discountService.UpdateDiscount(discount);
-            }
             model.AvailableRequirementGroups = requirementGroups.Select(requirement => 
                 new SelectListItem { Value = requirement.Id.ToString(), Text = requirement.DiscountRequirementRuleSystemName }).ToList();
         }
@@ -281,15 +270,6 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var discount = model.ToEntity();
-
-                //add default requirements group
-                discount.DiscountRequirements.Add(new DiscountRequirement
-                {
-                    IsGroup = true,
-                    InteractionType = RequirementGroupInteractionType.And,
-                    DiscountRequirementRuleSystemName = _localizationService.GetResource("Admin.Promotions.Discounts.Requirements.DefaultRequirementGroup")
-                });
-
                 _discountService.InsertDiscount(discount);
 
                 //activity log
@@ -462,29 +442,52 @@ namespace Nop.Admin.Controllers
             {
                 //delete
                 if (deleteRequirement)
-                    DeleteRequirement(new List<DiscountRequirement> {discountRequirement});
+                {
+                    DeleteRequirement(new List<DiscountRequirement> { discountRequirement });
+
+                    //delete default group if there are no any requirements
+                    if (!discount.DiscountRequirements.Any(requirement => requirement.ParentId.HasValue))
+                        DeleteRequirement(discount.DiscountRequirements);
+                }
                 //or update the requirement
                 else
                 {
+                    var defaultGroupId = discount.DiscountRequirements.FirstOrDefault(requirement => 
+                        !requirement.ParentId.HasValue && requirement.IsGroup).Return(requirement => requirement.Id, 0);
+                    if (defaultGroupId == 0)
+                    {
+                        //add default requirement group
+                        var defaultGroup = new DiscountRequirement
+                        {
+                            IsGroup = true,
+                            InteractionType = RequirementGroupInteractionType.And,
+                            DiscountRequirementRuleSystemName = _localizationService.GetResource("Admin.Promotions.Discounts.Requirements.DefaultRequirementGroup")
+                        };
+                        discount.DiscountRequirements.Add(defaultGroup);
+                        _discountService.UpdateDiscount(discount);
+                        defaultGroupId = defaultGroup.Id;
+                    }
+
+                    //set parent identifier if specified
                     if (parentId.HasValue)
                         discountRequirement.ParentId = parentId.Value;
                     else
                     {
-                        //set default group identifier if not specified
-                        var defaultGroupId = discount.DiscountRequirements
-                            .FirstOrDefault(requirement => !requirement.ParentId.HasValue).Return(requirement => (int?)requirement.Id, null);
+                        //or default group identifier
                         if (defaultGroupId != discountRequirement.Id)
                             discountRequirement.ParentId = defaultGroupId;
                     }
 
                     //set interaction type
-                    discountRequirement.InteractionTypeId = interactionTypeId;
+                    if (interactionTypeId.HasValue)
+                        discountRequirement.InteractionTypeId = interactionTypeId;
+
                     _discountService.UpdateDiscount(discount);
                 }
             }
 
             //get current requirements
-            var topLevelRequirements = discount.DiscountRequirements.Where(requirement => !requirement.ParentId.HasValue);
+            var topLevelRequirements = discount.DiscountRequirements.Where(requirement => !requirement.ParentId.HasValue && requirement.IsGroup);
 
             //get interaction type of top-level group
             var interactionType = topLevelRequirements.FirstOrDefault().Return(requirement => requirement.InteractionType, null);
@@ -509,24 +512,36 @@ namespace Nop.Admin.Controllers
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");
 
+            var defaultGroup = discount.DiscountRequirements.FirstOrDefault(requirement => !requirement.ParentId.HasValue && requirement.IsGroup);
+            if (defaultGroup == null)
+            {
+                //add default requirement group
+                discount.DiscountRequirements.Add(new DiscountRequirement
+                {
+                    IsGroup = true,
+                    InteractionType = RequirementGroupInteractionType.And,
+                    DiscountRequirementRuleSystemName = _localizationService.GetResource("Admin.Promotions.Discounts.Requirements.DefaultRequirementGroup")
+                });
+            }
+
             //save new requirement group
-            var discountRequirement = new DiscountRequirement
+            var discountRequirementGroup = new DiscountRequirement
             {
                 IsGroup = true,
                 DiscountRequirementRuleSystemName = name,
                 InteractionType = RequirementGroupInteractionType.And
             };
-            discount.DiscountRequirements.Add(discountRequirement);
+            discount.DiscountRequirements.Add(discountRequirementGroup);
             _discountService.UpdateDiscount(discount);
 
-            //set default group name (if not specified)
+            //set identifier as group name (if not specified)
             if (string.IsNullOrEmpty(name))
             {
-                discountRequirement.DiscountRequirementRuleSystemName = string.Format("#{0}", discountRequirement.Id);
+                discountRequirementGroup.DiscountRequirementRuleSystemName = string.Format("#{0}", discountRequirementGroup.Id);
                 _discountService.UpdateDiscount(discount);
             }
 
-            return Json(new { Result = true, NewRequirementId = discountRequirement.Id }, JsonRequestBehavior.AllowGet);
+            return Json(new { Result = true, NewRequirementId = discountRequirementGroup.Id }, JsonRequestBehavior.AllowGet);
         }
 
         #endregion

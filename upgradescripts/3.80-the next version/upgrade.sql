@@ -4647,13 +4647,12 @@ GO
 ALTER TABLE [DiscountRequirement] ALTER COLUMN [IsGroup] bit NOT NULL
 GO
 
---add default requirement group for all discounts
-DECLARE cursor_defaultGroup CURSOR FOR SELECT Id FROM [Discount]
+--add default requirement group for existing requirements
+DECLARE cursor_defaultGroup CURSOR FOR SELECT [DiscountId] FROM [DiscountRequirement]
 DECLARE @discountId int
 
 OPEN cursor_defaultGroup
 FETCH NEXT FROM cursor_defaultGroup INTO @discountId
-
 WHILE @@FETCH_STATUS = 0
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM [DiscountRequirement] WHERE [DiscountId] = @discountId AND [ParentId] IS NULL AND [IsGroup] = 1)

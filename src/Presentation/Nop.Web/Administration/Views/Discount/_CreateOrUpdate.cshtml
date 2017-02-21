@@ -309,7 +309,7 @@
                     var ruleSystemName = $("#@Html.FieldIdFor(model => model.AddDiscountRequirement)").val();
                     if (ruleSystemName) {
                         var groupsElement = $("#@Html.FieldIdFor(model => model.RequirementGroupId)");
-                        if (groupsElement.find('option').length > 0) {
+                        if (groupsElement.find('option').length > 1) {
                             $("#pnlGroup").show();
                         }
                         else {
@@ -375,7 +375,7 @@
                         data: postData,
                         success: function(result) {
                             //set requirements
-                            loadRequirementBoxes(result.Requirements, "#discountRequirementContainer");
+                            loadRequirementBoxes(result.Requirements, "#discountRequirementContainer", true);
 
                             //set available groups
                             var groupsElement = $("#@Html.FieldIdFor(model => model.RequirementGroupId)");
@@ -398,8 +398,8 @@
                 };
 
                 //load HTML for exisiting requirements
-                function loadRequirementBoxes(requirements, placeholder) {
-                    if(requirements.length > 0)
+                function loadRequirementBoxes(requirements, placeholder, hideEmptyString) {
+                    if(requirements.length > 0 || hideEmptyString)
                         $(placeholder).html('');
                     else
                         $(placeholder).html('@T("Admin.Promotions.Discounts.Requirements.GroupIsEmpty")');
@@ -410,7 +410,7 @@
                         var placeholderName = '#editrequirementplaceholder' + requirements[i].DiscountRequirementId;
                         $(placeholderName).html('loading...');
                         if (requirements[i].IsGroup) {
-                            loadRequirementBoxes(requirements[i].ChildRequirements, placeholderName);
+                            loadRequirementBoxes(requirements[i].ChildRequirements, placeholderName, false);
                         }
                         else {
                             loadRequirementIntoBox(requirements[i].ConfigurationUrl, placeholderName);
