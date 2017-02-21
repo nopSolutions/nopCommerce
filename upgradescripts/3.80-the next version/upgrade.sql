@@ -1139,6 +1139,9 @@ set @resources='
   <LocaleResource Name="Admin.Pager.Last">
     <Value>Go to the last page</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Pager.MorePages">
+    <Value>More pages</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Pager.Next">
     <Value>Go to the next page</Value>
   </LocaleResource>
