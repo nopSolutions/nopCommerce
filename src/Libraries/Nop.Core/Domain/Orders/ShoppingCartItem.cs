@@ -146,9 +146,9 @@ namespace Nop.Core.Domain.Orders
         }
         //fields for restored cart
         /// <summary>
-        /// VatRate for restored cart. Only used by UpdateOrderTotal and can be null
+        /// TaxRate for restored cart. Only used by UpdateOrderTotal and can be null
         /// </summary>
-        public decimal? VatRate { get; set; }
+        public decimal? TaxRate { get; set; }
         /// <summary>
         /// Subtotal of item with tax
         /// </summary>

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 
 namespace Nop.Core.Domain.Orders
 {
@@ -10,7 +11,7 @@ namespace Nop.Core.Domain.Orders
     public partial class OrderItem : BaseEntity
     {
         private ICollection<GiftCard> _associatedGiftCards;
-
+        private ICollection<RewardPointsHistory> _associatedRewardPoints;
         /// <summary>
         /// Gets or sets the order item identifier
         /// </summary>
@@ -127,8 +128,16 @@ namespace Nop.Core.Domain.Orders
         }
 
         /// <summary>
-        /// VAT% of product
+        /// tax% of product
         /// </summary>
-        public decimal VatRate { get; set; } //MF 25.11.16
+        public decimal TaxRate { get; set; } //MF 25.11.16
+        /// <summary>
+        /// Gets or sets the associated reward points
+        /// </summary>
+        public virtual ICollection<RewardPointsHistory> AssociatedRewardPoints
+        {
+            get { return _associatedRewardPoints ?? (_associatedRewardPoints = new List<RewardPointsHistory>()); }
+            protected set { _associatedRewardPoints = value; }
+        }
     }
 }

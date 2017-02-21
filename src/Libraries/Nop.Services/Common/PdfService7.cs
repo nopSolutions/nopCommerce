@@ -640,7 +640,7 @@ namespace Nop.Services.Common
                 {
                     tabPage.AddHeaderCell(new Cell(1, 1).Add(_localizationService.GetResource("PDFInvoice.SKU", lang.Id)).AddStyle(styleCell).AddStyle(style9b).SetBackgroundColor(Color.LIGHT_GRAY));
                 }
-                tabPage.AddHeaderCell(new Cell(1, 1).Add(_localizationService.GetResource("PDFInvoice.VatRate", lang.Id)).AddStyle(styleCell).AddStyle(style9b).SetBackgroundColor(Color.LIGHT_GRAY).SetTextAlignment(TextAlignment.CENTER));
+                tabPage.AddHeaderCell(new Cell(1, 1).Add(_localizationService.GetResource("PDFInvoice.TaxRate", lang.Id)).AddStyle(styleCell).AddStyle(style9b).SetBackgroundColor(Color.LIGHT_GRAY).SetTextAlignment(TextAlignment.CENTER));
                 tabPage.AddHeaderCell(new Cell(1, 1).Add(_priceFormatter.FormatTaxString(_localizationService.GetResource("PDFInvoice.ProductPrice", lang.Id), lang, includingTax)).AddStyle(styleCell).AddStyle(style9b).SetBackgroundColor(Color.LIGHT_GRAY).SetTextAlignment(TextAlignment.RIGHT));
                 tabPage.AddHeaderCell(new Cell(1, 1).Add(_localizationService.GetResource("PDFInvoice.ProductQuantity", lang.Id)).AddStyle(styleCell).AddStyle(style9b).SetBackgroundColor(Color.LIGHT_GRAY).SetTextAlignment(TextAlignment.RIGHT));
                 tabPage.AddHeaderCell(new Cell(1, 1).Add(_priceFormatter.FormatTaxString(_localizationService.GetResource("PDFInvoice.ProductTotal", lang.Id), lang, includingTax)).AddStyle(styleCell).AddStyle(style9b).SetBackgroundColor(Color.LIGHT_GRAY).SetTextAlignment(TextAlignment.RIGHT));
@@ -684,9 +684,9 @@ namespace Nop.Services.Common
                         paraPdf = new Paragraph(sku ?? String.Empty).AddStyle(styleNormal);
                         tabPage.AddCell(new Cell().Add(paraPdf).AddStyle(styleCell));
                     }
-                    //vatrate
+                    //taxrate
                     bool hasAttribVat = !String.IsNullOrEmpty(orderItem.AttributesXml) && orderItem.AttributesXml.Contains("<TaxRate Rate=");
-                    paraPdf = new Paragraph(hasAttribVat ? "(*)" : _priceFormatter.FormatTaxRate(orderItem.VatRate)).AddStyle(styleNormal).SetTextAlignment(TextAlignment.CENTER);
+                    paraPdf = new Paragraph(hasAttribVat ? "(*)" : _priceFormatter.FormatTaxRate(orderItem.TaxRate)).AddStyle(styleNormal).SetTextAlignment(TextAlignment.CENTER);
                     tabPage.AddCell(new Cell().Add(paraPdf).AddStyle(styleCell));
 
                     //price
@@ -746,7 +746,7 @@ namespace Nop.Services.Common
                             paraPdf = new Paragraph("").AddStyle(styleNormal);
                             tabPage.AddCell(new Cell().Add(paraPdf).AddStyle(styleCell));
                         }
-                        //vatrate
+                        //taxrate
                         paraPdf = new Paragraph(_priceFormatter.FormatTaxRate(taxRate)).AddStyle(styleNormal).SetTextAlignment(TextAlignment.CENTER);
                         tabPage.AddCell(new Cell().Add(paraPdf).AddStyle(styleCell));
 
@@ -777,7 +777,7 @@ namespace Nop.Services.Common
 
                 tabPage.AddCell(new Cell(1, col).Add(" ").AddStyle(styleCell).SetBorderTop(new SolidBorder(0.1f)));
 
-                #region Order notes first. not used atm
+                #region Order notes in cell not used atm. They are printed on last page
                 //var notesCell = 4;
                 //int totNotes = 0;
                 //if (pdfSettingsByStore.RenderOrderNotes)
@@ -816,7 +816,7 @@ namespace Nop.Services.Common
                 //    }
                 //}
 
-                #endregion
+                #endregion. see
 
                 #region Order totals
                 var taxRates = order.TaxRatesDictionary;
@@ -828,11 +828,19 @@ namespace Nop.Services.Common
                 //vendors cannot see totals
                 if (vendorId == 0)
                 {
+                    int redeemedPoints = 0;
+                    decimal redeemedAmount = decimal.Zero;
+                    if (order.RedeemedRewardPointsEntry != null)
+                    {
+                        redeemedPoints = -order.RedeemedRewardPointsEntry.Points;
+                        redeemedAmount = -order.RedeemedRewardPointsEntry.UsedAmount;
+                    }
                     var lstSummary = new List<Tuple<string, decimal, bool, bool, bool, bool>> //desc, amount, show when zero,  doLocalize, borderTop, borderBottom
                     {
                         Tuple.Create("PDFInvoice.Sub-Total",  includingTax ? order.OrderSubtotalInclTax : order.OrderSubtotalExclTax, true, true, false, false) //order subtotal
                         ,Tuple.Create("PDFInvoice.Discount",  includingTax ? -order.OrderSubTotalDiscountInclTax : -order.OrderSubTotalDiscountExclTax, false, true, false, false) //discount (applied to order subtotal)
-                        ,Tuple.Create("PDFInvoice.Shipping",  includingTax ? order.OrderShippingInclTax : order.OrderShippingExclTax, false,  true, order.ShippingStatus != ShippingStatus.ShippingNotRequired, false) //shipping
+                        ,Tuple.Create("PDFInvoice.Shipping",  includingTax ? order.OrderShippingInclTax : order.OrderShippingExclTax, false,  order.OrderShippingInclTax == decimal.Zero && order.OrderShippingNonTaxable == decimal.Zero, order.ShippingStatus != ShippingStatus.ShippingNotRequired, false) //shipping
+                        ,Tuple.Create(string.Format(_localizationService.GetResource("PDFInvoice.RewardPoints", lang.Id), redeemedPoints),  redeemedAmount, false,  true, false, false) //earned reward points
                         ,Tuple.Create("PDFInvoice.PaymentMethodAdditionalFee",  includingTax ? order.PaymentMethodAdditionalFeeInclTax : order.PaymentMethodAdditionalFeeExclTax, false, true, false, false) //payment fee
                         ,Tuple.Create("PDFInvoice.InvoiceDiscount",  -order.OrderDiscount, false, true, false, false) //discount (applied to order total)
                     };
@@ -844,6 +852,13 @@ namespace Nop.Services.Common
                     }
                     //order total incl.
                     lstSummary.Add(new Tuple<string, decimal, bool, bool, bool, bool>("PDFInvoice.OrderAmountIncl", order.OrderAmountIncl, true, true, false, false));
+                    
+                    //shipping non taxable
+                    var shippTuple = Tuple.Create("PDFInvoice.Shipping", order.OrderShippingNonTaxable, false, false, order.ShippingStatus != ShippingStatus.ShippingNotRequired, false);
+                    lstSummary.Add(shippTuple);
+
+                    //payment fee non taxable
+                    lstSummary.Add(new Tuple<string, decimal, bool, bool, bool, bool>("PDFInvoice.PaymentMethodAdditionalFee", order.PaymentMethodAdditionalFeeNonTaxable, false, true, false, false));
 
                     //gift cards
                     foreach (var gcuh in order.GiftCardUsageHistory)
@@ -854,11 +869,11 @@ namespace Nop.Services.Common
                         );
                     }
 
-                    //reward points
+                    //purchased reward points
                     if (order.RedeemedRewardPointsEntry != null)
                     {
                         lstSummary.Add(new Tuple<string, decimal, bool, bool, bool, bool>(
-                           string.Format(_localizationService.GetResource("PDFInvoice.RewardPoints", lang.Id), -order.RedeemedRewardPointsEntry.Points), -order.RedeemedRewardPointsEntry.UsedAmount, false, false, false, false
+                           string.Format(_localizationService.GetResource("PDFInvoice.RewardPointsPurchased", lang.Id), -order.RedeemedRewardPointsEntry.PointsPurchased), -order.RedeemedRewardPointsEntry.UsedAmountPurchased, false, false, false, false
                            )
                        );
                     }
@@ -950,11 +965,11 @@ namespace Nop.Services.Common
                     var taxTable = new Table(new float[] { 20, 20, 20, 20, 20 }).SetBorder(Border.NO_BORDER).SetWidthPercent(100f).AddStyle(styleNormal).SetHorizontalAlignment(HorizontalAlignment.LEFT);
 
                     //header
-                    taxTable.AddCell(new Cell().Add(_localizationService.GetResource("PDFInvoice.VatRate", lang.Id)).AddStyle(styleCell).AddStyle(style8).SetBackgroundColor(Color.LIGHT_GRAY).SetTextAlignment(TextAlignment.CENTER));
+                    taxTable.AddCell(new Cell().Add(_localizationService.GetResource("PDFInvoice.TaxRate", lang.Id)).AddStyle(styleCell).AddStyle(style8).SetBackgroundColor(Color.LIGHT_GRAY).SetTextAlignment(TextAlignment.CENTER));
                     taxTable.AddCell(new Cell().Add(_localizationService.GetResource(includingTax ? "PDFInvoice.OrderAmountIncl" : "PDFInvoice.OrderAmount", lang.Id)).AddStyle(styleCell).AddStyle(style8).SetBackgroundColor(Color.LIGHT_GRAY).SetTextAlignment(TextAlignment.CENTER));
                     taxTable.AddCell(new Cell().Add(_localizationService.GetResource(includingTax ? "PDFInvoice.DiscountAmountIncl" : "PDFInvoice.DiscountAmount", lang.Id)).AddStyle(styleCell).AddStyle(style8).SetBackgroundColor(Color.LIGHT_GRAY).SetTextAlignment(TextAlignment.CENTER));
                     taxTable.AddCell(new Cell().Add(_localizationService.GetResource("PDFInvoice.BaseAmount", lang.Id)).AddStyle(styleCell).AddStyle(style8).SetBackgroundColor(Color.LIGHT_GRAY).SetTextAlignment(TextAlignment.CENTER));
-                    taxTable.AddCell(new Cell().Add(_localizationService.GetResource("PDFInvoice.VatAmount", lang.Id)).AddStyle(styleCell).AddStyle(style8).SetBackgroundColor(Color.LIGHT_GRAY).SetTextAlignment(TextAlignment.CENTER));
+                    taxTable.AddCell(new Cell().Add(_localizationService.GetResource("PDFInvoice.TaxAmount", lang.Id)).AddStyle(styleCell).AddStyle(style8).SetBackgroundColor(Color.LIGHT_GRAY).SetTextAlignment(TextAlignment.CENTER));
 
 
                     foreach (var item in taxRates)
@@ -963,14 +978,14 @@ namespace Nop.Services.Common
                         string Amount = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(item.Value.Amount, order.CurrencyRate), showCurrency, order.CustomerCurrencyCode, false, lang);
                         string DiscountAmount = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(item.Value.DiscountAmount, order.CurrencyRate), showCurrency, order.CustomerCurrencyCode, false, lang);
                         string BaseAmount = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(item.Value.BaseAmount, order.CurrencyRate), showCurrency, order.CustomerCurrencyCode, false, lang);
-                        string VatAmount = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(item.Value.VatAmount, order.CurrencyRate), showCurrency, order.CustomerCurrencyCode, false, lang);
+                        string TaxAmount = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(item.Value.TaxAmount, order.CurrencyRate), showCurrency, order.CustomerCurrencyCode, false, lang);
                         //string AmountIncludingVAT = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(item.Value.AmountIncludingVAT, order.CurrencyRate), true, order.CustomerCurrencyCode, false, lang);
 
                         taxTable.AddCell(new Cell().Add(taxRate).AddStyle(styleCell).AddStyle(style8b).SetTextAlignment(TextAlignment.CENTER).SetBackgroundColor(Color.WHITE));
                         taxTable.AddCell(new Cell().Add(Amount).AddStyle(styleCell).AddStyle(style8b).SetTextAlignment(TextAlignment.CENTER).SetBackgroundColor(Color.WHITE));
                         taxTable.AddCell(new Cell().Add(DiscountAmount).AddStyle(styleCell).AddStyle(style8b).SetTextAlignment(TextAlignment.CENTER).SetBackgroundColor(Color.WHITE));
                         taxTable.AddCell(new Cell().Add(BaseAmount).AddStyle(styleCell).AddStyle(style8b).SetTextAlignment(TextAlignment.CENTER).SetBackgroundColor(Color.WHITE));
-                        taxTable.AddCell(new Cell().Add(VatAmount).AddStyle(styleCell).AddStyle(style8b).SetTextAlignment(TextAlignment.CENTER).SetBackgroundColor(Color.WHITE));
+                        taxTable.AddCell(new Cell().Add(TaxAmount).AddStyle(styleCell).AddStyle(style8b).SetTextAlignment(TextAlignment.CENTER).SetBackgroundColor(Color.WHITE));
                     }
 
                     footerTable.AddCell(new Cell(1, 5).Add(taxTable).AddStyle(styleCell).SetPadding(0).SetBorderTop(new SolidBorder(0.1f)).SetBorderBottom(new SolidBorder(0.1f)));
@@ -992,7 +1007,7 @@ namespace Nop.Services.Common
                     taxAmountTable.AddCell(new Cell(1, 1).Add(paraPdf).AddStyle(styleCell).SetBackgroundColor(Color.WHITE));
 
                     //vat amount head
-                    paraPdf = new Paragraph(_localizationService.GetResource("PDFInvoice.VatAmount", lang.Id)).AddStyle(style8).SetTextAlignment(TextAlignment.CENTER);
+                    paraPdf = new Paragraph(_localizationService.GetResource("PDFInvoice.TaxAmount", lang.Id)).AddStyle(style8).SetTextAlignment(TextAlignment.CENTER);
                     taxAmountTable.AddCell(new Cell(1, 1).Add(paraPdf).AddStyle(styleCell).SetBackgroundColor(Color.LIGHT_GRAY));
 
                     //total pay amount

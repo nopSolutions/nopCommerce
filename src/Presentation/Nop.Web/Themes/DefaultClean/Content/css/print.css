@@ -102,6 +102,40 @@ a {
 	text-align: right;
 }
 .order-details-page td.cart-total-left {
-	width: 100%;
+	/*width: 100%;*/
 	font-weight: bold;
+}
+
+.order-details-page .total-info {
+    float: right;
+}
+
+
+.cart-tax-table {
+    width: 100%;
+    display: table;
+    table-layout: auto;
+}
+/*.cart-tax-table span {
+    width: 100%;
+}*/
+
+.taxrow {
+    display: table-row;
+}
+.taxcell {
+    display: table-cell;
+    text-align: right;
+    /*width: 20%;*/
+    font-size: 11px;
+    font-weight: 100;
+    padding-top: 2px;
+    padding-left: 10px;
+}
+.taxrow.header span {
+    font-weight: bold;
+}
+.cart-tax {
+    overflow: auto;
+    margin-left: 50%;
 }

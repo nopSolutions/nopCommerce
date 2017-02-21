@@ -97,6 +97,7 @@ namespace Nop.Admin.Models.Common
         public bool CountryEnabled { get; set; }
         public bool CountryRequired { get; set; }
         public bool StateProvinceEnabled { get; set; }
+        public bool StateProvinceRequired { get; set; }
         public bool CityEnabled { get; set; }
         public bool CityRequired { get; set; }
         public bool StreetAddressEnabled { get; set; }

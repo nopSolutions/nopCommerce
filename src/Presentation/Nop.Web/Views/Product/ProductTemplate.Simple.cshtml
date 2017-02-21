@@ -74,6 +74,12 @@
                                 @Html.Raw(Model.ShortDescription)
                             </div>
                         }
+                        @if (Model.ExcludeFromRewardPoints)
+                        {
+                            <div class="excluded-from-rewardpoints">
+                                @T("Products.ExcludeFromRewardPoints")
+                            </div>
+                        }
                         @Html.Widget("productdetails_overview_top", Model.Id)
                         <!--product reviews-->
                         @Html.Partial("_ProductReviewOverview", Model.ProductReviewOverview)

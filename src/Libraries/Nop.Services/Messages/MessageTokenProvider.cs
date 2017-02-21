@@ -589,10 +589,10 @@ namespace Nop.Services.Messages
                     //including tax
 
                     //shipping
-                    var orderShippingInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingInclTax, order.CurrencyRate);
+                    var orderShippingInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingInclTax + order.OrderShippingNonTaxable, order.CurrencyRate);
                     cusShipTotal = _priceFormatter.FormatShippingPrice(orderShippingInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
                     //payment method additional fee
-                    var paymentMethodAdditionalFeeInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeInclTax, order.CurrencyRate);
+                    var paymentMethodAdditionalFeeInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeInclTax + order.PaymentMethodAdditionalFeeNonTaxable, order.CurrencyRate);
                     cusPaymentMethodAdditionalFee = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
                 }
                 else
@@ -600,18 +600,18 @@ namespace Nop.Services.Messages
                     //excluding tax
 
                     //shipping
-                    var orderShippingExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingExclTax, order.CurrencyRate);
+                    var orderShippingExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingExclTax + order.OrderShippingNonTaxable, order.CurrencyRate);
                     cusShipTotal = _priceFormatter.FormatShippingPrice(orderShippingExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
                     //payment method additional fee
-                    var paymentMethodAdditionalFeeExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeExclTax, order.CurrencyRate);
+                    var paymentMethodAdditionalFeeExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeExclTax + order.PaymentMethodAdditionalFeeNonTaxable, order.CurrencyRate);
                     cusPaymentMethodAdditionalFee = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
                 }
-
+                
                 //shipping
                 bool displayShipping = order.ShippingStatus != ShippingStatus.ShippingNotRequired;
 
                 //payment method fee
-                bool displayPaymentMethodFee = order.PaymentMethodAdditionalFeeExclTax > decimal.Zero;
+                bool displayPaymentMethodFee = order.PaymentMethodAdditionalFeeExclTax + order.PaymentMethodAdditionalFeeNonTaxable != decimal.Zero; //allow negative
 
                 //tax
                 bool displayTax = true;
@@ -635,12 +635,12 @@ namespace Nop.Services.Messages
                             //taxRates.Add(tr.Key, _currencyService.ConvertCurrency(tr.Value, order.CurrencyRate));
                             taxRates.Add(tr.Key, new TaxRateRec()
                             {
-                                VatRate = tr.Key,
+                                TaxRate = tr.Key,
                                 Amount = _currencyService.ConvertCurrency(tr.Value.Amount, order.CurrencyRate),
                                 DiscountAmount = _currencyService.ConvertCurrency(tr.Value.DiscountAmount, order.CurrencyRate),
                                 BaseAmount = _currencyService.ConvertCurrency(tr.Value.BaseAmount, order.CurrencyRate),
-                                VatAmount = _currencyService.ConvertCurrency(tr.Value.VatAmount, order.CurrencyRate),
-                                AmountIncludingVAT = _currencyService.ConvertCurrency(tr.Value.AmountIncludingVAT, order.CurrencyRate)
+                                TaxAmount = _currencyService.ConvertCurrency(tr.Value.TaxAmount, order.CurrencyRate),
+                                AmountIncludingTax = _currencyService.ConvertCurrency(tr.Value.AmountIncludingTax, order.CurrencyRate)
                             });
 
                         displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
@@ -725,11 +725,12 @@ namespace Nop.Services.Messages
                         string OrderAmount = _priceFormatter.FormatPrice(item.Value.Amount, true, order.CustomerCurrencyCode, false, language);
                         string DiscountAmount = _priceFormatter.FormatPrice(item.Value.DiscountAmount, true, order.CustomerCurrencyCode, false, language);
                         string Amount = _priceFormatter.FormatPrice(item.Value.BaseAmount, true, order.CustomerCurrencyCode, false, language);
-                        string VatAmount = _priceFormatter.FormatPrice(item.Value.VatAmount, true, order.CustomerCurrencyCode, false, language);
-                        string AmountIncludingVAT = _priceFormatter.FormatPrice(item.Value.AmountIncludingVAT, true, order.CustomerCurrencyCode, false, language);
+                        string TaxAmount = _priceFormatter.FormatPrice(item.Value.TaxAmount, true, order.CustomerCurrencyCode, false, language);
+                        string AmountIncludingVAT = _priceFormatter.FormatPrice(item.Value.AmountIncludingTax, true, order.CustomerCurrencyCode, false, language);
 
+                        //TODO: fill whole tax table
                         sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>",
-                             _templatesSettings.Color3, taxRate, VatAmount, OrderAmount, DiscountAmount, Amount, AmountIncludingVAT));
+                             _templatesSettings.Color3, taxRate, TaxAmount, OrderAmount, DiscountAmount, Amount, AmountIncludingVAT));
                     }
                 }
 
@@ -745,8 +746,8 @@ namespace Nop.Services.Messages
                 //reward points
                 if (order.RedeemedRewardPointsEntry != null)
                 {
-                    string rpTitle = string.Format(_localizationService.GetResource("Messages.Order.RewardPoints", languageId), -order.RedeemedRewardPointsEntry.Points);
-                    string rpAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(order.RedeemedRewardPointsEntry.UsedAmount, order.CurrencyRate)), true, order.CustomerCurrencyCode, false, language);
+                    string rpTitle = string.Format(_localizationService.GetResource("Messages.Order.RewardPoints", languageId), - (order.RedeemedRewardPointsEntry.Points + order.RedeemedRewardPointsEntry.PointsPurchased));
+                    string rpAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(order.RedeemedRewardPointsEntry.UsedAmount + order.RedeemedRewardPointsEntry.UsedAmountPurchased, order.CurrencyRate)), true, order.CustomerCurrencyCode, false, language);
                     sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", _templatesSettings.Color3, rpTitle, rpAmount));
                 }
 

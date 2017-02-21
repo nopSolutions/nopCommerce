@@ -16,7 +16,7 @@ namespace Nop.Services.Orders
     public partial class GiftCardService : IGiftCardService
     {
         #region Fields
-        
+
         private readonly IRepository<GiftCard> _giftCardRepository;
         private readonly IEventPublisher _eventPublisher;
 
@@ -36,7 +36,7 @@ namespace Nop.Services.Orders
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <returns>Gift cards</returns>
         public virtual IPagedList<GiftCard> GetAllGiftCards(int? purchasedWithOrderId = null, int? usedWithOrderId = null,
-            DateTime? createdFromUtc = null, DateTime? createdToUtc = null, 
+            DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             bool? isGiftCardActivated = null, string giftCardCouponCode = null,
             string recipientName = null,
             int pageIndex = 0, int pageSize = int.MaxValue)

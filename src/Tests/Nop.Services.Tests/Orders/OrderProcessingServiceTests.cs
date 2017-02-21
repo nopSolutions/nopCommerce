@@ -179,7 +179,7 @@ namespace Nop.Services.Tests.Orders
             _addressService.Expect(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Return(new Address { Id = _taxSettings.DefaultTaxAddressId });
             _taxService = new TaxService(_addressService, _workContext, _storeContext, _taxSettings,
                 pluginFinder, _geoLookupService, _countryService, _stateProvinceService, _logger,
-                _customerSettings, _shippingSettings, _addressSettings);
+                _customerSettings, _shippingSettings, _addressSettings, _productAttributeParser);
 
             _rewardPointService = MockRepository.GenerateMock<IRewardPointService>();
             _rewardPointsSettings = new RewardPointsSettings();

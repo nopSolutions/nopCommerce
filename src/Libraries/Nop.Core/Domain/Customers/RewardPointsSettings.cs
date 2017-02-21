@@ -58,5 +58,31 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the page size is for history of reward points on my account page
         /// </summary>
         public int PageSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether earned reward points are taxable
+        /// </summary>
+        public bool EarnedRewardPointsAreTaxable { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether reward points can be earned on shipping
+        /// </summary>
+        public bool AwardPointsIncludeShipping { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether reward points can be earned on payment fee
+        /// </summary>
+        public bool AwardPointsIncludePaymentMethodAdditionalFee { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether giftcards applied to payment amount should be excluded for reward points calculation
+        /// </summary>
+        public bool AwardPointsExcludeGiftCard { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether purchased reward points applied to payment amount should be excluded for reward points calculation
+        /// </summary>
+        public bool AwardPointsExcludePurchasedRewardPoints { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether reward points can only be earned when using purchased reward points for payment
+        /// </summary>
+        public bool EarnRewardPointsOnlyWhenUsingPurchasedRewardPoints { get; set; }
+
     }
 }

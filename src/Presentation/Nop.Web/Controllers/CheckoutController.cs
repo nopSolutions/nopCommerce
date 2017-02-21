@@ -714,7 +714,7 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             //reward points
-            if (_rewardPointsSettings.Enabled)
+            if (_rewardPointsSettings.Enabled && !cart.HasRewardPointsProduct())
             {
                 _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                     SystemCustomerAttributeNames.UseRewardPointsDuringCheckout, model.UseRewardPoints,

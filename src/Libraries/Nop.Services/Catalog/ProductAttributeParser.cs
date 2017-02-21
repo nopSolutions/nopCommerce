@@ -660,6 +660,7 @@ namespace Nop.Services.Catalog
         }
 
         #endregion
+
         #region taxAttribute
         /// <summary>
         /// Adds tax subdivision to existing attributesXml
@@ -711,8 +712,7 @@ namespace Nop.Services.Catalog
                             attributeTaxRateElement.SetAttribute("Rate", strVatPer);
                             attributeTaxElement.AppendChild(attributeTaxRateElement);
                         }
-                        attributeTaxRateElement.SetAttribute("RateWeight", taxrate.VatRateWeight.ToString(CultureInfo.InvariantCulture));
-
+                        attributeTaxRateElement.SetAttribute("RateWeight", taxrate.TaxRateWeight.ToString(CultureInfo.InvariantCulture));
                     }
                 }
                 else
@@ -735,7 +735,7 @@ namespace Nop.Services.Catalog
         /// Parse ProductAttributesTax
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>SortedDictionary with vatRate and vatRateWeight</returns>
+        /// <returns>SortedDictionary with taxRate and taxRateWeight</returns>
         public SortedDictionary<decimal, decimal> ParseTaxAttribute(string attributesXml)
         {
             var taxDict = new SortedDictionary<decimal, decimal>();
@@ -753,6 +753,16 @@ namespace Nop.Services.Catalog
 
             }
             return taxDict;
+        }
+
+        /// <summary>
+        /// Check if attributesXml contains tax attribute info
+        /// </summary>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <returns>A boolean value indicating if tax attribute info is present</returns>
+        public bool hasTaxInfoInAttributeXML(string attributesXml)
+        {
+            return attributesXml.Contains("<TaxRate Rate=");
         }
         #endregion
         #region Gift card attributes

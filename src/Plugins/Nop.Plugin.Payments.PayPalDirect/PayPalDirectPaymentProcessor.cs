@@ -328,10 +328,14 @@ namespace Nop.Plugin.Payments.PayPalDirect
             decimal discountAmount;
             List<AppliedGiftCard> giftCards;
             List<DiscountForCaching> discounts;
-            int rewardPoints;
-            decimal rewardPointsAmount;
+            RewardPoints rewardPoints;
+            TaxSummary taxSummary;
+            List<DiscountForCaching> subTotalAppliedDiscounts;
+            List<DiscountForCaching> shippingAppliedDiscounts;
+            decimal earnedRewardPointsBaseAmount;
+
             var orderTotal = _orderTotalCalculationService.GetShoppingCartTotal(shoppingCart, out discountAmount,
-                out discounts, out giftCards, out rewardPoints, out rewardPointsAmount);
+                out discounts, out subTotalAppliedDiscounts, out shippingAppliedDiscounts, out giftCards, out rewardPoints, out taxSummary, out earnedRewardPointsBaseAmount);
 
             if (discountAmount <= decimal.Zero)
                 return null;

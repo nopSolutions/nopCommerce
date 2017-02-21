@@ -56,24 +56,24 @@ namespace Nop.Web.Factories
 
 		#region Ctor
 
-        public CheckoutModelFactory(IAddressModelFactory addressModelFactory, 
+        public CheckoutModelFactory(IAddressModelFactory addressModelFactory,
             IWorkContext workContext,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
-            ILocalizationService localizationService, 
-            ITaxService taxService, 
-            ICurrencyService currencyService, 
-            IPriceFormatter priceFormatter, 
+            ILocalizationService localizationService,
+            ITaxService taxService,
+            ICurrencyService currencyService,
+            IPriceFormatter priceFormatter,
             IOrderProcessingService orderProcessingService,
             IGenericAttributeService genericAttributeService,
             ICountryService countryService,
             IStateProvinceService stateProvinceService,
-            IShippingService shippingService, 
+            IShippingService shippingService,
             IPaymentService paymentService,
             IOrderTotalCalculationService orderTotalCalculationService,
             IRewardPointService rewardPointService,
             IWebHelper webHelper,
-            OrderSettings orderSettings, 
+            OrderSettings orderSettings,
             RewardPointsSettings rewardPointsSettings,
             PaymentSettings paymentSettings,
             ShippingSettings shippingSettings,
@@ -105,7 +105,7 @@ namespace Nop.Web.Factories
         }
 
         #endregion
-        
+
         #region Methods
 
         public virtual CheckoutBillingAddressModel PrepareBillingAddressModel(IList<ShoppingCartItem> cart,
@@ -119,11 +119,11 @@ namespace Nop.Web.Factories
 
             //existing addresses
             var addresses = _workContext.CurrentCustomer.Addresses
-                .Where(a => a.Country == null || 
+                .Where(a => a.Country == null ||
                     (//published
-                    a.Country.Published && 
+                    a.Country.Published &&
                     //allow billing
-                    a.Country.AllowsBilling && 
+                    a.Country.AllowsBilling &&
                     //enabled for the current store
                     _storeMappingService.Authorize(a.Country)))
                 .ToList();
@@ -131,8 +131,8 @@ namespace Nop.Web.Factories
             {
                 var addressModel = new AddressModel();
                 _addressModelFactory.PrepareAddressModel(addressModel,
-                    address: address, 
-                    excludeProperties: false, 
+                    address: address,
+                    excludeProperties: false,
                     addressSettings: _addressSettings);
                 model.ExistingAddresses.Add(addressModel);
             }
@@ -213,10 +213,10 @@ namespace Nop.Web.Factories
                     return model;
                 }
             }
-            
+
             //existing addresses
             var addresses = _workContext.CurrentCustomer.Addresses
-                .Where(a => a.Country == null || 
+                .Where(a => a.Country == null ||
                     (//published
                     a.Country.Published &&
                     //allow shipping
@@ -330,17 +330,20 @@ namespace Nop.Web.Factories
             var model = new CheckoutPaymentMethodModel();
 
             //reward points
-            if (_rewardPointsSettings.Enabled && !cart.IsRecurring())
+            //don't give possibility to use reward points for payment when HasRewardPointsProduct in cart
+            if (_rewardPointsSettings.Enabled && !cart.IsRecurring() && !cart.HasRewardPointsProduct())
             {
-                int rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
-                decimal rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
-                decimal rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
-                if (rewardPointsAmount > decimal.Zero && 
-                    _orderTotalCalculationService.CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
+                var rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
+                decimal rewardPointsAmountTot = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsBalance.AmountTotalCorrectedForMinPointsToUse, _workContext.WorkingCurrency);
+                if (rewardPointsBalance.PointsPurchased > 0 ||
+                    (rewardPointsBalance.Points > 0 &&
+                      _rewardPointService.CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance.Points)
+                    )
+                   )
                 {
                     model.DisplayRewardPoints = true;
-                    model.RewardPointsAmount = _priceFormatter.FormatPrice(rewardPointsAmount, true, false);
-                    model.RewardPointsBalance = rewardPointsBalance;
+                    model.RewardPointsAmount = _priceFormatter.FormatPrice(rewardPointsAmountTot, true, false);
+                    model.RewardPointsBalance = rewardPointsBalance.PointsTotalCorrectedForMinPointsToUse;
 
                     //are points enough to pay for entire order? like if this option (to use them) was selected
                     model.RewardPointsEnoughToPayForOrder = !_orderProcessingService.IsPaymentWorkflowRequired(cart, true);
@@ -374,7 +377,7 @@ namespace Nop.Web.Factories
 
                 model.PaymentMethods.Add(pmModel);
             }
-            
+
             //find a selected (previously) payment method
             var selectedPaymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
                 SystemCustomerAttributeNames.SelectedPaymentMethod,
@@ -425,7 +428,7 @@ namespace Nop.Web.Factories
             }
             return model;
         }
-        
+
         public virtual CheckoutCompletedModel PrepareCheckoutCompletedModel(Order order)
         {
             if (order ==null)

@@ -7,6 +7,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Plugins;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Events;
@@ -34,6 +35,7 @@ namespace Nop.Services.Tests.Tax
         private CustomerSettings _customerSettings;
         private ShippingSettings _shippingSettings;
         private AddressSettings _addressSettings;
+        private IProductAttributeParser _productAttributeParser;
 
         [SetUp]
         public new void SetUp()
@@ -60,10 +62,12 @@ namespace Nop.Services.Tests.Tax
             _customerSettings = new CustomerSettings();
             _shippingSettings = new ShippingSettings();
             _addressSettings = new AddressSettings();
+            _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
+
 
             _taxService = new TaxService(_addressService, _workContext, _storeContext, _taxSettings,
                 pluginFinder, _geoLookupService, _countryService, _stateProvinceService, _logger,
-                _customerSettings, _shippingSettings, _addressSettings);
+                _customerSettings, _shippingSettings, _addressSettings, _productAttributeParser);
         }
 
         [Test]
@@ -143,10 +147,11 @@ namespace Nop.Services.Tests.Tax
             var product = new Product();
 
             decimal taxRate;
-            _taxService.GetProductPrice(product, 0, 1000M, true, customer, true, out taxRate).ShouldEqual(1000);
-            _taxService.GetProductPrice(product, 0, 1000M, true, customer, false, out taxRate).ShouldEqual(1100);
-            _taxService.GetProductPrice(product, 0, 1000M, false, customer, true, out taxRate).ShouldEqual(909.0909090909090909090909091M);
-            _taxService.GetProductPrice(product, 0, 1000M, false, customer, false, out taxRate).ShouldEqual(1000);
+            string attributesXml = "";
+            _taxService.GetProductPrice(product, 0, 1000M, true, customer, true, out taxRate, ref attributesXml).ShouldEqual(1000);
+            _taxService.GetProductPrice(product, 0, 1000M, true, customer, false, out taxRate, ref attributesXml).ShouldEqual(1100);
+            _taxService.GetProductPrice(product, 0, 1000M, false, customer, true, out taxRate, ref attributesXml).ShouldEqual(909.0909090909090909090909091M);
+            _taxService.GetProductPrice(product, 0, 1000M, false, customer, false, out taxRate, ref attributesXml).ShouldEqual(1000);
         }
 
         [Test]
@@ -159,10 +164,11 @@ namespace Nop.Services.Tests.Tax
             customer.IsTaxExempt = true;
 
             decimal taxRate;
-            _taxService.GetProductPrice(product, 0, 1000M, true, customer, true, out taxRate).ShouldEqual(909.0909090909090909090909091M);
-            _taxService.GetProductPrice(product, 0, 1000M, true, customer, false, out taxRate).ShouldEqual(1000);
-            _taxService.GetProductPrice(product, 0, 1000M, false, customer, true, out taxRate).ShouldEqual(909.0909090909090909090909091M);
-            _taxService.GetProductPrice(product, 0, 1000M, false, customer, false, out taxRate).ShouldEqual(1000);
+            string attributesXml = "";
+            _taxService.GetProductPrice(product, 0, 1000M, true, customer, true, out taxRate, ref attributesXml).ShouldEqual(909.0909090909090909090909091M);
+            _taxService.GetProductPrice(product, 0, 1000M, true, customer, false, out taxRate, ref attributesXml).ShouldEqual(1000);
+            _taxService.GetProductPrice(product, 0, 1000M, false, customer, true, out taxRate, ref attributesXml).ShouldEqual(909.0909090909090909090909091M);
+            _taxService.GetProductPrice(product, 0, 1000M, false, customer, false, out taxRate, ref attributesXml).ShouldEqual(1000);
         }
 
         [Test]

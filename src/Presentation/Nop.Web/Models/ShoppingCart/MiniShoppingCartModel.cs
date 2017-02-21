@@ -43,7 +43,7 @@ namespace Nop.Web.Models.ShoppingCart
             public string AttributeInfo { get; set; }
 
             public PictureModel Picture { get; set; }
-            public decimal VatRate { get; set; }
+            public string TaxRate { get; set; }
         }
 
         #endregion

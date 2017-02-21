@@ -713,7 +713,10 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewCustomerAttributeValue">
     <Value>Added a new customer attribute value (ID = {0})</Value>
-  </LocaleResource>  
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddCustomerRewardPoints">
+    <Value>Add customer reward points (points = {0}, purchased points = {1})</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewCustomerRole">
     <Value>Added a new customer role ('{0}')</Value>
   </LocaleResource>
@@ -930,12 +933,15 @@
   <LocaleResource Name="ActivityLog.EditCustomerRole">
     <Value>Edited a customer role ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditCustomerRewardPoints">
+    <Value>Edited customer reward points (ID = {0})</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.EditDiscount">
     <Value>Edited a discount ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditEmailAccount">
    <Value>Edited an email account (ID = {0})</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.EditGiftCard">
     <Value>Edited a gift card ('{0}')</Value>
   </LocaleResource>
@@ -965,7 +971,7 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditPlugin">
    <Value>Edited a plugin (FriendlyName: '{0}')</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.EditProduct">
     <Value>Edited a product ('{0}')</Value>
   </LocaleResource>
@@ -974,7 +980,7 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditProductReview">
    <Value>Edited a product review (ID = {0})</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.EditReturnRequest">
     <Value>Edited a return request (ID = {0})</Value>
   </LocaleResource>
@@ -992,7 +998,7 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditTask">
    <Value>Edited a task (ID = {0})</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.EditTopic">
     <Value>Edited a topic ('{0}')</Value>
   </LocaleResource>
@@ -1001,7 +1007,7 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditWarehouse">
    <Value>Edited a warehouse (ID = {0})</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.EditWidget">
     <Value>Edited a widget (ID = {0})</Value>
   </LocaleResource>
@@ -1475,7 +1481,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Affiliates.Orders.CustomOrderNumber">
     <Value>Order #</Value>
-  </LocaleResource>   
+  </LocaleResource>
   <LocaleResource Name="Admin.Affiliates.Orders.EndDate">
     <Value>End date</Value>
   </LocaleResource>
@@ -3204,8 +3210,29 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.Width.Hint">
     <Value>The product width.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.IsRewardPoints">
+    <Value>Is reward point(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.IsRewardPoints.Hint">
+    <Value>If this field is checked, reward points can be pruchased. </Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.OverriddenRPExchangeRate">
+    <Value>Overridden reward points exchange rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.OverriddenRPExchangeRate.Hint">
+    <Value>Use this field to override reward points exchange rate setting when converting product price to reward points (points = [overridden exchange rate] * price). If not specified, then reward points exchange rate will be used.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ExcludeFromRewardPoints">
+    <Value>Exclude from reward points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ExcludeFromRewardPoints.Hint">
+    <Value>If this field is checked, product will be excluded from reward points calculation. </Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.GiftCard">
     <Value>Gift card</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.RewardPoints">
+    <Value>Reward points</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Imported">
     <Value>Products have been imported successfully.</Value>
@@ -6779,22 +6806,22 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask">
     <Value>Order number mask</Value>
-  </LocaleResource> 
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.DD">
     <Value>{DD} - day of order creation date</Value>
-  </LocaleResource>   
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.ID">
     <Value>{ID} -Order identifier</Value>
-  </LocaleResource>     
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.MM">
     <Value>{MM} - month of order creation date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.YY">
     <Value>{YY} - last two digits of year of order creation date</Value>
-  </LocaleResource> 
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.YYYY">
     <Value>{YYYY} - year of order creation date</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Hint">
     <Value>Order number mask, for creating custom order number. For example, RE-{YYYY}-{MM}. Leave this field empty if you don't want to use custom order numbers.</Value>
   </LocaleResource>
@@ -6827,7 +6854,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.ExportWithProducts.Hint">
     <Value>Check if orders should be exported with products.</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.IsReOrderAllowed">
     <Value>Is re-order allowed</Value>
   </LocaleResource>
@@ -7260,6 +7287,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Weight">
     <Value>Weight</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.IsRewardPoints">
+    <Value>Reward point(s)</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints">
     <Value>Reward points</Value>
   </LocaleResource>
@@ -7343,6 +7373,42 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForRegistration.Hint">
     <Value>Specify number of points awarded for registration.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.EarnedRewardPointsAreTaxable">
+    <Value>Specify if earned reward points are taxable</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.EarnedRewardPointsAreTaxable.Hint">
+    <Value>If Earned reward points are taxable, then OrderAmount and tax will be reduced (like discounts do). Otherwise payment amount is reduced like with gift cards.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.AwardPointsIncludeShipping">
+    <Value>Include shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.AwardPointsIncludeShipping.Hint">
+    <Value>Specify if shipping amount should be included in reward points calculation.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.AwardPointsIncludePaymentMethodAdditionalFee">
+    <Value>Include payment method fee</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.AwardPointsIncludePaymentMethodAdditionalFee.Hint">
+    <Value>Specify if payment method additional fee should be included in reward points calculation.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.AwardPointsExcludeGiftCard">
+    <Value>Exclude gift card(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.AwardPointsExcludeGiftCard.Hint">
+    <Value>Specify if gift cards should be excluded in reward points calculation. This setting allows to earn reward points, although order was paid or partially paid with giftcards.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.AwardPointsExcludePurchasedRewardPoints">
+    <Value>Exclude purchased reward points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.AwardPointsExcludePurchasedRewardPoints.Hint">
+    <Value>Specify if purchased points should be excluded in reward points calculation. This setting allows to earn reward points, although order total is reduced or zero.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.EarnRewardPointsOnlyWhenUsingPurchasedRewardPoints">
+    <Value>Earn points only when using purchased points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.EarnRewardPointsOnlyWhenUsingPurchasedRewardPoints.Hint">
+    <Value>Specify if reward points can only be earned when using purchased reward points for payment. With this earning of reward points is connected to the use of purchased points.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping">
     <Value>Shipping settings</Value>
@@ -8336,13 +8402,13 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.Comments.ApproveSelected">
     <Value>Approve selected</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.Comments.DeleteSelected">
     <Value>Delete selected</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.Comments.DisapproveSelected">
     <Value>Disapprove selected</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.Comments.Fields.BlogPost">
     <Value>Blog post</Value>
   </LocaleResource>
@@ -8387,13 +8453,13 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchApproved.DisapprovedOnly">
     <Value>Disapproved only</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchText">
     <Value>Message</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchText.Hint">
     <Value>Search in comment text.</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Forums">
     <Value>Forums</Value>
   </LocaleResource>
@@ -9908,7 +9974,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Orders.CustomOrderNumber">
     <Value>Order #</Value>
-  </LocaleResource>     
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Orders.OrderStatus">
     <Value>Order status</Value>
   </LocaleResource>
@@ -9963,6 +10029,12 @@
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsValue.Hint">
     <Value>Enter points to add. Negative values are also supported (reduce points).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsValuePurchased">
+    <Value>Purchased value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsValuePurchased.Hint">
+    <Value>Indicate if added reward points are purchased points. Negative values are also supported.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.Date">
     <Value>Date</Value>
   </LocaleResource>
@@ -9974,6 +10046,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.PointsBalance">
     <Value>Points balance</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.PointsPurchased">
+    <Value>Points purchased</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.PointsBalancePurchased">
+    <Value>Points balance purchased</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.Store">
     <Value>Store</Value>
@@ -10235,7 +10313,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.Fields.CustomOrderNumber.Hint">
     <Value>The gift card was purchased with this order.</Value>
-  </LocaleResource>   
+  </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.Fields.GiftCardCouponCode">
     <Value>Coupon code</Value>
   </LocaleResource>
@@ -10316,7 +10394,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.History.CustomOrderNumber">
     <Value>Order #</Value>
-  </LocaleResource>   
+  </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.History.UsedValue">
     <Value>Used amount</Value>
   </LocaleResource>
@@ -10538,18 +10616,33 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.CustomOrderNumber.Hint">
     <Value>The unique number of this order.</Value>
-  </LocaleResource>    
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.CustomValues">
     <Value>Custom values</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.CustomValues.Hint">
     <Value>Custom values from the payment method.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.EarnedRewardPointsBaseAmount">
+    <Value>Reward points base</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.EarnedRewardPointsBaseAmount.Hint">
+    <Value>Earned reward points base amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.EarnedRewardPointsBaseAmountIncl">
+    <Value>Earned reward points base amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.EarnedRewardPointsBaseAmountExcl">
+    <Value>Earned reward points base amount excl. Tax</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.Edit.ExclTax">
     <Value>excl tax:</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.Edit.InclTax">
     <Value>incl tax:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.NonTaxable">
+    <Value>non taxable:</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.Edit.OrderShipping">
     <Value>Order shipping</Value>
@@ -10617,6 +10710,24 @@
   <LocaleResource Name="Admin.Orders.Fields.Edit.OrderAmountIncl.Hint">
     <Value>Edit Amount incl. Tax</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderTotalDiscountIncl">
+    <Value>Order discount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderTotalDiscountIncl.Hint">
+    <Value>Edit Order discount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.EarnedRewardPointsBaseAmountIncl">
+    <Value>Earned reward points base amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.EarnedRewardPointsBaseAmountIncl.Hint">
+    <Value>Edit earned reward points base amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.EarnedRewardPointsBaseAmountExcl">
+    <Value>Earned reward points base amount excl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.EarnedRewardPointsBaseAmountExcl.Hint">
+    <Value>Edit earned reward points base amount excl. Tax</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.Edit.InvoiceId">
     <Value>Edit Invoice data.</Value>
   </LocaleResource>
@@ -10649,6 +10760,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.OrderShippingInclTax">
     <Value>incl tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderShippingNonTaxable">
+    <Value>non taxable</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.OrderStatus">
     <Value>Order status</Value>
@@ -10740,6 +10854,9 @@
   <LocaleResource Name="Admin.Orders.Fields.PaymentMethodAdditionalFeeInclTax">
     <Value>incl tax</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.PaymentMethodAdditionalFeeNonTaxable">
+    <Value>non taxable</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.PaymentStatus">
     <Value>Payment status</Value>
   </LocaleResource>
@@ -10768,10 +10885,28 @@
     <Value>This is a recurring order. See the appropriate recurring payment record.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.RedeemedRewardPoints">
-    <Value>Reward points</Value>
+    <Value>Redeemed reward points</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.RedeemedRewardPoints.Hint">
     <Value>Redeemed reward points.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.RedeemedRewardPointsAmount">
+    <Value>Redeemed reward points amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.RedeemedRewardPointsAmount.Hint">
+    <Value>Redeemed reward points amount.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.RedeemedRewardPointsPurchased">
+    <Value>Redeemed reward points purchased</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.RedeemedRewardPointsPurchased.Hint">
+    <Value>Redeemed purchased reward points.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.RedeemedRewardPointsAmountPurchased">
+    <Value>Redeemed reward points amount purchased</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.RedeemedRewardPointsAmountPurchased.Hint">
+    <Value>Redeemed purchased reward points amount.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.RedeemedRewardPoints.Points">
     <Value>points</Value>
@@ -10862,6 +10997,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.OrderAmountIncl.Hint">
     <Value>Total order amount incl. tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderTotalDiscountIncl">
+    <Value>Order discount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderTotalDiscountIncl.Hint">
+    <Value>Order discount incl. Tax</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.InvoiceId">
     <Value>Invoice No.</Value>
@@ -11189,10 +11330,10 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.CustomOrderNumber">
     <Value>Order #</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.CustomOrderNumber.Hint">
     <Value>The order associated to this shipment.</Value>
-  </LocaleResource>    
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.Deleted">
     <Value>The shipment has been deleted successfully.</Value>
   </LocaleResource>
@@ -11720,7 +11861,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.History.CustomOrderNumber">
     <Value>Order #</Value>
-  </LocaleResource>    
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.History.OrderTotal">
     <Value>Order total</Value>
   </LocaleResource>
@@ -11972,7 +12113,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.RecurringPayments.History.LastPaymentFailed">
     <Value>Last payment failed</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.RecurringPayments.History.NextPaymentDate">
     <Value>Next payment date</Value>
   </LocaleResource>
@@ -12041,7 +12182,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Fields.CustomOrderNumber.Hint">
     <Value>The unique number of the order.</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Fields.Product">
     <Value>Product</Value>
   </LocaleResource>
@@ -12108,13 +12249,13 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.SearchCustomNumber.Hint">
     <Value>Search by a specific return request identifier.</Value>
-  </LocaleResource>    
+  </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.SearchEndDate">
     <Value>End date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.SearchEndDate.Hint">
     <Value>The end date for the search.</Value>
-  </LocaleResource>    
+  </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.SearchReturnRequestStatus">
     <Value>Return status</Value>
   </LocaleResource>
@@ -12123,10 +12264,10 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.SearchReturnRequestStatus.Hint">
     <Value>Search by a specific return request status e.g. Received.</Value>
-  </LocaleResource>    
+  </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.SearchStartDate">
     <Value>Start date</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.SearchStartDate.Hint">
     <Value>The start date for the search.</Value>
   </LocaleResource>
@@ -14737,6 +14878,9 @@
   <LocaleResource Name="Messages.Order.RewardPoints">
     <Value>{0} reward points:</Value>
   </LocaleResource>
+  <LocaleResource Name="Messages.Order.RewardPointsPurchased">
+    <Value>{0} purchased reward points:</Value>
+  </LocaleResource>
   <LocaleResource Name="Messages.Order.Shipping">
     <Value>Shipping:</Value>
   </LocaleResource>
@@ -14756,13 +14900,13 @@
     <Value>Discount:</Value>
   </LocaleResource>
   <LocaleResource Name="Messages.Order.TaxIncl">
-    <Value>Enthaltene USt.:</Value>
+    <Value>Included tax:</Value>
   </LocaleResource>
   <LocaleResource Name="Messages.Order.OrderAmount">
-    <Value>Betrag:</Value>
+    <Value>Amount:</Value>
   </LocaleResource>
   <LocaleResource Name="Messages.Order.OrderAmountIncl">
-    <Value>Betrag inkl. USt.:</Value>
+    <Value>Amount incl. tax:</Value>
   </LocaleResource>
   <LocaleResource Name="News">
     <Value>News</Value>
@@ -14951,7 +15095,10 @@
     <Value>Return Item(s)</Value>
   </LocaleResource>
   <LocaleResource Name="Order.RewardPoints">
-    <Value>{0} reward points</Value>
+    <Value>{0} used reward points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.RewardPointsPurchased">
+    <Value>{0} used purchased reward points</Value>
   </LocaleResource>
   <LocaleResource Name="Order.Shipments">
     <Value>Shipments</Value>
@@ -15073,13 +15220,22 @@
   <LocaleResource Name="Order.OrderAmountIncl">
     <Value>Amount incl. Tax</Value>
   </LocaleResource>
+  <LocaleResource Name="Order.OrderDiscountIncl">
+    <Value>Order discount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.EarnedRewardPointsBaseAmountIncl">
+    <Value>Earned reward points base amount incl. Tax</Value>
+  </LocaleResource>
+    <LocaleResource Name="Order.EarnedRewardPointsBaseAmountExcl">
+    <Value>Earned reward points base amount excl. Tax</Value>
+  </LocaleResource>
   <LocaleResource Name="Order.InvoiceId">
     <Value>Invoice No.</Value>
   </LocaleResource>
   <LocaleResource Name="Order.InvoiceDateUtc">
     <Value>Invoice Date</Value>
   </LocaleResource>
-  <LocaleResource Name="Order.TaxRateLine.VatRate">
+  <LocaleResource Name="Order.TaxRateLine.TaxRate">
     <Value>Tax %</Value>
   </LocaleResource>
   <LocaleResource Name="Order.TaxRateLine.Amount">
@@ -15097,8 +15253,8 @@
   <LocaleResource Name="Order.TaxRateLine.BaseAmount">
     <Value>Base Amount</Value>
   </LocaleResource>
-  <LocaleResource Name="Order.TaxRateLine.VatAmount">
-    <Value>VAT Amount</Value>
+  <LocaleResource Name="Order.TaxRateLine.TaxAmount">
+    <Value>Tax Amount</Value>
   </LocaleResource>
   <LocaleResource Name="Pager.CurrentPage">
     <Value>Page {0} of {1} ({2} total)</Value>
@@ -15367,6 +15523,9 @@
   <LocaleResource Name="PDFInvoice.RewardPoints">
     <Value>{0} reward points:</Value>
   </LocaleResource>
+  <LocaleResource Name="PDFInvoice.RewardPointsPurchased">
+    <Value>{0} purchased reward points:</Value>
+  </LocaleResource>
   <LocaleResource Name="PDFInvoice.Shipping">
     <Value>Shipping:</Value>
   </LocaleResource>
@@ -15391,7 +15550,7 @@
   <LocaleResource Name="PDFInvoice.VATNumber">
     <Value>VAT number: {0}</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.VatRate">
+  <LocaleResource Name="PDFInvoice.TaxRate">
     <Value>Tax %</Value>
   </LocaleResource>
   <LocaleResource Name="PDFInvoice.Invoice">
@@ -15412,7 +15571,7 @@
   <LocaleResource Name="PDFInvoice.DiscountAmountIncl">
     <Value>Discount incl. tax</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.VatAmount">
+  <LocaleResource Name="PDFInvoice.TaxAmount">
     <Value>VAT Amount</Value>
   </LocaleResource>
   <LocaleResource Name="PDFInvoice.AmountToPay">
@@ -16036,6 +16195,9 @@
   <LocaleResource Name="Products.Vendor">
     <Value>Vendor</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.ExcludeFromRewardPoints">
+    <Value>Please note that this product is excluded from the reward points program. No points will be earned.</Value>
+  </LocaleResource>
    <LocaleResource Name="Products.Wishlist.AddToWishlist">
     <Value>Add to wishlist</Value>
   </LocaleResource>
@@ -16205,7 +16367,13 @@
     <Value>The points will be activated on {0}</Value>
   </LocaleResource>
   <LocaleResource Name="RewardPoints.CurrentBalance">
-    <Value>Your current balance is {0} reward points ({1}).</Value>
+    <Value>Your current balance</Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.Total">
+    <Value>Total</Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.Amount">
+    <Value>Amount</Value>
   </LocaleResource>
   <LocaleResource Name="RewardPoints.Fields.Date">
     <Value>Date</Value>
@@ -16216,8 +16384,14 @@
   <LocaleResource Name="RewardPoints.Fields.Points">
     <Value>Points</Value>
   </LocaleResource>
+  <LocaleResource Name="RewardPoints.Fields.PointsPurchased">
+    <Value>Points Purchased</Value>
+  </LocaleResource>
   <LocaleResource Name="RewardPoints.Fields.PointsBalance">
     <Value>Points balance</Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.Fields.PointsBalancePurchased">
+    <Value>Points balance purchased</Value>
   </LocaleResource>
   <LocaleResource Name="RewardPoints.History">
     <Value>History</Value>
@@ -16242,6 +16416,12 @@
   </LocaleResource>
   <LocaleResource Name="RewardPoints.NoHistory">
     <Value>There is no balance history yet</Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.Message.PurchasedWithOrder">
+    <Value>Purchased with order #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.Message.PurchasedEarnedWithOrder">
+    <Value>Purchased and earned with order #{0}</Value>
   </LocaleResource>
   <LocaleResource Name="Search">
     <Value>Search</Value>
@@ -16350,6 +16530,9 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Discount.CannotBeUsedWithGiftCards">
     <Value>Sorry, this discount cannot be used with gift cards in the cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Discount.CannotBeUsedWithRewardPoints">
+    <Value>Sorry, this discount cannot be used with reward points products in the cart</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Discount.Expired">
     <Value>Sorry, this offer is expired</Value>
@@ -16571,13 +16754,19 @@
     <Value>Payment method additional fee</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Totals.RewardPoints">
-    <Value>{0} reward points</Value>
+    <Value>{0} used reward points</Value>
+  </LocaleResource>
+   <LocaleResource Name="ShoppingCart.Totals.RewardPointsPurchased">
+    <Value>{0} used purchased reward points</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Totals.RewardPoints.WillEarn">
-    <Value>You will earn</Value>
+    <Value>You will earn (based on {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.RewardPoints.WillEarnHint">
+    <Value>(*) when using purchased points</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Totals.RewardPoints.WillEarn.Point">
-    <Value>{0} points</Value>
+    <Value>{0} point(s)</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Totals.Shipping">
     <Value>Shipping</Value>
@@ -16606,7 +16795,7 @@
     <LocaleResource Name="ShoppingCart.Totals.OrderAmountIncl">
     <Value>Total Amount incl. Tax</Value>
   </LocaleResource>
-  <LocaleResource Name="ShoppingCart.VatRate">
+  <LocaleResource Name="ShoppingCart.TaxRate">
     <Value>Tax %</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Totals.TaxRateLine">

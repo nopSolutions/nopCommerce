@@ -31,6 +31,7 @@ using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
 using Nop.Services.Discounts;
+using Nop.Core.Domain.Tax;
 
 namespace Nop.Web.Factories
 {
@@ -70,6 +71,7 @@ namespace Nop.Web.Factories
         private readonly CaptchaSettings _captchaSettings;
         private readonly SeoSettings _seoSettings;
         private readonly ICacheManager _cacheManager;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
 
@@ -106,7 +108,8 @@ namespace Nop.Web.Factories
             CustomerSettings customerSettings,
             CaptchaSettings captchaSettings,
             SeoSettings seoSettings,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+             ShoppingCartSettings shoppingCartSettings)
         {
             this._specificationAttributeService = specificationAttributeService;
             this._categoryService = categoryService;
@@ -140,6 +143,7 @@ namespace Nop.Web.Factories
             this._captchaSettings = captchaSettings;
             this._seoSettings = seoSettings;
             this._cacheManager = cacheManager;
+            this._shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion
@@ -196,7 +200,6 @@ namespace Nop.Web.Factories
             switch (product.ProductType)
             {
                 case ProductType.GroupedProduct:
-                {
                     #region Grouped product
 
                     var associatedProducts = _productService.GetAssociatedProducts(product.Id,
@@ -217,12 +220,9 @@ namespace Nop.Web.Factories
                     switch (associatedProducts.Count)
                     {
                         case 0:
-                        {
                             //no associated products
-                        }
                             break;
                         default:
-                        {
                             //we have at least one associated product
                             //compare products
                             priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
@@ -287,27 +287,24 @@ namespace Nop.Web.Factories
                                 priceModel.OldPrice = null;
                                 priceModel.Price = null;
                             }
-                        }
                             break;
                     }
 
                     #endregion
-                }
                     break;
                 case ProductType.SimpleProduct:
                 default:
-                {
                     #region Simple product
 
                     //add to cart button
                     priceModel.DisableBuyButton = product.DisableBuyButton ||
-                                                  !_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart) ||
-                                                  !_permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+                                                    !_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart) ||
+                                                    !_permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
 
                     //add to wishlist button
                     priceModel.DisableWishlistButton = product.DisableWishlistButton ||
-                                                       !_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) ||
-                                                       !_permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+                                                        !_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) ||
+                                                        !_permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
                     //compare products
                     priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
 
@@ -318,8 +315,8 @@ namespace Nop.Web.Factories
                     if (product.AvailableForPreOrder)
                     {
                         priceModel.AvailableForPreOrder = !product.PreOrderAvailabilityStartDateTimeUtc.HasValue ||
-                                                          product.PreOrderAvailabilityStartDateTimeUtc.Value >=
-                                                          DateTime.UtcNow;
+                                                            product.PreOrderAvailabilityStartDateTimeUtc.Value >=
+                                                            DateTime.UtcNow;
                         priceModel.PreOrderAvailabilityStartDateTimeUtc = product.PreOrderAvailabilityStartDateTimeUtc;
                     }
 
@@ -346,7 +343,7 @@ namespace Nop.Web.Factories
                                         _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, quantity: int.MaxValue));
                                 }
 
-                                //attributes "set"
+                                //attributes generate attributesXml
                                 string attributesXml = "";
                                 var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
                                 foreach (var attribute in attributes)
@@ -380,9 +377,10 @@ namespace Nop.Web.Factories
                                             null, null,
                                             true, out discountAmount, out scDiscounts);
                                 }
+
                                 decimal taxRate;
                                 decimal oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out taxRate);
-                                decimal finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
+                                decimal finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out taxRate, ref attributesXml);
 
                                 decimal oldPrice = _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
                                 decimal finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
@@ -454,7 +452,6 @@ namespace Nop.Web.Factories
                     }
 
                     #endregion
-                }
                     break;
             }
 
@@ -588,10 +585,73 @@ namespace Nop.Web.Factories
                     }
                     else
                     {
+                        //prices
+                        string attributesXml = "";
+                        decimal priceAttributes = decimal.Zero;
+                        if (product.ProductType == ProductType.SimpleProduct)
+                        {
+                            //attributes generate attributesXml
+                            var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+                            foreach (var attribute in attributes)
+                            {
+                                if (attribute.ShouldHaveValues())
+                                {
+                                    //values
+                                    var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
+
+                                    //creating XML for "read-only checkboxes" attributes
+                                    foreach (var selectedAttributeId in attributeValues
+                                    .Where(v => v.IsPreSelected)
+                                    .Select(v => v.Id)
+                                    .ToList())
+                                    {
+                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                            attribute, selectedAttributeId.ToString());
+                                    }
+                                }
+
+                            }
+                            //Get final price using attributes
+                            if (!string.IsNullOrEmpty(attributesXml))
+                            {
+                                List<DiscountForCaching> scDiscounts;
+                                decimal discountAmountAttr;
+                                priceAttributes = _priceCalculationService.GetUnitPrice(product,
+                                        _workContext.CurrentCustomer,
+                                        ShoppingCartType.ShoppingCart,
+                                        1, ref attributesXml, 0,
+                                        null, null,
+                                        true, out discountAmountAttr, out scDiscounts);
+                            }
+                        }
                         decimal taxRate;
+                        decimal finalPriceFromAttributes = decimal.Zero;
+                        string attributesXmlTmp = attributesXml;
+                        if (priceAttributes != decimal.Zero)
+                            finalPriceFromAttributes = _taxService.GetProductPrice(product, priceAttributes, out taxRate, ref attributesXmlTmp);
+
                         decimal oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out taxRate);
-                        decimal finalPriceWithoutDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: false), out taxRate);
-                        decimal finalPriceWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: true), out taxRate);
+                        attributesXmlTmp = attributesXml;
+                        decimal finalPrice = _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: false);
+
+                       decimal finalPriceWithoutDiscountBase =
+                            _taxService.GetProductPrice(product,
+                                finalPriceFromAttributes != decimal.Zero ? priceAttributes : finalPrice
+                                , out taxRate, ref attributesXmlTmp);
+
+                        decimal discountAmount;
+                        List<DiscountForCaching> appliedDiscounts;
+                        attributesXmlTmp = attributesXml;
+                        decimal finalPriceWithDiscountBase = _taxService.GetProductPrice(product,
+                            _priceCalculationService.GetFinalPrice(product: product, customer: _workContext.CurrentCustomer,
+                               additionalCharge: decimal.Zero,
+                               includeDiscounts: true,
+                               quantity: 1,
+                               rentalStartDate: null, rentalEndDate: null,
+                               discountAmount: out discountAmount,
+                               appliedDiscounts: out appliedDiscounts,
+                               overriddenProductPrice: priceAttributes != decimal.Zero ? priceAttributes : finalPrice)
+                            , out taxRate, ref attributesXmlTmp);
 
                         decimal oldPrice = _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
                         decimal finalPriceWithoutDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithoutDiscountBase, _workContext.WorkingCurrency);
@@ -1145,7 +1205,8 @@ namespace Nop.Web.Factories
                 ManageInventoryMethod = product.ManageInventoryMethod,
                 StockAvailability = product.FormatStockMessage("", _localizationService, _productAttributeParser, _dateRangeService),
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
-                DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts
+                DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts,
+                ExcludeFromRewardPoints = product.ExcludeFromRewardPoints
             };
 
             //automatically generate product description?
@@ -1269,7 +1330,6 @@ namespace Nop.Web.Factories
             //product attributes
             model.ProductAttributes = PrepareProductAttributeModels(product, updatecartitem);
 
-
             //product specifications
             //do not prepare this model for the associated products. anyway it's not used
             if (!isAssociatedProduct)
@@ -1316,6 +1376,9 @@ namespace Nop.Web.Factories
                         model.AssociatedProducts.Add(PrepareProductDetailsModel(associatedProduct, null, true));
                 }
             }
+
+            //exclude from reward points program
+            model.ExcludeFromRewardPoints = product.ExcludeFromRewardPoints;
 
             return model;
         }
@@ -1374,9 +1437,9 @@ namespace Nop.Web.Factories
                 pageIndex = page.Value - 1;
             }
 
-            var list = _productService.GetAllProductReviews(customerId: _workContext.CurrentCustomer.Id, 
-                approved: null, 
-                pageIndex: pageIndex, 
+            var list = _productService.GetAllProductReviews(customerId: _workContext.CurrentCustomer.Id,
+                approved: null,
+                pageIndex: pageIndex,
                 pageSize: pageSize);
 
             var productReviews = new List<CustomerProductReviewModel>();

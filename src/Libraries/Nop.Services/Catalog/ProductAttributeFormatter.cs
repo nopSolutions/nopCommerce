@@ -81,13 +81,13 @@ namespace Nop.Services.Catalog
         /// <param name="renderProductAttributes">A value indicating whether to render product attributes</param>
         /// <param name="renderGiftCardAttributes">A value indicating whether to render gift card attributes</param>
         /// <param name="allowHyperlinks">A value indicating whether to HTML hyperink tags could be rendered (if required)</param>
-        /// /// <param name="subTotal">A value indicating if attribute VAT should be rendered with price. Decimal.MinusOne is default, i.e. don't render </param>
+        /// /// <param name="subTotal">A value indicating if attribute VAT should be rendered with price. Null is default, i.e. don't render </param>
         /// <returns>Attributes</returns>
         public virtual string FormatAttributes(Product product, string attributesXml,
             Customer customer, string serapator = "<br />", bool htmlEncode = true, bool renderPrices = true,
             bool renderProductAttributes = true, bool renderGiftCardAttributes = true,
             bool allowHyperlinks = true,
-            decimal subTotal = decimal.MinusOne)
+            decimal? subTotal = null)
         {
             var result = new StringBuilder();
 
@@ -168,7 +168,7 @@ namespace Nop.Services.Catalog
                                 attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id),
                                 attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
 
-                            if (renderPrices)
+                            if (renderPrices && _shoppingCartSettings.RenderProductAttributePrices && attribute.AttributeControlType != AttributeControlType.ReadonlyCheckboxes) //prices are off for readonly attributes
                             {
                                 decimal taxRate;
                                 var attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue);
@@ -243,31 +243,31 @@ namespace Nop.Services.Catalog
             }
 
             //attribute tax
-            if (subTotal != decimal.MinusOne)
+            if (subTotal != null & subTotal != decimal.Zero)
             {
                 var taxAttributes = _productAttributeParser.ParseTaxAttribute(attributesXml);
-                var attribTaxSummary = new TaxSummary(_workContext.TaxDisplayType == TaxDisplayType.IncludingTax);
-                var attribTax = attribTaxSummary.ParseAttributeRate(subTotal, taxAttributes);
-                string formattedAttribute = "";
-                if (result.Length > 0)
-                    result.Append(serapator);
-                result.Append(String.Format("<span style=\"display:inline-block;width:20%;\">{0}</span> <span style=\"display:inline-block;width:auto;\">{1}</span><br />",
-                    _localizationService.GetResource("ShoppingCart.VatRate"),
-                    _localizationService.GetResource("Shoppingcart.Totals.OrderAmount")));
-
-                foreach (KeyValuePair<decimal, decimal> kvp in attribTax)
+                if (taxAttributes.Count != 0)
                 {
-                    decimal vatpercentage = kvp.Key;
-                    decimal rateAmount = kvp.Value;
-                    decimal taxRate;
-                    var priceAdjustmentBase = _taxService.GetProductPrice(product, rateAmount, customer, out taxRate);
-                    var priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
-                    var price = _priceFormatter.FormatPrice(priceAdjustment, false, false);
-                    price = htmlEncode ? HttpUtility.HtmlEncode(price) : price;
-                    formattedAttribute = String.Format("<span style=\"display:inline-block;width:20%;\">{0}</span> <span style=\"display:inline-block;width:auto;\">{1}</span><br />", kvp.Key.ToString(), price);
-                    result.Append(formattedAttribute);
-                }
+                    var attribTaxSummary = new TaxSummary(_workContext.TaxDisplayType == TaxDisplayType.IncludingTax);
+                    var attribTax = attribTaxSummary.ApplyAttributeRate(subTotal ?? decimal.Zero, taxAttributes);
+                    string formattedAttribute = "";
+                    if (result.Length > 0)
+                        result.Append(serapator);
+                    result.Append(String.Format("<span style=\"display:inline-block;width:20%;\">{0}</span> <span style=\"display:inline-block;width:auto;\">{1}</span><br />",
+                        _localizationService.GetResource("ShoppingCart.TaxRate"),
+                        _localizationService.GetResource("Shoppingcart.Totals.OrderAmount")));
 
+                    foreach (KeyValuePair<decimal, decimal> kvp in attribTax)
+                    {
+                        decimal vatpercentage = kvp.Key;
+                        decimal rateAmount = kvp.Value;
+                        var priceBase = _currencyService.ConvertFromPrimaryStoreCurrency(rateAmount, _workContext.WorkingCurrency);
+                        var price = _priceFormatter.FormatPrice(priceBase, false, false);
+                        price = htmlEncode ? HttpUtility.HtmlEncode(price) : price;
+                        formattedAttribute = String.Format("<span style=\"display:inline-block;width:20%;\">{0}</span> <span style=\"display:inline-block;width:auto;\">{1}</span><br />", kvp.Key.ToString(), price);
+                        result.Append(formattedAttribute);
+                    }
+                }
 
             }
             return result.ToString();

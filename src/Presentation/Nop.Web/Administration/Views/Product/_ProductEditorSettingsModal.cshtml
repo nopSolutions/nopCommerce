@@ -230,6 +230,15 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.IsRewardPoints)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.IsRewardPoints)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.IsRewardPoints)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
                                                 @Html.NopLabelFor(model => model.ProductEditorSettingsModel.DownloadableProduct)
                                             </div>
                                             <div class="col-md-2">

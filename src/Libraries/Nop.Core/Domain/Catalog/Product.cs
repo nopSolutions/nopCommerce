@@ -144,6 +144,19 @@ namespace Nop.Core.Domain.Catalog
         public decimal? OverriddenGiftCardAmount { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the product are reward points
+        /// </summary>
+        public bool IsRewardPoints { get; set; }
+        /// <summary>
+        /// Gets or sets a value of Reward Points exchange rate when purchased
+        /// </summary>
+        public decimal? OverriddenRPExchangeRate { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the product is excluded from reward points calculation
+        /// </summary>
+        public bool ExcludeFromRewardPoints { get; set; }
+        /// <summary>
         /// Gets or sets a value indicating whether the product requires that other products are added to the cart (Product X requires Product Y)
         /// </summary>
         public bool RequireOtherProducts { get; set; }
@@ -697,7 +710,7 @@ namespace Nop.Core.Domain.Catalog
             get { return _appliedDiscounts ?? (_appliedDiscounts = new List<Discount>()); }
             protected set { _appliedDiscounts = value; }
         }
-        
+
         /// <summary>
         /// Gets or sets the collection of "ProductWarehouseInventory" records. We use it only when "UseMultipleWarehouses" is set to "true" and ManageInventoryMethod" to "ManageStock"
         /// </summary>

@@ -1,5 +1,6 @@
 ﻿
 using Nop.Services.Catalog;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -7,286 +8,576 @@ using System.Text;
 
 namespace Nop.Services.Tax
 {
+    #region taxrateEntry
     /// <summary>
-    /// TaxRate entry to store amounts per vatrate
+    /// TaxRate entry to store amounts per taxrate
     /// all values are per rate and most of them calculated
-    /// only VatRate, ItemAmount, ShippingAmount and PaymentFeeAmount can be set
+    /// only TaxRate, ItemAmount, ShippingAmount and PaymentFeeAmount can be set
     /// </summary>
     public partial class TaxRateEntry
     {
-        public decimal VatRate { get; set; }
-        public decimal VatRateWeight { get; internal set; } //weight of VatRate used for product sets [it's (sum of associated products price per VatRate) / (total price of assoc. prod.) ]
+        public decimal TaxRate { get; set; }
+        public decimal TaxRateWeight { get; internal set; } //weight of TaxRate used for product sets [it's (sum of associated products price per TaxRate) / (total price of assoc. prod.) ]
         public decimal SubtotalAmount { get; set; }
         public decimal ShippingAmount { get; set; }
-        public decimal PaymentFeeAmount { get; set; } //can be negative when discounted
-        public decimal Amount { get; internal set; } //sum of above amounts
-        public decimal SubTotalDiscAmount { get; internal set; }
+        public decimal PaymentFeeAmount { get; set; } //when set as fee
+        public decimal EntryAmount //sum of above amounts
+        {
+            get { return SubtotalAmount + ShippingAmount + PaymentFeeAmount; }
+        }
+        public decimal SubTotalDiscountAmount { get; internal set; }
         public decimal InvoiceDiscountAmount { get; internal set; }
-        public decimal DiscountAmount { get; internal set; } //sum of above discounts
-        public decimal BaseAmount { get; internal set; }
-        public decimal VatAmount { get; internal set; }
-        public decimal AmountIncludingVAT { get; internal set; }
+        public decimal PaymentFeeDiscountAmount { get; set; } //when set as discount or surcharge
+        public decimal RewardPointsDiscountAmount { get; set; } //earned reward points
+        public decimal DiscountAmount//sum of above discount amounts
+        {
+            get { return  SubTotalDiscountAmount + InvoiceDiscountAmount + PaymentFeeDiscountAmount + RewardPointsDiscountAmount; }
+        }
+        public decimal BaseAmount { get; internal set; } //base amount excl. tax
+        public decimal TaxAmount { get; internal set; } //tax
+        public decimal AmountIncludingTax { get; internal set; } //base + tax
     }
+
+    #endregion
+
     /// <summary>
     /// TaxSummary to store TaxRates and overall totals
     /// </summary>
     public partial class TaxSummary
     {
+        //private
+        decimal _totalSubTotalAmount;
+        decimal? _totalShippingAmountTaxable;
+        decimal _totalAmount;
+        decimal _totalAmountTax;
+        decimal _totalAmountIncludingTax;
+        decimal _totalPaymentFeeDiscAmount;
+        decimal _totalPaymentFeeAmount;
+        decimal _totalRewardPointsAmountTaxable;
+        decimal _totalSubTotalDiscAmount;
+        decimal _totalInvDiscAmount;
+
+        //externally set amounts
+        decimal? _totalShippingAmountNonTaxable;
+        decimal? _totalRewardPointsAmountNonTaxable;
+        decimal? _totalPaymentFeeAmountNonTaxable;
+        decimal? _totalRewardPointsAmountPurchased;
+        decimal? _totalGiftcardsAmount;
+
         #region Ctor
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="includingTax">Indicates if given amounts do include tax</param>
-        public TaxSummary(bool includingTax)
+        /// <param name="pricesIncludingTax">Indicates if given amounts do include tax</param>
+        public TaxSummary(bool pricesIncludingTax)
         {
             TaxRates = new SortedDictionary<decimal, TaxRateEntry>();
-            PricesIncludeTax = includingTax;
-            PercentageInvDiscount = decimal.Zero;
-            PercentageSubTotalDiscount = decimal.Zero;
-            PercentagePaymentFeeDiscount = decimal.Zero;
-
-            TotalSubTotalAmount = decimal.Zero;
-            TotalShippingAmount = decimal.Zero;
-            TotalPaymentFeeAmount = decimal.Zero;
-            TotalAmount = decimal.Zero;
-            TotalAmountVAT = decimal.Zero;
-            TotalAmountIncludingVAT = decimal.Zero;
-            TotalSubTotalDiscAmount = decimal.Zero;
-            TotalInvDiscAmount = decimal.Zero;
+            PricesIncludeTax = pricesIncludingTax;
         }
         #endregion
 
-        public SortedDictionary<decimal, TaxRateEntry> TaxRates { get; set; }
+        public SortedDictionary<decimal, TaxRateEntry> TaxRates { get; private set; }
         public bool PricesIncludeTax { get;  }
-        public decimal PercentageInvDiscount { get; private set; }
-        public decimal PercentageSubTotalDiscount { get; private set; }
-        public decimal PercentagePaymentFeeDiscount { get; private set; }
-        public decimal TotalSubTotalAmount { get; private set; }
-        public decimal TotalShippingAmount { get; private set; }
-        public decimal TotalPaymentFeeAmount { get; private set; }
-        public decimal TotalAmount { get; private set; }
-        public decimal TotalAmountVAT { get; private set; }
-        public decimal TotalAmountIncludingVAT { get; private set; }
-        public decimal TotalSubTotalDiscAmount { get; private set; }
-        public decimal TotalInvDiscAmount { get; private set; }
+        public decimal PercentageInvDiscount { get; private set; } = decimal.Zero; //set via sub
+        public decimal PercentageSubTotalDiscount { get; private set; } = decimal.Zero; //set via sub
+        public decimal PercentageRewardPointsDiscount { get; private set; } = decimal.Zero; //earned points, set via sub
+        public decimal PercentagePaymentFeeOrDiscount { get; private set; } = decimal.Zero; //set via sub
+        public decimal TotalSubTotalAmount { get { if (HasChanges) CalculateAmounts(); return _totalSubTotalAmount; } }
+        public decimal? TotalShippingAmountTaxable { get { if (HasChanges) CalculateAmounts(); return _totalShippingAmountTaxable; } }
+        public decimal? TotalShippingAmountNonTaxable
+        {
+            get { return _totalShippingAmountNonTaxable; }
+            set
+            {
+                _totalShippingAmountNonTaxable = value;
+                if (value.HasValue)
+                {
+                    _totalShippingAmountNonTaxable = RoundingHelper.RoundAmount(value.Value);
+                    HasShipping = true;
+                }
+            }
+        }
+        public decimal? TotalShippingAmount { get { return GetSum(SumType.TotalShippingAmount); } } //sum of shipping amounts
+        public decimal TotalRewardPointsAmountTaxable { get { if (HasChanges) CalculateAmounts(); return _totalRewardPointsAmountTaxable; } } //set via percentage
+        public decimal? TotalRewardPointsAmountNonTaxable
+        {
+            get { return _totalRewardPointsAmountNonTaxable; }
+            set { _totalRewardPointsAmountNonTaxable = value.HasValue ? RoundingHelper.RoundAmount(value.Value) : value; }
+        }
+        public decimal TotalPaymentFeeAmount { get { if (HasChanges) CalculateAmounts(); return _totalPaymentFeeAmount; } } //set via percentage
+        public decimal? TotalPaymentFeeAmountNonTaxable
+        {
+            get { return _totalPaymentFeeAmountNonTaxable; }
+            set { _totalPaymentFeeAmountNonTaxable = value.HasValue ? RoundingHelper.RoundAmount(value.Value) : value; }
+        }
 
-        private bool HasChanged = false;
+        public decimal TotalPaymentFeeDiscAmount { get { if (HasChanges) CalculateAmounts(); return _totalPaymentFeeDiscAmount; } } //set via percentage
+        public decimal TotalPaymentFeeAmountTaxable { get { return GetSum(SumType.TotalPaymentFeeAmountTaxable) ?? decimal.Zero; } } //sum of payment fees
+        public decimal TotalSubTotalDiscAmount { get { if (HasChanges) CalculateAmounts(); return _totalSubTotalDiscAmount; } } //set via percentage
+        public decimal TotalInvDiscAmount { get { if (HasChanges) CalculateAmounts(); return _totalInvDiscAmount; } } //set via percentage
+        public decimal TotalAmount { get { if (HasChanges) CalculateAmounts(); return _totalAmount; } }
+        public decimal TotalAmountTax { get { if (HasChanges) CalculateAmounts(); return _totalAmountTax; } }
+        public decimal TotalAmountIncludingTax { get { if (HasChanges) CalculateAmounts(); return _totalAmountIncludingTax; } }
+        public decimal? TotalRewardPointsAmountPurchased
+        {
+            get { return _totalRewardPointsAmountPurchased; }
+            set { _totalRewardPointsAmountPurchased = value.HasValue ? RoundingHelper.RoundAmount(value.Value) : value; }
+        }
+        public decimal? TotalGiftcardsAmount
+        {
+            get { return _totalGiftcardsAmount; }
+            set { _totalGiftcardsAmount = value.HasValue ? RoundingHelper.RoundAmount(value.Value) : value; }
+        }
+        public decimal TotalPaymentAmount { get { return GetSum(SumType.TotalPaymentAmount) ?? decimal.Zero; } }
+        public decimal TotalBaseAmountForPaymentFeeCalculation { get { return GetSum(SumType.TotalBaseAmountForPaymentFeeCalculation) ?? decimal.Zero; } }
+        public decimal TotalOrderAmount { get { return GetSum(SumType.TotalOrderAmount) ?? decimal.Zero; } }
+        public decimal TotalOrderAmountIncl { get { return GetSum(SumType.TotalOrderAmountIncl) ?? decimal.Zero; } }
+
+
+        private bool HasChanges;
+        private bool HasPaymentFeeTax
+        {
+            get
+            {
+                foreach (var tr in TaxRates)
+                {
+                    if (tr.Value.PaymentFeeAmount != decimal.Zero)
+                        return true;
+                }
+                return false;
+            }
+        }
+        private bool HasShipping { get; set; } = false;
+
+
+        #region sums
+        private enum SumType { TotalShippingAmount, TotalPaymentFeeAmountTaxable, TotalPaymentAmount, TotalBaseAmountForPaymentFeeCalculation, TotalOrderAmount, TotalOrderAmountIncl };
+        private decimal? GetSum(SumType type)
+        {
+
+            if (HasChanges)
+                CalculateAmounts();
+
+            switch (type)
+            {
+                case SumType.TotalShippingAmount:
+                    if (TotalShippingAmountTaxable.HasValue && !TotalShippingAmountNonTaxable.HasValue)
+                        return TotalShippingAmountTaxable;
+                    if (!TotalShippingAmountTaxable.HasValue && TotalShippingAmountNonTaxable.HasValue)
+                        return TotalShippingAmountNonTaxable;
+
+                    return TotalShippingAmountTaxable + TotalShippingAmountNonTaxable;
+
+                case SumType.TotalPaymentFeeAmountTaxable:
+                    return TotalPaymentFeeAmount - TotalPaymentFeeDiscAmount;
+
+                case SumType.TotalPaymentAmount:
+                    decimal amountPay = TotalAmountIncludingTax
+                            + (TotalShippingAmountNonTaxable ?? decimal.Zero)
+                            + (TotalPaymentFeeAmountNonTaxable ?? decimal.Zero)
+                            - (TotalRewardPointsAmountNonTaxable ?? decimal.Zero)
+                            - (TotalGiftcardsAmount ?? decimal.Zero)
+                            - (TotalRewardPointsAmountPurchased ?? decimal.Zero);
+
+                    if (amountPay < decimal.Zero)
+                        amountPay = decimal.Zero;
+
+                    return amountPay;
+
+                case SumType.TotalBaseAmountForPaymentFeeCalculation:
+                    return PricesIncludeTax ? TotalAmountIncludingTax : TotalAmount;
+
+                case SumType.TotalOrderAmount:
+                    decimal amountOrder = TotalAmount
+                            + (TotalShippingAmountNonTaxable ?? decimal.Zero)
+                            + (TotalPaymentFeeAmountNonTaxable ?? decimal.Zero)
+                            - (TotalRewardPointsAmountNonTaxable ?? decimal.Zero);
+
+                    if (amountOrder < decimal.Zero)
+                        amountOrder = decimal.Zero;
+                    return amountOrder;
+
+                case SumType.TotalOrderAmountIncl:
+                    decimal amountOrderIncl = TotalAmountIncludingTax
+                            + (TotalShippingAmountNonTaxable ?? decimal.Zero)
+                            + (TotalPaymentFeeAmountNonTaxable ?? decimal.Zero)
+                            - (TotalRewardPointsAmountNonTaxable ?? decimal.Zero);
+
+                    if (amountOrderIncl < decimal.Zero)
+                        amountOrderIncl = decimal.Zero;
+                    return amountOrderIncl;
+
+                default:
+                    return decimal.Zero;
+            }
+        }
+
+        #endregion
 
         #region utilities
         public string GenerateTaxRateString()
         {
             return this.TaxRates.Aggregate(string.Empty, (current, next) =>
                 string.Format("{0}{1}:{2}:{3}:{4}:{5}:{6};   ", current,
-                    next.Key.ToString(CultureInfo.InvariantCulture),
-                    next.Value.Amount.ToString(CultureInfo.InvariantCulture),
+                    next.Value.TaxRate.ToString(CultureInfo.InvariantCulture),
+                    next.Value.EntryAmount.ToString(CultureInfo.InvariantCulture),
                     next.Value.DiscountAmount.ToString(CultureInfo.InvariantCulture),
                     next.Value.BaseAmount.ToString(CultureInfo.InvariantCulture),
-                    next.Value.VatAmount.ToString(CultureInfo.InvariantCulture),
-                    next.Value.AmountIncludingVAT.ToString(CultureInfo.InvariantCulture)
+                    next.Value.TaxAmount.ToString(CultureInfo.InvariantCulture),
+                    next.Value.AmountIncludingTax.ToString(CultureInfo.InvariantCulture)
                  )
             );
         }
         public SortedDictionary<decimal, decimal> GenerateOldTaxrateDict()
         {
-            return new SortedDictionary<decimal, decimal>(TaxRates.ToDictionary(x => x.Key, x => x.Value.VatAmount));
+            return new SortedDictionary<decimal, decimal>(TaxRates.ToDictionary(x => x.Value.TaxRate, x => x.Value.TaxAmount));
 
         }
+
+        protected decimal CalcDiscountPercentage(ref decimal discAmount, decimal baseAmount)
+        {
+            decimal PercentageDiscount;
+
+            if (baseAmount == decimal.Zero)
+            {
+                PercentageDiscount = decimal.Zero;
+                discAmount = decimal.Zero;
+            }
+            else
+            {
+                if (discAmount > baseAmount)
+                    discAmount = baseAmount;
+
+                PercentageDiscount = discAmount / baseAmount * 100;
+            }
+            return PercentageDiscount;
+        }
+
         #endregion
 
         #region methods
+
+        #region rates
         /// <summary>
         /// Add amounts to taxrate
         /// </summary>
-        /// <param name="vatRate">Vat %</param>
+        /// <param name="taxRate">Vat %</param>
         /// <param name="itemAmount">Item amount</param>
         /// <param name="shippingAmount">Shipping amount</param>
-        /// <param name="paymentfeeAmount"> Payment method fee amount</param>
-        public void AddRate(decimal vatRate, decimal itemAmount = 0, decimal shippingAmount = 0, decimal paymentfeeAmount = 0)
+        /// <param name="paymentFeeAmount"> Payment method fee amount</param>
+        public void AddRate(decimal taxRate, decimal itemAmount = decimal.Zero, decimal? shippingAmount = null, decimal paymentFeeAmount = decimal.Zero)
         {
-            if (!TaxRates.ContainsKey(vatRate))
-                TaxRates.Add(vatRate, new TaxRateEntry()
+            if (shippingAmount.HasValue)
+                HasShipping = true;
+
+            if (!TaxRates.ContainsKey(taxRate))
+                TaxRates.Add(taxRate, new TaxRateEntry()
                 {
-                    VatRate = vatRate,
+                    TaxRate = taxRate,
                     SubtotalAmount = itemAmount,
-                    ShippingAmount = shippingAmount,
-                    PaymentFeeAmount = paymentfeeAmount
+                    ShippingAmount = shippingAmount ?? decimal.Zero,
+                    PaymentFeeAmount = paymentFeeAmount
                 });
             else
             {
-                TaxRates[vatRate].SubtotalAmount += itemAmount;
-                TaxRates[vatRate].ShippingAmount += shippingAmount;
-                TaxRates[vatRate].PaymentFeeAmount += paymentfeeAmount;
+                TaxRates[taxRate].SubtotalAmount += itemAmount;
+                TaxRates[taxRate].ShippingAmount += shippingAmount ?? decimal.Zero;
+                TaxRates[taxRate].PaymentFeeAmount += paymentFeeAmount;
             }
-            HasChanged = true;
+
+            HasChanges = true;
         }
         /// <summary>
         ///
         /// </summary>
-        /// <param name="attribAmount">Total Amount of Attributes</param>
+        /// <param name="amount">Total Amount of Attributes</param>
         /// <param name="attributeTaxWeight">dictionary of taxRate weights on that amount</param>
-        public void AddAttributeRate(decimal attribAmount, SortedDictionary<decimal, decimal> attributeTaxWeight)
+        public void AddAttributeRate(decimal amount, SortedDictionary<decimal, decimal> attributeTaxWeight)
         {
-            var dummyResult = ParseOrAddAttributeRate(attribAmount, attributeTaxWeight, doAdd: true);
+            var dummyResult = ApplyOrAddAttributeRate(amount, attributeTaxWeight, doAdd: true);
         }
+        /// <summary>
+        /// Parses taxWeights and calculates respective amounts
+        /// </summary>
+        /// <param name="amount">amount to weight</param>
+        /// <param name="attributeTaxWeight">tax weights</param>
+        /// <returns>SortedDictionary of weighted amounts</returns>
+        public SortedDictionary<decimal, decimal> ApplyAttributeRate(decimal amount, SortedDictionary<decimal, decimal> attributeTaxWeight)
+        {
+            return ApplyOrAddAttributeRate(amount, attributeTaxWeight, doAdd: false);
+        }
+        #endregion
 
-        public SortedDictionary<decimal, decimal> ParseAttributeRate(decimal attribAmount, SortedDictionary<decimal, decimal> attributeTaxWeight)
-        {
-            return ParseOrAddAttributeRate(attribAmount, attributeTaxWeight, doAdd: false);
-        }
-        public SortedDictionary<decimal, decimal> ParseOrAddAttributeRate(decimal attribAmount, SortedDictionary<decimal, decimal> attributeTaxWeight, bool doAdd = true)
+        protected SortedDictionary<decimal, decimal> ApplyOrAddAttributeRate(decimal amount, SortedDictionary<decimal, decimal> attributeTaxWeight, bool doAdd = true)
         {
             var result = new SortedDictionary<decimal, decimal>();
             int i = 0;
-            int c = attributeTaxWeight.Count();
-            decimal reminder = attribAmount;
+            var c = attributeTaxWeight.Count();
+            decimal reminder = amount;
             foreach (KeyValuePair<decimal, decimal> kvp in attributeTaxWeight)
             {
                 i += 1;
                 decimal vatpercentage = kvp.Key;
                 decimal rateWeight = kvp.Value;
-                var attribAmountWeighted = RoundingHelper.RoundAmount(attribAmount * rateWeight);
+                var amountWeighted = RoundingHelper.RoundAmount(amount * rateWeight);
                 if (i < c)
                 {
                     if (doAdd)
-                        AddRate(vatpercentage, attribAmountWeighted);
+                        AddRate(vatpercentage, amountWeighted);
                     else
-                        result.Add(kvp.Key, attribAmountWeighted);
-                    reminder -= attribAmountWeighted;
+                        result.Add(vatpercentage, amountWeighted);
+                    reminder -= amountWeighted;
                 }
                 else
                 {
+                    reminder = RoundingHelper.RoundAmount(reminder);
                     if (doAdd)
                         AddRate(vatpercentage, reminder);
                     else
-                        result.Add(kvp.Key, reminder);
+                        result.Add(vatpercentage, reminder);
                 }
             }
 
             return result;
         }
-        public void SetSubtotalDiscAmount(decimal totalSubTotalDiscAmount, decimal totalAmount = 0)
-        {
-            if (totalAmount == 0)
-                totalAmount = TaxRates.Sum(x => x.Value.SubtotalAmount);
-            if (totalSubTotalDiscAmount > totalAmount)
-                totalSubTotalDiscAmount = totalAmount;
 
-            if (totalAmount != decimal.Zero)
-                PercentageSubTotalDiscount = totalSubTotalDiscAmount / totalAmount * 100;
-            HasChanged = true;
-        }
+        #region discount percentages
         /// <summary>
-        /// set PaymentFee as discount (used for taxable fee as discount or surcharge)
+        /// Set subtotal discount amount. Converted internally to percentage
         /// </summary>
-        /// <param name="totalPaymentFeeDiscAmount">Fee Amount</param>
-        /// <param name="totalAmount">Base amount to which apply fee</param>
-        public void SetPaymentFeeDiscAmount(decimal totalPaymentFeeDiscAmount, decimal totalAmount)
+        /// <param name="totalSubTotalDiscAmount">Subtotal discount amount</param>
+        /// <param name="baseAmount">Base amount to which apply discount</param>
+        public void SetSubtotalDiscAmount(decimal totalSubTotalDiscAmount, decimal baseAmount = 0)
         {
-            PercentagePaymentFeeDiscount = totalPaymentFeeDiscAmount / totalAmount * 100;
-            HasChanged = true;
+            totalSubTotalDiscAmount = RoundingHelper.RoundAmount(totalSubTotalDiscAmount);
+            if (baseAmount == decimal.Zero)
+                baseAmount = TaxRates.Sum(x => x.Value.SubtotalAmount);
+
+            totalSubTotalDiscAmount = Math.Min(totalSubTotalDiscAmount, baseAmount);
+            PercentageSubTotalDiscount = CalcDiscountPercentage(ref totalSubTotalDiscAmount, baseAmount);
+            _totalSubTotalDiscAmount = totalSubTotalDiscAmount;
+
+            HasChanges = true;
+        }
+
+        /// <summary>
+        /// Set redeemed reward points amount. Converted internally to a percentage
+        /// </summary>
+        /// <param name="totalRewardPointsAmount">Redeemed reward points amount</param>
+        /// <param name="baseAmount">Base amount to which apply discount</param>
+        public void SetRewardPointsDiscAmount(decimal totalRewardPointsAmount, decimal baseAmount = 0)
+        {
+            totalRewardPointsAmount = RoundingHelper.RoundAmount(totalRewardPointsAmount);
+            totalRewardPointsAmount = Math.Min(totalRewardPointsAmount, baseAmount);
+
+            PercentageRewardPointsDiscount = CalcDiscountPercentage(ref totalRewardPointsAmount, baseAmount);
+            _totalRewardPointsAmountTaxable = totalRewardPointsAmount;
+
+            HasChanges = true;
+        }
+
+        /// <summary>
+        /// Set PaymentFee as discount (negative amount) or surcharge (positive amount) (used for taxable fee as discount or surcharge)
+        /// </summary>
+        /// <param name="totalPaymentFeeOrDiscAmount">Fee Amount</param>
+        /// <param name="baseAmount">Base amount to which apply discount fee</param>
+        public void SetPaymentFeeOrDiscAmount(decimal totalPaymentFeeOrDiscAmount, decimal baseAmount)
+        {
+            totalPaymentFeeOrDiscAmount = RoundingHelper.RoundAmount(totalPaymentFeeOrDiscAmount);
+            totalPaymentFeeOrDiscAmount = Math.Min(totalPaymentFeeOrDiscAmount, baseAmount);
+
+            //totalPaymentFeeDiscAmount is passed as negative number
+            var sign = Math.Sign(totalPaymentFeeOrDiscAmount);
+            totalPaymentFeeOrDiscAmount = Math.Abs(totalPaymentFeeOrDiscAmount);
+            _totalPaymentFeeAmount = decimal.Zero;
+            _totalPaymentFeeDiscAmount = decimal.Zero;
+
+            PercentagePaymentFeeOrDiscount = CalcDiscountPercentage(ref totalPaymentFeeOrDiscAmount, baseAmount);
+            if (sign == -1)
+                _totalPaymentFeeDiscAmount = totalPaymentFeeOrDiscAmount;
+            else
+                _totalPaymentFeeAmount = totalPaymentFeeOrDiscAmount;
+
+            HasChanges = true;
         }
 
         /// <summary>
         /// Set total invoice discount amount, it will be converted to an internal discount percentage
         /// </summary>
         /// <param name="totalInvDiscAmount">invoice discount amount</param>
-        public void SetTotalInvDiscAmount(decimal totalInvDiscAmount, decimal totalAmount)
+        /// <param name="baseAmount">Base amount to which apply discount</param>
+        public void SetTotalInvDiscAmount(decimal totalInvDiscAmount, decimal baseAmount)
         {
-            if (totalInvDiscAmount > totalAmount)
-                totalInvDiscAmount = totalAmount;
+            totalInvDiscAmount = RoundingHelper.RoundAmount(totalInvDiscAmount);
+            totalInvDiscAmount = Math.Min(totalInvDiscAmount, baseAmount);
 
-            PercentageInvDiscount = totalInvDiscAmount / totalAmount * 100;
-            HasChanged = true;
+            PercentageInvDiscount = CalcDiscountPercentage(ref totalInvDiscAmount, baseAmount);
+            _totalInvDiscAmount = totalInvDiscAmount;
+
+            HasChanges = true;
         }
+        #endregion
+
         /// <summary>
-        /// calculate amounts and VAT
+        /// Calculate amounts and tax
         /// </summary>
-        public void CalculateAmounts()
+        private void CalculateAmounts()
         {
-            if (!HasChanged)
+            if (!HasChanges)
                 return;
 
             //reset totals
-            TotalShippingAmount = decimal.Zero;
-            TotalPaymentFeeAmount = decimal.Zero;
-            TotalAmount = decimal.Zero;
-            TotalAmountVAT = decimal.Zero;
-            TotalAmountIncludingVAT = decimal.Zero;
-            TotalSubTotalAmount = decimal.Zero;
-            TotalSubTotalDiscAmount = decimal.Zero;
-            TotalInvDiscAmount = decimal.Zero;
-            HasChanged = false;
+            _totalSubTotalAmount = decimal.Zero;
+            if (HasShipping)
+                _totalShippingAmountTaxable = decimal.Zero;
+            else
+                _totalShippingAmountTaxable = null;
+            _totalAmount = decimal.Zero;
+            _totalAmountTax = decimal.Zero;
+            _totalAmountIncludingTax = decimal.Zero;
+
+            HasChanges = false;
+
+            //payment fee with tax
+            if (HasPaymentFeeTax)
+            {
+                _totalPaymentFeeAmount = decimal.Zero;
+                _totalPaymentFeeDiscAmount = decimal.Zero;
+                PercentagePaymentFeeOrDiscount = decimal.Zero;
+            }
 
             //init remainder
-            decimal remainderSubTotalDisc = decimal.Zero;
-            decimal remainderPaymentFeeDisc = decimal.Zero;
-            decimal remainderInvDisc = decimal.Zero;
+            decimal remainderSubTotalDisc = decimal.Zero; decimal sumSubTotalDisc = decimal.Zero;
+            decimal remainderInvDisc = decimal.Zero; decimal sumInvDisc = decimal.Zero;
+            decimal remainderRewardPointsDisc = decimal.Zero; decimal sumRewardPointsDisc = decimal.Zero;
+            decimal remainderPaymentFeeOrDisc = decimal.Zero; decimal sumPaymentFeeOrDisc = decimal.Zero;
+
+            var n = TaxRates.Count();
+            var i = 0;
 
             //calc and sum up tax
             foreach (KeyValuePair<decimal, TaxRateEntry> kvp in TaxRates)
             {
                 decimal vatpercentage = kvp.Key;
                 TaxRateEntry taxrate = kvp.Value;
+                i += 1;
 
-                //discounts
+                //subtotal discount
                 if (PercentageSubTotalDiscount != 0)
                 {
-                    remainderSubTotalDisc += taxrate.SubtotalAmount * PercentageSubTotalDiscount / 100;
-                    taxrate.SubTotalDiscAmount = RoundingHelper.RoundAmount(remainderSubTotalDisc);
-                    remainderSubTotalDisc -= taxrate.SubTotalDiscAmount;
-                }
-
-                if (PercentagePaymentFeeDiscount != 0)
-                {
-                    remainderPaymentFeeDisc += (taxrate.SubtotalAmount + taxrate.ShippingAmount - taxrate.SubTotalDiscAmount) * PercentagePaymentFeeDiscount / 100;
-                    taxrate.PaymentFeeAmount = RoundingHelper.RoundAmount(remainderPaymentFeeDisc);
-                    remainderPaymentFeeDisc -= taxrate.PaymentFeeAmount;
+                    if (i == n)
+                    {
+                        var diff = TotalSubTotalDiscAmount - sumSubTotalDisc;
+                        taxrate.SubTotalDiscountAmount = diff;
+                    }
+                    else
+                    {
+                        var discountbase = taxrate.SubtotalAmount;
+                        remainderSubTotalDisc += discountbase * PercentageSubTotalDiscount / 100;
+                        taxrate.SubTotalDiscountAmount = RoundingHelper.RoundAmount(remainderSubTotalDisc);
+                        remainderSubTotalDisc -= taxrate.SubTotalDiscountAmount;
+                        sumSubTotalDisc += taxrate.SubTotalDiscountAmount;
+                    }
                 }
 
                 //Invoice discount is in sequence to other discounts, i.e. applied to already discounted amounts
                 if (PercentageInvDiscount != 0)
                 {
-                    remainderInvDisc += (taxrate.SubtotalAmount + taxrate.ShippingAmount + taxrate.PaymentFeeAmount - taxrate.SubTotalDiscAmount)
-                                        * PercentageInvDiscount / 100;
-                    taxrate.InvoiceDiscountAmount = RoundingHelper.RoundAmount(remainderInvDisc);
-                    remainderInvDisc -= taxrate.InvoiceDiscountAmount;
+                    if (i == n)
+                    {
+                        var diff = TotalInvDiscAmount - sumInvDisc;
+                        taxrate.InvoiceDiscountAmount = diff;
+                    }
+                    else
+                    {
+                        var discountbase = taxrate.SubtotalAmount - taxrate.SubTotalDiscountAmount + taxrate.ShippingAmount;
+                        remainderInvDisc += discountbase * PercentageInvDiscount / 100;
+                        taxrate.InvoiceDiscountAmount = RoundingHelper.RoundAmount(remainderInvDisc);
+                        remainderInvDisc -= taxrate.InvoiceDiscountAmount;
+                        sumInvDisc += taxrate.InvoiceDiscountAmount;
+                    }
                 }
 
-                //last remainder get's lost as it can't be considered anywhere else. This has no implication and only lowers or highers discount.
+                //Reward points are in sequence to other discounts, i.e. applied to already discounted amounts
+                if (PercentageRewardPointsDiscount != 0)
+                {
+                    if (i == n)
+                    {
+                        var diff =TotalRewardPointsAmountTaxable - sumRewardPointsDisc;
+                        taxrate.RewardPointsDiscountAmount = diff;
+                    }
+                    else
+                    {
+                        var discountbase = taxrate.SubtotalAmount - taxrate.SubTotalDiscountAmount + taxrate.ShippingAmount - taxrate.InvoiceDiscountAmount;
+                        remainderRewardPointsDisc += discountbase * PercentageRewardPointsDiscount / 100;
+                        taxrate.RewardPointsDiscountAmount = RoundingHelper.RoundAmount(remainderRewardPointsDisc);
+                        remainderRewardPointsDisc -= taxrate.RewardPointsDiscountAmount;
+                        sumRewardPointsDisc += taxrate.RewardPointsDiscountAmount;
+                    }
+                }
 
-                taxrate.Amount = taxrate.SubtotalAmount + taxrate.ShippingAmount + taxrate.PaymentFeeAmount;
-                taxrate.DiscountAmount = taxrate.SubTotalDiscAmount + taxrate.InvoiceDiscountAmount;
+                //percentage payment fee discount.
+                if (PercentagePaymentFeeOrDiscount != 0)
+                {
+                    if (i == n)
+                    {
+                        var diff = TotalPaymentFeeAmount + TotalPaymentFeeDiscAmount - sumPaymentFeeOrDisc; //TotalPaymentFeeAmount and TotalPaymentFeeDiscAmount are mutual zero
+                        taxrate.PaymentFeeAmount = TotalPaymentFeeAmount != decimal.Zero ? diff : decimal.Zero;
+                        taxrate.PaymentFeeDiscountAmount = TotalPaymentFeeDiscAmount != decimal.Zero ? diff : decimal.Zero;
 
-                //VAT: always round VAT first
-                decimal rateamount = taxrate.Amount - taxrate.DiscountAmount;
+                    }
+                    else
+                    {
+                        var discountbase = taxrate.SubtotalAmount - taxrate.SubTotalDiscountAmount + taxrate.ShippingAmount - taxrate.InvoiceDiscountAmount - taxrate.RewardPointsDiscountAmount;
+                        remainderPaymentFeeOrDisc += discountbase * PercentagePaymentFeeOrDiscount / 100;
+                        taxrate.PaymentFeeAmount = decimal.Zero; taxrate.PaymentFeeDiscountAmount = decimal.Zero;
+                        if (TotalPaymentFeeAmount != decimal.Zero)
+                            taxrate.PaymentFeeAmount = RoundingHelper.RoundAmount(remainderPaymentFeeOrDisc);
+                        else
+                            taxrate.PaymentFeeDiscountAmount = RoundingHelper.RoundAmount(remainderPaymentFeeOrDisc);
+                        remainderPaymentFeeOrDisc -= taxrate.PaymentFeeAmount + taxrate.PaymentFeeDiscountAmount;
+                        sumPaymentFeeOrDisc += taxrate.PaymentFeeAmount + taxrate.PaymentFeeDiscountAmount;
+                    }
+                }
+
+                //TAX: always round tax first
+                decimal rateamount = taxrate.EntryAmount - taxrate.DiscountAmount;
                 if (PricesIncludeTax)
                 {
-                    taxrate.AmountIncludingVAT = rateamount;
-                    taxrate.VatAmount = RoundingHelper.RoundAmount(taxrate.AmountIncludingVAT  / (100 + vatpercentage) * vatpercentage); // this is  (1+p/100) * p/100
-                    taxrate.BaseAmount = taxrate.AmountIncludingVAT - taxrate.VatAmount;
+                    taxrate.AmountIncludingTax = rateamount;
+                    taxrate.TaxAmount = RoundingHelper.RoundTax(taxrate.AmountIncludingTax  / (100 + vatpercentage) * vatpercentage); // this is  (1+p/100) * p/100
+                    taxrate.BaseAmount = taxrate.AmountIncludingTax - taxrate.TaxAmount;
                 }
                 else
                 {
                     taxrate.BaseAmount = rateamount;
-                    taxrate.VatAmount = RoundingHelper.RoundAmount(taxrate.BaseAmount * vatpercentage / 100);
-                    taxrate.AmountIncludingVAT = taxrate.BaseAmount + taxrate.VatAmount;
+                    taxrate.TaxAmount = RoundingHelper.RoundTax(taxrate.BaseAmount * vatpercentage / 100);
+                    taxrate.AmountIncludingTax = taxrate.BaseAmount + taxrate.TaxAmount;
                 }
 
 
-                //totals
-                TotalSubTotalAmount += taxrate.SubtotalAmount;
-                TotalShippingAmount += taxrate.ShippingAmount;
-                TotalPaymentFeeAmount += taxrate.PaymentFeeAmount;
+                //taxrate totals
+                _totalSubTotalAmount += taxrate.SubtotalAmount;
+                if (HasShipping) //to maintain null
+                    _totalShippingAmountTaxable += taxrate.ShippingAmount;
 
-                if (PercentageSubTotalDiscount != 0)
-                    TotalSubTotalDiscAmount += taxrate.SubTotalDiscAmount;
-                if (PercentageInvDiscount != 0)
-                    TotalInvDiscAmount += taxrate.InvoiceDiscountAmount;
+                if (PercentagePaymentFeeOrDiscount == 0) //sum only when not set as discount or surcharge
+                    _totalPaymentFeeAmount += taxrate.PaymentFeeAmount;
 
-                TotalAmount += taxrate.BaseAmount;
-                TotalAmountVAT += taxrate.VatAmount;
-                TotalAmountIncludingVAT += taxrate.AmountIncludingVAT;
+                _totalAmount += taxrate.BaseAmount;
+                _totalAmountTax += taxrate.TaxAmount;
+                _totalAmountIncludingTax += taxrate.AmountIncludingTax;
             }
+        }
+        /// <summary>
+        /// Calculate tax weights used in attributes
+        /// </summary>
+        public void CalculateWeights()
+        {
+            if (HasChanges)
+                CalculateAmounts();
+
+            //calculate tax weights
             int i = 0;
             int c = TaxRates.Count();
             decimal totWeight = decimal.Zero;
@@ -297,12 +588,20 @@ namespace Nop.Services.Tax
                 TaxRateEntry taxrate = kvp.Value;
                 if (i < c)
                 {
-                    taxrate.VatRateWeight = (this.PricesIncludeTax ? (taxrate.AmountIncludingVAT / this.TotalAmountIncludingVAT) : (taxrate.BaseAmount / this.TotalAmount));
-                    totWeight += taxrate.VatRateWeight;
+                    if (this.TotalAmount != 0)
+                    {
+                        taxrate.TaxRateWeight = PricesIncludeTax ? taxrate.AmountIncludingTax / this.TotalAmountIncludingTax : taxrate.BaseAmount / this.TotalAmount;
+                    }
+                    else
+                    {
+                        taxrate.TaxRateWeight = 0;
+                    }
+                    totWeight += taxrate.TaxRateWeight;
                 }
                 else
                 {
-                    taxrate.VatRateWeight = decimal.One - totWeight; //assure sum of VatRateWeight = 1
+                    //assure sum of TaxRateWeight = 1
+                    taxrate.TaxRateWeight = decimal.One - totWeight;
                 }
             }
         }

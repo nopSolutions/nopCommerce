@@ -79,10 +79,14 @@ namespace Nop.Admin.Models.Orders
         public string OrderShippingInclTax { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.OrderShippingExclTax")]
         public string OrderShippingExclTax { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.OrderShippingNonTaxable")]
+        public string OrderShippingNonTaxable { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.PaymentMethodAdditionalFeeInclTax")]
         public string PaymentMethodAdditionalFeeInclTax { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.PaymentMethodAdditionalFeeExclTax")]
         public string PaymentMethodAdditionalFeeExclTax { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.PaymentMethodAdditionalFeeNonTaxable")]
+        public string PaymentMethodAdditionalFeeNonTaxable { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.Tax")]
         public string Tax { get; set; }
         public IList<TaxRate> TaxRates { get; set; }
@@ -92,8 +96,12 @@ namespace Nop.Admin.Models.Orders
         public string OrderTotalDiscount { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.RedeemedRewardPoints")]
         public int RedeemedRewardPoints { get; set; }
-        [NopResourceDisplayName("Admin.Orders.Fields.RedeemedRewardPoints")]
+        [NopResourceDisplayName("Admin.Orders.Fields.RedeemedRewardPointsAmount")]
         public string RedeemedRewardPointsAmount { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.RedeemedRewardPointsPurchased")]
+        public int RedeemedRewardPointsPurchased { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.RedeemedRewardPointsAmountPurchased")]
+        public string RedeemedRewardPointsAmountPurchased { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.OrderTotal")]
         public string OrderTotal { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.RefundedAmount")]
@@ -104,6 +112,12 @@ namespace Nop.Admin.Models.Orders
         public string OrderAmount { get; set; } //MF 09.12.16
         [NopResourceDisplayName("Admin.Orders.Fields.OrderAmountIncl")]
         public string OrderAmountIncl { get; set; } //MF 09.12.16
+        [NopResourceDisplayName("Admin.Orders.Fields.OrderTotalDiscountIncl")]
+        public string OrderTotalDiscountIncl { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.EarnedRewardPointsBaseAmountIncl")]
+        public string EarnedRewardPointsBaseAmountIncl { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.EarnedRewardPointsBaseAmountExcl")]
+        public string EarnedRewardPointsBaseAmountExcl { get; set; }
 
         //edit totals
         [NopResourceDisplayName("Admin.Orders.Fields.Edit.OrderSubtotal")]
@@ -118,10 +132,14 @@ namespace Nop.Admin.Models.Orders
         public decimal OrderShippingInclTaxValue { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.Edit.OrderShipping")]
         public decimal OrderShippingExclTaxValue { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.Edit.OrderShipping")]
+        public decimal OrderShippingNonTaxableValue { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.Edit.PaymentMethodAdditionalFee")]
         public decimal PaymentMethodAdditionalFeeInclTaxValue { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.Edit.PaymentMethodAdditionalFee")]
         public decimal PaymentMethodAdditionalFeeExclTaxValue { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.Edit.PaymentMethodAdditionalFee")]
+        public decimal PaymentMethodAdditionalFeeNonTaxableValue { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.Edit.Tax")]
         public decimal TaxValue { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.Edit.TaxRates")]
@@ -134,7 +152,12 @@ namespace Nop.Admin.Models.Orders
         public decimal OrderAmountValue { get; set; } //MF 09.12.16
         [NopResourceDisplayName("Admin.Orders.Fields.Edit.OrderAmountIncl")]
         public decimal OrderAmountInclValue { get; set; } //MF 09.12.16
-
+        [NopResourceDisplayName("Admin.Orders.Fields.Edit.OrderDiscountIncl")]
+        public decimal OrderTotalDiscountInclValue { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.Edit.EarnedRewardPointsBaseAmountIncl")]
+        public decimal EarnedRewardPointsBaseAmountInclValue { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.Edit.EarnedRewardPointsBaseAmountExcl")]
+        public decimal EarnedRewardPointsBaseAmountExclValue { get; set; }
         //associated recurring payment id
         [NopResourceDisplayName("Admin.Orders.Fields.RecurringPayment")]
         public int RecurringPaymentId { get; set; }
@@ -295,7 +318,7 @@ namespace Nop.Admin.Models.Orders
             public DownloadActivationType DownloadActivationType { get; set; }
             public bool IsDownloadActivated { get; set; }
             public Guid LicenseDownloadGuid { get; set; }
-            public decimal VatRate { get; set; }
+            public decimal TaxRate { get; set; }
 
             #region Nested Classes
 
@@ -309,7 +332,7 @@ namespace Nop.Admin.Models.Orders
 
         public partial class TaxRate : BaseNopModel
         {
-            [NopResourceDisplayName("Order.TaxRateLine.VatRate")]
+            [NopResourceDisplayName("Order.TaxRateLine.TaxRate")]
             public string Rate { get; set; }
             [NopResourceDisplayName("Order.TaxRateLine.Amount")]
             public string Amount { get; set; } // includes subtotal, shipping and payment fee
@@ -317,8 +340,8 @@ namespace Nop.Admin.Models.Orders
             public string DiscountAmount { get; set; }
             [NopResourceDisplayName("Order.TaxRateLine.BaseAmount")]
             public string BaseAmount { get; set; }
-            [NopResourceDisplayName("Order.TaxRateLine.VatAmount")]
-            public string VatAmount { get; set; }
+            [NopResourceDisplayName("Order.TaxRateLine.TaxAmount")]
+            public string TaxAmount { get; set; }
         }
 
         public partial class GiftCard : BaseNopModel
@@ -421,8 +444,8 @@ namespace Nop.Admin.Models.Orders
                 public decimal SubTotalInclTax { get; set; }
                 [NopResourceDisplayName("Admin.Orders.Products.AddNew.SubTotalExclTax")]
                 public decimal SubTotalExclTax { get; set; }
-                [NopResourceDisplayName("ShoppingCart.VatRate")]
-                public decimal VatRate { get; set; }
+                [NopResourceDisplayName("ShoppingCart.TaxRate")]
+                public decimal TaxRate { get; set; }
 
                 //product attributes
                 public IList<ProductAttributeModel> ProductAttributes { get; set; }

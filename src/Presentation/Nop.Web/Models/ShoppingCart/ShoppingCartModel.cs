@@ -92,7 +92,16 @@ namespace Nop.Web.Models.ShoppingCart
             public bool DisableRemoval { get; set; }
 
             public IList<string> Warnings { get; set; }
-            public string VatRate { get; set; }
+            private string _taxRate;
+            public string TaxRate
+            {
+                get { return hasTaxInfoInAttributeXML ? "(*)" : _taxRate; }
+                set { _taxRate = value; }
+            }
+
+            public bool hasTaxInfoInAttributeXML { get; set; }
+            //reward points program
+            public bool ExcludeFromRewardPoints { get; set; }
 
         }
 

@@ -82,6 +82,8 @@ namespace Nop.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.IsGiftCard")]
         public bool IsGiftCard { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.IsRewardPoints")]
+        public bool IsRewardPoints { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.DownloadableProduct")]
         public bool DownloadableProduct { get; set; }

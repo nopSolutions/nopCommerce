@@ -58,6 +58,7 @@ namespace Nop.Services.Tests.Catalog
             _catalogSettings = new CatalogSettings();
 
             _cacheManager = new NopNullCache();
+            _taxService = MockRepository.GenerateMock<ITaxService>();
 
             _priceCalcService = new PriceCalculationService(_workContext,
                 _storeContext, 

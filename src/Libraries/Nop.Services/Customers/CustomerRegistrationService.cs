@@ -273,13 +273,13 @@ namespace Nop.Services.Customers
             var guestRole = request.Customer.CustomerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Guests);
             if (guestRole != null)
                 request.Customer.CustomerRoles.Remove(guestRole);
-            
+
             //Add reward points for customer registration (if enabled)
             if (_rewardPointsSettings.Enabled &&
                 _rewardPointsSettings.PointsForRegistration > 0)
             {
                 _rewardPointService.AddRewardPointsHistoryEntry(request.Customer, 
-                    _rewardPointsSettings.PointsForRegistration,
+                    new RewardPoints(_rewardPointService) { Points = _rewardPointsSettings.PointsForRegistration },
                     request.StoreId,
                     _localizationService.GetResource("RewardPoints.Message.EarnedForRegistration"));
             }

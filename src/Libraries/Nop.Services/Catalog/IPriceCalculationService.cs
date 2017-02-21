@@ -67,7 +67,30 @@ namespace Nop.Services.Catalog
             out decimal discountAmount,
             out List<DiscountForCaching> appliedDiscounts);
 
-
+        /// <summary>
+        /// Gets the final price
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="customer">The customer</param>
+        /// <param name="additionalCharge">Additional charge</param>
+        /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
+        /// <param name="quantity">Shopping cart item quantity</param>
+        /// <param name="rentalStartDate">Rental period start date (for rental products)</param>
+        /// <param name="rentalEndDate">Rental period end date (for rental products)</param>
+        /// <param name="discountAmount">Applied discount amount</param>
+        /// <param name="appliedDiscounts">Applied discounts</param>
+        /// <param name="overriddenProductPrice">Overridden product price. If specified, then it'll be used instead of a product price. For example, used with product attribute combinations</param>
+        /// <returns>Final price</returns>
+        decimal GetFinalPrice(Product product,
+            Customer customer,
+            decimal additionalCharge,
+            bool includeDiscounts,
+            int quantity,
+            DateTime? rentalStartDate,
+            DateTime? rentalEndDate,
+            out decimal discountAmount,
+            out List<DiscountForCaching> appliedDiscounts,
+            decimal? overriddenProductPrice);
 
         /// <summary>
         /// Gets the shopping cart unit price (one item)

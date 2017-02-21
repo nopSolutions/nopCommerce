@@ -105,6 +105,8 @@ namespace Nop.Web.Models.Catalog
         public bool DisplayDiscontinuedMessage { get; set; }
 
         public string CurrentStoreName { get; set; }
+        //reward points program
+        public bool ExcludeFromRewardPoints { get; set; }
 
         #region Nested Classes
 

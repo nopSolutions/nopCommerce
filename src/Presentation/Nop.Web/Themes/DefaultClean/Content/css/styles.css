@@ -343,6 +343,13 @@ label, label + * {
 .table-wrapper {
 	overflow-x: auto;
 }
+.excluded-from-rewardpoints {
+    margin: 5px 0 5px;
+    line-height: 20px;
+    color: #de444c;
+    font-style: italic;
+    font-size: 12px;
+}
 .cart th,
 .data-table th,
 .forum-table th {

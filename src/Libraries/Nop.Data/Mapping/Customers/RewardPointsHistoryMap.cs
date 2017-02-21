@@ -10,6 +10,7 @@ namespace Nop.Data.Mapping.Customers
             this.HasKey(rph => rph.Id);
 
             this.Property(rph => rph.UsedAmount).HasPrecision(18, 4);
+            this.Property(rph => rph.UsedAmountPurchased).HasPrecision(18, 4);
 
             this.HasRequired(rph => rph.Customer)
                 .WithMany()
@@ -18,6 +19,10 @@ namespace Nop.Data.Mapping.Customers
             this.HasOptional(rph => rph.UsedWithOrder)
                 .WithOptionalDependent(o => o.RedeemedRewardPointsEntry)
                 .WillCascadeOnDelete(false);
+
+            this.HasOptional(rph => rph.PurchasedWithOrderItem)
+                .WithMany(orderItem => orderItem.AssociatedRewardPoints)
+                .HasForeignKey(rph => rph.PurchasedWithOrderItemId);
         }
     }
 }

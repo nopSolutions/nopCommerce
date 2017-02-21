@@ -964,7 +964,7 @@ namespace Nop.Web.Controllers
                     rentalStartDate, rentalEndDate,
                     true, out discountAmount, out scDiscounts);
                 decimal taxRate;
-                decimal finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out taxRate);
+                decimal finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out taxRate, ref attributeXml);
                 decimal finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
                 price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
             }

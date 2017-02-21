@@ -38,15 +38,15 @@ namespace Nop.Services.Catalog
         public CopyProductService(IProductService productService,
             IProductAttributeService productAttributeService,
             ILanguageService languageService,
-            ILocalizedEntityService localizedEntityService, 
+            ILocalizedEntityService localizedEntityService,
             ILocalizationService localizationService,
             IPictureService pictureService,
-            ICategoryService categoryService, 
+            ICategoryService categoryService,
             IManufacturerService manufacturerService,
             ISpecificationAttributeService specificationAttributeService,
             IDownloadService downloadService,
             IProductAttributeParser productAttributeParser,
-            IUrlRecordService urlRecordService, 
+            IUrlRecordService urlRecordService,
             IStoreMappingService storeMappingService)
         {
             this._productService = productService;
@@ -158,6 +158,9 @@ namespace Nop.Services.Catalog
                 IsGiftCard = product.IsGiftCard,
                 GiftCardType = product.GiftCardType,
                 OverriddenGiftCardAmount = product.OverriddenGiftCardAmount,
+                IsRewardPoints = product.IsRewardPoints,
+                OverriddenRPExchangeRate = product.OverriddenRPExchangeRate,
+                ExcludeFromRewardPoints = product.ExcludeFromRewardPoints,
                 RequireOtherProducts = product.RequireOtherProducts,
                 RequiredProductIds = product.RequiredProductIds,
                 AutomaticallyAddRequiredProducts = product.AutomaticallyAddRequiredProducts,

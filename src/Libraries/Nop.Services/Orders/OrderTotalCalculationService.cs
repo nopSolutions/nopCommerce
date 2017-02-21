@@ -139,7 +139,7 @@ namespace Nop.Services.Orders
             if (discountAmount < decimal.Zero)
                 discountAmount = decimal.Zero;
 
-            return discountAmount;
+            return RoundingHelper.RoundAmount(discountAmount); //round amount as it is displayed in this way and rounding errors my happen
         }
 
         /// <summary>
@@ -209,9 +209,55 @@ namespace Nop.Services.Orders
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
                 discountAmount = RoundingHelper.RoundAmount(discountAmount);
 
-            return discountAmount;
+            return RoundingHelper.RoundAmount(discountAmount); //round amount as it is displayed in this way and rounding errors my happen
         }
 
+        protected virtual RewardPoints GetRedeemableRewardPoints(decimal rewardpointsbase, RewardPoints redeemedRewardPoints, Customer customer, bool? useRewardPoints = null, int ? rewardPointsOfOrder = null)
+        {
+            if (_rewardPointsSettings.Enabled && rewardpointsbase > decimal.Zero)
+            {
+                if (!rewardPointsOfOrder.HasValue)
+                {
+                    if (!useRewardPoints.HasValue)
+                        useRewardPoints = customer.GetAttribute<bool>(SystemCustomerAttributeNames.UseRewardPointsDuringCheckout, _genericAttributeService, _storeContext.CurrentStore.Id);
+                    if (useRewardPoints.Value)
+                    {
+                        var rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(customer.Id, _storeContext.CurrentStore.Id);
+
+                        //taxable points.
+                        if ( _rewardPointService.CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance.Points))
+                        {
+                            if (rewardpointsbase > rewardPointsBalance.Amount)
+                            {
+                                redeemedRewardPoints.Points = rewardPointsBalance.Points;
+                            }
+                            else
+                            {
+                                if (rewardpointsbase > decimal.Zero)
+                                    redeemedRewardPoints.Points = _rewardPointService.ConvertAmountToRewardPoints(rewardpointsbase);
+                            }
+                            rewardpointsbase -= redeemedRewardPoints.Amount;
+                        }
+                        //purchased reward points (can be always spent)
+                        if (rewardpointsbase > rewardPointsBalance.AmountPurchased)
+                        {
+                            redeemedRewardPoints.PointsPurchased = rewardPointsBalance.PointsPurchased;
+                        }
+                        else
+                        {
+                            if (rewardpointsbase > decimal.Zero)
+                                redeemedRewardPoints.PointsPurchased = _rewardPointService.ConvertAmountToRewardPoints(rewardpointsbase);
+                        }
+                    }
+                }
+                else
+                {   //return corrected taxable points (only for updateorder total). Purchased points not needed here.
+                    redeemedRewardPoints.Points = _rewardPointService.ConvertAmountToRewardPoints(Math.Min(_rewardPointService.ConvertRewardPointsToAmount(rewardPointsOfOrder ?? 0), rewardpointsbase));
+                }
+            }
+
+            return redeemedRewardPoints;
+        }
         #endregion
 
         #region Methods
@@ -220,7 +266,7 @@ namespace Nop.Services.Orders
         /// Gets shopping cart subtotal
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <param name="includingTax">A value indicating whether submitted prices do include tax</param>
+        /// <param name="includingTax">A value indicating whether calculated amounts should include tax</param>
         /// <param name="discountAmount">Applied discount amount</param>
         /// <param name="appliedDiscounts">Applied discounts</param>
         /// <param name="subTotalWithoutDiscount">Sub total (without discount)</param>
@@ -231,32 +277,38 @@ namespace Nop.Services.Orders
             out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount)
         {
             TaxSummary taxSummary;
+            decimal subTotalRewardPointsBaseAmount;
+
             GetShoppingCartSubTotal(cart, includingTax,
                 out discountAmount, out appliedDiscounts,
-                out subTotalWithoutDiscount, out subTotalWithDiscount, out taxSummary);
+                out subTotalWithoutDiscount, out subTotalWithDiscount, out taxSummary,
+                out subTotalRewardPointsBaseAmount);
         }
 
         /// <summary>
         /// Gets shopping cart subtotal
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <param name="includingTax">A value indicating whether submitted prices do include tax</param>
+        /// <param name="includingTax">A value indicating whether calculated amounts should include tax</param>
         /// <param name="discountAmount">Applied discount amount</param>
         /// <param name="appliedDiscounts">Applied discounts</param>
         /// <param name="subTotalWithoutDiscount">Sub total (without discount)</param>
         /// <param name="subTotalWithDiscount">Sub total (with discount)</param>
         /// <param name="taxSummary">Tax rates summary (of order sub total)</param>
+        /// <param name="subTotalEarnedRewardPointsBaseAmount">Subtotal base amount for earned reward points calculation</param>
         public virtual void GetShoppingCartSubTotal(IList<ShoppingCartItem> cart,
             bool includingTax,
             out decimal discountAmount, out List<DiscountForCaching> appliedDiscounts,
             out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount,
-            out TaxSummary taxSummary)
+            out TaxSummary taxSummary,
+            out decimal subTotalEarnedRewardPointsBaseAmount)
         {
             taxSummary = new TaxSummary(includingTax);
             discountAmount = decimal.Zero;
             appliedDiscounts = new List<DiscountForCaching>();
             subTotalWithoutDiscount = decimal.Zero;
             subTotalWithDiscount = decimal.Zero;
+            subTotalEarnedRewardPointsBaseAmount = decimal.Zero;
 
             decimal subTotalAmount = decimal.Zero;
 
@@ -270,25 +322,30 @@ namespace Nop.Services.Orders
              foreach (var shoppingCartItem in cart)
             {
                 decimal itemAmount = decimal.Zero;
-                decimal taxRate;
+                decimal taxRate = decimal.Zero;
 
                 //restored cartitem
-                if (shoppingCartItem.VatRate.HasValue && shoppingCartItem.SubTotalExclTax != null && shoppingCartItem.SubTotalInclTax != null)
+                if (shoppingCartItem.TaxRate.HasValue && shoppingCartItem.SubTotalExclTax != null && shoppingCartItem.SubTotalInclTax != null)
                 {
                     itemAmount = includingTax ? shoppingCartItem.SubTotalInclTax ?? 0 : shoppingCartItem.SubTotalExclTax ?? 0;
-                    taxRate = shoppingCartItem.VatRate ?? 0;
+                    taxRate = shoppingCartItem.TaxRate ?? 0;
                     subTotalAmount += itemAmount;
                 }
                 //normal item
                 else
                 {
                     decimal sciSubTotal = _priceCalculationService.GetSubTotal(shoppingCartItem);
-                    itemAmount = _taxService.GetProductPrice(shoppingCartItem.Product, sciSubTotal, includingTax, customer, out taxRate);
+                    var newAttributesXml = shoppingCartItem.AttributesXml;
+                    itemAmount = _taxService.GetProductPrice(shoppingCartItem.Product, sciSubTotal, out taxRate, ref newAttributesXml, includingTax);
+                    shoppingCartItem.AttributesXml = newAttributesXml;
                     subTotalAmount += itemAmount;
                 }
 
+                //reward points base
+                subTotalEarnedRewardPointsBaseAmount += !shoppingCartItem.Product.ExcludeFromRewardPoints ? itemAmount : decimal.Zero;
+
                 //tax rates
-                var attributesXml = shoppingCartItem.AttributesXml;
+                string attributesXml = shoppingCartItem.AttributesXml;
                 SortedDictionary<decimal, decimal> attributeTaxWeight = !String.IsNullOrEmpty(attributesXml) ? _productAttributeParser.ParseTaxAttribute(attributesXml) : null;
                 if (attributeTaxWeight == null || !attributeTaxWeight.Any())
                 {
@@ -313,6 +370,7 @@ namespace Nop.Services.Orders
                         decimal taxRate;
                         decimal itemAmount = _taxService.GetCheckoutAttributePrice(attributeValue, includingTax, customer, out taxRate);
                         subTotalAmount += itemAmount;
+                        subTotalEarnedRewardPointsBaseAmount += itemAmount;
                         //tax rates
                         if (itemAmount > decimal.Zero) //taxRate > decimal.Zero &&
                             taxSummary.AddRate(taxRate, itemAmount);
@@ -321,15 +379,23 @@ namespace Nop.Services.Orders
             }
 
             //subtotal discount
-            var subDisc = GetOrderSubtotalDiscount(customer, subTotalAmount, out appliedDiscounts);
+            var subDisc = RoundingHelper.RoundAmount(GetOrderSubtotalDiscount(customer, subTotalAmount, out appliedDiscounts)); //round discount, otherwise rounding errors may happen
             if (subDisc != decimal.Zero)
+            {
                 taxSummary.SetSubtotalDiscAmount(subDisc);
 
+                //adjust earned reward points base amount
+                if (subTotalAmount != decimal.Zero)
+                    subTotalEarnedRewardPointsBaseAmount = subTotalEarnedRewardPointsBaseAmount * (1 - subDisc / subTotalAmount);
+                if (_shoppingCartSettings.RoundPricesDuringCalculation)
+                    subTotalEarnedRewardPointsBaseAmount = RoundingHelper.RoundAmount(subTotalEarnedRewardPointsBaseAmount);
+            }
+
+
             //overall totals
-            taxSummary.CalculateAmounts();
             discountAmount = taxSummary.TotalSubTotalDiscAmount;
             subTotalWithoutDiscount = taxSummary.TotalSubTotalAmount;
-            subTotalWithDiscount = taxSummary.TotalAmountIncludingVAT;
+            subTotalWithDiscount = includingTax ? taxSummary.TotalAmountIncludingTax : taxSummary.TotalAmount;
 
             if (subTotalWithDiscount < decimal.Zero)
                 subTotalWithDiscount = decimal.Zero;
@@ -357,11 +423,22 @@ namespace Nop.Services.Orders
             List<DiscountForCaching> orderAppliedDiscounts;
             List<DiscountForCaching> subTotalAppliedDiscounts;
             List<DiscountForCaching> shippingAppliedDiscounts;
+            List<AppliedGiftCard> appliedGiftCards;
             TaxSummary taxSummaryIncl;
             TaxSummary taxSummaryExcl;
 
-            decimal shoppingCartTax = GetTaxTotal(restoredCart, false, out taxSummaryExcl, out orderAppliedDiscounts, out subTotalAppliedDiscounts, out shippingAppliedDiscounts);
-            shoppingCartTax = GetTaxTotal(restoredCart, true, out taxSummaryIncl, out orderAppliedDiscounts, out subTotalAppliedDiscounts, out shippingAppliedDiscounts);
+            RewardPoints redeemedRewardPointsIncl;
+            RewardPoints redeemedRewardPointsExcl;
+            bool earnedRewardPointsAreTaxable = _rewardPointsSettings.EarnedRewardPointsAreTaxable;
+
+            //reward points of order
+            var rewardPointsOfOrder = _rewardPointService.GetRewardPointsHistory(customer.Id, true).FirstOrDefault(history => history.UsedWithOrder == updatedOrder);
+            var redeemedPointsToOrderAmount = rewardPointsOfOrder != null && earnedRewardPointsAreTaxable ? -rewardPointsOfOrder.Points : 0;
+            decimal earnedRewardPointsBaseAmountIncl;
+            decimal earnedRewardPointsBaseAmountExcl;
+
+            decimal shoppingCartTaxExcl = GetTaxTotal(restoredCart, false, out taxSummaryExcl, out orderAppliedDiscounts, out subTotalAppliedDiscounts, out shippingAppliedDiscounts, out appliedGiftCards, out redeemedRewardPointsExcl, out earnedRewardPointsBaseAmountExcl, useRewardPoints: false, rewardPointsOfOrder: redeemedPointsToOrderAmount);
+            decimal shoppingCartTaxIncl = GetTaxTotal(restoredCart, true, out taxSummaryIncl, out orderAppliedDiscounts, out subTotalAppliedDiscounts, out shippingAppliedDiscounts, out appliedGiftCards, out redeemedRewardPointsIncl, out earnedRewardPointsBaseAmountIncl, useRewardPoints: false, rewardPointsOfOrder: redeemedPointsToOrderAmount);
 
             #region discounts
             foreach (var discount in orderAppliedDiscounts)
@@ -384,14 +461,21 @@ namespace Nop.Services.Orders
             updatedOrder.OrderSubtotalInclTax = taxSummaryIncl.TotalSubTotalAmount;
             updatedOrder.OrderSubTotalDiscountExclTax = taxSummaryExcl.TotalSubTotalDiscAmount;
             updatedOrder.OrderSubTotalDiscountInclTax = taxSummaryIncl.TotalSubTotalDiscAmount;
-            updatedOrder.OrderShippingExclTax = taxSummaryExcl.TotalShippingAmount;
-            updatedOrder.OrderShippingInclTax = taxSummaryIncl.TotalShippingAmount;
-            updatedOrder.OrderTax = shoppingCartTax;
-            updatedOrder.OrderDiscount = includingTax ? taxSummaryIncl.TotalInvDiscAmount : taxSummaryExcl.TotalInvDiscAmount;
+            updatedOrder.OrderShippingExclTax = taxSummaryExcl.TotalShippingAmountTaxable ?? decimal.Zero;
+            updatedOrder.OrderShippingInclTax = taxSummaryIncl.TotalShippingAmountTaxable ?? decimal.Zero;
+            updatedOrder.OrderShippingNonTaxable = includingTax ? (taxSummaryIncl.TotalShippingAmountNonTaxable ?? decimal.Zero) : (taxSummaryExcl.TotalShippingAmountNonTaxable ?? decimal.Zero);
+            updatedOrder.OrderTax = includingTax ? shoppingCartTaxIncl : shoppingCartTaxExcl;
+            updatedOrder.OrderDiscount = taxSummaryExcl.TotalInvDiscAmount;
+            updatedOrder.OrderDiscountIncl = taxSummaryIncl.TotalInvDiscAmount;
             updatedOrder.OrderAmount = includingTax ? taxSummaryIncl.TotalAmount : taxSummaryExcl.TotalAmount;
-            updatedOrder.OrderAmountIncl = includingTax ? taxSummaryIncl.TotalAmountIncludingVAT : taxSummaryExcl.TotalAmountIncludingVAT;
+            updatedOrder.OrderAmountIncl = includingTax ? taxSummaryIncl.TotalAmountIncludingTax : taxSummaryExcl.TotalAmountIncludingTax;
+            updatedOrder.EarnedRewardPointsBaseAmountExcl = earnedRewardPointsBaseAmountExcl;
+            updatedOrder.EarnedRewardPointsBaseAmountIncl = earnedRewardPointsBaseAmountIncl;
+            updatedOrder.PaymentMethodAdditionalFeeInclTax = taxSummaryIncl.TotalPaymentFeeAmountTaxable;
+            updatedOrder.PaymentMethodAdditionalFeeExclTax = taxSummaryExcl.TotalPaymentFeeAmountTaxable;
+            updatedOrder.PaymentMethodAdditionalFeeNonTaxable = includingTax ? (taxSummaryIncl.TotalPaymentFeeAmountNonTaxable ?? decimal.Zero) : (taxSummaryExcl.TotalPaymentFeeAmountNonTaxable ?? decimal.Zero);
 
-            var total = includingTax ? taxSummaryIncl.TotalAmountIncludingVAT : taxSummaryExcl.TotalAmountIncludingVAT; //gets updated later on
+            var total = includingTax ? taxSummaryIncl.TotalAmountIncludingTax : taxSummaryExcl.TotalAmountIncludingTax; //gets updated later on
 
             //get shopping cart item which has been updated
             var updatedShoppingCartItem = restoredCart.FirstOrDefault(shoppingCartItem => shoppingCartItem.Id == updatedOrderItem.Id);
@@ -406,7 +490,7 @@ namespace Nop.Services.Orders
                 updatedOrderItem.PriceExclTax = updateOrderParameters.SubTotalExclTax;
                 updatedOrderItem.PriceInclTax = updateOrderParameters.SubTotalInclTax;
                 updatedOrderItem.Quantity = restoredCart.FirstOrDefault(item => item.Id == updatedOrderItem.Id).Quantity;
-                updatedOrderItem.VatRate = restoredCart.FirstOrDefault(item => item.Id == updatedOrderItem.Id).VatRate ?? 0;
+                updatedOrderItem.TaxRate = restoredCart.FirstOrDefault(item => item.Id == updatedOrderItem.Id).TaxRate ?? 0;
             }
             #endregion
 
@@ -527,28 +611,61 @@ namespace Nop.Services.Orders
             }
 
             //reward points
-            var rewardPointsOfOrder = _rewardPointService.GetRewardPointsHistory(customer.Id, true).FirstOrDefault(history => history.UsedWithOrder == updatedOrder);
             if (rewardPointsOfOrder != null)
             {
-                var rewardPoints = -rewardPointsOfOrder.Points;
-                var rewardPointsAmount = ConvertRewardPointsToAmount(rewardPoints);
-                if (total < rewardPointsAmount)
+                var rewardPoints = new RewardPoints(_rewardPointService)
                 {
-                    rewardPoints = ConvertAmountToRewardPoints(total);
-                    rewardPointsAmount = total;
-                }
-                if (total > decimal.Zero)
-                    total -= rewardPointsAmount;
+                    Points = -rewardPointsOfOrder.Points,
+                    PointsPurchased = -rewardPointsOfOrder.PointsPurchased
+                };
 
+                var redeemedRewardPoints = includingTax ? redeemedRewardPointsIncl : redeemedRewardPointsExcl;
+
+                if (earnedRewardPointsAreTaxable && redeemedRewardPoints.Amount != rewardPoints.Amount)
+                {
+                    rewardPoints.Points = redeemedRewardPoints.Points;
+                    var corrtotal = Math.Max(total - redeemedRewardPoints.Amount, decimal.Zero);
+
+                    if (corrtotal < rewardPoints.AmountPurchased)
+                    {
+                        rewardPoints.PointsPurchased = _rewardPointService.ConvertAmountToRewardPoints(corrtotal);
+                    }
+                }
+                else
+                {
+                    //purchased points have been applied to order total. To get base for reward points add them again.
+                    var corrtotal = Math.Max(total - rewardPoints.AmountPurchased, decimal.Zero);
+                    if (corrtotal < rewardPoints.Amount)
+                    {
+                        rewardPoints.Points = _rewardPointService.ConvertAmountToRewardPoints(corrtotal);
+                    }
+                    corrtotal = Math.Max(total - rewardPoints.Amount, decimal.Zero);
+                    if (corrtotal < rewardPoints.AmountPurchased)
+                    {
+                        rewardPoints.PointsPurchased = _rewardPointService.ConvertAmountToRewardPoints(corrtotal);
+                    }
+                }
+
+                total += -rewardPoints.Amount + -rewardPoints.AmountPurchased;
+
+                var corrRewardPoints = new RewardPoints(_rewardPointService);
                 //uncomment here for the return unused reward points if new order total less redeemed reward points amount
-                if (rewardPoints < -rewardPointsOfOrder.Points)
-                    _rewardPointService.AddRewardPointsHistoryEntry(customer, -rewardPointsOfOrder.Points - rewardPoints, _storeContext.CurrentStore.Id, "Return unused reward points");
+                if (rewardPoints.Points < -rewardPointsOfOrder.Points || rewardPoints.PointsPurchased < -rewardPointsOfOrder.PointsPurchased)
+                {
+                    corrRewardPoints.Points = -rewardPointsOfOrder.Points - rewardPoints.Points;
+                    corrRewardPoints.PointsPurchased = -rewardPointsOfOrder.PointsPurchased - rewardPoints.PointsPurchased;
+                    _rewardPointService.AddRewardPointsHistoryEntry(customer, corrRewardPoints, _storeContext.CurrentStore.Id, "Returned unused reward points due to order correction.");
+                }
                 //comment end
 
-                if (rewardPointsAmount != rewardPointsOfOrder.UsedAmount)
+                if (rewardPoints.Amount != rewardPointsOfOrder.UsedAmount || rewardPoints.AmountPurchased != rewardPointsOfOrder.UsedAmountPurchased)
                 {
-                    rewardPointsOfOrder.UsedAmount = rewardPointsAmount;
-                    rewardPointsOfOrder.Points = -rewardPoints;
+                    rewardPointsOfOrder.UsedAmount = rewardPoints.Amount;
+                    rewardPointsOfOrder.Points = -rewardPoints.Points;
+                    rewardPointsOfOrder.UsedAmountPurchased = rewardPoints.AmountPurchased;
+                    rewardPointsOfOrder.PointsPurchased = -rewardPoints.PointsPurchased;
+                    rewardPointsOfOrder.PointsBalance += -corrRewardPoints.Points;
+                    rewardPointsOfOrder.PointsBalancePurchased = -corrRewardPoints.PointsPurchased;
                     _rewardPointService.UpdateRewardPointsHistoryEntry(rewardPointsOfOrder);
                 }
             }
@@ -668,7 +785,7 @@ namespace Nop.Services.Orders
         /// Gets shopping cart shipping total
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <param name="includingTax">A value indicating whether submitted prices do include tax</param>
+        /// <param name="includingTax">A value indicating whether calculated amounts should include tax</param>
         /// <returns>Shipping total</returns>
         public virtual decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax)
         {
@@ -680,7 +797,7 @@ namespace Nop.Services.Orders
         /// Gets shopping cart shipping total
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <param name="includingTax">A value indicating whether submitted prices do include tax</param>
+        /// <param name="includingTax">A value indicating whether calculated amounts should include tax</param>
         /// <param name="taxRate">Applied tax rate</param>
         /// <returns>Shipping total</returns>
         public virtual decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax,
@@ -694,7 +811,7 @@ namespace Nop.Services.Orders
         /// Gets shopping cart shipping total
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <param name="includingTax">A value indicating whether submitted prices do include tax</param>
+        /// <param name="includingTax">A value indicating whether calculated amounts should include tax</param>
         /// <param name="taxRate">Applied tax rate</param>
         /// <param name="appliedDiscounts">Applied discounts</param>
         /// <returns>Shipping total</returns>
@@ -705,16 +822,22 @@ namespace Nop.Services.Orders
             decimal? shippingTotalTaxed = null;
             appliedDiscounts = new List<DiscountForCaching>();
             taxRate = decimal.Zero;
-
+            
             var customer = cart.GetCustomer();
+            
+            
 
             bool isFreeShipping = IsFreeShipping(cart);
             if (isFreeShipping)
-                return decimal.Zero;
+            {
+                //we always need a taxrate, get it from GetShippingPrice with price Zero
+                return _taxService.GetShippingPrice(decimal.Zero, includingTax, customer, out taxRate);
+            }
 
             ShippingOption shippingOption = null;
             if (customer != null)
                 shippingOption = customer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, _genericAttributeService, _storeContext.CurrentStore.Id);
+            
 
             if (shippingOption != null)
             {
@@ -755,6 +878,7 @@ namespace Nop.Services.Orders
                         }
                     }
 
+                    
                     if (fixedRate.HasValue)
                     {
                         //adjust shipping rate
@@ -785,10 +909,6 @@ namespace Nop.Services.Orders
             return shippingTotalTaxed;
         }
 
-
-
-
-
         /// <summary>
         /// Gets tax
         /// </summary>
@@ -804,19 +924,27 @@ namespace Nop.Services.Orders
             List<DiscountForCaching> appliedDiscounts;
             List<DiscountForCaching> subTotalAppliedDiscounts;
             List<DiscountForCaching> shippingAppliedDiscounts;
+            List<AppliedGiftCard> appliedGiftCards;
             bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
-            return GetTaxTotal(cart, includingTax, out taxSummary, out appliedDiscounts, out subTotalAppliedDiscounts, out shippingAppliedDiscounts, usePaymentMethodAdditionalFee);
+            RewardPoints redeemedRewardPoints;
+            decimal earnedRewardPointsBaseAmount;
+            return GetTaxTotal(cart, includingTax, out taxSummary, out appliedDiscounts, out subTotalAppliedDiscounts, out shippingAppliedDiscounts, out appliedGiftCards, out redeemedRewardPoints, out earnedRewardPointsBaseAmount, usePaymentMethodAdditionalFee);
         }
         /// <summary>
         /// Gets tax
         /// </summary>
         /// <param name="cart">Shopping cart</param>
-        /// <param name="includingTax">A value indicating whether submitted prices do include tax</param>
+        /// <param name="includingTax">A value indicating whether calculated amounts should include tax</param>
         /// <param name="taxSummary">Tax rates summary</param>
         /// <param name="appliedDiscounts">Applied invoice discounts</param>
         /// <param name="subTotalAppliedDiscounts">Applied subtotal discounts</param>
         /// <param name="shippingAppliedDiscounts">Applied shipping discounts</param>
+        /// <param name="appliedGiftCards">Applied gift cards</param>
+        /// <param name="redeemedRewardPoints">Taxable reward points to redeem</param>
+        /// <param name="earnedRewardPointsBaseAmount">Reward points base amount for earned points</param>
         /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating tax</param>
+        /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
+        /// <param name="rewardPointsOfOrder">Only in the case of updating a stored order: give the reward points amount used in the order.</param>
         /// <returns>Tax total</returns>
         public virtual decimal GetTaxTotal(IList<ShoppingCartItem> cart,
             bool includingTax,
@@ -824,9 +952,17 @@ namespace Nop.Services.Orders
             out List<DiscountForCaching> appliedDiscounts,
             out List<DiscountForCaching> subTotalAppliedDiscounts,
             out List<DiscountForCaching> shippingAppliedDiscounts,
-            bool usePaymentMethodAdditionalFee = true)
+            out List<AppliedGiftCard> appliedGiftCards,
+            out RewardPoints redeemedRewardPoints,
+            out decimal earnedRewardPointsBaseAmount,
+            bool usePaymentMethodAdditionalFee = true,
+            bool? useRewardPoints = null,
+            int? rewardPointsOfOrder = null
+            )
 
         {
+            redeemedRewardPoints = new RewardPoints(_rewardPointService);
+
             if (cart == null)
                 throw new ArgumentNullException("cart");
 
@@ -848,58 +984,159 @@ namespace Nop.Services.Orders
             GetShoppingCartSubTotal(cart, includingTax,
                 out orderSubTotalDiscountAmount, out subTotalAppliedDiscounts,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase,
-                out taxSummary);
+                out taxSummary, out earnedRewardPointsBaseAmount);
 
             decimal taxRate;
 
             //shipping
             decimal? shippingAmount = GetShoppingCartShippingTotal(cart, includingTax, out taxRate, out shippingAppliedDiscounts);
-            if ((shippingAmount ?? 0) > decimal.Zero && _taxSettings.ShippingIsTaxable)
-                taxSummary.AddRate(taxRate, shippingAmount: shippingAmount ?? 0);
+            if ((shippingAmount ?? decimal.Zero) >= decimal.Zero) //pass also zero, otherwise taxsummary does not know that there is a shipping
+                if (_taxSettings.ShippingIsTaxable)
+                {
+                    taxSummary.AddRate(taxRate, shippingAmount: shippingAmount ?? decimal.Zero);                    
+                }
+                else
+                {
+                    taxSummary.TotalShippingAmountNonTaxable = shippingAmount; //no need to recalulate without tax. GetShippingPrice returns price without tax when _taxSettings.ShippingIsTaxable = false.                    
+                }
 
-            //payment method additional fee
-            taxSummary.CalculateAmounts();
-            decimal discountbaseFee = includingTax ? taxSummary.TotalAmountIncludingVAT : taxSummary.TotalAmount;
+            if (_rewardPointsSettings.AwardPointsIncludeShipping)
+                earnedRewardPointsBaseAmount += shippingAmount ?? decimal.Zero; 
 
-            if (usePaymentMethodAdditionalFee && !String.IsNullOrEmpty(paymentMethodSystemName))
-            {
-                decimal paymentMethodAdditionalFee = _taxService.GetPaymentMethodAdditionalFee(_paymentService.GetAdditionalHandlingFee(cart, paymentMethodSystemName), includingTax, customer, out taxRate);
 
-                if (paymentMethodAdditionalFee != decimal.Zero )
-                    //tfc case of taxable fee > 0
-                    if (paymentMethodAdditionalFee > decimal.Zero && _taxSettings.PaymentMethodAdditionalFeeIsTaxable)
-                        taxSummary.AddRate(taxRate, paymentfeeAmount: paymentMethodAdditionalFee);
-                    //tfc case fee < 0 is considered as discount or as surcharge when not taxable
-                    else
-                        taxSummary.SetPaymentFeeDiscAmount(paymentMethodAdditionalFee, discountbaseFee);
-            }
+            //Order total invoice discount
 
-            //Order total invoice discount should be considered in tax calculation
-            taxSummary.CalculateAmounts();
-            decimal discountbase = includingTax ? taxSummary.TotalAmountIncludingVAT : taxSummary.TotalAmount;
+            //note if shipping is not taxable then no ivDiscount is calculated for it. It would be possible to do it separately. It can't be added here as tax amount would get changed.
+            //please note also, then when considering it, ivDiscount must be split
+            decimal discountbase = includingTax ? taxSummary.TotalAmountIncludingTax : taxSummary.TotalAmount;
             var ivDiscount = GetOrderTotalDiscount(customer, discountbase, out appliedDiscounts);
             if (ivDiscount != decimal.Zero)
-                taxSummary.SetTotalInvDiscAmount(ivDiscount, discountbase);
+                taxSummary.SetTotalInvDiscAmount(Math.Min(ivDiscount, discountbase), discountbase);
 
+            earnedRewardPointsBaseAmount -= ivDiscount;
+
+
+            #region reward points
+            //redeemed reward points applied to order amount (taxable) and payment amount
+            //we anticipate non taxable reward points here for taxable payment fee calculation
+            //if hasRewardPointsProduct, then don't redeem points. Would lead to discount plus it generates new reward points when buying a reward points product and paying with purchased points.
+            if (cart.HasRewardPointsProduct())
+                earnedRewardPointsBaseAmount = decimal.Zero;
+
+            if (_rewardPointsSettings.Enabled && earnedRewardPointsBaseAmount > decimal.Zero)
+            {
+                if (!useRewardPoints.HasValue)
+                    useRewardPoints = customer.GetAttribute<bool>(SystemCustomerAttributeNames.UseRewardPointsDuringCheckout, _genericAttributeService, _storeContext.CurrentStore.Id);
+
+                if (useRewardPoints.Value)
+                {
+                    redeemedRewardPoints = GetRedeemableRewardPoints(earnedRewardPointsBaseAmount, redeemedRewardPoints, customer, useRewardPoints, rewardPointsOfOrder);
+                    decimal consumedEarnedPointsAmount = Math.Min(redeemedRewardPoints.Amount, earnedRewardPointsBaseAmount);
+                    if (_rewardPointsSettings.EarnedRewardPointsAreTaxable && redeemedRewardPoints.Amount != decimal.Zero)
+                        taxSummary.SetRewardPointsDiscAmount(consumedEarnedPointsAmount, earnedRewardPointsBaseAmount);
+                    else
+                        taxSummary.TotalRewardPointsAmountNonTaxable = consumedEarnedPointsAmount;
+
+                    earnedRewardPointsBaseAmount -= consumedEarnedPointsAmount;
+
+                    taxSummary.TotalRewardPointsAmountPurchased = redeemedRewardPoints.AmountPurchased;
+
+                    if (!_rewardPointsSettings.AwardPointsExcludePurchasedRewardPoints)
+                        earnedRewardPointsBaseAmount -= redeemedRewardPoints.AmountPurchased;
+                }
+            }
+
+            #endregion
+
+            //we anticipate gift cards here for taxable payment fee calculation
+            #region Applied gift cards
+
+            //let's apply gift cards now (gift cards that can be used)
+            decimal giftCardBase = taxSummary.TotalPaymentAmount;
+            appliedGiftCards = new List<AppliedGiftCard>();
+            if (!cart.IsRecurring())
+            {
+                //we don't apply gift cards for recurring products
+                var giftCards = _giftCardService.GetActiveGiftCardsAppliedByCustomer(customer);
+                if (giftCards != null)
+                    foreach (var gc in giftCards)
+                        if (giftCardBase > decimal.Zero)
+                        {
+                            decimal remainingAmount = gc.GetGiftCardRemainingAmount();
+                            decimal amountCanBeUsed = giftCardBase > remainingAmount ?
+                                remainingAmount :
+                                giftCardBase;
+
+                            //round
+                            if (_shoppingCartSettings.RoundPricesDuringCalculation)
+                                amountCanBeUsed = RoundingHelper.RoundAmount(amountCanBeUsed);
+
+                            //reduce base
+                            giftCardBase -= amountCanBeUsed;
+                            taxSummary.TotalGiftcardsAmount += amountCanBeUsed;
+
+                            if (!_rewardPointsSettings.AwardPointsExcludeGiftCard)
+                                earnedRewardPointsBaseAmount -= amountCanBeUsed;
+
+                            var appliedGiftCard = new AppliedGiftCard();
+                            appliedGiftCard.GiftCard = gc;
+                            appliedGiftCard.AmountCanBeUsed = amountCanBeUsed;
+                            appliedGiftCards.Add(appliedGiftCard);
+                        }
+            }
+            if (!_rewardPointsSettings.AwardPointsExcludeGiftCard)
+                earnedRewardPointsBaseAmount -= taxSummary.TotalGiftcardsAmount ?? decimal.Zero;
+
+            #endregion
+
+            #region Payment Fee
+            //payment method additional fee
+            if (usePaymentMethodAdditionalFee && !String.IsNullOrEmpty(paymentMethodSystemName))
+            {
+                decimal additionalFee = _paymentService.GetAdditionalHandlingFee(cart, paymentMethodSystemName);
+                decimal paymentMethodAdditionalFee = _taxService.GetPaymentMethodAdditionalFee(additionalFee, includingTax, customer, out taxRate); //if not taxable returns price
+
+                if (_taxSettings.PaymentMethodAdditionalFeeIsTaxable)
+                {
+                    if (paymentMethodAdditionalFee != decimal.Zero)
+                        //case of normal taxable fee > 0, taxcategory != 0
+                        if (paymentMethodAdditionalFee > decimal.Zero && _taxSettings.PaymentMethodAdditionalFeeTaxClassId != 0)
+                            taxSummary.AddRate(taxRate, paymentFeeAmount: paymentMethodAdditionalFee);
+                        //case of fee < 0  considered as discount or > 0 considered as surcharge when taxcategory is not set
+                        else
+                        {
+                            decimal discountbaseFee = taxSummary.TotalBaseAmountForPaymentFeeCalculation;
+                            taxSummary.SetPaymentFeeOrDiscAmount(paymentMethodAdditionalFee, discountbaseFee);
+                        }
+                }
+                else
+                    taxSummary.TotalPaymentFeeAmountNonTaxable = paymentMethodAdditionalFee;
+
+                if (_rewardPointsSettings.AwardPointsIncludePaymentMethodAdditionalFee && paymentMethodAdditionalFee > decimal.Zero)
+                    earnedRewardPointsBaseAmount += paymentMethodAdditionalFee;
+                else
+                    //independent of AwardPointsIncludePaymentMethodAdditionalFee setting, reduce for a possible discount
+                    earnedRewardPointsBaseAmount += paymentMethodAdditionalFee;
+            }
+            #endregion
 
             //add at least one tax rate (0%)
             if (!taxSummary.TaxRates.Any())
                 taxSummary.AddRate(0, 0);
 
-            taxSummary.CalculateAmounts();
+            //total tax
+            decimal taxTotal = taxSummary.TotalAmountTax;
 
-            //summarize taxes
-            decimal taxTotal = taxSummary.TotalAmountVAT;
             //ensure that tax is equal or greater than zero
             if (taxTotal < decimal.Zero)
                 taxTotal = decimal.Zero;
 
+            //ensure that base amount for earning reward points is not negative
+            if (earnedRewardPointsBaseAmount < decimal.Zero)
+                earnedRewardPointsBaseAmount = decimal.Zero;
+
             return taxTotal;
         }
-
-
-
-
 
         /// <summary>
         /// Gets shopping cart total
@@ -915,10 +1152,10 @@ namespace Nop.Services.Orders
             List<DiscountForCaching> appliedDiscounts;
             List<DiscountForCaching> subTotalAppliedDiscounts;
             List<DiscountForCaching> shippingAppliedDiscounts;
-            int redeemedRewardPoints;
-            decimal redeemedRewardPointsAmount;
+            RewardPoints redeemedRewardPoints;
             List<AppliedGiftCard> appliedGiftCards;
             TaxSummary taxSummary;
+            decimal earnedRewardPointsBaseAmount;
             bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
 
             return GetShoppingCartTotal(cart,
@@ -928,8 +1165,8 @@ namespace Nop.Services.Orders
                 out shippingAppliedDiscounts,
                 out appliedGiftCards,
                 out redeemedRewardPoints,
-                out redeemedRewardPointsAmount,
                 out taxSummary,
+                out earnedRewardPointsBaseAmount,
                 includingTax,
                 useRewardPoints,
                 usePaymentMethodAdditionalFee);
@@ -944,10 +1181,10 @@ namespace Nop.Services.Orders
         /// <param name="subTotalAppliedDiscounts">Applied subtotal discounts</param>
         /// <param name="shippingAppliedDiscounts">Applied shipping discounts</param>
         /// <param name="appliedGiftCards">Applied gift cards</param>
-        /// <param name="redeemedRewardPoints">Reward points to redeem</param>
-        /// <param name="redeemedRewardPointsAmount">Reward points amount in primary store currency to redeem</param>
+        /// <param name="redeemedRewardPoints">Redeemed reward points</param>
         /// <param name="taxSummary">Tax summary</param>
-        /// <param name="includingTax">A value indicating whether submitted prices do include tax</param>
+        /// <param name="earnedRewardPointsBaseAmount">Base amount for reward points to earn</param>
+        /// <param name="includingTax">A value indicating whether calculated amounts should include tax</param>
         /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
         /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating order total</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
@@ -956,205 +1193,42 @@ namespace Nop.Services.Orders
             out List<DiscountForCaching> subTotalAppliedDiscounts,
             out List<DiscountForCaching> shippingAppliedDiscounts,
             out List<AppliedGiftCard> appliedGiftCards,
-            out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount,
+            out RewardPoints redeemedRewardPoints,
             out TaxSummary taxSummary,
-            bool includingTax,
+            out decimal earnedRewardPointsBaseAmount,
+            bool? includingTax = null,
             bool? useRewardPoints = null, bool usePaymentMethodAdditionalFee = true)
         {
 
-            redeemedRewardPoints = 0;
-            redeemedRewardPointsAmount = decimal.Zero;
+            redeemedRewardPoints = new RewardPoints(_rewardPointService);
 
-            #region order totals and tax
             //order totals and tax
-            decimal shoppingCartTax = GetTaxTotal(cart, includingTax, out taxSummary, out appliedDiscounts, out subTotalAppliedDiscounts, out shippingAppliedDiscounts, usePaymentMethodAdditionalFee);
-            decimal orderSubTotalDiscountAmount = taxSummary.TotalSubTotalDiscAmount;
-            decimal subTotalWithoutDiscountBase = taxSummary.TotalSubTotalAmount;
-            decimal subTotalWithDiscountBase = taxSummary.TotalAmountIncludingVAT;
-
-            //shipping
-            decimal? shoppingCartShipping = taxSummary.TotalShippingAmount;
-
-            //payment method additional fee
-            decimal paymentMethodAdditionalFee = taxSummary.TotalPaymentFeeAmount;
-
-            //order total
-            decimal resultTemp = taxSummary.TotalAmountIncludingVAT;
-            if (resultTemp < decimal.Zero)
-                resultTemp = decimal.Zero;
-            if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                resultTemp = RoundingHelper.RoundAmount(resultTemp);
-
-            //Order total discount
-            //it has reduced vat
+            decimal shoppingCartTax = GetTaxTotal(cart, includingTax ?? _workContext.TaxDisplayType == TaxDisplayType.IncludingTax, out taxSummary, out appliedDiscounts, out subTotalAppliedDiscounts, out shippingAppliedDiscounts, out appliedGiftCards, out redeemedRewardPoints, out earnedRewardPointsBaseAmount, usePaymentMethodAdditionalFee, useRewardPoints);
             discountAmount = taxSummary.TotalInvDiscAmount;
 
-            #endregion
 
-            #region Applied gift cards
-
-            var customer = cart.GetCustomer();
-            //let's apply gift cards now (gift cards that can be used)
-            appliedGiftCards = new List<AppliedGiftCard>();
-            if (!cart.IsRecurring())
+            //No shipping method found, hence total can't be calculated
+            if (cart.RequiresShipping() && !taxSummary.TotalShippingAmount.HasValue)
             {
-                //we don't apply gift cards for recurring products
-                var giftCards = _giftCardService.GetActiveGiftCardsAppliedByCustomer(customer);
-                if (giftCards != null)
-                    foreach (var gc in giftCards)
-                        if (resultTemp > decimal.Zero)
-                        {
-                            decimal remainingAmount = gc.GetGiftCardRemainingAmount();
-                            decimal amountCanBeUsed = resultTemp > remainingAmount ?
-                                remainingAmount :
-                                resultTemp;
-
-                            //reduce subtotal
-                            resultTemp -= amountCanBeUsed;
-
-                            var appliedGiftCard = new AppliedGiftCard();
-                            appliedGiftCard.GiftCard = gc;
-                            appliedGiftCard.AmountCanBeUsed = amountCanBeUsed;
-                            appliedGiftCards.Add(appliedGiftCard);
-                        }
-            }
-
-            #endregion
-
-            if (resultTemp < decimal.Zero)
-                resultTemp = decimal.Zero;
-            if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                resultTemp = RoundingHelper.RoundAmount(resultTemp);
-
-            if (!shoppingCartShipping.HasValue)
-            {
-                //we have errors
+                //we have no total -> display total on checkout
                 return null;
             }
 
-            decimal orderTotal = resultTemp;
+            decimal orderTotal = taxSummary.TotalPaymentAmount;
 
-            #region Reward points
 
-            if (_rewardPointsSettings.Enabled)
-            {
-                if (!useRewardPoints.HasValue)
-                    useRewardPoints = customer.GetAttribute<bool>(SystemCustomerAttributeNames.UseRewardPointsDuringCheckout, _genericAttributeService, _storeContext.CurrentStore.Id);
-                if (useRewardPoints.Value)
-                {
+            //due to rounding of reward points and different reward points base amount corrections, ordertotal and earnedRewardPointsBaseAmount can be negative
+            if (orderTotal < decimal.Zero)
+                orderTotal = decimal.Zero;
 
-                    int rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(customer.Id, _storeContext.CurrentStore.Id);
-                    if (CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
-                    {
-                        decimal rewardPointsBalanceAmount = ConvertRewardPointsToAmount(rewardPointsBalance);
-                        if (orderTotal > decimal.Zero)
-                        {
-                            if (orderTotal > rewardPointsBalanceAmount)
-                            {
-                                redeemedRewardPoints = rewardPointsBalance;
-                                redeemedRewardPointsAmount = rewardPointsBalanceAmount;
-                            }
-                            else
-                            {
-                                redeemedRewardPointsAmount = orderTotal;
-                                redeemedRewardPoints = ConvertAmountToRewardPoints(redeemedRewardPointsAmount);
-                            }
-                        }
-                    }
-                }
-            }
-
-            #endregion
-
-            orderTotal = orderTotal - redeemedRewardPointsAmount;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
+            {
                 orderTotal = RoundingHelper.RoundAmount(orderTotal);
+                earnedRewardPointsBaseAmount = RoundingHelper.RoundAmount(earnedRewardPointsBaseAmount);
+            }
             return orderTotal;
         }
 
-
-
-
-
-        /// <summary>
-        /// Converts existing reward points to amount
-        /// </summary>
-        /// <param name="rewardPoints">Reward points</param>
-        /// <returns>Converted value</returns>
-        public virtual decimal ConvertRewardPointsToAmount(int rewardPoints)
-        {
-            if (rewardPoints <= 0)
-                return decimal.Zero;
-
-            var result = rewardPoints * _rewardPointsSettings.ExchangeRate;
-            if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                result = RoundingHelper.RoundAmount(result);
-            return result;
-        }
-
-        /// <summary>
-        /// Converts an amount to reward points
-        /// </summary>
-        /// <param name="amount">Amount</param>
-        /// <returns>Converted value</returns>
-        public virtual int ConvertAmountToRewardPoints(decimal amount)
-        {
-            int result = 0;
-            if (amount <= 0)
-                return 0;
-
-            if (_rewardPointsSettings.ExchangeRate > 0)
-                result = (int)Math.Ceiling(amount / _rewardPointsSettings.ExchangeRate);
-            return result;
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether a customer has minimum amount of reward points to use (if enabled)
-        /// </summary>
-        /// <param name="rewardPoints">Reward points to check</param>
-        /// <returns>true - reward points could use; false - cannot be used.</returns>
-        public virtual bool CheckMinimumRewardPointsToUseRequirement(int rewardPoints)
-        {
-            if (_rewardPointsSettings.MinimumRewardPointsToUse <= 0)
-                return true;
-
-            return rewardPoints >= _rewardPointsSettings.MinimumRewardPointsToUse;
-        }
-
-        /// <summary>
-        /// Calculate how order total (maximum amount) for which reward points could be earned/reduced
-        /// </summary>
-        /// <param name="orderShippingInclTax">Order shipping (including tax)</param>
-        /// <param name="orderTotal">Order total</param>
-        /// <returns>Applicable order total</returns>
-        public virtual decimal CalculateApplicableOrderTotalForRewardPoints(decimal orderShippingInclTax, decimal orderTotal)
-        {
-            //do you give reward points for order total? or do you exclude shipping?
-            //since shipping costs vary some of store owners don't give reward points based on shipping total
-            //you can put your custom logic here
-            return orderTotal - orderShippingInclTax;
-        }
-        /// <summary>
-        /// Calculate how much reward points will be earned/reduced based on certain amount spent
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="amount">Amount (in primary store currency)</param>
-        /// <returns>Number of reward points</returns>
-        public virtual int CalculateRewardPoints(Customer customer, decimal amount)
-        {
-            if (!_rewardPointsSettings.Enabled)
-                return 0;
-
-            if (_rewardPointsSettings.PointsForPurchases_Amount <= decimal.Zero)
-                return 0;
-
-            //ensure that reward points are applied only to registered users
-            if (customer == null || customer.IsGuest())
-                return 0;
-
-            var points = (int)Math.Truncate(amount / _rewardPointsSettings.PointsForPurchases_Amount * _rewardPointsSettings.PointsForPurchases_Points);
-            return points;
-        }
 
         #endregion
     }

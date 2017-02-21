@@ -343,15 +343,14 @@ namespace Nop.Services.Catalog
             out decimal discountAmount,
             out List<DiscountForCaching> appliedDiscounts)
         {
-            return GetFinalPrice(product, customer, null, additionalCharge, includeDiscounts, quantity,
-                rentalStartDate, rentalEndDate, out discountAmount, out appliedDiscounts);
+            return GetFinalPrice(product, customer, additionalCharge, includeDiscounts, quantity,
+                rentalStartDate, rentalEndDate, out discountAmount, out appliedDiscounts, null);
         }
         /// <summary>
         /// Gets the final price
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">The customer</param>
-        /// <param name="overriddenProductPrice">Overridden product price. If specified, then it'll be used instead of a product price. For example, used with product attribute combinations</param>
         /// <param name="additionalCharge">Additional charge</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
         /// <param name="quantity">Shopping cart item quantity</param>
@@ -359,17 +358,18 @@ namespace Nop.Services.Catalog
         /// <param name="rentalEndDate">Rental period end date (for rental products)</param>
         /// <param name="discountAmount">Applied discount amount</param>
         /// <param name="appliedDiscounts">Applied discounts</param>
+        /// <param name="overriddenProductPrice">Overridden product price. If specified, then it'll be used instead of a product price. For example, used with product attribute combinations</param>
         /// <returns>Final price</returns>
         public virtual decimal GetFinalPrice(Product product,
             Customer customer,
-            decimal? overriddenProductPrice,
             decimal additionalCharge,
             bool includeDiscounts,
             int quantity,
             DateTime? rentalStartDate,
             DateTime? rentalEndDate,
             out decimal discountAmount,
-            out List<DiscountForCaching> appliedDiscounts)
+            out List<DiscountForCaching> appliedDiscounts,
+            decimal? overriddenProductPrice)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -385,7 +385,7 @@ namespace Nop.Services.Catalog
                 quantity,
                 string.Join(",", customer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-             var cacheTime = _catalogSettings.CacheProductPrices ? 60 : 0;
+            var cacheTime = _catalogSettings.CacheProductPrices ? 60 : 0;
             //we do not cache price for rental products
             //otherwise, it can cause memory leaks (to store all possible date period combinations)
             if (product.IsRental)
@@ -475,6 +475,7 @@ namespace Nop.Services.Catalog
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
             var attributesXml = shoppingCartItem.AttributesXml;
+            bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             var unitPrice = GetUnitPrice(shoppingCartItem.Product,
                 shoppingCartItem.Customer,
                 shoppingCartItem.ShoppingCartType,
@@ -486,6 +487,7 @@ namespace Nop.Services.Catalog
                 includeDiscounts,
                 out discountAmount,
                 out appliedDiscounts);
+            //update modified attributesXml with attributes taxinfo
             shoppingCartItem.AttributesXml = attributesXml;
             return unitPrice;
         }
@@ -524,51 +526,57 @@ namespace Nop.Services.Catalog
             discountAmount = decimal.Zero;
             appliedDiscounts = new List<DiscountForCaching>();
 
-            var taxWeightSummary = new TaxSummary(_workContext.TaxDisplayType == TaxDisplayType.IncludingTax);
+            //taxWeights will use price tax settings
+            var taxWeightSummary = new TaxSummary(_taxService.PricesIncludeTax());
 
             decimal finalPrice = decimal.Zero;
 
             var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
-            if (combination != null && combination.OverriddenPrice.HasValue)
-            {
-                finalPrice = GetFinalPrice(product,
-                        customer,
-                        combination.OverriddenPrice.Value,
-                        decimal.Zero,
-                        includeDiscounts,
-                        quantity,
-                        product.IsRental ? rentalStartDate : null,
-                        product.IsRental ? rentalEndDate : null,
-                        out discountAmount, out appliedDiscounts);
-            }
 
-            //summarize price of all attributes and build up taxSummary
+            //get taxrate and summarize price of all attributes to build up taxWeightSummary
             //needed for VAT calculation of product bundles
+            //taxrate comes from associated product and not from product
             decimal attributesTotalPrice = decimal.Zero;
-            var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
-            if (attributeValues != null)
+            if (combination != null)
             {
-                decimal taxRate;
-                foreach (var attributeValue in attributeValues)
+                var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
+                if (attributeValues != null)
                 {
-                    var attributePrice = GetProductAttributeValuePriceAdjustment(attributeValue);
-                    attributesTotalPrice += attributePrice;
-
-                    if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                    decimal taxRate;
+                    foreach (var attributeValue in attributeValues)
                     {
-                        //bundled product
-                        var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
-                        if (associatedProduct != null)
+                        var attributePrice = GetProductAttributeValuePriceAdjustment(attributeValue);
+                        attributesTotalPrice += attributePrice;
+
+                        if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
                         {
-                            //build taxSummary for tax subdivision
-                            var attributePriceTax = _taxService.GetProductPrice(associatedProduct, attributePrice, customer, out taxRate);
-                            taxWeightSummary.AddRate(taxRate, attributePrice);
+                            //bundled product
+                            var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
+                            if (associatedProduct != null)
+                            {
+                                //get only the taxrate of associate product, price is not needed
+                                var attributePriceTax = _taxService.GetProductPrice(associatedProduct, 0, customer, out taxRate);
+                                //build taxSummary for tax subdivision
+                                taxWeightSummary.AddRate(taxRate, attributePrice);
+                            }
                         }
                     }
                 }
             }
 
-            if (combination == null || !combination.OverriddenPrice.HasValue)
+            if (combination != null && combination.OverriddenPrice.HasValue)
+            {
+                finalPrice = GetFinalPrice(product,
+                        customer,
+                        decimal.Zero,
+                        includeDiscounts,
+                        quantity,
+                        product.IsRental ? rentalStartDate : null,
+                        product.IsRental ? rentalEndDate : null,
+                        out discountAmount, out appliedDiscounts,
+                        combination.OverriddenPrice.Value);
+            }
+            else
             {
                 //get price of a product (with previously calculated price of all attributes)
                 if (product.CustomerEntersPrice)
@@ -613,17 +621,23 @@ namespace Nop.Services.Catalog
             //add tax attributes
             if (taxWeightSummary != null && taxWeightSummary.TaxRates.Any())
             {
-                decimal taxRate;
-                var itemAmount = _taxService.GetProductPrice(product, 0, customer, out taxRate);
-                var baseProductPrice = finalPrice - attributesTotalPrice;
-                if (baseProductPrice > decimal.Zero)
-                    taxWeightSummary.AddRate(taxRate, baseProductPrice);
+                decimal prodcutTaxRate;
+                //get taxrate, no price needed
+                var itemAmount = _taxService.GetProductPrice(product, 0, customer, out prodcutTaxRate);
 
+                //price is overridden or it is product price + attributes price
+                if (combination != null && !combination.OverriddenPrice.HasValue)
+                {
+                    var baseProductPrice = finalPrice - attributesTotalPrice;
+                    //add product price if exists
+                    if (baseProductPrice > decimal.Zero)
+                        taxWeightSummary.AddRate(prodcutTaxRate, baseProductPrice);
+                }
                 if (taxWeightSummary.TaxRates.Count() > 1 ||
-                    (taxWeightSummary.TaxRates.FirstOrDefault().Key != taxRate && baseProductPrice != finalPrice) //use associated product taxRate when different
+                    (taxWeightSummary.TaxRates.FirstOrDefault().Key != prodcutTaxRate) //use associated product taxRate when different
                    )
                 {
-                    taxWeightSummary.CalculateAmounts();
+                    taxWeightSummary.CalculateWeights();
                     attributesXml = _productAttributeParser.AddTaxAttribute(attributesXml, taxWeightSummary);
                 }
             }

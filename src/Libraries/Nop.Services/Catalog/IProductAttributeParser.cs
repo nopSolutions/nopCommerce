@@ -89,6 +89,7 @@ namespace Nop.Services.Catalog
         IList<string> GenerateAllCombinations(Product product, bool ignoreNonCombinableAttributes = false);
 
         #endregion
+
         #region taxAttribute
         /// <summary>
         /// Adds tax subdivision to existing attributesXml
@@ -102,8 +103,15 @@ namespace Nop.Services.Catalog
         /// Parse ProductAttributesTax
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>SortedDictionary with vatRate and vatRateWeight</returns>
+        /// <returns>SortedDictionary with taxRate and taxRateWeight</returns>
         SortedDictionary<decimal, decimal> ParseTaxAttribute(string attributesXml);
+
+        /// <summary>
+        /// Check if attributesXml contains tax attribute information
+        /// </summary>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <returns>A boolean value indicating if tax attribute info is present</returns>
+        bool hasTaxInfoInAttributeXML (string attributesXml);
         #endregion
 
         #region Gift card attributes

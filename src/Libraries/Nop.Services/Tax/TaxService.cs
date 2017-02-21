@@ -14,6 +14,7 @@ using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Logging;
+using Nop.Services.Catalog;
 
 namespace Nop.Services.Tax
 {
@@ -36,6 +37,7 @@ namespace Nop.Services.Tax
         private readonly CustomerSettings _customerSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly AddressSettings _addressSettings;
+        private readonly IProductAttributeParser _productAttributeParser;
 
         #endregion
 
@@ -56,6 +58,7 @@ namespace Nop.Services.Tax
         /// <param name="customerSettings">Customer settings</param>
         /// <param name="shippingSettings">Shipping settings</param>
         /// <param name="addressSettings">Address settings</param>
+        /// <param name="productAttributeParser">Product attribute parser</param>
         public TaxService(IAddressService addressService,
             IWorkContext workContext,
             IStoreContext storeContext,
@@ -67,7 +70,8 @@ namespace Nop.Services.Tax
             ILogger logger,
             CustomerSettings customerSettings,
             ShippingSettings shippingSettings,
-            AddressSettings addressSettings)
+            AddressSettings addressSettings,
+            IProductAttributeParser productAttributeParser)
         {
             this._addressService = addressService;
             this._workContext = workContext;
@@ -81,6 +85,7 @@ namespace Nop.Services.Tax
             this._customerSettings = customerSettings;
             this._shippingSettings = shippingSettings;
             this._addressSettings = addressSettings;
+            this._productAttributeParser = productAttributeParser;
         }
 
         #endregion
@@ -138,6 +143,14 @@ namespace Nop.Services.Tax
             return true;
         }
 
+        /// <summary>
+        /// Get a value indicating whether prices do include tax
+        /// </summary>
+        /// <returns>Result</returns>
+        public virtual bool PricesIncludeTax()
+        {
+            return _taxSettings.PricesIncludeTax;
+        }
         /// <summary>
         /// Create request for tax calculation
         /// </summary>
@@ -218,7 +231,7 @@ namespace Nop.Services.Tax
                     calculateTaxRequest.Address = _addressService.GetAddressById(_taxSettings.DefaultTaxAddressId);
                     break;
             }
-            
+
             return calculateTaxRequest;
         }
 
@@ -365,6 +378,25 @@ namespace Nop.Services.Tax
         }
 
         /// <summary>
+        /// Gets price using tax attributes
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="price">Price</param>
+        /// <param name="taxRate">Tax rate</param>
+        /// <param name="attributesXml">Product atrributes (XML format)</param>
+        /// <param name="includingTax">Optional value indicating whether calculated price should include tax</param>
+        /// <returns>Price</returns>
+        public virtual decimal GetProductPrice(Product product, decimal price,
+            out decimal taxRate, ref string attributesXml, bool? includingTax = null)
+        {
+            var customer = _workContext.CurrentCustomer;
+            bool priceIncludesTax = _taxSettings.PricesIncludeTax;
+            int taxCategoryId = 0;
+            return GetProductPrice(product, taxCategoryId, price,
+                includingTax ?? _workContext.TaxDisplayType == TaxDisplayType.IncludingTax,
+                customer, priceIncludesTax, out taxRate, ref attributesXml);
+        }
+        /// <summary>
         /// Gets price
         /// </summary>
         /// <param name="product">Product</param>
@@ -393,8 +425,9 @@ namespace Nop.Services.Tax
         {
             bool priceIncludesTax = _taxSettings.PricesIncludeTax;
             int taxCategoryId = 0;
+            string attributesXml = "";
             return GetProductPrice(product, taxCategoryId, price, includingTax,
-                customer, priceIncludesTax, out taxRate);
+                customer, priceIncludesTax, out taxRate, ref attributesXml);
         }
 
         /// <summary>
@@ -407,16 +440,63 @@ namespace Nop.Services.Tax
         /// <param name="customer">Customer</param>
         /// <param name="priceIncludesTax">A value indicating whether price already includes tax</param>
         /// <param name="taxRate">Tax rate</param>
+        /// <param name="attributesXml">Product atrributes (XML format)</param>
         /// <returns>Price</returns>
         public virtual decimal GetProductPrice(Product product, int taxCategoryId,
             decimal price, bool includingTax, Customer customer,
-            bool priceIncludesTax, out decimal taxRate)
+            bool priceIncludesTax, out decimal taxRate, ref string attributesXml)
         {
             bool isTaxable;
             //taxrate should be always passed
             GetTaxRate(product, taxCategoryId, customer, price, out taxRate, out isTaxable);
 
-            //no need to calculate tax rate if passed "price" is 0
+            //get taxWeights of product attributes
+            SortedDictionary<decimal, decimal> attributeTaxWeight = !String.IsNullOrEmpty(attributesXml) ? _productAttributeParser.ParseTaxAttribute(attributesXml) : null;
+
+            //normal price or no need for taxinfo to attributesXml
+            if (String.IsNullOrEmpty(attributesXml) || attributeTaxWeight == null || !attributeTaxWeight.Any())
+            {
+                price = GetPrice(price, includingTax, priceIncludesTax, taxRate, isTaxable);
+            }
+            //add taxinfo to attributesXml
+            else
+            {
+                int numtaxRates = attributeTaxWeight.Count();
+                taxRate = attributeTaxWeight.FirstOrDefault().Key; // pass the first taxRate as it might be different from product taxrate. Will be used when #rates == 1
+
+                //need to change attributeXML (otherwise already set by unitprice calculation)
+                if (priceIncludesTax != includingTax)
+                {
+                    //no need to change attributeXML when only one rate
+                    if (numtaxRates == 1)
+                    {
+                        price = GetPrice(price, includingTax, priceIncludesTax, taxRate, isTaxable);
+                    }
+                    else
+                    {
+                        var taxWeightSummary = new TaxSummary(includingTax);
+                        foreach (KeyValuePair<decimal, decimal> kvp in attributeTaxWeight)
+                        {
+                            decimal attribtaxRate = kvp.Key;
+                            decimal rateWeight = kvp.Value;
+                            var priceWeighted = price * rateWeight;
+                            var attributePrice = RoundingHelper.RoundAmount(GetPrice(priceWeighted, includingTax, priceIncludesTax, attribtaxRate, isTaxable));
+                            taxWeightSummary.AddRate(attribtaxRate, attributePrice);
+                        }
+
+                        taxWeightSummary.CalculateWeights();
+                        attributesXml = _productAttributeParser.AddTaxAttribute(attributesXml, taxWeightSummary);
+                        price = includingTax ? taxWeightSummary.TotalAmountIncludingTax : taxWeightSummary.TotalAmount;
+                    }
+                }
+            }
+            return price;
+        }
+
+        protected virtual decimal GetPrice(decimal price, bool includingTax,
+            bool priceIncludesTax, decimal taxRate, bool isTaxable)
+        {
+            //no need to calculate new price if passed "price" is 0
             if (price == decimal.Zero)
             {
                 return price;
@@ -462,7 +542,7 @@ namespace Nop.Services.Tax
                 taxRate = decimal.Zero;
             }
 
-            //allowed to support negative price adjustments
+            //commented out to allow negative price adjustments
             //if (price < decimal.Zero)
             //    price = decimal.Zero;
 
@@ -516,8 +596,9 @@ namespace Nop.Services.Tax
             }
             int taxClassId = _taxSettings.ShippingTaxClassId;
             bool priceIncludesTax = _taxSettings.ShippingPriceIncludesTax;
+            string attributesXml = "";
             return GetProductPrice(null, taxClassId, price, includingTax, customer,
-                priceIncludesTax, out taxRate);
+                priceIncludesTax, out taxRate, ref attributesXml);
         }
 
         #endregion
@@ -568,8 +649,9 @@ namespace Nop.Services.Tax
             }
             int taxClassId = _taxSettings.PaymentMethodAdditionalFeeTaxClassId;
             bool priceIncludesTax = _taxSettings.PaymentMethodAdditionalFeeIncludesTax;
+            string attributesXml = "";
             return GetProductPrice(null, taxClassId, price, includingTax, customer,
-                priceIncludesTax, out taxRate);
+                priceIncludesTax, out taxRate, ref attributesXml);
         }
 
         #endregion
@@ -637,8 +719,9 @@ namespace Nop.Services.Tax
 
             bool priceIncludesTax = _taxSettings.PricesIncludeTax;
             int taxClassId = cav.CheckoutAttribute.TaxCategoryId;
+            string attributesXml = "";
             return GetProductPrice(null, taxClassId, price, includingTax, customer,
-                priceIncludesTax, out taxRate);
+                priceIncludesTax, out taxRate, ref attributesXml);
         }
 
         #endregion

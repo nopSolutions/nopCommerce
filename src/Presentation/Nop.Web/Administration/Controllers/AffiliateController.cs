@@ -104,6 +104,7 @@ namespace Nop.Admin.Controllers
                 model.Address.CountryEnabled = true;
                 model.Address.CountryRequired = true;
                 model.Address.StateProvinceEnabled = true;
+                model.Address.StateProvinceRequired = true;
                 model.Address.CityEnabled = true;
                 model.Address.CityRequired = true;
                 model.Address.StreetAddressEnabled = true;

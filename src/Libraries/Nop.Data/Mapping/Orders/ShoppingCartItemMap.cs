@@ -16,7 +16,7 @@ namespace Nop.Data.Mapping.Orders
             this.Ignore(sci => sci.IsShipEnabled);
             this.Ignore(sci => sci.AdditionalShippingCharge);
             this.Ignore(sci => sci.IsTaxExempt);
-            this.Ignore(sci => sci.VatRate);
+            this.Ignore(sci => sci.TaxRate);
             this.Ignore(sci => sci.SubTotalExclTax);
             this.Ignore(sci => sci.SubTotalInclTax);
 

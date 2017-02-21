@@ -25,6 +25,7 @@
         $("#@Html.FieldIdFor(model => model.RequireOtherProducts)").click(toggleRequireOtherProducts);
         $("#@Html.FieldIdFor(model => model.AvailableForPreOrder)").click(togglePreOrder);
         $("#@Html.FieldIdFor(model => model.IsGiftCard)").click(toggleGiftCard);
+        $("#@Html.FieldIdFor(model => model.IsRewardPoints)").click(toggleRewardPoints);
         $("#@Html.FieldIdFor(model => model.CustomerEntersPrice)").click(toggleCustomerEntersPrice);
         $("#@Html.FieldIdFor(model => model.BasepriceEnabled)").click(toggleBasepriceEnabled);
         $("#@Html.FieldIdFor(model => model.IsDownload)").click(toggleDownloadableProduct);
@@ -49,6 +50,7 @@
         togglePreOrder();
         toggleRequireOtherProducts();
         toggleGiftCard();
+        toggleRewardPoints();
         toggleCustomerEntersPrice();
         toggleBasepriceEnabled();
         toggleDownloadableProduct();
@@ -79,6 +81,7 @@
             $('#tier-prices').show();
             $('#group-required-other-products').show();
             $('#group-giftcard').show();
+            $('#group-rewardpoints').show();
             $('#group-downloads').show();
             $('#group-recurring').show();
             $('#group-rental').show();
@@ -90,6 +93,7 @@
             $('#tier-prices').hide();
             $('#group-required-other-products').hide();
             $('#group-giftcard').hide();
+            $('#group-rewardpoints').hide();
             $('#group-downloads').hide();
             $('#group-recurring').hide();
             $('#group-rental').hide();
@@ -153,6 +157,14 @@
         } else {
             $('#pnlGiftCardType').hide();
             $('#pnlOverriddenGiftCardAmount').hide();
+        }
+    }
+
+    function toggleRewardPoints() {
+        if ($('#@Html.FieldIdFor(model => model.IsRewardPoints)').is(':checked')) {
+            $('#pnlOverriddenRPExchangeRate').show();
+        } else {
+            $('#pnlOverriddenRPExchangeRate').hide();
         }
     }
 
@@ -756,6 +768,42 @@
                         <div class="col-md-9">
                             @Html.NopEditorFor(model => model.OverriddenGiftCardAmount)
                             @Html.ValidationMessageFor(model => model.OverriddenGiftCardAmount)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default @(Model.ProductEditorSettingsModel.IsRewardPoints ? null : "advanced-setting")" id="group-rewardpoints">
+                <div class="panel-heading">
+                    @T("Admin.Catalog.Products.RewardPoints")
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.ExcludeFromRewardPoints)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.ExcludeFromRewardPoints)
+                            @Html.ValidationMessageFor(model => model.ExcludeFromRewardPoints)
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.IsRewardPoints)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.IsRewardPoints)
+                            @Html.ValidationMessageFor(model => model.IsRewardPoints)
+                        </div>
+                    </div>
+                    <div class="form-group" id="pnlOverriddenRPExchangeRate">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.OverriddenRPExchangeRate)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.OverriddenRPExchangeRate)
+                            @Html.ValidationMessageFor(model => model.OverriddenRPExchangeRate)
                         </div>
                     </div>
                 </div>

@@ -183,3 +183,9 @@ GO
 
 CREATE NONCLUSTERED INDEX [IX_Product_SubjectToAcl] ON [Product] ([SubjectToAcl] ASC)
 GO
+
+CREATE NONCLUSTERED INDEX [IX_RewardPointsHistory_Customer] ON [RewardPointsHistory]
+(
+	[CustomerId] ASC
+)
+GO

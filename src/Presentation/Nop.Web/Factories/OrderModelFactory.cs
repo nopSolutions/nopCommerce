@@ -263,11 +263,14 @@ namespace Nop.Web.Factories
                 //including tax
 
                 //order shipping
-                var orderShippingInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingInclTax, order.CurrencyRate);
-                model.OrderShipping = _priceFormatter.FormatShippingPrice(orderShippingInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, true);
+                if (order.OrderShippingNonTaxable == decimal.Zero)
+                {
+                    var orderShippingInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingInclTax, order.CurrencyRate);
+                    model.OrderShipping = _priceFormatter.FormatShippingPrice(orderShippingInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, true);
+                }
                 //payment method additional fee
                 var paymentMethodAdditionalFeeInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeInclTax, order.CurrencyRate);
-                if (paymentMethodAdditionalFeeInclTaxInCustomerCurrency > decimal.Zero)
+                if (paymentMethodAdditionalFeeInclTaxInCustomerCurrency != decimal.Zero) //allow negative
                     model.PaymentMethodAdditionalFee = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, true);
             }
             else
@@ -275,13 +278,26 @@ namespace Nop.Web.Factories
                 //excluding tax
 
                 //order shipping
-                var orderShippingExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingExclTax, order.CurrencyRate);
-                model.OrderShipping = _priceFormatter.FormatShippingPrice(orderShippingExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, false);
+                if (order.OrderShippingNonTaxable == decimal.Zero)
+                {
+                    var orderShippingExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingExclTax, order.CurrencyRate);
+                    model.OrderShipping = _priceFormatter.FormatShippingPrice(orderShippingExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, false);
+                }
                 //payment method additional fee
                 var paymentMethodAdditionalFeeExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeExclTax, order.CurrencyRate);
-                if (paymentMethodAdditionalFeeExclTaxInCustomerCurrency > decimal.Zero)
+                if (paymentMethodAdditionalFeeExclTaxInCustomerCurrency != decimal.Zero) //allow negative
                     model.PaymentMethodAdditionalFee = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, false);
             }
+
+            //non taxable         
+            if (order.OrderShippingNonTaxable != decimal.Zero)
+            {
+                var orderShippingNonTaxableInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingNonTaxable, order.CurrencyRate);
+                model.OrderShippingNonTaxable = _priceFormatter.FormatShippingPrice(orderShippingNonTaxableInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, false);
+            }
+            var paymentMethodAdditionalFeeNonTaxableInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeNonTaxable, order.CurrencyRate);
+            if (paymentMethodAdditionalFeeNonTaxableInCustomerCurrency != decimal.Zero)
+                model.PaymentMethodAdditionalFeeNonTaxable = _priceFormatter.FormatShippingPrice(paymentMethodAdditionalFeeNonTaxableInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, false);
 
             //tax
             bool displayTax = true;
@@ -311,12 +327,12 @@ namespace Nop.Web.Factories
                     {
                         model.TaxRates.Add(new OrderDetailsModel.TaxRate
                         {
-                            Rate = _priceFormatter.FormatTaxRate(tr.Key),
+                            Rate = _priceFormatter.FormatTaxRate(tr.Value.TaxRate),
                             //TODO pass languageId to _priceFormatter.FormatPrice
                             Amount = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(tr.Value.Amount, order.CurrencyRate), true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage),
                             DiscountAmount = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(tr.Value.DiscountAmount, order.CurrencyRate), true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage),
                             BaseAmount = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(tr.Value.BaseAmount, order.CurrencyRate), true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage),
-                            VatAmount = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(tr.Value.VatAmount, order.CurrencyRate), true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage)
+                            TaxAmount = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(tr.Value.TaxAmount, order.CurrencyRate), true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage)
                         });
                     }
                 }
@@ -348,10 +364,13 @@ namespace Nop.Web.Factories
             }
 
             //reward points
+            model.EarnedRewardPointsAreTaxable =  _rewardPointsSettings.EarnedRewardPointsAreTaxable;
             if (order.RedeemedRewardPointsEntry != null)
             {
                 model.RedeemedRewardPoints = -order.RedeemedRewardPointsEntry.Points;
+                model.RedeemedRewardPointsPurchased = -order.RedeemedRewardPointsEntry.PointsPurchased;
                 model.RedeemedRewardPointsAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(order.RedeemedRewardPointsEntry.UsedAmount, order.CurrencyRate)), true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage);
+                model.RedeemedRewardPointsAmountPurchased = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(order.RedeemedRewardPointsEntry.UsedAmountPurchased, order.CurrencyRate)), true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage);
             }
 
             //total
@@ -392,7 +411,7 @@ namespace Nop.Web.Factories
                     ProductSeName = orderItem.Product.GetSeName(),
                     Quantity = orderItem.Quantity,
                     AttributeInfo = orderItem.AttributeDescription,
-                    VatRate = orderItem.VatRate
+                    TaxRate = orderItem.TaxRate.ToString("G29")
                 };
                 //rental info
                 if (orderItem.Product.IsRental)
@@ -403,6 +422,9 @@ namespace Nop.Web.Factories
                         rentalStartDate, rentalEndDate);
                 }
                 model.Items.Add(orderItemModel);
+
+                //reward points program
+                orderItemModel.ExcludeFromRewardPoints = orderItem.Product.ExcludeFromRewardPoints;
 
                 //unit price, subtotal
                 if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
@@ -527,7 +549,10 @@ namespace Nop.Web.Factories
                 return new CustomerRewardPointsModel.RewardPointsHistoryModel
                 {
                     Points = rph.Points,
+                    PointsPurchased = rph.PointsPurchased,
                     PointsBalance = rph.PointsBalance.HasValue ? rph.PointsBalance.ToString()
+                        : string.Format(_localizationService.GetResource("RewardPoints.ActivatedLater"), activatingDate),
+                    PointsBalancePurchased = rph.PointsBalancePurchased.HasValue ? rph.PointsBalancePurchased.ToString()
                         : string.Format(_localizationService.GetResource("RewardPoints.ActivatedLater"), activatingDate),
                     Message = rph.Message,
                     CreatedOn = activatingDate
@@ -546,14 +571,18 @@ namespace Nop.Web.Factories
             };
 
             //current amount/balance
-            int rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(customer.Id, _storeContext.CurrentStore.Id);
-            decimal rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
-            decimal rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
-            model.RewardPointsBalance = rewardPointsBalance;
+            RewardPoints rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(customer.Id, _storeContext.CurrentStore.Id);
+            decimal rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsBalance.Points, _workContext.WorkingCurrency);            
+            decimal rewardPointsAmountPurchased = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsBalance.PointsPurchased, _workContext.WorkingCurrency);
+            model.RewardPointsBalance = rewardPointsBalance.Points;
             model.RewardPointsAmount = _priceFormatter.FormatPrice(rewardPointsAmount, true, false);
+            model.RewardPointsBalancePurchased = rewardPointsBalance.PointsPurchased;
+            model.RewardPointsAmountPurchased = _priceFormatter.FormatPrice(rewardPointsAmountPurchased, true, false);
+            model.RewardPointsBalanceTotal = model.RewardPointsBalance + model.RewardPointsBalancePurchased;
+            model.RewardPointsAmountTotal = _priceFormatter.FormatPrice(rewardPointsAmount + rewardPointsAmountPurchased, true, false);
             //minimum amount/balance
             int minimumRewardPointsBalance = _rewardPointsSettings.MinimumRewardPointsToUse;
-            decimal minimumRewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(minimumRewardPointsBalance);
+            decimal minimumRewardPointsAmountBase = _rewardPointService.ConvertRewardPointsToAmount(minimumRewardPointsBalance);
             decimal minimumRewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(minimumRewardPointsAmountBase, _workContext.WorkingCurrency);
             model.MinimumRewardPointsBalance = minimumRewardPointsBalance;
             model.MinimumRewardPointsAmount = _priceFormatter.FormatPrice(minimumRewardPointsAmount, true, false);

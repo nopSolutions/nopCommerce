@@ -25,7 +25,7 @@
                     @Html.RenderBootstrapTabHeader("tab-activitylog", @T("Admin.Customers.Customers.ActivityLog"))
                     @Html.RenderBootstrapTabHeader("tab-impersonate", @T("Admin.Customers.Customers.Impersonate"))
                     @Html.RenderBootstrapTabHeader("tab-backinstock", @T("Admin.Customers.Customers.BackInStockSubscriptions"))
-                } 
+                }
                 @if (Model.DisplayRewardPointsHistory)
                 {
                     @Html.RenderBootstrapTabHeader("tab-rewardpoints", @T("Admin.Customers.Customers.RewardPoints"))
@@ -42,7 +42,7 @@
                     @Html.RenderBootstrapTabContent("tab-activitylog", @TabActivityLog())
                     @Html.RenderBootstrapTabContent("tab-impersonate", @TabImpersonate())
                     @Html.RenderBootstrapTabContent("tab-backinstock", @TabBackInStockSubscriptions())
-                } 
+                }
                 @if (Model.DisplayRewardPointsHistory)
                 {
                     @Html.RenderBootstrapTabContent("tab-rewardpoints", @TabRewardPoints())
@@ -1153,12 +1153,36 @@ var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
+                                    },
+                                    update: {
+                                        url: "@Html.Raw(Url.Action("RewardPointsHistoryUpdate", "Customer"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     }
                                 },
                                 schema: {
                                     data: "Data",
                                     total: "Total",
-                                    errors: "Errors"
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            StoreName: { editable: false, type: "string" },
+                                            Points: { editable: false, type: "number" },
+                                            PointsBalance: { editable: false, type: "string" },
+                                            PointsPurchased: { editable: false, type: "string" },
+                                            PointsBalancePurchased: { editable: false, type: "string" },
+                                            Message: { editable: true, type: "string" },
+                                            CreatedOn: { editable: false, type: "date" },
+                                            Id: { editable: false, type: "number" }
+                                        }
+                                    }
+                                },
+                                requestEnd: function(e) {
+                                    if (e.type == "update") {
+                                        this.read();
+                                    }
                                 },
                                 error: function(e) {
                                     display_kendoui_grid_error(e);
@@ -1192,14 +1216,31 @@ var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
                                 field: "PointsBalance",
                                 title: "@T("Admin.Customers.Customers.RewardPoints.Fields.PointsBalance")"
                             }, {
+                                field: "PointsPurchased",
+                                title: "@T("Admin.Customers.Customers.RewardPoints.Fields.PointsPurchased")"
+                            }, {
+                                field: "PointsBalancePurchased",
+                                title: "@T("Admin.Customers.Customers.RewardPoints.Fields.PointsBalancePurchased")"
+                            }, {
                                 field: "Message",
                                 title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Message")"
                             }, {
                                 field: "CreatedOn",
                                 title: "@T("Admin.Promotions.Campaigns.Fields.CreatedOn")",
                                 width: 200,
-                                type: "date",
-                                format: "{0:G}"
+                                format: "{0:G}""
+                            }, {
+                                command: [
+                                    {
+                                        name: "edit",
+                                        text: {
+                                            edit: "@T("Admin.Common.Edit")",
+                                            update: "@T("Admin.Common.Update")",
+                                            cancel: "@T("Admin.Common.Cancel")"
+                                        }
+                                    }
+                                ],
+                                width: 200
                             }
                             ]
                         });
@@ -1220,6 +1261,15 @@ var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
                     <div class="col-md-9">
                         @Html.NopEditorFor(model => model.AddRewardPointsValue)
                         @Html.ValidationMessageFor(model => model.AddRewardPointsValue)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.AddRewardPointsValuePurchased)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.AddRewardPointsValuePurchased)
+                        @Html.ValidationMessageFor(model => model.AddRewardPointsValuePurchased)
                     </div>
                 </div>
                 <div class="form-group">
@@ -1253,12 +1303,13 @@ var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
         $(document).ready(function () {
             $('#addRewardPoints').click(function () {
                 var rewardPointsValue = $("#@Html.FieldIdFor(model => model.AddRewardPointsValue)").val();
+                var rewardPointsValuePurchased = $("#@Html.FieldIdFor(model => model.AddRewardPointsValuePurchased)").val();
                 var rewardPointsMessage = $("#@Html.FieldIdFor(model => model.AddRewardPointsMessage)").val();
                 var rewardPointsStoreId = $("#@Html.FieldIdFor(model => model.AddRewardPointsStoreId)").val();
                 $('#addRewardPoints').attr('disabled', true);
 
                 var postData = {
-                    addRewardPointsValue: rewardPointsValue,
+                    addRewardPointsValue: [rewardPointsValue, rewardPointsValuePurchased],
                     addRewardPointsMessage: rewardPointsMessage,
                     storeId: rewardPointsStoreId,
                     customerId: @Model.Id

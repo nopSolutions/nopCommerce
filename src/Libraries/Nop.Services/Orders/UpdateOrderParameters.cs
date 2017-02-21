@@ -76,6 +76,6 @@ namespace Nop.Services.Orders
         /// </summary>
         public PickupPoint PickupPoint { get; set; }
 
-        public decimal VatRate { get; set; }
+        public decimal TaxRate { get; set; }
     }
 }

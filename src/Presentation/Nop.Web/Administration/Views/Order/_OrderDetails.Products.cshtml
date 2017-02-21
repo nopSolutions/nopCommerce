@@ -22,7 +22,7 @@
                                     $('#pnlEditPvQuantity@(item.Id)').show();
                                     $('#pnlEditPvDiscount@(item.Id)').show();
                                     $('#pnlEditPvPrice@(item.Id)').show();
-                                    $('#pnlEditPvVatRate@(item.Id)').show();
+                                    $('#pnlEditPvTaxRate@(item.Id)').show();
                                     $('#btnEditOrderItem@(item.Id)').hide();
                                     $('#btnDeleteOrderItem@(item.Id)').hide();
                                     $('#btnSaveOrderItem@(item.Id)').show();
@@ -32,7 +32,7 @@
                                     $('#pnlEditPvQuantity@(item.Id)').hide();
                                     $('#pnlEditPvDiscount@(item.Id)').hide();
                                     $('#pnlEditPvPrice@(item.Id)').hide();
-                                    $('#pnlEditPvVatRate@(item.Id)').hide()
+                                    $('#pnlEditPvTaxRate@(item.Id)').hide()
                                     $('#btnEditOrderItem@(item.Id)').show();
                                     $('#btnDeleteOrderItem@(item.Id)').show();
                                     $('#btnSaveOrderItem@(item.Id)').hide();
@@ -84,7 +84,7 @@
                             @T("Admin.Orders.Products.Total")
                         </th>
                         <th>
-                            @T("Order.TaxRateLine.VatRate")
+                            @T("Order.TaxRateLine.TaxRate")
                         </th>
                         @if (!Model.IsLoggedInAsVendor)
                         {
@@ -345,11 +345,11 @@
                                     </div>
                                 </td>
                                 <td style="width: 15%;">
-                                    <div>@item.VatRate.ToString("G29")</div>
-                                    <div id="pnlEditPvVatRate@(item.Id)">
+                                    <div>@item.TaxRate.ToString("G29")</div>
+                                    <div id="pnlEditPvTaxRate@(item.Id)">
                                         <div class="form-group">
                                             <div class="col-md-8 col-md-offset-2">
-                                                <input name="pvVatRate@(item.Id)" type="text" value="@item.VatRate" id="pvVatRate@(item.Id)" class="form-control input-sm" />
+                                                <input name="pvTaxRate@(item.Id)" type="text" value="@item.TaxRate" id="pvTaxRate@(item.Id)" class="form-control input-sm" />
                                             </div>
                                         </div>
                                     </div>

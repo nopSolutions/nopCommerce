@@ -330,7 +330,7 @@ namespace Nop.Services.ExportImport
 
                 //the columns
                 var properties = GetPropertiesByExcelCells<Product>(worksheet);
-                
+
                 var manager = new PropertyManager<Product>(properties);
 
                 var attributProperties = new[]
@@ -343,7 +343,7 @@ namespace Nop.Services.ExportImport
                         {
                             DropDownElements = AttributeControlType.TextBox.ToSelectList(useLocalization: false)
                         },
-                        new PropertyByName<ExportProductAttribute>("AttributeDisplayOrder"), 
+                        new PropertyByName<ExportProductAttribute>("AttributeDisplayOrder"),
                         new PropertyByName<ExportProductAttribute>("ProductAttributeValueId"),
                         new PropertyByName<ExportProductAttribute>("ValueName"),
                         new PropertyByName<ExportProductAttribute>("AttributeValueType")
@@ -371,7 +371,7 @@ namespace Nop.Services.ExportImport
 
                 var tempProperty = manager.GetProperty("Categories");
                 var categoryCellNum = tempProperty.Return(p => p.PropertyOrderPosition, -1);
-                
+
                 tempProperty = manager.GetProperty("SKU");
                 var skuCellNum = tempProperty.Return(p => p.PropertyOrderPosition, -1);
 
@@ -444,7 +444,7 @@ namespace Nop.Services.ExportImport
                     }
 
                     if (categoryCellNum > 0)
-                    { 
+                    {
                         var categoryIds = worksheet.Cells[endRow, categoryCellNum].Value.Return(p => p.ToString(), string.Empty);
 
                         if (!categoryIds.IsEmpty())
@@ -460,7 +460,7 @@ namespace Nop.Services.ExportImport
                     }
 
                     if (manufacturerCellNum > 0)
-                    { 
+                    {
                         var manufacturerIds = worksheet.Cells[endRow, manufacturerCellNum].Value.Return(p => p.ToString(), string.Empty);
                         if (!manufacturerIds.IsEmpty())
                             allManufacturersNames.AddRange(manufacturerIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()));
@@ -536,7 +536,7 @@ namespace Nop.Services.ExportImport
 
                             var productAttributeId = managerProductAttribute.GetProperty("AttributeId").IntValue;
                             var attributeControlTypeId = managerProductAttribute.GetProperty("AttributeControlType").IntValue;
-                            
+
                             var productAttributeValueId = managerProductAttribute.GetProperty("ProductAttributeValueId").IntValue;
                             var associatedProductId = managerProductAttribute.GetProperty("AssociatedProductId").IntValue;
                             var valueName = managerProductAttribute.GetProperty("ValueName").StringValue;
@@ -556,7 +556,7 @@ namespace Nop.Services.ExportImport
                             var attributeDisplayOrder = managerProductAttribute.GetProperty("AttributeDisplayOrder").IntValue;
 
                             var productAttributeMapping = lastLoadedProduct.ProductAttributeMappings.FirstOrDefault(pam => pam.ProductAttributeId == productAttributeId);
-                            
+
                             if (productAttributeMapping == null)
                             {
                                 //insert mapping
@@ -719,6 +719,15 @@ namespace Nop.Services.ExportImport
                                 break;
                             case "OverriddenGiftCardAmount":
                                 product.OverriddenGiftCardAmount = property.DecimalValue;
+                                break;
+                            case "IsRewardPoints":
+                                product.IsRewardPoints = property.BooleanValue;
+                                break;
+                            case "OverriddenRPExchangeRate":
+                                product.OverriddenRPExchangeRate = property.DecimalValue;
+                                break;
+                            case "ExcludeFromRewardPoints":
+                                product.ExcludeFromRewardPoints = property.BooleanValue;
                                 break;
                             case "RequireOtherProducts":
                                 product.RequireOtherProducts = property.BooleanValue;
@@ -935,7 +944,7 @@ namespace Nop.Services.ExportImport
                     //sets the current vendor for the new product
                     if (isNew && _workContext.CurrentVendor != null)
                         product.VendorId = _workContext.CurrentVendor.Id;
-                    
+
                     product.UpdatedOnUtc = DateTime.UtcNow;
 
                     if (isNew)
@@ -953,7 +962,7 @@ namespace Nop.Services.ExportImport
                         _productService.AddStockQuantityHistoryEntry(product, product.StockQuantity - previousStockQuantity, product.StockQuantity,
                             product.WarehouseId, _localizationService.GetResource("Admin.StockQuantityHistory.Messages.ImportProduct.Edit"));
                     }
-                    //warehouse is changed 
+                    //warehouse is changed
                     else
                     {
                         //compose a message
@@ -989,7 +998,7 @@ namespace Nop.Services.ExportImport
                     tempProperty = manager.GetProperty("Categories");
 
                     if (tempProperty != null)
-                    { 
+                    {
                         var categoryNames = tempProperty.StringValue;
 
                         //category mappings
@@ -999,7 +1008,7 @@ namespace Nop.Services.ExportImport
                         {
                             if (categories.Any(c => c == categoryId))
                                 continue;
-                       
+
                             var productCategory = new ProductCategory
                             {
                                 ProductId = product.Id,
@@ -1079,7 +1088,7 @@ namespace Nop.Services.ExportImport
                     //_productService.UpdateHasTierPricesProperty(product);
                     //_productService.UpdateHasDiscountsApplied(product);
                 }
-               
+
                 if (_mediaSettings.ImportProductImagesUsingHash && _pictureService.StoreInDb && _dataProvider.SupportedLengthOfBinaryHash() > 0)
                     ImportProductImagesUsingHash(productPictureMetadata, allProductsBySku);
                 else
@@ -1089,7 +1098,7 @@ namespace Nop.Services.ExportImport
                 _customerActivityService.InsertActivity("ImportProducts", _localizationService.GetResource("ActivityLog.ImportProducts"), countProductsInFile);
             }
         }
-        
+
         /// <summary>
         /// Import newsletter subscribers from TXT file
         /// </summary>

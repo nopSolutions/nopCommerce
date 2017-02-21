@@ -510,17 +510,21 @@ namespace Nop.Admin.Controllers
             //shipping
             model.OrderShippingInclTax = _priceFormatter.FormatShippingPrice(order.OrderShippingInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true);
             model.OrderShippingExclTax = _priceFormatter.FormatShippingPrice(order.OrderShippingExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false);
+            model.OrderShippingNonTaxable = _priceFormatter.FormatPrice(order.OrderShippingNonTaxable, true, false);
             model.OrderShippingInclTaxValue = order.OrderShippingInclTax;
             model.OrderShippingExclTaxValue = order.OrderShippingExclTax;
+            model.OrderShippingNonTaxableValue = order.OrderShippingNonTaxable;
 
             //payment method additional fee
             if (order.PaymentMethodAdditionalFeeInclTax > decimal.Zero)
             {
                 model.PaymentMethodAdditionalFeeInclTax = _priceFormatter.FormatPaymentMethodAdditionalFee(order.PaymentMethodAdditionalFeeInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true);
                 model.PaymentMethodAdditionalFeeExclTax = _priceFormatter.FormatPaymentMethodAdditionalFee(order.PaymentMethodAdditionalFeeExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false);
+                model.PaymentMethodAdditionalFeeNonTaxable = _priceFormatter.FormatPaymentMethodAdditionalFee(order.PaymentMethodAdditionalFeeNonTaxable, true, primaryStoreCurrency, _workContext.WorkingLanguage, false);
             }
             model.PaymentMethodAdditionalFeeInclTaxValue = order.PaymentMethodAdditionalFeeInclTax;
             model.PaymentMethodAdditionalFeeExclTaxValue = order.PaymentMethodAdditionalFeeExclTax;
+            model.PaymentMethodAdditionalFeeNonTaxableValue = order.PaymentMethodAdditionalFeeNonTaxable;
 
 
             //tax
@@ -536,7 +540,7 @@ namespace Nop.Admin.Controllers
                     Amount = _priceFormatter.FormatPrice(tr.Value.Amount, true, false),
                     DiscountAmount = _priceFormatter.FormatPrice(tr.Value.DiscountAmount, true, false),
                     BaseAmount = _priceFormatter.FormatPrice(tr.Value.BaseAmount, true, false),
-                    VatAmount = _priceFormatter.FormatPrice(tr.Value.VatAmount, true, false),
+                    TaxAmount = _priceFormatter.FormatPrice(tr.Value.TaxAmount, true, false),
                 });
             }
             model.DisplayTaxRates = displayTaxRates;
@@ -546,8 +550,12 @@ namespace Nop.Admin.Controllers
 
             //discount
             if (order.OrderDiscount > 0)
+            {
                 model.OrderTotalDiscount = _priceFormatter.FormatPrice(-order.OrderDiscount, true, false);
+                model.OrderTotalDiscountIncl = _priceFormatter.FormatPrice(-order.OrderDiscountIncl, true, false);
+            }
             model.OrderTotalDiscountValue = order.OrderDiscount;
+            model.OrderTotalDiscountInclValue = order.OrderDiscountIncl;
 
             //gift cards
             foreach (var gcuh in order.GiftCardUsageHistory)
@@ -573,6 +581,10 @@ namespace Nop.Admin.Controllers
             model.OrderAmountValue = order.OrderAmount;
             model.OrderAmountIncl = _priceFormatter.FormatPrice(order.OrderAmountIncl, true, false);
             model.OrderAmountInclValue = order.OrderAmountIncl;
+            model.EarnedRewardPointsBaseAmountExcl = _priceFormatter.FormatPrice(order.EarnedRewardPointsBaseAmountExcl, true, primaryStoreCurrency, _workContext.WorkingLanguage, false);
+            model.EarnedRewardPointsBaseAmountExclValue = order.EarnedRewardPointsBaseAmountExcl;
+            model.EarnedRewardPointsBaseAmountIncl = _priceFormatter.FormatPrice(order.EarnedRewardPointsBaseAmountIncl, true, primaryStoreCurrency, _workContext.WorkingLanguage, true);
+            model.EarnedRewardPointsBaseAmountInclValue = order.EarnedRewardPointsBaseAmountIncl;
 
             //refunded amount
             if (order.RefundedAmount > decimal.Zero)
@@ -675,6 +687,7 @@ namespace Nop.Admin.Controllers
             model.BillingAddress.CountryEnabled = _addressSettings.CountryEnabled;
             model.BillingAddress.CountryRequired = _addressSettings.CountryEnabled; //country is required when enabled
             model.BillingAddress.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
+            model.BillingAddress.StateProvinceRequired = _addressSettings.StateProvinceEnabled; //province is required when enabled
             model.BillingAddress.CityEnabled = _addressSettings.CityEnabled;
             model.BillingAddress.CityRequired = _addressSettings.CityRequired;
             model.BillingAddress.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
@@ -709,6 +722,7 @@ namespace Nop.Admin.Controllers
                     model.ShippingAddress.CountryEnabled = _addressSettings.CountryEnabled;
                     model.ShippingAddress.CountryRequired = _addressSettings.CountryEnabled; //country is required when enabled
                     model.ShippingAddress.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
+                    model.ShippingAddress.StateProvinceRequired = _addressSettings.StateProvinceEnabled;//province is required when enabled
                     model.ShippingAddress.CityEnabled = _addressSettings.CityEnabled;
                     model.ShippingAddress.CityRequired = _addressSettings.CityRequired;
                     model.ShippingAddress.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
@@ -769,7 +783,7 @@ namespace Nop.Admin.Controllers
                     DownloadCount = orderItem.DownloadCount,
                     DownloadActivationType = orderItem.Product.DownloadActivationType,
                     IsDownloadActivated = orderItem.IsDownloadActivated,
-                    VatRate = orderItem.VatRate
+                    TaxRate = orderItem.TaxRate
                 };
                 //picture
                 var orderItemPicture = orderItem.Product.GetProductPicture(orderItem.AttributesXml, _pictureService, _productAttributeParser);
@@ -864,7 +878,7 @@ namespace Nop.Admin.Controllers
                 SubTotalExclTax = presetPriceExclTax,
                 SubTotalInclTax = presetPriceInclTax,
                 AutoUpdateOrderTotals = _orderSettings.AutoUpdateOrderTotalsOnEditingOrder,
-                VatRate = taxRate
+                TaxRate = taxRate
             };
 
             //attributes
@@ -1191,7 +1205,7 @@ namespace Nop.Admin.Controllers
                     {
                         Id = x.Id,
                         StoreName = store != null ? store.Name : "Unknown",
-                        OrderTotal = _priceFormatter.FormatPrice(x.OrderTotal, true, false),
+                        OrderTotal = _priceFormatter.FormatPrice(x.OrderAmountIncl, true, false),
                         OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
                         OrderStatusId = x.OrderStatusId,
                         PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
@@ -2142,14 +2156,19 @@ namespace Nop.Admin.Controllers
             order.OrderSubTotalDiscountExclTax = model.OrderSubTotalDiscountExclTaxValue;
             order.OrderShippingInclTax = model.OrderShippingInclTaxValue;
             order.OrderShippingExclTax = model.OrderShippingExclTaxValue;
+            order.OrderShippingNonTaxable = model.OrderShippingNonTaxableValue;
             order.PaymentMethodAdditionalFeeInclTax = model.PaymentMethodAdditionalFeeInclTaxValue;
             order.PaymentMethodAdditionalFeeExclTax = model.PaymentMethodAdditionalFeeExclTaxValue;
+            order.PaymentMethodAdditionalFeeNonTaxable = model.PaymentMethodAdditionalFeeNonTaxableValue;
             order.TaxRates = model.TaxRatesValue;
             order.OrderTax = model.TaxValue;
             order.OrderDiscount = model.OrderTotalDiscountValue;
             order.OrderTotal = model.OrderTotalValue;
             order.OrderAmount = model.OrderAmountValue;
             order.OrderAmountIncl = model.OrderAmountInclValue;
+            order.OrderDiscountIncl = model.OrderTotalDiscountInclValue;
+            order.EarnedRewardPointsBaseAmountExcl = model.EarnedRewardPointsBaseAmountExclValue;
+            order.EarnedRewardPointsBaseAmountIncl = model.EarnedRewardPointsBaseAmountInclValue;
             _orderService.UpdateOrder(order);
 
             //add a note
@@ -2285,7 +2304,7 @@ namespace Nop.Admin.Controllers
 
 
             decimal unitPriceInclTax, unitPriceExclTax, discountInclTax, discountExclTax,priceInclTax,priceExclTax;
-            int quantity; decimal vatrate;
+            int quantity; decimal taxrate;
             if (!decimal.TryParse(form["pvUnitPriceInclTax" + orderItemId], out unitPriceInclTax))
                 unitPriceInclTax = orderItem.UnitPriceInclTax;
             if (!decimal.TryParse(form["pvUnitPriceExclTax" + orderItemId], out unitPriceExclTax))
@@ -2300,8 +2319,8 @@ namespace Nop.Admin.Controllers
                 priceInclTax = orderItem.PriceInclTax;
             if (!decimal.TryParse(form["pvPriceExclTax" + orderItemId], out priceExclTax))
                 priceExclTax = orderItem.PriceExclTax;
-            if (!decimal.TryParse(form["pvVatRate" + orderItemId], out vatrate))
-                vatrate = orderItem.VatRate;
+            if (!decimal.TryParse(form["pvTaxRate" + orderItemId], out taxrate))
+                taxrate = orderItem.TaxRate;
 
             if (quantity > 0)
             {
@@ -2316,7 +2335,7 @@ namespace Nop.Admin.Controllers
                     orderItem.DiscountAmountExclTax = discountExclTax;
                     orderItem.PriceInclTax = priceInclTax;
                     orderItem.PriceExclTax = priceExclTax;
-                    orderItem.VatRate = vatrate;
+                    orderItem.TaxRate = taxrate;
                     _orderService.UpdateOrder(order);
                 }
 
@@ -2347,7 +2366,7 @@ namespace Nop.Admin.Controllers
                 SubTotalInclTax = priceInclTax,
                 SubTotalExclTax = priceExclTax,
                 Quantity = quantity,
-                VatRate = vatrate
+                TaxRate = taxrate
             };
             _orderProcessingService.UpdateOrderTotals(updateOrderParameters);
 
@@ -2736,8 +2755,8 @@ namespace Nop.Admin.Controllers
             decimal.TryParse(form["SubTotalInclTax"], out priceInclTax);
             decimal priceExclTax;
             decimal.TryParse(form["SubTotalExclTax"], out priceExclTax);
-            decimal vatRate;
-            decimal.TryParse(form["VatRate"], out vatRate);
+            decimal taxRate;
+            decimal.TryParse(form["TaxRate"], out taxRate);
 
             //warnings
             var warnings = new List<string>();
@@ -2754,6 +2773,8 @@ namespace Nop.Admin.Controllers
                     1, ref attributesXml, 0,
                     null, null,
                     true, out discountAmount, out scDiscounts);
+
+            decimal price = _taxService.GetProductPrice(product, 0, finalPrice, _workContext.TaxDisplayType == TaxDisplayType.IncludingTax, _workContext.CurrentCustomer, _taxSettings.PricesIncludeTax, out taxRate, ref attributesXml);
 
             #region Gift cards
 
@@ -2842,7 +2863,7 @@ namespace Nop.Admin.Controllers
                     LicenseDownloadId = 0,
                     RentalStartDateUtc = rentalStartDate,
                     RentalEndDateUtc = rentalEndDate,
-                    VatRate = vatRate
+                    TaxRate = taxRate
                 };
                 order.OrderItems.Add(orderItem);
                 _orderService.UpdateOrder(order);
@@ -2861,7 +2882,7 @@ namespace Nop.Admin.Controllers
                     SubTotalInclTax = priceInclTax,
                     SubTotalExclTax = priceExclTax,
                     Quantity = quantity,
-                    VatRate = vatRate
+                    TaxRate = taxRate
                 };
                 _orderProcessingService.UpdateOrderTotals(updateOrderParameters);
 
@@ -2948,6 +2969,7 @@ namespace Nop.Admin.Controllers
             model.Address.CountryEnabled = _addressSettings.CountryEnabled;
             model.Address.CountryRequired = _addressSettings.CountryEnabled; //country is required when enabled
             model.Address.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
+            model.Address.StateProvinceRequired = _addressSettings.StateProvinceEnabled; //province is required when enabled
             model.Address.CityEnabled = _addressSettings.CityEnabled;
             model.Address.CityRequired = _addressSettings.CityRequired;
             model.Address.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
@@ -3041,6 +3063,7 @@ namespace Nop.Admin.Controllers
             model.Address.CountryEnabled = _addressSettings.CountryEnabled;
             model.Address.CountryRequired = _addressSettings.CountryEnabled; //country is required when enabled
             model.Address.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
+            model.Address.StateProvinceRequired = _addressSettings.StateProvinceEnabled; //province is required when enabled
             model.Address.CityEnabled = _addressSettings.CityEnabled;
             model.Address.CityRequired = _addressSettings.CityRequired;
             model.Address.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;

@@ -51,12 +51,12 @@ namespace Nop.Core.Domain.Orders
                         decimal rate = decimal.Parse(taxes[0].Trim(), CultureInfo.InvariantCulture);
                         taxRatesDictionary.Add(rate, new TaxRateRec()
                         {
-                            VatRate = rate,
+                            TaxRate = rate,
                             Amount = decimal.Parse(taxes[1].Trim(), CultureInfo.InvariantCulture),
                             DiscountAmount = decimal.Parse(taxes[2].Trim(), CultureInfo.InvariantCulture),
                             BaseAmount = decimal.Parse(taxes[3].Trim(), CultureInfo.InvariantCulture),
-                            VatAmount = decimal.Parse(taxes[4].Trim(), CultureInfo.InvariantCulture),
-                            AmountIncludingVAT = decimal.Parse(taxes[5].Trim(), CultureInfo.InvariantCulture)
+                            TaxAmount = decimal.Parse(taxes[4].Trim(), CultureInfo.InvariantCulture),
+                            AmountIncludingTax = decimal.Parse(taxes[5].Trim(), CultureInfo.InvariantCulture)
                         });
                     }
                     catch (Exception exc)
@@ -70,12 +70,12 @@ namespace Nop.Core.Domain.Orders
             if (!taxRatesDictionary.Any())
                 taxRatesDictionary.Add(decimal.Zero, new TaxRateRec()
                 {
-                    VatRate = decimal.Zero,
+                    TaxRate = decimal.Zero,
                     Amount = decimal.Zero,
                     DiscountAmount = decimal.Zero,
                     BaseAmount = decimal.Zero,
-                    VatAmount = decimal.Zero,
-                    AmountIncludingVAT = decimal.Zero
+                    TaxAmount = decimal.Zero,
+                    AmountIncludingTax = decimal.Zero
                 });
 
             return taxRatesDictionary;
@@ -183,13 +183,18 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the order shipping (incl tax)
         /// </summary>
+        /// 
         public decimal OrderShippingInclTax { get; set; }
-
         /// <summary>
         /// Gets or sets the order shipping (excl tax)
         /// </summary>
+        /// 
         public decimal OrderShippingExclTax { get; set; }
 
+        /// Gets or sets the order shipping (non taxable)
+        /// </summary>
+        public decimal OrderShippingNonTaxable { get; set; }
+        
         /// <summary>
         /// Gets or sets the payment method additional fee (incl tax)
         /// </summary>
@@ -200,6 +205,10 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public decimal PaymentMethodAdditionalFeeExclTax { get; set; }
 
+        /// <summary>
+        /// Gets or sets the payment method additional fee (non taxable)
+        /// </summary>
+        public decimal PaymentMethodAdditionalFeeNonTaxable { get; set; }
         /// <summary>
         /// Gets or sets the tax rates
         /// </summary>
@@ -373,6 +382,25 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the order total amount incl. tax
         /// </summary>
         public decimal OrderAmountIncl { get; set; } //MF 09.12.16
+        /// <summary>
+        /// Gets or sets the order total discount amount incl. tax
+        /// </summary>
+        public decimal OrderDiscountIncl { get; set; }
+        /// <summary>
+        /// Gets or sets the order total earned reward points base amount incl. tax
+        /// </summary>
+        public decimal EarnedRewardPointsBaseAmountIncl { get; set; }
+        /// <summary>
+        /// Gets or sets the order total earned reward points base amount excl. tax
+        /// </summary>
+        public decimal EarnedRewardPointsBaseAmountExcl { get; set; }
+        /// <summary>
+        /// Gets or sets the custom order number without prefix
+        /// </summary>
+        public string CustomOrderNumber { get; set; }
+        /// <summary>
+
+
         #endregion
 
         #region Navigation properties
@@ -528,12 +556,12 @@ namespace Nop.Core.Domain.Orders
     #region Nested classes
     public partial class TaxRateRec
     {
-        public decimal VatRate { get; set; }
+        public decimal TaxRate { get; set; }
         public decimal Amount { get; set; }
         public decimal DiscountAmount { get; set; }
         public decimal BaseAmount { get; set; }
-        public decimal VatAmount { get; set; }
-        public decimal AmountIncludingVAT { get; set; }
+        public decimal TaxAmount { get; set; }
+        public decimal AmountIncludingTax { get; set; }
     }
     #endregion
 }

@@ -893,7 +893,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.ActivatePointsImmediately, mo => mo.Ignore())
                     .ForMember(dest => dest.DisplayHowMuchWillBeEarned_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.PageSize_OverrideForStore, mo => mo.Ignore())
-                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                    .ForMember(dest => dest.EarnedRewardPointsAreTaxable_OverrideForStore, mo => mo.Ignore());
                 cfg.CreateMap<RewardPointsSettingsModel, RewardPointsSettings>();
                 cfg.CreateMap<OrderSettings, OrderSettingsModel>()
                     .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())
@@ -950,7 +951,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                 cfg.CreateMap<ShoppingCartSettingsModel, ShoppingCartSettings>()
                     .ForMember(dest => dest.RoundPricesDuringCalculation, mo => mo.Ignore())
                     .ForMember(dest => dest.GroupTierPricesForDistinctShoppingCartItems, mo => mo.Ignore())
-                    .ForMember(dest => dest.RenderAssociatedAttributeValueQuantity, mo => mo.Ignore());
+                    .ForMember(dest => dest.RenderAssociatedAttributeValueQuantity, mo => mo.Ignore())
+                    .ForMember(dest => dest.RenderProductAttributePrices, mo => mo.Ignore());
                 cfg.CreateMap<MediaSettings, MediaSettingsModel>()
                     .ForMember(dest => dest.PicturesStoredIntoDatabase, mo => mo.Ignore())
                     .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())

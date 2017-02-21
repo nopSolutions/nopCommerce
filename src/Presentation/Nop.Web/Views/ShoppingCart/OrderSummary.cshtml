@@ -76,8 +76,8 @@
                        <th class="quantity">
                            @T("ShoppingCart.Quantity")
                        </th>
-                       <th class="vatrate">
-                           @T("ShoppingCart.VatRate")
+                       <th class="taxrate">
+                           @T("ShoppingCart.TaxRate")
                        </th>
                        <th class="subtotal">
                            @T("ShoppingCart.ItemTotal")
@@ -135,6 +135,12 @@
                                        @Html.Raw(item.RentalInfo)
                                    </div>
                                }
+                               @if (item.ExcludeFromRewardPoints)
+                               {
+                                   <div class="excluded-from-rewardpoints">
+                                       @T("Products.ExcludeFromRewardPoints")
+                                   </div>
+                               }
                                @if (Model.IsEditable && item.AllowItemEditing)
                                {
                                    var editCartItemUrl = Url.RouteUrl("Product", new {SeName = item.ProductSeName});
@@ -183,10 +189,9 @@
                                     <span class="product-quantity">@item.Quantity</span>
                                }
                            </td>
-                           <td class="vat-rate">
-                               <label class="td-title">@T("ShoppingCart.VatRate"):</label>
-                               @*<span class="product-vatrate">@item.VatRate.ToString("G29")</span>*@
-                               <span class="product-vatrate">@item.VatRate</span>
+                           <td class="tax-rate">
+                               <label class="td-title">@T("ShoppingCart.TaxRate"):</label>
+                               <span class="product-taxrate">@item.TaxRate</span>
                            </td>
                            <td class="subtotal">
                                <label class="td-title">@T("ShoppingCart.ItemTotal"):</label>
