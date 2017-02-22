@@ -376,12 +376,12 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.No)]
         //available even when a store is closed
         [StoreClosed(true)]
-        public virtual ActionResult SitemapXml()
+        public virtual ActionResult SitemapXml(int? id)
         {
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
             
-            var siteMap = _commonModelFactory.PrepareSitemapXml(this.Url);
+            var siteMap = _commonModelFactory.PrepareSitemapXml(this.Url, id);
             return Content(siteMap, "text/xml");
         }
 

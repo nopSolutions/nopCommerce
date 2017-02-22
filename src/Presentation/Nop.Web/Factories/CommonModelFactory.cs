@@ -497,13 +497,13 @@ namespace Nop.Web.Factories
             return cachedModel;
         }
 
-        public virtual string PrepareSitemapXml(UrlHelper url)
+        public virtual string PrepareSitemapXml(UrlHelper url, int? id)
         {
-            string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_SEO_MODEL_KEY,
+            string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_SEO_MODEL_KEY, id,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            var siteMap = _cacheManager.Get(cacheKey, () => _sitemapGenerator.Generate(url));
+            var siteMap = _cacheManager.Get(cacheKey, () => _sitemapGenerator.Generate(url, id));
             return siteMap;
         }
         
