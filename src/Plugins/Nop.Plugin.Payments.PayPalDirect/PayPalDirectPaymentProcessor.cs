@@ -365,8 +365,10 @@ namespace Nop.Plugin.Payments.PayPalDirect
             var shippingTotal = shipping.HasValue ? shipping.Value : 0;
 
             //get tax total
+            TaxSummary taxSummary;
             SortedDictionary<decimal, decimal> taxRatesDictionary;
-            var taxTotal = _orderTotalCalculationService.GetTaxTotal(shoppingCart, out taxRatesDictionary);
+            var taxTotal = _orderTotalCalculationService.GetTaxTotal(shoppingCart, out taxSummary);
+            taxRatesDictionary = taxSummary.GenerateOldTaxrateDict();
 
             //get subtotal
             var subTotal = decimal.Zero;
