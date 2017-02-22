@@ -127,7 +127,7 @@
                                         @Html.ValidationMessageFor(model => model.ActivationDelay)
                                     </div>
                                     <div class="col-md-3">
-                                        @Html.NopDropDownListFor(model => model.ActivationDelayPeriodId, ((RewardPointsActivatingDelayPeriod)Model.ActivationDelayPeriodId).ToSelectList(), new { style = "max-width: 200px;" })
+                                        @Html.NopDropDownListFor(model => model.ActivationDelayPeriodId, ((RewardPointsActivatingDelayPeriod)Model.ActivationDelayPeriodId).ToSelectList(), htmlAttributes: new { style = "max-width: 200px;" })
                                         @Html.ValidationMessageFor(model => model.ActivationDelayPeriodId)
                                     </div>
                                 </div>

@@ -227,7 +227,12 @@
                     @Html.NopLabelFor(model => model.SelectedCustomerRoleIds)
                 </div>
                 <div class="col-md-9">
-                    @Html.EditorFor(model => model.SelectedCustomerRoleIds, new {SelectList = Model.AvailableCustomerRoles})
+                    <div class="input-group input-group-required">
+                        @Html.EditorFor(model => model.SelectedCustomerRoleIds, new { SelectList = Model.AvailableCustomerRoles })
+                        <div class="input-group-btn">
+                            @Html.RequiredHint()
+                        </div>
+                    </div>
                     <script>
                         $(document).ready(function() {
                             var customerRolesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");

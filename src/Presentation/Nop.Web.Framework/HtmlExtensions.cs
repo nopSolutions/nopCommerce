@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
@@ -403,7 +404,8 @@ namespace Nop.Web.Framework
         }
 
         public static MvcHtmlString NopEditorFor<TModel, TValue>(this HtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression, string postfix = "", bool? renderFormControlClass = null)
+            Expression<Func<TModel, TValue>> expression, string postfix = "", bool required = false,
+            bool? renderFormControlClass = null)
         {
             var result = new StringBuilder();
 
@@ -411,29 +413,20 @@ namespace Nop.Web.Framework
             var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
             if ((!renderFormControlClass.HasValue && metadata.ModelType.Name.Equals("String")) ||
                 (renderFormControlClass.HasValue && renderFormControlClass.Value))
-                htmlAttributes = new { @class = "form-control" };
+                htmlAttributes = new {@class = "form-control"};
 
-            result.Append(helper.EditorFor(expression, new { htmlAttributes, postfix }));
+            if (required)
+                result.AppendFormat(
+                    "<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>",
+                    helper.EditorFor(expression, new {htmlAttributes, postfix}));
+            else
+                result.Append(helper.EditorFor(expression, new {htmlAttributes, postfix}));
 
             return MvcHtmlString.Create(result.ToString());
         }
 
         public static MvcHtmlString NopDropDownList<TModel>(this HtmlHelper<TModel> helper, string name,
-            IEnumerable<SelectListItem> itemList, object htmlAttributes = null, bool renderFormControlClass = true)
-        {
-            var result = new StringBuilder();
-
-            var attrs = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            if (renderFormControlClass)
-                attrs = AddFormControlClassToHtmlAttributes(attrs);
-
-            result.Append(helper.DropDownList(name, itemList, attrs));
-
-            return MvcHtmlString.Create(result.ToString());
-        }
-
-        public static MvcHtmlString NopDropDownListFor<TModel, TValue>(this HtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression, IEnumerable<SelectListItem> itemList,
+            IEnumerable<SelectListItem> itemList, bool required = false, 
             object htmlAttributes = null, bool renderFormControlClass = true)
         {
             var result = new StringBuilder();
@@ -442,13 +435,38 @@ namespace Nop.Web.Framework
             if (renderFormControlClass)
                 attrs = AddFormControlClassToHtmlAttributes(attrs);
 
-            result.Append(helper.DropDownListFor(expression, itemList, attrs));
+            if (required)
+                result.AppendFormat(
+                    "<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>",
+                    helper.DropDownList(name, itemList, attrs));
+            else
+                result.Append(helper.DropDownList(name, itemList, attrs));
+
+            return MvcHtmlString.Create(result.ToString());
+        }
+
+        public static MvcHtmlString NopDropDownListFor<TModel, TValue>(this HtmlHelper<TModel> helper,
+            Expression<Func<TModel, TValue>> expression, IEnumerable<SelectListItem> itemList,
+            bool required = false, object htmlAttributes = null, bool renderFormControlClass = true)
+        {
+            var result = new StringBuilder();
+
+            var attrs = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+            if (renderFormControlClass)
+                attrs = AddFormControlClassToHtmlAttributes(attrs);
+
+            if (required)
+                result.AppendFormat(
+                    "<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>",
+                    helper.DropDownListFor(expression, itemList, attrs));
+            else
+                result.Append(helper.DropDownListFor(expression, itemList, attrs));
 
             return MvcHtmlString.Create(result.ToString());
         }
 
         public static MvcHtmlString NopTextAreaFor<TModel, TValue>(this HtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression, object htmlAttributes = null,
+            Expression<Func<TModel, TValue>> expression, bool required = false, object htmlAttributes = null,
             bool renderFormControlClass = true, int rows = 4, int columns = 20)
         {
             var result = new StringBuilder();
@@ -457,7 +475,12 @@ namespace Nop.Web.Framework
             if (renderFormControlClass)
                 attrs = AddFormControlClassToHtmlAttributes(attrs);
 
-            result.Append(helper.TextAreaFor(expression, rows, columns, attrs));
+            if (required)
+                result.AppendFormat(
+                    "<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>",
+                    helper.TextAreaFor(expression, rows, columns, attrs));
+            else
+                result.Append(helper.TextAreaFor(expression, rows, columns, attrs));
 
             return MvcHtmlString.Create(result.ToString());
         }

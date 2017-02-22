@@ -46,7 +46,7 @@
                         @Html.NopLabelFor(model => model.Name)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.Name)
+                        @Html.NopEditorFor(model => model.Name, required: true)
                         @Html.ValidationMessageFor(model => model.Name)
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                         @Html.NopLabelFor(model => model.UniqueSeoCode)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.UniqueSeoCode)
+                        @Html.NopEditorFor(model => model.UniqueSeoCode, required: true)
                         @Html.ValidationMessageFor(model => model.UniqueSeoCode)
                     </div>
                 </div>

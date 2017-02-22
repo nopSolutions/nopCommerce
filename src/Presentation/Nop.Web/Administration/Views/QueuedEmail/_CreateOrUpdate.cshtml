@@ -21,7 +21,7 @@
                             @Html.NopLabelFor(model => model.From)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.From)
+                            @Html.NopEditorFor(model => model.From, required: true)
                             @Html.ValidationMessageFor(model => model.From)
                         </div>
                     </div>
@@ -39,7 +39,7 @@
                             @Html.NopLabelFor(model => model.To)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.To)
+                            @Html.NopEditorFor(model => model.To, required: true)
                             @Html.ValidationMessageFor(model => model.To)
                         </div>
                     </div>

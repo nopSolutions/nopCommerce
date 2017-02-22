@@ -13,7 +13,7 @@
                             @Html.NopLabelFor(model => model.ForumGroupId)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopDropDownListFor(model => model.ForumGroupId, new SelectList(Model.ForumGroups, "Id", "Name"))
+                            @Html.NopDropDownListFor(model => model.ForumGroupId, new SelectList(Model.ForumGroups, "Id", "Name"), required: true)
                             @Html.ValidationMessageFor(model => model.ForumGroupId)
                         </div>
                     </div>
@@ -22,7 +22,7 @@
                             @Html.NopLabelFor(model => model.Name)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.Name)
+                            @Html.NopEditorFor(model => model.Name, required: true)
                             @Html.ValidationMessageFor(model => model.Name)
                         </div>
                     </div>

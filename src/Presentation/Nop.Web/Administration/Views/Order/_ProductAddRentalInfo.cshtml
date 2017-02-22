@@ -13,15 +13,19 @@
 
                 <div class="form-group">
                     <div class="col-md-3">
-                        <span class="required">*</span>
                         <div class="label-wrapper">
                             <label class="control-label">
                                 @T("Products.RentalStartDate")
                             </label>
                         </div>
                     </div>
-                    <div class="col-md-9">
-                        <input id="@(startDateControlId)" name="@(startDateControlId)" type="text" class="form-control"/>
+                    <div class="col-md-4">
+                        <div class="input-group input-group-required">
+                            <input id="@(startDateControlId)" name="@(startDateControlId)" type="text" class="form-control" />
+                            <div class="input-group-btn">
+                                @Html.RequiredHint()
+                            </div>
+                        </div>
                         <script>
                             $(document).ready(function() {
                                 $("#@(startDateControlId)").datepicker({ dateFormat: "@datePickerFormat" });
@@ -31,15 +35,19 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        <span class="required">*</span>
                         <div class="label-wrapper">
                             <label class="control-label">
                                 @T("Products.RentalEndDate")
                             </label>
                         </div>
                     </div>
-                    <div class="col-md-9">
-                        <input id="@(endDateControlId)" name="@(endDateControlId)" type="text" class="form-control"/>
+                    <div class="col-md-4">
+                        <div class="input-group input-group-required">
+                            <input id="@(endDateControlId)" name="@(endDateControlId)" type="text" class="form-control" />
+                            <div class="input-group-btn">
+                                @Html.RequiredHint()
+                            </div>
+                        </div>
                         <script>
                             $(document).ready(function() {
                                 $("#@(endDateControlId)").datepicker({ dateFormat: "@datePickerFormat" });
