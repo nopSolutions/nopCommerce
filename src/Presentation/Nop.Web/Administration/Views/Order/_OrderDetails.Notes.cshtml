@@ -74,7 +74,9 @@
                             field: "DownloadId",
                             title: "@T("Admin.Orders.OrderNotes.Fields.Download")",
                             width: 200,
-                            template: '# if(DownloadId > 0) {# <a href="@Url.Content("~/Admin/Download/DownloadFile")?downloadGuid=#=DownloadGuid#">@T("Admin.Orders.OrderNotes.Fields.Download.Link")</a> #} else {# @T("Admin.Orders.OrderNotes.Fields.Download.Link.No") #} #'
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '# if(DownloadId > 0) {# <a class="btn btn-default" href="@Url.Content("~/Admin/Download/DownloadFile")?downloadGuid=#=DownloadGuid#"><i class="fa fa-download"></i>@T("Admin.Orders.OrderNotes.Fields.Download.Link")</a> #} else {# @T("Admin.Orders.OrderNotes.Fields.Download.Link.No") #} #'
                         }, {
                             field: "DisplayToCustomer",
                             title: "@T("Admin.Orders.OrderNotes.Fields.DisplayToCustomer")",

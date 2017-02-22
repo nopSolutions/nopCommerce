@@ -3409,7 +3409,7 @@
     <Value>Check to specify a condition (depending on other attribute) when this attribute should be enabled (visible).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Condition.ViewLink">
-    <Value>View/Edit condition</Value>
+    <Value>Edit condition</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Fields.Attribute">
     <Value>Attribute</Value>
@@ -3466,7 +3466,7 @@
     <Value>Specify minimum length. Leave empty to skip this validation.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.ViewLink">
-    <Value>View/Edit rules</Value>
+    <Value>Edit rules</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values">
     <Value>Values</Value>
@@ -3592,7 +3592,7 @@
     <Value>Total: </Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.ViewLink">
-    <Value>View/Edit values</Value>
+    <Value>Edit values</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.NoAttributesAvailable">
     <Value>No product attributes available. Create at least one product attribute before mapping.</Value>

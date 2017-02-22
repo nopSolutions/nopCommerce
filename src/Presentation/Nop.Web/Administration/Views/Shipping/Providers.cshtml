@@ -113,7 +113,9 @@
                                     field: "SystemName",
                                     title: "@T("Admin.Configuration.Shipping.Providers.Configure")",
                                     width: 150,
-                                    template: '<a href="ConfigureProvider?systemName=#=SystemName#">@T("Admin.Configuration.Shipping.Providers.Configure")</a>'
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-default" href="ConfigureProvider?systemName=#=SystemName#"><i class="fa fa-cog"></i>@T("Admin.Configuration.Shipping.Providers.Configure")</a>'
                                 }, {
                                     command: {
                                         name: "edit",
@@ -124,7 +126,9 @@
                                         }
                                     },
                                     title: "@T("Admin.Common.Edit")",
-                                        width: 150
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" }
                                     }
                                 ]
                             });

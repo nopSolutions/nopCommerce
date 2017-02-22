@@ -2027,6 +2027,15 @@ set @resources='
  <LocaleResource Name="Admin.Configuration.Plugins.Description.DownloadMorePlugins">
     <Value><![CDATA[<p>You can download more nopCommerce plugins in our <a href="http://www.nopcommerce.com/marketplace.aspx?utm_source=admin-panel&utm_medium=plugins&utm_campaign=admin-panel" target="_blank">marketplace</a></p>]]></Value>
  </LocaleResource>   
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.ViewLink">
+    <Value>Edit values</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Condition.ViewLink">
+    <Value>Edit condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.ViewLink">
+    <Value>Edit rules</Value>
+  </LocaleResource>
 </Language>
 '
 
