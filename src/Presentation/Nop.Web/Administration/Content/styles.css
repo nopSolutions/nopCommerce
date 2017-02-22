@@ -1173,6 +1173,11 @@ span.grid-report-item.red {
 .bootstrap-touchspin {
     max-width: 300px;
 }
+.bootstrap-touchspin input {
+    height: auto;
+    display: table-cell !important;
+    min-height: 34px;
+}
 .bootstrap-touchspin-postfix {
     border-left: none;
 }
@@ -1181,18 +1186,21 @@ span.grid-report-item.red {
 }
 .input-group-addon.bootstrap-touchspin-postfix {
     background-color: #eee;
+    height: 34px;
 }
 .bootstrap-touchspin .input-group-btn-vertical>.btn {
     background: #fff;
     border-color: #d2d6de;
     border-radius: 0;
+    padding: 0 10px;
+    height: 18px;
 }
 .bootstrap-touchspin .input-group-btn-vertical>.btn:hover {
     border-color: #afafaf;
 }
 .bootstrap-touchspin .input-group-btn-vertical .bootstrap-touchspin-down {
-   margin-top: 0;
-   padding-bottom: 7px; 
+   margin-top: -1px;
+   height: 17px;
 }
 
 /* THROBBER */
@@ -1256,11 +1264,11 @@ span.grid-report-item.red {
     .form-horizontal .label-wrapper .ico-help {
         display: none;
     }
-    .form-horizontal .panel-popup .form-group input[type=checkbox] {
-        margin-top: 10px;
-    }
     .form-horizontal .panel-popup .ico-help  {
         display: block;
+    }
+    .form-horizontal .panel-popup .form-group input[type=checkbox] {
+        margin-top: 10px;
     }
     .form-control {
         margin-bottom: 3px;
@@ -1291,6 +1299,9 @@ span.grid-report-item.red {
     .form-horizontal .panel-popup .form-group input[type=checkbox] {
         margin-top: 10px;
     }
+    .form-horizontal span.required {
+        float: none;
+    }
     .form-group input[type=checkbox] {
         margin-top: 2px;
     }
@@ -1316,12 +1327,6 @@ span.grid-report-item.red {
 
     /* FORM ELEMENTS */
     .form-horizontal .panel-popup .label-wrapper {
-        float: none;
-    }
-    .form-horizontal .panel-popup .ico-help  {
-        display: none;
-    }
-    .form-horizontal span.required {
-        float: none;
+        float: left;
     }
 }
