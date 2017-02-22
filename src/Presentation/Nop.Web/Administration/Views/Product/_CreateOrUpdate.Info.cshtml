@@ -120,7 +120,12 @@
                 productTemplateDropddown.val(productTemplateSelectedValue);
             }
         });
-        
+
+        if ($('#@Html.FieldIdFor(model => model.ProductTemplateId) option').length > 1) {
+            $('#pnlProductTemplateId').show();
+        } else {
+            $('#pnlProductTemplateId').hide();
+        }
     }
 
     function togglePreOrder() {
@@ -491,7 +496,7 @@
                             </div>
                         </div>
                     }
-                    <div class="form-group @(Model.ProductEditorSettingsModel.ProductTemplate ? null : "advanced-setting")" @(Model.AvailableProductTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                    <div class="form-group @(Model.ProductEditorSettingsModel.ProductTemplate ? null : "advanced-setting")" @(Model.AvailableProductTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null) id="pnlProductTemplateId">
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.ProductTemplateId)
                         </div>
