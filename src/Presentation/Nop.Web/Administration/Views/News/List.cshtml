@@ -101,10 +101,12 @@
                                     }, {
                                         field: "LanguageName",
                                         title: "@T("Admin.ContentManagement.News.NewsItems.Fields.Language")",
-                                        width: 200,
+                                        width: 200
                                     }, {
                                         title: "@T("Admin.ContentManagement.News.NewsItems.Fields.Comments")",
-                                        template: '<a href="Comments?filterByNewsItemId=#=Id#">@T("Admin.ContentManagement.News.NewsItems.Fields.Comments") - #=ApprovedComments + NotApprovedComments# (#=NotApprovedComments#)</a>'
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-default" href="Comments?filterByNewsItemId=#=Id#">@T("Admin.ContentManagement.News.NewsItems.Fields.Comments") - #=ApprovedComments + NotApprovedComments# (#=NotApprovedComments#)</a>'
                                     }, {
                                         field: "StartDate",
                                         title: "@T("Admin.ContentManagement.News.NewsItems.Fields.StartDate")",

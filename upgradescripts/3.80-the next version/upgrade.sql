@@ -1997,6 +1997,15 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.Discounts.IgnoreDiscounts.Warning">
     <Value>In order to use this functionality you have to disable the following setting: Configuration > Catalog settings > Ignore discounts (sitewide).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.ViewLink">
+    <Value>Edit values</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Condition.ViewLink">
+    <Value>Edit condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.ViewLink">
+    <Value>Edit rules</Value>
+  </LocaleResource>
 </Language>
 '
 

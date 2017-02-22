@@ -114,7 +114,9 @@
                                     field: "SystemName",
                                     title: "@T("Admin.Configuration.Shipping.PickupPointProviders.Configure")",
                                     width: 150,
-                                    template: '<a href="ConfigurePickupPointProvider?systemName=#=SystemName#">@T("Admin.Configuration.Shipping.PickupPointProviders.Configure")</a>'
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-default" href="ConfigurePickupPointProvider?systemName=#=SystemName#"><i class="fa fa-cog"></i>@T("Admin.Configuration.Shipping.PickupPointProviders.Configure")</a>'
                                 }, {
                                     command: {
                                         name: "edit",
@@ -125,7 +127,9 @@
                                         }
                                     },
                                     title: "@T("Admin.Common.Edit")",
-                                        width: 150
+                                    width: 150,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" }
                                     }
                                 ]
                             });
