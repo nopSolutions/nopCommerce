@@ -227,16 +227,13 @@ namespace Nop.Admin.Controllers
             var templatesModel = _productTemplateService.GetAllProductTemplates()
                 .Select(x => x.ToModel())
                 .ToList();
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = templatesModel,
                 Total = templatesModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]

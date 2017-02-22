@@ -174,10 +174,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = blogPosts.TotalCount
             };
-			return new JsonResult
-			{
-				Data = gridModel
-			};
+
+            return Json(gridModel);
 		}
         
         public virtual ActionResult Create()

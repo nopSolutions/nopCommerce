@@ -1209,11 +1209,9 @@ namespace Nop.Admin.Controllers
                 aggregatortax = _priceFormatter.FormatPrice(reportSummary.SumTax, true, false),
                 aggregatortotal = _priceFormatter.FormatPrice(reportSummary.SumOrders, true, false)
             };
-			return new JsonResult
-			{
-				Data = gridModel
-			};
-		}
+
+            return Json(gridModel);
+        }
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("go-to-order-by-number")]
@@ -2993,11 +2991,9 @@ namespace Nop.Admin.Controllers
                 Data = shipments.Select(shipment => PrepareShipmentModel(shipment, false)),
                 Total = shipments.TotalCount
             };
-			return new JsonResult
-			{
-				Data = gridModel
-			};
-		}
+
+            return Json(gridModel);
+        }
 
         [HttpPost]
         public virtual ActionResult ShipmentsByOrder(int orderId, DataSourceRequest command)

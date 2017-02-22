@@ -4663,3 +4663,11 @@ END
 CLOSE cursor_defaultGroup
 DEALLOCATE cursor_defaultGroup
 GO
+
+ --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'adminareasettings.useisodatetimeconverterinjson')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'adminareasettings.useisodatetimeconverterinjson', N'True', 0)
+END
+GO
