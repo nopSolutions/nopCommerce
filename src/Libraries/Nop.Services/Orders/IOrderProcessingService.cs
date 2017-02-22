@@ -277,5 +277,10 @@ namespace Nop.Services.Orders
         /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
         /// <returns>true - OK; false - minimum order total amount is not reached</returns>
         bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool? useRewardPoints = null);
+        /// <summary>
+        /// Get next Invoice ID and store settings
+        /// </summary>
+        /// <returns></returns>
+        string GetInvoiceId(int storeId);
     }
 }

@@ -1118,6 +1118,7 @@ namespace Nop.Admin.Controllers
                 model.ReturnRequestNumberMask_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.ReturnRequestNumberMask, storeScope);
                 model.NumberOfDaysReturnRequestAvailable_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.NumberOfDaysReturnRequestAvailable, storeScope);
                 model.CustomOrderNumberMask_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.CustomOrderNumberMask, storeScope);
+                model.InvoiceIdent_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.InvoiceIdent, storeScope); //model.InvoiceYear_OverrideForStore set by model.InvoiceIdent_OverrideForStore
                 model.ExportWithProducts_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.ExportWithProducts, storeScope);
             }
 
@@ -1165,6 +1166,8 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSettingOverridablePerStore(orderSettings, x => x.ReturnRequestNumberMask, model.ReturnRequestNumberMask_OverrideForStore, storeScope, false);
                 _settingService.SaveSettingOverridablePerStore(orderSettings, x => x.NumberOfDaysReturnRequestAvailable, model.NumberOfDaysReturnRequestAvailable_OverrideForStore, storeScope, false);
                 _settingService.SaveSettingOverridablePerStore(orderSettings, x => x.CustomOrderNumberMask, model.CustomOrderNumberMask_OverrideForStore, storeScope, false);
+                _settingService.SaveSettingOverridablePerStore(orderSettings, x => x.InvoiceIdent, model.InvoiceIdent_OverrideForStore, storeScope, false);
+                _settingService.SaveSettingOverridablePerStore(orderSettings, x => x.InvoiceYear, model.InvoiceIdent_OverrideForStore, storeScope, false);
                 _settingService.SaveSettingOverridablePerStore(orderSettings, x => x.ExportWithProducts, model.ExportWithProducts_OverrideForStore, storeScope, false);
                 _settingService.SaveSetting(orderSettings, x => x.ActivateGiftCardsAfterCompletingOrder, 0, false);
                 _settingService.SaveSetting(orderSettings, x => x.DeactivateGiftCardsAfterCancellingOrder, 0, false);
@@ -2335,7 +2338,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        //action displaying notification (warning) to a store owner about a lot of traffic 
+        //action displaying notification (warning) to a store owner about a lot of traffic
         //between the Redis server and the application when LoadAllLocaleRecordsOnStartup seetting is set
         [ValidateInput(false)]
         public ActionResult RedisCacheHighTrafficWarning(bool loadAllLocaleRecordsOnStartup)

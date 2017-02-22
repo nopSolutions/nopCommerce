@@ -1241,7 +1241,7 @@ namespace Nop.Services.Orders
             if (order.PaymentStatus == PaymentStatus.Paid && order.InvoiceId == null)
             {
                 order.InvoiceDateUtc = DateTime.UtcNow;
-                order.InvoiceId = GetInvoiceId();
+                order.InvoiceId = GetInvoiceId(order.StoreId);
                 _orderService.UpdateOrder(order);
             }
 
@@ -3260,7 +3260,7 @@ namespace Nop.Services.Orders
         /// Get  invoice ID
         /// </summary>
         /// <returns></returns>
-        public virtual string GetInvoiceId()
+        public virtual string GetInvoiceId(int storeId)
         {
             var actYear = DateTime.UtcNow.Year;
             int ident = _orderSettings.InvoiceIdent;
@@ -3269,7 +3269,11 @@ namespace Nop.Services.Orders
                 // Reset counter if a new year
                 ident = 1;
                 _orderSettings.InvoiceYear = actYear;
-                _settingService.SetSetting<int>("ordersettings.invoiceyear", _orderSettings.InvoiceYear);
+                var settingYear = _settingService.GetSetting("ordersettings.invoiceyear", storeId);
+                if (settingYear != null)
+                    _settingService.SetSetting<int>("ordersettings.invoiceyear", _orderSettings.InvoiceYear, storeId);
+                else
+                    _settingService.SetSetting<int>("ordersettings.invoiceyear", _orderSettings.InvoiceYear);
             }
             else
             {
@@ -3277,7 +3281,11 @@ namespace Nop.Services.Orders
             }
             _orderSettings.InvoiceIdent = ident;
             // Update settings
-            _settingService.SetSetting<int>("ordersettings.invoiceident", _orderSettings.InvoiceIdent);
+            var settingIdent = _settingService.GetSetting("ordersettings.invoiceident", storeId);
+            if (settingIdent != null)
+                _settingService.SetSetting<int>("ordersettings.invoiceident", _orderSettings.InvoiceIdent, storeId);
+            else
+                _settingService.SetSetting<int>("ordersettings.invoiceident", _orderSettings.InvoiceIdent);
 
             return string.Format("I-{0}.{1}", DateTime.UtcNow.Year, ident.ToString("D5"));
         }

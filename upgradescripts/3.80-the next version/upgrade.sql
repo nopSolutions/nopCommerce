@@ -248,6 +248,18 @@ set @resources='
   <LocaleResource Name="Account.CustomerProductReviews.NoRecords">
     <Value>You haven''t written any reviews yet</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.InvoiceIdent">
+    <Value>Last used Invoice No.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.InvoiceIdent.Hint">
+    <Value>Invoice ID counter. This is useful if you want your invoices to start from certain number. This only affects invoices henceforward. The value must be greater than the current maximum invoice ID.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.InvoiceYear">
+    <Value>Year of last invoice</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.InvoiceYear.Hint">
+    <Value>Year of last invoice. If actual year is different from this setting, then InvoiceIdent starts from one.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.EnteringEmailTwice.Hint">
     <Value>Force entering email twice during registration.</Value>
   </LocaleResource>
@@ -3602,11 +3614,13 @@ BEGIN
 END
 
 GO
+DROP INDEX IF EXISTS [UI_Order_InvoiceId] ON [dbo].[Order]
+GO
 
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Order]') AND name = N'UI_Order_InvoiceId')
 BEGIN
 	CREATE UNIQUE NONCLUSTERED INDEX UI_Order_InvoiceId
-	ON dbo.[Order](InvoiceId)
+	ON dbo.[Order](InvoiceId, StoreId)
 	WHERE InvoiceId IS NOT NULL;
 END
 GO

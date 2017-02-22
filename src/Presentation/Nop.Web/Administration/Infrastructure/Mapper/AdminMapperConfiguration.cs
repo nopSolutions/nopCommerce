@@ -899,7 +899,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                 cfg.CreateMap<OrderSettings, OrderSettingsModel>()
                     .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())
                     .ForMember(dest => dest.OrderIdent, mo => mo.Ignore())
-                    .ForMember(dest => dest.InvoiceIdent, mo => mo.Ignore())
+                    .ForMember(dest => dest.InvoiceIdent_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
                     .ForMember(dest => dest.IsReOrderAllowed_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.MinOrderSubtotalAmount_OverrideForStore, mo => mo.Ignore())

@@ -1205,7 +1205,7 @@ namespace Nop.Admin.Controllers
                     {
                         Id = x.Id,
                         StoreName = store != null ? store.Name : "Unknown",
-                        OrderTotal = _priceFormatter.FormatPrice(x.OrderAmountIncl, true, false),
+                        OrderTotal = _priceFormatter.FormatPrice(x.OrderTotal, true, false),
                         OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
                         OrderStatusId = x.OrderStatusId,
                         PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
@@ -2205,7 +2205,7 @@ namespace Nop.Admin.Controllers
                 //assign invoice id when null
                 if (model.InvoiceId == null)
                 {
-                    order.InvoiceId = _orderProcessingService.GetInvoiceId();
+                    order.InvoiceId = _orderProcessingService.GetInvoiceId(order.StoreId);
                     order.InvoiceDateUtc = DateTime.UtcNow;
                     //not needed, we use redirection now
                     //ModelState.SetModelValue("InvoiceId", new ValueProviderResult(order.InvoiceId, "", ModelState["InvoiceId"].Value.Culture));

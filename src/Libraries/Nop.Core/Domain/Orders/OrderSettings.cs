@@ -125,7 +125,7 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public int InvoiceIdent { get; set; }
         /// <summary>
-        /// Last issued Invoice Date
+        /// Last issued Invoice Year
         /// </summary>
         public int InvoiceYear { get; set; }
 
