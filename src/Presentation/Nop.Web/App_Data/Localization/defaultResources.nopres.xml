@@ -4755,6 +4755,9 @@
   <LocaleResource Name="Admin.Configuration.Plugins.Description">
     <Value>Manual plugin installation</Value>
   </LocaleResource>
+ <LocaleResource Name="Admin.Configuration.Plugins.Description.DownloadMorePlugins">
+    <Value><![CDATA[<p>You can download more nopCommerce plugins in our <a href="http://www.nopcommerce.com/marketplace.aspx?utm_source=admin-panel&utm_medium=plugins&utm_campaign=admin-panel" target="_blank">marketplace</a></p>]]></Value>
+ </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Plugins.Description.Step1">
     <Value>Upload the plugin to the /plugins folder in your nopCommerce directory.</Value>
   </LocaleResource>
@@ -4881,6 +4884,9 @@
   <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Download">
     <Value>Download</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Instructions">
+    <Value><![CDATA[<p>Here you can find third-party extensions and themes which are developed by our community and partners.They are also available in our <a href="http://www.nopcommerce.com/marketplace.aspx?utm_source=admin-panel&utm_medium=official-plugins&utm_campaign=admin-panel" target="_blank">marketplace</a></p>]]></Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Name">
     <Value>Name</Value>
   </LocaleResource>
@@ -6075,6 +6081,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CanonicalUrlsEnabled.Hint">
     <Value>The goal of the canonicalization process is to transform a URL into a canonical URL so it is possible to determine if two syntactically different URLs may be equivalent.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Captcha.Instructions">
+    <Value><![CDATA[<p>A CAPTCHA is a program that can tell whether its user is a human or a computer.You've probably seen them — colorful images with distorted text at the bottom ofWeb registration forms. CAPTCHAs are used by many websites to prevent abuse from"bots," or automated programs usually written to generate spam. No computer programcan read distorted text as well as humans can, so bots cannot navigate sites protectedby CAPTCHAs. nopCommerce uses <a href="http://www.google.com/recaptcha" target="_blank">reCAPTCHA</a>.</p>]]></Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaAppropriateKeysNotEnteredError">
     <Value>Captcha is enabled but the appropriate keys are not entered</Value>
   </LocaleResource>  

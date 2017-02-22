@@ -466,14 +466,7 @@
                         @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Captcha")
                     </div>
                     <div class="panel-body">
-                        <p>
-                            A CAPTCHA is a program that can tell whether its user is a human or a computer.
-                            You've probably seen them — colorful images with distorted text at the bottom of
-                            Web registration forms. CAPTCHAs are used by many websites to prevent abuse from
-                            "bots," or automated programs usually written to generate spam. No computer program
-                            can read distorted text as well as humans can, so bots cannot navigate sites protected
-                            by CAPTCHAs. nopCommerce uses <a href="http://www.google.com/recaptcha" target="_blank">reCAPTCHA</a>.
-                        </p>
+                       @T("Admin.Configuration.Settings.GeneralCommon.Captcha.Instructions")
                         <div class="form-group">
                             <div class="col-md-3">
                                 @Html.NopLabelFor(model => model.CaptchaSettings.Enabled)
