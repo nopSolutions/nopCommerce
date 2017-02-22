@@ -601,7 +601,6 @@ label, label + * {
 	display: none !important;
 }
 .ui-dialog-content {
-	height: auto !important;
 	padding: 15px;
 	line-height: 20px;
 	/*override jQuery UI styles, do not delete doubled properties*/
