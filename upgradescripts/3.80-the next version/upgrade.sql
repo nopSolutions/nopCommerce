@@ -4,7 +4,55 @@
 declare @resources xml
 --a resource will be deleted if its value is empty
 set @resources='
-<Language>  
+<Language>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AssignInvoiceIdentFromTask">
+    <Value>Assign Invoice ID from Task</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AssignInvoiceIdentFromTask.Hint">
+    <Value>Assign invoice id using background task. This assures that the same invoice id isn''t used more than ones and that there are no wholes in the number series.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.History.OrderTotal">
+    <Value>Order total to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.OrderTotal">
+    <Value>Order total to pay:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Report.Total">
+    <Value>Total to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Report.TotalAmountIncl">
+    <Value>Total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Orders.OrderTotal">
+    <Value>Order total to pay</Value>
+  </LocaleResource>
+   <LocaleResource Name="Admin.Customers.Customers.Orders.OrderTotalAmountIncl">
+    <Value>Order total amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.OrderTotal">
+    <Value>Order Total to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.OrderTotalAmountIncl">
+    <Value>Order Total Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.Order.OrderTotal">
+    <Value>Order Total to pay:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.Order.OrderTotalAmount">
+    <Value>Order Total Amount:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.OrderTotal">
+    <Value>Order total to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.OrderTotalAmountIncl">
+    <Value>Order total amount (incl.)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerOrders.OrderTotal">
+    <Value>Order Total to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerOrders.OrderTotalAmountIncl">
+    <Value>Order Total Amount</Value>
+  </LocaleResource>
   <LocaleResource Name="Messages.Order.TaxIncl">
     <Value>Included Tax:</Value>
   </LocaleResource>
@@ -5570,6 +5618,23 @@ END
 
 CLOSE cursor_defaultGroup
 DEALLOCATE cursor_defaultGroup
+GO
+
+
+--new task
+IF NOT EXISTS (SELECT 1 FROM [ScheduleTask] WHERE [Name] = N'Assign invoice ident')
+INSERT INTO ScheduleTask
+          (Name, Seconds, Type, Enabled, StopOnError)
+VALUES    (N'Assign invoice ident', 60, N'Nop.Services.Orders.AssignInvoiceIdentTask, Nop.Services', 0, 0)
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.assigninvoiceidentfromtask')   
+   BEGIN   
+     INSERT [Setting] ([Name], [Value], [StoreId])   
+     VALUES (N'ordersettings.assigninvoiceidentfromtask', 'False', 0)   
+   END   
+GO
 GO
 
  --new setting

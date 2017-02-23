@@ -1173,6 +1173,7 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(orderSettings, x => x.DeactivateGiftCardsAfterCancellingOrder, 0, false);
                 _settingService.SaveSetting(orderSettings, x => x.DeactivateGiftCardsAfterDeletingOrder, 0, false);
                 _settingService.SaveSetting(orderSettings, x => x.CompleteOrderWhenDelivered, 0, false);
+                _settingService.SaveSetting(orderSettings, x => x.AssignInvoiceIdentFromTask, 0, false);
 
                 //now clear settings cache
                 _settingService.ClearCache();

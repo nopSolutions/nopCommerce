@@ -4458,7 +4458,7 @@ namespace Nop.Services.Installation
                 EarnedRewardPointsBaseAmountIncl = 1855M,
                 EarnedRewardPointsBaseAmountExcl = 1855M,
                 RefundedAmount = decimal.Zero,
-                OrderDiscount = decimal.Zero,                
+                OrderDiscount = decimal.Zero,
                 CheckoutAttributeDescription = string.Empty,
                 CheckoutAttributesXml = string.Empty,
                 CustomerCurrencyCode = "USD",
@@ -6306,7 +6306,8 @@ namespace Nop.Services.Installation
                 DeactivateGiftCardsAfterDeletingOrder = false,
                 CompleteOrderWhenDelivered = true,
                 CustomOrderNumberMask = "{ID}",
-                ExportWithProducts = true
+                ExportWithProducts = true,
+                AssignInvoiceIdentFromTask = false,
             });
 
             settingService.SaveSetting(new SecuritySettings
@@ -12100,6 +12101,15 @@ namespace Nop.Services.Installation
                     Seconds = 3600,
                     Type = "Nop.Services.Directory.UpdateExchangeRateTask, Nop.Services",
                     Enabled = true,
+                    StopOnError = false,
+                },
+                new ScheduleTask
+                {
+                    Name = "Assign invoice ident",
+                    //60 minutes
+                    Seconds = 60,
+                    Type = "Nop.Services.Orders.AssignInvoiceIdentTask, Nop.Services",
+                    Enabled = false,
                     StopOnError = false,
                 },
             };

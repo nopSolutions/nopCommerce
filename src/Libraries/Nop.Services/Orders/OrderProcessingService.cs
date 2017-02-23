@@ -1240,8 +1240,13 @@ namespace Nop.Services.Orders
             //set invoice id
             if (order.PaymentStatus == PaymentStatus.Paid && order.InvoiceId == null)
             {
-                order.InvoiceDateUtc = DateTime.UtcNow;
-                order.InvoiceId = GetInvoiceId(order.StoreId);
+                if (_orderSettings.AssignInvoiceIdentFromTask)
+                    order.InvoiceId = "ToBeAssigned";
+                else
+                {
+                    order.InvoiceDateUtc = DateTime.UtcNow;
+                    order.InvoiceId = GetInvoiceId(order.StoreId);
+                }
                 _orderService.UpdateOrder(order);
             }
 
@@ -3290,11 +3295,24 @@ namespace Nop.Services.Orders
             return string.Format("I-{0}.{1}", DateTime.UtcNow.Year, ident.ToString("D5"));
         }
         /// <summary>
-        /// Gets a value indicating whether payment workflow is required
+        /// Set Invoice ID on orders which passed payment
         /// </summary>
-        /// <param name="cart">Shopping cart</param>
-        /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
-        /// <returns>true - OK; false - minimum order total amount is not reached</returns>
+        public virtual void AssignInvoiceIdentToOrders()
+        {
+            var orders = _orderService.GetOrdersToAssignInvoiceId();
+            foreach (var order in orders)
+            {
+                order.InvoiceDateUtc = DateTime.UtcNow;
+                order.InvoiceId = GetInvoiceId(order.StoreId);
+                _orderService.UpdateOrder(order);
+            }
+        }
+         /// <summary>
+         /// Gets a value indicating whether payment workflow is required
+         /// </summary>
+         /// <param name="cart">Shopping cart</param>
+         /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
+         /// <returns>true - OK; false - minimum order total amount is not reached</returns>
         public virtual bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool? useRewardPoints = null)
         {
             if (cart == null)

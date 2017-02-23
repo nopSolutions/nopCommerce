@@ -292,7 +292,21 @@ namespace Nop.Services.Orders
             var order = query.FirstOrDefault();
             return order;
         }
-        
+
+        /// <summary>
+        /// Get all orders to whom an invoice id should be assigned
+        /// </summary>
+        /// <returns>Order</returns>
+        public virtual IList<Order> GetOrdersToAssignInvoiceId()
+        {
+
+            var query = from o in _orderRepository.Table
+                        where (o.InvoiceId == "ToBeAssigned")
+                        select o;
+            var orders = query.ToList();
+
+            return orders;
+        }
         #endregion
 
         #region Orders items
