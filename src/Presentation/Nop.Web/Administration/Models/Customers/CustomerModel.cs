@@ -43,6 +43,8 @@ namespace Nop.Admin.Models.Customers
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Password")]
         [AllowHtml]
+        [DataType(DataType.Password)]
+        [NoTrim]
         public string Password { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Vendor")]

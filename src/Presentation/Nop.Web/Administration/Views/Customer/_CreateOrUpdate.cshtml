@@ -129,7 +129,7 @@
                     </div>
                     <div class="col-md-9">
                         <div class="input-group">
-                            @Html.TextBoxFor(model => model.Password, new { autocomplete = "off", @class = "text-box single-line form-control" })
+                            @Html.NopEditorFor(model => model.Password)
                             <div class="input-group-btn">
                                 @if (Model.Id > 0)
                                 {
