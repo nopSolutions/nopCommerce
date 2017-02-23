@@ -14,12 +14,12 @@
     </div>
     <div class="page-body">
         <div class="shipment-details-area">
-            <div class="shipping-info-wrap">
-                <div class="title">
-                    <strong>@T("Order.Shipments.Order#")@Model.Order.Id</strong>
-                </div>
-                <div class="info-content">
-                    <ul class="shipping-info">
+            <div class="order-info-wrap">
+                <div class="order-info">
+	                <div class="title">
+	                    <strong>@T("Order.Shipments.Order#")@Model.Order.Id</strong>
+	                </div>
+                    <ul class="info-list">
                         <li class="shipping-method">
                             @T("Order.Shipments.ShippingMethod"): @Model.Order.ShippingMethod
                         </li>
@@ -62,14 +62,14 @@
                     </ul>
                 </div>
             </div>
-            <div class="shipping-info-wrap">
-                <div class="title">
-                    <strong>@T("Order.Shipments.ShippingAddress")</strong>
-                </div>
-                <div class="info-content">
-                    <ul class="shipping-address">
-                        @if (!Model.Order.PickUpInStore)
-                        {
+            <div class="shipping-info-wrap"> 
+                <div class="shipping-info">
+                    @if (!Model.Order.PickUpInStore)
+                    {
+                        <div class="title">
+                            <strong>@T("Order.Shipments.ShippingAddress")</strong>
+                        </div>
+                        <ul class="info-list">
                             <li class="name">
                                 @Model.Order.ShippingAddress.FirstName @Model.Order.ShippingAddress.LastName
                             </li>
@@ -82,7 +82,7 @@
                             <li class="fax">
                                 @T("Order.Shipments.Fax"): @Model.Order.ShippingAddress.FaxNumber
                             </li>
-                            if (!String.IsNullOrEmpty(Model.Order.ShippingAddress.Company))
+                            @if (!String.IsNullOrEmpty(Model.Order.ShippingAddress.Company))
                             {
                                 <li class="company">
                                     @Model.Order.ShippingAddress.Company
@@ -91,7 +91,7 @@
                             <li class="address1">
                                 @Model.Order.ShippingAddress.Address1
                             </li>
-                            if (!String.IsNullOrEmpty(Model.Order.ShippingAddress.Address2))
+                            @if (!String.IsNullOrEmpty(Model.Order.ShippingAddress.Address2))
                             {
                                 <li class="address2">
                                     @Model.Order.ShippingAddress.Address2
@@ -101,18 +101,20 @@
                                 @Model.Order.ShippingAddress.City, @Model.Order.ShippingAddress.StateProvinceName
                                 @Model.Order.ShippingAddress.ZipPostalCode
                             </li>
-                            if (!String.IsNullOrEmpty(Model.Order.ShippingAddress.CountryName))
+                            @if (!String.IsNullOrEmpty(Model.Order.ShippingAddress.CountryName))
                             {
                                 <li class="country">
                                     @Model.Order.ShippingAddress.CountryName
                                 </li>
                             }
-                        }
-                        else
-                        {
-                            <li class="title">
-                                @T("Order.Shipments.PickupAddress")
-                            </li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <div class="title">
+                            <strong>@T("Order.Shipments.PickupAddress")</strong>
+                        </div>
+                        <ul class="info-list">
                             <li class="address1">
                                 @Model.Order.PickupAddress.Address1
                             </li>
@@ -120,14 +122,14 @@
                                 @Model.Order.PickupAddress.City,
                                 @Model.Order.PickupAddress.ZipPostalCode
                             </li>
-                            if (!string.IsNullOrEmpty(Model.Order.PickupAddress.CountryName))
+                            @if (!string.IsNullOrEmpty(Model.Order.PickupAddress.CountryName))
                             {
                                 <li class="country">
                                     @Model.Order.PickupAddress.CountryName
                                 </li>
                             }
-                        }
-                    </ul>
+                        </ul>
+                    }
                 </div>
             </div>
         </div>
