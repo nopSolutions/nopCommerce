@@ -77,13 +77,25 @@ namespace Nop.Services.Tax
         #endregion
 
         public SortedDictionary<decimal, TaxRateEntry> TaxRates { get; private set; }
+        /// <summary>
+        /// Indicates if supplied prices and amounts do include tax
+        /// </summary>
         public bool PricesIncludeTax { get;  }
         public decimal PercentageInvDiscount { get; private set; } = decimal.Zero; //set via sub
         public decimal PercentageSubTotalDiscount { get; private set; } = decimal.Zero; //set via sub
         public decimal PercentageRewardPointsDiscount { get; private set; } = decimal.Zero; //earned points, set via sub
         public decimal PercentagePaymentFeeOrDiscount { get; private set; } = decimal.Zero; //set via sub
+        /// <summary>
+        /// Total subtotal of taxrates
+        /// </summary>
         public decimal TotalSubTotalAmount { get { if (HasChanges) CalculateAmounts(); return _totalSubTotalAmount; } }
+        /// <summary>
+        /// Total shipping of taxrates
+        /// </summary>
         public decimal? TotalShippingAmountTaxable { get { if (HasChanges) CalculateAmounts(); return _totalShippingAmountTaxable; } }
+        /// <summary>
+        /// Total shipping not taxable
+        /// </summary>
         public decimal? TotalShippingAmountNonTaxable
         {
             get { return _totalShippingAmountNonTaxable; }
@@ -97,40 +109,93 @@ namespace Nop.Services.Tax
                 }
             }
         }
+        /// <summary>
+        /// Total shipping amount (taxable + nontaxable)
+        /// </summary>
         public decimal? TotalShippingAmount { get { return GetSum(SumType.TotalShippingAmount); } } //sum of shipping amounts
+        /// <summary>
+        /// Total reward points amount (taxable) = earned points
+        /// </summary>
         public decimal TotalRewardPointsAmountTaxable { get { if (HasChanges) CalculateAmounts(); return _totalRewardPointsAmountTaxable; } } //set via percentage
+        /// <summary>
+        /// Total reward points amount (nontaxable) = earned points set as nontaxable
+        /// </summary>
         public decimal? TotalRewardPointsAmountNonTaxable
         {
             get { return _totalRewardPointsAmountNonTaxable; }
             set { _totalRewardPointsAmountNonTaxable = value.HasValue ? RoundingHelper.RoundAmount(value.Value) : value; }
         }
+        /// <summary>
+        /// Total payment fee amount (taxable)
+        /// </summary>
         public decimal TotalPaymentFeeAmount { get { if (HasChanges) CalculateAmounts(); return _totalPaymentFeeAmount; } } //set via percentage
+        /// <summary>
+        /// Total payment fee amount (nontaxable)
+        /// </summary>
         public decimal? TotalPaymentFeeAmountNonTaxable
         {
             get { return _totalPaymentFeeAmountNonTaxable; }
             set { _totalPaymentFeeAmountNonTaxable = value.HasValue ? RoundingHelper.RoundAmount(value.Value) : value; }
         }
-
+        /// <summary>
+        /// Total payment fee discount amount (taxable)
+        /// </summary>
         public decimal TotalPaymentFeeDiscAmount { get { if (HasChanges) CalculateAmounts(); return _totalPaymentFeeDiscAmount; } } //set via percentage
+        /// <summary>
+        /// Total payment fee + discount amount (taxable)
+        /// </summary>
         public decimal TotalPaymentFeeAmountTaxable { get { return GetSum(SumType.TotalPaymentFeeAmountTaxable) ?? decimal.Zero; } } //sum of payment fees
+        /// <summary>
+        /// Total subtotal discount of taxrates
+        /// </summary>
         public decimal TotalSubTotalDiscAmount { get { if (HasChanges) CalculateAmounts(); return _totalSubTotalDiscAmount; } } //set via percentage
+        /// <summary>
+        /// Total invoice discount of taxrates
+        /// </summary>
         public decimal TotalInvDiscAmount { get { if (HasChanges) CalculateAmounts(); return _totalInvDiscAmount; } } //set via percentage
+        /// <summary>
+        /// Total base amount (excl. tax=
+        /// </summary>
         public decimal TotalAmount { get { if (HasChanges) CalculateAmounts(); return _totalAmount; } }
+        /// <summary>
+        /// Total tax amount
+        /// </summary>
         public decimal TotalAmountTax { get { if (HasChanges) CalculateAmounts(); return _totalAmountTax; } }
+        /// <summary>
+        /// Total amount incl. tax (base + tax)
+        /// </summary>
         public decimal TotalAmountIncludingTax { get { if (HasChanges) CalculateAmounts(); return _totalAmountIncludingTax; } }
+        /// <summary>
+        /// Total purchased reward points amount (nontaxable)
+        /// </summary>
         public decimal? TotalRewardPointsAmountPurchased
         {
             get { return _totalRewardPointsAmountPurchased; }
             set { _totalRewardPointsAmountPurchased = value.HasValue ? RoundingHelper.RoundAmount(value.Value) : value; }
         }
+        /// <summary>
+        /// Total gift cards amount (nontaxable)
+        /// </summary>
         public decimal? TotalGiftcardsAmount
         {
             get { return _totalGiftcardsAmount; }
             set { _totalGiftcardsAmount = value.HasValue ? RoundingHelper.RoundAmount(value.Value) : value; }
         }
+        /// <summary>
+        /// Total to pay (Amount incl. vat + non tax payment fee + non tax shipp - rewardpoints - gift cards)
+        /// </summary>
         public decimal TotalPaymentAmount { get { return GetSum(SumType.TotalPaymentAmount) ?? decimal.Zero; } }
+        /// <summary>
+        /// Total base amount for payment fee calculation (total amount or total incl.)
+        /// </summary>
         public decimal TotalBaseAmountForPaymentFeeCalculation { get { return GetSum(SumType.TotalBaseAmountForPaymentFeeCalculation) ?? decimal.Zero; } }
-        public decimal TotalOrderAmount { get { return GetSum(SumType.TotalOrderAmount) ?? decimal.Zero; } }
+        /// <summary>
+        /// Total order amount (base + fee (nontax) + shipp (nontax) - reward (nontax)
+        /// </summary>
+        public decimal TotalOrderAmountExcl { get { return GetSum(SumType.TotalOrderAmount) ?? decimal.Zero; } }
+        /// <summary>
+        /// Total order amount (base + tax + fee (nontax) + shipp (nontax) - reward (nontax)
+        /// </summary>
         public decimal TotalOrderAmountIncl { get { return GetSum(SumType.TotalOrderAmountIncl) ?? decimal.Zero; } }
 
 
@@ -185,7 +250,7 @@ namespace Nop.Services.Tax
                     return amountPay;
 
                 case SumType.TotalBaseAmountForPaymentFeeCalculation:
-                    return PricesIncludeTax ? TotalAmountIncludingTax : TotalAmount;
+                    return PricesIncludeTax ? TotalOrderAmountIncl : TotalOrderAmountExcl;
 
                 case SumType.TotalOrderAmount:
                     decimal amountOrder = TotalAmount

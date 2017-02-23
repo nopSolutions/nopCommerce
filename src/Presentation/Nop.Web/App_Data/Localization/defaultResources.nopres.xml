@@ -169,7 +169,10 @@
     <Value>Order status</Value>
   </LocaleResource>
   <LocaleResource Name="Account.CustomerOrders.OrderTotal">
-    <Value>Order Total</Value>
+    <Value>Order Total to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerOrders.OrderTotalAmountIncl">
+    <Value>Order Total Amount</Value>
   </LocaleResource>
   <LocaleResource Name="Account.CustomerOrders.RecurringOrders">
     <Value>Recurring payments</Value>
@@ -1495,7 +1498,10 @@
     <Value>Search by a specific order status e.g. Complete.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Affiliates.Orders.OrderTotal">
-    <Value>Order total</Value>
+    <Value>Order total to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.OrderTotalAmountIncl">
+    <Value>Order total amount (incl.)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Affiliates.Orders.PaymentStatus">
     <Value>Payment status</Value>
@@ -4802,7 +4808,7 @@
   </LocaleResource>
  <LocaleResource Name="Admin.Configuration.Plugins.Description.DownloadMorePlugins">
     <Value><![CDATA[<p>You can download more nopCommerce plugins in our <a href="http://www.nopcommerce.com/marketplace.aspx?utm_source=admin-panel&utm_medium=plugins&utm_campaign=admin-panel" target="_blank">marketplace</a></p>]]></Value>
- </LocaleResource>  
+ </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Description.Step1">
     <Value>Upload the plugin to the /plugins folder in your nopCommerce directory.</Value>
   </LocaleResource>
@@ -4931,7 +4937,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Instructions">
     <Value><![CDATA[<p>Here you can find third-party extensions and themes which are developed by our community and partners.They are also available in our <a href="http://www.nopcommerce.com/marketplace.aspx?utm_source=admin-panel&utm_medium=official-plugins&utm_campaign=admin-panel" target="_blank">marketplace</a></p>]]></Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Name">
     <Value>Name</Value>
   </LocaleResource>
@@ -6131,7 +6137,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Captcha.Instructions">
     <Value><![CDATA[<p>A CAPTCHA is a program that can tell whether its user is a human or a computer.You've probably seen them — colorful images with distorted text at the bottom ofWeb registration forms. CAPTCHAs are used by many websites to prevent abuse from"bots," or automated programs usually written to generate spam. No computer programcan read distorted text as well as humans can, so bots cannot navigate sites protectedby CAPTCHAs. nopCommerce uses <a href="http://www.google.com/recaptcha" target="_blank">reCAPTCHA</a>.</p>]]></Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaAppropriateKeysNotEnteredError">
     <Value>Captcha is enabled but the appropriate keys are not entered</Value>
   </LocaleResource>
@@ -9991,7 +9997,10 @@
     <Value>Order status</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Orders.OrderTotal">
-    <Value>Order total</Value>
+    <Value>Order total to pay</Value>
+  </LocaleResource>
+   <LocaleResource Name="Admin.Customers.Customers.Orders.OrderTotalAmountIncl">
+    <Value>Order total amount</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Orders.PaymentStatus">
     <Value>Payment status</Value>
@@ -10675,10 +10684,10 @@
     <Value>Edit the subtotal discount of this order.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.Edit.OrderTotal">
-    <Value>Order total</Value>
+    <Value>Order total to pay</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.Edit.OrderTotal.Hint">
-    <Value>Edit the total cost of this order.</Value>
+    <Value>Edit the total amount to pay for this order.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.Edit.OrderTotalDiscount">
     <Value>Order discount</Value>
@@ -10819,10 +10828,16 @@
     <Value>incl tax</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.OrderTotal">
-    <Value>Order total</Value>
+    <Value>Order total to pay</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.OrderTotal.Hint">
-    <Value>The total cost of this order (includes discounts, shipping and tax).</Value>
+    <Value>The total amount to pay for this order (includes discounts, shipping and tax, reward points, gift cards).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderTotalAmountIncl">
+    <Value>Order total amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderTotal.Hint">
+    <Value>The total amount for this order (includes discounts, shipping and tax).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.OrderTotalDiscount">
     <Value>Order discount</Value>
@@ -11314,6 +11329,9 @@
     <Value>Tax</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Report.Total">
+    <Value>Total to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Report.TotalAmountIncl">
     <Value>Total</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments">
@@ -11875,7 +11893,7 @@
     <Value>Order #</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.History.OrderTotal">
-    <Value>Order total</Value>
+    <Value>Order total to pay</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Info">
     <Value>Discount info</Value>
@@ -14858,7 +14876,10 @@
     <Value>Gift card ({0}):</Value>
   </LocaleResource>
   <LocaleResource Name="Messages.Order.OrderTotal">
-    <Value>Order Total:</Value>
+    <Value>Order Total to pay:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.Order.OrderTotalAmount">
+    <Value>Order Total Amount:</Value>
   </LocaleResource>
   <LocaleResource Name="Messages.Order.PaymentMethodAdditionalFee">
     <Value>Payment method additional fee:</Value>
@@ -15050,7 +15071,10 @@
     <Value>Order Status</Value>
   </LocaleResource>
   <LocaleResource Name="Order.OrderTotal">
-    <Value>Order Total</Value>
+    <Value>Order Total to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.OrderTotalAmountIncl">
+    <Value>Order Total Amount</Value>
   </LocaleResource>
   <LocaleResource Name="Order.Payment">
     <Value>Payment</Value>
@@ -15503,7 +15527,7 @@
     <Value>Note</Value>
   </LocaleResource>
   <LocaleResource Name="PDFInvoice.OrderTotal">
-    <Value>Order total:</Value>
+    <Value>Order total to pay:</Value>
   </LocaleResource>
   <LocaleResource Name="PDFInvoice.PaymentMethod">
     <Value>Payment method: {0}</Value>

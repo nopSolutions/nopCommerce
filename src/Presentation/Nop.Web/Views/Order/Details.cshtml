@@ -48,6 +48,9 @@
                     @T("Order.OrderStatus"): @Model.OrderStatus
                 </li>
                 <li class="order-total">
+                    @T("Order.OrderTotalAmountIncl"): <strong>@Model.OrderTotalAmountIncl</strong>
+                </li>
+                <li class="order-total">
                     @T("Order.OrderTotal"): <strong>@Model.OrderTotal</strong>
                 </li>
             </ul>
@@ -791,6 +794,14 @@
                                     </td>
                                 </tr>
                             }
+                            <tr>
+                                <td class="cart-total-left">
+                                    <label>@T("Order.OrderTotalAmountIncl"):</label>
+                                </td>
+                                <td class="cart-total-right">
+                                    <span><strong>@Model.OrderTotalAmountIncl</strong></span>
+                                </td>
+                            </tr>
                             <tr>
                                 <td class="cart-total-left">
                                     <label>@T("Order.OrderTotal"):</label>

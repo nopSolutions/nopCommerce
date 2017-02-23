@@ -375,15 +375,31 @@
                                         {
                                             //a vendor does not have access to this functionality
                                             <text>{
-                                            field: "OrderTotal",
-                                            title: "@T("Admin.Orders.Fields.OrderTotal")",
+                                            field: "OrderTotalAmountIncl",
+                                            title: "@T("Admin.Orders.Fields.OrderTotalAmountIncl")",
                                             width: 100,
                                             footerTemplate: '<div><strong>@T("Admin.Orders.Report.Summary")</strong></div>' +
-                                                                    '<div>@T("Admin.Orders.Report.Profit") <span id=\"aggregator-profit-block\"></span></div>' +
-                                                                    '<div>@T("Admin.Orders.Report.Shipping") <span id=\"aggregator-shipping-block\"></span></div>' +
-                                                                    '<div>@T("Admin.Orders.Report.Tax") <span id=\"aggregator-tax-block\"></span></div>' +
-                                                                    '<div>@T("Admin.Orders.Report.Total") <span id=\"aggregator-total-block\"></span></div>'
-                                        },</text>
+                                                                   '<div>@T("Admin.Orders.Report.Profit")</div>' +
+                                                                   '<div>@T("Admin.Orders.Report.Shipping")</div>' +
+                                                                   '<div>@T("Admin.Orders.Report.Tax")</div>' +
+                                                                   '<div>@T("Admin.Orders.Report.TotalAmountIncl")</div>' +
+                                                                   '<div>@T("Admin.Orders.Report.Total")</div>'
+                                            },</text>
+                                        }
+                                        @if (!Model.IsLoggedInAsVendor)
+                                        {
+                                            //a vendor does not have access to this functionality
+                                            <text>{
+                                            field: "OrderTotal",
+                                            title: "@T("Admin.Orders.Fields.OrderTotal")",
+                                            width: 200,
+                                            footerTemplate: '<div><br></div>' +
+                                                                    '<div> <span id=\"aggregator-profit-block\"></span></div>' +
+                                                                    '<div> <span id=\"aggregator-shipping-block\"></span></div>' +
+                                                                    '<div> <span id=\"aggregator-tax-block\"></span></div>' +
+                                                                    '<div> <span id=\"aggregator-totalamountincl-block\"></span></div>' +
+                                                                    '<div> <span id=\"aggregator-total-block\"></span></div>'
+                                            },</text>
                                         }
                                         {
                                             field: "Id",
@@ -495,6 +511,7 @@
                                         $('#aggregator-profit-block').text(reportAggregates['aggregatorprofit']);
                                         $('#aggregator-shipping-block').text(reportAggregates['aggregatorshipping']);
                                         $('#aggregator-tax-block').text(reportAggregates['aggregatortax']);
+                                        $('#aggregator-totalamountincl-block').text(reportAggregates['aggregatortotalamountincl']);
                                         $('#aggregator-total-block').text(reportAggregates['aggregatortotal']);
                                     }
                                 }

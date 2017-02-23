@@ -577,6 +577,7 @@ namespace Nop.Admin.Controllers
             //total
             model.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
             model.OrderTotalValue = order.OrderTotal;
+            model.OrderTotalAmountIncl = _priceFormatter.FormatPrice(order.OrderTotalAmountIncl, true, false);
             model.OrderAmount = _priceFormatter.FormatPrice(order.OrderAmount, true, false);
             model.OrderAmountValue = order.OrderAmount;
             model.OrderAmountIncl = _priceFormatter.FormatPrice(order.OrderAmountIncl, true, false);
@@ -1206,6 +1207,7 @@ namespace Nop.Admin.Controllers
                         Id = x.Id,
                         StoreName = store != null ? store.Name : "Unknown",
                         OrderTotal = _priceFormatter.FormatPrice(x.OrderTotal, true, false),
+                        OrderTotalAmountIncl = _priceFormatter.FormatPrice(x.OrderTotalAmountIncl, true, false),
                         OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
                         OrderStatusId = x.OrderStatusId,
                         PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
@@ -1258,8 +1260,9 @@ namespace Nop.Admin.Controllers
             gridModel.ExtraData = new OrderAggreratorModel
             {
                 aggregatorprofit = _priceFormatter.FormatPrice(profit, true, false),
-                aggregatorshipping = _priceFormatter.FormatShippingPrice(reportSummary.SumShippingExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false),
+                aggregatorshipping = _priceFormatter.FormatShippingPrice(reportSummary.SumShippingExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, false),
                 aggregatortax = _priceFormatter.FormatPrice(reportSummary.SumTax, true, false),
+                aggregatortotalamountincl = _priceFormatter.FormatPrice(reportSummary.SumOrdersTotalAmountIncl, true, false),
                 aggregatortotal = _priceFormatter.FormatPrice(reportSummary.SumOrders, true, false)
             };
 

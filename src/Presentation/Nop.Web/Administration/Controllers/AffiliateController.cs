@@ -322,11 +322,11 @@ namespace Nop.Admin.Controllers
             //order statuses
             model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
             model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            
+
             //payment statuses
             model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
             model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            
+
             //shipping statuses
             model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
             model.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -372,6 +372,7 @@ namespace Nop.Admin.Controllers
                         orderModel.OrderStatusId = order.OrderStatusId;
                         orderModel.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
                         orderModel.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
+                        orderModel.OrderTotalAmountIncl = _priceFormatter.FormatPrice(order.OrderTotalAmountIncl, true, false);
                         orderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
                         orderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
                         orderModel.CustomOrderNumber = order.CustomOrderNumber;
@@ -394,7 +395,7 @@ namespace Nop.Admin.Controllers
             var affiliate = _affiliateService.GetAffiliateById(affiliateId);
             if (affiliate == null)
                 throw new ArgumentException("No affiliate found with the specified id");
-            
+
             var customers = _customerService.GetAllCustomers(
                 affiliateId: affiliate.Id,
                 pageIndex: command.Page - 1,

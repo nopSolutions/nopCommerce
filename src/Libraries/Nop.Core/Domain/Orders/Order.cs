@@ -183,18 +183,18 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the order shipping (incl tax)
         /// </summary>
-        /// 
+        ///
         public decimal OrderShippingInclTax { get; set; }
         /// <summary>
         /// Gets or sets the order shipping (excl tax)
         /// </summary>
-        /// 
+        ///
         public decimal OrderShippingExclTax { get; set; }
 
         /// Gets or sets the order shipping (non taxable)
         /// </summary>
         public decimal OrderShippingNonTaxable { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the payment method additional fee (incl tax)
         /// </summary>
@@ -395,6 +395,10 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public decimal EarnedRewardPointsBaseAmountExcl { get; set; }
         /// <summary>
+        /// Gets or sets a value indicating if redeemed reward points are taxable
+        /// </summary>
+        public bool RewardPointsTaxable { get; set; }
+        /// <summary>
         /// Gets or sets the custom order number without prefix
         /// </summary>
         public string CustomOrderNumber { get; set; }
@@ -550,6 +554,17 @@ namespace Nop.Core.Domain.Orders
             }
         }
 
+        /// <summary>
+        /// Gets the order total amount incl. tax
+        /// </summary>
+        public decimal OrderTotalAmountIncl
+        {
+            get
+            {
+                return OrderAmountIncl + PaymentMethodAdditionalFeeNonTaxable + OrderShippingNonTaxable
+                      - (RewardPointsTaxable ? decimal.Zero : (RedeemedRewardPointsEntry != null ? RedeemedRewardPointsEntry.UsedAmount : decimal.Zero));
+            }
+        }
         #endregion
     }
 

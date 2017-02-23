@@ -35,6 +35,7 @@ namespace Nop.Data.Mapping.Orders
             this.Ignore(o => o.ShippingStatus);
             this.Ignore(o => o.CustomerTaxDisplayType);
             this.Ignore(o => o.TaxRatesDictionary);
+            this.Ignore(o => o.OrderTotalAmountIncl);
 
             this.HasRequired(o => o.Customer)
                 .WithMany()

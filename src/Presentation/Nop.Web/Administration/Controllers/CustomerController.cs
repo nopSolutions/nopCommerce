@@ -1935,6 +1935,7 @@ namespace Nop.Admin.Controllers
                             PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
                             ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
                             OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false),
+                            OrderTotalAmountIncl = _priceFormatter.FormatPrice(order.OrderTotalAmountIncl, true, false),
                             StoreName = store != null ? store.Name : "Unknown",
                             CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
                             CustomOrderNumber = order.CustomOrderNumber

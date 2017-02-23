@@ -36,7 +36,7 @@ namespace Nop.Admin.Models.Orders
         public DateTime? InvoiceDateUtc { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.CustomOrderNumber")]
         public string CustomOrderNumber { get; set; }
-        
+
         //store
         [NopResourceDisplayName("Admin.Orders.Fields.Store")]
         public string StoreName { get; set; }
@@ -114,6 +114,8 @@ namespace Nop.Admin.Models.Orders
         public string OrderAmountIncl { get; set; } //MF 09.12.16
         [NopResourceDisplayName("Admin.Orders.Fields.OrderTotalDiscountIncl")]
         public string OrderTotalDiscountIncl { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.OrderTotalAmountIncl")]
+        public string OrderTotalAmountIncl { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.EarnedRewardPointsBaseAmountIncl")]
         public string EarnedRewardPointsBaseAmountIncl { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.EarnedRewardPointsBaseAmountExcl")]
@@ -549,5 +551,6 @@ namespace Nop.Admin.Models.Orders
         public string aggregatorshipping { get; set; }
         public string aggregatortax { get; set; }
         public string aggregatortotal { get; set; }
+        public string aggregatortotalamountincl { get; set; }
     }
 }

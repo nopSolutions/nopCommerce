@@ -316,6 +316,8 @@ namespace Nop.Admin.Models.Customers
 
             [NopResourceDisplayName("Admin.Customers.Customers.Orders.OrderTotal")]
             public string OrderTotal { get; set; }
+            [NopResourceDisplayName("Admin.Customers.Customers.Orders.OrderTotalAmountIncl")]
+            public string OrderTotalAmountIncl { get; set; }
 
             [NopResourceDisplayName("Admin.Customers.Customers.Orders.Store")]
             public string StoreName { get; set; }

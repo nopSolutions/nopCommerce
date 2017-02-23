@@ -283,6 +283,7 @@ namespace Nop.Services.Orders
             public decimal OrderDiscountAmountIncl { get; set; }
             public decimal EarnedRewardPointsBaseAmountIncl { get; set; }
             public decimal EarnedRewardPointsBaseAmountExcl { get; set; }
+            public bool RewardPointsTaxable { get; set; }
 
         }
 
@@ -508,6 +509,7 @@ namespace Nop.Services.Orders
             details.OrderAmountIncl = includingTax ? taxSummaryIncl.TotalAmountIncludingTax : taxSummaryExcl.TotalAmountIncludingTax;
             details.EarnedRewardPointsBaseAmountIncl = earnedRewardPointsBaseAmountIncl;
             details.EarnedRewardPointsBaseAmountExcl = earnedRewardPointsBaseAmountExcl;
+            details.RewardPointsTaxable = _rewardPointsSettings.EarnedRewardPointsAreTaxable;
 
 
             //discount history
@@ -644,6 +646,7 @@ namespace Nop.Services.Orders
             details.OrderDiscountAmountIncl = details.InitialOrder.OrderDiscountIncl;
             details.EarnedRewardPointsBaseAmountIncl = details.InitialOrder.EarnedRewardPointsBaseAmountIncl;
             details.EarnedRewardPointsBaseAmountExcl = details.InitialOrder.EarnedRewardPointsBaseAmountExcl;
+            details.RewardPointsTaxable = _rewardPointsSettings.EarnedRewardPointsAreTaxable;
             processPaymentRequest.OrderTotal = details.OrderTotal;
 
             return details;
@@ -685,6 +688,7 @@ namespace Nop.Services.Orders
                 OrderDiscountIncl = details.OrderDiscountAmountIncl,
                 EarnedRewardPointsBaseAmountIncl = details.EarnedRewardPointsBaseAmountIncl,
                 EarnedRewardPointsBaseAmountExcl = details.EarnedRewardPointsBaseAmountExcl,
+                RewardPointsTaxable = details.RewardPointsTaxable,
                 RefundedAmount = decimal.Zero,
                 OrderDiscount = details.OrderDiscountAmount,
                 CheckoutAttributeDescription = details.CheckoutAttributeDescription,

@@ -49,6 +49,7 @@ namespace Nop.Web.Models.ShoppingCart
         public string OrderAmount { get; set; } //MF 09.12.16
         public string OrderAmountIncl { get; set; } //MF 09.12.16
         public string OrderDiscountIncl { get; set; }
+        public string OrderTotalAmountIncl { get; set; }
         public string EarnedRewardPointsBaseAmountIncl { get; set; }
         public string EarnedRewardPointsBaseAmountExcl { get; set; }
         public bool HasRewardPointsProduct { get; set; }        

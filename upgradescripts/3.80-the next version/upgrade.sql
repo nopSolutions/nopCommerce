@@ -152,6 +152,18 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Fields.InvoiceDateUtc">
     <Value>Invoice Date</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderTotal">
+    <Value>Order total to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderTotal.Hint">
+    <Value>The total amount to pay for this order (includes discounts, shipping and tax, reward points, gift cards).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderTotalAmountIncl">
+    <Value>Order total amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderTotal.Hint">
+    <Value>The total amount for this order (includes discounts, shipping and tax).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.OrderAmount">
     <Value>Amount</Value>
   </LocaleResource>
@@ -205,8 +217,14 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.Edit.OrderAmountIncl.Hint">
     <Value>Amount incl. Tax</Value>
-  </LocaleResource>  
-    <LocaleResource Name="Admin.Orders.Fields.Edit.EarnedRewardPointsBaseAmountIncl">
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderTotal">
+    <Value>Order total to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderTotal.Hint">
+    <Value>Edit the total amount to pay for this order.</Value>
+  </LocaleResource>    
+  <LocaleResource Name="Admin.Orders.Fields.Edit.EarnedRewardPointsBaseAmountIncl">
     <Value>Earned reward points base amount incl. Tax</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.Edit.EarnedRewardPointsBaseAmountIncl.Hint">
@@ -3831,6 +3849,21 @@ IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and N
 ALTER TABLE [Order] ALTER COLUMN EarnedRewardPointsBaseAmountExcl DECIMAL(18,4) NOT NULL
 GO
 
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='RewardPointsTaxable')
+BEGIN
+	ALTER TABLE [dbo].[Order]
+	ADD RewardPointsTaxable bit NULL;
+END
+GO
+IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='RewardPointsTaxable')
+UPDATE   [dbo].[Order]
+	SET     RewardPointsTaxable = 0
+	WHERE   RewardPointsTaxable IS NULL
+GO
+IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='RewardPointsTaxable')
+ALTER TABLE [Order] ALTER COLUMN RewardPointsTaxable bit NOT NULL
+GO
 --a stored procedure update
 IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[ProductLoadAllPaged]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [ProductLoadAllPaged]

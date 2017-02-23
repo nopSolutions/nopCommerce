@@ -1057,6 +1057,10 @@ namespace Nop.Web.Factories
                     model.OrderAmount = _priceFormatter.FormatPrice(orderAmount, true, true);
                     decimal orderAmountIncl = _currencyService.ConvertFromPrimaryStoreCurrency(taxSummary.TotalAmountIncludingTax, _workContext.WorkingCurrency);
                     model.OrderAmountIncl = _priceFormatter.FormatPrice(orderAmountIncl, true, includingTax);
+
+                    decimal orderTotalAmountInCustomerCurrency = _currencyService.ConvertFromPrimaryStoreCurrency(taxSummary.TotalAmountIncludingTax + (taxSummary.TotalPaymentFeeAmountNonTaxable ?? decimal.Zero) + (taxSummary.TotalShippingAmountNonTaxable ?? decimal.Zero), _workContext.WorkingCurrency);
+                    model.OrderTotalAmountIncl = _priceFormatter.FormatPrice(orderTotalAmountInCustomerCurrency, true, includingTax);
+
                 }
 
                 //subtotal

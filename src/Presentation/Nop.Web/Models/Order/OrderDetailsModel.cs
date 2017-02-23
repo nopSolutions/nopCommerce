@@ -88,6 +88,7 @@ namespace Nop.Web.Models.Order
         public string OrderAmount { get; set; } //MF 08.12.16
         public string OrderAmountIncl { get; set; } //MF 08.12.16
         public string OrderTotalDiscountIncl { get; set; }
+        public string OrderTotalAmountIncl { get; set; }
         public string EarnedRewardPointsBaseAmountIncl { get; set; }
         public string EarnedRewardPointsBaseAmountExcl { get; set; }
 

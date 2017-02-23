@@ -25,6 +25,7 @@ namespace Nop.Web.Models.Order
         {
             public string CustomOrderNumber { get; set; }
             public string OrderTotal { get; set; }
+            public string OrderTotalAmountIncl { get; set; }
             public bool IsReturnRequestAllowed { get; set; }
             public OrderStatus OrderStatusEnum { get; set; }
             public string OrderStatus { get; set; }

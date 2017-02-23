@@ -130,6 +130,9 @@ namespace Nop.Web.Factories
                 var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
                 orderModel.OrderTotal = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage);
 
+                var orderTotalAmountInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotalAmountIncl, order.CurrencyRate);
+                orderModel.OrderTotalAmountIncl = _priceFormatter.FormatPrice(orderTotalAmountInCustomerCurrency, true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage);
+
                 model.Orders.Add(orderModel);
             }
 
@@ -289,7 +292,7 @@ namespace Nop.Web.Factories
                     model.PaymentMethodAdditionalFee = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, false);
             }
 
-            //non taxable         
+            //non taxable
             if (order.OrderShippingNonTaxable != decimal.Zero)
             {
                 var orderShippingNonTaxableInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingNonTaxable, order.CurrencyRate);
@@ -376,6 +379,9 @@ namespace Nop.Web.Factories
             //total
             var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
             model.OrderTotal = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage);
+
+            var orderTotalAmountInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotalAmountIncl, order.CurrencyRate);
+            model.OrderTotalAmountIncl = _priceFormatter.FormatPrice(orderTotalAmountInCustomerCurrency, true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage);
 
             //checkout attributes
             model.CheckoutAttributeInfo = order.CheckoutAttributeDescription;
@@ -572,7 +578,7 @@ namespace Nop.Web.Factories
 
             //current amount/balance
             RewardPoints rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(customer.Id, _storeContext.CurrentStore.Id);
-            decimal rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsBalance.Points, _workContext.WorkingCurrency);            
+            decimal rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsBalance.Points, _workContext.WorkingCurrency);
             decimal rewardPointsAmountPurchased = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsBalance.PointsPurchased, _workContext.WorkingCurrency);
             model.RewardPointsBalance = rewardPointsBalance.Points;
             model.RewardPointsAmount = _priceFormatter.FormatPrice(rewardPointsAmount, true, false);
