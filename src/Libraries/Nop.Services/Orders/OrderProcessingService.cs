@@ -835,7 +835,7 @@ namespace Nop.Services.Orders
             var points = new RewardPoints(_rewardPointService);
 
             //earned points
-            decimal usedPurchasedRewardPointsAmount = order.RedeemedRewardPointsEntry.UsedAmountPurchased;
+            decimal usedPurchasedRewardPointsAmount = order.RedeemedRewardPointsEntry != null ? order.RedeemedRewardPointsEntry.UsedAmountPurchased : decimal.Zero;
 
             bool includingTax = order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax;
             decimal amount = _rewardPointService.GetRewardPointsBaseAmount(includingTax ? order.EarnedRewardPointsBaseAmountIncl : order.EarnedRewardPointsBaseAmountExcl, usedPurchasedRewardPointsAmount);

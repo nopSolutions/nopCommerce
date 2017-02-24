@@ -6787,7 +6787,7 @@
     <Value>Assign Invoice ID from Task</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.AssignInvoiceIdentFromTask.Hint">
-    <Value>Assign invoice id using background task. This assures that the same invoice id isn't used more than ones and that there are no wholes in the number series.</Value>
+    <Value>Assign invoice id using background task. This assures that the same invoice id isn't used more than ones and that there are no wholes in the number series. Please note: Activate the task manually in System/Schedule tasks.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.AutoUpdateOrderTotalsOnEditingOrder">
     <Value>Auto update order totals</Value>

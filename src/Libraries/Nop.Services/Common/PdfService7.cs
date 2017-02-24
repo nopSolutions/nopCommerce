@@ -566,9 +566,10 @@ namespace Nop.Services.Common
                 //empty Line
                 tabPage.AddHeaderCell(new Cell(1, col).Add("\n").AddStyle(styleCell));
                 //Invoice
-                paraPdf = new Paragraph(new Text(_localizationService.GetResource(order.InvoiceId != null? "PDFInvoice.Invoice" :"PDFInvoice.Order", lang.Id)).AddStyle(styleTitle));
-                if (order.InvoiceId != null)
-                    paraPdf.Add(new Text(" " + order.InvoiceId).AddStyle(styleTitle));
+                var invoiceID = (order.InvoiceId != null && order.InvoiceId != "ToBeAssigned") ? order.InvoiceId : null;
+                paraPdf = new Paragraph(new Text(_localizationService.GetResource(invoiceID != null? "PDFInvoice.Invoice" :"PDFInvoice.Order", lang.Id)).AddStyle(styleTitle));
+                if (invoiceID != null)
+                    paraPdf.Add(new Text(" " + invoiceID).AddStyle(styleTitle));
                 tabPage.AddHeaderCell(new Cell(1, col - 3).Add(paraPdf).AddStyle(styleCell));
                 paraPdf = new Paragraph();
                 if (order.InvoiceDateUtc.HasValue)
@@ -852,7 +853,7 @@ namespace Nop.Services.Common
                     }
                     //order total incl.
                     lstSummary.Add(new Tuple<string, decimal, bool, bool, bool, bool>("PDFInvoice.OrderAmountIncl", order.OrderAmountIncl, true, true, false, false));
-                    
+
                     //shipping non taxable
                     var shippTuple = Tuple.Create("PDFInvoice.Shipping", order.OrderShippingNonTaxable, false, false, order.ShippingStatus != ShippingStatus.ShippingNotRequired, false);
                     lstSummary.Add(shippTuple);
