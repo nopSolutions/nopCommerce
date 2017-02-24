@@ -318,7 +318,7 @@ set @resources='
     <Value>Last used Invoice No.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.InvoiceIdent.Hint">
-    <Value>Invoice ID counter. This is useful if you want your invoices to start from certain number. This only affects invoices henceforward. The value must be greater than the current maximum invoice ID.</Value>
+    <Value>Invoice ID counter. This is useful if you want your invoices to start from certain number. This only affects invoices henceforward. The value must be greater than the current maximum invoice ID. Please note: Activate the task manually in System/Schedule tasks.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.InvoiceYear">
     <Value>Year of last invoice</Value>
