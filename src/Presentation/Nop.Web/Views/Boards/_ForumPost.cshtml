@@ -6,7 +6,6 @@
     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
     var thisPageUrl = webHelper.GetThisPageUrl(true);
 }
-@Html.Raw(String.Format("<a name=\"{0}\"></a>", Model.Id))
 <div class="topic-post" id="@Html.Encode(String.Format("post{0}", Model.Id))">
     <div class="post-info">
         <div class="user-info">
