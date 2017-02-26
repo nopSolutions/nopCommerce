@@ -309,11 +309,25 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare category (simple) models
         /// </summary>
+        /// <returns>Categories</returns>
+        protected virtual List<CategorySimpleModel> PrepareCategorySimpleModels()
+        {
+            //load and cache them
+            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_ALL_MODEL_KEY,
+                _workContext.WorkingLanguage.Id,
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
+            return _cacheManager.Get(cacheKey, () => PrepareCategorySimpleModels(0));
+        }
+
+        /// <summary>
+        /// Prepare category (simple) models
+        /// </summary>
         /// <param name="rootCategoryId">Root category identifier</param>
         /// <param name="loadSubCategories">A value indicating whether subcategories should be loaded</param>
         /// <param name="allCategories">All available categories; pass null to load them internally</param>
         /// <returns>Category models</returns>
-        protected virtual IList<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId,
+        protected virtual List<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId,
             bool loadSubCategories = true,IList<Category> allCategories = null)
         {
             var result = new List<CategorySimpleModel>();
@@ -373,7 +387,7 @@ namespace Nop.Web.Factories
         }
 
         #endregion
-        
+
         #region Categories
 
         public virtual CategoryModel PrepareCategoryModel(Category category, CatalogPagingFilteringModel command)
@@ -594,16 +608,11 @@ namespace Nop.Web.Factories
                     activeCategoryId = productCategories[0].CategoryId;
             }
 
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, 
-                _workContext.WorkingLanguage.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
-                _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () => PrepareCategorySimpleModels(0).ToList());
-
+            var cachedCategoriesModel = PrepareCategorySimpleModels();
             var model = new CategoryNavigationModel
             {
                 CurrentCategoryId = activeCategoryId,
-                Categories = cachedModel
+                Categories = cachedCategoriesModel
             };
 
             return model;
@@ -612,11 +621,7 @@ namespace Nop.Web.Factories
         public virtual TopMenuModel PrepareTopMenuModel()
         {
             //categories
-            string categoryCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_MENU_MODEL_KEY,
-                _workContext.WorkingLanguage.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
-                _storeContext.CurrentStore.Id);
-            var cachedCategoriesModel = _cacheManager.Get(categoryCacheKey, () => PrepareCategorySimpleModels(0));
+            var cachedCategoriesModel = PrepareCategorySimpleModels();
 
             //top menu topics
             string topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TOP_MENU_MODEL_KEY, 
