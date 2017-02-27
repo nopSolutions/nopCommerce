@@ -750,11 +750,12 @@ namespace Nop.Web.Infrastructure.Cache
         /// Key for sitemap on the sitemap SEO page
         /// </summary>
         /// <remarks>
-        /// {0} : language id
-        /// {1} : roles of the current user
-        /// {2} : current store ID
+        /// {0} : sitemap identifier
+        /// {1} : language id
+        /// {2} : roles of the current user
+        /// {3} : current store ID
         /// </remarks>
-        public const string SITEMAP_SEO_MODEL_KEY = "Nop.pres.sitemap.seo-{0}-{1}-{2}";
+        public const string SITEMAP_SEO_MODEL_KEY = "Nop.pres.sitemap.seo-{0}-{1}-{2}-{3}";
         public const string SITEMAP_PATTERN_KEY = "Nop.pres.sitemap";
 
         /// <summary>
