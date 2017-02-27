@@ -3689,24 +3689,20 @@ label, label + * {
 .order-review-data .title,
 .order-details-area .title,
 .shipment-details-area .title {
-	margin: 20px 0 5px;
+	margin: 0 0 5px;
 	padding: 0;
 	font-size: 16px;
 	font-weight: bold;
 }
-.order-review-data .title:first-child,
-.order-details-area .title:first-child,
-.shipment-details-area .title:first-child {
-	margin-top: 0;
-}
 .order-review-data .title strong,
 .order-details-area .title strong,
-.shipment-details-area .title strong{
+.shipment-details-area .title strong {
     font-weight: 700;
 }
-.order-review-data .side-list-wrap,
-.order-details-area .side-list-wrap,
-.shipment-details-area .side-list-wrap {
+.order-review-data .payment-method-info,
+.order-review-data .shipping-method-info,
+.order-details-area .payment-method-info,
+.order-details-area .shipping-method-info {
     margin-top: 20px;
 }
 .order-completed .details {
