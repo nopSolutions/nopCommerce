@@ -26,6 +26,8 @@
                             $('#ph-topic-@Model.Id .topic-block-body').html(data.Body);
                             $('#ph-password-@Model.Id').hide();
                             $('#ph-topic-@Model.Id').show();
+                            //we need to re-run the validation plugin after the content is loaded after successful authentication
+                            $.validator.unobtrusive.parse('#ph-topic-@Model.Id');
                         } else {
                             $('#password-error-@Model.Id').text(data.Error).fadeIn("slow");
                             $('#ph-password-@Model.Id #password-@Model.Id').select().focus();
