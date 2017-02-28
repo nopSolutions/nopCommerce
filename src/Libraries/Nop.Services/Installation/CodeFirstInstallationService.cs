@@ -5823,7 +5823,7 @@ namespace Nop.Services.Installation
 
         }
 
-        protected virtual void InstallSettings()
+        protected virtual void InstallSettings(bool installSampleData)
         {
             var settingService = EngineContext.Current.Resolve<ISettingService>();
             settingService.SaveSetting(new PdfSettings
@@ -6408,6 +6408,17 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new WidgetSettings
             {
                 ActiveWidgetSystemNames = new List<string> { "Widgets.NivoSlider" },
+            });
+
+            settingService.SaveSetting(new DisplayDefaultMenuItemSettings
+            {
+                DisplayHomePageMenuItem = !installSampleData,
+                DisplayNewProductsMenuItem = !installSampleData,
+                DisplayProductSearchMenuItem = !installSampleData,
+                DisplayCustomerInfoMenuItem = !installSampleData,
+                DisplayBlogMenuItem = !installSampleData,
+                DisplayForumsMenuItem = !installSampleData,
+                DisplayContactUsMenuItem = !installSampleData
             });
         }
 
@@ -12179,7 +12190,7 @@ namespace Nop.Services.Installation
             InstallCustomersAndUsers(defaultUserEmail, defaultUserPassword);
             InstallEmailAccounts();
             InstallMessageTemplates();
-            InstallSettings();
+            InstallSettings(installSampleData);
             InstallTopicTemplates();
             InstallTopics();
             InstallLocaleResources();

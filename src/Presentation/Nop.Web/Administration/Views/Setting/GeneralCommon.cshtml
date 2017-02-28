@@ -149,6 +149,84 @@
                     </div>
                 </div>
 
+                <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.TopMenuItems")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem_OverrideForStore, model => model.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem)
+                                @Html.ValidationMessageFor(model => model.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem_OverrideForStore, model => model.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem)
+                                @Html.ValidationMessageFor(model => model.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem_OverrideForStore, model => model.DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem)
+                                @Html.ValidationMessageFor(model => model.DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem_OverrideForStore, model => model.DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem)
+                                @Html.ValidationMessageFor(model => model.DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.DisplayDefaultMenuItemSettings.DisplayBlogMenuItem_OverrideForStore, model => model.DisplayDefaultMenuItemSettings.DisplayBlogMenuItem, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.DisplayDefaultMenuItemSettings.DisplayBlogMenuItem)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.DisplayDefaultMenuItemSettings.DisplayBlogMenuItem)
+                                @Html.ValidationMessageFor(model => model.DisplayDefaultMenuItemSettings.DisplayBlogMenuItem)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem_OverrideForStore, model => model.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem)
+                                @Html.ValidationMessageFor(model => model.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem_OverrideForStore, model => model.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem)
+                                @Html.ValidationMessageFor(model => model.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.SocialMedia")
