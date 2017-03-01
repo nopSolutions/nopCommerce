@@ -537,32 +537,30 @@ namespace Nop.Services.Catalog
             //needed for VAT calculation of product bundles
             //taxrate comes from associated product and not from product
             decimal attributesTotalPrice = decimal.Zero;
-            if (combination != null)
+            var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
+            if (attributeValues != null)
             {
-                var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
-                if (attributeValues != null)
+                decimal taxRate;
+                foreach (var attributeValue in attributeValues)
                 {
-                    decimal taxRate;
-                    foreach (var attributeValue in attributeValues)
-                    {
-                        var attributePrice = GetProductAttributeValuePriceAdjustment(attributeValue);
-                        attributesTotalPrice += attributePrice;
+                    var attributePrice = GetProductAttributeValuePriceAdjustment(attributeValue);
+                    attributesTotalPrice += attributePrice;
 
-                        if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                    if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                    {
+                        //bundled product
+                        var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
+                        if (associatedProduct != null)
                         {
-                            //bundled product
-                            var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
-                            if (associatedProduct != null)
-                            {
-                                //get only the taxrate of associate product, price is not needed
-                                var attributePriceTax = _taxService.GetProductPrice(associatedProduct, 0, customer, out taxRate);
-                                //build taxSummary for tax subdivision
-                                taxWeightSummary.AddRate(taxRate, attributePrice);
-                            }
+                            //get only the taxrate of associate product, price is not needed
+                            var attributePriceTax = _taxService.GetProductPrice(associatedProduct, 0, customer, out taxRate);
+                            //build taxSummary for tax subdivision
+                            taxWeightSummary.AddRate(taxRate, attributePrice);
                         }
                     }
                 }
             }
+
 
             if (combination != null && combination.OverriddenPrice.HasValue)
             {
@@ -618,17 +616,17 @@ namespace Nop.Services.Catalog
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
                 finalPrice = RoundingHelper.RoundPrice(finalPrice);
 
-            //add tax attributes
+            //add tax attributes if needed
             if (taxWeightSummary != null && taxWeightSummary.TaxRates.Any())
             {
                 decimal prodcutTaxRate;
-                //get taxrate, no price needed
-                var itemAmount = _taxService.GetProductPrice(product, 0, customer, out prodcutTaxRate);
+                //get taxrate and product price
+                var productPrice = _taxService.GetProductPrice(product, product.Price, customer, out prodcutTaxRate);
 
                 //price is overridden or it is product price + attributes price
-                if (combination != null && !combination.OverriddenPrice.HasValue)
+                if (combination == null || combination != null && !combination.OverriddenPrice.HasValue)
                 {
-                    var baseProductPrice = finalPrice - attributesTotalPrice;
+                    var baseProductPrice = productPrice; // finalPrice - attributesTotalPrice;
                     //add product price if exists
                     if (baseProductPrice > decimal.Zero)
                         taxWeightSummary.AddRate(prodcutTaxRate, baseProductPrice);
