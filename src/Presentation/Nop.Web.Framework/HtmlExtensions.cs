@@ -404,8 +404,8 @@ namespace Nop.Web.Framework
         }
 
         public static MvcHtmlString NopEditorFor<TModel, TValue>(this HtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression, string postfix = "", bool required = false,
-            bool? renderFormControlClass = null)
+            Expression<Func<TModel, TValue>> expression, string postfix = "",
+            bool? renderFormControlClass = null, bool required = false)
         {
             var result = new StringBuilder();
 
@@ -426,8 +426,8 @@ namespace Nop.Web.Framework
         }
 
         public static MvcHtmlString NopDropDownList<TModel>(this HtmlHelper<TModel> helper, string name,
-            IEnumerable<SelectListItem> itemList, bool required = false, 
-            object htmlAttributes = null, bool renderFormControlClass = true)
+            IEnumerable<SelectListItem> itemList, object htmlAttributes = null, 
+            bool renderFormControlClass = true, bool required = false)
         {
             var result = new StringBuilder();
 
@@ -447,7 +447,7 @@ namespace Nop.Web.Framework
 
         public static MvcHtmlString NopDropDownListFor<TModel, TValue>(this HtmlHelper<TModel> helper,
             Expression<Func<TModel, TValue>> expression, IEnumerable<SelectListItem> itemList,
-            bool required = false, object htmlAttributes = null, bool renderFormControlClass = true)
+            object htmlAttributes = null, bool renderFormControlClass = true, bool required = false)
         {
             var result = new StringBuilder();
 
@@ -466,8 +466,8 @@ namespace Nop.Web.Framework
         }
 
         public static MvcHtmlString NopTextAreaFor<TModel, TValue>(this HtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression, bool required = false, object htmlAttributes = null,
-            bool renderFormControlClass = true, int rows = 4, int columns = 20)
+            Expression<Func<TModel, TValue>> expression, object htmlAttributes = null,
+            bool renderFormControlClass = true, int rows = 4, int columns = 20, bool required = false)
         {
             var result = new StringBuilder();
 
