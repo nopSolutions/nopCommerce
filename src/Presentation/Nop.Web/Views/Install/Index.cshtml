@@ -47,17 +47,15 @@
                 </div>
             </div>
         </div>
-        <div class="content">
-            @Html.ValidationSummary(false)
-
-            @*@ILS.GetResource("Tooltip1")*@
-            @ILS.GetResource("Tooltip2")
-            <br />
-            @ILS.GetResource("Documentation1")
-            <a href="http://docs.nopcommerce.com/dashboard.action?utm_source=installation-page&utm_medium=footer&utm_campaign=installation-page" target="_blank">@ILS.GetResource("Documentation2")</a>.
-
-            @using (Html.BeginForm("Index", "Install", FormMethod.Post, new { id = "installation-form" }))
+        @using (Html.BeginForm("Index", "Install", FormMethod.Post, new { id = "installation-form" }))
             {
+            <div class="content">
+                @Html.ValidationSummary(false)
+
+                @*<p>@ILS.GetResource("Tooltip1")</p>*@
+                <p>@ILS.GetResource("Tooltip2")</p>
+                <p>@ILS.GetResource("Documentation1") <a href="http://docs.nopcommerce.com/dashboard.action?utm_source=installation-page&utm_medium=footer&utm_campaign=installation-page" target="_blank">@ILS.GetResource("Documentation2")</a>.</p>
+
                 <script type="text/javascript">
                     function showThrobber(message) {
                         $('.throbber-header').html(message);
@@ -213,14 +211,14 @@
                                     {
                                         <div class="radio">
                                             <label>
-                                                @Html.RadioButton("DataProvider", "sqlce", (Model.DataProvider == "sqlce"), new {id = "provider_sqlce"})
+                                                @Html.RadioButton("DataProvider", "sqlce", (Model.DataProvider == "sqlce"), new { id = "provider_sqlce" })
                                                 @ILS.GetResource("SqlCompact")
                                             </label>
                                         </div>
                                     }
                                     <div class="radio">
                                         <label>
-                                            @Html.RadioButton("DataProvider", "sqlserver", (Model.DataProvider == "sqlserver"), new {id = "provider_sqlserver"})
+                                            @Html.RadioButton("DataProvider", "sqlserver", (Model.DataProvider == "sqlserver"), new { id = "provider_sqlserver" })
                                             @ILS.GetResource("SqlStandard") <strong>@ILS.GetResource("Recommended")</strong>
                                         </label>
                                     </div>
@@ -364,14 +362,14 @@
                         </div>
                     </div>
                 </div>
-            }
-        </div>
+            </div>
+        }
         <div class="content-footer">
             @using (Html.BeginForm("RestartInstall", "Install", FormMethod.Post, new { id = "restart-form" }))
             {
                 <div class="row">
                     <div class="col-xs-12 text-center">
-                        <button type="submit" class="btn btn-md btn-default"  title="@ILS.GetResource("RestartInstallationTooltip")">@ILS.GetResource("RestartInstallation")</button>
+                        <button type="submit" class="btn btn-md btn-default" title="@ILS.GetResource("RestartInstallationTooltip")">@ILS.GetResource("RestartInstallation")</button>
                     </div>
                 </div>
             }
