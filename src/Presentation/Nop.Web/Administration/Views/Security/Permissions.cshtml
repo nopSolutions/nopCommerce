@@ -41,7 +41,7 @@
                         else
                         {
                             <script type="text/javascript">
-                                $(document).ready(function() {
+                                $(document).ready(function () {
                                     @foreach (var cr in Model.AvailableCustomerRoles)
                                     {
                                         <text>
@@ -53,41 +53,43 @@
                                     }
                                 });
                             </script>
-                            <table class="table table-hover table-bordered">
-                                <tbody>
-                                <tr>
-                                    <th scope="col">
-                                        <strong>@T("Admin.Configuration.ACL.Permission")</strong>
-                                    </th>
-                                    @foreach (var cr in Model.AvailableCustomerRoles)
-                                    {
-                                        <th scope="col">
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" id="selectall-@(cr.Id)" />
-                                                    <strong>@cr.Name</strong>
-                                                </label>
-                                            </div>
-                                        </th>
-                                    }
-                                </tr>
-                                @foreach (var pr in Model.AvailablePermissions)
-                                {
-                                    <tr>
-                                        <td>
-                                            <span>@pr.Name</span>
-                                        </td>
-                                        @foreach (var cr in Model.AvailableCustomerRoles)
+                            <div class="scroll-wrapper">
+                                <table class="table table-hover table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="col">
+                                                <strong>@T("Admin.Configuration.ACL.Permission")</strong>
+                                            </th>
+                                            @foreach (var cr in Model.AvailableCustomerRoles)
+                                            {
+                                                <th scope="col">
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="checkbox" id="selectall-@(cr.Id)" />
+                                                            <strong>@cr.Name</strong>
+                                                        </label>
+                                                    </div>
+                                                </th>
+                                            }
+                                        </tr>
+                                        @foreach (var pr in Model.AvailablePermissions)
                                         {
-                                            var allowed = Model.Allowed.ContainsKey(pr.SystemName) && Model.Allowed[pr.SystemName][cr.Id];
-                                            <td>
-                                                <input class="allow_@(cr.Id)" type="checkbox" value="@(pr.SystemName)" name="allow_@(cr.Id)" @(allowed ? " checked=checked" : null)/>
-                                            </td>
+                                            <tr>
+                                                <td>
+                                                    <span>@pr.Name</span>
+                                                </td>
+                                                @foreach (var cr in Model.AvailableCustomerRoles)
+                                                {
+                                                    var allowed = Model.Allowed.ContainsKey(pr.SystemName) && Model.Allowed[pr.SystemName][cr.Id];
+                                                    <td>
+                                                        <input class="allow_@(cr.Id)" type="checkbox" value="@(pr.SystemName)" name="allow_@(cr.Id)" @(allowed ? " checked=checked" : null) />
+                                                    </td>
+                                                }
+                                            </tr>
                                         }
-                                    </tr>
-                                }
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         }
                     </div>
                 </div>

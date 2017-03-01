@@ -123,6 +123,9 @@ ul.common-list {
 .dropdown-menu li:hover button{
     background-color: transparent !important;
 }
+.scroll-wrapper {
+    overflow-x: scroll;
+}
 
 /*DISCOUNT*/
 .requirement-container {
