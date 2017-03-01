@@ -4081,7 +4081,7 @@ GO
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shoppingcartsettings.cartssharedbetweenstores')
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
-	VALUES (N'shoppingcartsettings.activationdelayperiodid', N'False', 0)
+	VALUES (N'shoppingcartsettings.cartssharedbetweenstores', N'False', 0)
 END
 GO
 
