@@ -1727,13 +1727,14 @@ label, label + * {
 	overflow: hidden;
 	font-size: 0;
 }
-.gallery .picture-thumbs a {
+.gallery .picture-thumbs .thumb-item {
 	display: inline-block;
 	position: relative;
 	width: 100px;
 	height: 100px;
 	margin: 0 5px 10px;
 	overflow: hidden;
+    cursor: pointer;
 }
 
 .overview {
