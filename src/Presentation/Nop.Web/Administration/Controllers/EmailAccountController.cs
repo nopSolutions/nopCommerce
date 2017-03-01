@@ -68,11 +68,8 @@ namespace Nop.Admin.Controllers
                 Total = emailAccountModels.Count()
             };
 
-			return new JsonResult
-			{
-				Data = gridModel
-			};
-		}
+            return Json(gridModel);
+        }
 
         public virtual ActionResult MarkAsDefaultEmail(int id)
         {

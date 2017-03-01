@@ -158,6 +158,7 @@
     <Compile Include="Menu\SiteMapNode.cs" />
     <Compile Include="Menu\XmlSiteMap.cs" />
     <Compile Include="Mvc\ActionConfirmationModel.cs" />
+    <Compile Include="Mvc\ConverterJsonResult.cs" />
     <Compile Include="Mvc\NoTrimAttribute.cs" />
     <Compile Include="Mvc\DependencyRegistrarExtensions.cs" />
     <Compile Include="Mvc\NullJsonResult.cs" />

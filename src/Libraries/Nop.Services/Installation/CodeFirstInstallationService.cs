@@ -5934,7 +5934,8 @@ namespace Nop.Services.Installation
                 PopupGridPageSize = 10,
                 GridPageSizes = "10, 15, 20, 50, 100",
                 RichEditorAdditionalSettings = null,
-                RichEditorAllowJavaScript = false
+                RichEditorAllowJavaScript = false,
+                UseIsoDateTimeConverterInJson = true
             });
 
 
