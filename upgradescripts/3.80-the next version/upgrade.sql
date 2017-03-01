@@ -2036,6 +2036,18 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.ViewLink">
     <Value>Edit rules</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.ImportCategories">
+    <Value>{0} categories were imported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ImportManufacturers">
+    <Value>{0} manufacturers were imported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ImportProducts">
+    <Value>{0} products were imported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ImportStates">
+    <Value>{0} states and provinces were imported</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -4669,5 +4681,37 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'adminareasettings.useiso
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'adminareasettings.useisodatetimeconverterinjson', N'True', 0)
+END
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'ImportCategories')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'ImportCategories', N'Categories were imported', N'True')
+END
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'ImportManufacturers')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'ImportManufacturers', N'Manufacturers were imported', N'True')
+END
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'ImportProducts')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'ImportProducts', N'Products were imported', N'True')
+END
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'ImportStates')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'ImportStates', N'States and provinces were imported', N'True')
 END
 GO

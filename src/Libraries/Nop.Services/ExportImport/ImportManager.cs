@@ -17,6 +17,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.ExportImport.Help;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Security;
@@ -59,6 +60,7 @@ namespace Nop.Services.ExportImport
         private readonly IProductTagService _productTagService;
         private readonly IWorkContext _workContext;
         private readonly ILocalizationService _localizationService;
+        private readonly ICustomerActivityService _customerActivityService;
         private readonly VendorSettings _vendorSettings;
 
         #endregion
@@ -88,6 +90,7 @@ namespace Nop.Services.ExportImport
             IProductTagService productTagService,
             IWorkContext workContext,
             ILocalizationService localizationService,
+            ICustomerActivityService customerActivityService,
             VendorSettings vendorSettings)
         {
             this._productService = productService;
@@ -113,6 +116,7 @@ namespace Nop.Services.ExportImport
             this._productTagService = productTagService;
             this._workContext = workContext;
             this._localizationService = localizationService;
+            this._customerActivityService = customerActivityService;
             this._vendorSettings = vendorSettings;
         }
 
@@ -317,7 +321,6 @@ namespace Nop.Services.ExportImport
         /// <param name="stream">Stream</param>
         public virtual void ImportProductsFromXlsx(Stream stream)
         {
-            //var start = DateTime.Now;
             using (var xlPackage = new ExcelPackage(stream))
             {
                 // get the first worksheet in the workbook
@@ -1081,8 +1084,10 @@ namespace Nop.Services.ExportImport
                     ImportProductImagesUsingHash(productPictureMetadata, allProductsBySku);
                 else
                     ImportProductImagesUsingServices(productPictureMetadata);
+
+                //activity log
+                _customerActivityService.InsertActivity("ImportProducts", _localizationService.GetResource("ActivityLog.ImportProducts"), countProductsInFile);
             }
-            //Trace.WriteLine(DateTime.Now-start);
         }
         
         /// <summary>
@@ -1215,6 +1220,9 @@ namespace Nop.Services.ExportImport
                 }
             }
 
+            //activity log
+            _customerActivityService.InsertActivity("ImportStates", _localizationService.GetResource("ActivityLog.ImportStates"), count);
+
             return count;
         }
 
@@ -1336,6 +1344,9 @@ namespace Nop.Services.ExportImport
 
                     iRow++;
                 }
+
+                //activity log
+                _customerActivityService.InsertActivity("ImportManufacturers", _localizationService.GetResource("ActivityLog.ImportManufacturers"), iRow - 2);
             }
         }
 
@@ -1463,6 +1474,9 @@ namespace Nop.Services.ExportImport
 
                     iRow++;
                 }
+
+                //activity log
+                _customerActivityService.InsertActivity("ImportCategories", _localizationService.GetResource("ActivityLog.ImportCategories"), iRow - 2);
             }
         }
 
