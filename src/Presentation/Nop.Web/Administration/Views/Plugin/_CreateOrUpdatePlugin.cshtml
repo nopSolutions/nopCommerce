@@ -37,7 +37,7 @@
                                 @Html.NopLabelFor(model => model.FriendlyName)
                             </div>
                             <div class="col-sm-9">
-                                @Html.NopEditorFor(model => model.FriendlyName)
+                                @Html.NopEditorFor(model => model.FriendlyName, required: true)
                                 @Html.ValidationMessageFor(model => model.FriendlyName)
                             </div>
                         </div>

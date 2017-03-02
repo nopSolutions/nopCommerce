@@ -107,7 +107,7 @@
                               @Html.NopLabelFor(model => model.Subject)
                           </div>
                           <div class="col-md-9">
-                              @Html.NopEditorFor(model => model.Subject)
+                              @Html.NopEditorFor(model => model.Subject, required: true)
                               @Html.ValidationMessageFor(model => model.Subject)
                           </div>
                       </div>
@@ -116,7 +116,7 @@
                               @Html.NopLabelFor(model => model.Body)
                           </div>
                           <div class="col-md-9">
-                              @Html.NopTextAreaFor(model => model.Body)
+                              @Html.NopTextAreaFor(model => model.Body, required: true)
                               @Html.ValidationMessageFor(model => model.Body)
                           </div>
                           <script type="text/javascript">
@@ -185,7 +185,7 @@
                                     @Html.ValidationMessageFor(model => model.DelayBeforeSend)
                                 </div>
                                 <div class="col-md-3">
-                                    @Html.NopDropDownListFor(model => model.DelayPeriodId, ((MessageDelayPeriod) Model.DelayPeriodId).ToSelectList(), new {style = "max-width: 200px;"})
+                                    @Html.NopDropDownListFor(model => model.DelayPeriodId, ((MessageDelayPeriod) Model.DelayPeriodId).ToSelectList(), htmlAttributes: new {style = "max-width: 200px;"})
                                     @Html.ValidationMessageFor(model => model.DelayPeriodId)
                                 </div>
                             </div>

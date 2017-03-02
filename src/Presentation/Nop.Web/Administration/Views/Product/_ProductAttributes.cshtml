@@ -15,81 +15,85 @@
                     <label class="control-label">
                         @textPrompt
                     </label>
-                    @if (attribute.IsRequired)
-                    {
-                        <span class="required">*</span>
-                    }
                 </div>
             </div>
             <div class="col-sm-8">
-                @switch (attribute.AttributeControlType)
-                {
-                    case AttributeControlType.DropdownList:
-                        {
-                            <select name="@(controlId)" id="@(controlId)" class="form-control">
-                                @if (!attribute.IsRequired)
-                                {
-                                    <option value="0">---</option>
-                                }
-                                @foreach (var attributeValue in attribute.Values)
-                                {
-                                    <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">
-                                        @attributeValue.Name
-                                    </option>
-                                }
-                            </select>
-                        }
-                        break;
-                    case AttributeControlType.RadioList:
-                    case AttributeControlType.ColorSquares:
-                    case AttributeControlType.ImageSquares:
-                        {
-                            foreach (var attributeValue in attribute.Values)
+                <div class="input-group input-group-required">
+                    @switch (attribute.AttributeControlType)
+                    {
+                        case AttributeControlType.DropdownList:
                             {
-                                <div class="radio">
-                                    <label>
-                                        <input id="@(controlId)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
-                                        @attributeValue.Name
-                                    </label>
-                                </div>
+                                <select name="@(controlId)" id="@(controlId)" class="form-control">
+                                    @if (!attribute.IsRequired)
+                                    {
+                                        <option value="0">---</option>
+                                    }
+                                    @foreach (var attributeValue in attribute.Values)
+                                    {
+                                        <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">
+                                            @attributeValue.Name
+                                        </option>
+                                    }
+                                </select>
                             }
-                        }
-                        break;
-                    case AttributeControlType.Checkboxes:
-                    case AttributeControlType.ReadonlyCheckboxes:
-                        {
-                            foreach (var attributeValue in attribute.Values)
+                            break;
+                        case AttributeControlType.RadioList:
+                        case AttributeControlType.ColorSquares:
+                        case AttributeControlType.ImageSquares:
                             {
-                                <div class="checkbox">
-                                    <label>
-                                        <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
-                                        @attributeValue.Name
-                                    </label>
-                                </div>
+                                foreach (var attributeValue in attribute.Values)
+                                {
+                                    <div class="radio">
+                                        <label>
+                                            <input id="@(controlId)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                            @attributeValue.Name
+                                        </label>
+                                    </div>
+                                }
                             }
-                        }
-                        break;
-                    case AttributeControlType.TextBox:
+                            break;
+                        case AttributeControlType.Checkboxes:
+                        case AttributeControlType.ReadonlyCheckboxes:
+                            {
+                                foreach (var attributeValue in attribute.Values)
+                                {
+                                    <div class="checkbox">
+                                        <label>
+                                            <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                                            @attributeValue.Name
+                                        </label>
+                                    </div>
+                                }
+                            }
+                            break;
+                        case AttributeControlType.TextBox:
+                            {
+                                <input name="@(controlId)" type="text" id="@(controlId)" class="form-control" />
+                            }
+                            break;
+                        case AttributeControlType.MultilineTextbox:
+                            {
+                                <textarea cols="20" id="@(controlId)" name="@(controlId)" rows="2" class="form-control"></textarea>
+                            }
+                            break;
+                        case AttributeControlType.Datepicker:
+                            {
+                                @Html.DatePickerDropDowns(controlId + "_day", controlId + "_month", controlId + "_year", DateTime.Now.Year, DateTime.Now.Year + 1)
+                            }
+                            break;
+                        case AttributeControlType.FileUpload:
+                            {
+                                <input type="file" id="@(controlId)" name="@(controlId)" class="form-control" />
+                            }
+                            break;
+                    }
+                    <div class="input-group-btn">
+                        @if (attribute.IsRequired)
                         {
-                            <input name="@(controlId)" type="text" id="@(controlId)" class="form-control" />
+                            @Html.RequiredHint()
                         }
-                        break;
-                    case AttributeControlType.MultilineTextbox:
-                        {
-                            <textarea cols="20" id="@(controlId)" name="@(controlId)" rows="2" class="form-control"></textarea>
-                        }
-                        break;
-                    case AttributeControlType.Datepicker:
-                        {
-                            @Html.DatePickerDropDowns(controlId + "_day", controlId + "_month", controlId + "_year", DateTime.Now.Year, DateTime.Now.Year + 1)
-                        }
-                        break;
-                    case AttributeControlType.FileUpload:
-                        {
-                            <input type="file" id="@(controlId)" name="@(controlId)" class="form-control" />
-                        }
-                        break;
-                }
+                    </div>
+                </div>
             </div>
         </div>
     }

@@ -793,13 +793,10 @@ td.k-state-focused.k-state-selected {
     top: 9px;
 }
 .form-horizontal span.required {
-    float: left;
-    margin-top: 8px;
-    margin-right: 5px;
-    color: #FF5E5E;
-}
-.form-horizontal .label-wrapper span.required {
-    float: none;
+    color: #ff2e2e;
+    margin-right: 6px;
+    font-size: 16px;
+    font-weight: bold;
 }
 .form-group {
     margin-bottom: 5px;
@@ -835,6 +832,9 @@ td.k-state-focused.k-state-selected {
 .form-group .attributes .qty-box {
 	width: 48px;
     display: inline-block;
+}
+.form-horizontal .attributes .input-group-required{
+    width: 320px;
 }
 
 .form-horizontal .k-autocomplete, .form-horizontal .k-combobox, 
@@ -908,6 +908,14 @@ td.k-state-focused.k-state-selected {
 }
 .input-group.input-group-short .input-group-text {
     margin-left: 10px;
+}
+.input-group-required {
+    width: 100%;
+}
+.input-group-required .input-group-btn{
+    font-size: inherit;
+    vertical-align: top;
+    width: 1.5%;
 }
 input[type=file].form-control {
     height: auto;
@@ -1342,9 +1350,6 @@ span.grid-report-item.red {
     }
     .form-horizontal .panel-popup .ico-help  {
         display: none;
-    }
-    .form-horizontal span.required {
-        float: none;
     }
 }
 

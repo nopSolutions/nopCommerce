@@ -32,7 +32,7 @@
                                 @Html.NopLabelFor(model => model.SendTo)
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SendTo)
+                                @Html.NopEditorFor(model => model.SendTo, required: true)
                                 @Html.ValidationMessageFor(model => model.SendTo)
                             </div>
                         </div>

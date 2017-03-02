@@ -80,7 +80,7 @@
                             @Html.NopLabelFor(model => model.ReasonForReturn)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.ReasonForReturn)
+                            @Html.NopEditorFor(model => model.ReasonForReturn, required: true)
                             @Html.ValidationMessageFor(model => model.ReasonForReturn)
                         </div>
                     </div>
@@ -89,7 +89,7 @@
                             @Html.NopLabelFor(model => model.RequestedAction)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.RequestedAction)
+                            @Html.NopEditorFor(model => model.RequestedAction, required: true)
                             @Html.ValidationMessageFor(model => model.RequestedAction)
                         </div>
                     </div>

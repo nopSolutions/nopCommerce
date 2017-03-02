@@ -36,7 +36,7 @@
         <div class="content-header clearfix">
             <div class="row">
                 <div class="col-xs-offset-9 col-xs-3">
-                    @Html.NopDropDownList("language", Model.AvailableLanguages, new { onchange = "window.location.href = this.value;", @class = "language-selector" })
+                    @Html.NopDropDownList("language", Model.AvailableLanguages, htmlAttributes: new { onchange = "window.location.href = this.value;", @class = "language-selector" })
                 </div>
             </div>
             <div class="row">

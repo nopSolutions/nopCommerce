@@ -14,7 +14,7 @@
                 Selected = lang.Id.Equals(Model.CurrentLanguage.Id)
             });
 
-            @Html.NopDropDownList("customerlanguage", languages, new {onchange = "setLocation(this.value);"})
+            @Html.NopDropDownList("customerlanguage", languages, htmlAttributes: new { onchange = "setLocation(this.value);" })
         }
     </div>
 }
