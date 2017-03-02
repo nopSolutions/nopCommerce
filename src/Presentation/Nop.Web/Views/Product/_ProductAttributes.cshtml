@@ -283,7 +283,7 @@
                             break;
                         case AttributeControlType.ImageSquares:
                             {
-                                <ul class="option-list color-squares" id="color-squares-@(attribute.Id)">
+                                <ul class="option-list image-squares" id="image-squares-@(attribute.Id)">
                                     @foreach (var attributeValue in attribute.Values)
                                     {
                                         var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
@@ -291,8 +291,8 @@
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment, string.Empty).Text;
                                         <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
                                             <label for="@(controlId)_@(attributeValue.Id)">
-                                                <span class="color-container">
-                                                    <span class="color" style="background: url('@(attributeValue.ImageSquaresPictureModel.ImageUrl)') 50% 50% no-repeat;">&nbsp;</span>
+                                                <span class="image-container image-squares-container">
+                                                    <span class="image" style="background: url('@(attributeValue.ImageSquaresPictureModel.ImageUrl)') 50% 50% no-repeat;">&nbsp;</span>
                                                 </span>
                                                 <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected"
                                                        @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw(string.Format("onclick=\"showHideRadioQuantity('{0}', true)\"", controlId)) : null) />

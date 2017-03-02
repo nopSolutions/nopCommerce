@@ -2253,36 +2253,43 @@ label, label + * {
 	color: #4ab2f1 !important;
 }
 
-.color-squares {
+.color-squares,
+.image-squares {
 	font-size: 0;
 }
-.color-squares li {
+.color-squares li,
+.image-squares li  {
 	display: inline-block;
 	margin: 0 5px 5px;
 	text-align: center;
 }
-.color-squares .color-container {
+.color-squares .color-container,
+.image-squares .image-container {
     display: block;
     position: relative;
     z-index: 0;
 	padding: 1px;
 }
-.color-squares label {
+.color-squares label,
+.image-squares label {
 	display: block;
 	margin: 0 !important;
     overflow: hidden;
 }
-.color-squares .color {
+.color-squares .color,
+.image-squares .image {
     display: table !important;
     width: 32px !important;
     height: 32px !important;
     border: 1px solid #444 !important;
     cursor: pointer;
 }
-.color-squares .selected-value .color-container {
+.color-squares .selected-value .color-container,
+.image-squares .selected-value .image-container {
 	background-color: #4ab2f1;
 }
-.color-squares li input {
+.color-squares li input,
+.image-squares li input {
 	position: relative;
 	z-index: -1;
 	margin: -32px 0 0;
@@ -2319,7 +2326,8 @@ label, label + * {
     border-right: 6px solid transparent;
     border-left: 6px solid transparent;
 }
-.color-squares li:hover .tooltip-container {
+.color-squares li:hover .tooltip-container,
+.image-squares li:hover .tooltip-container {
     visibility: visible;
     margin-right: -83px;
     margin-top: 5px;
@@ -3314,7 +3322,8 @@ label, label + * {
 	padding: 8px 10px;
 	font-size: 14px; /*reset zeroing*/
 }
-.checkout-attributes .color-squares li {
+.checkout-attributes .color-squares li,
+.checkout-attributes .image-squares li {
      border: none;
      padding: 0;
      line-height: 0;
@@ -6553,8 +6562,9 @@ pre {
 	width: 160px;
 	text-align: right;
 }
-.color-squares li {
-	margin: 0 0 0 10px 10px;
+.color-squares li,
+.image-squares li {
+	margin: 0 0 10px 10px;
 }
 .product-details-page .title {
 	text-align: right;
