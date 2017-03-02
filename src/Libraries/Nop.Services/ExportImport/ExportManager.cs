@@ -1363,6 +1363,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer>("IsRegistered", p => p.IsRegistered()),
                 new PropertyByName<Customer>("IsAdministrator", p => p.IsAdmin()),
                 new PropertyByName<Customer>("IsForumModerator", p => p.IsForumModerator()),
+                new PropertyByName<Customer>("CreatedOnUtc", p => p.CreatedOnUtc),
                 //attributes
                 new PropertyByName<Customer>("FirstName", p => p.GetAttribute<string>(SystemCustomerAttributeNames.FirstName)),
                 new PropertyByName<Customer>("LastName", p => p.GetAttribute<string>(SystemCustomerAttributeNames.LastName)),
@@ -1424,6 +1425,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("IsRegistered", null, customer.IsRegistered().ToString());
                 xmlWriter.WriteElementString("IsAdministrator", null, customer.IsAdmin().ToString());
                 xmlWriter.WriteElementString("IsForumModerator", null, customer.IsForumModerator().ToString());
+                xmlWriter.WriteElementString("CreatedOnUtc", null, customer.CreatedOnUtc.ToString());
 
                 xmlWriter.WriteElementString("FirstName", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName));
                 xmlWriter.WriteElementString("LastName", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
