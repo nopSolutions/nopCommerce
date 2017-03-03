@@ -1023,7 +1023,8 @@ namespace Nop.Web.Factories
                 {
                     var pictureModel = new PictureModel
                     {
-                        ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
+                        ImageUrl = _pictureService.GetPictureUrl(picture, defaultPictureSize, !isAssociatedProduct),
+                        ThumbImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
                         FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
                         Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), productName),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), productName),
