@@ -15804,6 +15804,12 @@
   <LocaleResource Name="Products.Vendor">
     <Value>Vendor</Value>
   </LocaleResource>
+   <LocaleResource Name="Products.Wishlist.AddToWishlist">
+    <Value>Add to wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Wishlist.AddToWishlist.Update">
+    <Value>Update</Value>
+  </LocaleResource>
   <LocaleResource Name="Profile.Country">
     <Value>Country</Value>
   </LocaleResource>
@@ -16062,14 +16068,14 @@
   <LocaleResource Name="ShoppingCart.AddToCart.Update">
     <Value>Update</Value>
   </LocaleResource>
-  <LocaleResource Name="ShoppingCart.AddToCompareList">
-    <Value>Add to compare list</Value>
-  </LocaleResource>
   <LocaleResource Name="ShoppingCart.AddToWishlist">
     <Value>Add to wishlist</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.AddToWishlist.Update">
     <Value>Update</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.AddToCompareList">
+    <Value>Add to compare list</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.AllowedQuantities">
     <Value>Allowed quantities for this product: {0}</Value>

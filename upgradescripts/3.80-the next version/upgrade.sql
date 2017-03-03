@@ -2048,6 +2048,12 @@ set @resources='
   <LocaleResource Name="ActivityLog.ImportStates">
     <Value>{0} states and provinces were imported</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Wishlist.AddToWishlist">
+    <Value>Add to wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Wishlist.AddToWishlist.Update">
+    <Value>Update</Value>
+  </LocaleResource>
 </Language>
 '
 
