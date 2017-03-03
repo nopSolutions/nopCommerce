@@ -88,8 +88,8 @@ namespace Nop.Core.Html
             if (replaceImg)
             {
                 // format the img tags: [img]http://www.nopCommerce.com/Content/Images/Image.jpg[/img]
-                // becomes: <img src="http://www.nopCommerce.com/Content/Images/Image.jpg"></img>
-                text = regexImg.Replace(text, "<img src=\"$1\" class=\"user-posted-image\" alt=\"\"></img>");
+                // becomes: <img src="http://www.nopCommerce.com/Content/Images/Image.jpg">
+                text = regexImg.Replace(text, "<img src=\"$1\" class=\"user-posted-image\" alt=\"\">");
             }
             return text;
         }
