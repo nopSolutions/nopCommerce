@@ -108,6 +108,7 @@ namespace Nop.Web.Controllers
         {
             this.Response.StatusCode = 404;
             this.Response.TrySkipIisCustomErrors = true;
+            this.Response.ContentType = "text/html";
 
             return View();
         }
