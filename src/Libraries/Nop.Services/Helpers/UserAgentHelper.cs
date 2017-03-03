@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Web;
@@ -16,6 +17,9 @@ namespace Nop.Services.Helpers
         private readonly NopConfig _config;
         private readonly HttpContextBase _httpContext;
         private readonly BrowscapXmlHelper _browscapXmlHelper;
+        private ConcurrentDictionary<string, bool> _foundSearchEnginesCache;
+
+        public const string IS_SEARCH_ENGINE_REQUEST_COOKIE_KEY = "ise";
         
 
         /// <summary>
@@ -28,6 +32,7 @@ namespace Nop.Services.Helpers
             this._config = config;
             this._httpContext = httpContext;
             this._browscapXmlHelper = browscapXmlHelper;
+            this._foundSearchEnginesCache = new ConcurrentDictionary<string, bool>();
         }
 
        
@@ -49,7 +54,33 @@ namespace Nop.Services.Helpers
                     return false;
 
                 var userAgent = _httpContext.Request.UserAgent;
-                return _browscapXmlHelper.IsCrawler(userAgent);
+                if (String.IsNullOrEmpty(userAgent))
+                    return false;
+
+                // check in already found cache
+                bool result;
+                if (_foundSearchEnginesCache.TryGetValue(userAgent, out result))
+                    return true;
+
+                // check cookie
+                var cookie = _httpContext.Request.Cookies[IS_SEARCH_ENGINE_REQUEST_COOKIE_KEY];
+                if (cookie != null)
+                    return cookie.Value == "1";
+
+                // check browscap
+                result = _browscapXmlHelper.IsCrawler(userAgent);
+
+                // if IS search engine, save to cache
+                if (result)
+                    _foundSearchEnginesCache.TryAdd(userAgent, true);
+
+                // write cookie for subsequent requests
+                _httpContext.Response.AppendCookie(new HttpCookie(IS_SEARCH_ENGINE_REQUEST_COOKIE_KEY)
+                {
+                    Value = result ? "1" : "0",
+                    Expires = DateTime.Now.AddMonths(6),
+                    HttpOnly = true
+                });
             }
             catch (Exception exc)
             {

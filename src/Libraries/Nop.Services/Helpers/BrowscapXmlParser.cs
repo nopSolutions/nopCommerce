@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,11 +14,12 @@ namespace Nop.Services.Helpers
     /// </summary>
     public class BrowscapXmlHelper
     {
+        private readonly List<string> _crawlerUserAgentsRegexp;
 
-        private ConcurrentDictionary<String, bool> _userAgentsCache;
-       
         public BrowscapXmlHelper(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath)
         {
+            _crawlerUserAgentsRegexp = new List<string>();
+
             Initialize(userAgentStringsPath, crawlerOnlyUserAgentStringsPath);
         }
 
@@ -50,15 +50,12 @@ namespace Nop.Services.Helpers
             if (crawlerItems == null)
                 throw new Exception("Incorrect file format");
 
-            var crawlerUserAgents = crawlerItems
+            _crawlerUserAgentsRegexp.AddRange(crawlerItems
                 //get only user agent names
                 .Select(e => e.Attribute("name"))
                 .Where(e => e != null && !string.IsNullOrEmpty(e.Value))
-                .Select(e => new KeyValuePair<string, bool>(e.Value, true));
-
-            // populate cache object
-            _userAgentsCache = new ConcurrentDictionary<string, bool>(crawlerUserAgents);
-
+                .Select(e => e.Value)
+                .Select(ToRegexp));
 
             if (string.IsNullOrEmpty(crawlerOnlyUserAgentStringsPath) || File.Exists(crawlerOnlyUserAgentStringsPath))
                 return;
@@ -104,11 +101,7 @@ namespace Nop.Services.Helpers
         /// <returns>True if user agent is a crawler, otherwise - false</returns>
         public bool IsCrawler(string userAgent)
         {
-            // check against cache object
-            bool result;
-            if (_userAgentsCache.TryGetValue(userAgent, out result))
-                return true;
-            return false;
+            return _crawlerUserAgentsRegexp.Any(p => Regex.IsMatch(userAgent, p));
         }
     }
 }
