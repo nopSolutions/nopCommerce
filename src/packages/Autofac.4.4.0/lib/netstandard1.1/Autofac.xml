@@ -1439,6 +1439,52 @@
             Thrown if <paramref name="registration" /> is <see langword="null" />.
             </exception>
         </member>
+        <member name="M:Autofac.RegistrationExtensions.OnlyIf``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},System.Predicate{Autofac.Core.IComponentRegistry})">
+            <summary>
+            Attaches a predicate to evaluate prior to executing the registration.
+            The predicate will run at registration time, not runtime, to determine
+            whether the registration should execute.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
+            <typeparam name="TActivatorData">Activator data type.</typeparam>
+            <typeparam name="TStyle">Registration style.</typeparam>
+            <param name="registration">The registration to configure.</param>
+            <param name="predicate">The predicate to run to determine if the registration should be made.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="registration" /> or <paramref name="predicate" /> is <see langword="null" />.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+            Thrown if <paramref name="registration" /> has no reference to the original callback
+            with which it was associated (e.g., it wasn't made with a standard registration method
+            as part of a <see cref="T:Autofac.ContainerBuilder"/>).
+            </exception>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.IfNotRegistered``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},System.Type)">
+            <summary>
+            Attaches a predicate such that a registration will only be made if
+            a specific service type is not already registered.
+            The predicate will run at registration time, not runtime, to determine
+            whether the registration should execute.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
+            <typeparam name="TActivatorData">Activator data type.</typeparam>
+            <typeparam name="TStyle">Registration style.</typeparam>
+            <param name="registration">The registration to configure.</param>
+            <param name="serviceType">
+            The service type to check for to determine if the registration should be made.
+            Note this is the *service type* - the <code>As&lt;T&gt;</code> part.
+            </param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="registration" /> or <paramref name="serviceType" /> is <see langword="null" />.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+            Thrown if <paramref name="registration" /> has no reference to the original callback
+            with which it was associated (e.g., it wasn't made with a standard registration method
+            as part of a <see cref="T:Autofac.ContainerBuilder"/>).
+            </exception>
+        </member>
         <member name="T:Autofac.RegistrationExtensionsResources">
             <summary>
                A strongly-typed resource class, for looking up localized strings, etc.
@@ -1473,6 +1519,11 @@
         <member name="P:Autofac.RegistrationExtensionsResources.NoMatchingConstructorExists">
             <summary>
                Looks up a localized string similar to No matching constructor exists on type &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:Autofac.RegistrationExtensionsResources.OnlyIfRequiresCallbackContainer">
+            <summary>
+               Looks up a localized string similar to You can only attach a registration predicate to a registration that has a callback container attached (e.g., one that was made with a standard ContainerBuilder extension method)..
             </summary>
         </member>
         <member name="T:Autofac.ResolutionExtensions">
@@ -2350,6 +2401,44 @@
             this interface (useful for module testing.)
             </summary>
         </member>
+        <member name="T:Autofac.Builder.DeferredCallback">
+            <summary>
+            Reference object allowing location and update of a registration callback.
+            </summary>
+        </member>
+        <member name="M:Autofac.Builder.DeferredCallback.#ctor(System.Action{Autofac.Core.IComponentRegistry})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Builder.DeferredCallback"/> class.
+            </summary>
+            <param name="callback">
+            An <see cref="T:System.Action`1"/> that executes a registration action
+            against an <see cref="T:Autofac.Core.IComponentRegistry"/>.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="callback" /> is <see langword="null" />.
+            </exception>
+        </member>
+        <member name="P:Autofac.Builder.DeferredCallback.Callback">
+            <summary>
+            Gets or sets the callback to execute during registration.
+            </summary>
+            <value>
+            An <see cref="T:System.Action`1"/> that executes a registration action
+            against an <see cref="T:Autofac.Core.IComponentRegistry"/>.
+            </value>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="value" /> is <see langword="null" />.
+            </exception>
+        </member>
+        <member name="P:Autofac.Builder.DeferredCallback.Id">
+            <summary>
+            Gets the callback identifier.
+            </summary>
+            <value>
+            A <see cref="T:System.Guid"/> that uniquely identifies the callback action
+            in a set of callbacks.
+            </value>
+        </member>
         <member name="T:Autofac.Builder.DynamicRegistrationStyle">
             <summary>
             Registration style for dynamic registrations.
@@ -3106,6 +3195,15 @@
             <summary>
             Gets the extended properties assigned to the component.
             </summary>
+        </member>
+        <member name="P:Autofac.Builder.RegistrationData.DeferredCallback">
+            <summary>
+            Gets or sets the callback used to register this component.
+            </summary>
+            <value>
+            A <see cref="T:Autofac.Builder.DeferredCallback"/> that contains the delegate
+            used to register this component with an <see cref="T:Autofac.Core.IComponentRegistry"/>.
+            </value>
         </member>
         <member name="P:Autofac.Builder.RegistrationData.PreparingHandlers">
             <summary>
@@ -6092,7 +6190,7 @@
              <code lang="C#">
              public class Manager
              {
-               public Manager([WithKey("Manager")] ILogger logger)
+               public Manager([KeyFilter("Manager")] ILogger logger)
                {
                  // ...
                }
@@ -6105,8 +6203,8 @@
              public class SolutionExplorer
              {
                public SolutionExplorer(
-                 [WithKey("Solution")] IEnumerable&lt;IAdapter&gt; adapters,
-                 [WithKey("Solution")] ILogger logger)
+                 [KeyFilter("Solution")] IEnumerable&lt;IAdapter&gt; adapters,
+                 [KeyFilter("Solution")] ILogger logger)
                {
                  this.Adapters = adapters.ToList();
                  this.Logger = logger;
@@ -6121,14 +6219,13 @@
              </para>
              <code lang="C#">
              var builder = new ContainerBuilder();
-             builder.RegisterModule(new AttributedMetadataModule());
             
              // Register the components getting filtered with keys
              builder.RegisterType&lt;ConsoleLogger&gt;().Keyed&lt;ILogger&gt;(&quot;Solution&quot;);
              builder.RegisterType&lt;FileLogger&gt;().Keyed&lt;ILogger&gt;(&quot;Other&quot;);
             
              // Attach the filtering behavior to the component with the constructor
-             builder.RegisterType&lt;SolutionExplorer&gt;().WithAttributeFilter();
+             builder.RegisterType&lt;SolutionExplorer&gt;().WithAttributeFiltering();
             
              var container = builder.Build();
             
@@ -6189,7 +6286,7 @@
              <code lang="C#">
              public class Manager
              {
-               public Manager([WithMetadata("LoggerName", "Manager")] ILogger logger)
+               public Manager([MetadataFilter("LoggerName", "Manager")] ILogger logger)
                {
                  // ...
                }
@@ -6202,8 +6299,8 @@
              public class SolutionExplorer
              {
                public SolutionExplorer(
-                 [WithMetadata("Target", "Solution")] IEnumerable&lt;IAdapter&gt; adapters,
-                 [WithMetadata("LoggerName", "Solution")] ILogger logger)
+                 [MetadataFilter("Target", "Solution")] IEnumerable&lt;IAdapter&gt; adapters,
+                 [MetadataFilter("LoggerName", "Solution")] ILogger logger)
                {
                  this.Adapters = adapters.ToList();
                  this.Logger = logger;
@@ -6217,14 +6314,13 @@
              </para>
              <code lang="C#">
              var builder = new ContainerBuilder();
-             builder.RegisterModule(new AttributedMetadataModule());
             
              // Attach metadata to the components getting filtered
              builder.RegisterType&lt;ConsoleLogger&gt;().WithMetadata(&quot;LoggerName&quot;, &quot;Solution&quot;).As&lt;ILogger&gt;();
              builder.RegisterType&lt;FileLogger&gt;().WithMetadata(&quot;LoggerName&quot;, &quot;Other&quot;).As&lt;ILogger&gt;();
             
              // Attach the filtering behavior to the component with the constructor
-             builder.RegisterType&lt;SolutionExplorer&gt;().WithAttributeFilter();
+             builder.RegisterType&lt;SolutionExplorer&gt;().WithAttributeFiltering();
             
              var container = builder.Build();
             
