@@ -6525,6 +6525,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Media.DefaultImageQuality.Hint">
     <Value>The image quality to be used for uploaded images. Once changed you have to manually delete already generated thumbs.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.DefaultPictureZoomEnabled">
+    <Value>Picture zoom</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.DefaultPictureZoomEnabled.Hint">
+    <Value>Check to enable picture zoom on product details page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.ImportProductImagesUsingHash">
     <Value>Import product images using hash</Value>
   </LocaleResource>

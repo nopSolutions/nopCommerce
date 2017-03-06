@@ -2093,6 +2093,12 @@ set @resources='
   <LocaleResource Name="Enums.Nop.Core.Domain.Directory.RoundingType.Rounding1Up">
     <Value>Rounding up with 1.00 intervals (1.01–1.99 round to 2.00)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.DefaultPictureZoomEnabled">
+    <Value>Picture zoom</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.DefaultPictureZoomEnabled.Hint">
+    <Value>Check to enable picture zoom on product details page.</Value>
+  </LocaleResource> 
 </Language>
 '
 

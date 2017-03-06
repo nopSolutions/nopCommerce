@@ -968,9 +968,9 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.MultipleThumbDirectories_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.DefaultImageQuality_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
-                    .ForMember(dest => dest.ImportProductImagesUsingHash_OverrideForStore, mo => mo.Ignore());
+                    .ForMember(dest => dest.ImportProductImagesUsingHash_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.DefaultPictureZoomEnabled_OverrideForStore, mo => mo.Ignore());
                 cfg.CreateMap<MediaSettingsModel, MediaSettings>()
-                    .ForMember(dest => dest.DefaultPictureZoomEnabled, mo => mo.Ignore())
                     .ForMember(dest => dest.ImageSquarePictureSize, mo => mo.Ignore())
                     .ForMember(dest => dest.AutoCompleteSearchThumbPictureSize, mo => mo.Ignore());
                 cfg.CreateMap<CustomerSettings, CustomerUserSettingsModel.CustomerSettingsModel>()

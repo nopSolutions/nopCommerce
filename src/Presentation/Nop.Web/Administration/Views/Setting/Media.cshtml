@@ -102,6 +102,16 @@
                                 @Html.ValidationMessageFor(model => model.ImportProductImagesUsingHash)
                             </div>
                         </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.DefaultPictureZoomEnabled_OverrideForStore, model => model.DefaultPictureZoomEnabled, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.DefaultPictureZoomEnabled)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.DefaultPictureZoomEnabled)
+                                @Html.ValidationMessageFor(model => model.DefaultPictureZoomEnabled)
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="panel panel-default advanced-setting">
