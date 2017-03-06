@@ -2057,6 +2057,12 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.SystemName.Required">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.List.SearchStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.List.SearchStore.Hint">
+    <Value>Search by a specific store.</Value>
+  </LocaleResource>
 </Language>
 '
 
