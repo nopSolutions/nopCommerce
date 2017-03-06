@@ -17,7 +17,7 @@ namespace Nop.Services.Helpers
         private readonly NopConfig _config;
         private readonly HttpContextBase _httpContext;
         private readonly BrowscapXmlHelper _browscapXmlHelper;
-        private ConcurrentDictionary<string, bool> _foundSearchEnginesCache;
+        
 
         public const string IS_SEARCH_ENGINE_REQUEST_COOKIE_KEY = "ise";
         
@@ -32,7 +32,7 @@ namespace Nop.Services.Helpers
             this._config = config;
             this._httpContext = httpContext;
             this._browscapXmlHelper = browscapXmlHelper;
-            this._foundSearchEnginesCache = new ConcurrentDictionary<string, bool>();
+            
         }
 
        
@@ -57,22 +57,13 @@ namespace Nop.Services.Helpers
                 if (String.IsNullOrEmpty(userAgent))
                     return false;
 
-                // check in already found cache
-                bool result;
-                if (_foundSearchEnginesCache.TryGetValue(userAgent, out result))
-                    return true;
-
                 // check cookie
                 var cookie = _httpContext.Request.Cookies[IS_SEARCH_ENGINE_REQUEST_COOKIE_KEY];
                 if (cookie != null)
                     return cookie.Value == "1";
 
                 // check browscap
-                result = _browscapXmlHelper.IsCrawler(userAgent);
-
-                // if IS search engine, save to cache
-                if (result)
-                    _foundSearchEnginesCache.TryAdd(userAgent, true);
+                bool result = _browscapXmlHelper.IsCrawler(userAgent);
 
                 // write cookie for subsequent requests
                 _httpContext.Response.AppendCookie(new HttpCookie(IS_SEARCH_ENGINE_REQUEST_COOKIE_KEY)
