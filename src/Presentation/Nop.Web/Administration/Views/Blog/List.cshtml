@@ -75,7 +75,9 @@
                                     title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Language")"
                                 }, {
                                     title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments")",
-                                    template: '<a href="Comments?filterByBlogPostId=#=Id#">@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments") - #=ApprovedComments + NotApprovedComments# (#=NotApprovedComments#)</a>'
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-default" href="Comments?filterByBlogPostId=#=Id#">@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments") - #=ApprovedComments + NotApprovedComments# (#=NotApprovedComments#)</a>'
                                 }, {
                                     field: "StartDate",
                                     title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate")",
