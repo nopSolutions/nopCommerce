@@ -2054,6 +2054,9 @@ set @resources='
   <LocaleResource Name="Products.Wishlist.AddToWishlist.Update">
     <Value>Update</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.SystemName.Required">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

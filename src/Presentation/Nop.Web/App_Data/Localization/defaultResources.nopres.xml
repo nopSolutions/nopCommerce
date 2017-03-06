@@ -9117,9 +9117,6 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.SystemName.Hint">
     <Value>System name of this topic.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.SystemName.Required">
-    <Value>Enter system name.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Title">
     <Value>Title</Value>
   </LocaleResource>
