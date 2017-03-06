@@ -403,7 +403,6 @@
     <Compile Include="Validators\Polls\PollAnswerValidator.cs" />
     <Compile Include="Validators\Polls\PollValidator.cs" />
     <Compile Include="Validators\Settings\SettingValidator.cs" />
-    <Compile Include="Validators\Topics\TopicValidator.cs" />
     <Compile Include="Validators\News\NewsItemValidator.cs" />
     <Compile Include="Validators\Messages\MessageTemplateValidator.cs" />
     <Compile Include="Validators\Messages\EmailAccountValidator.cs" />

@@ -2,14 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
-using Nop.Admin.Validators.Topics;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Topics
 {
-    [Validator(typeof(TopicValidator))]
     public partial class TopicModel : BaseNopEntityModel, ILocalizedModel<TopicLocalizedModel>
     {
         public TopicModel()
