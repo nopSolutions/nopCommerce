@@ -807,6 +807,10 @@ namespace Nop.Plugin.Shipping.UPS
                 if (response.ShippingOptions.Any())
                     response.Errors.Clear();
             }
+            catch (Exception exc)
+            {
+                response.AddError(string.Format("UPS Service is currently unavailable, try again later. {0}", exc.Message));
+            }
             finally
             {
                 if (_upsSettings.Tracing && _traceMessages.Length > 0)
