@@ -4808,3 +4808,11 @@ GO
 
 ALTER TABLE [Currency] ALTER COLUMN [RoundingTypeId] INT NOT NULL
 GO
+
+ --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'adminareasettings.usericheditorinmessagetemplates')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'adminareasettings.usericheditorinmessagetemplates', N'False', 0)
+END
+GO

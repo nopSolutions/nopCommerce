@@ -1,4 +1,6 @@
-﻿@model CampaignModel
+﻿@using Nop.Core.Domain.Common
+
+@model CampaignModel
 
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
@@ -76,22 +78,34 @@
                             @Html.NopLabelFor(model => model.Body)
                         </div>
                         <div class="col-md-9">
-                            @{
+                            @if (EngineContext.Current.Resolve<AdminAreaSettings>().UseRichEditorInMessageTemplates)
+                            {
                                 //we use rich editor with BODY tag supported
                                 //it could be a better practice to implement one more editor (similar to RichEditor.cshtml)
                                 //with "enableFullPage" property set to "true". but we do not want to duplicate source code
                                 //that's why we use this workaround
                                 //we store a value into "ViewData" and then use it in the RichEditor.cshtml file
                                 ViewData["nop.RichEditor.EnableFullPage"] = true;
+                                <div class="input-group input-group-required">
+                                    @Html.EditorFor(model => model.Body, "RichEditor")
+                                    <div class="input-group-btn">
+                                        @Html.RequiredHint()
+                                    </div>
+                                </div>
                             }
-                            @Html.NopTextAreaFor(model => model.Body, required: true)
+                            else
+                            {
+                                @Html.NopTextAreaFor(model => model.Body, required: true);
+                                <text>
+                                    <script type="text/javascript">
+                                        $(document).ready(function () {
+                                            $('#@Html.FieldIdFor(model => model.Body)').height($('#@Html.FieldIdFor(model => model.Body)')[0].scrollHeight);
+                                        });
+                                    </script>
+                                </text>
+                            }
                             @Html.ValidationMessageFor(model => model.Body)
                         </div>
-                        <script type="text/javascript">
-                            $(document).ready(function () {
-                                $('#@Html.FieldIdFor(model => model.Body)').height($('#@Html.FieldIdFor(model => model.Body)')[0].scrollHeight);
-                            });
-                        </script>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">

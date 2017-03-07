@@ -1,4 +1,6 @@
 ﻿@model MessageTemplateModel
+
+@using Nop.Core.Domain.Common;
 @using Nop.Core.Domain.Messages;
 @using Nop.Services
 
@@ -59,14 +61,23 @@
                               @Html.NopLabelFor(model => model.Locales[item].Body)
                           </div>
                           <div class="col-md-9">
-                              @Html.NopTextAreaFor(model => model.Locales[item].Body)
+                              @if (EngineContext.Current.Resolve<AdminAreaSettings>().UseRichEditorInMessageTemplates)
+                              {
+                                  @Html.EditorFor(model => model.Locales[item].Body, "RichEditor")
+                              }
+                              else
+                              {
+                                  @Html.NopTextAreaFor(model => model.Locales[item].Body);
+                                  <text>
+                                      <script type="text/javascript">
+                                          $(document).ready(function () {
+                                              $('#@Html.FieldIdFor(model => model.Locales[item].Body)').height($('#@Html.FieldIdFor(model => model.Body)')[0].scrollHeight);
+                                          });
+                                      </script>
+                                  </text>
+                              }
                               @Html.ValidationMessageFor(model => model.Locales[item].Body)
                           </div>
-                          <script type="text/javascript">
-                              $(document).ready(function() {
-                                  $('#@Html.FieldIdFor(model => model.Locales[item].Body)').height($('#@Html.FieldIdFor(model => model.Body)')[0].scrollHeight);
-                              });
-                          </script>
                       </div>
                       <div class="form-group advanced-setting">
                           <div class="col-md-3">
@@ -116,14 +127,28 @@
                               @Html.NopLabelFor(model => model.Body)
                           </div>
                           <div class="col-md-9">
-                              @Html.NopTextAreaFor(model => model.Body, required: true)
+                              @if (EngineContext.Current.Resolve<AdminAreaSettings>().UseRichEditorInMessageTemplates)
+                              {
+                                  <div class="input-group input-group-required">
+                                      @Html.EditorFor(model => model.Body, "RichEditor")
+                                      <div class="input-group-btn">
+                                          @Html.RequiredHint()
+                                      </div>
+                                  </div>
+                              }
+                              else
+                              {
+                                  @Html.NopTextAreaFor(model => model.Body, required: true);
+                                  <text>
+                                      <script type="text/javascript">
+                                          $(document).ready(function () {
+                                              $('#@Html.FieldIdFor(model => model.Body)').height($('#@Html.FieldIdFor(model => model.Body)')[0].scrollHeight);
+                                          });
+                                      </script>
+                                  </text>
+                              }
                               @Html.ValidationMessageFor(model => model.Body)
                           </div>
-                          <script type="text/javascript">
-                              $(document).ready(function() {
-                                  $('#@Html.FieldIdFor(model => model.Body)').height($('#@Html.FieldIdFor(model => model.Body)')[0].scrollHeight);
-                              });
-                          </script>
                       </div>
                       <div class="form-group advanced-setting">
                           <div class="col-md-3">
