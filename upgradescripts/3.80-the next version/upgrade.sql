@@ -4729,3 +4729,9 @@ BEGIN
 	VALUES (N'ImportStates', N'States and provinces were imported', N'True')
 END
 GO
+
+--update DownloadActivationType according to the new enum value 
+UPDATE [Product]
+SET [DownloadActivationTypeId] = 0
+WHERE [DownloadActivationTypeId] = 1
+GO
