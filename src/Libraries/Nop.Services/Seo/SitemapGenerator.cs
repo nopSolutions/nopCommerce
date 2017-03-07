@@ -188,7 +188,7 @@ namespace Nop.Services.Seo
         /// Get category URLs for the sitemap
         /// </summary>
         /// <param name="urlHelper">URL helper</param>
-        /// <param name="sitemapUrls">Current list of URL</param>
+        /// <param name="parentCategoryId">Parent category identifier</param>
         /// <returns>Collection of sitemap URLs</returns>
         protected virtual IEnumerable<SitemapUrl> GetCategoryUrls(UrlHelper urlHelper, int parentCategoryId)
         {
