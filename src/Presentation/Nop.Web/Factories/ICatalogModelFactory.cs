@@ -7,6 +7,17 @@ namespace Nop.Web.Factories
 {
     public partial interface ICatalogModelFactory
     {
+        #region Common
+
+        void PrepareSortingOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command);
+
+        void PrepareViewModes(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command);
+
+        void PreparePageSizeOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command,
+            bool allowCustomersToSelectPageSize, string pageSizeOptions, int fixedPageSize);
+
+        #endregion
+
         #region Categories
 
         CategoryModel PrepareCategoryModel(Category category, CatalogPagingFilteringModel command);
@@ -19,6 +30,22 @@ namespace Nop.Web.Factories
         TopMenuModel PrepareTopMenuModel();
 
         List<CategoryModel> PrepareHomepageCategoryModels();
+
+        /// <summary>
+        /// Prepare category (simple) models
+        /// </summary>
+        /// <returns>Categories</returns>
+        List<CategorySimpleModel> PrepareCategorySimpleModels();
+
+        /// <summary>
+        /// Prepare category (simple) models
+        /// </summary>
+        /// <param name="rootCategoryId">Root category identifier</param>
+        /// <param name="loadSubCategories">A value indicating whether subcategories should be loaded</param>
+        /// <param name="allCategories">All available categories; pass null to load them internally</param>
+        /// <returns>Category models</returns>
+        List<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId,
+            bool loadSubCategories = true, IList<Category> allCategories = null);
 
         #endregion
 

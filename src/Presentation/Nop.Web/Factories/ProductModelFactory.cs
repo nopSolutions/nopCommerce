@@ -466,45 +466,6 @@ namespace Nop.Web.Factories
             return defaultPictureModel;
         }
 
-        protected virtual IList<ProductSpecificationModel> PrepareProductSpecificationModel(Product product)
-        {
-            if (product == null)
-                throw new ArgumentNullException("product");
-
-            string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SPECS_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id);
-            return _cacheManager.Get(cacheKey, () =>
-                _specificationAttributeService.GetProductSpecificationAttributes(product.Id, 0, null, true)
-                .Select(psa =>
-                {
-                    var m = new ProductSpecificationModel
-                    {
-                        SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttributeId,
-                        SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(x => x.Name),
-                        ColorSquaresRgb = psa.SpecificationAttributeOption.ColorSquaresRgb
-                    };
-
-                    switch (psa.AttributeType)
-                    {
-                        case SpecificationAttributeType.Option:
-                            m.ValueRaw = HttpUtility.HtmlEncode(psa.SpecificationAttributeOption.GetLocalized(x => x.Name));
-                            break;
-                        case SpecificationAttributeType.CustomText:
-                            m.ValueRaw = HttpUtility.HtmlEncode(psa.CustomValue);
-                            break;
-                        case SpecificationAttributeType.CustomHtmlText:
-                            m.ValueRaw = psa.CustomValue;
-                            break;
-                        case SpecificationAttributeType.Hyperlink:
-                            m.ValueRaw = string.Format("<a href='{0}' target='_blank'>{0}</a>", psa.CustomValue);
-                            break;
-                        default:
-                            break;
-                    }
-                    return m;
-                }).ToList()
-            );
-        }
-
         protected virtual ProductDetailsModel.ProductBreadcrumbModel PrepareProductBreadcrumbModel(Product product)
         {
             if (product == null)
@@ -1446,6 +1407,45 @@ namespace Nop.Web.Factories
             }
 
             return model;
+        }
+
+        public virtual IList<ProductSpecificationModel> PrepareProductSpecificationModel(Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SPECS_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id);
+            return _cacheManager.Get(cacheKey, () =>
+                _specificationAttributeService.GetProductSpecificationAttributes(product.Id, 0, null, true)
+                .Select(psa =>
+                {
+                    var m = new ProductSpecificationModel
+                    {
+                        SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttributeId,
+                        SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(x => x.Name),
+                        ColorSquaresRgb = psa.SpecificationAttributeOption.ColorSquaresRgb
+                    };
+
+                    switch (psa.AttributeType)
+                    {
+                        case SpecificationAttributeType.Option:
+                            m.ValueRaw = HttpUtility.HtmlEncode(psa.SpecificationAttributeOption.GetLocalized(x => x.Name));
+                            break;
+                        case SpecificationAttributeType.CustomText:
+                            m.ValueRaw = HttpUtility.HtmlEncode(psa.CustomValue);
+                            break;
+                        case SpecificationAttributeType.CustomHtmlText:
+                            m.ValueRaw = psa.CustomValue;
+                            break;
+                        case SpecificationAttributeType.Hyperlink:
+                            m.ValueRaw = string.Format("<a href='{0}' target='_blank'>{0}</a>", psa.CustomValue);
+                            break;
+                        default:
+                            break;
+                    }
+                    return m;
+                }).ToList()
+            );
         }
 
         #endregion

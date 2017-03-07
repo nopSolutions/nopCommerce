@@ -21,5 +21,7 @@ namespace Nop.Web.Factories
         CustomerProductReviewsModel PrepareCustomerProductReviewsModel(int? page);
 
         ProductEmailAFriendModel PrepareProductEmailAFriendModel(ProductEmailAFriendModel model, Product product, bool excludeProperties);
+
+        IList<ProductSpecificationModel> PrepareProductSpecificationModel(Product product);
     }
 }

@@ -130,7 +130,30 @@ namespace Nop.Web.Factories
 
         #region Utilities
         
-        protected virtual void PrepareSortingOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
+        protected virtual List<int> GetChildCategoryIds(int parentCategoryId)
+        {
+            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY, 
+                parentCategoryId, 
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
+                _storeContext.CurrentStore.Id);
+            return _cacheManager.Get(cacheKey, () =>
+            {
+                var categoriesIds = new List<int>();
+                var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId);
+                foreach (var category in categories)
+                {
+                    categoriesIds.Add(category.Id);
+                    categoriesIds.AddRange(GetChildCategoryIds(category.Id));
+                }
+                return categoriesIds;
+            });
+        }
+
+        #endregion
+
+        #region Common
+
+        public virtual void PrepareSortingOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
         {
             if (pagingFilteringModel == null)
                 throw new ArgumentNullException("pagingFilteringModel");
@@ -170,7 +193,7 @@ namespace Nop.Web.Factories
             }
         }
         
-        protected virtual void PrepareViewModes(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
+        public virtual void PrepareViewModes(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
         {
             if (pagingFilteringModel == null)
                 throw new ArgumentNullException("pagingFilteringModel");
@@ -205,7 +228,7 @@ namespace Nop.Web.Factories
 
         }
         
-        protected virtual void PreparePageSizeOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command,
+        public virtual void PreparePageSizeOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command,
             bool allowCustomersToSelectPageSize, string pageSizeOptions, int fixedPageSize)
         {
             if (pagingFilteringModel == null)
@@ -287,105 +310,6 @@ namespace Nop.Web.Factories
             }
         }
         
-        protected virtual List<int> GetChildCategoryIds(int parentCategoryId)
-        {
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY, 
-                parentCategoryId, 
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
-                _storeContext.CurrentStore.Id);
-            return _cacheManager.Get(cacheKey, () =>
-            {
-                var categoriesIds = new List<int>();
-                var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId);
-                foreach (var category in categories)
-                {
-                    categoriesIds.Add(category.Id);
-                    categoriesIds.AddRange(GetChildCategoryIds(category.Id));
-                }
-                return categoriesIds;
-            });
-        }
-
-        /// <summary>
-        /// Prepare category (simple) models
-        /// </summary>
-        /// <returns>Categories</returns>
-        protected virtual List<CategorySimpleModel> PrepareCategorySimpleModels()
-        {
-            //load and cache them
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_ALL_MODEL_KEY,
-                _workContext.WorkingLanguage.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
-                _storeContext.CurrentStore.Id);
-            return _cacheManager.Get(cacheKey, () => PrepareCategorySimpleModels(0));
-        }
-
-        /// <summary>
-        /// Prepare category (simple) models
-        /// </summary>
-        /// <param name="rootCategoryId">Root category identifier</param>
-        /// <param name="loadSubCategories">A value indicating whether subcategories should be loaded</param>
-        /// <param name="allCategories">All available categories; pass null to load them internally</param>
-        /// <returns>Category models</returns>
-        protected virtual List<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId,
-            bool loadSubCategories = true,IList<Category> allCategories = null)
-        {
-            var result = new List<CategorySimpleModel>();
-
-            //little hack for performance optimization.
-            //we know that this method is used to load top and left menu for categories.
-            //it'll load all categories anyway.
-            //so there's no need to invoke "GetAllCategoriesByParentCategoryId" multiple times (extra SQL commands) to load childs
-            //so we load all categories at once
-            //if you don't like this implementation if you can uncomment the line below (old behavior) and comment several next lines (before foreach)
-            //var categories = _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId);
-            if (allCategories == null)
-            {
-                //load categories if null passed
-                //we implemeneted it this way for performance optimization - recursive iterations (below)
-                //this way all categories are loaded only once
-                allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
-            }
-            var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).ToList();
-            foreach (var category in categories)
-            {
-                var categoryModel = new CategorySimpleModel
-                {
-                    Id = category.Id,
-                    Name = category.GetLocalized(x => x.Name),
-                    SeName = category.GetSeName(),
-                    IncludeInTopMenu = category.IncludeInTopMenu
-                };
-
-                //number of products in each category
-                if (_catalogSettings.ShowCategoryProductNumber)
-                {
-                    string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NUMBER_OF_PRODUCTS_MODEL_KEY,
-                        string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
-                        _storeContext.CurrentStore.Id, 
-                        category.Id);
-                    categoryModel.NumberOfProducts = _cacheManager.Get(cacheKey, () =>
-                    {
-                        var categoryIds = new List<int>();
-                        categoryIds.Add(category.Id);
-                        //include subcategories
-                        if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
-                            categoryIds.AddRange(GetChildCategoryIds(category.Id));
-                        return _productService.GetNumberOfProductsInCategory(categoryIds, _storeContext.CurrentStore.Id);
-                    });
-                }
-
-                if (loadSubCategories)
-                {
-                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategories, allCategories);
-                    categoryModel.SubCategories.AddRange(subCategories);
-                }
-                result.Add(categoryModel);
-            }
-
-            return result;
-        }
-
         #endregion
 
         #region Categories
@@ -697,6 +621,86 @@ namespace Nop.Web.Factories
             );
 
             return model;
+        }
+
+        /// <summary>
+        /// Prepare category (simple) models
+        /// </summary>
+        /// <returns>Categories</returns>
+        public virtual List<CategorySimpleModel> PrepareCategorySimpleModels()
+        {
+            //load and cache them
+            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_ALL_MODEL_KEY,
+                _workContext.WorkingLanguage.Id,
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
+            return _cacheManager.Get(cacheKey, () => PrepareCategorySimpleModels(0));
+        }
+
+        /// <summary>
+        /// Prepare category (simple) models
+        /// </summary>
+        /// <param name="rootCategoryId">Root category identifier</param>
+        /// <param name="loadSubCategories">A value indicating whether subcategories should be loaded</param>
+        /// <param name="allCategories">All available categories; pass null to load them internally</param>
+        /// <returns>Category models</returns>
+        public virtual List<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId,
+            bool loadSubCategories = true, IList<Category> allCategories = null)
+        {
+            var result = new List<CategorySimpleModel>();
+
+            //little hack for performance optimization.
+            //we know that this method is used to load top and left menu for categories.
+            //it'll load all categories anyway.
+            //so there's no need to invoke "GetAllCategoriesByParentCategoryId" multiple times (extra SQL commands) to load childs
+            //so we load all categories at once
+            //if you don't like this implementation if you can uncomment the line below (old behavior) and comment several next lines (before foreach)
+            //var categories = _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId);
+            if (allCategories == null)
+            {
+                //load categories if null passed
+                //we implemeneted it this way for performance optimization - recursive iterations (below)
+                //this way all categories are loaded only once
+                allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
+            }
+            var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).ToList();
+            foreach (var category in categories)
+            {
+                var categoryModel = new CategorySimpleModel
+                {
+                    Id = category.Id,
+                    Name = category.GetLocalized(x => x.Name),
+                    SeName = category.GetSeName(),
+                    IncludeInTopMenu = category.IncludeInTopMenu
+                };
+
+                //number of products in each category
+                if (_catalogSettings.ShowCategoryProductNumber)
+                {
+                    string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NUMBER_OF_PRODUCTS_MODEL_KEY,
+                        string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                        _storeContext.CurrentStore.Id,
+                        category.Id);
+                    categoryModel.NumberOfProducts = _cacheManager.Get(cacheKey, () =>
+                    {
+                        var categoryIds = new List<int>();
+                        categoryIds.Add(category.Id);
+                        //include subcategories
+                        if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
+                            categoryIds.AddRange(GetChildCategoryIds(category.Id));
+                        return _productService.GetNumberOfProductsInCategory(categoryIds, _storeContext.CurrentStore.Id);
+                    });
+                }
+
+                if (loadSubCategories)
+                {
+                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategories, allCategories);
+                    categoryModel.SubCategories.AddRange(subCategories);
+                }
+                result.Add(categoryModel);
+            }
+
+            return result;
         }
 
         #endregion
