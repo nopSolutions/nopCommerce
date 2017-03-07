@@ -1,4 +1,6 @@
-﻿@model CurrencyModel
+﻿@using Nop.Core.Domain.Directory
+@using Nop.Services
+@model CurrencyModel
 
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
@@ -120,6 +122,15 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.RoundingTypeId)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDropDownListFor(model => model.RoundingTypeId, ((RoundingType)Model.RoundingTypeId).ToSelectList())
+                            @Html.ValidationMessageFor(model => model.RoundingTypeId)
+                        </div>
+                    </div>                    
                     <div class="form-group">
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Published)

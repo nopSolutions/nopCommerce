@@ -40,6 +40,7 @@ namespace Nop.Services.Tests.Directory
                 DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
+                RoundingType = RoundingType.Rounding001
             };
             currencyEUR = new Currency
             {
@@ -53,6 +54,7 @@ namespace Nop.Services.Tests.Directory
                 DisplayOrder = 2,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
+                RoundingType = RoundingType.Rounding001
             };
             currencyRUR = new Currency
             {
@@ -66,6 +68,7 @@ namespace Nop.Services.Tests.Directory
                 DisplayOrder = 3,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
+                RoundingType = RoundingType.Rounding001
             };
             _currencyRepository = MockRepository.GenerateMock<IRepository<Currency>>();
             _currencyRepository.Expect(x => x.Table).Return(new List<Currency> { currencyUSD, currencyEUR, currencyRUR }.AsQueryable());

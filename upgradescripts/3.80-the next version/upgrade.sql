@@ -2063,6 +2063,36 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.List.SearchStore.Hint">
     <Value>Search by a specific store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.Fields.RoundingType">
+    <Value>Rounding type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.Fields.RoundingType.Hint">
+    <Value>The rounding type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Directory.RoundingType.Rounding001">
+    <Value>Default rounding</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Directory.RoundingType.Rounding005Up">
+    <Value>Rounding up with 0.05 intervals (0.06 round to 0.10)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Directory.RoundingType.Rounding005Down">
+    <Value>Rounding down with 0.05 intervals (0.06 round to 0.05)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Directory.RoundingType.Rounding01Up">
+    <Value>Rounding up with 0.10 intervals (1.05 round to 1.10)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Directory.RoundingType.Rounding01Down">
+    <Value>Rounding down with 0.10 intervals (1.05 round to 1.00)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Directory.RoundingType.Rounding05">
+    <Value>Rounding with 0.50 intervals</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Directory.RoundingType.Rounding1">
+    <Value>Rounding with 1.00 intervals (1.01-1.49 round to 1.00, 1.50-1.99 round to 2.00)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Directory.RoundingType.Rounding1Up">
+    <Value>Rounding up with 1.00 intervals (1.01–1.99 round to 2.00)</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2982,6 +3012,38 @@ BEGIN
 END
 GO
 
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[TierPrice]') and NAME='StartDateTimeUtc')
+BEGIN
+	ALTER TABLE [TierPrice]
+	ADD [StartDateTimeUtc] datetime NULL
+END
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[TierPrice]') and NAME='EndDateTimeUtc')
+BEGIN
+	ALTER TABLE [TierPrice]
+	ADD [EndDateTimeUtc] datetime NULL
+END
+GO
+
+--add a tier prices instead of product special prices 
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='SpecialPrice')
+BEGIN
+	EXEC('
+        INSERT INTO [dbo].[TierPrice]([ProductId], [StoreId], [CustomerRoleId], [Quantity], [Price], [StartDateTimeUtc], [EndDateTimeUtc])
+        SELECT [Id], 0, NULL, 1, [SpecialPrice], [SpecialPriceStartDateTimeUtc], [SpecialPriceEndDateTimeUtc]
+        FROM [dbo].[Product]
+        WHERE [SpecialPrice] <> 0')
+END
+GO
+
+UPDATE [Product]
+SET [HasTierPrices] = 1
+WHERE [Id] IN (SELECT [ProductId] FROM [dbo].[TierPrice])
+GO
+
 --drop column
 IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='SpecialPrice')
 BEGIN
@@ -3016,22 +3078,6 @@ GO
 --delete setting
 DELETE FROM [Setting]
 WHERE [name] = N'producteditordettings.specialpriceenddate'
-GO
-
---add a new column
-IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[TierPrice]') and NAME='StartDateTimeUtc')
-BEGIN
-	ALTER TABLE [TierPrice]
-	ADD [StartDateTimeUtc] datetime NULL
-END
-GO
-
---add a new column
-IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[TierPrice]') and NAME='EndDateTimeUtc')
-BEGIN
-	ALTER TABLE [TierPrice]
-	ADD [EndDateTimeUtc] datetime NULL
-END
 GO
 
   --a stored procedure update
@@ -4569,7 +4615,6 @@ GO
 ALTER TABLE [CustomerRole] ALTER COLUMN [EnablePasswordLifetime] bit NOT NULL
 GO
 
-
 -- new message template
  IF NOT EXISTS (SELECT 1 FROM [dbo].[MessageTemplate] WHERE [Name] = N'Service.ContactUs')
  BEGIN
@@ -4734,4 +4779,26 @@ GO
 UPDATE [Product]
 SET [DownloadActivationTypeId] = 0
 WHERE [DownloadActivationTypeId] = 1
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Currency]') and NAME='RoundingTypeId')
+BEGIN
+	ALTER TABLE [Currency]
+	ADD [RoundingTypeId] INT NULL
+END
+GO
+
+UPDATE [Currency]
+SET [RoundingTypeId] = 0
+WHERE [RoundingTypeId] IS NULL
+GO
+
+-- Rounding with 1.00 intervals (The system used in Sweden since 30 September 2010. https://en.wikipedia.org/wiki/Cash_rounding#Rounding_with_1.00_intervals)
+UPDATE [Currency]
+SET [RoundingTypeId] = 60
+WHERE [CurrencyCode] = 'SEK'
+GO
+
+ALTER TABLE [Currency] ALTER COLUMN [RoundingTypeId] INT NOT NULL
 GO
