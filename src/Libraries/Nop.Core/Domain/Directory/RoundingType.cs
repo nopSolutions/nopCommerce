@@ -23,19 +23,20 @@
         /// </summary>
         Rounding01Down = 40,
         /// <summary>
-        /// Sales ending in 1–24 öre round down to 0 öre
-        /// Sales ending in 25–49 öre round up to 50 öre
-        /// Sales ending in 51–74 öre round down to 50 öre
-        /// Sales ending in 75–99 öre round up to the next whole krona
+        /// Sales ending in 1–24 cents round down to 0¢
+        /// Sales ending in 25–49 cents round up to 50¢
+        /// Sales ending in 51–74 cents round down to 50¢
+        /// Sales ending in 75–99 cents round up to the next whole dollar
         /// </summary>
         Rounding05 = 50,
         /// <summary>
-        /// Sales ending in 1–49 öre/øre round down to 0 öre/øre
-        /// Sales ending in 50–99 öre/øre round up to the next whole krona/krone
+        /// Sales ending in 1–49 cents round down to 0
+        /// Sales ending in 50–99 cents round up to the next whole dollar
+        /// For example, Swedish Krona
         /// </summary>
         Rounding1 = 60,
         /// <summary>
-        /// Sales ending in 1–99 öre/øre round up to the next whole krona/krone
+        /// Sales ending in 1–99 cents round up to the next whole dollar
         /// </summary>
         Rounding1Up = 70
     }
