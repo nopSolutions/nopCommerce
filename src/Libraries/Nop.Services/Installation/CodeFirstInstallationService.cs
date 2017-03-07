@@ -31,6 +31,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
@@ -395,6 +396,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 1,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
                 },
                 new Currency
                 {
@@ -407,6 +409,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 2,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
                 },
                 new Currency
                 {
@@ -419,6 +422,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 3,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
                 },
                 new Currency
                 {
@@ -431,6 +435,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 4,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
                 },
                 new Currency
                 {
@@ -443,6 +448,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 5,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
                 },
                 new Currency
                 {
@@ -456,6 +462,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 6,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
                 },
                 new Currency
                 {
@@ -468,6 +475,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 7,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
                 },
                 new Currency
                 {
@@ -480,6 +488,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 8,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
                 },
                 new Currency
                 {
@@ -492,6 +501,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 9,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
                 },
                 new Currency
                 {
@@ -504,6 +514,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 10,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding1
                 },
                 new Currency
                 {
@@ -516,6 +527,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 11,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
                 },
                 new Currency
                 {
@@ -528,6 +540,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 12,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
                 },
             };
             _currencyRepository.Insert(currencies);

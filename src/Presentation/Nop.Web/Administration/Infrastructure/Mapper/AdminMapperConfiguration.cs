@@ -375,7 +375,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                 cfg.CreateMap<CurrencyModel, Currency>()
                     .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
-                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore())
+                    .ForMember(dest => dest.RoundingType, mo => mo.Ignore());
                 //measure weights
                 cfg.CreateMap<MeasureWeight, MeasureWeightModel>()
                     .ForMember(dest => dest.IsPrimaryWeight, mo => mo.Ignore())
