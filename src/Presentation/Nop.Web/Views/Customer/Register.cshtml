@@ -169,8 +169,28 @@
                     </div>
                 </div>
             }
+
+            @if (Model.RoleSelectionEnabled && Model.CustomerRoles.Any())
+            {
+                <div class="fieldset">
+                    <div class="title">
+                        <strong>@T("Account.TypeOfCustomer")</strong>
+                    </div>
+                    <div class="form-fields">
+                        @for (int i = 0; i < Model.CustomerRoles.Count; i++)
+                        {
+                            <div class="inputs">
+                                <label>@Model.CustomerRoles[i].Description:</label>
+                                @Html.CheckBoxFor(currModel => currModel.CustomerRoles[i].IsChecked);
+                                @Html.HiddenFor(currModel => currModel.CustomerRoles[i].Id);
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
             @if (Model.StreetAddressEnabled || Model.StreetAddress2Enabled || Model.ZipPostalCodeEnabled
-            || Model.CityEnabled || Model.CountryEnabled)
+                || Model.CityEnabled || Model.CountryEnabled)
             {
                 <div class="fieldset">
                     <div class="title">

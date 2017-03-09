@@ -18,6 +18,7 @@ namespace Nop.Web.Models.Customer
             this.AvailableCountries = new List<SelectListItem>();
             this.AvailableStates = new List<SelectListItem>();
             this.CustomerAttributes = new List<CustomerAttributeModel>();
+            this.CustomerRoles = new List<CustomerRoleModel>();            
         }
 
         [NopResourceDisplayName("Account.Fields.Email")]
@@ -156,7 +157,8 @@ namespace Nop.Web.Models.Customer
 
         public bool HoneypotEnabled { get; set; }
         public bool DisplayCaptcha { get; set; }
-
-        public IList<CustomerAttributeModel> CustomerAttributes { get; set; }
+        public bool RoleSelectionEnabled { get; set; }        
+        public IList<CustomerAttributeModel> CustomerAttributes { get; set; }       
+        public IList<CustomerRoleModel> CustomerRoles { get; set; }       
     }
 }

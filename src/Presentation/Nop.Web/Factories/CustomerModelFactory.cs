@@ -42,7 +42,7 @@ namespace Nop.Web.Factories
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
-        private readonly ICustomerAttributeParser _customerAttributeParser;
+        private readonly ICustomerAttributeParser _customerAttributeParser;        
         private readonly ICustomerAttributeService _customerAttributeService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly RewardPointsSettings _rewardPointsSettings;
@@ -65,6 +65,8 @@ namespace Nop.Web.Factories
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly VendorSettings _vendorSettings;
+
+        private readonly ICustomerService _customerService;
 
         #endregion
 
@@ -99,7 +101,8 @@ namespace Nop.Web.Factories
             SecuritySettings securitySettings,
             ExternalAuthenticationSettings externalAuthenticationSettings,
             CatalogSettings catalogSettings, 
-            VendorSettings vendorSettings)
+            VendorSettings vendorSettings,
+            ICustomerService customerService)
         {
             this._addressModelFactory = addressModelFactory;
             this._dateTimeHelper = dateTimeHelper;
@@ -131,6 +134,7 @@ namespace Nop.Web.Factories
             this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._catalogSettings = catalogSettings;
             this._vendorSettings = vendorSettings;
+            this._customerService = customerService;
         }
 
         #endregion
@@ -353,6 +357,21 @@ namespace Nop.Web.Factories
             model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
             model.SignatureEnabled = _forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled;
 
+
+            //role selection in registration form
+            if (_customerSettings.RoleSelectionEnabled)
+            {
+                model.AvailableCustomerRoles = _customerService.GetAllCustomerRoles(false)
+                                                                               .Where(x => !x.IsSystemRole && x.AllowFormSelection)
+                                                                               .Select(y => new CustomerRoleModel
+
+                                                                               {
+                                                                                   Description = y.GetLocalized(k => k.Description),
+                                                                                   Id = y.Id
+                                                                               })
+                                                                .ToList();
+            }
+
             //external authentication
             model.NumberOfExternalAuthenticationProviders = _openAuthenticationService
                 .LoadActiveExternalAuthenticationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id).Count;
@@ -418,6 +437,22 @@ namespace Nop.Web.Factories
             model.HoneypotEnabled = _securitySettings.HoneypotEnabled;
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnRegistrationPage;
             model.EnteringEmailTwice = _customerSettings.EnteringEmailTwice;
+            model.RoleSelectionEnabled = _customerSettings.RoleSelectionEnabled;
+
+            if (_customerSettings.RoleSelectionEnabled)
+            {
+                model.CustomerRoles = _customerService.GetAllCustomerRoles(false)
+                                                                               .Where(x => !x.IsSystemRole && x.AllowFormSelection)
+                                                                               .Select(y => new CustomerRoleModel
+
+                                                                               {
+                                                                                   Description = y.GetLocalized(k => k.Description),
+                                                                                   Id = y.Id
+                                                                               })
+                                                                .ToList();
+            }
+
+
             if (setDefaultValues)
             {
                 //enable newsletter by default

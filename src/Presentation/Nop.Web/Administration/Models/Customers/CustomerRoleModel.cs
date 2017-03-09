@@ -4,12 +4,20 @@ using FluentValidation.Attributes;
 using Nop.Admin.Validators.Customers;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Localization;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Nop.Admin.Models.Customers
 {
     [Validator(typeof(CustomerRoleValidator))]
-    public partial class CustomerRoleModel : BaseNopEntityModel
+    public partial class CustomerRoleModel : BaseNopEntityModel,ILocalizedModel<CustomerRoleLocalizedModel>
     {
+        public CustomerRoleModel()
+        {
+            Locales = new List<CustomerRoleLocalizedModel>();
+        }
+
         [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
@@ -30,6 +38,9 @@ namespace Nop.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.SystemName")]
         public string SystemName { get; set; }
 
+        [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.AllowFormSelection")]
+        public bool AllowFormSelection { get; set; }        
+
         [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.EnablePasswordLifetime")]
         public bool EnablePasswordLifetime { get; set; }
 
@@ -39,7 +50,12 @@ namespace Nop.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct")]
         public string PurchasedWithProductName { get; set; }
 
+        public IList<CustomerRoleLocalizedModel> Locales { get; set; }
 
+        [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.Description")]
+        [AllowHtml]       
+        public string Description { get; set; }
+        
         #region Nested classes
 
         public partial class AssociateProductToCustomerRoleModel : BaseNopModel
@@ -80,5 +96,13 @@ namespace Nop.Admin.Models.Customers
             public int AssociatedToProductId { get; set; }
         }
         #endregion
+    }
+
+    public partial class CustomerRoleLocalizedModel : ILocalizedModelLocal
+    {
+        public int LanguageId { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.Description")]
+        public string Description { get; set; }
     }
 }
