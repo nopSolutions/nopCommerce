@@ -4816,3 +4816,11 @@ BEGIN
     VALUES (N'adminareasettings.usericheditorinmessagetemplates', N'False', 0)
 END
 GO
+
+ --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'mediasettings.azurecachecontrolheader')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'mediasettings.azurecachecontrolheader', N'', 0)
+END
+GO

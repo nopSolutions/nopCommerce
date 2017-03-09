@@ -6136,7 +6136,8 @@ namespace Nop.Services.Installation
                 DefaultPictureZoomEnabled = false,
                 DefaultImageQuality = 80,
                 MultipleThumbDirectories = false,
-                ImportProductImagesUsingHash = true
+                ImportProductImagesUsingHash = true,
+                AzureCacheControlHeader = string.Empty
             });
 
             settingService.SaveSetting(new StoreInformationSettings
