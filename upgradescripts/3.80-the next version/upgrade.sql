@@ -4931,3 +4931,11 @@ BEGIN
     VALUES (N'commonsettings.usestoredprocedureforloadingcategories', N'False', 0)
 END
 GO
+
+ --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings.displayminiprofilerforadminonly')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'storeinformationsettings.displayminiprofilerforadminonly', N'False', 0)
+END
+GO

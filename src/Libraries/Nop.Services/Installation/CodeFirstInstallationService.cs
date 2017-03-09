@@ -6147,6 +6147,7 @@ namespace Nop.Services.Installation
                 DefaultStoreTheme = "DefaultClean",
                 AllowCustomerToSelectTheme = false,
                 DisplayMiniProfilerInPublicStore = false,
+                DisplayMiniProfilerForAdminOnly = false,
                 DisplayEuCookieLawWarning = false,
                 FacebookLink = "http://www.facebook.com/nopCommerce",
                 TwitterLink = "https://twitter.com/nopCommerce",
