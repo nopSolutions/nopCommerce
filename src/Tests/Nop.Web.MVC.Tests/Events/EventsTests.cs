@@ -13,7 +13,7 @@ namespace Nop.Web.MVC.Tests.Events
         private NopEngine _engine;
         private IEventPublisher _eventPublisher;
 
-        [OneTimeSetUpAttribute]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _engine = new NopEngine();
