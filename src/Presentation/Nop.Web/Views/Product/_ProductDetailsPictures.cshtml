@@ -39,9 +39,9 @@
         <div class="picture-thumbs">
             @foreach (var picture in Model.PictureModels)
             {
-                <div class="thumb-item">
+                <a class="thumb-item" href="javascript:void(0)">
                     <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl"/>
-                </div>
+                </a>
             }
         </div>
         <script type="text/javascript">
