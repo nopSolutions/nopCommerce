@@ -48,9 +48,9 @@
                                 </select>
                                 foreach (var attributeValue in attribute.Values.Where(value => value.CustomerEntersQty))
                                 {
-                                    <div id="@(controlId)_@(attributeValue.Id)_qty_box" style="display:none">
+                                    <div class="qty-box" id="@(controlId)_@(attributeValue.Id)_qty_box" style="display:none">
                                         <label for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
-                                        <input class="qty-box" type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
+                                        <input type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
                                     </div>
                                 }
                                 <script>
@@ -76,9 +76,9 @@
 
                                             @if (attributeValue.CustomerEntersQty)
                                     {
-                                                <div id="@(controlId)_@(attributeValue.Id)_qty_box" style="display:none">
+                                                <div class="qty-box" id="@(controlId)_@(attributeValue.Id)_qty_box" style="display:none">
                                                     <label for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
-                                                    <input class="qty-box" type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
+                                                    <input type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
                                                 </div>
                                             }
                                         </li>
@@ -108,9 +108,9 @@
 
                                             @if (attributeValue.CustomerEntersQty)
                                     {
-                                                <div id="@(controlId)_@(attributeValue.Id)_qty_box" style="display:none">
+                                                <div class="qty-box" id="@(controlId)_@(attributeValue.Id)_qty_box" style="display:none">
                                                     <label for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
-                                                    <input class="qty-box" type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
+                                                    <input type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
                                                     <script>
                                                         $(document).ready(function() {
                                                             showHideCheckboxQuantity('@(controlId)_@(attributeValue.Id)');
@@ -265,9 +265,9 @@
                                 </ul>
                                 foreach (var attributeValue in attribute.Values.Where(value => value.CustomerEntersQty))
                                 {
-                                    <div id="@(controlId)_@(attributeValue.Id)_qty_box" style="display:none">
+                                    <div class="qty-box" id="@(controlId)_@(attributeValue.Id)_qty_box" style="display:none">
                                         <label for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
-                                        <input class="qty-box" type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
+                                        <input type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
                                     </div>
                                 }
                                 <script type="text/javascript">
@@ -306,9 +306,9 @@
                                 </ul>
                                 foreach (var attributeValue in attribute.Values.Where(value => value.CustomerEntersQty))
                                 {
-                                    <div id="@(controlId)_@(attributeValue.Id)_qty_box" style="display:none">
+                                    <div class="qty-box" id="@(controlId)_@(attributeValue.Id)_qty_box" style="display:none">
                                         <label for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
-                                        <input class="qty-box" type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
+                                        <input type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
                                     </div>
                                 }
                                 <script type="text/javascript">

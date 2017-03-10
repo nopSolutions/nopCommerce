@@ -2149,7 +2149,7 @@ label, label + * {
 	color: #444;
 }
 
-.attributes .qty-box {
+.attributes .qty-box input{
 	width: 48px;
     height: 32px;
     text-align: center;
