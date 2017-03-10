@@ -1467,7 +1467,7 @@ label, label + * {
 	color: #248ece;
 }
 .item-box .sku {
-    margin: -3px 0px 15px;
+    margin: 0 0 15px;
 }
 .item-box .product-rating-box {
     display: inline-block;
@@ -5368,7 +5368,7 @@ pre {
     height: 40px;
 }
 .item-box .product-title {
-    min-height: 21px;
+    min-height: 42px;
     margin: 0 0 5px;
 }
 
