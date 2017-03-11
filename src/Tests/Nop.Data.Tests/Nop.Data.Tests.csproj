@@ -86,6 +86,7 @@
     <Compile Include="Shipping\ProductAvailabilityRangePersistenceTests.cs" />
     <Compile Include="Shipping\DeliveryDatePersistenceTests.cs" />
     <Compile Include="Shipping\WarehousePersistenceTests.cs" />
+    <Compile Include="TestHelper.cs" />
     <Compile Include="Topics\TopicTemplatePersistenceTests.cs" />
     <Compile Include="Vendors\VendorNotePersistenceTests.cs" />
     <Compile Include="Vendors\VendorPersistenceTests.cs" />

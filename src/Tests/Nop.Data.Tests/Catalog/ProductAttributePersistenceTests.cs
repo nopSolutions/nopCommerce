@@ -1,5 +1,4 @@
-﻿using Nop.Core.Domain.Catalog;
-using Nop.Tests;
+﻿using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Data.Tests.Catalog
@@ -10,16 +9,11 @@ namespace Nop.Data.Tests.Catalog
         [Test]
         public void Can_save_and_load_productAttribute()
         {
-            var pa = new ProductAttribute
-            {
-                Name = "Name 1",
-                Description = "Description 1",
-            };
+            var pa = this.GetTestProductAttribute();
 
-            var fromDb = SaveAndLoadEntity(pa);
+            var fromDb = SaveAndLoadEntity(this.GetTestProductAttribute());
             fromDb.ShouldNotBeNull();
-            fromDb.Name.ShouldEqual("Name 1");
-            fromDb.Description.ShouldEqual("Description 1");
-        }
+            fromDb.PropertiesShouldEqual(pa);
+        }       
     }
 }

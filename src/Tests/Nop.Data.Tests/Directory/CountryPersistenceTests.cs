@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Shipping;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -12,96 +10,39 @@ namespace Nop.Data.Tests.Directory
         [Test]
         public void Can_save_and_load_country()
         {
-            var country = new Country
-            {
-                Name = "United States",
-                AllowsBilling = true,
-                AllowsShipping = true,
-                TwoLetterIsoCode = "US",
-                ThreeLetterIsoCode = "USA",
-                NumericIsoCode = 1,
-                SubjectToVat = true,
-                Published = true,
-                DisplayOrder = 1,
-                LimitedToStores = true
-            };
+            var country = this.GetTestCountry();
 
-            var fromDb = SaveAndLoadEntity(country);
+            var fromDb = SaveAndLoadEntity(this.GetTestCountry());
             fromDb.ShouldNotBeNull();
-            fromDb.Name.ShouldEqual("United States");
-            fromDb.AllowsBilling.ShouldEqual(true);
-            fromDb.AllowsShipping.ShouldEqual(true);
-            fromDb.TwoLetterIsoCode.ShouldEqual("US");
-            fromDb.ThreeLetterIsoCode.ShouldEqual("USA");
-            fromDb.NumericIsoCode.ShouldEqual(1);
-            fromDb.SubjectToVat.ShouldEqual(true);
-            fromDb.Published.ShouldEqual(true);
-            fromDb.DisplayOrder.ShouldEqual(1);
-            fromDb.LimitedToStores.ShouldEqual(true);
+            fromDb.PropertiesShouldEqual(country);
         }
 
         [Test]
         public void Can_save_and_load_country_with_states()
         {
-            var country = new Country
-            {
-                Name = "United States",
-                AllowsBilling = true,
-                AllowsShipping = true,
-                TwoLetterIsoCode = "US",
-                ThreeLetterIsoCode = "USA",
-                NumericIsoCode = 1,
-                SubjectToVat = true,
-                Published = true,
-                DisplayOrder = 1
-            };
-            country.StateProvinces.Add
-                (
-                    new StateProvince
-                    {
-                        Name = "California",
-                        Abbreviation = "CA",
-                        DisplayOrder = 1
-                    }
-                );
+            var country = this.GetTestCountry();
+            country.StateProvinces.Add(this.GetTestStateProvince());
             var fromDb = SaveAndLoadEntity(country);
             fromDb.ShouldNotBeNull();
-            fromDb.Name.ShouldEqual("United States");
+            fromDb.PropertiesShouldEqual(this.GetTestCountry());
 
             fromDb.StateProvinces.ShouldNotBeNull();
             (fromDb.StateProvinces.Count == 1).ShouldBeTrue();
-            fromDb.StateProvinces.First().Name.ShouldEqual("California");
+            fromDb.StateProvinces.First().PropertiesShouldEqual(this.GetTestStateProvince());
         }
 
         [Test]
         public void Can_save_and_load_country_with_restrictions()
         {
-            var country = new Country
-            {
-                Name = "United States",
-                AllowsBilling = true,
-                AllowsShipping = true,
-                TwoLetterIsoCode = "US",
-                ThreeLetterIsoCode = "USA",
-                NumericIsoCode = 1,
-                SubjectToVat = true,
-                Published = true,
-                DisplayOrder = 1
-            };
-            country.RestrictedShippingMethods.Add
-                (
-                    new ShippingMethod
-                    {
-                        Name = "By train",
-                    }
-                );
+            var country = this.GetTestCountry();
+            country.RestrictedShippingMethods.Add(this.GetTestShippingMethod());
             var fromDb = SaveAndLoadEntity(country);
             fromDb.ShouldNotBeNull();
-            fromDb.Name.ShouldEqual("United States");
+            fromDb.PropertiesShouldEqual(this.GetTestCountry());
 
             fromDb.RestrictedShippingMethods.ShouldNotBeNull();
             (fromDb.RestrictedShippingMethods.Count == 1).ShouldBeTrue();
-            fromDb.RestrictedShippingMethods.First().Name.ShouldEqual("By train");
+            fromDb.RestrictedShippingMethods.First().PropertiesShouldEqual(this.GetTestShippingMethod());
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Nop.Core.Domain.Shipping;
-using Nop.Tests;
+﻿using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Data.Tests.Shipping
@@ -10,16 +9,11 @@ namespace Nop.Data.Tests.Shipping
         [Test]
         public void Can_save_and_load_productAvailabilityRange()
         {
-            var productAvailabilityRange = new ProductAvailabilityRange
-            {
-                Name = "product availability range",
-                DisplayOrder = 1
-            };
+            var productAvailabilityRange = this.GetTestProductAvailabilityRange();
 
-            var fromDb = SaveAndLoadEntity(productAvailabilityRange);
+            var fromDb = SaveAndLoadEntity(this.GetTestProductAvailabilityRange());
             fromDb.ShouldNotBeNull();
-            fromDb.Name.ShouldEqual("product availability range");
-            fromDb.DisplayOrder.ShouldEqual(1);
+            fromDb.PropertiesShouldEqual(productAvailabilityRange);
         }
     }
 }
