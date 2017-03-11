@@ -18,6 +18,7 @@ namespace Nop.Admin.Models.Settings
             PdfSettings = new PdfSettingsModel();
             LocalizationSettings = new LocalizationSettingsModel();
             FullTextSettings = new FullTextSettingsModel();
+            DisplayDefaultMenuItemSettings = new DisplayDefaultMenuItemSettingsModel();
         }
 
         public StoreInformationSettingsModel StoreInformationSettings { get; set; }
@@ -27,7 +28,7 @@ namespace Nop.Admin.Models.Settings
         public PdfSettingsModel PdfSettings { get; set; }
         public LocalizationSettingsModel LocalizationSettings { get; set; }
         public FullTextSettingsModel FullTextSettings { get; set; }
-
+        public DisplayDefaultMenuItemSettingsModel DisplayDefaultMenuItemSettings { get; set; }
 
         public int ActiveStoreScopeConfiguration { get; set; }
 
@@ -318,6 +319,31 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.SearchMode")]
             public int SearchMode { get; set; }
             public SelectList SearchModeValues { get; set; }
+        }
+        
+        public partial class DisplayDefaultMenuItemSettingsModel: BaseNopModel
+        {
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem")]
+            public bool DisplayHomePageMenuItem { get; set; }
+            public bool DisplayHomePageMenuItem_OverrideForStore { get; set; }
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem")]
+            public bool DisplayNewProductsMenuItem { get; set; }
+            public bool DisplayNewProductsMenuItem_OverrideForStore { get; set; }
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem")]
+            public bool DisplayProductSearchMenuItem { get; set; }
+            public bool DisplayProductSearchMenuItem_OverrideForStore { get; set; }
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem")]
+            public bool DisplayCustomerInfoMenuItem { get; set; }
+            public bool DisplayCustomerInfoMenuItem_OverrideForStore { get; set; }
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayBlogMenuItem")]
+            public bool DisplayBlogMenuItem { get; set; }
+            public bool DisplayBlogMenuItem_OverrideForStore { get; set; }
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem")]
+            public bool DisplayForumsMenuItem { get; set; }
+            public bool DisplayForumsMenuItem_OverrideForStore { get; set; }
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem")]
+            public bool DisplayContactUsMenuItem { get; set; }
+            public bool DisplayContactUsMenuItem_OverrideForStore { get; set; }
         }
         
         #endregion

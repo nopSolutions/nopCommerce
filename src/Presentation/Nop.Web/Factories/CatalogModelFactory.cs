@@ -62,6 +62,7 @@ namespace Nop.Web.Factories
         private readonly BlogSettings _blogSettings;
         private readonly ForumSettings _forumSettings;
         private readonly ICacheManager _cacheManager;
+        private readonly DisplayDefaultMenuItemSettings _displayDefaultMenuItemSettings;
 
         #endregion
 
@@ -94,7 +95,8 @@ namespace Nop.Web.Factories
             VendorSettings vendorSettings,
             BlogSettings blogSettings,
             ForumSettings  forumSettings,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            DisplayDefaultMenuItemSettings displayDefaultMenuItemSettings)
         {
             this._productModelFactory = productModelFactory;
             this._categoryService = categoryService;
@@ -124,6 +126,7 @@ namespace Nop.Web.Factories
             this._blogSettings = blogSettings;
             this._forumSettings = forumSettings;
             this._cacheManager = cacheManager;
+            this._displayDefaultMenuItemSettings = displayDefaultMenuItemSettings;
         }
 
         #endregion
@@ -569,7 +572,14 @@ namespace Nop.Web.Factories
                 Topics = cachedTopicModel,
                 NewProductsEnabled = _catalogSettings.NewProductsEnabled,
                 BlogEnabled = _blogSettings.Enabled,
-                ForumEnabled = _forumSettings.ForumsEnabled
+                ForumEnabled = _forumSettings.ForumsEnabled,
+                DisplayHomePageMenuItem = _displayDefaultMenuItemSettings.DisplayHomePageMenuItem,
+                DisplayNewProductsMenuItem = _displayDefaultMenuItemSettings.DisplayNewProductsMenuItem,
+                DisplayProductSearchMenuItem = _displayDefaultMenuItemSettings.DisplayProductSearchMenuItem,
+                DisplayCustomerInfoMenuItem = _displayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem,
+                DisplayBlogMenuItem = _displayDefaultMenuItemSettings.DisplayBlogMenuItem,
+                DisplayForumsMenuItem = _displayDefaultMenuItemSettings.DisplayForumsMenuItem,
+                DisplayContactUsMenuItem = _displayDefaultMenuItemSettings.DisplayContactUsMenuItem
             };
             return model;
         }
