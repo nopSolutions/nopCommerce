@@ -3043,6 +3043,14 @@ BEGIN
 END
 GO
 
+IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'shippingsettings.activeshippingratecomputationmethodsystemnames' AND [Value] LIKE N'%Shipping.ByWeight%')
+BEGIN
+    UPDATE [Setting] 
+    SET [Value] = N'True' 
+    WHERE [Name] = N'fixedorbyweightsettings.shippingbyweightenabled'
+END
+GO
+
 --rename settings
 UPDATE [Setting] 
 SET [Name] = N'fixedorbyweightsettings.limitmethodstocreated' 
