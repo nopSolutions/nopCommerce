@@ -39,6 +39,10 @@
 
 <ul class="top-menu">
     @Html.Widget("header_menu_before")
+    @if (Model.DisplayHomePageMenuItem)
+    {
+        <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
+    }
     @{
         var rootCategories = Model.Categories.Where(x => x.IncludeInTopMenu).ToList();
     }
@@ -49,10 +53,6 @@
     @foreach (var topic in Model.Topics)
     {
         <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
-    }
-    @if (Model.DisplayHomePageMenuItem)
-    {
-        <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
     }
     @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenuItem)
     {
@@ -88,6 +88,10 @@
     <div class="menu-toggle">@responsiveMenuTitle</div>
     <ul class="top-menu mobile">
         @Html.Widget("mob_header_menu_before")
+        @if (Model.DisplayHomePageMenuItem)
+        {
+            <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
+        }
         @foreach (var category in rootCategoriesResponsive)
         {
             @RenderCategoryLine(category, 0, true)
@@ -95,11 +99,6 @@
         @foreach (var topic in Model.Topics)
         {
             <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
-        }
-
-        @if (Model.DisplayHomePageMenuItem)
-        {
-            <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
         }
         @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenuItem)
         {
