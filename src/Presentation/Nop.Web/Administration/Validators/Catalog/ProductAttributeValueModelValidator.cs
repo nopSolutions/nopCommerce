@@ -25,7 +25,7 @@ namespace Nop.Admin.Validators.Catalog
                 .WithMessage(localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.Choose"))
                 .When(x => x.AttributeValueTypeId == (int)AttributeValueType.AssociatedToProduct);
 
-            SetStringPropertiesMaxLength<ProductAttributeValue>(dbContext);
+            SetDatabaseValidationRules<ProductAttributeValue>(dbContext);
         }
     }
 }

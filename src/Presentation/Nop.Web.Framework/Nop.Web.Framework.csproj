@@ -175,6 +175,7 @@
     <Compile Include="Security\AdminAntiForgeryAttribute.cs" />
     <Compile Include="ValidatePasswordAttribute.cs" />
     <Compile Include="Validators\BaseNopValidator.cs" />
+    <Compile Include="Validators\DecimalPropertyValidator.cs" />
     <Compile Include="WebStoreContext.cs" />
     <Compile Include="StoreIpAddressAttribute.cs" />
     <Compile Include="CustomerLastActivityAttribute.cs" />

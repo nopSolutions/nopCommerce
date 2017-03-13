@@ -13,7 +13,7 @@ namespace Nop.Admin.Validators.Tax
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Tax.Categories.Fields.Name.Required"));
 
-            SetStringPropertiesMaxLength<TaxCategory>(dbContext);
+            SetDatabaseValidationRules<TaxCategory>(dbContext);
         }
     }
 }

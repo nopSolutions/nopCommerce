@@ -14,7 +14,7 @@ namespace Nop.Admin.Validators.Messages
             RuleFor(x => x.Email).NotEmpty().WithMessage(localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.Fields.Email.Required"));
             RuleFor(x => x.Email).EmailAddress().WithMessage(localizationService.GetResource("Admin.Common.WrongEmail"));
 
-            SetStringPropertiesMaxLength<NewsLetterSubscription>(dbContext);
+            SetDatabaseValidationRules<NewsLetterSubscription>(dbContext);
         }
     }
 }

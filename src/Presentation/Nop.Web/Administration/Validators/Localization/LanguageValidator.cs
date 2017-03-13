@@ -33,7 +33,7 @@ namespace Nop.Admin.Validators.Localization
             RuleFor(x => x.UniqueSeoCode).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Languages.Fields.UniqueSeoCode.Required"));
             RuleFor(x => x.UniqueSeoCode).Length(2).WithMessage(localizationService.GetResource("Admin.Configuration.Languages.Fields.UniqueSeoCode.Length"));
 
-            SetStringPropertiesMaxLength<Language>(dbContext, "UniqueSeoCode");
+            SetDatabaseValidationRules<Language>(dbContext, "UniqueSeoCode");
 
         }
     }

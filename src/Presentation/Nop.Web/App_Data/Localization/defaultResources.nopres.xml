@@ -14205,6 +14205,9 @@
   <LocaleResource Name="Enums.Nop.Web.Framework.Security.Captcha.ReCaptchaVersion.Version2">
     <Value>Version 2.0</Value>
   </LocaleResource>
+  <LocaleResource Name="Nop.Web.Framework.Validators.MaxDecimal">
+    <Value>The value is out of range. Maximum value is {0}.99</Value>
+  </LocaleResource>  
   <LocaleResource Name="EUCookieLaw.CannotBrowse">
     <Value>You cannot browse this site until you accept cookies</Value>
   </LocaleResource>

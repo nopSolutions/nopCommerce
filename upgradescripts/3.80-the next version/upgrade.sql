@@ -2144,6 +2144,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.TopMenuItems">
     <Value>Top menu items</Value>
   </LocaleResource>
+  <LocaleResource Name="Nop.Web.Framework.Validators.MaxDecimal">
+    <Value>The value is out of range. Maximum value is {0}.99</Value>
+  </LocaleResource>    
 </Language>
 '
 
