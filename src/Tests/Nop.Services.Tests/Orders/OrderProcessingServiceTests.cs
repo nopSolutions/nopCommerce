@@ -33,6 +33,7 @@ using Nop.Services.Vendors;
 using Nop.Tests;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Nop.Services.Configuration;
 
 namespace Nop.Services.Tests.Orders
 {
@@ -95,6 +96,8 @@ namespace Nop.Services.Tests.Orders
         private AddressSettings _addressSettings;
         private ICustomNumberFormatter _customNumberFormatter;
 
+        private ISettingService _settingService;
+
         private Store _store;
 
         [SetUp]
@@ -124,7 +127,7 @@ namespace Nop.Services.Tests.Orders
             _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
                 _discountService, _categoryService, _manufacturerService,
                 _productAttributeParser, _productService, 
-                cacheManager, _shoppingCartSettings, _catalogSettings);
+                cacheManager, _shoppingCartSettings, _catalogSettings, _taxService);
 
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
@@ -176,7 +179,7 @@ namespace Nop.Services.Tests.Orders
             _addressService.Expect(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Return(new Address { Id = _taxSettings.DefaultTaxAddressId });
             _taxService = new TaxService(_addressService, _workContext, _storeContext, _taxSettings,
                 pluginFinder, _geoLookupService, _countryService, _stateProvinceService, _logger,
-                _customerSettings, _shippingSettings, _addressSettings);
+                _customerSettings, _shippingSettings, _addressSettings, _productAttributeParser);
 
             _rewardPointService = MockRepository.GenerateMock<IRewardPointService>();
             _rewardPointsSettings = new RewardPointsSettings();
@@ -185,7 +188,7 @@ namespace Nop.Services.Tests.Orders
                 _priceCalcService, _taxService, _shippingService, _paymentService,
                 _checkoutAttributeParser, _discountService, _giftCardService,
                 _genericAttributeService, _rewardPointService,
-                _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings);
+                _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings, _productAttributeParser);
 
             _orderService = MockRepository.GenerateMock<IOrderService>();
             _webHelper = MockRepository.GenerateMock<IWebHelper>();
@@ -220,6 +223,7 @@ namespace Nop.Services.Tests.Orders
 
             _rewardPointService = MockRepository.GenerateMock<IRewardPointService>();
             _currencySettings = new CurrencySettings();
+            _settingService = MockRepository.GenerateMock<ISettingService>();
 
             _orderProcessingService = new OrderProcessingService(_orderService, _webHelper,
                 _localizationService, _languageService,
@@ -237,9 +241,10 @@ namespace Nop.Services.Tests.Orders
                 _countryService, _stateProvinceService,
                 _shippingSettings, _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings,
-                _currencySettings, _customNumberFormatter);
+                _currencySettings,
+                _settingService, _customNumberFormatter);
         }
-        
+
         [Test]
         public void Ensure_order_can_only_be_cancelled_when_orderStatus_is_not_cancelled_yet()
         {

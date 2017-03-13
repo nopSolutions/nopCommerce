@@ -28,10 +28,12 @@ namespace Nop.Services.Catalog
         /// <param name="renderProductAttributes">A value indicating whether to render product attributes</param>
         /// <param name="renderGiftCardAttributes">A value indicating whether to render gift card attributes</param>
         /// <param name="allowHyperlinks">A value indicating whether to HTML hyperink tags could be rendered (if required)</param>
+        /// <param name="subTotal">A value indicating if attribute VAT should be rendered with price. Null is default, i.e. don't render </param>
         /// <returns>Attributes</returns>
         string FormatAttributes(Product product, string attributesXml,
             Customer customer, string serapator = "<br />", bool htmlEncode = true, bool renderPrices = true,
             bool renderProductAttributes = true, bool renderGiftCardAttributes = true,
-            bool allowHyperlinks = true);
+            bool allowHyperlinks = true,
+            decimal? subTotal = null);
     }
 }

@@ -22,17 +22,26 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the points redeemed/added
         /// </summary>
         public int Points { get; set; }
-
+        /// <summary>
+        /// Gets or sets the purchased points redeemed/added
+        /// </summary>
+        public int PointsPurchased { get; set; }
         /// <summary>
         /// Gets or sets the points balance
         /// </summary>
         public int? PointsBalance { get; set; }
-
         /// <summary>
-        /// Gets or sets the used amount
+        /// Gets or sets the purchased points balance
+        /// </summary>
+        public int? PointsBalancePurchased { get; set; }
+        /// <summary>
+        /// Gets or sets the used amount. Opposite sign as respective points!
         /// </summary>
         public decimal UsedAmount { get; set; }
-
+        /// <summary>
+        /// Gets or sets the used purchased amount. Opposite sign as respective points!
+        /// </summary>
+        public decimal UsedAmountPurchased { get; set; }
         /// <summary>
         /// Gets or sets the message
         /// </summary>
@@ -52,5 +61,13 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the customer
         /// </summary>
         public virtual Customer Customer { get; set; }
+        /// <summary>
+        /// Gets or sets the associated order item identifier
+        /// </summary>
+        public int? PurchasedWithOrderItemId { get; set; }
+        /// <summary>
+        /// Gets or sets the associated order item
+        /// </summary>
+        public virtual OrderItem PurchasedWithOrderItem { get; set; }
     }
 }

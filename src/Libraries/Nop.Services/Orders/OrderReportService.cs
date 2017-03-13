@@ -184,15 +184,17 @@ namespace Nop.Services.Orders
 						           {
                                        OrderCount = result.Count(),
                                        OrderShippingExclTaxSum = result.Sum(o => o.OrderShippingExclTax),
-                                       OrderTaxSum = result.Sum(o => o.OrderTax), 
-                                       OrderTotalSum = result.Sum(o => o.OrderTotal)
-						           }
+                                       OrderTaxSum = result.Sum(o => o.OrderTax),
+                                       OrderTotalAmountInclSum = result.Sum(o => o.OrderAmountIncl + o.OrderShippingNonTaxable + o.PaymentMethodAdditionalFeeNonTaxable - (o.RedeemedRewardPointsEntry != null ? o.RedeemedRewardPointsEntry.UsedAmount : decimal.Zero)),
+                                       OrderTotalSum = result.Sum(o => o.OrderTotal),
+                        }
 					   ).Select(r => new OrderAverageReportLine
                        {
                            CountOrders = r.OrderCount,
                            SumShippingExclTax = r.OrderShippingExclTaxSum, 
-                           SumTax = r.OrderTaxSum, 
-                           SumOrders = r.OrderTotalSum
+                           SumTax = r.OrderTaxSum,
+                           SumOrdersTotalAmountIncl = r.OrderTotalAmountInclSum,
+                           SumOrders = r.OrderTotalSum,
                        })
                        .FirstOrDefault();
 
@@ -201,8 +203,9 @@ namespace Nop.Services.Orders
                                    CountOrders = 0,
                                    SumShippingExclTax = decimal.Zero,
                                    SumTax = decimal.Zero,
-                                   SumOrders = decimal.Zero, 
-			                   };
+                                   SumOrdersTotalAmountIncl = decimal.Zero,
+                                   SumOrders = decimal.Zero,
+            };
             return item;
         }
 

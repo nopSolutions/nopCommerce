@@ -328,10 +328,14 @@ namespace Nop.Plugin.Payments.PayPalDirect
             decimal discountAmount;
             List<AppliedGiftCard> giftCards;
             List<DiscountForCaching> discounts;
-            int rewardPoints;
-            decimal rewardPointsAmount;
+            RewardPoints rewardPoints;
+            TaxSummary taxSummary;
+            List<DiscountForCaching> subTotalAppliedDiscounts;
+            List<DiscountForCaching> shippingAppliedDiscounts;
+            decimal earnedRewardPointsBaseAmount;
+
             var orderTotal = _orderTotalCalculationService.GetShoppingCartTotal(shoppingCart, out discountAmount,
-                out discounts, out giftCards, out rewardPoints, out rewardPointsAmount);
+                out discounts, out subTotalAppliedDiscounts, out shippingAppliedDiscounts, out giftCards, out rewardPoints, out taxSummary, out earnedRewardPointsBaseAmount);
 
             if (discountAmount <= decimal.Zero)
                 return null;
@@ -361,8 +365,10 @@ namespace Nop.Plugin.Payments.PayPalDirect
             var shippingTotal = shipping.HasValue ? shipping.Value : 0;
 
             //get tax total
+            TaxSummary taxSummary;
             SortedDictionary<decimal, decimal> taxRatesDictionary;
-            var taxTotal = _orderTotalCalculationService.GetTaxTotal(shoppingCart, out taxRatesDictionary);
+            var taxTotal = _orderTotalCalculationService.GetTaxTotal(shoppingCart, out taxSummary);
+            taxRatesDictionary = taxSummary.GenerateOldTaxrateDict();
 
             //get subtotal
             var subTotal = decimal.Zero;

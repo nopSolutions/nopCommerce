@@ -22,6 +22,7 @@
                                     $('#pnlEditPvQuantity@(item.Id)').show();
                                     $('#pnlEditPvDiscount@(item.Id)').show();
                                     $('#pnlEditPvPrice@(item.Id)').show();
+                                    $('#pnlEditPvTaxRate@(item.Id)').show();
                                     $('#btnEditOrderItem@(item.Id)').hide();
                                     $('#btnDeleteOrderItem@(item.Id)').hide();
                                     $('#btnSaveOrderItem@(item.Id)').show();
@@ -31,6 +32,7 @@
                                     $('#pnlEditPvQuantity@(item.Id)').hide();
                                     $('#pnlEditPvDiscount@(item.Id)').hide();
                                     $('#pnlEditPvPrice@(item.Id)').hide();
+                                    $('#pnlEditPvTaxRate@(item.Id)').hide()
                                     $('#btnEditOrderItem@(item.Id)').show();
                                     $('#btnDeleteOrderItem@(item.Id)').show();
                                     $('#btnSaveOrderItem@(item.Id)').hide();
@@ -80,6 +82,9 @@
                         </th>
                         <th>
                             @T("Admin.Orders.Products.Total")
+                        </th>
+                        <th>
+                            @T("Order.TaxRateLine.TaxRate")
                         </th>
                         @if (!Model.IsLoggedInAsVendor)
                         {
@@ -335,6 +340,16 @@
                                             </div>
                                             <div class="col-md-7">
                                                 <input name="pvPriceExclTax@(item.Id)" type="text" value="@item.SubTotalExclTaxValue" id="pvPriceExclTax@(item.Id)" class="form-control input-sm"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="width: 15%;">
+                                    <div>@item.TaxRate.ToString("G29")</div>
+                                    <div id="pnlEditPvTaxRate@(item.Id)">
+                                        <div class="form-group">
+                                            <div class="col-md-8 col-md-offset-2">
+                                                <input name="pvTaxRate@(item.Id)" type="text" value="@item.TaxRate" id="pvTaxRate@(item.Id)" class="form-control input-sm" />
                                             </div>
                                         </div>
                                     </div>

@@ -343,6 +343,13 @@ label, label + * {
 .table-wrapper {
 	overflow-x: auto;
 }
+.excluded-from-rewardpoints {
+    margin: 5px 0 5px;
+    line-height: 20px;
+    color: #de444c;
+    font-style: italic;
+    font-size: 12px;
+}
 .cart th,
 .data-table th,
 .forum-table th {
@@ -736,11 +743,11 @@ label, label + * {
 	font-size: 0;
 }
 .language-list li {
-	display: inline-block; 
+	display: inline-block;
 	margin: 0 1px;
 	vertical-align: middle;
 }
-.language-list a { 
+.language-list a {
 	display: block;
 	position: relative;
 	width: 24px;
@@ -981,9 +988,9 @@ label, label + * {
 	background-position: -152px 0;
 }
 
-.newsletter-email { 
+.newsletter-email {
 	display: inline-block;
-	overflow: hidden; 
+	overflow: hidden;
 }
 .newsletter-email input[type="text"] {
 	float: left;
@@ -1008,14 +1015,14 @@ label, label + * {
     clear: both;
     padding: 10px 0 0;
 }
-.newsletter-validation, 
-.newsletter-result { 
+.newsletter-validation,
+.newsletter-result {
 	width: 100%;
-	overflow: hidden; 
-	line-height: 28px; 
+	overflow: hidden;
+	line-height: 28px;
 }
 /*.newsletter-validation .please-wait {
-	display: none !important; 
+	display: none !important;
 }*/
 
 .footer-lower {
@@ -1195,10 +1202,10 @@ label, label + * {
 	padding: 10px 20px;
 	font-size: 13px;
 	color: #fff;
-	text-transform: uppercase;	
+	text-transform: uppercase;
 }
 .poll .buttons input:hover {
-	background-color: #bbb;	
+	background-color: #bbb;
 }
 .poll-total-votes {
 	display: block;
@@ -1392,10 +1399,10 @@ label, label + * {
 	padding: 10px 20px;
 	font-size: 13px;
 	color: #fff;
-	text-transform: uppercase;	
+	text-transform: uppercase;
 }
 .remove-filter a:hover {
-	background-color: #999;	
+	background-color: #999;
 }
 
 .item-grid:after {
@@ -1774,7 +1781,7 @@ label, label + * {
 	background: url('../images/rating1.png') repeat-x;
 }
 .product-review-box .rating div {
-	height: 14px; 
+	height: 14px;
 	background: url('../images/rating2.png') repeat-x;
 }
 .product-review-links a {
@@ -2100,14 +2107,14 @@ label, label + * {
 	margin: 20px 0;
 }
 .attributes dl {
-	overflow: hidden; 
+	overflow: hidden;
     padding: 0 2px; /* fix for Chrome in Mac, the checkboxes get cut off */
 }
 .attributes dt,
 .attribute-label {
 	display: block;
 	margin: 0 0 5px;
-	white-space: nowrap; 
+	white-space: nowrap;
 	font-weight: bold;
 	color: #444;
 }
@@ -2477,7 +2484,7 @@ label, label + * {
 .product-review-helpfulness .vote {
 	display: inline-block;
 	padding: 0 5px;
-	color: #4ab2f1; 
+	color: #4ab2f1;
 	cursor: pointer;
 }
 .product-review-helpfulness .question {
@@ -3357,6 +3364,28 @@ label, label + * {
 	font-style: italic;
 }
 
+.cart-vat-table {
+    width: 100%;
+    display: table;
+    table-layout: auto;
+}
+
+.vatrow {
+    display: table-row;
+}
+.vatcell {
+    display: table-cell;
+    text-align: right;
+    width: 20%;
+    font-size: 10px;
+    font-weight: 100;
+    padding-top: 2px;
+    padding-left: 10px;
+}
+.vatrow.header span {
+    font-weight: bold;
+}
+
 .min-amount-warning {
 	margin: 0 0 20px;
 	padding: 0 30px;
@@ -3685,7 +3714,7 @@ label, label + * {
 .order-review-data li,
 .order-details-area li,
 .shipment-details-area li {
-	padding: 3px 0; 
+	padding: 3px 0;
 }
 .order-review-data .title,
 .order-details-area .title,
@@ -3999,7 +4028,7 @@ label, label + * {
 }
 .search-results .warning,
 .search-results .no-result {
-	margin: 10px 0; 
+	margin: 10px 0;
 	color: #e4434b;
 }
 
@@ -4115,7 +4144,7 @@ label, label + * {
 	padding: 0 10px;
 	line-height: 22px;
 }
-.blog-page .tags, 
+.blog-page .tags,
 .blogpost-page .tags {
 	margin: 0 0 15px;
 	overflow: hidden;
@@ -4871,7 +4900,7 @@ label, label + * {
 .private-messages-page th.select {
 	text-align: center;
 }
-.private-messages-page td.from, 
+.private-messages-page td.from,
 .private-messages-page td.to,
 .private-messages-page td.subject {
 	min-width: 150px;
@@ -4986,15 +5015,15 @@ label, label + * {
 pre {
     white-space: pre-wrap;
     white-space: normal;
-    word-wrap: break-word;	
+    word-wrap: break-word;
 }
 .csharpcode {
 	margin: 10px 0;
     border: 1px dashed #ccc;
 	background-color: #fff;
-    padding: 10px; 
+    padding: 10px;
 	font-family: "Courier New", Courier, monospace;
-	color: #000;  
+	color: #000;
 }
 .csharpcode .rem {
     color: green;

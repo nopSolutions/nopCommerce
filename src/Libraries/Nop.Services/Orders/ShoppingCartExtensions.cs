@@ -139,5 +139,21 @@ namespace Nop.Services.Orders
 
             return cart.Where(x => x.StoreId == storeId);
         }
+
+        /// <summary>
+        /// Indicates whether the shopping cart has at least one purchased reward points product
+        /// </summary>
+        /// <param name="shoppingCart">Shopping cart</param>
+        /// <returns>True if the shopping cart conatins one reward points product; otherwise, false.</returns>
+        public static bool HasRewardPointsProduct(this IList<ShoppingCartItem> shoppingCart)
+        {
+            foreach (ShoppingCartItem sci in shoppingCart)
+            {
+                var product = sci.Product;
+                if (product != null && product.IsRewardPoints)
+                    return true;
+            }
+            return false;
+        }
     }
 }

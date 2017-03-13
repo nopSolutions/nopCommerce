@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
+using Nop.Services.Tax;
 
 namespace Nop.Services.Catalog
 {
@@ -70,7 +71,7 @@ namespace Nop.Services.Catalog
         bool? IsConditionMet(ProductAttributeMapping pam, string selectedAttributesXml);
 
         /// <summary>
-        /// Finds a product attribute combination by attributes stored in XML 
+        /// Finds a product attribute combination by attributes stored in XML
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
@@ -87,6 +88,30 @@ namespace Nop.Services.Catalog
         /// <returns>Attribute combinations in XML format</returns>
         IList<string> GenerateAllCombinations(Product product, bool ignoreNonCombinableAttributes = false);
 
+        #endregion
+
+        #region taxAttribute
+        /// <summary>
+        /// Adds tax subdivision to existing attributesXml
+        /// </summary>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="taxSummary">Set Product tax subdivision</param>
+        /// <returns>Updated result (XML format)</returns>
+        string AddTaxAttribute(string attributesXml, TaxSummary taxSummary);
+
+        /// <summary>
+        /// Parse ProductAttributesTax
+        /// </summary>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <returns>SortedDictionary with taxRate and taxRateWeight</returns>
+        SortedDictionary<decimal, decimal> ParseTaxAttribute(string attributesXml);
+
+        /// <summary>
+        /// Check if attributesXml contains tax attribute information
+        /// </summary>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <returns>A boolean value indicating if tax attribute info is present</returns>
+        bool hasTaxInfoInAttributeXML (string attributesXml);
         #endregion
 
         #region Gift card attributes

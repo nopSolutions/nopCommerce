@@ -144,6 +144,14 @@ namespace Nop.Admin.Models.Catalog
         [UIHint("DecimalNullable")]
         public decimal? OverriddenGiftCardAmount { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsRewardPoints")]
+        public bool IsRewardPoints { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.OverriddenRPExchangeRate")]
+        [UIHint("DecimalNullable")]
+        public decimal? OverriddenRPExchangeRate { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ExcludeFromRewardPoints")]
+        public bool ExcludeFromRewardPoints { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.RequireOtherProducts")]
         public bool RequireOtherProducts { get; set; }
 
@@ -428,7 +436,7 @@ namespace Nop.Admin.Models.Catalog
 
         //product attributes
         public IList<SelectListItem> AvailableProductAttributes { get; set; }
-        
+
         //pictures
         public ProductPictureModel AddPictureModel { get; set; }
         public IList<ProductPictureModel> ProductPictureModels { get; set; }
@@ -493,7 +501,7 @@ namespace Nop.Admin.Models.Catalog
                 AvailableAttributes = new List<SelectListItem>();
                 AvailableOptions = new List<SelectListItem>();
             }
-            
+
             [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttribute")]
             public int SpecificationAttributeId { get; set; }
 
@@ -519,7 +527,7 @@ namespace Nop.Admin.Models.Catalog
             public IList<SelectListItem> AvailableAttributes { get; set; }
             public IList<SelectListItem> AvailableOptions { get; set; }
         }
-        
+
         public partial class ProductPictureModel : BaseNopEntityModel
         {
             public int ProductId { get; set; }
@@ -549,7 +557,7 @@ namespace Nop.Admin.Models.Catalog
 
             [NopResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.Product")]
             public string Product2Name { get; set; }
-            
+
             [NopResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
         }
@@ -784,7 +792,7 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.DefaultValue")]
             public string DefaultValue { get; set; }
             public string ValidationRulesString { get; set; }
-            
+
             //condition
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Condition")]
             public bool ConditionAllowed { get; set; }
@@ -824,7 +832,7 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name")]
             [AllowHtml]
             public string Name { get; set; }
-            
+
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.ColorSquaresRgb")]
             [AllowHtml]
             public string ColorSquaresRgb { get; set; }
@@ -902,7 +910,7 @@ namespace Nop.Admin.Models.Catalog
                 public IList<SelectListItem> AvailableStores { get; set; }
                 public IList<SelectListItem> AvailableVendors { get; set; }
                 public IList<SelectListItem> AvailableProductTypes { get; set; }
-                
+
                 //vendor
                 public bool IsLoggedInAsVendor { get; set; }
 

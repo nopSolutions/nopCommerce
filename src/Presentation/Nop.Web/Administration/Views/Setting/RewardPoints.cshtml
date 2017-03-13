@@ -162,6 +162,66 @@
                                 @Html.ValidationMessageFor(model => model.PageSize)
                             </div>
                         </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.EarnedRewardPointsAreTaxable_OverrideForStore, model => model.EarnedRewardPointsAreTaxable, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.EarnedRewardPointsAreTaxable)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.EarnedRewardPointsAreTaxable)
+                                @Html.ValidationMessageFor(model => model.EarnedRewardPointsAreTaxable)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.AwardPointsIncludeShipping_OverrideForStore, model => model.AwardPointsIncludeShipping, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.AwardPointsIncludeShipping)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.AwardPointsIncludeShipping)
+                                @Html.ValidationMessageFor(model => model.AwardPointsIncludeShipping)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.AwardPointsIncludePaymentMethodAdditionalFee_OverrideForStore, model => model.AwardPointsIncludePaymentMethodAdditionalFee, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.AwardPointsIncludePaymentMethodAdditionalFee)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.AwardPointsIncludePaymentMethodAdditionalFee)
+                                @Html.ValidationMessageFor(model => model.AwardPointsIncludePaymentMethodAdditionalFee)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.AwardPointsExcludeGiftCard_OverrideForStore, model => model.AwardPointsExcludeGiftCard, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.AwardPointsExcludeGiftCard)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.AwardPointsExcludeGiftCard)
+                                @Html.ValidationMessageFor(model => model.AwardPointsExcludeGiftCard)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.AwardPointsExcludePurchasedRewardPoints_OverrideForStore, model => model.AwardPointsExcludePurchasedRewardPoints, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.AwardPointsExcludePurchasedRewardPoints)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.AwardPointsExcludePurchasedRewardPoints)
+                                @Html.ValidationMessageFor(model => model.AwardPointsExcludePurchasedRewardPoints)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.EarnRewardPointsOnlyWhenUsingPurchasedRewardPoints_OverrideForStore, model => model.EarnRewardPointsOnlyWhenUsingPurchasedRewardPoints, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.EarnRewardPointsOnlyWhenUsingPurchasedRewardPoints)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.EarnRewardPointsOnlyWhenUsingPurchasedRewardPoints)
+                                @Html.ValidationMessageFor(model => model.EarnRewardPointsOnlyWhenUsingPurchasedRewardPoints)
+                            </div>
+                        </div>
                     </div>
 
                     <script type="text/javascript">

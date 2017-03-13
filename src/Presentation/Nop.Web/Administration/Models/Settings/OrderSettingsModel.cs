@@ -98,7 +98,13 @@ namespace Nop.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.OrderIdent")]
         public int? OrderIdent { get; set; }
-        
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.InvoiceIdent")]
+        public int InvoiceIdent { get; set; }
+        public bool InvoiceIdent_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.InvoiceYear")]
+        public int InvoiceYear { get; set; } //InvoiceYear_OverrideForStore = InvoiceIdent_OverrideForStore
+        public bool InvoiceYear_OverrideForStore { get { return InvoiceIdent_OverrideForStore; } set { InvoiceIdent_OverrideForStore = value; } }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.CustomOrderNumberMask")]
         public string CustomOrderNumberMask { get; set; }
         public bool CustomOrderNumberMask_OverrideForStore { get; set; }
@@ -106,5 +112,7 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.ExportWithProducts")]
         public bool ExportWithProducts { get; set; }
         public bool ExportWithProducts_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.AssignInvoiceIdentFromTask")]
+        public bool AssignInvoiceIdentFromTask { get; set; }
     }
 }

@@ -49,5 +49,25 @@ namespace Nop.Admin.Models.Settings
         public bool PageSize_OverrideForStore { get; set; }
 
         public string PrimaryStoreCurrencyCode { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.EarnedRewardPointsAreTaxable")]
+        public bool EarnedRewardPointsAreTaxable { get; set; }
+        public bool EarnedRewardPointsAreTaxable_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.AwardPointsIncludeShipping")]
+        public bool AwardPointsIncludeShipping { get; set; }
+        public bool AwardPointsIncludeShipping_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.AwardPointsIncludePaymentMethodAdditionalFee")]
+        public bool AwardPointsIncludePaymentMethodAdditionalFee { get; set; }
+        public bool AwardPointsIncludePaymentMethodAdditionalFee_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.AwardPointsExcludeGiftCard")]
+        public bool AwardPointsExcludeGiftCard { get; set; }
+        public bool AwardPointsExcludeGiftCard_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.AwardPointsExcludePurchasedRewardPoints")]
+        public bool AwardPointsExcludePurchasedRewardPoints { get; set; }
+        public bool AwardPointsExcludePurchasedRewardPoints_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.EarnRewardPointsOnlyWhenUsingPurchasedRewardPoints")]
+        public bool EarnRewardPointsOnlyWhenUsingPurchasedRewardPoints { get; set; }
+        public bool EarnRewardPointsOnlyWhenUsingPurchasedRewardPoints_OverrideForStore { get; set; }
+
     }
 }

@@ -21,7 +21,7 @@
                }
            </ul>
        </div>
-       }     
+       }
        @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
        using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post, new { enctype = "multipart/form-data", id = "shopping-cart-form" }))
        {
@@ -42,6 +42,7 @@
                        <col width="1" />
                    }
                    <col />
+                   <col width="1" />
                    <col width="1" />
                    <col width="1" />
                    <col width="1" />
@@ -74,6 +75,9 @@
                        </th>
                        <th class="quantity">
                            @T("ShoppingCart.Quantity")
+                       </th>
+                       <th class="taxrate">
+                           @T("ShoppingCart.TaxRate")
                        </th>
                        <th class="subtotal">
                            @T("ShoppingCart.ItemTotal")
@@ -131,6 +135,12 @@
                                        @Html.Raw(item.RentalInfo)
                                    </div>
                                }
+                               @if (item.ExcludeFromRewardPoints)
+                               {
+                                   <div class="excluded-from-rewardpoints">
+                                       @T("Products.ExcludeFromRewardPoints")
+                                   </div>
+                               }
                                @if (Model.IsEditable && item.AllowItemEditing)
                                {
                                    var editCartItemUrl = Url.RouteUrl("Product", new {SeName = item.ProductSeName});
@@ -178,6 +188,10 @@
                                {
                                     <span class="product-quantity">@item.Quantity</span>
                                }
+                           </td>
+                           <td class="tax-rate">
+                               <label class="td-title">@T("ShoppingCart.TaxRate"):</label>
+                               <span class="product-taxrate">@item.TaxRate</span>
                            </td>
                            <td class="subtotal">
                                <label class="td-title">@T("ShoppingCart.ItemTotal"):</label>

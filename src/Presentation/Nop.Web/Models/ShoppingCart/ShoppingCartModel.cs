@@ -80,7 +80,7 @@ namespace Nop.Web.Models.ShoppingCart
 
             public int Quantity { get; set; }
             public List<SelectListItem> AllowedQuantities { get; set; }
-            
+
             public string AttributeInfo { get; set; }
 
             public string RecurringInfo { get; set; }
@@ -92,6 +92,16 @@ namespace Nop.Web.Models.ShoppingCart
             public bool DisableRemoval { get; set; }
 
             public IList<string> Warnings { get; set; }
+            private string _taxRate;
+            public string TaxRate
+            {
+                get { return hasTaxInfoInAttributeXML ? "(*)" : _taxRate; }
+                set { _taxRate = value; }
+            }
+
+            public bool hasTaxInfoInAttributeXML { get; set; }
+            //reward points program
+            public bool ExcludeFromRewardPoints { get; set; }
 
         }
 

@@ -120,6 +120,14 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether an order status should be set to "Complete" only when its shipping status is "Delivered". Otherwise, "Shipped" status will be enough.
         /// </summary>
         public bool CompleteOrderWhenDelivered { get; set; }
+        /// <summary>
+        /// Last issued Invoice Id
+        /// </summary>
+        public int InvoiceIdent { get; set; }
+        /// <summary>
+        /// Last issued Invoice Year
+        /// </summary>
+        public int InvoiceYear { get; set; }
 
         /// <summary>
         /// Gets or sets a custom order number mask
@@ -130,5 +138,9 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether the orders need to be exported with their products
         /// </summary>
         public bool ExportWithProducts { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether invoice ident should be set from background task
+        /// </summary>
+        public bool AssignInvoiceIdentFromTask { get; set; }
     }
 }

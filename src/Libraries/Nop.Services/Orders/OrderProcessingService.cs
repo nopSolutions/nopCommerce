@@ -30,6 +30,8 @@ using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
+using Nop.Services.Configuration;
+using System.Text;
 
 namespace Nop.Services.Orders
 {
@@ -39,7 +41,7 @@ namespace Nop.Services.Orders
     public partial class OrderProcessingService : IOrderProcessingService
     {
         #region Fields
-        
+
         private readonly IOrderService _orderService;
         private readonly IWebHelper _webHelper;
         private readonly ILocalizationService _localizationService;
@@ -82,6 +84,8 @@ namespace Nop.Services.Orders
         private readonly LocalizationSettings _localizationSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly ICustomNumberFormatter _customNumberFormatter;
+
+        private readonly ISettingService _settingService;
 
         #endregion
 
@@ -129,6 +133,7 @@ namespace Nop.Services.Orders
         /// <param name="taxSettings">Tax settings</param>
         /// <param name="localizationSettings">Localization settings</param>
         /// <param name="currencySettings">Currency settings</param>
+        /// <param name="settingService">Setting service</param>
         /// <param name="customNumberFormatter">Custom number formatter</param>
         public OrderProcessingService(IOrderService orderService,
             IWebHelper webHelper,
@@ -170,6 +175,7 @@ namespace Nop.Services.Orders
             TaxSettings taxSettings,
             LocalizationSettings localizationSettings,
             CurrencySettings currencySettings,
+            ISettingService settingService,
             ICustomNumberFormatter customNumberFormatter)
         {
             this._orderService = orderService;
@@ -213,6 +219,7 @@ namespace Nop.Services.Orders
             this._taxSettings = taxSettings;
             this._localizationSettings = localizationSettings;
             this._currencySettings = currencySettings;
+            this._settingService = settingService;
             this._customNumberFormatter = customNumberFormatter;
         }
 
@@ -261,15 +268,23 @@ namespace Nop.Services.Orders
             public decimal OrderSubTotalDiscountExclTax { get; set; }
             public decimal OrderShippingTotalInclTax { get; set; }
             public decimal OrderShippingTotalExclTax { get; set; }
+            public decimal OrderShippingTotalNonTaxable { get; set; }
             public decimal PaymentAdditionalFeeInclTax {get; set; }
             public decimal PaymentAdditionalFeeExclTax { get; set; }
+            public decimal PaymentAdditionalFeeNonTaxable { get; set; }
             public decimal OrderTaxTotal  {get; set; }
             public string VatNumber {get; set; }
             public string TaxRates {get; set; }
             public decimal OrderDiscountAmount { get; set; }
-            public int RedeemedRewardPoints { get; set; }
-            public decimal RedeemedRewardPointsAmount { get; set; }
+            public RewardPoints RedeemedRewardPoints { get; set; }
             public decimal OrderTotal { get; set; }
+            public decimal OrderAmount { get; set; } //MF 09.12.16
+            public decimal OrderAmountIncl { get; set; } //MF 09.12.16
+            public decimal OrderDiscountAmountIncl { get; set; }
+            public decimal EarnedRewardPointsBaseAmountIncl { get; set; }
+            public decimal EarnedRewardPointsBaseAmountExcl { get; set; }
+            public bool RewardPointsTaxable { get; set; }
+
         }
 
         #endregion
@@ -371,26 +386,44 @@ namespace Nop.Services.Orders
             else
                 details.CustomerTaxDisplayType = _taxSettings.TaxDisplayType;
 
-            //sub total (incl tax)
-            decimal orderSubTotalDiscountAmount;
-            List<DiscountForCaching> orderSubTotalAppliedDiscounts;
-            decimal subTotalWithoutDiscountBase;
-            decimal subTotalWithDiscountBase;
-            _orderTotalCalculationService.GetShoppingCartSubTotal(details.Cart, true, out orderSubTotalDiscountAmount,
-                out orderSubTotalAppliedDiscounts, out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
-            details.OrderSubTotalInclTax = subTotalWithoutDiscountBase;
-            details.OrderSubTotalDiscountInclTax = orderSubTotalDiscountAmount;
+
+            //order total (and applied discounts, gift cards, reward points)
+            List<AppliedGiftCard> appliedGiftCardsIncl;
+            List<AppliedGiftCard> appliedGiftCardsExcl;
+            List<DiscountForCaching> orderAppliedDiscounts;
+            List<DiscountForCaching> subTotalAppliedDiscounts;
+            List<DiscountForCaching> shippingAppliedDiscounts;
+            decimal orderDiscountAmount;
+            RewardPoints redeemedRewardPointsIncl;
+            RewardPoints redeemedRewardPointsExcl;
+            TaxSummary taxSummaryIncl;
+            TaxSummary taxSummaryExcl;
+            decimal earnedRewardPointsBaseAmountIncl;
+            decimal earnedRewardPointsBaseAmountExcl;
+
+            //calculate two times to get correct incl./excl. tax
+            var orderTotalIncl = _orderTotalCalculationService.GetShoppingCartTotal(details.Cart, out orderDiscountAmount,
+                out orderAppliedDiscounts, out subTotalAppliedDiscounts, out shippingAppliedDiscounts,
+                out appliedGiftCardsIncl, out redeemedRewardPointsIncl,
+                out taxSummaryIncl, out earnedRewardPointsBaseAmountIncl, true);
+
+            var orderTotalExcl = _orderTotalCalculationService.GetShoppingCartTotal(details.Cart, out orderDiscountAmount,
+                out orderAppliedDiscounts, out subTotalAppliedDiscounts, out shippingAppliedDiscounts,
+                out appliedGiftCardsExcl, out redeemedRewardPointsExcl,
+                out taxSummaryExcl, out earnedRewardPointsBaseAmountExcl, false);
+
+            //sub total (incl tax) (excl tax)
+            details.OrderSubTotalInclTax = taxSummaryIncl.TotalSubTotalAmount;
+            details.OrderSubTotalDiscountInclTax = taxSummaryIncl.TotalSubTotalDiscAmount;
+
+            details.OrderSubTotalExclTax = taxSummaryExcl.TotalSubTotalAmount;
+            details.OrderSubTotalDiscountExclTax = taxSummaryExcl.TotalSubTotalDiscAmount;
+
 
             //discount history
-            foreach (var disc in orderSubTotalAppliedDiscounts)
+            foreach (var disc in subTotalAppliedDiscounts)
                 if (!details.AppliedDiscounts.ContainsDiscount(disc))
                     details.AppliedDiscounts.Add(disc);
-
-            //sub total (excl tax)
-            _orderTotalCalculationService.GetShoppingCartSubTotal(details.Cart, false, out orderSubTotalDiscountAmount,
-                out orderSubTotalAppliedDiscounts, out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
-            details.OrderSubTotalExclTax = subTotalWithoutDiscountBase;
-            details.OrderSubTotalDiscountExclTax = orderSubTotalDiscountAmount;
 
             //shipping info
             if (details.Cart.RequiresShipping())
@@ -439,28 +472,22 @@ namespace Nop.Services.Orders
                 details.ShippingStatus = ShippingStatus.ShippingNotRequired;
 
             //shipping total
-            decimal tax;
-            List<DiscountForCaching> shippingTotalDiscounts;
-            var orderShippingTotalInclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(details.Cart, true, out tax, out shippingTotalDiscounts);
-            var orderShippingTotalExclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(details.Cart, false);
-            if (!orderShippingTotalInclTax.HasValue || !orderShippingTotalExclTax.HasValue)
-                throw new NopException("Shipping total couldn't be calculated");
+            details.OrderShippingTotalInclTax = taxSummaryIncl.TotalShippingAmountTaxable ?? decimal.Zero;
+            details.OrderShippingTotalExclTax = taxSummaryExcl.TotalShippingAmountTaxable ?? decimal.Zero;
+            details.OrderShippingTotalNonTaxable = taxSummaryIncl.TotalShippingAmountNonTaxable ?? decimal.Zero;
 
-            details.OrderShippingTotalInclTax = orderShippingTotalInclTax.Value;
-            details.OrderShippingTotalExclTax = orderShippingTotalExclTax.Value;
-
-            foreach(var disc in shippingTotalDiscounts)
+            foreach (var disc in shippingAppliedDiscounts)
                 if (!details.AppliedDiscounts.ContainsDiscount(disc))
                     details.AppliedDiscounts.Add(disc);
 
             //payment total
-            var paymentAdditionalFee = _paymentService.GetAdditionalHandlingFee(details.Cart, processPaymentRequest.PaymentMethodSystemName);
-            details.PaymentAdditionalFeeInclTax = _taxService.GetPaymentMethodAdditionalFee(paymentAdditionalFee, true, details.Customer);
-            details.PaymentAdditionalFeeExclTax = _taxService.GetPaymentMethodAdditionalFee(paymentAdditionalFee, false, details.Customer);
+            details.PaymentAdditionalFeeInclTax = taxSummaryIncl.TotalPaymentFeeAmountTaxable;
+            details.PaymentAdditionalFeeExclTax = taxSummaryExcl.TotalPaymentFeeAmountTaxable;
+            details.PaymentAdditionalFeeNonTaxable = taxSummaryExcl.TotalPaymentFeeAmountNonTaxable ?? decimal.Zero;
 
             //tax amount
-            SortedDictionary<decimal, decimal> taxRatesDictionary;
-            details.OrderTaxTotal = _orderTotalCalculationService.GetTaxTotal(details.Cart, out taxRatesDictionary);
+            bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+            details.OrderTaxTotal = includingTax? taxSummaryIncl.TotalAmountTax : taxSummaryExcl.TotalAmountTax;
 
             //VAT number
             var customerVatStatus = (VatNumberStatus)details.Customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId);
@@ -468,25 +495,22 @@ namespace Nop.Services.Orders
                 details.VatNumber = details.Customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber);
 
             //tax rates
-            details.TaxRates = taxRatesDictionary.Aggregate(string.Empty, (current, next) =>
-                string.Format("{0}{1}:{2};   ", current, next.Key.ToString(CultureInfo.InvariantCulture), next.Value.ToString(CultureInfo.InvariantCulture)));
+            //var taxrates = includingTax ? taxSummaryIncl.GenerateOldTaxrateDict() : taxSummaryExcl.GenerateOldTaxrateDict();
+            var taxrates = includingTax ? taxSummaryIncl : taxSummaryExcl;
+            details.TaxRates = taxrates.GenerateTaxRateString();
 
             //order total (and applied discounts, gift cards, reward points)
-            List<AppliedGiftCard> appliedGiftCards;
-            List<DiscountForCaching> orderAppliedDiscounts;
-            decimal orderDiscountAmount;
-            int redeemedRewardPoints;
-            decimal redeemedRewardPointsAmount;
-            var orderTotal = _orderTotalCalculationService.GetShoppingCartTotal(details.Cart, out orderDiscountAmount,
-                out orderAppliedDiscounts, out appliedGiftCards, out redeemedRewardPoints, out redeemedRewardPointsAmount);
-            if (!orderTotal.HasValue)
-                throw new NopException("Order total couldn't be calculated");
+            details.OrderDiscountAmount = taxSummaryExcl.TotalInvDiscAmount;
+            details.OrderDiscountAmountIncl = taxSummaryIncl.TotalInvDiscAmount;
+            details.RedeemedRewardPoints = includingTax ? redeemedRewardPointsIncl : redeemedRewardPointsExcl;
+            details.AppliedGiftCards = includingTax ? appliedGiftCardsIncl : appliedGiftCardsExcl;
+            details.OrderTotal = includingTax ? taxSummaryIncl.TotalPaymentAmount : taxSummaryExcl.TotalPaymentAmount;
+            details.OrderAmount = includingTax ? taxSummaryIncl.TotalAmount : taxSummaryExcl.TotalAmount;
+            details.OrderAmountIncl = includingTax ? taxSummaryIncl.TotalAmountIncludingTax : taxSummaryExcl.TotalAmountIncludingTax;
+            details.EarnedRewardPointsBaseAmountIncl = earnedRewardPointsBaseAmountIncl;
+            details.EarnedRewardPointsBaseAmountExcl = earnedRewardPointsBaseAmountExcl;
+            details.RewardPointsTaxable = _rewardPointsSettings.EarnedRewardPointsAreTaxable;
 
-            details.OrderDiscountAmount = orderDiscountAmount;
-            details.RedeemedRewardPoints = redeemedRewardPoints;
-            details.RedeemedRewardPointsAmount = redeemedRewardPointsAmount;
-            details.AppliedGiftCards = appliedGiftCards;
-            details.OrderTotal = orderTotal.Value;
 
             //discount history
             foreach (var disc in orderAppliedDiscounts)
@@ -558,7 +582,7 @@ namespace Nop.Services.Orders
             //billing address
             if (details.InitialOrder.BillingAddress == null)
                 throw new NopException("Billing address is not available");
-            
+
             details.BillingAddress = (Address)details.InitialOrder.BillingAddress.Clone();
             if (details.BillingAddress.Country != null && !details.BillingAddress.Country.AllowsBilling)
                 throw new NopException(string.Format("Country '{0}' is not allowed for billing", details.BillingAddress.Country.Name));
@@ -601,10 +625,12 @@ namespace Nop.Services.Orders
             //shipping total
             details.OrderShippingTotalInclTax = details.InitialOrder.OrderShippingInclTax;
             details.OrderShippingTotalExclTax = details.InitialOrder.OrderShippingExclTax;
+            details.OrderShippingTotalNonTaxable = details.InitialOrder.OrderShippingNonTaxable;
 
             //payment total
             details.PaymentAdditionalFeeInclTax = details.InitialOrder.PaymentMethodAdditionalFeeInclTax;
             details.PaymentAdditionalFeeExclTax = details.InitialOrder.PaymentMethodAdditionalFeeExclTax;
+            details.PaymentAdditionalFeeNonTaxable = details.InitialOrder.PaymentMethodAdditionalFeeNonTaxable;
 
             //tax total
             details.OrderTaxTotal = details.InitialOrder.OrderTax;
@@ -615,6 +641,12 @@ namespace Nop.Services.Orders
             //order total
             details.OrderDiscountAmount = details.InitialOrder.OrderDiscount;
             details.OrderTotal = details.InitialOrder.OrderTotal;
+            details.OrderAmount = details.InitialOrder.OrderAmount;
+            details.OrderAmountIncl = details.InitialOrder.OrderAmountIncl;
+            details.OrderDiscountAmountIncl = details.InitialOrder.OrderDiscountIncl;
+            details.EarnedRewardPointsBaseAmountIncl = details.InitialOrder.EarnedRewardPointsBaseAmountIncl;
+            details.EarnedRewardPointsBaseAmountExcl = details.InitialOrder.EarnedRewardPointsBaseAmountExcl;
+            details.RewardPointsTaxable = _rewardPointsSettings.EarnedRewardPointsAreTaxable;
             processPaymentRequest.OrderTotal = details.OrderTotal;
 
             return details;
@@ -627,7 +659,7 @@ namespace Nop.Services.Orders
         /// <param name="processPaymentResult">Process payment result</param>
         /// <param name="details">Details</param>
         /// <returns>Order</returns>
-        protected virtual Order SaveOrderDetails(ProcessPaymentRequest processPaymentRequest, 
+        protected virtual Order SaveOrderDetails(ProcessPaymentRequest processPaymentRequest,
             ProcessPaymentResult processPaymentResult, PlaceOrderContainter details)
         {
             var order = new Order
@@ -644,11 +676,19 @@ namespace Nop.Services.Orders
                 OrderSubTotalDiscountExclTax = details.OrderSubTotalDiscountExclTax,
                 OrderShippingInclTax = details.OrderShippingTotalInclTax,
                 OrderShippingExclTax = details.OrderShippingTotalExclTax,
+                OrderShippingNonTaxable = details.OrderShippingTotalNonTaxable,
                 PaymentMethodAdditionalFeeInclTax = details.PaymentAdditionalFeeInclTax,
                 PaymentMethodAdditionalFeeExclTax = details.PaymentAdditionalFeeExclTax,
+                PaymentMethodAdditionalFeeNonTaxable = details.PaymentAdditionalFeeNonTaxable,
                 TaxRates = details.TaxRates,
                 OrderTax = details.OrderTaxTotal,
                 OrderTotal = details.OrderTotal,
+                OrderAmount = details.OrderAmount,
+                OrderAmountIncl = details.OrderAmountIncl,
+                OrderDiscountIncl = details.OrderDiscountAmountIncl,
+                EarnedRewardPointsBaseAmountIncl = details.EarnedRewardPointsBaseAmountIncl,
+                EarnedRewardPointsBaseAmountExcl = details.EarnedRewardPointsBaseAmountExcl,
+                RewardPointsTaxable = details.RewardPointsTaxable,
                 RefundedAmount = decimal.Zero,
                 OrderDiscount = details.OrderDiscountAmount,
                 CheckoutAttributeDescription = details.CheckoutAttributeDescription,
@@ -684,6 +724,8 @@ namespace Nop.Services.Orders
                 CustomValuesXml = processPaymentRequest.SerializeCustomValues(),
                 VatNumber = details.VatNumber,
                 CreatedOnUtc = DateTime.UtcNow,
+                InvoiceId = null,
+                InvoiceDateUtc = null,
                 CustomOrderNumber = string.Empty
             };
 
@@ -694,11 +736,15 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //reward points history
-            if (details.RedeemedRewardPointsAmount > decimal.Zero)
+            if (details.RedeemedRewardPoints.AmountTotal > decimal.Zero)
             {
-                _rewardPointService.AddRewardPointsHistoryEntry(details.Customer, -details.RedeemedRewardPoints, order.StoreId,
+                //set to negative
+                details.RedeemedRewardPoints.RevertSign();
+                //add entry
+                _rewardPointService.AddRewardPointsHistoryEntry(details.Customer, details.RedeemedRewardPoints, order.StoreId,
                     string.Format(_localizationService.GetResource("RewardPoints.Message.RedeemedForOrder", order.CustomerLanguageId), order.CustomOrderNumber),
-                    order, details.RedeemedRewardPointsAmount);
+                    order, hasUsedAmount: true);
+
                 _customerService.UpdateCustomer(details.Customer);
             }
 
@@ -782,13 +828,19 @@ namespace Nop.Services.Orders
         /// <param name="order">Order</param>
         protected virtual void AwardRewardPoints(Order order)
         {
-            var totalForRewardPoints = _orderTotalCalculationService.CalculateApplicableOrderTotalForRewardPoints(order.OrderShippingInclTax, order.OrderTotal);
-            int points = _orderTotalCalculationService.CalculateRewardPoints(order.Customer, totalForRewardPoints);
-            if (points == 0)
-                return;
-
             //Ensure that reward points were not added (earned) before. We should not add reward points if they were already earned for this order
             if (order.RewardPointsHistoryEntryId.HasValue)
+                return;
+
+            var points = new RewardPoints(_rewardPointService);
+
+            //earned points
+            decimal usedPurchasedRewardPointsAmount = order.RedeemedRewardPointsEntry != null ? order.RedeemedRewardPointsEntry.UsedAmountPurchased : decimal.Zero;
+
+            bool includingTax = order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax;
+            decimal amount = _rewardPointService.GetRewardPointsBaseAmount(includingTax ? order.EarnedRewardPointsBaseAmountIncl : order.EarnedRewardPointsBaseAmountExcl, usedPurchasedRewardPointsAmount);
+            points.Points = _rewardPointService.CalculateRewardPoints(order.Customer, amount);
+            if (points.Points == 0)
                 return;
 
             //check whether delay is set
@@ -802,7 +854,7 @@ namespace Nop.Services.Orders
 
             //add reward points
             order.RewardPointsHistoryEntryId = _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, points, order.StoreId,
-                string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.CustomOrderNumber), activatingDate: activatingDate);
+                string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.CustomOrderNumber, amount), activatingDate: activatingDate);
 
             _orderService.UpdateOrder(order);
         }
@@ -813,26 +865,32 @@ namespace Nop.Services.Orders
         /// <param name="order">Order</param>
         protected virtual void ReduceRewardPoints(Order order)
         {
-            var totalForRewardPoints = _orderTotalCalculationService.CalculateApplicableOrderTotalForRewardPoints(order.OrderShippingInclTax, order.OrderTotal);
-            int points = _orderTotalCalculationService.CalculateRewardPoints(order.Customer, totalForRewardPoints);
-            if (points == 0)
-                return;
-
             //ensure that reward points were already earned for this order before
             if (!order.RewardPointsHistoryEntryId.HasValue)
                 return;
 
+            //is this needed? points have already been  assigned, why recalculate them? Use what was assigned
+            //var totalForRewardPoints = _orderTotalCalculationService.CalculateApplicableOrderTotalForRewardPoints(order.OrderShippingInclTax, order.OrderTotal);
+            //int points = _orderTotalCalculationService.CalculateRewardPoints(order.Customer, totalForRewardPoints);
+            //if (points == 0)
+            //    return;
+
             //get appropriate history entry
             var rewardPointsHistoryEntry = _rewardPointService.GetRewardPointsHistoryEntryById(order.RewardPointsHistoryEntryId.Value);
-            if (rewardPointsHistoryEntry != null && rewardPointsHistoryEntry.CreatedOnUtc > DateTime.UtcNow)
+            if (rewardPointsHistoryEntry != null && rewardPointsHistoryEntry.CreatedOnUtc > DateTime.UtcNow && !rewardPointsHistoryEntry.PointsBalance.HasValue && rewardPointsHistoryEntry.PointsPurchased == 0)
             {
-                //just delete the upcoming entry (points were not granted yet)
+                //just delete the upcoming entry (points were not granted yet); assure PointsBalance.HasValue is null and points where not purchased
                 _rewardPointService.DeleteRewardPointsHistoryEntry(rewardPointsHistoryEntry);
             }
             else
             {
                 //or reduce reward points if the entry already exists
-                _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, -points, order.StoreId,
+                var rewardPoints = new RewardPoints(_rewardPointService)
+                {
+                    Points = -rewardPointsHistoryEntry.Points,
+                    PointsPurchased = -rewardPointsHistoryEntry.PointsPurchased
+                };
+                _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, rewardPoints, order.StoreId,
                     string.Format(_localizationService.GetResource("RewardPoints.Message.ReducedForOrder"), order.CustomOrderNumber));
             }
 
@@ -850,12 +908,53 @@ namespace Nop.Services.Orders
                 return;
 
             //return back
-            _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, -order.RedeemedRewardPointsEntry.Points, order.StoreId,
+            var redeemdRewardPoints = new RewardPoints(_rewardPointService)
+            {
+                Points = -order.RedeemedRewardPointsEntry.Points,
+                PointsPurchased = -order.RedeemedRewardPointsEntry.PointsPurchased
+            };
+            _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, redeemdRewardPoints, order.StoreId,
                 string.Format(_localizationService.GetResource("RewardPoints.Message.ReturnedForOrder"), order.CustomOrderNumber));
             _orderService.UpdateOrder(order);
         }
 
+        /// <summary>
+        /// Award purchased reward points
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <param name="sc">shoppingcart item</param>
+        protected virtual void AwardPurchasedRewardPoints(Order order, ShoppingCartItem sc, OrderItem orderItem)
+        {
+            //Ensure that reward points were not added before.
+            if (order.RewardPointsHistoryEntryId.HasValue)
+                return;
 
+            var points = new RewardPoints(_rewardPointService)
+            {
+                PointsPurchased = _rewardPointService.ConvertAmountToRewardPoints(orderItem.PriceInclTax, sc.Product.OverriddenRPExchangeRate)
+            };
+
+            //When puchasing reward points, earned points are immediately added. As points get pruchased, points can be earned independently of the setting EarnRewardPointsOnlyWhenUsingPurchasedRewardPoints.
+            //earned points
+            bool includingTax = order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax;
+            decimal baseAmount = includingTax ? order.EarnedRewardPointsBaseAmountIncl : order.EarnedRewardPointsBaseAmountExcl;
+            points.Points = _rewardPointService.CalculateRewardPoints(order.Customer, baseAmount);
+
+            //total points
+            if (points.PointsPurchased == 0 && points.Points == 0)
+                return;
+
+            //add reward points
+            string message = string.Format(
+                points.Points == 0 ? _localizationService.GetResource("RewardPoints.Message.PurchasedWithOrder")
+                                   : _localizationService.GetResource("RewardPoints.Message.PurchasedEarnedWithOrder")
+                                    , order.CustomOrderNumber, baseAmount);
+
+            order.RewardPointsHistoryEntryId = _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, points, order.StoreId,
+                message.ToString(), orderItem: orderItem);
+
+            _orderService.UpdateOrder(order);
+        }
         /// <summary>
         /// Set IsActivated value for purchase gift cards for particular order
         /// </summary>
@@ -863,7 +962,7 @@ namespace Nop.Services.Orders
         /// <param name="activate">A value indicating whether to activate gift cards; true - activate, false - deactivate</param>
         protected virtual void SetActivatedValueForPurchasedGiftCards(Order order, bool activate)
         {
-            var giftCards = _giftCardService.GetAllGiftCards(purchasedWithOrderId: order.Id, 
+            var giftCards = _giftCardService.GetAllGiftCards(purchasedWithOrderId: order.Id,
                 isGiftCardActivated: !activate);
             foreach (var gc in giftCards)
             {
@@ -1142,6 +1241,19 @@ namespace Nop.Services.Orders
                 _orderService.UpdateOrder(order);
             }
 
+            //set invoice id
+            if (order.PaymentStatus == PaymentStatus.Paid && order.InvoiceId == null)
+            {
+                if (_orderSettings.AssignInvoiceIdentFromTask)
+                    order.InvoiceId = "ToBeAssigned";
+                else
+                {
+                    order.InvoiceDateUtc = DateTime.UtcNow;
+                    order.InvoiceId = GetInvoiceId(order.StoreId);
+                }
+                _orderService.UpdateOrder(order);
+            }
+
             if (order.OrderStatus == OrderStatus.Pending)
             {
                 if (order.PaymentStatus == PaymentStatus.Authorized ||
@@ -1287,7 +1399,7 @@ namespace Nop.Services.Orders
                                 details.AppliedDiscounts.Add(disc);
 
                         //attributes
-                        var attributeDescription = _productAttributeFormatter.FormatAttributes(sc.Product, sc.AttributesXml, details.Customer);
+                        var attributeDescription = _productAttributeFormatter.FormatAttributes(sc.Product, sc.AttributesXml, details.Customer, subTotal: _taxSettings.PricesIncludeTax ? scSubTotalInclTax : scSubTotalExclTax);
 
                         var itemWeight = _shippingService.GetShoppingCartItemWeight(sc);
 
@@ -1312,7 +1424,8 @@ namespace Nop.Services.Orders
                             LicenseDownloadId = 0,
                             ItemWeight = itemWeight,
                             RentalStartDateUtc = sc.RentalStartDateUtc,
-                            RentalEndDateUtc = sc.RentalEndDateUtc
+                            RentalEndDateUtc = sc.RentalEndDateUtc,
+                            TaxRate = taxRate //MF 25.11.16
                         };
                         order.OrderItems.Add(orderItem);
                         _orderService.UpdateOrder(order);
@@ -1346,6 +1459,12 @@ namespace Nop.Services.Orders
                                     CreatedOnUtc = DateTime.UtcNow
                                 });
                             }
+                        }
+
+                        //purchased reward points from product
+                        if (sc.Product.IsRewardPoints && scUnitPriceExclTax > decimal.Zero)
+                        {
+                            AwardPurchasedRewardPoints(order, sc, orderItem);
                         }
 
                         //inventory
@@ -1435,7 +1554,7 @@ namespace Nop.Services.Orders
                     //check order status
                     CheckOrderStatus(order);
 
-                    //raise event       
+                    //raise event
                     _eventPublisher.Publish(new OrderPlacedEvent(order));
 
                     if (order.PaymentStatus == PaymentStatus.Paid)
@@ -1490,7 +1609,10 @@ namespace Nop.Services.Orders
                 RentalEndDateUtc = orderItem.RentalEndDateUtc,
                 RentalStartDateUtc = orderItem.RentalStartDateUtc,
                 ShoppingCartType = ShoppingCartType.ShoppingCart,
-                StoreId = updatedOrder.StoreId
+                StoreId = updatedOrder.StoreId,
+                TaxRate = orderItem.Id == updatedOrderItem.Id ? updateOrderParameters.TaxRate : orderItem.TaxRate,
+                SubTotalInclTax = orderItem.Id == updatedOrderItem.Id ? updateOrderParameters.SubTotalInclTax : orderItem.PriceInclTax,
+                SubTotalExclTax = orderItem.Id == updatedOrderItem.Id ? updateOrderParameters.SubTotalExclTax : orderItem.PriceExclTax
             }).ToList();
 
             //get shopping cart item which has been updated
@@ -1526,7 +1648,7 @@ namespace Nop.Services.Orders
                 updatedOrderItem.ItemWeight = _shippingService.GetShoppingCartItemWeight(updatedShoppingCartItem);
                 updatedOrderItem.OriginalProductCost = _priceCalculationService.GetProductCost(updatedShoppingCartItem.Product, updatedShoppingCartItem.AttributesXml);
                 updatedOrderItem.AttributeDescription = _productAttributeFormatter.FormatAttributes(updatedShoppingCartItem.Product,
-                    updatedShoppingCartItem.AttributesXml, updatedOrder.Customer);
+                    updatedShoppingCartItem.AttributesXml, updatedOrder.Customer,subTotal: updatedOrder.CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? updatedOrderItem.PriceInclTax : updatedOrderItem.PriceExclTax);
 
                 //gift cards
                 if (updatedShoppingCartItem.Product.IsGiftCard)
@@ -1649,7 +1771,7 @@ namespace Nop.Services.Orders
                 CreatedOnUtc = DateTime.UtcNow
             });
             _orderService.UpdateOrder(order);
-            
+
             //now delete an order
             _orderService.DeleteOrder(order);
         }
@@ -1775,7 +1897,8 @@ namespace Nop.Services.Orders
                             LicenseDownloadId = 0,
                             ItemWeight = orderItem.ItemWeight,
                             RentalStartDateUtc = orderItem.RentalStartDateUtc,
-                            RentalEndDateUtc = orderItem.RentalEndDateUtc
+                            RentalEndDateUtc = orderItem.RentalEndDateUtc,
+                            TaxRate = orderItem.TaxRate
                         };
                         order.OrderItems.Add(newOrderItem);
                         _orderService.UpdateOrder(order);
@@ -1823,7 +1946,7 @@ namespace Nop.Services.Orders
                     //check order status
                     CheckOrderStatus(order);
 
-                    //raise event       
+                    //raise event
                     _eventPublisher.Publish(new OrderPlacedEvent(order));
 
                     if (order.PaymentStatus == PaymentStatus.Paid)
@@ -2332,7 +2455,7 @@ namespace Nop.Services.Orders
                     _orderService.UpdateOrder(order);
 
                     CheckOrderStatus(order);
-     
+
                     if (order.PaymentStatus == PaymentStatus.Paid)
                     {
                         ProcessOrderPaid(order);
@@ -2420,7 +2543,7 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             CheckOrderStatus(order);
-   
+
             if (order.PaymentStatus == PaymentStatus.Paid)
             {
                 ProcessOrderPaid(order);
@@ -2456,7 +2579,7 @@ namespace Nop.Services.Orders
 
             return false;
         }
-        
+
         /// <summary>
         /// Refunds an order (from admin panel)
         /// </summary>
@@ -2524,7 +2647,7 @@ namespace Nop.Services.Orders
                         _orderService.UpdateOrder(order);
                     }
 
-                    //raise event       
+                    //raise event
                     _eventPublisher.Publish(new OrderRefundedEvent(order, request.AmountToRefund));
                 }
 
@@ -2648,7 +2771,7 @@ namespace Nop.Services.Orders
                 _orderService.UpdateOrder(order);
             }
 
-            //raise event       
+            //raise event
             _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
         }
 
@@ -2757,7 +2880,7 @@ namespace Nop.Services.Orders
                         _orderService.UpdateOrder(order);
                     }
 
-                    //raise event       
+                    //raise event
                     _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
                 }
             }
@@ -2835,7 +2958,7 @@ namespace Nop.Services.Orders
         {
             if (order == null)
                 throw new ArgumentNullException("order");
-            
+
             if (!CanPartiallyRefundOffline(order, amountToRefund))
                 throw new NopException("You can't partially refund (offline) this order");
 
@@ -2883,7 +3006,7 @@ namespace Nop.Services.Orders
                 });
                 _orderService.UpdateOrder(order);
             }
-            //raise event       
+            //raise event
             _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
         }
 
@@ -3051,7 +3174,7 @@ namespace Nop.Services.Orders
             foreach (var orderItem in order.OrderItems)
             {
                 _shoppingCartService.AddToCart(order.Customer, orderItem.Product,
-                    ShoppingCartType.ShoppingCart, order.StoreId, 
+                    ShoppingCartType.ShoppingCart, order.StoreId,
                     orderItem.AttributesXml, orderItem.UnitPriceExclTax,
                     orderItem.RentalStartDateUtc, orderItem.RentalEndDateUtc,
                     orderItem.Quantity, false);
@@ -3061,7 +3184,7 @@ namespace Nop.Services.Orders
             //comment the code below if you want to disable this functionality
             _genericAttributeService.SaveAttribute(order.Customer, SystemCustomerAttributeNames.CheckoutAttributes, order.CheckoutAttributesXml, order.StoreId);
         }
-        
+
         /// <summary>
         /// Check whether return request is allowed
         /// </summary>
@@ -3090,7 +3213,7 @@ namespace Nop.Services.Orders
             //ensure that we have at least one returnable product
             return order.OrderItems.Any(oi => !oi.Product.NotReturnable);
         }
-        
+
 
 
         /// <summary>
@@ -3143,11 +3266,57 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// Gets a value indicating whether payment workflow is required
+        /// Get  invoice ID
         /// </summary>
-        /// <param name="cart">Shopping cart</param>
-        /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
-        /// <returns>true - OK; false - minimum order total amount is not reached</returns>
+        /// <returns></returns>
+        public virtual string GetInvoiceId(int storeId)
+        {
+            var actYear = DateTime.UtcNow.Year;
+            int ident = _orderSettings.InvoiceIdent;
+            if (_orderSettings.InvoiceYear < actYear)
+            {
+                // Reset counter if a new year
+                ident = 1;
+                _orderSettings.InvoiceYear = actYear;
+                var settingYear = _settingService.GetSetting("ordersettings.invoiceyear", storeId);
+                if (settingYear != null)
+                    _settingService.SetSetting<int>("ordersettings.invoiceyear", _orderSettings.InvoiceYear, storeId);
+                else
+                    _settingService.SetSetting<int>("ordersettings.invoiceyear", _orderSettings.InvoiceYear);
+            }
+            else
+            {
+                ident += 1;
+            }
+            _orderSettings.InvoiceIdent = ident;
+            // Update settings
+            var settingIdent = _settingService.GetSetting("ordersettings.invoiceident", storeId);
+            if (settingIdent != null)
+                _settingService.SetSetting<int>("ordersettings.invoiceident", _orderSettings.InvoiceIdent, storeId);
+            else
+                _settingService.SetSetting<int>("ordersettings.invoiceident", _orderSettings.InvoiceIdent);
+
+            return string.Format("I-{0}.{1}", DateTime.UtcNow.Year, ident.ToString("D5"));
+        }
+        /// <summary>
+        /// Set Invoice ID on orders which passed payment
+        /// </summary>
+        public virtual void AssignInvoiceIdentToOrders()
+        {
+            var orders = _orderService.GetOrdersToAssignInvoiceId();
+            foreach (var order in orders)
+            {
+                order.InvoiceDateUtc = DateTime.UtcNow;
+                order.InvoiceId = GetInvoiceId(order.StoreId);
+                _orderService.UpdateOrder(order);
+            }
+        }
+         /// <summary>
+         /// Gets a value indicating whether payment workflow is required
+         /// </summary>
+         /// <param name="cart">Shopping cart</param>
+         /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
+         /// <returns>true - OK; false - minimum order total amount is not reached</returns>
         public virtual bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool? useRewardPoints = null)
         {
             if (cart == null)

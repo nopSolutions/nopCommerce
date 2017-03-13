@@ -5,8 +5,326 @@ declare @resources xml
 --a resource will be deleted if its value is empty
 set @resources='
 <Language>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AssignInvoiceIdentFromTask">
+    <Value>Assign Invoice ID from Task</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AssignInvoiceIdentFromTask.Hint">
+    <Value>Assign invoice id using background task. This assures that the same invoice id isn''t used more than ones and that there are no wholes in the number series.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.History.OrderTotal">
+    <Value>Order total to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.OrderTotal">
+    <Value>Order total to pay:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Report.Total">
+    <Value>Total to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Report.TotalAmountIncl">
+    <Value>Total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Orders.OrderTotal">
+    <Value>Order total to pay</Value>
+  </LocaleResource>
+   <LocaleResource Name="Admin.Customers.Customers.Orders.OrderTotalAmountIncl">
+    <Value>Order total amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.OrderTotal">
+    <Value>Order Total to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.OrderTotalAmountIncl">
+    <Value>Order Total Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.Order.OrderTotal">
+    <Value>Order Total to pay:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.Order.OrderTotalAmount">
+    <Value>Order Total Amount:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.OrderTotal">
+    <Value>Order total to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.OrderTotalAmountIncl">
+    <Value>Order total amount (incl.)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerOrders.OrderTotal">
+    <Value>Order Total to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerOrders.OrderTotalAmountIncl">
+    <Value>Order Total Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.Order.TaxIncl">
+    <Value>Included Tax:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.Order.OrderAmount">
+    <Value>Amount:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.Order.OrderAmountIncl">
+    <Value>Amount incl. Tax:</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.TaxIncl">
+    <Value>Included Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.OrderAmount">
+    <Value>Amount</Value>
+  </LocaleResource>
+    <LocaleResource Name="ShoppingCart.Totals.OrderAmountIncl">
+    <Value>Amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.OrderTotal">
+    <Value>Total to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.OrderTotalDiscount">
+    <Value>Invoice Discount</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.VatRate">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.TaxRate">
+    <Value>Tax %</Value>
+  </LocaleResource>
+    <LocaleResource Name="PDFInvoice.VatRate">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.TaxRate">
+    <Value>Tax %</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.Invoice">
+    <Value>Invoice</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.InvoiceDate">
+    <Value>Invoice Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.OrderAmount">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.OrderAmountIncl">
+    <Value>Amount incl. tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.DiscountAmount">
+    <Value>Discount</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.DiscountAmountIncl">
+    <Value>Discount incl. tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.VatAmount">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.TaxAmount">
+    <Value>Tax Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.AmountToPay">
+    <Value>Amount to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.BaseAmount">
+    <Value>Base Ammount</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.BaseAmountTotal">
+    <Value>Total Base</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.Continue">
+    <Value>Continued on next page ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.CheckOutAttrib">
+    <Value>Additional items</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.InvoiceDiscount">
+    <Value>Invoice discount</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.Currency">
+    <Value>Currency</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.Page">
+    <Value>Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.Order#">
+    <Value>Order No.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.OrderDate">
+    <Value>Orderdate</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.RewardPointsPurchased">
+    <Value>{0} purchased reward points:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.InvoiceId">
+    <Value>Invoice No.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.InvoiceDateUtc">
+    <Value>Invoice Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderTotal">
+    <Value>Order total to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderTotal.Hint">
+    <Value>The total amount to pay for this order (includes discounts, shipping and tax, reward points, gift cards).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderTotalAmountIncl">
+    <Value>Order total amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderTotal.Hint">
+    <Value>The total amount for this order (includes discounts, shipping and tax).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderAmount">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderAmount.Hint">
+    <Value>Total order base amount.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderAmountIncl">
+    <Value>Amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderAmountIncl.Hint">
+    <Value>Total order amount incl. tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.InvoiceId">
+    <Value>Invoice No.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.InvoiceId.Hint">
+    <Value>Invoice No.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.InvoiceDateUtc">
+    <Value>Invoice Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.InvoiceDateUtc.Hint">
+    <Value>Invoice Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderDiscountIncl">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderDiscountIncl.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderTotalDiscountIncl">
+    <Value>Order discount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderTotalDiscountIncl.Hint">
+    <Value>Order discount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderShippingNonTaxable">
+    <Value>non taxable</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.PaymentMethodAdditionalFeeNonTaxable">
+    <Value>non taxable</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderAmount">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderAmount.Hint">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderAmountIncl">
+    <Value>Amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderAmountIncl.Hint">
+    <Value>Amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderTotal">
+    <Value>Order total to pay</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderTotal.Hint">
+    <Value>Edit the total amount to pay for this order.</Value>
+  </LocaleResource>    
+  <LocaleResource Name="Admin.Orders.Fields.Edit.EarnedRewardPointsBaseAmountIncl">
+    <Value>Earned reward points base amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.EarnedRewardPointsBaseAmountIncl.Hint">
+    <Value>Edit earned reward points base amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.EarnedRewardPointsBaseAmountExcl">
+    <Value>Earned reward points base amount excl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.EarnedRewardPointsBaseAmountExcl.Hint">
+    <Value>Edit earned reward points base amount excl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderDiscountIncl">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderDiscountIncl.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderTotalDiscountIncl">
+    <Value>Order discount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.OrderTotalDiscountIncl.Hint">
+    <Value>Order discount incl. Tax</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Orders.Fields.Edit.NonTaxable">
+    <Value>non taxable:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.OrderDiscountIncl">
+    <Value>Order discount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.EarnedRewardPointsBaseAmountIncl">
+    <Value>Earned reward points base amount incl. Tax</Value>
+  </LocaleResource>
+    <LocaleResource Name="Order.EarnedRewardPointsBaseAmountExcl">
+    <Value>Earned reward points base amount excl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Edit.InvoiceId">
+    <Value>Edit Invoice data.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Save.InvoiceId">
+    <Value>Save Invoice Data.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Orders.Fields.Save.InvoiceId.Hint">
+    <Value>A new InvoiceId get''s assigned when saving an Id = null</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Order.TaxIncl">
+    <Value>Included Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.OrderAmount">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.OrderAmountIncl">
+    <Value>Amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.InvoiceId">
+    <Value>Invoice No.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.InvoiceDateUtc">
+    <Value>Invoice Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.TaxRateLine.VatRate">
+    <Value></Value>
+  </LocaleResource>   
+  <LocaleResource Name="Order.TaxRateLine.TaxRate">
+    <Value>Tax %</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.TaxRateLine.Amount">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.TaxRateLine.AmountIncl">
+    <Value>Amount incl. Tax</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Order.TaxRateLine.DiscountAmount">
+    <Value>Discount</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Order.TaxRateLine.DiscountAmountIncl">
+    <Value>Discount incl. tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.TaxRateLine.BaseAmount">
+    <Value>Base Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.TaxRateLine.VATAmount">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.TaxRateLine.TaxAmount">
+    <Value>Tax Amount</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.CustomerProductReviews.NoRecords">
     <Value>You haven''t written any reviews yet</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.InvoiceIdent">
+    <Value>Last used Invoice No.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.InvoiceIdent.Hint">
+    <Value>Invoice ID counter. This is useful if you want your invoices to start from certain number. This only affects invoices henceforward. The value must be greater than the current maximum invoice ID. Please note: Activate the task manually in System/Schedule tasks.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.InvoiceYear">
+    <Value>Year of last invoice</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.InvoiceYear.Hint">
+    <Value>Year of last invoice. If actual year is different from this setting, then InvoiceIdent starts from one.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.EnteringEmailTwice.Hint">
     <Value>Force entering email twice during registration.</Value>
@@ -416,6 +734,147 @@ set @resources='
   <LocaleResource Name="RewardPoints.ActivatedLater">
     <Value>The points will be activated on {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="RewardPoints.CurrentBalance">
+    <Value>Your current balance</Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.Total">
+    <Value>Total</Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.Amount">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.EarnedRewardPointsAreTaxable">
+    <Value>Specify if earned reward points are taxable</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.EarnedRewardPointsAreTaxable.Hint">
+    <Value>If Earned reward points are taxable, then OrderAmount and tax will be reduced (like discounts do). Otherwise payment amount is reduced like with gift cards.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.AwardPointsIncludeShipping">
+    <Value>Include shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.AwardPointsIncludeShipping.Hint">
+    <Value>Specify if shipping amount should be included in reward points calculation.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.AwardPointsIncludePaymentMethodAdditionalFee">
+    <Value>Include payment method fee</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.AwardPointsIncludePaymentMethodAdditionalFee.Hint">
+    <Value>Specify if payment method additional fee should be included in reward points calculation.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.AwardPointsExcludeGiftCard">
+    <Value>Exclude gift card(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.AwardPointsExcludeGiftCard.Hint">
+    <Value>Specify if gift cards should be excluded in reward points calculation. This setting allows to earn reward points, although order was paid or partially paid with giftcards.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.AwardPointsExcludePurchasedRewardPoints">
+    <Value>Exclude purchased reward points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.AwardPointsExcludePurchasedRewardPoints.Hint">
+    <Value>Specify if purchased points should be excluded in reward points calculation. This setting allows to earn reward points, although order total is reduced or zero.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.EarnRewardPointsOnlyWhenUsingPurchasedRewardPoints">
+    <Value>Earn points only when using purchased points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.EarnRewardPointsOnlyWhenUsingPurchasedRewardPoints.Hint">
+    <Value>Specify if reward points can only be earned when using purchased reward points for payment. With this earning of reward points is connected to the use of purchased points.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.IsRewardPoints">
+    <Value>Is reward point(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.IsRewardPoints.Hint">
+    <Value>If this field is checked, reward points can be pruchased. </Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.OverriddenRPExchangeRate">
+    <Value>Overridden reward points exchange rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.OverriddenRPExchangeRate.Hint">
+    <Value>Use this field to override reward points exchange rate setting when converting product price to reward points (points = [overridden exchange rate] * price). If not specified, then reward points exchange rate will be used.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.IsRewardPoints">
+    <Value>Reward point(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.RewardPoints">
+    <Value>Reward points</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Discount.CannotBeUsedWithRewardPoints">
+    <Value>Sorry, this discount cannot be used with reward points products in the cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.Order.RewardPointsPurchased">
+    <Value>{0} purchased reward points:</Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.Message.PurchasedWithOrder">
+    <Value>Purchased with order #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.Message.PurchasedEarnedWithOrder">
+    <Value>Purchased and earned with order #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.RewardPoints">
+    <Value>{0} used reward points</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.RewardPointsPurchased">
+    <Value>{0} used purchased reward points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.RewardPoints">
+    <Value>{0} used reward points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.RewardPointsPurchased">
+    <Value>{0} used purchased reward points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.RedeemedRewardPoints">
+    <Value>Redeemed reward points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.RedeemedRewardPoints.Hint">
+    <Value>Redeemed reward points.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.RedeemedRewardPointsAmount">
+    <Value>Redeemed reward points amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.RedeemedRewardPointsAmount.Hint">
+    <Value>Redeemed reward points amount.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.RedeemedRewardPointsPurchased">
+    <Value>Redeemed reward points purchased</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.RedeemedRewardPointsPurchased.Hint">
+    <Value>Redeemed purchased reward points.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.RedeemedRewardPointsAmountPurchased">
+    <Value>Redeemed reward points amount purchased</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.RedeemedRewardPointsAmountPurchased.Hint">
+    <Value>Redeemed purchased reward points amount.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsValuePurchased">
+    <Value>Purchased value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsValuePurchased.Hint">
+    <Value>Indicate if added reward points are purchased points. Negative values are also supported.</Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.Fields.PointsBalancePurchased">
+    <Value>Points balance purchased</Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.Fields.PointsPurchased">
+    <Value>Points Purchased</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.PointsPurchased">
+    <Value>Points purchased</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.PointsBalancePurchased">
+    <Value>Points balance purchased</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddCustomerRewardPoints">
+    <Value>Add customer reward points (points = {0}, purchased points = {1})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditCustomerRewardPoints">
+    <Value>Edited customer reward points (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ExcludeFromRewardPoints">
+    <Value>Exclude from reward points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ExcludeFromRewardPoints.Hint">
+    <Value>If this field is checked, product will be excluded from reward points calculation. </Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Currencies.PublishedCurrencyRequired">
     <Value>At least one published currency is required</Value>
   </LocaleResource>
@@ -518,8 +977,20 @@ set @resources='
   <LocaleResource Name="Products.Availability.BackorderingWithDate">
     <Value>Out of stock - on backorder and will be dispatched once in stock ({0}).</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.ExcludeFromRewardPoints">
+    <Value>Please note that this product is excluded from the reward points program. No points will be earned.</Value>
+  </LocaleResource>  
   <LocaleResource Name="ShoppingCart.AvailabilityRange">
     <Value>Available in {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.RewardPoints.WillEarn.Point">
+    <Value>{0} point(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.RewardPoints.WillEarn">
+    <Value>You will earn (based on {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.RewardPoints.WillEarnHint">
+    <Value>(when using purchased points)</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Payment.CheckMoneyOrder.PaymentMethodDescription">
     <Value>Pay by cheque or money order</Value>
@@ -1477,6 +1948,18 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.CustomOrderNumber.Hint">
     <Value>The unique number of this order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.EarnedRewardPointsBaseAmount">
+    <Value>Reward points base</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.EarnedRewardPointsBaseAmount.Hint">
+    <Value>Earned reward points base amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.EarnedRewardPointsBaseAmountIncl">
+    <Value>Earned reward points base amount incl. Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.EarnedRewardPointsBaseAmountExcl">
+    <Value>Earned reward points base amount excl. Tax</Value>
   </LocaleResource>  
   <LocaleResource Name="Admin.RecurringPayments.History.OrderId">
     <Value>Created order ID</Value>
@@ -2217,6 +2700,20 @@ DEALLOCATE cur_existinglanguage
 DROP TABLE #LocaleStringResourceTmp
 GO
 
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.invoiceident')   
+   BEGIN   
+     INSERT [Setting] ([Name], [Value], [StoreId])   
+     VALUES (N'ordersettings.invoiceident', 0, 0)   
+   END   
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.invoiceyear')   
+   BEGIN   
+     INSERT [Setting] ([Name], [Value], [StoreId])   
+     VALUES (N'ordersettings.invoiceyear', 2016, 0)   
+   END   
+GO
 --new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.hideshippingtotal')
 BEGIN
@@ -3131,11 +3628,246 @@ DELETE FROM [Setting]
 WHERE [name] = N'producteditordettings.specialpriceenddate'
 GO
 
-  --a stored procedure update
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[TierPrice]') and NAME='StartDateTimeUtc')
+BEGIN
+	ALTER TABLE [TierPrice]
+	ADD [StartDateTimeUtc] datetime NULL
+END
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[TierPrice]') and NAME='EndDateTimeUtc')
+BEGIN
+	ALTER TABLE [TierPrice]
+	ADD [EndDateTimeUtc] datetime NULL
+END
+GO
+
+IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[OrderItem]') and NAME='VatRate')
+	EXEC sp_rename 'OrderItem.VatRate', 'TaxRate', 'COLUMN' 
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[OrderItem]') and NAME='TaxRate')
+BEGIN
+	ALTER TABLE [OrderItem]
+	ADD [TaxRate] decimal(18,4) NULL
+END
+GO
+
+IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[OrderItem]') and NAME='TaxRate')
+BEGIN
+
+	UPDATE   OrderItem
+	SET     [TaxRate] = 0
+	WHERE   ([TaxRate] IS NULL) AND (PriceInclTax = PriceExclTax)
+
+	UPDATE   OrderItem
+	SET     [TaxRate] = round((PriceInclTax / PriceExclTax  - 1) * 100, 2)
+	WHERE   ([TaxRate] IS NULL) AND PriceExclTax <> 0
+
+	ALTER TABLE [OrderItem]
+	ALTER COLUMN [TaxRate] DECIMAL(18,4) NOT NULL
+END
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='InvoiceId')
+BEGIN
+	ALTER TABLE [dbo].[Order]
+	ADD InvoiceId NVARCHAR(20) NULL;
+END
+
+GO
+DROP INDEX IF EXISTS [UI_Order_InvoiceId] ON [dbo].[Order]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Order]') AND name = N'UI_Order_InvoiceId')
+BEGIN
+	CREATE UNIQUE NONCLUSTERED INDEX UI_Order_InvoiceId
+	ON dbo.[Order](InvoiceId, StoreId)
+	WHERE InvoiceId IS NOT NULL;
+END
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='InvoiceDateUtc')
+BEGIN
+	ALTER TABLE [dbo].[Order]
+	ADD InvoiceDateUtc DATETIME NULL;
+END
+
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='OrderAmount')
+BEGIN
+	ALTER TABLE [dbo].[Order]
+	ADD OrderAmount DECIMAL(18,4) NULL;
+END
+
+GO
+
+IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='OrderAmount')
+BEGIN
+
+	UPDATE   [dbo].[Order]
+	SET     [OrderAmount] = OrderSubtotalExclTax - ISNULL(OrderSubTotalDiscountExclTax, 0) + ISNULL(OrderShippingExclTax, 0) + ISNULL(PaymentMethodAdditionalFeeExclTax, 0) - ISNULL(OrderDiscount, 0)
+	WHERE   CustomerTaxDisplayTypeId = 10 AND OrderSubtotalExclTax IS NOT NULL
+
+	UPDATE   [dbo].[Order]
+	SET     [OrderAmount] = OrderSubtotalInclTax - ISNULL(OrderSubTotalDiscountInclTax, 0) + ISNULL(OrderShippingInclTax, 0) + ISNULL(PaymentMethodAdditionalFeeInclTax, 0) - ISNULL(OrderDiscount, 0) - ISNULL(OrderTax, 0)
+	WHERE   CustomerTaxDisplayTypeId = 0 AND OrderSubtotalInclTax IS NOT NULL
+END
+
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='OrderAmountIncl')
+BEGIN
+	ALTER TABLE [dbo].[Order]
+	ADD OrderAmountIncl DECIMAL(18,4) NULL;
+END
+
+GO
+
+IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='OrderAmountIncl')
+BEGIN
+
+	UPDATE   [dbo].[Order]
+	SET     [OrderAmountIncl] = OrderSubtotalExclTax - ISNULL(OrderSubTotalDiscountExclTax, 0) + ISNULL(OrderShippingExclTax, 0) + ISNULL(PaymentMethodAdditionalFeeExclTax, 0) - ISNULL(OrderDiscount, 0) + ISNULL(OrderTax, 0)
+	WHERE   CustomerTaxDisplayTypeId = 10 AND OrderSubtotalExclTax IS NOT NULL
+
+	UPDATE   [dbo].[Order]
+	SET     [OrderAmountIncl] = OrderSubtotalInclTax - ISNULL(OrderSubTotalDiscountInclTax, 0) + ISNULL(OrderShippingInclTax, 0) + ISNULL(PaymentMethodAdditionalFeeInclTax, 0) - ISNULL(OrderDiscount, 0)
+	WHERE   CustomerTaxDisplayTypeId = 0 AND OrderSubtotalExclTax IS NOT NULL
+END
+
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='OrderDiscountIncl')
+BEGIN
+	ALTER TABLE [dbo].[Order]
+	ADD OrderDiscountIncl DECIMAL(18,4) NULL;
+END
+GO
+IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='OrderDiscountIncl')
+	UPDATE   [dbo].[Order]
+	SET     [OrderDiscount] = OrderSubtotalExclTax - ISNULL(OrderSubTotalDiscountExclTax, 0) + ISNULL(OrderShippingExclTax, 0) + ISNULL(PaymentMethodAdditionalFeeExclTax, 0)  + ISNULL(OrderTax, 0),
+			[OrderDiscountIncl] = [OrderDiscount]
+	WHERE   CustomerTaxDisplayTypeId = 10 
+
+	UPDATE   [dbo].[Order]
+	SET     
+			[OrderDiscountIncl] = OrderSubtotalInclTax - ISNULL(OrderSubTotalDiscountInclTax, 0) + ISNULL(OrderShippingInclTax, 0) + ISNULL(PaymentMethodAdditionalFeeInclTax, 0) 
+	WHERE   CustomerTaxDisplayTypeId = 0 
+GO
+
+IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='OrderDiscountIncl')
+ALTER TABLE [Order] ALTER COLUMN OrderDiscountIncl DECIMAL(18,4) NOT NULL
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='OrderShippingNonTaxable')
+BEGIN
+	ALTER TABLE [dbo].[Order]
+	ADD OrderShippingNonTaxable DECIMAL(18,4) NULL;
+END
+GO
+
+--init
+IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='OrderShippingNonTaxable')
+	UPDATE   [dbo].[Order]
+	SET     OrderShippingNonTaxable = 0 
+	where OrderShippingNonTaxable is Null
+			/*update old orders? like. Will not work for taxempted customers
+			[OrderShippingNonTax] = OrderShippingExclTax,
+			OrderShippingExclTax = 0,
+			OrderShippingInclTax = 0
+	WHERE   OrderShippingExclTax = OrderShippingInclTax */
+GO
+
+IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='OrderShippingNonTaxable')
+ALTER TABLE [Order] ALTER COLUMN OrderShippingNonTaxable DECIMAL(18,4) NOT NULL
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='PaymentMethodAdditionalFeeNonTaxable')
+BEGIN
+	ALTER TABLE [dbo].[Order]
+	ADD PaymentMethodAdditionalFeeNonTaxable DECIMAL(18,4) NULL;
+END
+GO
+
+--init
+IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='PaymentMethodAdditionalFeeNonTaxable')
+	UPDATE   [dbo].[Order]
+	SET     [PaymentMethodAdditionalFeeNonTaxable] = 0 
+	where [PaymentMethodAdditionalFeeNonTaxable] is Null
+			/*update old orders? like. Will not work for taxempted customers
+			[PaymentMethodAdditionalFeeNonTaxable] = PaymentMethodAdditionalFeeInclTax,
+			PaymentMethodAdditionalFeeExclTax = 0,
+			PaymentMethodAdditionalFeeInclTax = 0
+	WHERE   PaymentMethodAdditionalFeeInclTax = PaymentMethodAdditionalFeeExclTax */
+GO
+
+IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='PaymentMethodAdditionalFeeNonTaxable')
+ALTER TABLE [Order] ALTER COLUMN PaymentMethodAdditionalFeeNonTaxable DECIMAL(18,4) NOT NULL
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='EarnedRewardPointsBaseAmountIncl')
+BEGIN
+	ALTER TABLE [dbo].[Order]
+	ADD EarnedRewardPointsBaseAmountIncl DECIMAL(18,4) NULL;
+END
+GO
+IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='EarnedRewardPointsBaseAmountIncl')
+UPDATE   [dbo].[Order]
+	SET     EarnedRewardPointsBaseAmountIncl = 0
+	WHERE   EarnedRewardPointsBaseAmountIncl IS NULL
+GO
+IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='EarnedRewardPointsBaseAmountIncl')
+ALTER TABLE [Order] ALTER COLUMN EarnedRewardPointsBaseAmountIncl DECIMAL(18,4) NOT NULL
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='EarnedRewardPointsBaseAmountExcl')
+BEGIN
+	ALTER TABLE [dbo].[Order]
+	ADD EarnedRewardPointsBaseAmountExcl DECIMAL(18,4) NULL;
+END
+GO
+IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='EarnedRewardPointsBaseAmountExcl')
+UPDATE   [dbo].[Order]
+	SET     EarnedRewardPointsBaseAmountExcl = 0
+	WHERE   EarnedRewardPointsBaseAmountExcl IS NULL
+GO
+IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='EarnedRewardPointsBaseAmountExcl')
+ALTER TABLE [Order] ALTER COLUMN EarnedRewardPointsBaseAmountExcl DECIMAL(18,4) NOT NULL
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='RewardPointsTaxable')
+BEGIN
+	ALTER TABLE [dbo].[Order]
+	ADD RewardPointsTaxable bit NULL;
+END
+GO
+IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='RewardPointsTaxable')
+UPDATE   [dbo].[Order]
+	SET     RewardPointsTaxable = 0
+	WHERE   RewardPointsTaxable IS NULL
+GO
+IF  EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='RewardPointsTaxable')
+ALTER TABLE [Order] ALTER COLUMN RewardPointsTaxable bit NOT NULL
+GO
+--a stored procedure update
 IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[ProductLoadAllPaged]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [ProductLoadAllPaged]
 GO
-
 CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
 (
 	@CategoryIds		nvarchar(MAX) = null,	--a list of category IDs (comma-separated list). e.g. 1,2,3
@@ -4548,6 +5280,124 @@ BEGIN
     VALUES (N'RecurringPaymentFailed.CustomerNotification', NULL, N'%Store.Name%. Last recurring payment failed', N'<p>' + @NewLine + '<a href=\"%Store.URL%\">%Store.Name%</a>' + @NewLine + '<br />' + @NewLine + '<br />' + @NewLine + 'Hello %Customer.FullName%,' + @NewLine + '<br />' + @NewLine + 'It appears your credit card didn''t go through for this recurring payment (<a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a>)' + @NewLine + '<br /> %if (%RecurringPayment.RecurringPaymentType% == "Manual") ' + @NewLine + 'You can recharge balance and manually retry payment or cancel it on the order history page. endif% %if (%RecurringPayment.RecurringPaymentType% == "Automatic") ' + @NewLine + 'You can recharge balance and wait, we will try to make the payment again, or you can cancel it on the order history page. endif%' + @NewLine + '</p>' + @NewLine, 1, 0, 0, 0, 0)
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shoppingcartsettings.renderproductattributeprices')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'shoppingcartsettings.renderproductattributeprices', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'rewardpointssettings.earnedrewardpointsaretaxable')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'rewardpointssettings.earnedrewardpointsaretaxable', N'False', 0)
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = lower(N'rewardpointssettings.AwardPointsIncludeShipping'))
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (lower(N'rewardpointssettings.AwardPointsIncludeShipping'), N'True', 0)
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = lower(N'rewardpointssettings.AwardPointsIncludePaymentMethodAdditionalFee'))
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (lower(N'rewardpointssettings.AwardPointsIncludePaymentMethodAdditionalFee'), N'True', 0)
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = lower(N'rewardpointssettings.AwardPointsExcludeGiftCard'))
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (lower(N'rewardpointssettings.AwardPointsExcludeGiftCard'), N'True', 0)
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = lower(N'rewardpointssettings.AwardPointsExcludePurchasedRewardPoints'))
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (lower(N'rewardpointssettings.AwardPointsExcludePurchasedRewardPoints'), N'True', 0)
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = lower(N'rewardpointssettings.EarnRewardPointsOnlyWhenUsingPurchasedRewardPoints'))
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (lower(N'rewardpointssettings.EarnRewardPointsOnlyWhenUsingPurchasedRewardPoints'), N'False', 0)
+END
+GO
+--add a new columns
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[RewardPointsHistory]') and NAME='PointsPurchased')
+BEGIN
+	ALTER TABLE [RewardPointsHistory]
+	ADD  PointsPurchased [int] NULL, PointsBalancePurchased [int] NULL, [PurchasedWithOrderItemId] [int] NULL, [UsedAmountPurchased] decimal(18,4) NULL
+END
+GO
+
+--create fk
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[RewardPoints_PurchasedWithOrderItem]') AND parent_object_id = OBJECT_ID(N'[dbo].[RewardPointsHistory]'))
+ALTER TABLE [dbo].[RewardPointsHistory]  WITH CHECK ADD  CONSTRAINT [RewardPoints_PurchasedWithOrderItem] FOREIGN KEY([PurchasedWithOrderItemId])
+REFERENCES [dbo].[OrderItem] ([Id])
+GO
+
+--enable it
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[RewardPoints_PurchasedWithOrderItem]') AND parent_object_id = OBJECT_ID(N'[dbo].[RewardPointsHistory]'))
+ALTER TABLE [dbo].[RewardPointsHistory] CHECK CONSTRAINT [RewardPoints_PurchasedWithOrderItem]
+GO
+
+--init new col.
+UPDATE [RewardPointsHistory]
+SET [PointsPurchased] = 0, [UsedAmountPurchased] = 0, [PointsBalancePurchased] = 0
+WHERE [PointsPurchased] IS NULL
+GO
+
+ALTER TABLE [RewardPointsHistory] ALTER COLUMN [PointsPurchased] [int] NOT NULL
+GO
+ALTER TABLE [RewardPointsHistory] ALTER COLUMN [UsedAmountPurchased] decimal(18,4) NOT NULL
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[RewardPointsHistory]') AND name = N'IX_RewardPointsHistory_Customer')
+CREATE NONCLUSTERED INDEX [IX_RewardPointsHistory_Customer] ON [dbo].[RewardPointsHistory]
+(
+	[CustomerId] ASC
+)
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='IsRewardPoints')
+BEGIN
+	ALTER TABLE [Product]
+	ADD [IsRewardPoints] [bit] NULL, 
+	OverriddenRPExchangeRate decimal(18,4) NULL
+END
+GO
+
+--init new col.
+UPDATE [Product]
+SET [IsRewardPoints] = 0
+WHERE [IsRewardPoints] IS NULL
+GO
+
+ALTER TABLE [Product] ALTER COLUMN [IsRewardPoints] [bit] NOT NULL
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='ExcludeFromRewardPoints')
+BEGIN
+	ALTER TABLE [Product]
+	ADD ExcludeFromRewardPoints [bit] NULL
+END
+GO
+
+--init new col.
+UPDATE [Product]
+SET [ExcludeFromRewardPoints] = 0
+WHERE [ExcludeFromRewardPoints] IS NULL
+GO
+
+ALTER TABLE [Product] ALTER COLUMN [ExcludeFromRewardPoints] [bit] NOT NULL
+GO
+
 --new column
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='CustomOrderNumber')
 BEGIN
@@ -4665,6 +5515,23 @@ GO
 
 ALTER TABLE [CustomerRole] ALTER COLUMN [EnablePasswordLifetime] bit NOT NULL
 GO
+
+--new activity types
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'AddCustomerRewardPoints')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'AddCustomerRewardPoints', N'Add customer reward points', N'true')
+END
+GO
+--new activity types
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'EditCustomerRewardPoints')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'EditCustomerRewardPoints', N'Edit customer reward points', N'true')
+END
+GO
+GO
+
 
 -- new message template
  IF NOT EXISTS (SELECT 1 FROM [dbo].[MessageTemplate] WHERE [Name] = N'Service.ContactUs')
@@ -4784,6 +5651,23 @@ END
 
 CLOSE cursor_defaultGroup
 DEALLOCATE cursor_defaultGroup
+GO
+
+
+--new task
+IF NOT EXISTS (SELECT 1 FROM [ScheduleTask] WHERE [Name] = N'Assign invoice ident')
+INSERT INTO ScheduleTask
+          (Name, Seconds, Type, Enabled, StopOnError)
+VALUES    (N'Assign invoice ident', 60, N'Nop.Services.Orders.AssignInvoiceIdentTask, Nop.Services', 0, 0)
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.assigninvoiceidentfromtask')   
+   BEGIN   
+     INSERT [Setting] ([Name], [Value], [StoreId])   
+     VALUES (N'ordersettings.assigninvoiceidentfromtask', 'False', 0)   
+   END   
+GO
 GO
 
  --new setting

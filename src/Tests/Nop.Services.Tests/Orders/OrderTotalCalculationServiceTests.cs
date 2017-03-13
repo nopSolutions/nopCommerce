@@ -89,10 +89,10 @@ namespace Nop.Services.Tests.Orders
             _catalogSettings = new CatalogSettings();
 
             _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
-                _discountService, _categoryService, 
+                _discountService, _categoryService,
                 _manufacturerService, _productAttributeParser,
-                _productService, cacheManager, 
-                _shoppingCartSettings, _catalogSettings);
+                _productService, cacheManager,
+                _shoppingCartSettings, _catalogSettings, _taxService);
 
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
@@ -116,12 +116,12 @@ namespace Nop.Services.Tests.Orders
                 _localizationService,
                 _addressService,
                 _shippingSettings,
-                pluginFinder, 
+                pluginFinder,
                 _storeContext,
-                _eventPublisher, 
+                _eventPublisher,
                 _shoppingCartSettings,
                 cacheManager);
-            
+
 
             _paymentService = MockRepository.GenerateMock<IPaymentService>();
             _checkoutAttributeParser = MockRepository.GenerateMock<ICheckoutAttributeParser>();
@@ -146,7 +146,7 @@ namespace Nop.Services.Tests.Orders
             _addressService.Expect(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Return(new Address { Id = _taxSettings.DefaultTaxAddressId });
             _taxService = new TaxService(_addressService, _workContext, _storeContext, _taxSettings,
                 pluginFinder, _geoLookupService, _countryService, _stateProvinceService, _logger,
-                _customerSettings, _shippingSettings, _addressSettings);
+                _customerSettings, _shippingSettings, _addressSettings, _productAttributeParser);
             _rewardPointService = MockRepository.GenerateMock<IRewardPointService>();
 
             _rewardPointsSettings = new RewardPointsSettings();
@@ -155,7 +155,7 @@ namespace Nop.Services.Tests.Orders
                 _priceCalcService, _taxService, _shippingService, _paymentService,
                 _checkoutAttributeParser, _discountService, _giftCardService, _genericAttributeService,
                 _rewardPointService, _taxSettings, _rewardPointsSettings,
-                _shippingSettings, _shoppingCartSettings, _catalogSettings);
+                _shippingSettings, _shoppingCartSettings, _catalogSettings, _productAttributeParser);
         }
 
         [Test]
@@ -205,11 +205,16 @@ namespace Nop.Services.Tests.Orders
             List<DiscountForCaching> appliedDiscounts;
             decimal subTotalWithoutDiscount;
             decimal subTotalWithDiscount;
-            SortedDictionary<decimal, decimal> taxRates;
+
+            TaxSummary taxSummary; //MF 22.11.16
+            decimal earnedRewardPointsBaseAmount;
+
             //10% - default tax rate
             _orderTotalCalcService.GetShoppingCartSubTotal(cart, false,
                 out discountAmount, out appliedDiscounts,
-                out subTotalWithoutDiscount, out subTotalWithDiscount, out taxRates);
+                out subTotalWithoutDiscount, out subTotalWithDiscount, out taxSummary,
+                out earnedRewardPointsBaseAmount);
+            var taxRates = taxSummary.GenerateOldTaxrateDict(); //MF 22.11.16
             discountAmount.ShouldEqual(0);
             appliedDiscounts.Count.ShouldEqual(0);
             subTotalWithoutDiscount.ShouldEqual(89.39);
@@ -266,11 +271,16 @@ namespace Nop.Services.Tests.Orders
             List<DiscountForCaching> appliedDiscounts;
             decimal subTotalWithoutDiscount;
             decimal subTotalWithDiscount;
-            SortedDictionary<decimal, decimal> taxRates;
+
+            TaxSummary taxSummary; //MF 22.11.16
+            decimal earnedRewardPointsBaseAmount;
 
             _orderTotalCalcService.GetShoppingCartSubTotal(cart, true,
                 out discountAmount, out appliedDiscounts,
-                out subTotalWithoutDiscount, out subTotalWithDiscount, out taxRates);
+                out subTotalWithoutDiscount, out subTotalWithDiscount, out taxSummary,
+                out earnedRewardPointsBaseAmount);
+            var taxRates = taxSummary.GenerateOldTaxrateDict(); //MF 22.11.16
+
             discountAmount.ShouldEqual(0);
             appliedDiscounts.Count.ShouldEqual(0);
             subTotalWithoutDiscount.ShouldEqual(98.329);
@@ -319,7 +329,7 @@ namespace Nop.Services.Tests.Orders
             var cart = new List<ShoppingCartItem> { sci1, sci2 };
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
-            
+
             //discounts
             var discount1 = new DiscountForCaching
             {
@@ -338,11 +348,15 @@ namespace Nop.Services.Tests.Orders
             List<DiscountForCaching> appliedDiscounts;
             decimal subTotalWithoutDiscount;
             decimal subTotalWithDiscount;
-            SortedDictionary<decimal, decimal> taxRates;
+            TaxSummary taxSummary; //MF 22.11.16
+            decimal earnedRewardPointsBaseAmount;
+
             //10% - default tax rate
             _orderTotalCalcService.GetShoppingCartSubTotal(cart, false,
                 out discountAmount, out appliedDiscounts,
-                out subTotalWithoutDiscount, out subTotalWithDiscount, out taxRates);
+                out subTotalWithoutDiscount, out subTotalWithDiscount, out taxSummary,
+                out earnedRewardPointsBaseAmount);
+            var taxRates = taxSummary.GenerateOldTaxrateDict(); //MF 22.11.16
             discountAmount.ShouldEqual(3);
             appliedDiscounts.Count.ShouldEqual(1);
             appliedDiscounts.First().Name.ShouldEqual("Discount 1");
@@ -411,10 +425,14 @@ namespace Nop.Services.Tests.Orders
             List<DiscountForCaching> appliedDiscounts;
             decimal subTotalWithoutDiscount;
             decimal subTotalWithDiscount;
-            SortedDictionary<decimal, decimal> taxRates;
+            TaxSummary taxSummary;//MF 22.11.16
+            decimal earnedRewardPointsBaseAmount;
+
             _orderTotalCalcService.GetShoppingCartSubTotal(cart, true,
                 out discountAmount, out appliedDiscounts,
-                out subTotalWithoutDiscount, out subTotalWithDiscount, out taxRates);
+                out subTotalWithoutDiscount, out subTotalWithDiscount, out taxSummary,
+                out earnedRewardPointsBaseAmount);
+            var taxRates = taxSummary.GenerateOldTaxrateDict(); //MF 22.11.16
 
             //The comparison test failed before, because of a very tiny number difference.
             //discountAmount.ShouldEqual(3.3);
@@ -973,8 +991,9 @@ namespace Nop.Services.Tests.Orders
             //1. shipping is taxable, payment fee is taxable
             _taxSettings.ShippingIsTaxable = true;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
-            SortedDictionary<decimal, decimal> taxRates;
-            _orderTotalCalcService.GetTaxTotal(cart, out taxRates).ShouldEqual(8.6);
+            TaxSummary taxSummary; //22.11.16
+            _orderTotalCalcService.GetTaxTotal(cart, out taxSummary).ShouldEqual(8.6);
+            var taxRates = taxSummary.GenerateOldTaxrateDict();
             taxRates.ShouldNotBeNull();
             taxRates.Count.ShouldEqual(1);
             taxRates.ContainsKey(10).ShouldBeTrue();
@@ -983,7 +1002,8 @@ namespace Nop.Services.Tests.Orders
             //2. shipping is taxable, payment fee is not taxable
             _taxSettings.ShippingIsTaxable = true;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = false;
-            _orderTotalCalcService.GetTaxTotal(cart, out taxRates).ShouldEqual(6.6);
+            _orderTotalCalcService.GetTaxTotal(cart, out taxSummary).ShouldEqual(6.6);
+            taxRates = taxSummary.GenerateOldTaxrateDict();
             taxRates.ShouldNotBeNull();
             taxRates.Count.ShouldEqual(1);
             taxRates.ContainsKey(10).ShouldBeTrue();
@@ -992,7 +1012,8 @@ namespace Nop.Services.Tests.Orders
             //3. shipping is not taxable, payment fee is taxable
             _taxSettings.ShippingIsTaxable = false;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
-            _orderTotalCalcService.GetTaxTotal(cart, out taxRates).ShouldEqual(7.6);
+            _orderTotalCalcService.GetTaxTotal(cart, out taxSummary).ShouldEqual(7.6);
+            taxRates = taxSummary.GenerateOldTaxrateDict();
             taxRates.ShouldNotBeNull();
             taxRates.Count.ShouldEqual(1);
             taxRates.ContainsKey(10).ShouldBeTrue();
@@ -1001,7 +1022,8 @@ namespace Nop.Services.Tests.Orders
             //3. shipping is not taxable, payment fee is not taxable
             _taxSettings.ShippingIsTaxable = false;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = false;
-            _orderTotalCalcService.GetTaxTotal(cart, out taxRates).ShouldEqual(5.6);
+            _orderTotalCalcService.GetTaxTotal(cart, out taxSummary).ShouldEqual(5.6);
+            taxRates = taxSummary.GenerateOldTaxrateDict();
             taxRates.ShouldNotBeNull();
             taxRates.Count.ShouldEqual(1);
             taxRates.ContainsKey(10).ShouldBeTrue();
@@ -1073,17 +1095,20 @@ namespace Nop.Services.Tests.Orders
             decimal discountAmount;
             List<DiscountForCaching> appliedDiscounts;
             List<AppliedGiftCard> appliedGiftCards;
-            int redeemedRewardPoints;
-            decimal redeemedRewardPointsAmount;
-
+            List<DiscountForCaching> subTotalAppliedDiscounts;
+            List<DiscountForCaching> shippingAppliedDiscounts;
+            TaxSummary taxSummary;
+            bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+            RewardPoints redeemedRewardPoints;
+            decimal earnedRewardPointsBaseAmount;
 
             //shipping is taxable, payment fee is taxable
             _taxSettings.ShippingIsTaxable = true;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
 
             //56 - items, 20 - payment fee, 7.6 - tax
-            _orderTotalCalcService.GetShoppingCartTotal(cart,  out discountAmount, out appliedDiscounts, 
-                out appliedGiftCards, out redeemedRewardPoints, out redeemedRewardPointsAmount)
+            _orderTotalCalcService.GetShoppingCartTotal(cart,  out discountAmount, out appliedDiscounts, out subTotalAppliedDiscounts,
+                out shippingAppliedDiscounts, out appliedGiftCards, out redeemedRewardPoints, out taxSummary, out earnedRewardPointsBaseAmount, includingTax)
                 .ShouldEqual(83.6M);
         }
 
@@ -1150,17 +1175,20 @@ namespace Nop.Services.Tests.Orders
             decimal discountAmount;
             List<DiscountForCaching> appliedDiscounts;
             List<AppliedGiftCard> appliedGiftCards;
-            int redeemedRewardPoints;
-            decimal redeemedRewardPointsAmount;
-
+            RewardPoints redeemedRewardPoints;
+            List<DiscountForCaching> subTotalAppliedDiscounts;
+            List<DiscountForCaching> shippingAppliedDiscounts;
+            TaxSummary taxSummary;
+            bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+            decimal earnedRewardPointsBaseAmount;
 
             //shipping is taxable, payment fee is taxable
             _taxSettings.ShippingIsTaxable = true;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
 
             //56 - items, 10 - shipping (fixed), 20 - payment fee, 8.6 - tax
-            _orderTotalCalcService.GetShoppingCartTotal(cart, out discountAmount, out appliedDiscounts,
-                out appliedGiftCards, out redeemedRewardPoints, out redeemedRewardPointsAmount)
+            _orderTotalCalcService.GetShoppingCartTotal(cart, out discountAmount, out appliedDiscounts, out subTotalAppliedDiscounts,
+                out shippingAppliedDiscounts, out appliedGiftCards, out redeemedRewardPoints, out taxSummary, out earnedRewardPointsBaseAmount, includingTax)
                 .ShouldEqual(94.6M);
         }
 
@@ -1250,7 +1278,7 @@ namespace Nop.Services.Tests.Orders
             //reward points
             _rewardPointsSettings.Enabled = true;
             _rewardPointsSettings.ExchangeRate = 2; //1 reward point = 2
-            
+
             customer.AddRewardPointsHistoryEntry(15, 0); //15*2=30
 
             //56 - items, 10 - shipping (fixed), 20 - payment fee, 8.6 - tax, -30 (reward points)
@@ -1335,17 +1363,21 @@ namespace Nop.Services.Tests.Orders
             decimal discountAmount;
             List<DiscountForCaching> appliedDiscounts;
             List<AppliedGiftCard> appliedGiftCards;
-            int redeemedRewardPoints;
-            decimal redeemedRewardPointsAmount;
+            RewardPoints redeemedRewardPoints;
+            List<DiscountForCaching> subTotalAppliedDiscounts;
+            List<DiscountForCaching> shippingAppliedDiscounts;
+            TaxSummary taxSummary;
+            bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+            decimal earnedRewardPointsBaseAmount;
 
             //shipping is taxable, payment fee is taxable
             _taxSettings.ShippingIsTaxable = true;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
 
             //56 - items, 10 - shipping (fixed), 20 - payment fee, 8.6 - tax, [-3] - discount
-            _orderTotalCalcService.GetShoppingCartTotal(cart, out discountAmount, out appliedDiscounts,
-                out appliedGiftCards, out redeemedRewardPoints, out redeemedRewardPointsAmount)
-                .ShouldEqual(91.6M); 
+            _orderTotalCalcService.GetShoppingCartTotal(cart, out discountAmount, out appliedDiscounts, out subTotalAppliedDiscounts,
+                out shippingAppliedDiscounts, out appliedGiftCards, out redeemedRewardPoints, out taxSummary, out earnedRewardPointsBaseAmount, includingTax)
+                .ShouldEqual(91.6M);
             discountAmount.ShouldEqual(3);
             appliedDiscounts.Count.ShouldEqual(1);
             appliedDiscounts.First().Name.ShouldEqual("Discount 1");
@@ -1357,7 +1389,7 @@ namespace Nop.Services.Tests.Orders
             _rewardPointsSettings.Enabled = true;
             _rewardPointsSettings.ExchangeRate = 15M;
 
-            _orderTotalCalcService.ConvertRewardPointsToAmount(100).ShouldEqual(1500);
+            _rewardPointService.ConvertRewardPointsToAmount(100).ShouldEqual(1500);
         }
 
         [Test]
@@ -1367,7 +1399,7 @@ namespace Nop.Services.Tests.Orders
             _rewardPointsSettings.ExchangeRate = 15M;
 
             //we calculate ceiling for reward points
-            _orderTotalCalcService.ConvertAmountToRewardPoints(100).ShouldEqual(7);
+            _rewardPointService.ConvertAmountToRewardPoints(100).ShouldEqual(7);
         }
 
         [Test]
@@ -1376,16 +1408,16 @@ namespace Nop.Services.Tests.Orders
             _rewardPointsSettings.Enabled = true;
             _rewardPointsSettings.MinimumRewardPointsToUse = 0;
 
-            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(0).ShouldEqual(true);
-            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(1).ShouldEqual(true);
-            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(10).ShouldEqual(true);
+            _rewardPointService.CheckMinimumRewardPointsToUseRequirement(0).ShouldEqual(true);
+            _rewardPointService.CheckMinimumRewardPointsToUseRequirement(1).ShouldEqual(true);
+            _rewardPointService.CheckMinimumRewardPointsToUseRequirement(10).ShouldEqual(true);
 
 
             _rewardPointsSettings.MinimumRewardPointsToUse = 2;
-            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(0).ShouldEqual(false);
-            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(1).ShouldEqual(false);
-            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(2).ShouldEqual(true);
-            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(10).ShouldEqual(true);
+            _rewardPointService.CheckMinimumRewardPointsToUseRequirement(0).ShouldEqual(false);
+            _rewardPointService.CheckMinimumRewardPointsToUseRequirement(1).ShouldEqual(false);
+            _rewardPointService.CheckMinimumRewardPointsToUseRequirement(2).ShouldEqual(true);
+            _rewardPointService.CheckMinimumRewardPointsToUseRequirement(10).ShouldEqual(true);
         }
     }
 }

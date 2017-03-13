@@ -249,6 +249,34 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.InvoiceIdent_OverrideForStore, model => model.InvoiceIdent, model => model.InvoiceYear, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.InvoiceIdent)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.InvoiceIdent)
+                        @Html.ValidationMessageFor(model => model.InvoiceIdent)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.InvoiceYear)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.InvoiceYear)
+                        @Html.ValidationMessageFor(model => model.InvoiceYear)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.AssignInvoiceIdentFromTask)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.AssignInvoiceIdentFromTask)
+                        @Html.ValidationMessageFor(model => model.AssignInvoiceIdentFromTask)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.IsReOrderAllowed_OverrideForStore, model => model.IsReOrderAllowed, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.IsReOrderAllowed)
                     </div>

@@ -136,8 +136,13 @@ namespace Nop.Core.Domain.Catalog
         public bool IsGiftCard { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether 'reward points' section is shown
+        /// </summary>
+        public bool IsRewardPoints { get; set; }
+        /// <summary>
         /// Gets or sets a value indicating whether 'Downloadable product' field is shown
         /// </summary>
+
         public bool DownloadableProduct { get; set; }
 
         /// <summary>

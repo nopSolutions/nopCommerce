@@ -43,7 +43,6 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the quantity
         /// </summary>
         public int Quantity { get; set; }
-
         /// <summary>
         /// Gets or sets the rental product start date (null if it's not a rental product)
         /// </summary>
@@ -63,7 +62,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the date and time of instance update
         /// </summary>
         public DateTime UpdatedOnUtc { get; set; }
-        
+
         /// <summary>
         /// Gets the log type
         /// </summary>
@@ -119,7 +118,7 @@ namespace Nop.Core.Domain.Orders
 
         /// <summary>
         /// Gets the additional shipping charge
-        /// </summary> 
+        /// </summary>
         public decimal AdditionalShippingCharge
         {
             get
@@ -145,5 +144,19 @@ namespace Nop.Core.Domain.Orders
                 return false;
             }
         }
+        //fields for restored cart
+        /// <summary>
+        /// TaxRate for restored cart. Only used by UpdateOrderTotal and can be null
+        /// </summary>
+        public decimal? TaxRate { get; set; }
+        /// <summary>
+        /// Subtotal of item with tax
+        /// </summary>
+        public decimal? SubTotalInclTax { get; set; }
+
+        /// <summary>
+        /// Subtotal of item without tax
+        /// </summary>
+        public decimal? SubTotalExclTax { get; set; }
     }
 }

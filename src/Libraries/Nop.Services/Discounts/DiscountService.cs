@@ -554,6 +554,13 @@ namespace Nop.Services.Discounts
                     result.Errors = new List<string> { _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsedWithGiftCards") };
                     return result;
                 }
+
+                var hasRewardPoints = cart.HasRewardPointsProduct(); // cart.Any(x => x.Product.IsRewardPoints);
+                if (hasRewardPoints)
+                {
+                    result.Errors = new List<string> { _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsedWithRewardPoints") };
+                    return result;
+                }
             }
 
             //check date range

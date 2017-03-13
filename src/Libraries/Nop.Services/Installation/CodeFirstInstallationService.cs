@@ -4092,7 +4092,7 @@ namespace Nop.Services.Installation
                                 };
             _customerRoleRepository.Insert(customerRoles);
 
-            //default store 
+            //default store
             var defaultStore = _storeRepository.Table.FirstOrDefault();
 
             if (defaultStore == null)
@@ -4445,11 +4445,19 @@ namespace Nop.Services.Installation
                 OrderSubTotalDiscountExclTax = decimal.Zero,
                 OrderShippingInclTax = decimal.Zero,
                 OrderShippingExclTax = decimal.Zero,
+                OrderShippingNonTaxable = decimal.Zero,
                 PaymentMethodAdditionalFeeInclTax = decimal.Zero,
                 PaymentMethodAdditionalFeeExclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeNonTaxable = decimal.Zero,
                 TaxRates = "0:0;",
                 OrderTax = decimal.Zero,
                 OrderTotal = 1855M,
+                OrderAmount = 1855M,
+                OrderAmountIncl = 1855M,
+                OrderDiscountIncl = decimal.Zero,
+                EarnedRewardPointsBaseAmountIncl = 1855M,
+                EarnedRewardPointsBaseAmountExcl = 1855M,
+                RewardPointsTaxable = false,
                 RefundedAmount = decimal.Zero,
                 OrderDiscount = decimal.Zero,
                 CheckoutAttributeDescription = string.Empty,
@@ -4511,7 +4519,8 @@ namespace Nop.Services.Installation
                 LicenseDownloadId = 0,
                 ItemWeight = null,
                 RentalStartDateUtc = null,
-                RentalEndDateUtc = null
+                RentalEndDateUtc = null,
+                TaxRate = 0
             };
             _orderItemRepository.Insert(firstOrderItem1);
 
@@ -4536,7 +4545,8 @@ namespace Nop.Services.Installation
                 LicenseDownloadId = 0,
                 ItemWeight = null,
                 RentalStartDateUtc = null,
-                RentalEndDateUtc = null
+                RentalEndDateUtc = null,
+                TaxRate = 0
             };
             _orderItemRepository.Insert(fierstOrderItem2);
 
@@ -4561,7 +4571,8 @@ namespace Nop.Services.Installation
                 LicenseDownloadId = 0,
                 ItemWeight = null,
                 RentalStartDateUtc = null,
-                RentalEndDateUtc = null
+                RentalEndDateUtc = null,
+                TaxRate = 0
             };
             _orderItemRepository.Insert(firstOrderItem3);
 
@@ -4612,11 +4623,19 @@ namespace Nop.Services.Installation
                 OrderSubTotalDiscountExclTax = decimal.Zero,
                 OrderShippingInclTax = decimal.Zero,
                 OrderShippingExclTax = decimal.Zero,
+                OrderShippingNonTaxable = decimal.Zero,
                 PaymentMethodAdditionalFeeInclTax = decimal.Zero,
                 PaymentMethodAdditionalFeeExclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeNonTaxable = decimal.Zero,
                 TaxRates = "0:0;",
                 OrderTax = decimal.Zero,
                 OrderTotal = 2460M,
+                OrderAmount = 2460M,
+                OrderAmountIncl = 2460M,
+                OrderDiscountIncl = decimal.Zero,
+                EarnedRewardPointsBaseAmountIncl = 2460M,
+                EarnedRewardPointsBaseAmountExcl = 2460M,
+                RewardPointsTaxable = false,
                 RefundedAmount = decimal.Zero,
                 OrderDiscount = decimal.Zero,
                 CheckoutAttributeDescription = string.Empty,
@@ -4686,7 +4705,8 @@ namespace Nop.Services.Installation
                 LicenseDownloadId = 0,
                 ItemWeight = null,
                 RentalStartDateUtc = null,
-                RentalEndDateUtc = null
+                RentalEndDateUtc = null,
+                TaxRate = 0
             };
             _orderItemRepository.Insert(secondOrderItem1);
 
@@ -4711,7 +4731,8 @@ namespace Nop.Services.Installation
                 LicenseDownloadId = 0,
                 ItemWeight = null,
                 RentalStartDateUtc = null,
-                RentalEndDateUtc = null
+                RentalEndDateUtc = null,
+                TaxRate = 0
             };
             _orderItemRepository.Insert(secondOrderItem2);
 
@@ -4731,11 +4752,19 @@ namespace Nop.Services.Installation
                 OrderSubTotalDiscountExclTax = decimal.Zero,
                 OrderShippingInclTax = decimal.Zero,
                 OrderShippingExclTax = decimal.Zero,
+                OrderShippingNonTaxable = decimal.Zero,
                 PaymentMethodAdditionalFeeInclTax = decimal.Zero,
                 PaymentMethodAdditionalFeeExclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeNonTaxable = decimal.Zero,
                 TaxRates = "0:0;",
                 OrderTax = decimal.Zero,
                 OrderTotal = 8.80M,
+                OrderAmount = 8.80M,
+                OrderAmountIncl = 8.80M,
+                OrderDiscountIncl = decimal.Zero,
+                EarnedRewardPointsBaseAmountIncl = 8.80M,
+                EarnedRewardPointsBaseAmountExcl = 8.80M,
+                RewardPointsTaxable = false,
                 RefundedAmount = decimal.Zero,
                 OrderDiscount = decimal.Zero,
                 CheckoutAttributeDescription = string.Empty,
@@ -4805,7 +4834,8 @@ namespace Nop.Services.Installation
                 LicenseDownloadId = 0,
                 ItemWeight = null,
                 RentalStartDateUtc = null,
-                RentalEndDateUtc = null
+                RentalEndDateUtc = null,
+                TaxRate = 0
             };
             _orderItemRepository.Insert(thirdOrderItem1);
 
@@ -4830,7 +4860,8 @@ namespace Nop.Services.Installation
                 LicenseDownloadId = 0,
                 ItemWeight = null,
                 RentalStartDateUtc = null,
-                RentalEndDateUtc = null
+                RentalEndDateUtc = null,
+                TaxRate = 0
             };
             _orderItemRepository.Insert(thirdOrderItem2);
 
@@ -4855,7 +4886,8 @@ namespace Nop.Services.Installation
                 LicenseDownloadId = 0,
                 ItemWeight = null,
                 RentalStartDateUtc = null,
-                RentalEndDateUtc = null
+                RentalEndDateUtc = null,
+                TaxRate = 0
             };
             _orderItemRepository.Insert(thirdOrderItem3);
 
@@ -4875,11 +4907,19 @@ namespace Nop.Services.Installation
                 OrderSubTotalDiscountExclTax = decimal.Zero,
                 OrderShippingInclTax = decimal.Zero,
                 OrderShippingExclTax = decimal.Zero,
+                OrderShippingNonTaxable = decimal.Zero,
                 PaymentMethodAdditionalFeeInclTax = decimal.Zero,
                 PaymentMethodAdditionalFeeExclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeNonTaxable = decimal.Zero,
                 TaxRates = "0:0;",
                 OrderTax = decimal.Zero,
                 OrderTotal = 102M,
+                OrderAmount = 102M,
+                OrderAmountIncl = 102M,
+                OrderDiscountIncl = decimal.Zero,
+                EarnedRewardPointsBaseAmountIncl = 102M,
+                EarnedRewardPointsBaseAmountExcl = 102M,
+                RewardPointsTaxable = false,
                 RefundedAmount = decimal.Zero,
                 OrderDiscount = decimal.Zero,
                 CheckoutAttributeDescription = string.Empty,
@@ -4962,7 +5002,8 @@ namespace Nop.Services.Installation
                 LicenseDownloadId = 0,
                 ItemWeight = null,
                 RentalStartDateUtc = null,
-                RentalEndDateUtc = null
+                RentalEndDateUtc = null,
+                TaxRate = 0
             };
             _orderItemRepository.Insert(fourthOrderItem1);
 
@@ -4987,7 +5028,8 @@ namespace Nop.Services.Installation
                 LicenseDownloadId = 0,
                 ItemWeight = null,
                 RentalStartDateUtc = null,
-                RentalEndDateUtc = null
+                RentalEndDateUtc = null,
+                TaxRate = 0
             };
             _orderItemRepository.Insert(fourthOrderItem2);
 
@@ -5012,7 +5054,8 @@ namespace Nop.Services.Installation
                 LicenseDownloadId = 0,
                 ItemWeight = null,
                 RentalStartDateUtc = null,
-                RentalEndDateUtc = null
+                RentalEndDateUtc = null,
+                TaxRate = 0
             };
             _orderItemRepository.Insert(fourthOrderItem3);
 
@@ -5088,11 +5131,19 @@ namespace Nop.Services.Installation
                 OrderSubTotalDiscountExclTax = decimal.Zero,
                 OrderShippingInclTax = decimal.Zero,
                 OrderShippingExclTax = decimal.Zero,
+                OrderShippingNonTaxable = decimal.Zero,
                 PaymentMethodAdditionalFeeInclTax = decimal.Zero,
                 PaymentMethodAdditionalFeeExclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeNonTaxable = decimal.Zero,
                 TaxRates = "0:0;",
                 OrderTax = decimal.Zero,
                 OrderTotal = 43.50M,
+                OrderAmount = 43.50M,
+                OrderAmountIncl = 43.50M,
+                OrderDiscountIncl = decimal.Zero,
+                EarnedRewardPointsBaseAmountIncl = 43.50M,
+                EarnedRewardPointsBaseAmountExcl = 43.50M,
+                RewardPointsTaxable = false,
                 RefundedAmount = decimal.Zero,
                 OrderDiscount = decimal.Zero,
                 CheckoutAttributeDescription = string.Empty,
@@ -5180,7 +5231,8 @@ namespace Nop.Services.Installation
                 LicenseDownloadId = 0,
                 ItemWeight = null,
                 RentalStartDateUtc = null,
-                RentalEndDateUtc = null
+                RentalEndDateUtc = null,
+                TaxRate = 0
             };
             _orderItemRepository.Insert(fifthOrderItem1);
 
@@ -6172,7 +6224,13 @@ namespace Nop.Services.Installation
                 ActivationDelayPeriodId = 0,
                 DisplayHowMuchWillBeEarned = true,
                 PointsAccumulatedForAllStores = true,
-                PageSize = 10
+                PageSize = 10,
+                EarnedRewardPointsAreTaxable = false,
+                AwardPointsIncludeShipping = true,
+                AwardPointsIncludePaymentMethodAdditionalFee = true,
+                AwardPointsExcludeGiftCard = true,
+                AwardPointsExcludePurchasedRewardPoints = true,
+                EarnRewardPointsOnlyWhenUsingPurchasedRewardPoints = false
             });
 
             settingService.SaveSetting(new CurrencySettings
@@ -6220,7 +6278,8 @@ namespace Nop.Services.Installation
                 RoundPricesDuringCalculation = true,
                 GroupTierPricesForDistinctShoppingCartItems = false,
                 AllowCartItemEditing = true,
-                RenderAssociatedAttributeValueQuantity = true
+                RenderAssociatedAttributeValueQuantity = true,
+                RenderProductAttributePrices = true
             });
 
             settingService.SaveSetting(new OrderSettings
@@ -6252,7 +6311,8 @@ namespace Nop.Services.Installation
                 DeactivateGiftCardsAfterDeletingOrder = false,
                 CompleteOrderWhenDelivered = true,
                 CustomOrderNumberMask = "{ID}",
-                ExportWithProducts = true
+                ExportWithProducts = true,
+                AssignInvoiceIdentFromTask = false,
             });
 
             settingService.SaveSetting(new SecuritySettings
@@ -11177,6 +11237,12 @@ namespace Nop.Services.Installation
                 },
                 new ActivityLogType
                 {
+                    SystemKeyword = "AddCustomerRewardPoints",
+                    Enabled = true,
+                    Name = "Add customer reward points"
+                },
+                new ActivityLogType
+                {
                     SystemKeyword = "AddNewDiscount",
                     Enabled = true,
                     Name = "Add a new discount"
@@ -11594,6 +11660,12 @@ namespace Nop.Services.Installation
                     SystemKeyword = "EditCustomerRole",
                     Enabled = true,
                     Name = "Edit a customer role"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditCustomerRewardPoints",
+                    Enabled = true,
+                    Name = "Edit customer reward points"
                 },
                 new ActivityLogType
                 {
@@ -12034,6 +12106,15 @@ namespace Nop.Services.Installation
                     Seconds = 3600,
                     Type = "Nop.Services.Directory.UpdateExchangeRateTask, Nop.Services",
                     Enabled = true,
+                    StopOnError = false,
+                },
+                new ScheduleTask
+                {
+                    Name = "Assign invoice ident",
+                    //60 minutes
+                    Seconds = 60,
+                    Type = "Nop.Services.Orders.AssignInvoiceIdentTask, Nop.Services",
+                    Enabled = false,
                     StopOnError = false,
                 },
             };

@@ -50,6 +50,8 @@ namespace Nop.Admin.Models.Affiliates
 
             [NopResourceDisplayName("Admin.Affiliates.Orders.OrderTotal")]
             public string OrderTotal { get; set; }
+            [NopResourceDisplayName("Admin.Affiliates.Orders.OrderTotalAmount")]
+            public string OrderTotalAmountIncl { get; set; }
 
             [NopResourceDisplayName("Admin.Affiliates.Orders.CreatedOn")]
             public DateTime CreatedOn { get; set; }

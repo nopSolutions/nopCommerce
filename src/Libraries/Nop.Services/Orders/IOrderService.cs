@@ -97,6 +97,11 @@ namespace Nop.Services.Orders
         /// <returns>Order</returns>
         Order GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId, string paymentMethodSystemName);
 
+        /// <summary>
+        /// Get all orders to whom an invoice id shouzld be assigned
+        /// </summary>
+        /// <returns>Order</returns>
+        IList<Order> GetOrdersToAssignInvoiceId();
         #endregion
 
         #region Orders items

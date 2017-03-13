@@ -52,6 +52,34 @@
       <HintPath>..\..\packages\ImageResizer.Plugins.PrettyGifs.4.0.5\lib\net45\ImageResizer.Plugins.PrettyGifs.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="itext.barcodes, Version=7.0.1.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\itext7.7.0.1\lib\net40\itext.barcodes.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="itext.forms, Version=7.0.1.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\itext7.7.0.1\lib\net40\itext.forms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="itext.io, Version=7.0.1.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\itext7.7.0.1\lib\net40\itext.io.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="itext.kernel, Version=7.0.1.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\itext7.7.0.1\lib\net40\itext.kernel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="itext.layout, Version=7.0.1.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\itext7.7.0.1\lib\net40\itext.layout.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="itext.pdfa, Version=7.0.1.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\itext7.7.0.1\lib\net40\itext.pdfa.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="itext.sign, Version=7.0.1.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\itext7.7.0.1\lib\net40\itext.sign.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="itextsharp, Version=5.5.10.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>..\..\packages\iTextSharp.5.5.10\lib\itextsharp.dll</HintPath>
       <Private>True</Private>
@@ -208,6 +236,7 @@
     <Compile Include="Catalog\IPriceFormatter.cs" />
     <Compile Include="Catalog\ProductAttributeFormatter.cs" />
     <Compile Include="Catalog\ProductAttributeParser.cs" />
+    <Compile Include="Common\PdfService7.cs" />
     <Compile Include="Customers\Cache\CustomerCacheEventConsumer.cs" />
     <Compile Include="Customers\CustomerAttributeFormatter.cs" />
     <Compile Include="Customers\ICustomerAttributeFormatter.cs" />
@@ -264,6 +293,8 @@
     <Compile Include="Media\ResizeType.cs" />
     <Compile Include="Messages\TokenGroupNames.cs" />
     <Compile Include="Messages\MessageTemplateExtensions.cs" />
+    <Compile Include="Orders\AssignInvoiceIdentTask.cs" />
+    <Compile Include="Orders\RewardPoints.cs" />
     <Compile Include="Orders\UpdateOrderParameters.cs" />
     <Compile Include="Orders\ICustomNumberFormatter.cs" />
     <Compile Include="Orders\IReturnRequestService.cs" />
@@ -277,6 +308,7 @@
     <Compile Include="Shipping\Pickup\IPickupPointProvider.cs" />
     <Compile Include="Shipping\Date\DateRangeService.cs" />
     <Compile Include="Shipping\Tracking\ShipmentExtensions.cs" />
+    <Compile Include="Tax\TaxSummary.cs" />
     <Compile Include="Topics\ITopicTemplateService.cs" />
     <Compile Include="Topics\TopicTemplateService.cs" />
     <Compile Include="Vendors\VendorExtensions.cs" />
@@ -500,7 +532,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

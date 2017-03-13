@@ -650,6 +650,7 @@ namespace Nop.Admin.Controllers
             {
                 model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
                 model.AddRewardPointsValue = 0;
+                model.AddRewardPointsValuePurchased = 0;
                 model.AddRewardPointsMessage = "Some comment here...";
 
                 //stores
@@ -719,6 +720,7 @@ namespace Nop.Admin.Controllers
             model.Address.CountryEnabled = _addressSettings.CountryEnabled;
             model.Address.CountryRequired = _addressSettings.CountryEnabled; //country is required when enabled
             model.Address.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
+            model.Address.StateProvinceRequired = _addressSettings.StateProvinceEnabled; //province is required when enabled
             model.Address.CityEnabled = _addressSettings.CityEnabled;
             model.Address.CityRequired = _addressSettings.CityRequired;
             model.Address.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
@@ -832,7 +834,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-        
+
         public virtual ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -1649,9 +1651,13 @@ namespace Nop.Admin.Controllers
 
                     return new CustomerModel.RewardPointsHistoryModel
                     {
+                        Id = rph.Id,
                         StoreName = store != null ? store.Name : "Unknown",
                         Points = rph.Points,
+                        PointsPurchased = rph.PointsPurchased,
                         PointsBalance = rph.PointsBalance.HasValue ? rph.PointsBalance.ToString()
+                            : string.Format(_localizationService.GetResource("Admin.Customers.Customers.RewardPoints.ActivatedLater"), activatingDate),
+                        PointsBalancePurchased = rph.PointsBalancePurchased.HasValue ? rph.PointsBalancePurchased.ToString()
                             : string.Format(_localizationService.GetResource("Admin.Customers.Customers.RewardPoints.ActivatedLater"), activatingDate),
                         Message = rph.Message,
                         CreatedOn = activatingDate
@@ -1664,7 +1670,7 @@ namespace Nop.Admin.Controllers
         }
 
         [ValidateInput(false)]
-        public virtual ActionResult RewardPointsHistoryAdd(int customerId, int storeId, int addRewardPointsValue, string addRewardPointsMessage)
+        public virtual ActionResult RewardPointsHistoryAdd(int customerId, int storeId, int[] addRewardPointsValue, string addRewardPointsMessage)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1673,12 +1679,44 @@ namespace Nop.Admin.Controllers
             if (customer == null)
                 return Json(new { Result = false }, JsonRequestBehavior.AllowGet);
 
+            var addRewardPoints = new RewardPoints(_rewardPointService)
+            {
+                Points = addRewardPointsValue[0],
+                PointsPurchased = addRewardPointsValue[1],
+            };
+
             _rewardPointService.AddRewardPointsHistoryEntry(customer,
-                addRewardPointsValue, storeId, addRewardPointsMessage);
+                addRewardPoints, storeId, addRewardPointsMessage);
+
+            //activity log
+            _customerActivityService.InsertActivity("AddCustomerRewardPoints", _localizationService.GetResource("ActivityLog.AddCustomerRewardPoints"), addRewardPointsValue[0], addRewardPointsValue[1]);
 
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }
-        
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public virtual ActionResult RewardPointsHistoryUpdate(CustomerModel.RewardPointsHistoryModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            if (model.Message != null)
+                model.Message = model.Message.Trim();
+
+            var rph = _rewardPointService.GetRewardPointsHistoryEntryById(model.Id);
+            if (rph == null)
+                return Content("No reward points history entry could be loaded with the specified ID");
+
+            rph.Message = model.Message;
+
+            _rewardPointService.UpdateRewardPointsHistoryEntry(rph);
+
+           //activity log
+            _customerActivityService.InsertActivity("EditCustomerRewardPoints", _localizationService.GetResource("ActivityLog.EditCustomerRewardPoints"), rph.Id);
+
+            return new NullJsonResult();
+        }
         #endregion
         
         #region Addresses
@@ -1751,7 +1789,7 @@ namespace Nop.Admin.Controllers
 
             return new NullJsonResult();
         }
-        
+
         public virtual ActionResult AddressCreate(int customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -1897,6 +1935,7 @@ namespace Nop.Admin.Controllers
                             PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
                             ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
                             OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false),
+                            OrderTotalAmountIncl = _priceFormatter.FormatPrice(order.OrderTotalAmountIncl, true, false),
                             StoreName = store != null ? store.Name : "Unknown",
                             CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
                             CustomOrderNumber = order.CustomOrderNumber

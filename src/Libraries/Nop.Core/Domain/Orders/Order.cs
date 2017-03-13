@@ -26,26 +26,38 @@ namespace Nop.Core.Domain.Orders
 
         #region Utilities
 
-        protected virtual SortedDictionary<decimal, decimal> ParseTaxRates(string taxRatesStr)
+        /// <summary>
+        /// Parses order.TaxRates string
+        /// </summary>
+        /// <param name="taxRatesStr"></param>
+        /// <returns>Returns the sorted dictionary of taxrateEntries</returns>
+        protected virtual SortedDictionary<decimal, TaxRateRec> ParseTaxRates(string taxRatesStr)
         {
-            var taxRatesDictionary = new SortedDictionary<decimal, decimal>();
+            var taxRatesDictionary = new SortedDictionary<decimal, TaxRateRec>();
             if (String.IsNullOrEmpty(taxRatesStr))
                 return taxRatesDictionary;
 
-            string[] lines = taxRatesStr.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = taxRatesStr.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string line in lines)
             {
                 if (String.IsNullOrEmpty(line.Trim()))
                     continue;
 
-                string[] taxes = line.Split(new [] { ':' });
-                if (taxes.Length == 2)
+                string[] taxes = line.Split(new[] { ':' });
+                if (taxes.Length == 6)
                 {
                     try
                     {
-                        decimal taxRate = decimal.Parse(taxes[0].Trim(), CultureInfo.InvariantCulture);
-                        decimal taxValue = decimal.Parse(taxes[1].Trim(), CultureInfo.InvariantCulture);
-                        taxRatesDictionary.Add(taxRate, taxValue);
+                        decimal rate = decimal.Parse(taxes[0].Trim(), CultureInfo.InvariantCulture);
+                        taxRatesDictionary.Add(rate, new TaxRateRec()
+                        {
+                            TaxRate = rate,
+                            Amount = decimal.Parse(taxes[1].Trim(), CultureInfo.InvariantCulture),
+                            DiscountAmount = decimal.Parse(taxes[2].Trim(), CultureInfo.InvariantCulture),
+                            BaseAmount = decimal.Parse(taxes[3].Trim(), CultureInfo.InvariantCulture),
+                            TaxAmount = decimal.Parse(taxes[4].Trim(), CultureInfo.InvariantCulture),
+                            AmountIncludingTax = decimal.Parse(taxes[5].Trim(), CultureInfo.InvariantCulture)
+                        });
                     }
                     catch (Exception exc)
                     {
@@ -56,7 +68,15 @@ namespace Nop.Core.Domain.Orders
 
             //add at least one tax rate (0%)
             if (!taxRatesDictionary.Any())
-                taxRatesDictionary.Add(decimal.Zero, decimal.Zero);
+                taxRatesDictionary.Add(decimal.Zero, new TaxRateRec()
+                {
+                    TaxRate = decimal.Zero,
+                    Amount = decimal.Zero,
+                    DiscountAmount = decimal.Zero,
+                    BaseAmount = decimal.Zero,
+                    TaxAmount = decimal.Zero,
+                    AmountIncludingTax = decimal.Zero
+                });
 
             return taxRatesDictionary;
         }
@@ -163,12 +183,17 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the order shipping (incl tax)
         /// </summary>
+        ///
         public decimal OrderShippingInclTax { get; set; }
-
         /// <summary>
         /// Gets or sets the order shipping (excl tax)
         /// </summary>
+        ///
         public decimal OrderShippingExclTax { get; set; }
+
+        /// Gets or sets the order shipping (non taxable)
+        /// </summary>
+        public decimal OrderShippingNonTaxable { get; set; }
 
         /// <summary>
         /// Gets or sets the payment method additional fee (incl tax)
@@ -180,6 +205,10 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public decimal PaymentMethodAdditionalFeeExclTax { get; set; }
 
+        /// <summary>
+        /// Gets or sets the payment method additional fee (non taxable)
+        /// </summary>
+        public decimal PaymentMethodAdditionalFeeNonTaxable { get; set; }
         /// <summary>
         /// Gets or sets the tax rates
         /// </summary>
@@ -196,7 +225,7 @@ namespace Nop.Core.Domain.Orders
         public decimal OrderDiscount { get; set; }
 
         /// <summary>
-        /// Gets or sets the order total
+        /// Gets or sets the order total to pay
         /// </summary>
         public decimal OrderTotal { get; set; }
 
@@ -209,7 +238,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the reward points history entry identifier when reward points were earned (gained) for placing this order
         /// </summary>
         public int? RewardPointsHistoryEntryId { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the checkout attribute description
         /// </summary>
@@ -309,7 +338,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the paid date and time
         /// </summary>
         public DateTime? PaidDateUtc { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the shipping method
         /// </summary>
@@ -336,9 +365,45 @@ namespace Nop.Core.Domain.Orders
         public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
+        /// Gets or sets the invoice ID
+        /// </summary>
+        public string InvoiceId { get; set; }
+        /// <summary>
+        /// Gets or sets the invoice date UTC
+        /// </summary>
+        public DateTime? InvoiceDateUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the order total base amount excl. tax
+        /// </summary>
+        public decimal OrderAmount { get; set; } //MF 09.12.16
+
+        /// <summary>
+        /// Gets or sets the order total amount incl. tax
+        /// </summary>
+        public decimal OrderAmountIncl { get; set; } //MF 09.12.16
+        /// <summary>
+        /// Gets or sets the order total discount amount incl. tax
+        /// </summary>
+        public decimal OrderDiscountIncl { get; set; }
+        /// <summary>
+        /// Gets or sets the order total earned reward points base amount incl. tax
+        /// </summary>
+        public decimal EarnedRewardPointsBaseAmountIncl { get; set; }
+        /// <summary>
+        /// Gets or sets the order total earned reward points base amount excl. tax
+        /// </summary>
+        public decimal EarnedRewardPointsBaseAmountExcl { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating if redeemed reward points are taxable
+        /// </summary>
+        public bool RewardPointsTaxable { get; set; }
+        /// <summary>
         /// Gets or sets the custom order number without prefix
         /// </summary>
         public string CustomOrderNumber { get; set; }
+        /// <summary>
+
 
         #endregion
 
@@ -481,14 +546,37 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets the applied tax rates
         /// </summary>
-        public SortedDictionary<decimal, decimal> TaxRatesDictionary
+        public SortedDictionary<decimal, TaxRateRec> TaxRatesDictionary
         {
             get
             {
                 return ParseTaxRates(this.TaxRates);
             }
         }
-        
+
+        /// <summary>
+        /// Gets the order total amount incl. tax
+        /// </summary>
+        public decimal OrderTotalAmountIncl
+        {
+            get
+            {
+                return OrderAmountIncl + PaymentMethodAdditionalFeeNonTaxable + OrderShippingNonTaxable
+                      - (RewardPointsTaxable ? decimal.Zero : (RedeemedRewardPointsEntry != null ? RedeemedRewardPointsEntry.UsedAmount : decimal.Zero));
+            }
+        }
         #endregion
     }
+
+    #region Nested classes
+    public partial class TaxRateRec
+    {
+        public decimal TaxRate { get; set; }
+        public decimal Amount { get; set; }
+        public decimal DiscountAmount { get; set; }
+        public decimal BaseAmount { get; set; }
+        public decimal TaxAmount { get; set; }
+        public decimal AmountIncludingTax { get; set; }
+    }
+    #endregion
 }

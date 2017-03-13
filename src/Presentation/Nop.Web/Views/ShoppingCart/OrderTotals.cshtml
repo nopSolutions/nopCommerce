@@ -22,7 +22,7 @@
                     </td>
                 </tr>
             }
-            @if (!Model.HideShippingTotal)
+            @if (!Model.HideShippingTotal && String.IsNullOrEmpty(Model.ShippingNonTaxable))
             {
                 <tr class="shipping-cost">
                     <td class="cart-total-left">
@@ -62,31 +62,6 @@
                     </td>
                 </tr>
             }
-            @if (Model.DisplayTaxRates && Model.TaxRates.Count > 0)
-            {
-                foreach (var taxRate in Model.TaxRates)
-                {
-                <tr class="tax-rate">
-                    <td class="cart-total-left">
-                        <label>@string.Format(T("ShoppingCart.Totals.TaxRateLine").Text, taxRate.Rate):</label>
-                    </td>
-                    <td class="cart-total-right">
-                        <span>@taxRate.Value</span>
-                    </td>
-                </tr>
-                }
-            }
-            @if (Model.DisplayTax)
-            {
-                <tr class="tax-value">
-                    <td class="cart-total-left">
-                        <label>@T("ShoppingCart.Totals.Tax"):</label>
-                    </td>
-                    <td class="cart-total-right">
-                        <span class="value-summary">@Model.Tax</span>
-                    </td>
-                </tr>
-            }
             @if (!String.IsNullOrEmpty(Model.OrderTotalDiscount))
             {
                 <tr class="discount-total">
@@ -95,6 +70,130 @@
                     </td>
                     <td class="cart-total-right">
                         <span class="value-summary">@Model.OrderTotalDiscount</span>
+                    </td>
+                </tr>
+            }
+            @if (Model.EarnedRewardPointsAreTaxable && Model.RedeemedRewardPoints > 0)
+            {
+                <tr class="reward-points">
+                    <td class="cart-total-left">
+                        <label>@string.Format(T("ShoppingCart.Totals.RewardPoints").Text, Model.RedeemedRewardPoints):</label>
+                    </td>
+                    <td class="cart-total-right">
+                        <span class="value-summary">@Model.RedeemedRewardPointsAmount</span>
+                    </td>
+                </tr>
+            }
+            @if (!String.IsNullOrEmpty(Model.OrderAmount))
+            {
+                <tr class="order-total-amount">
+                    <td class="cart-total-left">
+                        <label>@T("ShoppingCart.Totals.OrderAmount"):</label>
+                    </td>
+                    <td class="cart-total-right">
+                        <span class="value-summary">@(Model.includingTax ? Model.OrderAmountIncl : Model.OrderAmount)</span>
+                    </td>
+                </tr>
+            }
+            @if (Model.DisplayTax)
+            {
+                <tr class="tax-value">
+                    <td class="cart-total-left">
+                        <label>@T(Model.includingTax ? "ShoppingCart.Totals.TaxIncl" : "ShoppingCart.Totals.Tax"):</label>
+                    </td>
+                    <td class="cart-total-right">
+                        <span class="value-summary">@Model.Tax</span>
+                    </td>
+                </tr>
+            }
+            @if (Model.DisplayTaxRates && Model.TaxRates.Count > 0)
+            {
+                <tr class="tax-rate">
+                    <td colspan="2" class="cart-tax">
+                        <ul class="cart-tax-table">
+                            <li class="taxrow header">
+                                <span class="taxcell">@T("Order.TaxRateLine.TaxRate")</span>
+                                @if (Model.includingTax)
+                                {
+                                    <span class="taxcell">@T("Order.TaxRateLine.AmountIncl")</span>
+                                }
+                                else
+                                {
+                                    <span class="taxcell">@T("Order.TaxRateLine.Amount")</span>
+                                }
+                                @if (Model.includingTax)
+                                {
+                                    <span class="taxcell">@T("Order.TaxRateLine.DiscountAmountIncl")</span>
+                                }
+                                else
+                                {
+                                    <span class="taxcell">@T("Order.TaxRateLine.DiscountAmount")</span>
+                                }
+                                <span class="taxcell">@T("Order.TaxRateLine.BaseAmount")</span>
+                                <span class="taxcell">@T("Order.TaxRateLine.TaxAmount")</span>
+                            </li>
+                            @foreach (var taxRate in Model.TaxRates)
+                            {
+                                <li class="taxrow">
+                                    <span class="taxcell">@taxRate.Rate</span>
+                                    <span class="taxcell">@taxRate.Amount</span>
+                                    <span class="taxcell">@taxRate.DiscountAmount</span>
+                                    <span class="taxcell">@taxRate.BaseAmount</span>
+                                    <span class="taxcell">@taxRate.TaxAmount</span>
+                                </li>
+                            }
+                        </ul>
+                    </td>
+                </tr>
+            }
+            @if (!String.IsNullOrEmpty(Model.OrderAmount) && !Model.includingTax)
+            {
+                <tr class="order-total-amount">
+                    <td class="cart-total-left">
+                        <label>@T("ShoppingCart.Totals.OrderAmountIncl"):</label>
+                    </td>
+                    <td class="cart-total-right">
+                        <span class="value-summary">@Model.OrderAmountIncl</span>
+                    </td>
+                </tr>
+            }
+            @if (!Model.HideShippingTotal && !String.IsNullOrEmpty(Model.ShippingNonTaxable))
+            {
+                <tr class="shipping-cost">
+                    <td class="cart-total-left">
+                        <label>@T("ShoppingCart.Totals.Shipping"):</label>
+                        @if (Model.RequiresShipping && !String.IsNullOrEmpty(Model.SelectedShippingMethod))
+                        {
+                            <span class="selected-shipping-method">@T("ShoppingCart.Totals.Shipping.Method", Model.SelectedShippingMethod)</span>
+                        }
+                    </td>
+                    <td class="cart-total-right">
+                        @if (Model.RequiresShipping)
+                        {
+                            if (!String.IsNullOrEmpty(Model.ShippingNonTaxable))
+                            {
+                                <span class="value-summary">@Model.ShippingNonTaxable</span>
+                            }
+                            else
+                            {
+                                <span>@T("ShoppingCart.Totals.CalculatedDuringCheckout")</span>
+                            }
+                        }
+                        else
+                        {
+                            <span>@T("ShoppingCart.Totals.Shipping.NotRequired")</span>
+                        }
+                    </td>
+                </tr>
+            }
+            @if (!String.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeNonTaxable))
+            {
+                <tr class="additional-fees">
+                    <td class="cart-total-left">
+                        <label>@T("ShoppingCart.Totals.PaymentMethodAdditionalFee"):</label>
+                    </td>
+                    <td class="cart-total-right">
+                        <span class="value-summary">@Model.PaymentMethodAdditionalFeeNonTaxable</span>
                     </td>
                 </tr>
             }
@@ -119,7 +218,7 @@
                 </tr>
                 }
             }
-            @if (Model.RedeemedRewardPoints > 0)
+            @if (!Model.EarnedRewardPointsAreTaxable && Model.RedeemedRewardPoints > 0)
             {
                 <tr class="reward-points">
                     <td class="cart-total-left">
@@ -127,6 +226,17 @@
                     </td>
                     <td class="cart-total-right">
                         <span class="value-summary">@Model.RedeemedRewardPointsAmount</span>
+                    </td>
+                </tr>
+            }
+            @if (Model.RedeemedRewardPointsPurchased > 0)
+            {
+                <tr class="reward-points">
+                    <td class="cart-total-left">
+                        <label>@string.Format(T("ShoppingCart.Totals.RewardPointsPurchased").Text, Model.RedeemedRewardPointsPurchased):</label>
+                    </td>
+                    <td class="cart-total-right">
+                        <span class="value-summary">@Model.RedeemedRewardPointsAmountPurchased</span>
                     </td>
                 </tr>
             }
@@ -149,11 +259,16 @@
             {
                 <tr class="earn-reward-points">
                     <td class="cart-total-left">
-                        <label>@T("ShoppingCart.Totals.RewardPoints.WillEarn"):</label>
+                        <label>@string.Format(T("ShoppingCart.Totals.RewardPoints.WillEarn").Text, Model.WillEarnRewardPointsBasedOnAmount):</label>
+                        @if (!Model.WillEarn)
+                        {
+                            <div>@T("ShoppingCart.Totals.RewardPoints.WillEarnHint")</div>
+                        }
                     </td>
                     <td class="cart-total-right">
                         <span class="value-summary">@string.Format(T("ShoppingCart.Totals.RewardPoints.WillEarn.Point").Text, Model.WillEarnRewardPoints)</span>
                     </td>
+
                 </tr>
             }
         </tbody>

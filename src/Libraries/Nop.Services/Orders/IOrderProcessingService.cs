@@ -76,7 +76,7 @@ namespace Nop.Services.Orders
         /// <param name="shipment">Shipment</param>
         /// <param name="notifyCustomer">True to notify customer</param>
         void Ship(Shipment shipment, bool notifyCustomer);
-        
+
         /// <summary>
         /// Marks a shipment as delivered
         /// </summary>
@@ -241,7 +241,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">The order</param>
         void ReOrder(Order order);
-        
+
         /// <summary>
         /// Check whether return request is allowed
         /// </summary>
@@ -264,6 +264,11 @@ namespace Nop.Services.Orders
         /// <param name="cart">Shopping cart</param>
         /// <returns>true - OK; false - minimum order total amount is not reached</returns>
         bool ValidateMinOrderTotalAmount(IList<ShoppingCartItem> cart);
+        /// <summary>
+        /// Get next Invoice ID and store settings
+        /// </summary>
+        /// <returns></returns>
+        string GetInvoiceId();
 
         /// <summary>
         /// Gets a value indicating whether payment workflow is required
@@ -272,5 +277,14 @@ namespace Nop.Services.Orders
         /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
         /// <returns>true - OK; false - minimum order total amount is not reached</returns>
         bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool? useRewardPoints = null);
+        /// <summary>
+        /// Get next Invoice ID and store settings
+        /// </summary>
+        /// <returns></returns>
+        string GetInvoiceId(int storeId);
+        /// <summary>
+        /// Set Invoice ID on orders which passed payment
+        /// </summary>
+        void AssignInvoiceIdentToOrders();
     }
 }

@@ -291,7 +291,7 @@ namespace Nop.Services.ExportImport
                 using (var xlPackage = new ExcelPackage(stream))
                 {
                     // uncomment this line if you want the XML written out to the outputDir
-                    //xlPackage.DebugMode = true; 
+                    //xlPackage.DebugMode = true;
 
                     // get handles to the worksheets
                     var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(T).Name);
@@ -355,7 +355,7 @@ namespace Nop.Services.ExportImport
                 using (var xlPackage = new ExcelPackage(stream))
                 {
                     // uncomment this line if you want the XML written out to the outputDir
-                    //xlPackage.DebugMode = true; 
+                    //xlPackage.DebugMode = true;
 
                     // get handles to the worksheets
                     var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(Product).Name);
@@ -436,15 +436,17 @@ namespace Nop.Services.ExportImport
         {
             var orderItemProperties = new[]
             {
-                new PropertyByName<OrderItem>("Name", oi => oi.Product.Name),
                 new PropertyByName<OrderItem>("Sku", oi => oi.Product.Sku),
+                new PropertyByName<OrderItem>("Name", oi => oi.Product.Name),
+                new PropertyByName<OrderItem>("AttributeDescription", oi => oi.AttributeDescription),
                 new PropertyByName<OrderItem>("PriceExclTax", oi => oi.UnitPriceExclTax),
                 new PropertyByName<OrderItem>("PriceInclTax", oi => oi.UnitPriceInclTax),
                 new PropertyByName<OrderItem>("Quantity", oi => oi.Quantity),
                 new PropertyByName<OrderItem>("DiscountExclTax", oi => oi.DiscountAmountExclTax),
                 new PropertyByName<OrderItem>("DiscountInclTax", oi => oi.DiscountAmountInclTax),
                 new PropertyByName<OrderItem>("TotalExclTax", oi => oi.PriceExclTax),
-                new PropertyByName<OrderItem>("TotalInclTax", oi => oi.PriceInclTax)
+                new PropertyByName<OrderItem>("TotalInclTax", oi => oi.PriceInclTax),
+                new PropertyByName<OrderItem>("TaxRate", oi => oi.TaxRate)
             };
 
             var orderItemsManager = new PropertyManager<OrderItem>(orderItemProperties);
@@ -473,23 +475,23 @@ namespace Nop.Services.ExportImport
                         manager.WriteToXlsx(worksheet, row++, _catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities);
                         
                         //products
-                        var orederItems = order.OrderItems.ToList();
+                        var orderItems = order.OrderItems.ToList();
 
                         //a vendor should have access only to his products
                         if (_workContext.CurrentVendor != null)
-                            orederItems = orederItems.Where(p => p.Product.VendorId == _workContext.CurrentVendor.Id).ToList();
+                            orderItems = orderItems.Where(p => p.Product.VendorId == _workContext.CurrentVendor.Id).ToList();
 
-                        if (!orederItems.Any())
+                        if (!orderItems.Any())
                             continue;
 
                         orderItemsManager.WriteCaption(worksheet, SetCaptionStyle, row, 2);
                         worksheet.Row(row).OutlineLevel = 1;
                         worksheet.Row(row).Collapsed = true;
 
-                        foreach (var orederItem in orederItems)
+                        foreach (var orderItem in orderItems)
                         {
                             row++;
-                            orderItemsManager.CurrentObject = orederItem;
+                            orderItemsManager.CurrentObject = orderItem;
                             orderItemsManager.WriteToXlsx(worksheet, row, _catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities, 2, fpWorksheet);
                             worksheet.Row(row).OutlineLevel = 1;
                             worksheet.Row(row).Collapsed = true;
@@ -701,6 +703,9 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteString("IsGiftCard", product.IsGiftCard, IgnoreExportPoductProperty(p => p.IsGiftCard));
                 xmlWriter.WriteString("GiftCardType", product.GiftCardType, IgnoreExportPoductProperty(p => p.IsGiftCard));
                 xmlWriter.WriteString("OverriddenGiftCardAmount", product.OverriddenGiftCardAmount, IgnoreExportPoductProperty(p => p.IsGiftCard));
+                xmlWriter.WriteString("IsRewardPoints", product.IsRewardPoints, IgnoreExportPoductProperty(p => p.IsRewardPoints));
+                xmlWriter.WriteString("OverriddenRPExchangeRate", product.OverriddenRPExchangeRate, IgnoreExportPoductProperty(p => p.IsRewardPoints));
+                xmlWriter.WriteString("ExcludeFromRewardPoints", product.ExcludeFromRewardPoints, IgnoreExportPoductProperty(p => p.IsRewardPoints));
                 xmlWriter.WriteString("RequireOtherProducts", product.RequireOtherProducts, IgnoreExportPoductProperty(p => p.RequireOtherProductsAddedToTheCart));
                 xmlWriter.WriteString("RequiredProductIds", product.RequiredProductIds, IgnoreExportPoductProperty(p => p.RequireOtherProductsAddedToTheCart));
                 xmlWriter.WriteString("AutomaticallyAddRequiredProducts", product.AutomaticallyAddRequiredProducts, IgnoreExportPoductProperty(p => p.RequireOtherProductsAddedToTheCart));
@@ -1009,6 +1014,9 @@ namespace Nop.Services.ExportImport
                     DropDownElements = GiftCardType.Virtual.ToSelectList(useLocalization: false)
                 },
                 new PropertyByName<Product>("OverriddenGiftCardAmount", p => p.OverriddenGiftCardAmount, IgnoreExportPoductProperty(p => p.IsGiftCard)),
+                new PropertyByName<Product>("IsRewardPoints", p => p.IsRewardPoints, IgnoreExportPoductProperty(p => p.IsRewardPoints)),
+                new PropertyByName<Product>("OverriddenRPExchangeRate", p => p.OverriddenRPExchangeRate, IgnoreExportPoductProperty(p => p.IsRewardPoints)),
+                new PropertyByName<Product>("ExcludeFromRewardPoints", p => p.ExcludeFromRewardPoints, IgnoreExportPoductProperty(p => p.IsRewardPoints)),
                 new PropertyByName<Product>("RequireOtherProducts", p => p.RequireOtherProducts, IgnoreExportPoductProperty(p => p.RequireOtherProductsAddedToTheCart)),
                 new PropertyByName<Product>("RequiredProductIds", p => p.RequiredProductIds, IgnoreExportPoductProperty(p => p.RequireOtherProductsAddedToTheCart)),
                 new PropertyByName<Product>("AutomaticallyAddRequiredProducts", p => p.AutomaticallyAddRequiredProducts, IgnoreExportPoductProperty(p => p.RequireOtherProductsAddedToTheCart)),
@@ -1173,13 +1181,22 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteString("OrderSubTotalDiscountExclTax", order.OrderSubTotalDiscountExclTax, ignore);
                 xmlWriter.WriteString("OrderShippingInclTax", order.OrderShippingInclTax, ignore);
                 xmlWriter.WriteString("OrderShippingExclTax", order.OrderShippingExclTax, ignore);
+                xmlWriter.WriteString("OrderShippingNonTaxable", order.OrderShippingNonTaxable, ignore);
                 xmlWriter.WriteString("PaymentMethodAdditionalFeeInclTax", order.PaymentMethodAdditionalFeeInclTax, ignore);
                 xmlWriter.WriteString("PaymentMethodAdditionalFeeExclTax", order.PaymentMethodAdditionalFeeExclTax, ignore);
+                xmlWriter.WriteString("PaymentMethodAdditionalFeeNonTaxable", order.PaymentMethodAdditionalFeeNonTaxable, ignore);
                 xmlWriter.WriteString("TaxRates", order.TaxRates, ignore);
                 xmlWriter.WriteString("OrderTax", order.OrderTax, ignore);
                 xmlWriter.WriteString("OrderTotal", order.OrderTotal, ignore);
+                xmlWriter.WriteString("OrderAmount", order.OrderAmount, ignore);
+                xmlWriter.WriteString("OrderAmountIncl", order.OrderAmount, ignore);
+                xmlWriter.WriteString("OrderDiscountIncl", order.OrderAmount, ignore);
+                xmlWriter.WriteString("EarnedRewardPointsBaseAmountIncl", order.OrderAmount, ignore);
+                xmlWriter.WriteString("EarnedRewardPointsBaseAmountExcl", order.OrderAmount, ignore);
                 xmlWriter.WriteString("RefundedAmount", order.RefundedAmount, ignore);
                 xmlWriter.WriteString("OrderDiscount", order.OrderDiscount, ignore);
+                xmlWriter.WriteString("OrderShippingNonTaxable", order.OrderAmount, ignore);
+                xmlWriter.WriteString("PaymentMethodAdditionalFeeNonTaxable", order.OrderAmount, ignore);
                 xmlWriter.WriteString("CurrencyRate", order.CurrencyRate);
                 xmlWriter.WriteString("CustomerCurrencyCode", order.CustomerCurrencyCode);
                 xmlWriter.WriteString("AffiliateId", order.AffiliateId, ignore);
@@ -1232,6 +1249,7 @@ namespace Nop.Services.ExportImport
                             xmlWriter.WriteString("DiscountInclTax", orderItem.DiscountAmountInclTax);
                             xmlWriter.WriteString("TotalExclTax", orderItem.PriceExclTax);
                             xmlWriter.WriteString("TotalInclTax", orderItem.PriceInclTax);
+                            xmlWriter.WriteString("TaxRate", orderItem.TaxRate.ToString());
                             xmlWriter.WriteEndElement();
                         }
                         xmlWriter.WriteEndElement();
@@ -1250,9 +1268,9 @@ namespace Nop.Services.ExportImport
                         xmlWriter.WriteElementString("TrackingNumber", null, shipment.TrackingNumber);
                         xmlWriter.WriteElementString("TotalWeight", null, shipment.TotalWeight.HasValue ? shipment.TotalWeight.Value.ToString() : String.Empty);
 
-                        xmlWriter.WriteElementString("ShippedDateUtc", null, shipment.ShippedDateUtc.HasValue ? 
+                        xmlWriter.WriteElementString("ShippedDateUtc", null, shipment.ShippedDateUtc.HasValue ?
                             shipment.ShippedDateUtc.ToString() : String.Empty);
-                        xmlWriter.WriteElementString("DeliveryDateUtc", null, shipment.DeliveryDateUtc.HasValue ? 
+                        xmlWriter.WriteElementString("DeliveryDateUtc", null, shipment.DeliveryDateUtc.HasValue ?
                             shipment.DeliveryDateUtc.Value.ToString() : String.Empty);
                         xmlWriter.WriteElementString("CreatedOnUtc", null, shipment.CreatedOnUtc.ToString());
                         xmlWriter.WriteEndElement();
@@ -1293,13 +1311,22 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("OrderSubTotalDiscountExclTax", p => p.OrderSubTotalDiscountExclTax, ignore),
                 new PropertyByName<Order>("OrderShippingInclTax", p => p.OrderShippingInclTax, ignore),
                 new PropertyByName<Order>("OrderShippingExclTax", p => p.OrderShippingExclTax, ignore),
+                new PropertyByName<Order>("OrderShippingNonTaxable", p => p.OrderShippingNonTaxable, ignore),
                 new PropertyByName<Order>("PaymentMethodAdditionalFeeInclTax", p => p.PaymentMethodAdditionalFeeInclTax, ignore),
                 new PropertyByName<Order>("PaymentMethodAdditionalFeeExclTax", p => p.PaymentMethodAdditionalFeeExclTax, ignore),
+                new PropertyByName<Order>("PaymentMethodAdditionalFeeNonTaxable", p => p.PaymentMethodAdditionalFeeNonTaxable, ignore),
                 new PropertyByName<Order>("TaxRates", p => p.TaxRates, ignore),
                 new PropertyByName<Order>("OrderTax", p => p.OrderTax, ignore),
                 new PropertyByName<Order>("OrderTotal", p => p.OrderTotal, ignore),
+                new PropertyByName<Order>("OrderAmount", p => p.OrderAmount, ignore),
+                new PropertyByName<Order>("OrderAmountIncl", p => p.OrderAmountIncl, ignore),
+                new PropertyByName<Order>("OrderDiscountIncl", p => p.OrderAmountIncl, ignore),
+                new PropertyByName<Order>("EarnedRewardPointsBaseAmountIncl", p => p.OrderAmountIncl, ignore),
+                new PropertyByName<Order>("EarnedRewardPointsBaseAmountExcl", p => p.OrderAmountIncl, ignore),
                 new PropertyByName<Order>("RefundedAmount", p => p.RefundedAmount, ignore),
                 new PropertyByName<Order>("OrderDiscount", p => p.OrderDiscount, ignore),
+                new PropertyByName<Order>("OrderShippingNonTaxable", p => p.OrderShippingNonTaxable, ignore),
+                new PropertyByName<Order>("PaymentMethodAdditionalFeeNonTaxable", p => p.PaymentMethodAdditionalFeeNonTaxable, ignore),
                 new PropertyByName<Order>("CurrencyRate", p => p.CurrencyRate),
                 new PropertyByName<Order>("CustomerCurrencyCode", p => p.CustomerCurrencyCode),
                 new PropertyByName<Order>("AffiliateId", p => p.AffiliateId, ignore),

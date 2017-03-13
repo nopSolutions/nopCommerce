@@ -81,24 +81,24 @@ namespace Nop.Admin.Controllers
         #region Ctor
 
         public SettingController(ISettingService settingService,
-            ICountryService countryService, 
+            ICountryService countryService,
             IStateProvinceService stateProvinceService,
-            IAddressService addressService, 
+            IAddressService addressService,
             ITaxCategoryService taxCategoryService,
             ICurrencyService currencyService,
-            IPictureService pictureService, 
-            ILocalizationService localizationService, 
+            IPictureService pictureService,
+            ILocalizationService localizationService,
             IDateTimeHelper dateTimeHelper,
             IOrderService orderService,
             IEncryptionService encryptionService,
             IThemeProvider themeProvider,
-            ICustomerService customerService, 
+            ICustomerService customerService,
             ICustomerActivityService customerActivityService,
             IPermissionService permissionService,
-            IFulltextService fulltextService, 
+            IFulltextService fulltextService,
             IMaintenanceService maintenanceService,
             IStoreService storeService,
-            IWorkContext workContext, 
+            IWorkContext workContext,
             IGenericAttributeService genericAttributeService,
             IReturnRequestService returnRequestService,
             ILanguageService languageService,
@@ -247,7 +247,7 @@ namespace Nop.Admin.Controllers
             blogSettings = model.ToEntity(blogSettings);
 
             /* We do not clear cache after each setting update.
-             * This behavior can increase performance because cached settings will not be cleared 
+             * This behavior can increase performance because cached settings will not be cleared
              * and loaded from database after each update */
             _settingService.SaveSettingOverridablePerStore(blogSettings, x => x.Enabled, model.Enabled_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(blogSettings, x => x.PostsPageSize, model.PostsPageSize_OverrideForStore, storeScope, false);
@@ -308,7 +308,7 @@ namespace Nop.Admin.Controllers
             vendorSettings = model.ToEntity(vendorSettings);
 
             /* We do not clear cache after each setting update.
-             * This behavior can increase performance because cached settings will not be cleared 
+             * This behavior can increase performance because cached settings will not be cleared
              * and loaded from database after each update */
             _settingService.SaveSettingOverridablePerStore(vendorSettings, x => x.VendorsBlockItemsToDisplay, model.VendorsBlockItemsToDisplay_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(vendorSettings, x => x.ShowVendorOnProductDetailsPage, model.ShowVendorOnProductDetailsPage_OverrideForStore, storeScope, false);
@@ -386,7 +386,7 @@ namespace Nop.Admin.Controllers
             forumSettings = model.ToEntity(forumSettings);
 
             /* We do not clear cache after each setting update.
-             * This behavior can increase performance because cached settings will not be cleared 
+             * This behavior can increase performance because cached settings will not be cleared
              * and loaded from database after each update */
             _settingService.SaveSettingOverridablePerStore(forumSettings, x => x.ForumsEnabled, model.ForumsEnabled_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(forumSettings, x => x.RelativeDateTimeFormattingEnabled, model.RelativeDateTimeFormattingEnabled_OverrideForStore, storeScope, false);
@@ -411,7 +411,7 @@ namespace Nop.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(forumSettings, x => x.ForumFeedCount, model.ForumFeedCount_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(forumSettings, x => x.SearchResultsPageSize, model.SearchResultsPageSize_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(forumSettings, x => x.ActiveDiscussionsPageSize, model.ActiveDiscussionsPageSize_OverrideForStore, storeScope, false);
-            
+
             //now clear settings cache
             _settingService.ClearCache();
 
@@ -460,7 +460,7 @@ namespace Nop.Admin.Controllers
             newsSettings = model.ToEntity(newsSettings);
 
             /* We do not clear cache after each setting update.
-             * This behavior can increase performance because cached settings will not be cleared 
+             * This behavior can increase performance because cached settings will not be cleared
              * and loaded from database after each update */
             _settingService.SaveSettingOverridablePerStore(newsSettings, x => x.Enabled, model.Enabled_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(newsSettings, x => x.AllowNotRegisteredUsersToLeaveComments, model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, storeScope, false);
@@ -542,7 +542,7 @@ namespace Nop.Admin.Controllers
             model.ShippingOriginAddress.StreetAddressEnabled = true;
             model.ShippingOriginAddress.ZipPostalCodeEnabled = true;
             model.ShippingOriginAddress.ZipPostalCodeRequired = true;
-            
+
             return View(model);
         }
         [HttpPost]
@@ -558,7 +558,7 @@ namespace Nop.Admin.Controllers
             shippingSettings = model.ToEntity(shippingSettings);
 
             /* We do not clear cache after each setting update.
-             * This behavior can increase performance because cached settings will not be cleared 
+             * This behavior can increase performance because cached settings will not be cleared
              * and loaded from database after each update */
             _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.ShipToSameAddress, model.ShipToSameAddress_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.AllowPickUpInStore, model.AllowPickUpInStore_OverrideForStore, storeScope, false);
@@ -712,7 +712,7 @@ namespace Nop.Admin.Controllers
             taxSettings = model.ToEntity(taxSettings);
 
             /* We do not clear cache after each setting update.
-             * This behavior can increase performance because cached settings will not be cleared 
+             * This behavior can increase performance because cached settings will not be cleared
              * and loaded from database after each update */
             _settingService.SaveSettingOverridablePerStore(taxSettings, x => x.PricesIncludeTax, model.PricesIncludeTax_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(taxSettings, x => x.AllowCustomersToSelectTaxDisplayType, model.AllowCustomersToSelectTaxDisplayType_OverrideForStore, storeScope, false);
@@ -763,7 +763,7 @@ namespace Nop.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(taxSettings, x => x.EuVatUseWebService, model.EuVatUseWebService_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(taxSettings, x => x.EuVatAssumeValid, model.EuVatAssumeValid_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(taxSettings, x => x.EuVatEmailAdminWhenNewVatSubmitted, model.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore, storeScope, false);
-            
+
             //now clear settings cache
             _settingService.ClearCache();
 
@@ -860,7 +860,7 @@ namespace Nop.Admin.Controllers
             catalogSettings = model.ToEntity(catalogSettings);
 
             /* We do not clear cache after each setting update.
-             * This behavior can increase performance because cached settings will not be cleared 
+             * This behavior can increase performance because cached settings will not be cleared
              * and loaded from database after each update */
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.AllowViewUnpublishedProductPage, model.AllowViewUnpublishedProductPage_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.DisplayDiscontinuedMessageForUnpublishedProducts, model.DisplayDiscontinuedMessageForUnpublishedProducts_OverrideForStore, storeScope, false);
@@ -1011,8 +1011,15 @@ namespace Nop.Admin.Controllers
                 model.DisplayHowMuchWillBeEarned_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.DisplayHowMuchWillBeEarned, storeScope);
                 model.PointsForRegistration_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForRegistration, storeScope);
                 model.PageSize_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PageSize, storeScope);
+                model.EarnedRewardPointsAreTaxable_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.EarnedRewardPointsAreTaxable, storeScope);
+                model.AwardPointsIncludeShipping_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.AwardPointsIncludeShipping, storeScope);
+                model.AwardPointsIncludePaymentMethodAdditionalFee_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.AwardPointsIncludePaymentMethodAdditionalFee, storeScope);
+                model.AwardPointsExcludeGiftCard_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.AwardPointsExcludeGiftCard, storeScope);
+                model.AwardPointsExcludePurchasedRewardPoints_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.AwardPointsExcludePurchasedRewardPoints, storeScope);
+                model.EarnRewardPointsOnlyWhenUsingPurchasedRewardPoints_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.EarnRewardPointsOnlyWhenUsingPurchasedRewardPoints, storeScope);
+
             }
-            var currencySettings = _settingService.LoadSetting<CurrencySettings>(storeScope); 
+            var currencySettings = _settingService.LoadSetting<CurrencySettings>(storeScope);
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
 
             model.ActivatePointsImmediately = model.ActivationDelay <= 0;
@@ -1036,7 +1043,7 @@ namespace Nop.Admin.Controllers
                     rewardPointsSettings.ActivationDelay = 0;
 
                 /* We do not clear cache after each setting update.
-                 * This behavior can increase performance because cached settings will not be cleared 
+                 * This behavior can increase performance because cached settings will not be cleared
                  * and loaded from database after each update */
                 _settingService.SaveSettingOverridablePerStore(rewardPointsSettings, x => x.Enabled, model.Enabled_OverrideForStore, storeScope, false);
                 _settingService.SaveSettingOverridablePerStore(rewardPointsSettings, x => x.ExchangeRate, model.ExchangeRate_OverrideForStore, storeScope, false);
@@ -1049,6 +1056,12 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSettingOverridablePerStore(rewardPointsSettings, x => x.DisplayHowMuchWillBeEarned, model.DisplayHowMuchWillBeEarned_OverrideForStore, storeScope, false);
                 _settingService.SaveSettingOverridablePerStore(rewardPointsSettings, x => x.PageSize, model.PageSize_OverrideForStore, storeScope, false);
                 _settingService.SaveSetting(rewardPointsSettings, x => x.PointsAccumulatedForAllStores, 0, false);
+                _settingService.SaveSettingOverridablePerStore(rewardPointsSettings, x => x.EarnedRewardPointsAreTaxable, model.EarnedRewardPointsAreTaxable_OverrideForStore, storeScope, false);
+                _settingService.SaveSettingOverridablePerStore(rewardPointsSettings, x => x.AwardPointsIncludeShipping, model.AwardPointsIncludeShipping_OverrideForStore, storeScope, false);
+                _settingService.SaveSettingOverridablePerStore(rewardPointsSettings, x => x.AwardPointsIncludePaymentMethodAdditionalFee, model.AwardPointsIncludePaymentMethodAdditionalFee_OverrideForStore, storeScope, false);
+                _settingService.SaveSettingOverridablePerStore(rewardPointsSettings, x => x.AwardPointsExcludeGiftCard, model.AwardPointsExcludeGiftCard_OverrideForStore, storeScope, false);
+                _settingService.SaveSettingOverridablePerStore(rewardPointsSettings, x => x.AwardPointsExcludePurchasedRewardPoints, model.AwardPointsExcludePurchasedRewardPoints_OverrideForStore, storeScope, false);
+                _settingService.SaveSettingOverridablePerStore(rewardPointsSettings, x => x.EarnRewardPointsOnlyWhenUsingPurchasedRewardPoints, model.EarnRewardPointsOnlyWhenUsingPurchasedRewardPoints_OverrideForStore, storeScope, false);
 
                 //now clear settings cache
                 _settingService.ClearCache();
@@ -1105,6 +1118,7 @@ namespace Nop.Admin.Controllers
                 model.ReturnRequestNumberMask_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.ReturnRequestNumberMask, storeScope);
                 model.NumberOfDaysReturnRequestAvailable_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.NumberOfDaysReturnRequestAvailable, storeScope);
                 model.CustomOrderNumberMask_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.CustomOrderNumberMask, storeScope);
+                model.InvoiceIdent_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.InvoiceIdent, storeScope); //model.InvoiceYear_OverrideForStore set by model.InvoiceIdent_OverrideForStore
                 model.ExportWithProducts_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.ExportWithProducts, storeScope);
             }
 
@@ -1130,7 +1144,7 @@ namespace Nop.Admin.Controllers
                 orderSettings = model.ToEntity(orderSettings);
 
                 /* We do not clear cache after each setting update.
-                 * This behavior can increase performance because cached settings will not be cleared 
+                 * This behavior can increase performance because cached settings will not be cleared
                  * and loaded from database after each update */
                 _settingService.SaveSettingOverridablePerStore(orderSettings, x => x.IsReOrderAllowed, model.IsReOrderAllowed_OverrideForStore, storeScope, false);
                 _settingService.SaveSettingOverridablePerStore(orderSettings, x => x.MinOrderSubtotalAmount, model.MinOrderSubtotalAmount_OverrideForStore, storeScope, false);
@@ -1152,15 +1166,18 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSettingOverridablePerStore(orderSettings, x => x.ReturnRequestNumberMask, model.ReturnRequestNumberMask_OverrideForStore, storeScope, false);
                 _settingService.SaveSettingOverridablePerStore(orderSettings, x => x.NumberOfDaysReturnRequestAvailable, model.NumberOfDaysReturnRequestAvailable_OverrideForStore, storeScope, false);
                 _settingService.SaveSettingOverridablePerStore(orderSettings, x => x.CustomOrderNumberMask, model.CustomOrderNumberMask_OverrideForStore, storeScope, false);
+                _settingService.SaveSettingOverridablePerStore(orderSettings, x => x.InvoiceIdent, model.InvoiceIdent_OverrideForStore, storeScope, false);
+                _settingService.SaveSettingOverridablePerStore(orderSettings, x => x.InvoiceYear, model.InvoiceIdent_OverrideForStore, storeScope, false);
                 _settingService.SaveSettingOverridablePerStore(orderSettings, x => x.ExportWithProducts, model.ExportWithProducts_OverrideForStore, storeScope, false);
                 _settingService.SaveSetting(orderSettings, x => x.ActivateGiftCardsAfterCompletingOrder, 0, false);
                 _settingService.SaveSetting(orderSettings, x => x.DeactivateGiftCardsAfterCancellingOrder, 0, false);
                 _settingService.SaveSetting(orderSettings, x => x.DeactivateGiftCardsAfterDeletingOrder, 0, false);
                 _settingService.SaveSetting(orderSettings, x => x.CompleteOrderWhenDelivered, 0, false);
-               
+                _settingService.SaveSetting(orderSettings, x => x.AssignInvoiceIdentFromTask, 0, false);
+
                 //now clear settings cache
                 _settingService.ClearCache();
-                
+
                 //order ident
                 if (model.OrderIdent.HasValue)
                 {
@@ -1492,7 +1509,7 @@ namespace Nop.Admin.Controllers
             shoppingCartSettings = model.ToEntity(shoppingCartSettings);
 
             /* We do not clear cache after each setting update.
-             * This behavior can increase performance because cached settings will not be cleared 
+             * This behavior can increase performance because cached settings will not be cleared
              * and loaded from database after each update */
             _settingService.SaveSettingOverridablePerStore(shoppingCartSettings, x => x.DisplayCartAfterAddingProduct, model.DisplayCartAfterAddingProduct_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(shoppingCartSettings, x => x.DisplayWishlistAfterAddingProduct, model.DisplayWishlistAfterAddingProduct_OverrideForStore, storeScope, false);
@@ -1512,10 +1529,10 @@ namespace Nop.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(shoppingCartSettings, x => x.ShowProductImagesInMiniShoppingCart, model.ShowProductImagesInMiniShoppingCart_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(shoppingCartSettings, x => x.MiniShoppingCartProductNumber, model.MiniShoppingCartProductNumber_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(shoppingCartSettings, x => x.AllowCartItemEditing, model.AllowCartItemEditing_OverrideForStore, storeScope, false);
-            
+
             //now clear settings cache
             _settingService.ClearCache();
-            
+
 
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
@@ -1571,7 +1588,7 @@ namespace Nop.Admin.Controllers
             mediaSettings = model.ToEntity(mediaSettings);
 
             /* We do not clear cache after each setting update.
-             * This behavior can increase performance because cached settings will not be cleared 
+             * This behavior can increase performance because cached settings will not be cleared
              * and loaded from database after each update */
             _settingService.SaveSettingOverridablePerStore(mediaSettings, x => x.AvatarPictureSize, model.AvatarPictureSize_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(mediaSettings, x => x.ProductThumbPictureSize, model.ProductThumbPictureSize_OverrideForStore, storeScope, false);
@@ -1591,7 +1608,7 @@ namespace Nop.Admin.Controllers
 
             //now clear settings cache
             _settingService.ClearCache();
-            
+
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
@@ -1793,7 +1810,7 @@ namespace Nop.Admin.Controllers
                 model.SeoSettings.OpenGraphMetaTags_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.OpenGraphMetaTags, storeScope);
                 model.SeoSettings.CustomHeadTags_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.CustomHeadTags, storeScope);
             }
-            
+
             //security settings
             var securitySettings = _settingService.LoadSetting<SecuritySettings>(storeScope);
             model.SecuritySettings.EncryptionKey = securitySettings.EncryptionKey;
@@ -1901,7 +1918,7 @@ namespace Nop.Admin.Controllers
             commonSettings.SitemapIncludeProducts = model.StoreInformationSettings.SitemapIncludeProducts;
 
             /* We do not clear cache after each setting update.
-             * This behavior can increase performance because cached settings will not be cleared 
+             * This behavior can increase performance because cached settings will not be cleared
              * and loaded from database after each update */
 
             _settingService.SaveSettingOverridablePerStore(storeInformationSettings, x => x.StoreClosed, model.StoreInformationSettings.StoreClosed_OverrideForStore, storeScope, false);
@@ -1943,7 +1960,7 @@ namespace Nop.Admin.Controllers
             seoSettings.CustomHeadTags = model.SeoSettings.CustomHeadTags;
 
             /* We do not clear cache after each setting update.
-             * This behavior can increase performance because cached settings will not be cleared 
+             * This behavior can increase performance because cached settings will not be cleared
              * and loaded from database after each update */
             _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.PageTitleSeparator, model.SeoSettings.PageTitleSeparator_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.PageTitleSeoAdjustment, model.SeoSettings.PageTitleSeoAdjustment_OverrideForStore, storeScope, false);
@@ -1959,7 +1976,7 @@ namespace Nop.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.TwitterMetaTags, model.SeoSettings.TwitterMetaTags_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.OpenGraphMetaTags, model.SeoSettings.OpenGraphMetaTags_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.CustomHeadTags, model.SeoSettings.CustomHeadTags_OverrideForStore, storeScope, false);
-            
+
             //now clear settings cache
             _settingService.ClearCache();
 
@@ -1999,15 +2016,15 @@ namespace Nop.Admin.Controllers
             pdfSettings.InvoiceFooterTextColumn1 = model.PdfSettings.InvoiceFooterTextColumn1;
             pdfSettings.InvoiceFooterTextColumn2 = model.PdfSettings.InvoiceFooterTextColumn2;
             /* We do not clear cache after each setting update.
-             * This behavior can increase performance because cached settings will not be cleared 
+             * This behavior can increase performance because cached settings will not be cleared
              * and loaded from database after each update */
-            
+
             _settingService.SaveSettingOverridablePerStore(pdfSettings, x => x.LetterPageSizeEnabled, model.PdfSettings.LetterPageSizeEnabled_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(pdfSettings, x => x.LogoPictureId, model.PdfSettings.LogoPictureId_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(pdfSettings, x => x.DisablePdfInvoicesForPendingOrders, model.PdfSettings.DisablePdfInvoicesForPendingOrders_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(pdfSettings, x => x.InvoiceFooterTextColumn1, model.PdfSettings.InvoiceFooterTextColumn1_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(pdfSettings, x => x.InvoiceFooterTextColumn2, model.PdfSettings.InvoiceFooterTextColumn2_OverrideForStore, storeScope, false);
-           
+
             //now clear settings cache
             _settingService.ClearCache();
 
@@ -2062,7 +2079,7 @@ namespace Nop.Admin.Controllers
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
-            
+
             return RedirectToAction("GeneralCommon");
         }
         [HttpPost, ActionName("GeneralCommon")]
@@ -2182,7 +2199,7 @@ namespace Nop.Admin.Controllers
             {
                 ErrorNotification(exc);
             }
-            
+
             return RedirectToAction("GeneralCommon");
         }
 
@@ -2194,13 +2211,13 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
-            
+
             return View();
         }
         [HttpPost]
         //do not validate request token (XSRF)
         //for some reasons it does not work with "filtering" support
-        [AdminAntiForgery(true)] 
+        [AdminAntiForgery(true)]
         public virtual ActionResult AllSettings(DataSourceRequest command, AllSettingsListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
@@ -2322,7 +2339,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        //action displaying notification (warning) to a store owner about a lot of traffic 
+        //action displaying notification (warning) to a store owner about a lot of traffic
         //between the Redis server and the application when LoadAllLocaleRecordsOnStartup seetting is set
         [ValidateInput(false)]
         public ActionResult RedisCacheHighTrafficWarning(bool loadAllLocaleRecordsOnStartup)

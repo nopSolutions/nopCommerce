@@ -202,6 +202,8 @@ namespace Nop.Admin.Models.Customers
         public bool DisplayRewardPointsHistory { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsValue")]
         public int AddRewardPointsValue { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsValuePurchased")]
+        public int AddRewardPointsValuePurchased { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsMessage")]
         [AllowHtml]
         public string AddRewardPointsMessage { get; set; }
@@ -209,6 +211,7 @@ namespace Nop.Admin.Models.Customers
         public int AddRewardPointsStoreId { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsStore")]
         public IList<SelectListItem> RewardPointsAvailableStores { get; set; }
+
 
 
 
@@ -254,6 +257,10 @@ namespace Nop.Admin.Models.Customers
 
             [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.PointsBalance")]
             public string PointsBalance { get; set; }
+            [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.PointsPurchased")]
+            public int PointsPurchased { get; set; }
+            [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.PointsBalancePurchased")]
+            public string PointsBalancePurchased { get; set; }
 
             [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Message")]
             [AllowHtml]
@@ -309,6 +316,8 @@ namespace Nop.Admin.Models.Customers
 
             [NopResourceDisplayName("Admin.Customers.Customers.Orders.OrderTotal")]
             public string OrderTotal { get; set; }
+            [NopResourceDisplayName("Admin.Customers.Customers.Orders.OrderTotalAmountIncl")]
+            public string OrderTotalAmountIncl { get; set; }
 
             [NopResourceDisplayName("Admin.Customers.Customers.Orders.Store")]
             public string StoreName { get; set; }

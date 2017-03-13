@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Models.Common;
+using Nop.Web.Framework;
 
 namespace Nop.Web.Models.Order
 {
@@ -34,7 +35,7 @@ namespace Nop.Web.Models.Order
         public bool IsReOrderAllowed { get; set; }
 
         public bool IsReturnRequestAllowed { get; set; }
-        
+
         public bool IsShippable { get; set; }
         public bool PickUpInStore { get; set; }
         public AddressModel PickupAddress { get; set; }
@@ -55,7 +56,9 @@ namespace Nop.Web.Models.Order
         public string OrderSubtotal { get; set; }
         public string OrderSubTotalDiscount { get; set; }
         public string OrderShipping { get; set; }
+        public string OrderShippingNonTaxable { get; set; }
         public string PaymentMethodAdditionalFee { get; set; }
+        public string PaymentMethodAdditionalFeeNonTaxable { get; set; }
         public string CheckoutAttributeInfo { get; set; }
 
         public bool PricesIncludeTax { get; set; }
@@ -68,16 +71,29 @@ namespace Nop.Web.Models.Order
         public string OrderTotalDiscount { get; set; }
         public int RedeemedRewardPoints { get; set; }
         public string RedeemedRewardPointsAmount { get; set; }
+        public int RedeemedRewardPointsPurchased { get; set; }
+        public string RedeemedRewardPointsAmountPurchased { get; set; }
+        public bool EarnedRewardPointsAreTaxable { get; set; }
         public string OrderTotal { get; set; }
-        
+
         public IList<GiftCard> GiftCards { get; set; }
 
         public bool ShowSku { get; set; }
         public IList<OrderItemModel> Items { get; set; }
-        
-        public IList<OrderNote> OrderNotes { get; set; }
 
-		#region Nested Classes
+        public IList<OrderNote> OrderNotes { get; set; }
+        public bool includingTax { get; set; } //MF 26.11.16
+        public string InvoiceId { get; set; }
+        public DateTime? InvoiceDateUtc { get; set; }
+        public string OrderAmount { get; set; } //MF 08.12.16
+        public string OrderAmountIncl { get; set; } //MF 08.12.16
+        public string OrderTotalDiscountIncl { get; set; }
+        public string OrderTotalAmountIncl { get; set; }
+        public string EarnedRewardPointsBaseAmountIncl { get; set; }
+        public string EarnedRewardPointsBaseAmountExcl { get; set; }
+
+
+        #region Nested Classes
 
         public partial class OrderItemModel : BaseNopEntityModel
         {
@@ -91,16 +107,27 @@ namespace Nop.Web.Models.Order
             public int Quantity { get; set; }
             public string AttributeInfo { get; set; }
             public string RentalInfo { get; set; }
-
+            public string TaxRate { get; set; }
             //downloadable product properties
             public int DownloadId { get; set; }
             public int LicenseId { get; set; }
+            //reward points program
+            public bool ExcludeFromRewardPoints { get; set; }
         }
 
         public partial class TaxRate : BaseNopModel
         {
+            [NopResourceDisplayName("Order.TaxRateLine.TaxRate")]
             public string Rate { get; set; }
-            public string Value { get; set; }
+            [NopResourceDisplayName("Order.TaxRateLine.Amount")]
+            public string Amount { get; set; } // includes subtotal, shipping and payment fee
+            [NopResourceDisplayName("Order.TaxRateLine.DiscountAmount")]
+            public string DiscountAmount { get; set; }
+            [NopResourceDisplayName("Order.TaxRateLine.BaseAmount")]
+            public string BaseAmount { get; set; }
+            [NopResourceDisplayName("Order.TaxRateLine.TaxAmount")]
+            public string TaxAmount { get; set; }
+
         }
 
         public partial class GiftCard : BaseNopModel

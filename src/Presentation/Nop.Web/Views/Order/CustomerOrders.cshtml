@@ -129,7 +129,7 @@
                 </div>
             }
         }
-        
+
         @if (Model.Orders.Count > 0)
         {
             <div class="order-list">
@@ -142,6 +142,7 @@
                     <ul class="info">
                         <li>@T("Account.CustomerOrders.OrderStatus"): <span class="order-status @order.OrderStatusEnum.ToString().ToLowerInvariant()">@order.OrderStatus</span></li>
                         <li>@T("Account.CustomerOrders.OrderDate"): <span class="order-date">@order.CreatedOn.ToString()</span></li>
+                        <li>@T("Account.CustomerOrders.OrderTotalAmountIncl"): <span class="order-total-amount-incl">@order.OrderTotalAmountIncl</span></li>
                         <li>@T("Account.CustomerOrders.OrderTotal"): <span class="order-total">@order.OrderTotal</span></li>
                     </ul>
                     <div class="buttons">

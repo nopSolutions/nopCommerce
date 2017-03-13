@@ -411,7 +411,7 @@ namespace Nop.Services.Messages
         protected virtual string ProductListToHtmlTable(Order order, int languageId, int vendorId)
         {
             string result;
-
+            var includingTax = order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax;
             var language = _languageService.GetLanguageById(languageId);
 
             var sb = new StringBuilder();
@@ -488,7 +488,7 @@ namespace Nop.Services.Messages
                 sb.AppendLine("</td>");
 
                 string unitPriceStr;
-                if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
+                if (includingTax)
                 {
                     //including tax
                     var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
@@ -504,8 +504,8 @@ namespace Nop.Services.Messages
 
                 sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: center;\">{0}</td>", orderItem.Quantity));
 
-                string priceStr; 
-                if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
+                string priceStr;
+                if (includingTax)
                 {
                     //including tax
                     var priceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.PriceInclTax, order.CurrencyRate);
@@ -544,7 +544,7 @@ namespace Nop.Services.Messages
                 string cusSubTotal;
                 bool displaySubTotalDiscount = false;
                 string cusSubTotalDiscount = string.Empty;
-                if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal)
+                if (includingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal)
                 {
                     //including tax
 
@@ -578,19 +578,21 @@ namespace Nop.Services.Messages
                 //shipping, payment method fee
                 string cusShipTotal;
                 string cusPaymentMethodAdditionalFee;
-                var taxRates = new SortedDictionary<decimal, decimal>();
+                var taxRates = new SortedDictionary<decimal, TaxRateRec>();
                 string cusTaxTotal = string.Empty;
                 string cusDiscount = string.Empty;
-                string cusTotal; 
-                if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
+                string cusTotal;
+                string cusAmount;
+                string cusAmountIncl;
+                if (includingTax)
                 {
                     //including tax
 
                     //shipping
-                    var orderShippingInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingInclTax, order.CurrencyRate);
+                    var orderShippingInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingInclTax + order.OrderShippingNonTaxable, order.CurrencyRate);
                     cusShipTotal = _priceFormatter.FormatShippingPrice(orderShippingInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
                     //payment method additional fee
-                    var paymentMethodAdditionalFeeInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeInclTax, order.CurrencyRate);
+                    var paymentMethodAdditionalFeeInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeInclTax + order.PaymentMethodAdditionalFeeNonTaxable, order.CurrencyRate);
                     cusPaymentMethodAdditionalFee = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
                 }
                 else
@@ -598,23 +600,23 @@ namespace Nop.Services.Messages
                     //excluding tax
 
                     //shipping
-                    var orderShippingExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingExclTax, order.CurrencyRate);
+                    var orderShippingExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingExclTax + order.OrderShippingNonTaxable, order.CurrencyRate);
                     cusShipTotal = _priceFormatter.FormatShippingPrice(orderShippingExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
                     //payment method additional fee
-                    var paymentMethodAdditionalFeeExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeExclTax, order.CurrencyRate);
+                    var paymentMethodAdditionalFeeExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeExclTax + order.PaymentMethodAdditionalFeeNonTaxable, order.CurrencyRate);
                     cusPaymentMethodAdditionalFee = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
                 }
-
+                
                 //shipping
                 bool displayShipping = order.ShippingStatus != ShippingStatus.ShippingNotRequired;
 
                 //payment method fee
-                bool displayPaymentMethodFee = order.PaymentMethodAdditionalFeeExclTax > decimal.Zero;
+                bool displayPaymentMethodFee = order.PaymentMethodAdditionalFeeExclTax + order.PaymentMethodAdditionalFeeNonTaxable != decimal.Zero; //allow negative
 
                 //tax
                 bool displayTax = true;
                 bool displayTaxRates = true;
-                if (_taxSettings.HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
+                if (_taxSettings.HideTaxInOrderSummary && includingTax)
                 {
                     displayTax = false;
                     displayTaxRates = false;
@@ -628,9 +630,18 @@ namespace Nop.Services.Messages
                     }
                     else
                     {
-                        taxRates = new SortedDictionary<decimal, decimal>();
+                        taxRates = new SortedDictionary<decimal, TaxRateRec>();
                         foreach (var tr in order.TaxRatesDictionary)
-                            taxRates.Add(tr.Key, _currencyService.ConvertCurrency(tr.Value, order.CurrencyRate));
+                            //taxRates.Add(tr.Key, _currencyService.ConvertCurrency(tr.Value, order.CurrencyRate));
+                            taxRates.Add(tr.Key, new TaxRateRec()
+                            {
+                                TaxRate = tr.Key,
+                                Amount = _currencyService.ConvertCurrency(tr.Value.Amount, order.CurrencyRate),
+                                DiscountAmount = _currencyService.ConvertCurrency(tr.Value.DiscountAmount, order.CurrencyRate),
+                                BaseAmount = _currencyService.ConvertCurrency(tr.Value.BaseAmount, order.CurrencyRate),
+                                TaxAmount = _currencyService.ConvertCurrency(tr.Value.TaxAmount, order.CurrencyRate),
+                                AmountIncludingTax = _currencyService.ConvertCurrency(tr.Value.AmountIncludingTax, order.CurrencyRate)
+                            });
 
                         displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
                         displayTax = !displayTaxRates;
@@ -654,8 +665,11 @@ namespace Nop.Services.Messages
                 var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
                 cusTotal = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, language);
 
+                var orderAmountInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderAmount, order.CurrencyRate);
+                cusAmount = _priceFormatter.FormatPrice(orderAmountInCustomerCurrency, true, order.CustomerCurrencyCode, false, language);
 
-
+                var orderAmountInclInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderAmountIncl, order.CurrencyRate);
+                cusAmountIncl = _priceFormatter.FormatPrice(orderAmountInclInCustomerCurrency, true, order.CustomerCurrencyCode, false, language);
 
                 //subtotal
                 sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", _templatesSettings.Color3, _localizationService.GetResource("Messages.Order.SubTotal", languageId), cusSubTotal));
@@ -680,25 +694,44 @@ namespace Nop.Services.Messages
                     sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", _templatesSettings.Color3, paymentMethodFeeTitle, cusPaymentMethodAdditionalFee));
                 }
 
+                //discount
+                if (displayDiscount)
+                {
+                    sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", _templatesSettings.Color3, _localizationService.GetResource("Messages.Order.TotalDiscount", languageId), cusDiscount));
+                }
+
+                //amount
+                if (includingTax)
+                {
+                    sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", _templatesSettings.Color3, _localizationService.GetResource("Messages.Order.OrderAmountIncl", languageId), cusAmountIncl));
+                }
+
                 //tax
                 if (displayTax)
                 {
-                    sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", _templatesSettings.Color3, _localizationService.GetResource("Messages.Order.Tax", languageId), cusTaxTotal));
+                    sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", _templatesSettings.Color3, _localizationService.GetResource(includingTax ? "Messages.Order.TaxIncl" : "Messages.Order.Tax", languageId), cusTaxTotal));
+                }
+
+                //amount
+                if (!includingTax)
+                {
+                    sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", _templatesSettings.Color3, _localizationService.GetResource("Messages.Order.OrderAmount", languageId), cusAmount));
                 }
                 if (displayTaxRates)
                 {
                     foreach (var item in taxRates)
                     {
                         string taxRate = String.Format(_localizationService.GetResource("Messages.Order.TaxRateLine"), _priceFormatter.FormatTaxRate(item.Key));
-                        string taxValue = _priceFormatter.FormatPrice(item.Value, true, order.CustomerCurrencyCode, false, language);
-                        sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", _templatesSettings.Color3, taxRate, taxValue));
-                    }
-                }
+                        string OrderAmount = _priceFormatter.FormatPrice(item.Value.Amount, true, order.CustomerCurrencyCode, false, language);
+                        string DiscountAmount = _priceFormatter.FormatPrice(item.Value.DiscountAmount, true, order.CustomerCurrencyCode, false, language);
+                        string Amount = _priceFormatter.FormatPrice(item.Value.BaseAmount, true, order.CustomerCurrencyCode, false, language);
+                        string TaxAmount = _priceFormatter.FormatPrice(item.Value.TaxAmount, true, order.CustomerCurrencyCode, false, language);
+                        string AmountIncludingVAT = _priceFormatter.FormatPrice(item.Value.AmountIncludingTax, true, order.CustomerCurrencyCode, false, language);
 
-                //discount
-                if (displayDiscount)
-                {
-                    sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", _templatesSettings.Color3, _localizationService.GetResource("Messages.Order.TotalDiscount", languageId), cusDiscount));
+                        //TODO: fill whole tax table
+                        sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>",
+                             _templatesSettings.Color3, taxRate, TaxAmount, OrderAmount, DiscountAmount, Amount, AmountIncludingVAT));
+                    }
                 }
 
                 //gift cards
@@ -713,8 +746,8 @@ namespace Nop.Services.Messages
                 //reward points
                 if (order.RedeemedRewardPointsEntry != null)
                 {
-                    string rpTitle = string.Format(_localizationService.GetResource("Messages.Order.RewardPoints", languageId), -order.RedeemedRewardPointsEntry.Points);
-                    string rpAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(order.RedeemedRewardPointsEntry.UsedAmount, order.CurrencyRate)), true, order.CustomerCurrencyCode, false, language);
+                    string rpTitle = string.Format(_localizationService.GetResource("Messages.Order.RewardPoints", languageId), - (order.RedeemedRewardPointsEntry.Points + order.RedeemedRewardPointsEntry.PointsPurchased));
+                    string rpAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(order.RedeemedRewardPointsEntry.UsedAmount + order.RedeemedRewardPointsEntry.UsedAmountPurchased, order.CurrencyRate)), true, order.CustomerCurrencyCode, false, language);
                     sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", _templatesSettings.Color3, rpTitle, rpAmount));
                 }
 

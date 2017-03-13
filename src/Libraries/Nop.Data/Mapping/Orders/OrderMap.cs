@@ -15,10 +15,17 @@ namespace Nop.Data.Mapping.Orders
             this.Property(o => o.OrderSubTotalDiscountExclTax).HasPrecision(18, 4);
             this.Property(o => o.OrderShippingInclTax).HasPrecision(18, 4);
             this.Property(o => o.OrderShippingExclTax).HasPrecision(18, 4);
+            this.Property(o => o.OrderShippingNonTaxable).HasPrecision(18, 4);
             this.Property(o => o.PaymentMethodAdditionalFeeInclTax).HasPrecision(18, 4);
             this.Property(o => o.PaymentMethodAdditionalFeeExclTax).HasPrecision(18, 4);
+            this.Property(o => o.PaymentMethodAdditionalFeeNonTaxable).HasPrecision(18, 4);
             this.Property(o => o.OrderTax).HasPrecision(18, 4);
             this.Property(o => o.OrderDiscount).HasPrecision(18, 4);
+            this.Property(o => o.OrderAmount).HasPrecision(18, 4); //MF 09.12.16
+            this.Property(o => o.OrderAmountIncl).HasPrecision(18, 4); //MF 09.12.16
+            this.Property(o => o.OrderDiscountIncl).HasPrecision(18, 4);
+            this.Property(o => o.EarnedRewardPointsBaseAmountIncl).HasPrecision(18, 4);
+            this.Property(o => o.EarnedRewardPointsBaseAmountExcl).HasPrecision(18, 4);
             this.Property(o => o.OrderTotal).HasPrecision(18, 4);
             this.Property(o => o.RefundedAmount).HasPrecision(18, 4);
             this.Property(o => o.CustomOrderNumber).IsRequired();
@@ -28,11 +35,12 @@ namespace Nop.Data.Mapping.Orders
             this.Ignore(o => o.ShippingStatus);
             this.Ignore(o => o.CustomerTaxDisplayType);
             this.Ignore(o => o.TaxRatesDictionary);
-            
+            this.Ignore(o => o.OrderTotalAmountIncl);
+
             this.HasRequired(o => o.Customer)
                 .WithMany()
                 .HasForeignKey(o => o.CustomerId);
-            
+
             //code below is commented because it causes some issues on big databases - http://www.nopcommerce.com/boards/t/11126/bug-version-20-command-confirm-takes-several-minutes-using-big-databases.aspx
             //this.HasRequired(o => o.BillingAddress).WithOptional().Map(x => x.MapKey("BillingAddressId")).WillCascadeOnDelete(false);
             //this.HasOptional(o => o.ShippingAddress).WithOptionalDependent().Map(x => x.MapKey("ShippingAddressId")).WillCascadeOnDelete(false);
