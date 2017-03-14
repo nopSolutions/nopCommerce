@@ -46,12 +46,12 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.Parent.None">
     <Value>[None]</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.HideShippingTotal">
-    <Value>Hide shipping total if shipping not required</Value>
+    <Value>Hide shipping total if shipping is not required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.HideShippingTotal.Hint">
-    <Value>Check if you want Hide ''Shipping total'' label if shipping not required.</Value>
+    <Value>Check if you want to hide ''Shipping total'' label when shipping is not required.</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.ApiAccountName">
     <Value></Value>
@@ -327,13 +327,13 @@ set @resources='
     <Value>Product review possible only after product purchasing</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSize.Positive">
-    <Value>Page size should be positive.</Value>
+    <Value>Page size should have a positive value.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSize.Positive">
-    <Value>Page size should be positive.</Value>
+    <Value>Page size should have a positive value.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.PageSize.Positive">
-    <Value>Page size should be positive.</Value>
+    <Value>Page size should have a positive value.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Tags.Placeholder">
     <Value>Enter tags ...</Value>
@@ -402,7 +402,7 @@ set @resources='
     <Value>Reward points activation</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ActivationDelay.Hint">
-    <Value>Specify how many days (hours) must elapse before earned points become active. Points earned by purchase cannot be redeemed until activated. For example, you may set the days before the points become available to 7. In this case, the points earned will be available for spending 7 days after the order gets chosen awarded status.</Value>
+    <Value>Specify how many days (hours) must elapse before earned points become active. Points earned by purchase cannot be redeemed until activated. For example, you may set the days before the points become available to 7. In this case, the points earned will be available for spending only 7 days after the purchase.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.ActivatedLater">
     <Value>The points will be activated on {0}</Value>
@@ -471,7 +471,7 @@ set @resources='
     <Value>Dates and ranges</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Hint">
-    <Value>List of delivery dates which will be available for choice in product details.</Value>
+    <Value>List of delivery dates which will be available on the product details page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges">
     <Value>Product availability ranges</Value>
@@ -507,7 +507,7 @@ set @resources='
     <Value>Please provide a name.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.Hint">
-    <Value>List of availability ranges which will be available for choice in product details.</Value>
+    <Value>List of availability range options which will be available in product details.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.ProductAvailabilityRanges.Updated">
     <Value>The product availability range has been updated successfully.</Value>
@@ -1026,10 +1026,10 @@ set @resources='
     <Value>Load products only from a specific manufacturer.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.CartsSharedBetweenStores">
-    <Value>Carts shared between storest</Value>
+    <Value>Carts shared between stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.CartsSharedBetweenStores.Hint">
-    <Value>Determines whether shopping carts (and wishlist) are shared between stores (in multi-store environment).</Value>
+    <Value>Determines whether shopping carts (and wishlists) are shared between stores (in multi-store environment).</Value>
   </LocaleResource>
   <LocaleResource Name="Account.EmailRevalidation">
     <Value>Email validation</Value>
@@ -1341,7 +1341,7 @@ set @resources='
     <Value>Consider associated products dimensions and weight</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ConsiderAssociatedProductsDimensions.Hint">
-    <Value>Check to consider associated products dimensions and weight on shipping, uncheck for example if the main product already includes them.</Value>
+    <Value>Check to consider associated products dimensions and weight on shipping, uncheck for example, if the main product already includes them.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.Comments.List.CreatedOnFrom">
     <Value>Created from</Value>
@@ -1509,7 +1509,7 @@ set @resources='
     <Value>{DD} - day of order creation date</Value>
   </LocaleResource>   
   <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.ID">
-    <Value>{ID} -Order identifier</Value>
+    <Value>{ID} - Order identifier</Value>
   </LocaleResource>     
   <LocaleResource Name="Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.MM">
     <Value>{MM} - month of order creation date</Value>
@@ -2146,7 +2146,73 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Nop.Web.Framework.Validators.MaxDecimal">
     <Value>The value is out of range. Maximum value is {0}.99</Value>
-  </LocaleResource>    
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.FreeShippingOverXEnabled.Hint">
+    <Value>Check to enable free shipping for all orders over ''X''. Set the value to X below.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.DisplayCartAfterAddingProduct">
+    <Value>Display cart after adding a product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.DisplayCartAfterAddingProduct.Hint">
+    <Value>If checked, a customer will be taken to the shopping cart page immediately after adding a product to their cart. If unchecked, a customer will stay on the same page from which the product was added to the cart.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.DisplayWishlistAfterAddingProduct">
+    <Value>Display wishlist after adding a product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.DisplayWishlistAfterAddingProduct.Hint">
+    <Value>If checked, a customer will be taken to the wishlist page immediately after adding a product to their wishlist. If unchecked, a customer will stay on the same page from which the product was added to the cart.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.ShowProductImagesOnWishList.Hint">
+    <Value>Determines whether product images should be displayed in customer wishlists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.BodyOverview.Hint">
+    <Value>Brief overview of this blog post. If specified, then it will be used instead of full body on the main blog page. HTML is supported.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.DelayBeforeSend.Hint">
+    <Value>A delay before sending the message.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.ShowOnHomePage.Hint">
+    <Value>Check if you want to show poll on the home page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.IsPreSelected.Hint">
+    <Value>Determines whether this attribute value is pre-selected for the customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Values.Fields.IsPreSelected.Hint">
+    <Value>Determines whether this attribute value is pre-selected for the customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Values.Fields.IsPreSelected.Hint">
+    <Value>Determines whether this attribute value is pre-selected for the address.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.IsPreSelected.Hint">
+    <Value>Determines whether this attribute value is pre-selected for the customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.IsPreSelected.Hint">
+    <Value>Determines whether this attribute value is pre-selected for the customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Choose">
+    <Value>Choose a product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendEmail.Body.Hint">
+    <Value>Enter the message.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.CardType.Hint">
+    <Value>The type of a card used in the transaction.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.CustomerIP.Hint">
+    <Value>Customer IP address from where an order has been placed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerRole.Hint">
+    <Value>Choose a customer role to which this email will be sent.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.SentTries.Required">
+    <Value>Enter send attempts.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.List.LoadNotSent.Hint">
+    <Value>Only load emails into queue that have not been sent yet.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Forum.TopicSubjectCannotBeEmpty">
+    <Value>Topic subject can not be empty</Value>
+  </LocaleResource>
 </Language>
 '
 
