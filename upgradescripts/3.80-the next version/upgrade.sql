@@ -1931,7 +1931,7 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Media.BlockTitle.Product">
     <Value>Product</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.News.BlockTitle.BlogComments">
+  <LocaleResource Name="Admin.Configuration.Settings.News.BlockTitle.NewsComments">
     <Value>News comments</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.News.BlockTitle.Common">

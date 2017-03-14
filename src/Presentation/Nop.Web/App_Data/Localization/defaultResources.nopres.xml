@@ -6663,7 +6663,7 @@
   <LocaleResource Name="Admin.Configuration.Settings.News.AllowNotRegisteredUsersToLeaveComments.Hint">
     <Value>Check to allow guests to leave comments.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.News.BlockTitle.BlogComments">
+  <LocaleResource Name="Admin.Configuration.Settings.News.BlockTitle.NewsComments">
     <Value>News comments</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.News.BlockTitle.Common">
