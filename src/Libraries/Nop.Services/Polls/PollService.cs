@@ -164,7 +164,7 @@ namespace Nop.Services.Polls
         }
 
         /// <summary>
-        /// Gets a value indicating whether customer already vited for this poll
+        /// Gets a value indicating whether customer already voted for this poll
         /// </summary>
         /// <param name="pollId">Poll identifier</param>
         /// <param name="customerId">Customer identifier</param>
