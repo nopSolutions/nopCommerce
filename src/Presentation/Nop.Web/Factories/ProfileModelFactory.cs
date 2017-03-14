@@ -17,8 +17,13 @@ using Nop.Web.Models.Profile;
 
 namespace Nop.Web.Factories
 {
+    /// <summary>
+    /// Represents the profile model factory
+    /// </summary>
     public partial class ProfileModelFactory : IProfileModelFactory
     {
+        #region Fields
+
         private readonly IForumService _forumService;
         private readonly ILocalizationService _localizationService;
         private readonly IPictureService _pictureService;
@@ -27,6 +32,10 @@ namespace Nop.Web.Factories
         private readonly ForumSettings _forumSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly MediaSettings _mediaSettings;
+
+        #endregion
+
+        #region Ctor
 
         public ProfileModelFactory(IForumService forumService,
             ILocalizationService localizationService,
@@ -47,6 +56,16 @@ namespace Nop.Web.Factories
             this._mediaSettings = mediaSettings;
         }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Prepare the profile index model
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="page">Number of posts page; pass null to disable paging</param>
+        /// <returns>Profile index model</returns>
         public virtual ProfileIndexModel PrepareProfileIndexModel(Customer customer, int? page)
         {
             if (customer == null)
@@ -75,6 +94,11 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the profile info model
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Profile info model</returns>
         public virtual ProfileInfoModel PrepareProfileInfoModel(Customer customer)
         {
             if (customer == null)
@@ -163,6 +187,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the profile posts model
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="page">Number of posts page</param>
+        /// <returns>Profile posts model</returns>
         public virtual ProfilePostsModel PrepareProfilePostsModel(Customer customer, int page)
         {
             if (customer == null)
@@ -220,5 +250,7 @@ namespace Nop.Web.Factories
 
             return model;
         }
+
+        #endregion
     }
 }

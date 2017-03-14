@@ -22,6 +22,9 @@ using Nop.Web.Models.Order;
 
 namespace Nop.Web.Factories
 {
+    /// <summary>
+    /// Represents the order model factory
+    /// </summary>
     public partial class OrderModelFactory : IOrderModelFactory
     {
         #region Fields
@@ -109,6 +112,10 @@ namespace Nop.Web.Factories
 
         #region Methods
 
+        /// <summary>
+        /// Prepare the customer order list model
+        /// </summary>
+        /// <returns>Customer order list model</returns>
         public virtual CustomerOrderListModel PrepareCustomerOrderListModel()
         {
             var model = new CustomerOrderListModel();
@@ -157,6 +164,11 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the order details model
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>Order details model</returns>
         public virtual OrderDetailsModel PrepareOrderDetailsModel(Order order)
         {
             if (order == null)
@@ -424,6 +436,11 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the shipment details model
+        /// </summary>
+        /// <param name="shipment">Shipment</param>
+        /// <returns>Shipment details model</returns>
         public virtual ShipmentDetailsModel PrepareShipmentDetailsModel(Shipment shipment)
         {
             if (shipment == null)
@@ -504,6 +521,11 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the customer reward points model
+        /// </summary>
+        /// <param name="page">Number of items page; pass null to load the first page</param>
+        /// <returns>Customer reward points model</returns>
         public virtual CustomerRewardPointsModel PrepareCustomerRewardPoints(int? page)
         {
             var customer = _workContext.CurrentCustomer;

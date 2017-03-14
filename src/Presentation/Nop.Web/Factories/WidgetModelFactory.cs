@@ -9,6 +9,9 @@ using Nop.Web.Models.Cms;
 
 namespace Nop.Web.Factories
 {
+    /// <summary>
+    /// Represents the widget model factory
+    /// </summary>
     public partial class WidgetModelFactory : IWidgetModelFactory
     {
 		#region Fields
@@ -40,6 +43,12 @@ namespace Nop.Web.Factories
 
         #region Methods
 
+        /// <summary>
+        /// Get the render widget models
+        /// </summary>
+        /// <param name="widgetZone">Name of widget zone</param>
+        /// <param name="additionalData">Additional data object</param>
+        /// <returns>List of the render widget models</returns>
         public virtual List<RenderWidgetModel> GetRenderWidgetModels(string widgetZone, object additionalData = null)
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.WIDGET_MODEL_KEY,

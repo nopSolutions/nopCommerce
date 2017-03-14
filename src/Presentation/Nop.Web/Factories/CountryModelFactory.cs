@@ -8,6 +8,9 @@ using Nop.Web.Infrastructure.Cache;
 
 namespace Nop.Web.Factories
 {
+    /// <summary>
+    /// Represents the country model factory
+    /// </summary>
     public partial class CountryModelFactory : ICountryModelFactory
     {
 		#region Fields
@@ -39,6 +42,12 @@ namespace Nop.Web.Factories
 
         #region Methods
 
+        /// <summary>
+        /// Get states and provinces by country identifier
+        /// </summary>
+        /// <param name="countryId">Country identifier</param>
+        /// <param name="addSelectStateItem">Whether to add "Select state" item to list of states</param>
+        /// <returns>List of identifiers and names of states and provinces</returns>
         public virtual dynamic GetStatesByCountryId(string countryId, bool addSelectStateItem)
         {
             if (String.IsNullOrEmpty(countryId))

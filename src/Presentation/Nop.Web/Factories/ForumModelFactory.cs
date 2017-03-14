@@ -21,6 +21,9 @@ using Nop.Web.Models.Common;
 
 namespace Nop.Web.Factories
 {
+    /// <summary>
+    /// Represents the forum model factory
+    /// </summary>
     public partial class ForumModelFactory : IForumModelFactory
     {
         #region Fields
@@ -64,6 +67,10 @@ namespace Nop.Web.Factories
 
         #region Utilities
 
+        /// <summary>
+        /// Get the list of forum topic types
+        /// </summary>
+        /// <returns>Collection of the select list item</returns>
         protected virtual IEnumerable<SelectListItem> ForumTopicTypesList()
         {
             var list = new List<SelectListItem>();
@@ -89,6 +96,10 @@ namespace Nop.Web.Factories
             return list;
         }
 
+        /// <summary>
+        /// Get the list of forum groups
+        /// </summary>
+        /// <returns>Collection of the select list item</returns>
         protected virtual IEnumerable<SelectListItem> ForumGroupsForumsList()
         {
             var forumsList = new List<SelectListItem>();
@@ -114,6 +125,11 @@ namespace Nop.Web.Factories
 
         #region Methods
 
+        /// <summary>
+        /// Prepare the forum topic row model
+        /// </summary>
+        /// <param name="topic">Forum topic</param>
+        /// <returns>Forum topic row model</returns>
         public virtual ForumTopicRowModel PrepareForumTopicRowModel(ForumTopic topic)
         {
             if (topic == null)
@@ -142,6 +158,11 @@ namespace Nop.Web.Factories
             return topicModel;
         }
 
+        /// <summary>
+        /// Prepare the forum row model
+        /// </summary>
+        /// <param name="forum">Forum</param>
+        /// <returns>Forum row model</returns>
         public virtual ForumRowModel PrepareForumRowModel(Forum forum)
         {
             if (forum == null)
@@ -160,6 +181,11 @@ namespace Nop.Web.Factories
             return forumModel;
         }
 
+        /// <summary>
+        /// Prepare the forum group model
+        /// </summary>
+        /// <param name="forum">Forum group</param>
+        /// <returns>Forum group model</returns>
         public virtual ForumGroupModel PrepareForumGroupModel(ForumGroup forumGroup)
         {
             if (forumGroup == null)
@@ -180,6 +206,10 @@ namespace Nop.Web.Factories
             return forumGroupModel;
         }
 
+        /// <summary>
+        /// Prepare the boards index model
+        /// </summary>
+        /// <returns>Boards index model</returns>
         public virtual BoardsIndexModel PrepareBoardsIndexModel()
         {
             var model = new BoardsIndexModel();
@@ -193,6 +223,10 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the active discussions model
+        /// </summary>
+        /// <returns>Active discussions model</returns>
         public virtual ActiveDiscussionsModel PrepareActiveDiscussionsModel()
         {
             var model = new ActiveDiscussionsModel()
@@ -213,6 +247,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the active discussions model
+        /// </summary>
+        /// <param name="forumId">Forum identifier</param>
+        /// <param name="page">Number of forum topics page</param>
+        /// <returns>Active discussions model</returns>
         public virtual ActiveDiscussionsModel PrepareActiveDiscussionsModel(int forumId, int page)
         {
             var model = new ActiveDiscussionsModel
@@ -238,6 +278,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the forum page model
+        /// </summary>
+        /// <param name="forum">Forum</param>
+        /// <param name="page">Number of forum topics page</param>
+        /// <returns>Forum page model</returns>
         public virtual ForumPageModel PrepareForumPageModel(Forum forum, int page)
         {
             if (forum == null)
@@ -280,6 +326,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the forum topic page model
+        /// </summary>
+        /// <param name="forumTopic">Forum topic</param>
+        /// <param name="page">Number of forum posts page</param>
+        /// <returns>Forum topic page model</returns>
         public virtual ForumTopicPageModel PrepareForumTopicPageModel(ForumTopic forumTopic, int page)
         {
             if (forumTopic == null)
@@ -377,6 +429,11 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the topic move model
+        /// </summary>
+        /// <param name="forumTopic">Forum topic</param>
+        /// <returns>Topic move model</returns>
         public virtual TopicMoveModel PrepareTopicMove(ForumTopic forumTopic)
         {
             if (forumTopic == null)
@@ -393,6 +450,11 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the forum topic create model
+        /// </summary>
+        /// <param name="forum">Forum</param>
+        /// <param name="model">Edit forum topic model</param>
         public virtual void PrepareTopicCreateModel(Forum forum, EditForumTopicModel model)
         {
             if (forum == null)
@@ -411,6 +473,12 @@ namespace Nop.Web.Factories
             model.IsCustomerAllowedToSubscribe = _forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer);
         }
 
+        /// <summary>
+        /// Prepare the forum topic edit model
+        /// </summary>
+        /// <param name="forumTopic">Forum topic</param>
+        /// <param name="model">Edit forum topic model</param>
+        /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
         public virtual void PrepareTopicEditModel(ForumTopic forumTopic, EditForumTopicModel model, bool excludeProperties)
         {
             if (forumTopic == null)
@@ -450,6 +518,13 @@ namespace Nop.Web.Factories
             }
         }
 
+        /// <summary>
+        /// Prepare the forum post create model
+        /// </summary>
+        /// <param name="forumTopic">Forum topic</param>
+        /// <param name="quote">Identifier of the quoted post; pass null to load the empty text</param>
+        /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
+        /// <returns>Edit forum post model</returns>
         public virtual EditForumPostModel PreparePostCreateModel(ForumTopic forumTopic, int? quote, bool excludeProperties)
         {
             if (forumTopic == null)
@@ -506,6 +581,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the forum post edit model
+        /// </summary>
+        /// <param name="forumPost">Forum post</param>
+        /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
+        /// <returns>Edit forum post model</returns>
         public virtual EditForumPostModel PreparePostEditModel(ForumPost forumPost, bool excludeProperties)
         {
             if (forumPost == null)
@@ -545,6 +626,16 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the search model
+        /// </summary>
+        /// <param name="searchterms">Search terms</param>
+        /// <param name="adv">Whether to use the advanced search</param>
+        /// <param name="forumId">Forum identifier</param>
+        /// <param name="within">String representation of int value of ForumSearchType</param>
+        /// <param name="limitDays">Limit by the last number days; 0 to load all topics</param>
+        /// <param name="page">Number of items page</param>
+        /// <returns>Search model</returns>
         public virtual SearchModel PrepareSearchModel(string searchterms, bool? adv, string forumId,
             string within, string limitDays, int page)
         {
@@ -726,6 +817,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the last post model
+        /// </summary>
+        /// <param name="forumPost">Forum post</param>
+        /// <param name="showTopic">Whether to show topic</param>
+        /// <returns>Last post model</returns>
         public virtual LastPostModel PrepareLastPostModel(ForumPost forumPost, bool showTopic)
         {
             var model = new LastPostModel();
@@ -751,6 +848,13 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the forum breadcrumb model
+        /// </summary>
+        /// <param name="forumGroupId">Forum group identifier; pass null to load nothing</param>
+        /// <param name="forumId">Forum identifier; pass null to load breadcrumbs up to forum group</param>
+        /// <param name="forumTopicId">Forum topic identifier; pass null to load breadcrumbs up to forum</param>
+        /// <returns>Forum breadcrumb model</returns>
         public virtual ForumBreadcrumbModel PrepareForumBreadcrumbModel(int? forumGroupId, int? forumId, int? forumTopicId)
         {
             var model = new ForumBreadcrumbModel();
@@ -785,7 +889,12 @@ namespace Nop.Web.Factories
 
             return model;
         }
-        
+
+        /// <summary>
+        /// Prepare the customer forum subscriptions model
+        /// </summary>
+        /// <param name="page">Number of items page; pass null to load the first page</param>
+        /// <returns>customer forum subscriptions model</returns>
         public virtual CustomerForumSubscriptionsModel PrepareCustomerForumSubscriptionsModel(int? page)
         {
             int pageIndex = 0;

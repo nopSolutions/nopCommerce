@@ -36,6 +36,9 @@ using Nop.Web.Models.ShoppingCart;
 
 namespace Nop.Web.Factories
 {
+    /// <summary>
+    /// Represents the shopping cart model factory
+    /// </summary>
     public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
     {
         #region Fields
@@ -166,7 +169,12 @@ namespace Nop.Web.Factories
         #endregion
 
         #region Utilities
-        
+
+        /// <summary>
+        /// Prepare the checkout attribute models
+        /// </summary>
+        /// <param name="cart">List of the shopping cart item</param>
+        /// <returns>List of the checkout attribute model</returns>
         protected virtual IList<ShoppingCartModel.CheckoutAttributeModel> PrepareCheckoutAttributeModels(IList<ShoppingCartItem> cart)
         {
             if (cart == null)
@@ -307,6 +315,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the estimate shipping model
+        /// </summary>
+        /// <param name="cart">List of the shopping cart item</param>
+        /// <param name="setEstimateShippingDefaultAddress">Whether to use customer default shipping address for estimating</param>
+        /// <returns>Estimate shipping model</returns>
         protected virtual EstimateShippingModel PrepareEstimateShippingModel(IList<ShoppingCartItem> cart, bool setEstimateShippingDefaultAddress = true)
         {
             if (cart == null)
@@ -369,6 +383,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the shopping cart item model
+        /// </summary>
+        /// <param name="cart">List of the shopping cart item</param>
+        /// <param name="sci">Shopping cart item</param>
+        /// <returns>Shopping cart item model</returns>
         protected virtual ShoppingCartModel.ShoppingCartItemModel PrepareShoppingCartItemModel(IList<ShoppingCartItem> cart, ShoppingCartItem sci)
         {
             if (cart == null)
@@ -502,6 +522,12 @@ namespace Nop.Web.Factories
             return cartItemModel;
         }
 
+        /// <summary>
+        /// Prepare the wishlist item model
+        /// </summary>
+        /// <param name="cart">List of the shopping cart item</param>
+        /// <param name="sci">Shopping cart item</param>
+        /// <returns>Shopping cart item model</returns>
         protected virtual WishlistModel.ShoppingCartItemModel PrepareWishlistItemModel(IList<ShoppingCartItem> cart, ShoppingCartItem sci)
         {
             if (cart == null)
@@ -633,6 +659,11 @@ namespace Nop.Web.Factories
             return cartItemModel;
         }
 
+        /// <summary>
+        /// Prepare the order review data model
+        /// </summary>
+        /// <param name="cart">List of the shopping cart item</param>
+        /// <returns>Order review data model</returns>
         protected virtual ShoppingCartModel.OrderReviewDataModel PrepareOrderReviewDataModel(IList<ShoppingCartItem> cart)
         {
             if (cart == null)
@@ -709,6 +740,14 @@ namespace Nop.Web.Factories
 
         #region Methods
 
+        /// <summary>
+        /// Prepare the cart item picture model
+        /// </summary>
+        /// <param name="sci">Shopping cart item</param>
+        /// <param name="pictureSize">Picture size</param>
+        /// <param name="showDefaultPicture">Whether to show the default picture</param>
+        /// <param name="productName">Product name</param>
+        /// <returns>Picture model</returns>
         public virtual PictureModel PrepareCartItemPictureModel(ShoppingCartItem sci, int pictureSize, bool showDefaultPicture, string productName)
         {
             var pictureCacheKey = string.Format(ModelCacheEventConsumer.CART_PICTURE_MODEL_KEY, sci.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
@@ -728,7 +767,18 @@ namespace Nop.Web.Factories
             });
             return model;
         }
-        
+
+        /// <summary>
+        /// Prepare the shopping cart model
+        /// </summary>
+        /// <param name="model">Shopping cart model</param>
+        /// <param name="cart">List of the shopping cart item</param>
+        /// <param name="isEditable">Whether model is editable</param>
+        /// <param name="validateCheckoutAttributes">Whether to validate checkout attributes</param>
+        /// <param name="prepareEstimateShippingIfEnabled">Whether to prepare estimate shipping model</param>
+        /// <param name="setEstimateShippingDefaultAddress">Whether to use customer default shipping address for estimating</param>
+        /// <param name="prepareAndDisplayOrderReviewData">Whether to prepare and display order review data</param>
+        /// <returns>Shopping cart model</returns>
         public virtual ShoppingCartModel PrepareShoppingCartModel(ShoppingCartModel model, 
             IList<ShoppingCartItem> cart, bool isEditable = true, 
             bool validateCheckoutAttributes = false, 
@@ -840,6 +890,13 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the wishlist model
+        /// </summary>
+        /// <param name="model">Wishlist model</param>
+        /// <param name="cart">List of the shopping cart item</param>
+        /// <param name="isEditable">Whether model is editable</param>
+        /// <returns>Wishlist model</returns>
         public virtual WishlistModel PrepareWishlistModel(WishlistModel model, IList<ShoppingCartItem> cart, bool isEditable = true)
         {
             if (cart == null)
@@ -878,6 +935,10 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the mini shopping cart model
+        /// </summary>
+        /// <returns>Mini shopping cart model</returns>
         public virtual MiniShoppingCartModel PrepareMiniShoppingCartModel()
         {
             var model = new MiniShoppingCartModel
@@ -981,6 +1042,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the order totals model
+        /// </summary>
+        /// <param name="cart">List of the shopping cart item</param>
+        /// <param name="isEditable">Whether model is editable</param>
+        /// <returns>Order totals model</returns>
         public virtual OrderTotalsModel PrepareOrderTotalsModel(IList<ShoppingCartItem> cart, bool isEditable)
         {
             var model = new OrderTotalsModel();
@@ -1147,7 +1214,15 @@ namespace Nop.Web.Factories
 
             return model;
         }
-        
+
+        /// <summary>
+        /// Prepare the estimate shipping result model
+        /// </summary>
+        /// <param name="cart">List of the shopping cart item</param>
+        /// <param name="countryId">Country identifier</param>
+        /// <param name="stateProvinceId">State or province identifier</param>
+        /// <param name="zipPostalCode">Zip postal code</param>
+        /// <returns>Estimate shipping result model</returns>
         public virtual EstimateShippingResultModel PrepareEstimateShippingResultModel(IList<ShoppingCartItem> cart, int? countryId, int? stateProvinceId, string zipPostalCode)
         {
             var model = new EstimateShippingResultModel();
@@ -1223,7 +1298,13 @@ namespace Nop.Web.Factories
 
             return model;
         }
-        
+
+        /// <summary>
+        /// Prepare the wishlist email a friend model
+        /// </summary>
+        /// <param name="model">Wishlist email a friend model</param>
+        /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
+        /// <returns>Wishlist email a friend model</returns>
         public virtual WishlistEmailAFriendModel PrepareWishlistEmailAFriendModel(WishlistEmailAFriendModel model, bool excludeProperties)
         {
             if (model == null)

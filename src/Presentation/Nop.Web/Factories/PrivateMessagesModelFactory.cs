@@ -11,6 +11,9 @@ using Nop.Web.Models.PrivateMessages;
 
 namespace Nop.Web.Factories
 {
+    /// <summary>
+    /// Represents the private message model factory
+    /// </summary>
     public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
     {
         #region Fields
@@ -45,6 +48,12 @@ namespace Nop.Web.Factories
 
         #region Methods
 
+        /// <summary>
+        /// Prepare the private message index model
+        /// </summary>
+        /// <param name="page">Number of items page; pass null to disable paging</param>
+        /// <param name="tab">Tab name</param>
+        /// <returns>Private message index model</returns>
         public virtual PrivateMessageIndexModel PreparePrivateMessageIndexModel(int? page, string tab)
         {
             int inboxPage = 0;
@@ -80,6 +89,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the inbox model
+        /// </summary>
+        /// <param name="page">Number of items page</param>
+        /// <param name="tab">Tab name</param>
+        /// <returns>Private message list model</returns>
         public virtual PrivateMessageListModel PrepareInboxModel(int page, string tab)
         {
             if (page > 0)
@@ -116,6 +131,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the sent model
+        /// </summary>
+        /// <param name="page">Number of items page</param>
+        /// <param name="tab">Tab name</param>
+        /// <returns>Private message list model</returns>
         public virtual PrivateMessageListModel PrepareSentModel(int page, string tab)
         {
             if (page > 0)
@@ -152,6 +173,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the send private message model
+        /// </summary>
+        /// <param name="customerTo">Customer, recipient of the message</param>
+        /// <param name="replyToPM">Private message, pass if reply to a previous message is need</param>
+        /// <returns>Send private message model</returns>
         public virtual SendPrivateMessageModel PrepareSendPrivateMessageModel(Customer customerTo, PrivateMessage replyToPM)
         {
             if (customerTo == null)
@@ -175,6 +202,11 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the private message model
+        /// </summary>
+        /// <param name="pm">Private message</param>
+        /// <returns>Private message model</returns>
         public virtual PrivateMessageModel PreparePrivateMessageModel(PrivateMessage pm)
         {
             if (pm == null)
