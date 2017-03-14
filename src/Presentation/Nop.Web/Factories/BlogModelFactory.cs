@@ -18,6 +18,9 @@ using Nop.Web.Models.Blogs;
 
 namespace Nop.Web.Factories
 {
+    /// <summary>
+    /// Represents the blog model factory
+    /// </summary>
     public partial class BlogModelFactory : IBlogModelFactory
     {
         #region Fields
@@ -65,6 +68,11 @@ namespace Nop.Web.Factories
 
         #region Methods
 
+        /// <summary>
+        /// Prepare blog comment model
+        /// </summary>
+        /// <param name="blogComment">Blog comment entity</param>
+        /// <returns>Blog comment model</returns>
         public virtual BlogCommentModel PrepareBlogPostCommentModel(BlogComment blogComment)
         {
             if (blogComment == null)
@@ -91,6 +99,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare blog post model
+        /// </summary>
+        /// <param name="model">Blog post model</param>
+        /// <param name="blogPost">Blog post entity</param>
+        /// <param name="prepareComments">Whether to prepare blog comments</param>
         public virtual void PrepareBlogPostModel(BlogPostModel model, BlogPost blogPost, bool prepareComments)
         {
             if (model == null)
@@ -131,6 +145,11 @@ namespace Nop.Web.Factories
             }
         }
 
+        /// <summary>
+        /// Prepare blog post list model
+        /// </summary>
+        /// <param name="command">Blog paging filtering model</param>
+        /// <returns>Blog post list model</returns>
         public virtual BlogPostListModel PrepareBlogPostListModel(BlogPagingFilteringModel command)
         {
             if (command == null)
@@ -174,6 +193,10 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare blog post tag list model
+        /// </summary>
+        /// <returns>Blog post tag list model</returns>
         public virtual BlogPostTagListModel PrepareBlogPostTagListModel()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_TAGS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
@@ -201,6 +224,10 @@ namespace Nop.Web.Factories
             return cachedModel;
         }
 
+        /// <summary>
+        /// Prepare blog post year models
+        /// </summary>
+        /// <returns>List of blog post year model</returns>
         public virtual List<BlogPostYearModel> PrepareBlogPostYearModel()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_MONTHS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);

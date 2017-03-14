@@ -33,6 +33,9 @@ using Nop.Web.Models.Media;
 
 namespace Nop.Web.Factories
 {
+    /// <summary>
+    /// Represents the product model factory
+    /// </summary>
     public partial class ProductModelFactory : IProductModelFactory
     {
         #region Fields
@@ -145,6 +148,11 @@ namespace Nop.Web.Factories
 
         #region Utilities
 
+        /// <summary>
+        /// Prepare the product review overview model
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>Product review overview model</returns>
         protected virtual ProductReviewOverviewModel PrepareProductReviewOverviewModel(Product product)
         {
             ProductReviewOverviewModel productReview;
@@ -182,6 +190,12 @@ namespace Nop.Web.Factories
             return productReview;
         }
 
+        /// <summary>
+        /// Prepare the product overview price model
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="forceRedirectionAfterAddingToCart">Whether to force redirection after adding to cart</param>
+        /// <returns>Product overview price model</returns>
         protected virtual ProductOverviewModel.ProductPriceModel PrepareProductOverviewPriceModel(Product product, bool forceRedirectionAfterAddingToCart = false)
         {
             if (product == null)
@@ -426,6 +440,12 @@ namespace Nop.Web.Factories
             return priceModel;
         }
 
+        /// <summary>
+        /// Prepare the product overview picture model
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="productThumbPictureSize">Product thumb picture size (longest side); pass null to use the default value of media settings</param>
+        /// <returns>Picture model</returns>
         protected virtual PictureModel PrepareProductOverviewPictureModel(Product product, int? productThumbPictureSize = null)
         {
             if (product == null)
@@ -466,6 +486,11 @@ namespace Nop.Web.Factories
             return defaultPictureModel;
         }
 
+        /// <summary>
+        /// Prepare the product breadcrumb model
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>Product breadcrumb model</returns>
         protected virtual ProductDetailsModel.ProductBreadcrumbModel PrepareProductBreadcrumbModel(Product product)
         {
             if (product == null)
@@ -508,6 +533,11 @@ namespace Nop.Web.Factories
             return cachedModel;
         }
 
+        /// <summary>
+        /// Prepare the product tag models
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>List of product tag model</returns>
         protected virtual IList<ProductTagModel> PrepareProductTagModels(Product product)
         {
             if (product == null)
@@ -530,6 +560,11 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the product price model
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>Product price model</returns>
         protected virtual ProductDetailsModel.ProductPriceModel PrepareProductPriceModel(Product product)
         {
             if (product == null)
@@ -606,6 +641,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the product add to cart model
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="updatecartitem">Updated shopping cart item</param>
+        /// <returns>Product add to cart model</returns>
         protected virtual ProductDetailsModel.AddToCartModel PrepareProductAddToCartModel(Product product, ShoppingCartItem updatecartitem)
         {
             if (product == null)
@@ -674,6 +715,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the product attribute models
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="updatecartitem">Updated shopping cart item</param>
+        /// <returns>List of product attribute model</returns>
         protected virtual IList<ProductDetailsModel.ProductAttributeModel> PrepareProductAttributeModels(Product product, ShoppingCartItem updatecartitem)
         {
             if (product == null)
@@ -890,6 +937,11 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the product tier price models
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>List of tier price model</returns>
         protected virtual IList<ProductDetailsModel.TierPriceModel> PrepareProductTierPriceModels(Product product)
         {
             if (product == null)
@@ -917,6 +969,11 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the product manufacturer models
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>List of manufacturer brief info model</returns>
         protected virtual IList<ManufacturerBriefInfoModel> PrepareProductManufacturerModels(Product product)
         {
             if (product == null)
@@ -946,6 +1003,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the product details picture model
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="isAssociatedProduct">Whether the product is associated</param>
+        /// <returns>Picture model for the default picture and list of picture models for all product pictures</returns>
         protected virtual dynamic PrepareProductDetailsPictureModel(Product product, bool isAssociatedProduct = false)
         {
             if (product == null)
@@ -1012,6 +1075,11 @@ namespace Nop.Web.Factories
 
         #region Methods
 
+        /// <summary>
+        /// Get the product template view path
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>View path</returns>
         public virtual string PrepareProductTemplateViewPath(Product product)
         {
             if (product == null)
@@ -1031,6 +1099,16 @@ namespace Nop.Web.Factories
             return productTemplateViewPath;
         }
 
+        /// <summary>
+        /// Prepare the product overview models
+        /// </summary>
+        /// <param name="products">Collection of products</param>
+        /// <param name="preparePriceModel">Whether to prepare the price model</param>
+        /// <param name="preparePictureModel">Whether to prepare the picture model</param>
+        /// <param name="productThumbPictureSize">Product thumb picture size (longest side); pass null to use the default value of media settings</param>
+        /// <param name="prepareSpecificationAttributes">Whether to prepare the specification attribute models</param>
+        /// <param name="forceRedirectionAfterAddingToCart">Whether to force redirection after adding to cart</param>
+        /// <returns>Collection of product overview model</returns>
         public virtual IEnumerable<ProductOverviewModel> PrepareProductOverviewModels(IEnumerable<Product> products,
             bool preparePriceModel = true, bool preparePictureModel = true,
             int? productThumbPictureSize = null, bool prepareSpecificationAttributes = false,
@@ -1082,6 +1160,13 @@ namespace Nop.Web.Factories
             return models;
         }
 
+        /// <summary>
+        /// Prepare the product details model
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="updatecartitem">Updated shopping cart item</param>
+        /// <param name="isAssociatedProduct">Whether the product is associated</param>
+        /// <returns>Product details model</returns>
         public virtual ProductDetailsModel PrepareProductDetailsModel(Product product,
             ShoppingCartItem updatecartitem = null, bool isAssociatedProduct = false)
         {
@@ -1284,6 +1369,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the product reviews model
+        /// </summary>
+        /// <param name="model">Product reviews model</param>
+        /// <param name="product">Product</param>
+        /// <returns>Product reviews model</returns>
         public virtual ProductReviewsModel PrepareProductReviewsModel(ProductReviewsModel model, Product product)
         {
             if (model == null)
@@ -1327,7 +1418,12 @@ namespace Nop.Web.Factories
 
             return model;
         }
-        
+
+        /// <summary>
+        /// Prepare the customer product reviews model
+        /// </summary>
+        /// <param name="page">Number of items page; pass null to load the first page</param>
+        /// <returns>Customer product reviews model</returns>
         public virtual CustomerProductReviewsModel PrepareCustomerProductReviewsModel(int? page)
         {
             var pageSize = _catalogSettings.ProductReviewsPageSizeOnAccountPage;
@@ -1389,6 +1485,13 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the product email a friend model
+        /// </summary>
+        /// <param name="model">Product email a friend model</param>
+        /// <param name="product">Product</param>
+        /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
+        /// <returns>product email a friend model</returns>
         public virtual ProductEmailAFriendModel PrepareProductEmailAFriendModel(ProductEmailAFriendModel model, Product product, bool excludeProperties)
         {
             if (model == null)
@@ -1409,6 +1512,11 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the product specification models
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>List of product specification model</returns>
         public virtual IList<ProductSpecificationModel> PrepareProductSpecificationModel(Product product)
         {
             if (product == null)

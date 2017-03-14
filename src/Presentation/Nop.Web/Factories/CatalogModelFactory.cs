@@ -132,7 +132,12 @@ namespace Nop.Web.Factories
         #endregion
 
         #region Utilities
-        
+
+        /// <summary>
+        /// Get child category identifiers
+        /// </summary>
+        /// <param name="parentCategoryId">Parent category identifier</param>
+        /// <returns>List of child category identifiers</returns>
         protected virtual List<int> GetChildCategoryIds(int parentCategoryId)
         {
             string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY, 
@@ -156,6 +161,11 @@ namespace Nop.Web.Factories
 
         #region Common
 
+        /// <summary>
+        /// Prepare sorting options
+        /// </summary>
+        /// <param name="pagingFilteringModel">Catalog paging filtering model</param>
+        /// <param name="command">Catalog paging filtering command</param>
         public virtual void PrepareSortingOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
         {
             if (pagingFilteringModel == null)
@@ -195,7 +205,12 @@ namespace Nop.Web.Factories
                 }
             }
         }
-        
+
+        /// <summary>
+        /// Prepare view modes
+        /// </summary>
+        /// <param name="pagingFilteringModel">Catalog paging filtering model</param>
+        /// <param name="command">Catalog paging filtering command</param>
         public virtual void PrepareViewModes(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
         {
             if (pagingFilteringModel == null)
@@ -230,7 +245,15 @@ namespace Nop.Web.Factories
             }
 
         }
-        
+
+        /// <summary>
+        /// Prepare page size options
+        /// </summary>
+        /// <param name="pagingFilteringModel">Catalog paging filtering model</param>
+        /// <param name="command">Catalog paging filtering command</param>
+        /// <param name="allowCustomersToSelectPageSize">Are customers allowed to select page size?</param>
+        /// <param name="pageSizeOptions">Page size options</param>
+        /// <param name="fixedPageSize">Fixed page size</param>
         public virtual void PreparePageSizeOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command,
             bool allowCustomersToSelectPageSize, string pageSizeOptions, int fixedPageSize)
         {
@@ -312,11 +335,17 @@ namespace Nop.Web.Factories
                 command.PageSize = fixedPageSize;
             }
         }
-        
+
         #endregion
 
         #region Categories
 
+        /// <summary>
+        /// Prepare category model
+        /// </summary>
+        /// <param name="category">Category</param>
+        /// <param name="command">Catalog paging filtering command</param>
+        /// <returns>Category model</returns>
         public virtual CategoryModel PrepareCategoryModel(Category category, CatalogPagingFilteringModel command)
         {
             if (category == null)
@@ -502,6 +531,11 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare category template view path
+        /// </summary>
+        /// <param name="templateId">Template identifier</param>
+        /// <returns>Category template view path</returns>
         public virtual string PrepareCategoryTemplateViewPath(int templateId)
         {
             var templateCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_TEMPLATE_MODEL_KEY, templateId);
@@ -518,6 +552,12 @@ namespace Nop.Web.Factories
             return templateViewPath;
         }
 
+        /// <summary>
+        /// Prepare category navigation model
+        /// </summary>
+        /// <param name="currentCategoryId">Current category identifier</param>
+        /// <param name="currentProductId">Current product identifier</param>
+        /// <returns>Category navigation model</returns>
         public virtual CategoryNavigationModel PrepareCategoryNavigationModel(int currentCategoryId, int currentProductId)
         {
             //get active category
@@ -545,6 +585,10 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare top menu model
+        /// </summary>
+        /// <returns>Top menu model</returns>
         public virtual TopMenuModel PrepareTopMenuModel()
         {
             //categories
@@ -583,7 +627,11 @@ namespace Nop.Web.Factories
             };
             return model;
         }
-        
+
+        /// <summary>
+        /// Prepare homepage category models
+        /// </summary>
+        /// <returns>List of homepage category models</returns>
         public virtual List<CategoryModel> PrepareHomepageCategoryModels()
         {
             var pictureSize = _mediaSettings.CategoryThumbPictureSize;
@@ -636,7 +684,7 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare category (simple) models
         /// </summary>
-        /// <returns>Categories</returns>
+        /// <returns>List of category (simple) models</returns>
         public virtual List<CategorySimpleModel> PrepareCategorySimpleModels()
         {
             //load and cache them
@@ -653,7 +701,7 @@ namespace Nop.Web.Factories
         /// <param name="rootCategoryId">Root category identifier</param>
         /// <param name="loadSubCategories">A value indicating whether subcategories should be loaded</param>
         /// <param name="allCategories">All available categories; pass null to load them internally</param>
-        /// <returns>Category models</returns>
+        /// <returns>List of category (simple) models</returns>
         public virtual List<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId,
             bool loadSubCategories = true, IList<Category> allCategories = null)
         {
@@ -717,6 +765,12 @@ namespace Nop.Web.Factories
 
         #region Manufacturers
 
+        /// <summary>
+        /// Prepare manufacturer model
+        /// </summary>
+        /// <param name="manufacturer">Manufacturer identifier</param>
+        /// <param name="command">Catalog paging filtering command</param>
+        /// <returns>Manufacturer model</returns>
         public virtual ManufacturerModel PrepareManufacturerModel(Manufacturer manufacturer, CatalogPagingFilteringModel command)
         {
             if (manufacturer == null)
@@ -732,8 +786,6 @@ namespace Nop.Web.Factories
                 MetaTitle = manufacturer.GetLocalized(x => x.MetaTitle),
                 SeName = manufacturer.GetSeName(),
             };
-
-
 
             //sorting
             PrepareSortingOptions(model.PagingFilteringContext, command);
@@ -822,6 +874,11 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare manufacturer template view path
+        /// </summary>
+        /// <param name="templateId">Template identifier</param>
+        /// <returns>Manufacturer template view path</returns>
         public virtual string PrepareManufacturerTemplateViewPath(int templateId)
         {
             var templateCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_TEMPLATE_MODEL_KEY, templateId);
@@ -838,6 +895,10 @@ namespace Nop.Web.Factories
             return templateViewPath;
         }
 
+        /// <summary>
+        /// Prepare manufacturer all models
+        /// </summary>
+        /// <returns>List of manufacturer models</returns>
         public virtual List<ManufacturerModel> PrepareManufacturerAllModels()
         {
             var model = new List<ManufacturerModel>();
@@ -876,6 +937,11 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare manufacturer navigation model
+        /// </summary>
+        /// <param name="currentManufacturerId">Current manufacturer identifier</param>
+        /// <returns>Manufacturer navigation model</returns>
         public virtual ManufacturerNavigationModel PrepareManufacturerNavigationModel(int currentManufacturerId)
         {
             string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MODEL_KEY, 
@@ -916,6 +982,12 @@ namespace Nop.Web.Factories
 
         #region Vendors
 
+        /// <summary>
+        /// Prepare vendor model
+        /// </summary>
+        /// <param name="vendor">Vendor</param>
+        /// <param name="command">Catalog paging filtering command</param>
+        /// <returns>Vendor model</returns>
         public virtual VendorModel PrepareVendorModel(Vendor vendor, CatalogPagingFilteringModel command)
         {
             if (vendor == null)
@@ -961,6 +1033,10 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare vendor all models
+        /// </summary>
+        /// <returns>List of vendor models</returns>
         public virtual List<VendorModel> PrepareVendorAllModels()
         {
             var model = new List<VendorModel>();
@@ -978,6 +1054,7 @@ namespace Nop.Web.Factories
                     SeName = vendor.GetSeName(),
                     AllowCustomersToContactVendors = _vendorSettings.AllowCustomersToContactVendors
                 };
+
                 //prepare picture model
                 int pictureSize = _mediaSettings.VendorThumbPictureSize;
                 var pictureCacheKey = string.Format(ModelCacheEventConsumer.VENDOR_PICTURE_MODEL_KEY, vendor.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
@@ -999,6 +1076,10 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare vendor navigation model
+        /// </summary>
+        /// <returns>Vendor navigation model</returns>
         public virtual VendorNavigationModel PrepareVendorNavigationModel()
         {
             string cacheKey = ModelCacheEventConsumer.VENDOR_NAVIGATION_MODEL_KEY;
@@ -1028,7 +1109,11 @@ namespace Nop.Web.Factories
         #endregion
 
         #region Product tags
-        
+
+        /// <summary>
+        /// Prepare popular product tags model
+        /// </summary>
+        /// <returns>Product tags model</returns>
         public virtual PopularProductTagsModel PreparePopularProductTagsModel()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_POPULAR_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
@@ -1067,6 +1152,12 @@ namespace Nop.Web.Factories
             return cachedModel;
         }
 
+        /// <summary>
+        /// Prepare products by tag model
+        /// </summary>
+        /// <param name="productTag">Product tag</param>
+        /// <param name="command">Catalog paging filtering command</param>
+        /// <returns>Products by tag model</returns>
         public virtual ProductsByTagModel PrepareProductsByTagModel(ProductTag productTag, CatalogPagingFilteringModel command)
         {
             if (productTag == null)
@@ -1104,7 +1195,11 @@ namespace Nop.Web.Factories
             model.PagingFilteringContext.LoadPagedList(products);
             return model;
         }
-        
+
+        /// <summary>
+        /// Prepare product tags all model
+        /// </summary>
+        /// <returns>Popular product tags model</returns>
         public virtual PopularProductTagsModel PrepareProductTagsAllModel()
         {
             var model = new PopularProductTagsModel();
@@ -1133,6 +1228,12 @@ namespace Nop.Web.Factories
 
         #region Searching
 
+        /// <summary>
+        /// Prepare search model
+        /// </summary>
+        /// <param name="model">Search model</param>
+        /// <param name="command">Catalog paging filtering command</param>
+        /// <returns>Search model</returns>
         public virtual SearchModel PrepareSearchModel(SearchModel model, CatalogPagingFilteringModel command)
         {
             if (model == null)
@@ -1142,7 +1243,6 @@ namespace Nop.Web.Factories
             if (searchTerms == null)
                 searchTerms = "";
             searchTerms = searchTerms.Trim();
-
 
             //sorting
             PrepareSortingOptions(model.PagingFilteringContext, command);
@@ -1369,6 +1469,10 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare search box model
+        /// </summary>
+        /// <returns>Search box model</returns>
         public virtual SearchBoxModel PrepareSearchBoxModel()
         {
             var model = new SearchBoxModel

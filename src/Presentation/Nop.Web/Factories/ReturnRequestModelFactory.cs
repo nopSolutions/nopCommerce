@@ -17,6 +17,9 @@ using Nop.Web.Models.Order;
 
 namespace Nop.Web.Factories
 {
+    /// <summary>
+    /// Represents the return request model factory
+    /// </summary>
     public partial class ReturnRequestModelFactory : IReturnRequestModelFactory
     {
 		#region Fields
@@ -66,6 +69,11 @@ namespace Nop.Web.Factories
 
         #region Methods
 
+        /// <summary>
+        /// Prepare the order item model
+        /// </summary>
+        /// <param name="orderItem">Order item</param>
+        /// <returns>Order item model</returns>
         public virtual SubmitReturnRequestModel.OrderItemModel PrepareSubmitReturnRequestOrderItemModel(OrderItem orderItem)
         {
             if (orderItem == null)
@@ -100,6 +108,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the submit return request model
+        /// </summary>
+        /// <param name="model">Submit return request model</param>
+        /// <param name="order">Order</param>
+        /// <returns>Submit return request model</returns>
         public virtual SubmitReturnRequestModel PrepareSubmitReturnRequestModel(SubmitReturnRequestModel model, Order order)
         {
             if (order == null)
@@ -151,6 +165,10 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the customer return requests model
+        /// </summary>
+        /// <returns>Customer return requests model</returns>
         public virtual CustomerReturnRequestsModel PrepareCustomerReturnRequestsModel()
         {
             var model = new CustomerReturnRequestsModel();
