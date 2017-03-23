@@ -58,9 +58,9 @@ namespace Nop.Services.Catalog
                     t = (t - Math.Truncate(t)) * 10;
 
                     if (roundingType == RoundingType.Rounding005Down)
-                        t = t >= 5 ? 5 - t : t * -1;
+                        t = t >= 5 ? 5 - t : t == 0 ? 0 : t * -1;
                     else
-                        t = t >= 5 ? 10 - t : 5 - t;
+                        t = t >= 5 ? 10 - t : t == 0 ? 0 : 5 - t;
 
                     rez += t / 100;
                     break;
@@ -73,14 +73,14 @@ namespace Nop.Services.Catalog
                     if (roundingType == RoundingType.Rounding01Down && t == 5)
                         t = -5;
                     else
-                        t = t < 5 ? t * -1 : 10 - t;
+                        t = t < 5 ? t * -1 : t == 0 ? 0 : 10 - t;
 
                     rez += t / 100;
                     break;
                 //rounding with 0.50 intervals
                 case RoundingType.Rounding05:
                     t = (rez - Math.Truncate(rez)) * 100;
-                    t = t < 25 ? t * -1 : t < 50 || t < 75 ? 50 - t : 100 - t;
+                    t = t < 25 ? t * -1 : t == 0 ? 0 : t < 50 || t < 75 ? 50 - t : t == 0 ? 0 : 100 - t;
 
                     rez += t / 100;
                     break;
@@ -92,7 +92,7 @@ namespace Nop.Services.Catalog
                     if (roundingType == RoundingType.Rounding1Up && t > 0)
                         rez = Math.Truncate(rez) + 1;
                     else
-                        rez = t < 50 ? Math.Truncate(rez) : Math.Truncate(rez) + 1;
+                        rez = t < 50 ? Math.Truncate(rez) : t == 0 ? 0 : Math.Truncate(rez) + 1;
 
                     break;
                 case RoundingType.Rounding001:
