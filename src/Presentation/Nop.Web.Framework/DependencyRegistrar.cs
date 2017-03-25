@@ -95,6 +95,11 @@ namespace Nop.Web.Framework
             //user agent helper
             builder.RegisterType<UserAgentHelper>().As<IUserAgentHelper>().InstancePerLifetimeScope();
 
+            var crawlerOnlyUserAgentStringsPath = string.IsNullOrEmpty(config.CrawlerOnlyUserAgentStringsPath) ? string.Empty : CommonHelper.MapPath(config.CrawlerOnlyUserAgentStringsPath);
+            builder.RegisterType<BrowscapXmlHelper>()
+                .WithParameter("userAgentStringsPath", CommonHelper.MapPath(config.UserAgentStringsPath))
+                .WithParameter("crawlerOnlyUserAgentStringsPath", crawlerOnlyUserAgentStringsPath)
+                .SingleInstance();
             
             //controllers
             builder.RegisterControllers(typeFinder.GetAssemblies().ToArray());
