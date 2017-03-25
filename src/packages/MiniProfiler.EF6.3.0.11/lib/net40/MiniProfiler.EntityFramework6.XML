@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MiniProfiler.EntityFramework6</name>
+    </assembly>
+    <members>
+        <member name="T:StackExchange.Profiling.Data.EFProfiledSqlClientDbProviderServices">
+            <summary>
+            Specific implementation of <c>EFProfiledDbProviderFactory&lt;SqlClientFactory&gt;</c> to enable profiling
+            </summary>
+        </member>
+        <member name="T:StackExchange.Profiling.Data.EFProfiledDbProviderServices`1">
+            <summary>
+            Wrapper for a database provider factory to enable profiling
+            </summary>
+            <typeparam name="T">the factory type.</typeparam>
+        </member>
+        <member name="F:StackExchange.Profiling.Data.EFProfiledDbProviderServices`1.Instance">
+            <summary>
+            Every provider factory must have an Instance public field
+            </summary>
+        </member>
+        <member name="F:StackExchange.Profiling.Data.EFProfiledDbProviderServices`1._tail">
+            <summary>
+            The tail.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Profiling.Data.EFProfiledDbProviderServices`1.#ctor">
+            <summary>
+            Initialises a new instance of the <see cref="T:StackExchange.Profiling.Data.EFProfiledDbProviderServices`1"/> class. 
+            Used for DB provider APIS internally 
+            </summary>
+        </member>
+        <member name="M:StackExchange.Profiling.Data.EFProfiledDbProviderServices`1.CreateCommandDefinition(System.Data.Common.DbCommand)">
+            <summary>
+            Get DB command definition
+            </summary>
+            <param name="prototype">The prototype.</param>
+            <returns>the command definition.</returns>
+        </member>
+        <member name="M:StackExchange.Profiling.Data.EFProfiledDbProviderServices`1.GetDbProviderManifest(System.String)">
+            <summary>
+            The get database provider manifest.
+            </summary>
+            <param name="manifestToken">The manifest token.</param>
+            <returns>the provider manifest.</returns>
+        </member>
+        <member name="M:StackExchange.Profiling.Data.EFProfiledDbProviderServices`1.GetDbProviderManifestToken(System.Data.Common.DbConnection)">
+            <summary>
+            get the database provider manifest token.
+            </summary>
+            <param name="connection">The connection.</param>
+            <returns>a string containing the token.</returns>
+        </member>
+        <member name="M:StackExchange.Profiling.Data.EFProfiledDbProviderServices`1.CreateDbCommandDefinition(System.Data.Entity.Core.Common.DbProviderManifest,System.Data.Entity.Core.Common.CommandTrees.DbCommandTree)">
+            <summary>
+            create the database command definition.
+            </summary>
+            <param name="providerManifest">The provider manifest.</param>
+            <param name="commandTree">The command tree.</param>
+            <returns>the command definition.</returns>
+        </member>
+        <member name="M:StackExchange.Profiling.Data.EFProfiledDbProviderServices`1.DbCreateDatabase(System.Data.Common.DbConnection,System.Nullable{System.Int32},System.Data.Entity.Core.Metadata.Edm.StoreItemCollection)">
+            <summary>
+            create the database.
+            </summary>
+            <param name="connection">The connection.</param>
+            <param name="commandTimeout">The command timeout.</param>
+            <param name="storeItemCollection">The store item collection.</param>
+        </member>
+        <member name="M:StackExchange.Profiling.Data.EFProfiledDbProviderServices`1.DbDeleteDatabase(System.Data.Common.DbConnection,System.Nullable{System.Int32},System.Data.Entity.Core.Metadata.Edm.StoreItemCollection)">
+            <summary>
+            delete the database.
+            </summary>
+            <param name="connection">The connection.</param>
+            <param name="commandTimeout">The command timeout.</param>
+            <param name="storeItemCollection">The store item collection.</param>
+        </member>
+        <member name="M:StackExchange.Profiling.Data.EFProfiledDbProviderServices`1.DbCreateDatabaseScript(System.String,System.Data.Entity.Core.Metadata.Edm.StoreItemCollection)">
+            <summary>
+            create the database script.
+            </summary>
+            <param name="providerManifestToken">The provider manifest token.</param>
+            <param name="storeItemCollection">The store item collection.</param>
+            <returns>a string containing the database script.</returns>
+        </member>
+        <member name="M:StackExchange.Profiling.Data.EFProfiledDbProviderServices`1.DbDatabaseExists(System.Data.Common.DbConnection,System.Nullable{System.Int32},System.Data.Entity.Core.Metadata.Edm.StoreItemCollection)">
+            <summary>
+            test if the database exists.
+            </summary>
+            <param name="connection">The connection.</param>
+            <param name="commandTimeout">The command timeout.</param>
+            <param name="storeItemCollection">The store item collection.</param>
+            <returns>true if the database exists.</returns>
+        </member>
+        <member name="M:StackExchange.Profiling.Data.EFProfiledDbProviderServices`1.GetRealConnection(System.Data.Common.DbConnection)">
+            <summary>
+            get the real connection.
+            </summary>
+            <param name="connection">The connection.</param>
+            <returns>the database connection</returns>
+        </member>
+        <member name="F:StackExchange.Profiling.Data.EFProfiledSqlClientDbProviderServices.Instance">
+            <summary>
+            Every provider factory must have an Instance public field
+            </summary>
+        </member>
+        <member name="M:StackExchange.Profiling.Data.EFProfiledSqlClientDbProviderServices.#ctor">
+            <summary>
+            Prevents a default instance of the <see cref="T:StackExchange.Profiling.Data.EFProfiledSqlClientDbProviderServices"/> class from being created.
+            </summary>
+        </member>
+        <member name="T:StackExchange.Profiling.EntityFramework6.MiniProfilerEF6">
+            <summary>
+            Provides helper methods to help with initializing the MiniProfiler for Entity Framework 6.
+            </summary>
+        </member>
+        <member name="F:StackExchange.Profiling.EntityFramework6.MiniProfilerEF6.ProviderCache">
+            <summary>
+            A cache so we don't have to do reflection every time someone asks for the MiniProfiler implementation for a DB Provider.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Profiling.EntityFramework6.MiniProfilerEF6.Initialize">
+            <summary>
+            Registers the WrapProviderService method with the Entity Framework 6 DbConfiguration as a replacement service for DbProviderServices.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Profiling.EntityFramework6.MiniProfilerEF6.WrapProviderService(System.Data.Entity.Core.Common.DbProviderServices)">
+            <summary>
+            Wraps the provided DbProviderServices class in a MiniProfiler profiled DbService and returns the wrapped service.
+            </summary>
+            <param name="services">The DbProviderServices service to wrap.</param>
+            <returns>A wrapped version of the DbProviderService service.</returns>
+        </member>
+    </members>
+</doc>
