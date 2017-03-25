@@ -122,6 +122,21 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
+        protected virtual void DeleteLocales(Topic topic)
+        {
+            if (topic == null)
+            {
+                return;
+            }
+
+            var properties = _localizedEntityService.GetLocalizedPropertyByEntityId(topic.Id, "Topic");
+            foreach(var property in properties)
+            {
+                _localizedEntityService.DeleteLocalizedProperty(property);
+            }
+        }
+
+        [NonAction]
         protected virtual void PrepareAclModel(TopicModel model, Topic topic, bool excludeProperties)
         {
             if (model == null)
@@ -438,6 +453,7 @@ namespace Nop.Admin.Controllers
                 //No topic found with the specified id
                 return RedirectToAction("List");
 
+            DeleteLocales(topic);
             _topicService.DeleteTopic(topic);
 
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Deleted"));

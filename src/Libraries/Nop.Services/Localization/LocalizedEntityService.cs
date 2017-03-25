@@ -138,6 +138,32 @@ namespace Nop.Services.Localization
         #region Methods
 
         /// <summary>
+        /// Get all localized properties for a particular entity
+        /// </summary>
+        /// <param name="entityId">Entity identifier</param>
+        /// <param name="localeKeyGroup">Locale key group</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <returns>The list of found localized properties</returns>
+        public virtual IList<LocalizedProperty> GetLocalizedPropertyByEntityId(int entityId, string localeKeyGroup, int languageId = 0)
+        {
+            if (string.IsNullOrEmpty(localeKeyGroup))
+            {
+                throw new ArgumentException("localeKeyGroup");
+            }
+
+            var properties = _localizedPropertyRepository.Table
+                .Where(p => p.EntityId == entityId && p.LocaleKeyGroup == localeKeyGroup);
+
+
+            if (languageId != 0)
+            {
+                properties = properties.Where(p => p.LanguageId == languageId);
+            }
+
+            return properties.ToList();
+        }
+
+        /// <summary>
         /// Deletes a localized property
         /// </summary>
         /// <param name="localizedProperty">Localized property</param>
