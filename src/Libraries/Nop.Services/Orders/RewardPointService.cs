@@ -56,7 +56,10 @@ namespace Nop.Services.Orders
             query = query.OrderBy(rph => rph.CreatedOnUtc).ThenBy(rph => rph.Id);
 
             //get has not yet activated points, but it's time to do it
-            var notActivatedRph = query.Where(rph => !rph.PointsBalance.HasValue && rph.CreatedOnUtc < DateTime.UtcNow).ToList();
+            //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
+            //That's why we pass the date value
+            var nowUtc = DateTime.UtcNow;
+            var notActivatedRph = query.Where(rph => !rph.PointsBalance.HasValue && rph.CreatedOnUtc < nowUtc).ToList();
 
             //nothing to update
             if (!notActivatedRph.Any())
@@ -103,7 +106,11 @@ namespace Nop.Services.Orders
             if (!showNotActivated)
             {
                 //show only the points that already activated
-                query = query.Where(rph => rph.CreatedOnUtc < DateTime.UtcNow);
+
+                //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
+                //That's why we pass the date value
+                var nowUtc = DateTime.UtcNow;
+                query = query.Where(rph => rph.CreatedOnUtc < nowUtc);
             }
 
             //update points balance
@@ -170,7 +177,10 @@ namespace Nop.Services.Orders
                 query = query.Where(rph => rph.StoreId == storeId);
 
             //show only the points that already activated
-            query = query.Where(rph => rph.CreatedOnUtc < DateTime.UtcNow);
+            //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
+            //That's why we pass the date value
+            var nowUtc = DateTime.UtcNow;
+            query = query.Where(rph => rph.CreatedOnUtc < nowUtc);
 
             //first update points balance
             UpdateRewardPointsBalance(query);
