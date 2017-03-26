@@ -127,7 +127,7 @@ namespace Nop.Web.Controllers
             var model = _commonModelFactory.PrepareLanguageSelectorModel();
 
             if (model.AvailableLanguages.Count == 1)
-                Content("");
+                return Content("");
 
             return PartialView(model);
         }
@@ -171,7 +171,7 @@ namespace Nop.Web.Controllers
         {
             var model = _commonModelFactory.PrepareCurrencySelectorModel();
             if (model.AvailableCurrencies.Count == 1)
-                Content("");
+                return Content("");
 
             return PartialView(model);
         }
