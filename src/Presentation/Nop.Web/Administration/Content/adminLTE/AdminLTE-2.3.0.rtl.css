@@ -2363,7 +2363,7 @@ a:focus {
  * ----------------
  */
 .alert {
-  border-radius: 3px;
+  border-radius: 0px;
 }
 .alert h4 {
   font-weight: 600;
