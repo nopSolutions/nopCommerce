@@ -1,3 +1,4 @@
+#if NET451
 using System;
 using System.Net;
 using StackExchange.Redis;
@@ -45,3 +46,5 @@ namespace Nop.Core.Caching
         bool PerformActionWithLock(string resource, TimeSpan expirationTime, Action action);
     }
 }
+
+#endif

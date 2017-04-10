@@ -93,7 +93,11 @@ namespace Nop.Core.Html.CodeFormatter
                     var csf = new CSharpFormat();
                     csf.LineNumbers = options.DisplayLineNumbers;
                     csf.Alternate = options.AlternateLineNumbers;
+#if NET451
                     return HttpUtility.HtmlDecode(csf.FormatCode(text));
+#else
+                    return csf.FormatCode(text);
+#endif
 
                 case "vb":
                     var vbf = new VisualBasicFormat();
@@ -105,14 +109,22 @@ namespace Nop.Core.Html.CodeFormatter
                     var jsf = new JavaScriptFormat();
                     jsf.LineNumbers = options.DisplayLineNumbers;
                     jsf.Alternate = options.AlternateLineNumbers;
+#if NET451
                     return HttpUtility.HtmlDecode(jsf.FormatCode(text));
+#else
+                    return jsf.FormatCode(text);
+#endif
 
                 case "html":
                     var htmlf = new HtmlFormat();
                     htmlf.LineNumbers = options.DisplayLineNumbers;
                     htmlf.Alternate = options.AlternateLineNumbers;
                     text = StripHtml(text).Trim();
+#if NET451
                     string code = htmlf.FormatCode(HttpUtility.HtmlDecode(text)).Trim();
+#else
+                    string code = htmlf.FormatCode(text).Trim();
+#endif
                     return code.Replace("\r\n", "<br />").Replace("\n", "<br />");
 
                 case "xml":
@@ -121,29 +133,42 @@ namespace Nop.Core.Html.CodeFormatter
                     xmlf.Alternate = options.AlternateLineNumbers;
                     text = text.Replace("<br />", "\r\n");
                     text = StripHtml(text).Trim();
+#if NET451
                     string xml = xmlf.FormatCode(HttpUtility.HtmlDecode(text)).Trim();
+#else
+                    string xml = xmlf.FormatCode(text).Trim();
+#endif
+
                     return xml.Replace("\r\n", "<br />").Replace("\n", "<br />");
 
                 case "tsql":
                     var tsqlf = new TsqlFormat();
                     tsqlf.LineNumbers = options.DisplayLineNumbers;
                     tsqlf.Alternate = options.AlternateLineNumbers;
+#if NET451
                     return HttpUtility.HtmlDecode(tsqlf.FormatCode(text));
+#else
+                    return tsqlf.FormatCode(text);
+#endif
 
                 case "msh":
                     var mshf = new MshFormat();
                     mshf.LineNumbers = options.DisplayLineNumbers;
                     mshf.Alternate = options.AlternateLineNumbers;
+#if NET451
                     return HttpUtility.HtmlDecode(mshf.FormatCode(text));
 
+#else
+                    return mshf.FormatCode(text);
+#endif
             }
 
             return string.Empty;
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         /// <summary>
         /// Formats the text
@@ -163,7 +188,7 @@ namespace Nop.Core.Html.CodeFormatter
             return text;
         }
 
-        #endregion
+#endregion
     }
 }
 

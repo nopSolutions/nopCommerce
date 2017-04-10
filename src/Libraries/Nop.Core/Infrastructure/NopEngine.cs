@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+#if NET451
 using System.Web.Mvc;
+#endif
 using Autofac;
+#if NET451
 using Autofac.Integration.Mvc;
+#endif
 using AutoMapper;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure.DependencyManagement;
@@ -16,13 +20,13 @@ namespace Nop.Core.Infrastructure
     /// </summary>
     public class NopEngine : IEngine
     {
-        #region Fields
+#region Fields
 
         private ContainerManager _containerManager;
 
-        #endregion
+#endregion
 
-        #region Utilities
+#region Utilities
 
         /// <summary>
         /// Run startup tasks
@@ -67,8 +71,10 @@ namespace Nop.Core.Infrastructure
             var container = builder.Build();
             this._containerManager = new ContainerManager(container);
 
+#if NET451
             //set dependency resolver
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
+#endif
         }
 
         /// <summary>
@@ -95,9 +101,9 @@ namespace Nop.Core.Infrastructure
             AutoMapperConfiguration.Init(configurationActions);
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         /// <summary>
         /// Initialize components and plugins in the nop environment.
@@ -149,9 +155,9 @@ namespace Nop.Core.Infrastructure
             return ContainerManager.ResolveAll<T>();
         }
 
-		#endregion
+#endregion
 
-        #region Properties
+#region Properties
 
         /// <summary>
         /// Container manager
@@ -161,6 +167,6 @@ namespace Nop.Core.Infrastructure
             get { return _containerManager; }
         }
 
-        #endregion
+#endregion
     }
 }

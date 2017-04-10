@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Linq;
 using System.Web;
@@ -9,6 +10,7 @@ namespace Nop.Core.Caching
     /// </summary>
     public partial class PerRequestCacheManager : ICacheManager
     {
+#if NET451
         private readonly HttpContextBase _context;
 
         /// <summary>
@@ -125,5 +127,41 @@ namespace Nop.Core.Caching
         public virtual void Dispose()
         {
         }
+#else
+        public void Clear()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
+        public T Get<T>(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsSet(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Remove(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveByPattern(string pattern)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Set(string key, object data, int cacheTime)
+        {
+            throw new NotImplementedException();
+        }
+#endif
     }
 }

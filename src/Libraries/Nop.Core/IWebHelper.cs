@@ -67,6 +67,7 @@ namespace Nop.Core
         /// <returns>Store location</returns>
         string GetStoreLocation(bool useSsl);
 
+#if NET451
         /// <summary>
         /// Returns true if the requested resource is one of the typical resources that needn't be processed by the cms engine.
         /// </summary>
@@ -84,6 +85,7 @@ namespace Nop.Core
         /// .ashx
         /// </remarks>
         bool IsStaticResource(HttpRequest request);        
+#endif
 
         /// <summary>
         /// Modifies query string

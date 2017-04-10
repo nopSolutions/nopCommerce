@@ -3,10 +3,13 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Security.Principal;
 using System.Web;
+#if NET451
 using System.Web.SessionState;
+#endif
 
 namespace Nop.Core.Fakes
 {
+#if NET451
     public class FakeHttpContext : HttpContextBase
     {
         private readonly HttpCookieCollection _cookies;
@@ -115,4 +118,7 @@ namespace Nop.Core.Fakes
             return null;
         }
     }
+#else
+    public class FakeHttpContext { }
+#endif
 }

@@ -83,8 +83,14 @@ namespace Nop.Core.Plugins
             int totalRecords = 0;
 
             //pageSize parameter is currently ignored by official site (set to 15)
+#if NET451
             var xmlDoc = GetDocument("category={0}&version={1}&price={2}&pageIndex={3}&pageSize={4}&searchTerm={5}",
                 categoryId, versionId, price, pageIndex, pageSize, HttpUtility.UrlEncode(searchTerm));
+#else
+            var xmlDoc = GetDocument("category={0}&version={1}&price={2}&pageIndex={3}&pageSize={4}&searchTerm={5}",
+                categoryId, versionId, price, pageIndex, pageSize, searchTerm);
+#endif
+
 
             var list = xmlDoc.SelectNodes(@"//extensions/extension").Cast<XmlNode>().Select(node => new OfficialFeedPlugin
             {

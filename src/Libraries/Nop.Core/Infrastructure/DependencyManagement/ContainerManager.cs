@@ -4,7 +4,9 @@ using System.Linq;
 using System.Web;
 using Autofac;
 using Autofac.Core.Lifetime;
+#if NET451
 using Autofac.Integration.Mvc;
+#endif
 
 namespace Nop.Core.Infrastructure.DependencyManagement
 {
@@ -197,9 +199,11 @@ namespace Nop.Core.Infrastructure.DependencyManagement
         {
             try
             {
+#if NET451
                 if (HttpContext.Current != null)
                     return AutofacDependencyResolver.Current.RequestLifetimeScope;
 
+#endif
                 //when such lifetime scope is returned, you should be sure that it'll be disposed once used (e.g. in schedule tasks)
                 return Container.BeginLifetimeScope(MatchingScopeLifetimeTags.RequestLifetimeScopeTag);
             }

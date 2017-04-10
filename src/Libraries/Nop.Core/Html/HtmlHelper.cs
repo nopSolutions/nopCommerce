@@ -89,7 +89,12 @@ namespace Nop.Core.Html
                     text = StripTags(text);
                 }
 
+#if NET451
                 text = allowHtml ? EnsureOnlyAllowedHtml(text) : HttpUtility.HtmlEncode(text);
+#else
+                text = allowHtml ? EnsureOnlyAllowedHtml(text) : text;
+#endif
+
 
                 if (convertPlainTextToHtml)
                 {
@@ -181,9 +186,11 @@ namespace Nop.Core.Html
             if (String.IsNullOrEmpty(text))
                 return string.Empty;
 
+#if NET451
             if (decode)
                 text = HttpUtility.HtmlDecode(text);
 
+#endif
             text = text.Replace("<br>", "\n");
             text = text.Replace("<br >", "\n");
             text = text.Replace("<br />", "\n");
@@ -222,6 +229,6 @@ namespace Nop.Core.Html
             }
             return builder.ToString();
         }
-        #endregion
+#endregion
     }
 }

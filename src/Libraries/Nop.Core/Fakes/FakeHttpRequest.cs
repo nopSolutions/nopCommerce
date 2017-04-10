@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Web;
+#if NET451
 using System.Web.Mvc;
+#endif
 
 namespace Nop.Core.Fakes
 {
+#if NET451
     public class FakeHttpRequest : HttpRequestBase
     {
         private readonly HttpCookieCollection _cookies;
@@ -156,4 +159,7 @@ namespace Nop.Core.Fakes
             get { return null; }
         }
     }
+#else
+    public class FakeHttpRequest { }
+#endif
 }

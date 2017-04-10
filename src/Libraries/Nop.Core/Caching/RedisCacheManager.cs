@@ -1,3 +1,4 @@
+#if NET451
 using System;
 using System.Text;
 using Newtonsoft.Json;
@@ -170,3 +171,4 @@ namespace Nop.Core.Caching
 
     }
 }
+#endif

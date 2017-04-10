@@ -7,14 +7,18 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Web;
+#if NET451
 using System.Web.Compilation;
+#endif
 using Nop.Core.ComponentModel;
 using Nop.Core.Plugins;
 
 //Contributor: Umbraco (http://www.umbraco.com). Thanks a lot! 
 //SEE THIS POST for full details of what this does - http://shazwazza.com/post/Developing-a-plugin-framework-in-ASPNET-with-medium-trust.aspx
 
+#if NET451
 [assembly: PreApplicationStartMethod(typeof(PluginManager), "Initialize")]
+#endif
 namespace Nop.Core.Plugins
 {
     /// <summary>
@@ -65,8 +69,10 @@ namespace Nop.Core.Plugins
                 var referencedPlugins = new List<PluginDescriptor>();
                 var incompatiblePlugins = new List<string>();
 
+#if NET451
                 _clearShadowDirectoryOnStartup = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["ClearPluginsShadowDirectoryOnStartup"]) &&
                    Convert.ToBoolean(ConfigurationManager.AppSettings["ClearPluginsShadowDirectoryOnStartup"]);
+#endif
 
                 try
                 {
@@ -356,9 +362,11 @@ namespace Nop.Core.Plugins
             //we can now register the plugin definition
             var shadowCopiedAssembly = Assembly.Load(AssemblyName.GetAssemblyName(shadowCopiedPlug.FullName));
 
+#if NET451
             //add the reference to the build manager
             Debug.WriteLine("Adding to BuildManager: '{0}'", shadowCopiedAssembly.FullName);
             BuildManager.AddReferencedAssembly(shadowCopiedAssembly);
+#endif
 
             return shadowCopiedAssembly;
         }
@@ -480,6 +488,6 @@ namespace Nop.Core.Plugins
             return CommonHelper.MapPath(InstalledPluginsFilePath);
         }
 
-        #endregion
+#endregion
     }
 }

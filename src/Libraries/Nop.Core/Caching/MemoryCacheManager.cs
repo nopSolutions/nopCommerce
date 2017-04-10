@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
+#if NET451
 using System.Runtime.Caching;
+#endif
 
 namespace Nop.Core.Caching
 {
@@ -9,6 +11,7 @@ namespace Nop.Core.Caching
     /// </summary>
     public partial class MemoryCacheManager : ICacheManager
     {
+#if NET451
         /// <summary>
         /// Cache object
         /// </summary>
@@ -90,5 +93,41 @@ namespace Nop.Core.Caching
         public virtual void Dispose()
         {
         }
+#else
+        public void Clear()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
+        public T Get<T>(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsSet(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Remove(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveByPattern(string pattern)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Set(string key, object data, int cacheTime)
+        {
+            throw new NotImplementedException();
+        }
+#endif
     }
 }

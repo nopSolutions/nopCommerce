@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Specialized;
 using System.Web;
+#if NET451
 using System.Web.SessionState;
+#endif
 
 namespace Nop.Core.Fakes
 {
+#if NET451
     public class FakeHttpSessionState : HttpSessionStateBase
     {
         private readonly SessionStateItemCollection _sessionItems;
@@ -56,4 +59,7 @@ namespace Nop.Core.Fakes
             _sessionItems.Remove(name);
         }
     }
+#else
+    public class FakeHttpSessionState { }
+#endif
 }

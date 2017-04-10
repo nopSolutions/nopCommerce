@@ -15,6 +15,7 @@ namespace Nop.Core
     /// </summary>
     public partial class WebHelper : IWebHelper
     {
+#if NET451
         #region Fields 
 
         private readonly HttpContextBase _httpContext;
@@ -284,7 +285,7 @@ namespace Nop.Core
 
             if (DataSettingsHelper.DatabaseIsInstalled())
             {
-                #region Database is installed
+        #region Database is installed
 
                 //let's resolve IWorkContext  here.
                 //Do not inject it via constructor  because it'll cause circular references
@@ -324,18 +325,18 @@ namespace Nop.Core
                         result = currentStore.Url;
                     }
                 }
-                #endregion
+        #endregion
             }
             else
             {
-                #region Database is not installed
+        #region Database is not installed
                 if (useSsl)
                 {
                     //Secure URL is not specified.
                     //So a store owner wants it to be detected automatically.
                     result = result.Replace("http:/", "https:/");
                 }
-                #endregion
+        #endregion
             }
 
 
@@ -668,5 +669,75 @@ namespace Nop.Core
         }
 
         #endregion
+#else
+        public bool IsRequestBeingRedirected => throw new NotImplementedException();
+
+        public bool IsPostBeingDone { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public string GetCurrentIpAddress()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetStoreHost(bool useSsl)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetStoreLocation()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetStoreLocation(bool useSsl)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetThisPageUrl(bool includeQueryString)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetThisPageUrl(bool includeQueryString, bool useSsl)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetUrlReferrer()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsCurrentConnectionSecured()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string ModifyQueryString(string url, string queryStringModification, string anchor)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T QueryString<T>(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string RemoveQueryString(string url, string queryString)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RestartAppDomain(bool makeRedirect = false, string redirectUrl = "")
+        {
+            throw new NotImplementedException();
+        }
+
+        public string ServerVariables(string name)
+        {
+            throw new NotImplementedException();
+        }
+#endif
     }
 }

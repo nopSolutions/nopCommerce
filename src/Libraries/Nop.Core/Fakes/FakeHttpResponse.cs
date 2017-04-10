@@ -3,6 +3,7 @@ using System.Web;
 
 namespace Nop.Core.Fakes
 {
+#if NET451
     public class FakeHttpResponse : HttpResponseBase
     {
         private readonly HttpCookieCollection _cookies;
@@ -39,4 +40,7 @@ namespace Nop.Core.Fakes
             }
         }
     }
+#else
+    public class FakeHttpResponse { }
+#endif
 }

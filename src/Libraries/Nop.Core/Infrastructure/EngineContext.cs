@@ -22,7 +22,12 @@ namespace Nop.Core.Infrastructure
             {
                 Singleton<IEngine>.Instance = new NopEngine();
 
+#if NET451
                 var config = ConfigurationManager.GetSection("NopConfig") as NopConfig;
+#else
+                var config = new NopConfig();
+#endif
+
                 Singleton<IEngine>.Instance.Initialize(config);
             }
             return Singleton<IEngine>.Instance;

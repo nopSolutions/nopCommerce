@@ -12,6 +12,7 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
+#if NET451
 using System;
 using System.Linq;
 using System.Reflection;
@@ -96,3 +97,5 @@ namespace Nop.Core.Infrastructure
 
     }
 }
+
+#endif
