@@ -46,13 +46,17 @@ namespace Nop.Admin.Models.Orders
         
         public bool CanCancelRecurringPayment { get; set; }
 
+        public bool LastPaymentFailed { get; set; }
+
         #region Nested classes
 
 
         public partial class RecurringPaymentHistoryModel : BaseNopEntityModel
         {
-            [NopResourceDisplayName("Admin.RecurringPayments.History.Order")]
             public int OrderId { get; set; }
+
+            [NopResourceDisplayName("Admin.RecurringPayments.History.CustomOrderNumber")]
+            public string CustomOrderNumber { get; set; }
 
             public int RecurringPaymentId { get; set; }
 

@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
-using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Orders;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework;
@@ -18,6 +17,9 @@ namespace Nop.Admin.Models.Orders
         {
             Locales = new List<CheckoutAttributeLocalizedModel>();
             AvailableTaxCategories = new List<SelectListItem>();
+
+            SelectedStoreIds = new List<int>();
+            AvailableStores = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.Name")]
@@ -75,12 +77,11 @@ namespace Nop.Admin.Models.Orders
         public bool ConditionAllowed { get; set; }
         public ConditionModel ConditionModel { get; set; }
 
-        //Store mapping
+        //store mapping
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.LimitedToStores")]
-        public bool LimitedToStores { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AvailableStores")]
-        public List<StoreModel> AvailableStores { get; set; }
-        public int[] SelectedStoreIds { get; set; }
+        [UIHint("MultiSelect")]
+        public IList<int> SelectedStoreIds { get; set; }
+        public IList<SelectListItem> AvailableStores { get; set; }
 
     }
 

@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System.Linq;
+using FluentValidation;
 using FluentValidation.Results;
 using Nop.Core.Domain.Common;
 using Nop.Services.Directory;
@@ -41,7 +42,7 @@ namespace Nop.Web.Validators.Common
                 {
                     //does selected country has states?
                     var countryId = x.CountryId.HasValue ? x.CountryId.Value : 0;
-                    var hasStates = stateProvinceService.GetStateProvincesByCountryId(countryId).Count > 0;
+                    var hasStates = stateProvinceService.GetStateProvincesByCountryId(countryId).Any();
 
                     if (hasStates)
                     {

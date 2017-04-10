@@ -20,10 +20,6 @@ namespace Nop.Plugin.Payments.PayPalDirect.Models
         [NopResourceDisplayName("Payment.SelectCreditCard")]
         public IList<SelectListItem> CreditCardTypes { get; set; }
 
-        [NopResourceDisplayName("Payment.CardholderName")]
-        [AllowHtml]
-        public string CardholderName { get; set; }
-
         [NopResourceDisplayName("Payment.CardNumber")]
         [AllowHtml]
         public string CardNumber { get; set; }

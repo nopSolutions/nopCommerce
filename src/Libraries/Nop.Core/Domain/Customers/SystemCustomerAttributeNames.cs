@@ -31,6 +31,7 @@ namespace Nop.Core.Domain.Customers
         public static string PasswordRecoveryToken { get { return "PasswordRecoveryToken"; } }
         public static string PasswordRecoveryTokenDateGenerated { get { return "PasswordRecoveryTokenDateGenerated"; } }
         public static string AccountActivationToken { get { return "AccountActivationToken"; } }
+        public static string EmailRevalidationToken { get { return "EmailRevalidationToken"; } }
         public static string LastVisitedPage { get { return "LastVisitedPage"; } }
         public static string ImpersonatedCustomerId { get { return "ImpersonatedCustomerId"; } }
         public static string AdminAreaStoreScopeConfiguration { get { return "AdminAreaStoreScopeConfiguration"; } }
@@ -43,8 +44,7 @@ namespace Nop.Core.Domain.Customers
         public static string LanguageAutomaticallyDetected { get { return "LanguageAutomaticallyDetected"; } }
         public static string SelectedPaymentMethod { get { return "SelectedPaymentMethod"; } }
         public static string SelectedShippingOption { get { return "SelectedShippingOption"; } }
-        //value indicating whether customer chose "pick up in store" option
-        public static string SelectedPickUpInStore { get { return "SelectedPickUpInStore"; } }
+        public static string SelectedPickupPoint { get { return "SelectedPickupPoint"; } }
         public static string CheckoutAttributes { get { return "CheckoutAttributes"; } }
         public static string OfferedShippingOptions { get { return "OfferedShippingOptions"; } }
         public static string LastContinueShoppingPage { get { return "LastContinueShoppingPage"; } }

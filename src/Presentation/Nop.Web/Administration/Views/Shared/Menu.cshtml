@@ -1,7 +1,6 @@
 ﻿@using Nop.Core
 @using Nop.Core.Domain.Localization
-@using Nop.Web.Framework.Menu;
-
+@using Nop.Web.Framework.Menu
 @{
     //load sitemap
     var siteMap = new Nop.Web.Framework.Menu.XmlSiteMap();
@@ -26,8 +25,8 @@
 
     if (!String.IsNullOrEmpty(url))
     {
-        <li @(isActive ? Html.Raw("class=\"active\"") : null)>
-            <a href="@url" class="menu-item-link">
+        <li @(isActive ? Html.Raw("class=\"active current-active-item\"") : null)>
+            <a href="@url" class="menu-item-link"@(item.OpenUrlInNewTab ? Html.Raw(" target=\"_blank\"") : null)>
                 @if (!String.IsNullOrEmpty(item.IconClass))
                 {
                     <text>
@@ -40,7 +39,7 @@
     }
     else
     {
-        <li class="treeview @(isActive ? Html.Raw("active") : null)">
+        <li class="treeview @(isActive ? Html.Raw("active current-active-item") : null)">
             <a href="#">
                 @if (!String.IsNullOrEmpty(item.IconClass))
                 {

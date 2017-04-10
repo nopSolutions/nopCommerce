@@ -1,10 +1,12 @@
 ﻿@using Nop.Core
 @using Nop.Services.Common
+@using Nop.Services.Stores
 @{
     const string panelId = "latest-orders-box";
     const string hidePanelAttributeName = "HideLatestOrdersPanel";
     var hidePanel = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
     var gridPageSize = 5;
+    var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
 }
 
 <div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">
@@ -64,13 +66,14 @@
                         serverSorting: true
                     },
                     pageable: {
-                        refresh: true
+                        refresh: true,
+                        @Html.Partial("_GridPagerMessages")
                     },
                     scrollable: false,
                     columns: [
                         {
-                            field: "Id",
-                            title: "@T("Admin.Orders.Fields.ID")",
+                            field: "CustomOrderNumber",
+                            title: "@T("Admin.Orders.Fields.CustomOrderNumber")",
                             width: 80
                         },
                         {
@@ -92,6 +95,7 @@
                         },
                         {
                             field: "StoreName",
+                            hidden: @(stores.Count > 1 ? "false" : "true"),
                             title: "@T("Admin.Orders.Fields.Store")",
                             width: 100
                         }, {
@@ -104,8 +108,10 @@
                         {
                             field: "Id",
                             title: "@T("Admin.Common.View")",
-                            width: 50,
-                            template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                            width: 30,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<a class="btn btn-xs btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
                         }
                     ]
                 });

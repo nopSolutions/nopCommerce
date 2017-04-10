@@ -4,9 +4,9 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading;
-using System.Web.Hosting;
 using System.Web.Mvc;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
@@ -43,7 +43,7 @@ namespace Nop.Web.Controllers
         /// <summary>
         /// A value indicating whether we use MARS (Multiple Active Result Sets)
         /// </summary>
-        protected bool UseMars
+        protected virtual bool UseMars
         {
             get { return false; }
         }
@@ -54,7 +54,7 @@ namespace Nop.Web.Controllers
         /// <param name="connectionString">Connection string</param>
         /// <returns>Returns true if the database exists.</returns>
         [NonAction]
-        protected bool SqlServerDatabaseExists(string connectionString)
+        protected virtual bool SqlServerDatabaseExists(string connectionString)
         {
             try
             {
@@ -76,9 +76,14 @@ namespace Nop.Web.Controllers
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <param name="collation">Server collation; the default one will be used if not specified</param>
+        /// <param name="triesToConnect">
+        /// Number of times to try to connect to database. 
+        /// If connection cannot be open, then error will be returned. 
+        /// Pass 0 to skip this validation.
+        /// </param>
         /// <returns>Error</returns>
         [NonAction]
-        protected string CreateDatabase(string connectionString, string collation)
+        protected virtual string CreateDatabase(string connectionString, string collation, int triesToConnect = 10)
         {
             try
             {
@@ -97,6 +102,25 @@ namespace Nop.Web.Controllers
                     using (var command = new SqlCommand(query, conn))
                     {
                         command.ExecuteNonQuery();
+                    }
+                }
+
+                //try connect
+                if (triesToConnect > 0)
+                {
+                    //Sometimes on slow servers (hosting) there could be situations when database requires some time to be created.
+                    //But we have already started creation of tables and sample data.
+                    //As a result there is an exception thrown and the installation process cannot continue.
+                    //That's why we are in a cycle of "triesToConnect" times trying to connect to a database with a delay of one second.
+                    for (var i = 0; i <= triesToConnect; i++)
+                    {
+                        if (i == triesToConnect)
+                            throw new Exception("Unable to connect to the new database. Please try one more time");
+
+                        if (!this.SqlServerDatabaseExists(connectionString))
+                            Thread.Sleep(1000);
+                        else
+                            break;
                     }
                 }
 
@@ -119,7 +143,7 @@ namespace Nop.Web.Controllers
         /// <param name="timeout">The connection timeout</param>
         /// <returns>Connection string</returns>
         [NonAction]
-        protected string CreateConnectionString(bool trustedConnection,
+        protected virtual string CreateConnectionString(bool trustedConnection,
             string serverName, string databaseName,
             string userName, string password, int timeout = 0)
         {
@@ -148,7 +172,7 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");
@@ -186,7 +210,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(InstallModel model)
+        public virtual ActionResult Index(InstallModel model)
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");
@@ -309,10 +333,6 @@ namespace Nop.Web.Controllers
                                 var errorCreatingDatabase = CreateDatabase(connectionString, collation);
                                 if (!String.IsNullOrEmpty(errorCreatingDatabase))
                                     throw new Exception(errorCreatingDatabase);
-
-                                //Database cannot be created sometimes. Weird! Seems to be Entity Framework issue
-                                //that's just wait 5 seconds (3 seconds is not enough for some reasons)
-                                Thread.Sleep(5000);
                             }
                         }
                         else
@@ -400,6 +420,9 @@ namespace Nop.Web.Controllers
                     //reset cache
                     DataSettingsHelper.ResetCache();
 
+                    var cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+                    cacheManager.Clear();
+
                     //clear provider settings if something got wrong
                     settingsManager.SaveSettings(new DataSettings
                     {
@@ -413,7 +436,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public ActionResult ChangeLanguage(string language)
+        public virtual ActionResult ChangeLanguage(string language)
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");
@@ -424,7 +447,8 @@ namespace Nop.Web.Controllers
             return RedirectToAction("Index", "Install");
         }
 
-        public ActionResult RestartInstall()
+        [HttpPost]
+        public virtual ActionResult RestartInstall()
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");

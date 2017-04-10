@@ -213,6 +213,11 @@ namespace Nop.Web.Infrastructure
                             new { controller = "BackInStockSubscription", action = "SubscribePopup" },
                             new { productId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("BackInStockSubscribeSend",
+                            "backinstocksubscribesend/{productId}",
+                            new { controller = "BackInStockSubscription", action = "SubscribePopupPOST" },
+                            new { productId = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
             //downloads
             routes.MapRoute("GetSampleDownload",
                             "download/sample/{productid}",
@@ -383,6 +388,10 @@ namespace Nop.Web.Infrastructure
                             "customer/activation",
                             new { controller = "Customer", action = "AccountActivation" },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("EmailRevalidation",
+                            "customer/revalidateemail",
+                            new { controller = "Customer", action = "EmailRevalidation" },
+                            new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("CustomerForumSubscriptions",
                             "boards/forumsubscriptions",
                             new { controller = "Boards", action = "CustomerForumSubscriptions" },
@@ -531,7 +540,12 @@ namespace Nop.Web.Infrastructure
                             new { controller = "ShoppingCart", action = "UploadFileCheckoutAttribute" },
                             new { attributeId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
-            
+            //return request with "upload file" tsupport
+            routes.MapLocalizedRoute("UploadFileReturnRequest",
+                            "uploadfilereturnrequest",
+                            new { controller = "ReturnRequest", action = "UploadFileReturnRequest" },
+                            new[] { "Nop.Web.Controllers" });
+
             //forums
             routes.MapLocalizedRoute("ActiveDiscussions",
                             "boards/activediscussions",
@@ -687,6 +701,11 @@ namespace Nop.Web.Infrastructure
             routes.MapLocalizedRoute("sitemap.xml",
                             "sitemap.xml",
                             new { controller = "Common", action = "SitemapXml" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("sitemap-indexed.xml",
+                            "sitemap-{Id}.xml",
+                            new { controller = "Common", action = "SitemapXml" },
+                            new { Id = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
 
             //store closed

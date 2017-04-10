@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Payments;
 
 namespace Nop.Services.Payments
@@ -23,7 +24,7 @@ namespace Nop.Services.Payments
         /// </summary>
         public bool Success
         {
-            get { return (this.Errors.Count == 0); }
+            get { return (!this.Errors.Any()); }
         }
 
         /// <summary>
@@ -80,6 +81,11 @@ namespace Nop.Services.Payments
         /// Gets or sets a value indicating whether storing of credit card number, CVV2 is allowed
         /// </summary>
         public bool AllowStoringCreditCardNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating that the recurring payment failed
+        /// </summary>
+        public bool RecurringPaymentFailed { get; set; }
 
         /// <summary>
         /// Gets or sets a payment status after processing

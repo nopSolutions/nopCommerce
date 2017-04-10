@@ -1,0 +1,61 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Shipping.CanadaPost.Models.CanadaPostShippingModel
+@using Nop.Web.Framework;
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @T("Plugins.Shipping.CanadaPost.Instructions")
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerNumber)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CustomerNumber)
+                        @Html.ValidationMessageFor(model => model.CustomerNumber)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.ContractId)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.ContractId)
+                        @Html.ValidationMessageFor(model => model.ContractId)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.ApiKey)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.ApiKey)
+                        @Html.ValidationMessageFor(model => model.ApiKey)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.UseSandbox)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.UseSandbox)
+                        @Html.ValidationMessageFor(model => model.UseSandbox)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

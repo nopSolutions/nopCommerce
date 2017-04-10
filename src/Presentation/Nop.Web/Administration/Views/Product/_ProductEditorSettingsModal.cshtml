@@ -1,0 +1,798 @@
+﻿@model ProductModel
+
+<div id="productsettings-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="productsettings-window-title">
+    <div class="modal-dialog editor-settings-modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="productsettings-window-title">
+                    @T("Admin.Configuration.Settings.ProductEditor.ModalTitle")
+                </h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("SaveProductEditorSettings", "Product"))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("returnurl", HttpContext.Current.Request.RawUrl)
+                    <div class="row">
+                        <div class="col-md-12">
+                            @T("Admin.Configuration.Settings.ProductEditor.ModalDescription")
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="panel-group">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.CommonInfo")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Id)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Id)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Id)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.ProductType)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.ProductType)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.ProductType)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.ProductTemplate)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.ProductTemplate)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.ProductTemplate)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.VisibleIndividually)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.VisibleIndividually)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.VisibleIndividually)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Published)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Published)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Published)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.ProductTags)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.ProductTags)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.ProductTags)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.GTIN)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.GTIN)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.GTIN)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.ManufacturerPartNumber)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.ManufacturerPartNumber)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.ManufacturerPartNumber)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.ShowOnHomePage)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.ShowOnHomePage)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.ShowOnHomePage)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.DisplayOrder)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.DisplayOrder)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.DisplayOrder)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.AllowCustomerReviews)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.AllowCustomerReviews)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.AllowCustomerReviews)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.AvailableStartDate)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.AvailableStartDate)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.AvailableStartDate)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.AvailableEndDate)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.AvailableEndDate)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.AvailableEndDate)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.MarkAsNew)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.MarkAsNew)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.MarkAsNew)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.MarkAsNewStartDate)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.MarkAsNewStartDate)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.MarkAsNewStartDate)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.MarkAsNewEndDate)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.MarkAsNewEndDate)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.MarkAsNewEndDate)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.AdminComment)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.AdminComment)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.AdminComment)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.CreatedOn)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.CreatedOn)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.CreatedOn)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.UpdatedOn)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.UpdatedOn)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.UpdatedOn)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.AdvancedProductTypes")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.IsGiftCard)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.IsGiftCard)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.IsGiftCard)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.DownloadableProduct)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.DownloadableProduct)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.DownloadableProduct)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.RecurringProduct)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.RecurringProduct)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.RecurringProduct)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.IsRental)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.IsRental)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.IsRental)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel-group">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Price")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.OldPrice)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.OldPrice)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.OldPrice)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.ProductCost)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.ProductCost)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.ProductCost)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.TierPrices)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.TierPrices)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.TierPrices)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Discounts)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Discounts)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Discounts)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.DisableBuyButton)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.DisableBuyButton)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.DisableBuyButton)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.DisableWishlistButton)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.DisableWishlistButton)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.DisableWishlistButton)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.AvailableForPreOrder)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.AvailableForPreOrder)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.AvailableForPreOrder)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.CallForPrice)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.CallForPrice)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.CallForPrice)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.CustomerEntersPrice)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.CustomerEntersPrice)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.CustomerEntersPrice)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.PAngV)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.PAngV)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.PAngV)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.TelecommunicationsBroadcastingElectronicServices)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.TelecommunicationsBroadcastingElectronicServices)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.TelecommunicationsBroadcastingElectronicServices)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Shipping")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Weight)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Weight)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Weight)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Dimensions)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Dimensions)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Dimensions)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.FreeShipping)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.FreeShipping)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.FreeShipping)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.ShipSeparately)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.ShipSeparately)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.ShipSeparately)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.AdditionalShippingCharge)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.AdditionalShippingCharge)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.AdditionalShippingCharge)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.DeliveryDate)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.DeliveryDate)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.DeliveryDate)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Mappings")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Vendor)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Vendor)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Vendor)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Stores)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Stores)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Stores)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Manufacturers)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Manufacturers)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Manufacturers)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel-group">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Inventory")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.ProductAvailabilityRange)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.ProductAvailabilityRange)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.ProductAvailabilityRange)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.UseMultipleWarehouses)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.UseMultipleWarehouses)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.UseMultipleWarehouses)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Warehouse)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Warehouse)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Warehouse)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.DisplayStockAvailability)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.DisplayStockAvailability)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.DisplayStockAvailability)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.DisplayStockQuantity)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.DisplayStockQuantity)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.DisplayStockQuantity)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.MinimumStockQuantity)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.MinimumStockQuantity)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.MinimumStockQuantity)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.LowStockActivity)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.LowStockActivity)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.LowStockActivity)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.NotifyAdminForQuantityBelow)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.NotifyAdminForQuantityBelow)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.NotifyAdminForQuantityBelow)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Backorders)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Backorders)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Backorders)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.AllowBackInStockSubscriptions)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.AllowBackInStockSubscriptions)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.AllowBackInStockSubscriptions)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.MinimumCartQuantity)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.MinimumCartQuantity)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.MinimumCartQuantity)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.MaximumCartQuantity)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.MaximumCartQuantity)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.MaximumCartQuantity)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.AllowedQuantities)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.AllowedQuantities)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.AllowedQuantities)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.AllowAddingOnlyExistingAttributeCombinations)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.AllowAddingOnlyExistingAttributeCombinations)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.AllowAddingOnlyExistingAttributeCombinations)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.NotReturnable)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.NotReturnable)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.NotReturnable)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Security")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.ACL)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.ACL)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.ACL)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.LinkedProducts")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.RequireOtherProductsAddedToTheCart)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.RequireOtherProductsAddedToTheCart)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.RequireOtherProductsAddedToTheCart)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.RelatedProducts)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.RelatedProducts)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.RelatedProducts)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.CrossSellsProducts)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.CrossSellsProducts)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.CrossSellsProducts)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Tabs")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.Seo)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.Seo)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.Seo)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.PurchasedWithOrders)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.PurchasedWithOrders)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.PurchasedWithOrders)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.OneColumnProductPage)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.OneColumnProductPage)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.OneColumnProductPage)
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.ProductAttributes)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.ProductAttributes)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.ProductAttributes)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.SpecificationAttributes)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.SpecificationAttributes)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.SpecificationAttributes)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @Html.NopLabelFor(model => model.ProductEditorSettingsModel.StockQuantityHistory)
+                                            </div>
+                                            <div class="col-md-2">
+                                                @Html.NopEditorFor(model => model.ProductEditorSettingsModel.StockQuantityHistory)
+                                                @Html.ValidationMessageFor(model => model.ProductEditorSettingsModel.StockQuantityHistory)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center margin-t-5">
+                            <button type="submit" name="save-product-editor-settings" class="btn btn-lg bg-light-blue">Save</button>
+                        </div>
+                    </div>
+                }
+                <script>
+                    $(document).ready(function () {
+                        $('input[type=checkbox].select-all-fields').each(function (index, value) {
+                            if ($('input[type=checkbox]:checked', $(this).closest('.panel')).length > 0) {
+                                $(this).attr('checked', true);
+                            }
+                        });
+
+
+                        $('input[type=checkbox].select-all-fields').on('click', function () {
+                            $('input[type=checkbox]', $(this).closest('.panel')).attr('checked', $(this).is(':checked'));
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

@@ -4,9 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
 using Nop.Services.Common;
+using Nop.Services.Customers.Cache;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Customers
@@ -82,6 +84,135 @@ namespace Nop.Services.Customers
             return result;
         }
 
+        /// <summary>
+        /// Gets coupon codes
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Coupon codes</returns>
+        public static string[] ParseAppliedDiscountCouponCodes(this Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
+            var existingCouponCodes = customer.GetAttribute<string>(SystemCustomerAttributeNames.DiscountCouponCode,
+                genericAttributeService);
+
+            var couponCodes = new List<string>();
+            if (String.IsNullOrEmpty(existingCouponCodes))
+                return couponCodes.ToArray();
+
+            try
+            {
+                var xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(existingCouponCodes);
+
+                var nodeList1 = xmlDoc.SelectNodes(@"//DiscountCouponCodes/CouponCode");
+                foreach (XmlNode node1 in nodeList1)
+                {
+                    if (node1.Attributes != null && node1.Attributes["Code"] != null)
+                    {
+                        string code = node1.Attributes["Code"].InnerText.Trim();
+                        couponCodes.Add(code);
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                Debug.Write(exc.ToString());
+            }
+            return couponCodes.ToArray();
+        }
+        /// <summary>
+        /// Adds a coupon code
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="couponCode">Coupon code</param>
+        /// <returns>New coupon codes document</returns>
+        public static void ApplyDiscountCouponCode(this Customer customer, string couponCode)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
+            string result = string.Empty;
+            try
+            {
+                var existingCouponCodes = customer.GetAttribute<string>(SystemCustomerAttributeNames.DiscountCouponCode,
+                    genericAttributeService);
+
+                couponCode = couponCode.Trim().ToLower();
+
+                var xmlDoc = new XmlDocument();
+                if (String.IsNullOrEmpty(existingCouponCodes))
+                {
+                    var element1 = xmlDoc.CreateElement("DiscountCouponCodes");
+                    xmlDoc.AppendChild(element1);
+                }
+                else
+                {
+                    xmlDoc.LoadXml(existingCouponCodes);
+                }
+                var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//DiscountCouponCodes");
+
+                XmlElement gcElement = null;
+                //find existing
+                var nodeList1 = xmlDoc.SelectNodes(@"//DiscountCouponCodes/CouponCode");
+                foreach (XmlNode node1 in nodeList1)
+                {
+                    if (node1.Attributes != null && node1.Attributes["Code"] != null)
+                    {
+                        string couponCodeAttribute = node1.Attributes["Code"].InnerText.Trim();
+                        if (couponCodeAttribute.ToLower() == couponCode.ToLower())
+                        {
+                            gcElement = (XmlElement)node1;
+                            break;
+                        }
+                    }
+                }
+
+                //create new one if not found
+                if (gcElement == null)
+                {
+                    gcElement = xmlDoc.CreateElement("CouponCode");
+                    gcElement.SetAttribute("Code", couponCode);
+                    rootElement.AppendChild(gcElement);
+                }
+
+                result = xmlDoc.OuterXml;
+            }
+            catch (Exception exc)
+            {
+                Debug.Write(exc.ToString());
+            }
+
+            //apply new value
+            genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.DiscountCouponCode, result);
+        }
+        /// <summary>
+        /// Removes a coupon code
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="couponCode">Coupon code to remove</param>
+        /// <returns>New coupon codes document</returns>
+        public static void RemoveDiscountCouponCode(this Customer customer, string couponCode)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            //get applied coupon codes
+            var existingCouponCodes = customer.ParseAppliedDiscountCouponCodes();
+
+            //clear them
+            var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
+            genericAttributeService.SaveAttribute<string>(customer, SystemCustomerAttributeNames.DiscountCouponCode, null);
+
+            //save again except removed one
+            foreach (string existingCouponCode in existingCouponCodes)
+                if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
+                    customer.ApplyDiscountCouponCode(existingCouponCode);
+        }
+
 
         /// <summary>
         /// Gets coupon codes
@@ -94,17 +225,17 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException("customer");
 
             var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
-            var existingGiftCartCouponCodes = customer.GetAttribute<string>(SystemCustomerAttributeNames.GiftCardCouponCodes,
+            var existingCouponCodes = customer.GetAttribute<string>(SystemCustomerAttributeNames.GiftCardCouponCodes,
                 genericAttributeService);
 
             var couponCodes = new List<string>();
-            if (String.IsNullOrEmpty(existingGiftCartCouponCodes))
+            if (String.IsNullOrEmpty(existingCouponCodes))
                 return couponCodes.ToArray();
 
             try
             {
                 var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(existingGiftCartCouponCodes);
+                xmlDoc.LoadXml(existingCouponCodes);
 
                 var nodeList1 = xmlDoc.SelectNodes(@"//GiftCardCouponCodes/CouponCode");
                 foreach (XmlNode node1 in nodeList1)
@@ -137,20 +268,20 @@ namespace Nop.Services.Customers
             string result = string.Empty;
             try
             {
-                var existingGiftCartCouponCodes = customer.GetAttribute<string>(SystemCustomerAttributeNames.GiftCardCouponCodes,
+                var existingCouponCodes = customer.GetAttribute<string>(SystemCustomerAttributeNames.GiftCardCouponCodes,
                     genericAttributeService);
 
                 couponCode = couponCode.Trim().ToLower();
 
                 var xmlDoc = new XmlDocument();
-                if (String.IsNullOrEmpty(existingGiftCartCouponCodes))
+                if (String.IsNullOrEmpty(existingCouponCodes))
                 {
                     var element1 = xmlDoc.CreateElement("GiftCardCouponCodes");
                     xmlDoc.AppendChild(element1);
                 }
                 else
                 {
-                    xmlDoc.LoadXml(existingGiftCartCouponCodes);
+                    xmlDoc.LoadXml(existingCouponCodes);
                 }
                 var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//GiftCardCouponCodes");
 
@@ -277,6 +408,46 @@ namespace Nop.Services.Customers
                .ToArray();
 
             return customerRolesIds;
+        }
+
+        /// <summary>
+        /// Check whether customer password is expired 
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>True if password is expired; otherwise false</returns>
+        public static bool PasswordIsExpired(this Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            //the guests don't have a password
+            if (customer.IsGuest())
+                return false;
+
+            //password lifetime is disabled for user
+            if (!customer.CustomerRoles.Any(role => role.Active && role.EnablePasswordLifetime))
+                return false;
+
+            //setting disabled for all
+            var customerSettings = EngineContext.Current.Resolve<CustomerSettings>();
+            if (customerSettings.PasswordLifetime == 0)
+                return false;
+
+            //cache result between HTTP requests 
+            var cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+            var cacheKey = string.Format(CustomerCacheEventConsumer.CUSTOMER_PASSWORD_LIFETIME, customer.Id);
+            //get current password usage time
+            var currentLifetime = cacheManager.Get(cacheKey, () =>
+            {
+                var customerPassword = EngineContext.Current.Resolve<ICustomerService>().GetCurrentPassword(customer.Id);
+                //password is not found, so return max value to force customer to change password
+                if (customerPassword == null)
+                    return int.MaxValue;
+
+                return (DateTime.UtcNow - customerPassword.CreatedOnUtc).Days;
+            });
+
+            return currentLifetime >= customerSettings.PasswordLifetime;
         }
     }
 }

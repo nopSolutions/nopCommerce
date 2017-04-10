@@ -1,0 +1,199 @@
+﻿@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
+}
+@using Nop.Core.Infrastructure
+@using Nop.Services.Stores
+@using Nop.Web.Framework
+@model Nop.Plugin.Shipping.FixedOrByWeight.Models.ConfigurationModel
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new {id = "shipping-byweight-form"}))
+{
+    @Html.AntiForgeryToken()
+    <div class="panel-group advanced-setting">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>
+                    <b>@T("Plugins.Shipping.FixedOrByWeight.Formula")</b>
+                    @T("Plugins.Shipping.FixedOrByWeight.Formula.Value")
+                </p>
+                <div id="shipping-byweight-grid"></div>
+                <script>
+                    $(document)
+                        .ready(function() {
+                            $("#shipping-byweight-grid")
+                                .kendoGrid({
+                                    dataSource: {
+                                        type: "json",
+                                        transport: {
+                                            read: {
+                                                url:
+                                                    "@Html.Raw(Url.Action("RateByWeightList", "FixedOrByWeight", new RouteValueDictionary {{"Namespaces", "Nop.Plugin.Shipping.FixedOrByWeight.Controllers"}, {"area", ""}}))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: addAntiForgeryToken
+                                            },
+                                            destroy: {
+                                                url:
+                                                    "@Html.Raw(Url.Action("DeleteRateByWeigh", "FixedOrByWeight", new RouteValueDictionary {{"Namespaces", "Nop.Plugin.Shipping.FixedOrByWeight.Controllers"}, {"area", ""}}))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: addAntiForgeryToken
+                                            }
+                                        },
+                                        schema: {
+                                            data: "Data",
+                                            total: "Total",
+                                            errors: "Errors",
+                                            model: {
+                                                id: "Id"
+                                            }
+                                        },
+                                        requestEnd: function(e) {
+                                            if (e.type == "update") {
+                                                this.read();
+                                            }
+                                        },
+                                        error: function(e) {
+                                            display_kendoui_grid_error(e);
+                                            // Cancel the changes
+                                            this.cancelChanges();
+                                        },
+                                        pageSize: @(defaultGridPageSize),
+                                        serverPaging: true,
+                                        serverFiltering: true,
+                                        serverSorting: true
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        pageSizes: [@(gridPageSizes)],
+                                        @Html.Partial("~/Administration/Views/Shared/_GridPagerMessages.cshtml")
+                                    },
+                                    editable: {
+                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                        mode: "inline"
+                                    },
+                                    scrollable: false,
+                                    columns: [
+                                        {
+                                            field: "StoreName",
+                                            hidden: @(stores.Count > 1 ? "false" : "true"),
+                                            title: "@T("Plugins.Shipping.FixedOrByWeight.Fields.Store")",
+                                            width: 200
+                                        }, {
+                                            field: "WarehouseName",
+                                            title: "@T("Plugins.Shipping.FixedOrByWeight.Fields.Warehouse")",
+                                            width: 200
+                                        }, {
+                                            field: "CountryName",
+                                            title: "@T("Plugins.Shipping.FixedOrByWeight.Fields.Country")",
+                                            width: 200
+                                        }, {
+                                            field: "StateProvinceName",
+                                            title: "@T("Plugins.Shipping.FixedOrByWeight.Fields.StateProvince")",
+                                            width: 200
+                                        }, {
+                                            field: "Zip",
+                                            title: "@T("Plugins.Shipping.FixedOrByWeight.Fields.Zip")",
+                                            width: 200
+                                        }, {
+                                            field: "ShippingMethodName",
+                                            title: "@T("Plugins.Shipping.FixedOrByWeight.Fields.ShippingMethod")",
+                                            width: 200
+                                        }, {
+                                            field: "DataHtml",
+                                            title: "@T("Plugins.Shipping.FixedOrByWeight.Fields.DataHtml")",
+                                            width: 400,
+                                            encoded: false
+                                        }, {
+                                            field: "Id",
+                                            title: "@T("Admin.Common.Edit")",
+                                            width: 100,
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                            template: "<button onclick=\"javascript:OpenWindow('@Url.RouteUrl("Plugin.Shipping.FixedOrByWeight.EditRateByWeighPopup")?id=#=Id#&btnId=btnRefresh&formId=shipping-byweight-form', 800, 800, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
+                                        }, {
+                                            command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                            title: "@T("Admin.Common.Delete")",
+                                            width: 100
+                                        }
+                                    ]
+                                });
+                        });
+                </script>
+            </div>
+            <div class="panel-footer">
+                @{
+                    var addNewUrl = Url.RouteUrl("Plugin.Shipping.FixedOrByWeight.AddRateByWeighPopup") + "?btnId=btnRefresh&formId=shipping-byweight-form";
+                }
+                <input type="submit" id="btnAddNewOption" class="btn btn-primary" value="@T("Plugins.Shipping.FixedOrByWeight.AddRecord")" onclick="javascript:OpenWindow('@(addNewUrl)', 800, 800, true); return false;"/>
+                <input type="submit" id="btnRefresh" class="btn btn-default" style="display: none"/>
+            </div>
+            <script type="text/javascript">
+                $(document)
+                    .ready(function() {
+                        $('#btnRefresh')
+                            .click(function() {
+                                //refresh grid
+                                var grid = $("#shipping-byweight-grid").data('kendoGrid');
+                                //grid.dataSource.page(1); //new search. Set page size to 1
+                                grid.dataSource.read();
+
+                                //return false to don't reload a page
+                                return false;
+                            });
+                    });
+            </script>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.LimitMethodsToCreated)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.LimitMethodsToCreated)
+                        @Html.ValidationMessageFor(model => model.LimitMethodsToCreated)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="button" id="savegeneralsettings" class="btn btn-primary" value="@T("Admin.Common.Save")"/>
+
+                        <script type="text/javascript">
+                            $(document)
+                                .ready(function() {
+                                    $('#savegeneralsettings')
+                                        .click(function() {
+
+                                            var postData = $(this.form).serialize();
+                                            addAntiForgeryToken(postData);
+
+                                            $.ajax({
+                                                cache: false,
+                                                type: 'POST',
+                                                url:
+                                                    '@Url.RouteUrl("Plugin.Shipping.FixedOrByWeight.Configure")',
+                                                data: postData,
+                                                dataType: 'json',
+                                                success: function(data) {
+                                                    alert('Saved');
+                                                },
+                                                error: function(xhr, ajaxOptions, thrownError) {
+                                                    alert('Error while saving.');
+                                                }
+                                            });
+                                            return false;
+                                        });
+                                });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

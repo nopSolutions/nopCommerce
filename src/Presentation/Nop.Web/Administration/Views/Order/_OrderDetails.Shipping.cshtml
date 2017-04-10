@@ -3,7 +3,7 @@
 <div class="panel-group">
     @if (Model.IsShippable)
     {
-        if (Model.IsShippable && Model.ShippingAddress != null)
+        if (Model.ShippingAddress != null)
         {
             <div class="panel panel-default">
                 <div class="panel-body">
@@ -12,9 +12,9 @@
                             @Html.NopLabelFor(model => model.ShippingAddress)
                         </div>
                         <div class="col-md-9">
-                            <img alt="google maps" src="@Url.Content("~/Administration/Content/images/google-maps.gif")"/>
+                            <img alt="google maps" src="@Url.Content("~/Administration/Content/images/google-maps.gif")" />
                             <a href="@Html.Raw(Model.ShippingAddressGoogleMapsUrl)" style="margin-bottom: 10px;" target="_blank">@T("Admin.Orders.Fields.ShippingAddress.ViewOnGoogleMaps")</a>
-                            
+
                             <table class="table table-hover table-bordered" style="max-width: 400px;">
                                 @if (Model.ShippingAddress.FirstNameEnabled || Model.ShippingAddress.LastNameEnabled)
                                 {
@@ -160,6 +160,70 @@
             </div>
         }
 
+        if (Model.PickupAddress != null)
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.PickupAddress)
+                        </div>
+                        <div class="col-md-9">
+                            <img alt="google maps" src="@Url.Content("~/Administration/Content/images/google-maps.gif")" />
+                            <a href="@Html.Raw(Model.PickupAddressGoogleMapsUrl)" style="margin-bottom: 10px;" target="_blank">@T("Admin.Orders.Fields.PickupAddress.ViewOnGoogleMaps")</a>
+
+                            <table class="table table-hover table-bordered" style="max-width: 400px;">
+                                @if (!string.IsNullOrEmpty(Model.PickupAddress.Address1))
+                                {
+                                    <tr>
+                                        <td>
+                                            @T("Admin.Orders.Address.Address1")
+                                        </td>
+                                        <td>
+                                            @Model.PickupAddress.Address1
+                                        </td>
+                                    </tr>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.PickupAddress.City))
+                                {
+                                    <tr>
+                                        <td>
+                                            @T("Admin.Orders.Address.City")
+                                        </td>
+                                        <td>
+                                            @Model.PickupAddress.City
+                                        </td>
+                                    </tr>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.PickupAddress.CountryName))
+                                {
+                                    <tr>
+                                        <td>
+                                            @T("Admin.Orders.Address.Country")
+                                        </td>
+                                        <td>
+                                            @Model.PickupAddress.CountryName
+                                        </td>
+                                    </tr>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.PickupAddress.ZipPostalCode))
+                                {
+                                    <tr>
+                                        <td>
+                                            @T("Admin.Orders.Address.ZipPostalCode")
+                                        </td>
+                                        <td>
+                                            @Model.PickupAddress.ZipPostalCode
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
@@ -199,9 +263,12 @@
                                     <button type="submit" onclick="toggleEditShippingMethod(true);return false;" id="btnEditShippingMethod" class="btn btn-primary">
                                         @T("Admin.Common.Edit")
                                     </button>
-                                    <button type="submit" id="btnSaveShippingMethod" name="save-shipping-method" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+
+                                    <button type="submit" id="btnSaveShippingMethod" name="save-shipping-method" class="btn btn-primary">
                                         @T("Admin.Common.Save")
                                     </button>
+                                    @Html.ActionConfirmation("btnSaveShippingMethod")
+
                                     <button type="submit" onclick="toggleEditShippingMethod(false);return false;" id="btnCancelShippingMethod" class="btn bg-teal">
                                         @T("Admin.Common.Cancel")
                                     </button>
@@ -224,7 +291,7 @@
                             @Html.NopLabelFor(model => model.ShippingStatus)
                         </div>
                         <div class="col-md-9">
-                             @Html.NopDisplayFor(model => model.ShippingStatus)
+                            @Html.NopDisplayFor(model => model.ShippingStatus)
                         </div>
                     </div>
                 }
@@ -269,7 +336,8 @@
                                 refresh: true,
                                 numeric: false,
                                 previousNext: false,
-                                info: false
+                                info: false,
+                                @Html.Partial("_GridPagerMessages")
                             },
                             //details grid
                             detailInit: detailInit,
@@ -280,8 +348,8 @@
                                     title: "@T("Admin.Orders.Shipments.ID")",
                                     width: 50
                                 }, {
-                                    field: "OrderId",
-                                    title: "@T("Admin.Orders.Shipments.OrderID")",
+                                    field: "CustomOrderNumber",
+                                    title: "@T("Admin.Orders.Shipments.CustomOrderNumber")",
                                     width: 100
                                 }, {
                                     field: "TrackingNumber",
@@ -307,7 +375,9 @@
                                     field: "Id",
                                     title: "@T("Admin.Common.View")",
                                     width: 50,
-                                    template: '<a href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#">@T("Admin.Common.View")</a>'
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
                                 }
                             ]
                         });
@@ -346,7 +416,8 @@
                                 refresh: true,
                                 numeric: false,
                                 previousNext: false,
-                                info: false
+                                info: false,
+                                @Html.Partial("_GridPagerMessages")
                             },
                             columns: [
                                 {

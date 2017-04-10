@@ -11,10 +11,10 @@ namespace Nop.Admin.Validators.Directory
     {
         public MeasureWeightValidator(ILocalizationService localizationService, IDbContext dbContext)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Measures.Weights.Fields.Name.Required"));
-            RuleFor(x => x.SystemKeyword).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Measures.Weights.Fields.SystemKeyword.Required"));
+            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Shipping.Measures.Weights.Fields.Name.Required"));
+            RuleFor(x => x.SystemKeyword).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Shipping.Measures.Weights.Fields.SystemKeyword.Required"));
 
-            SetStringPropertiesMaxLength<MeasureWeight>(dbContext);
+            SetDatabaseValidationRules<MeasureWeight>(dbContext);
         }
     }
 }

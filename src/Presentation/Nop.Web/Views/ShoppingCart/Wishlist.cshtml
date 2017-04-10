@@ -9,7 +9,7 @@
     //title
     Html.AddTitleParts(T("PageTitle.Wishlist").Text);
     //page class
-    Html.AddPageCssClassParts("html-wishlist-page");
+    Html.AppendPageCssClassParts("html-wishlist-page");
 
     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 }
@@ -211,8 +211,14 @@
                                        @if (!String.IsNullOrEmpty(item.Discount))
                                        {
                                            <div class="discount">
-                                               @T("ShoppingCart.ItemYouSave"): @item.Discount
+                                               @T("ShoppingCart.ItemYouSave", item.Discount)
                                            </div>
+                                           if (item.MaximumDiscountedQty.HasValue)
+                                           {
+                                               <div class="discount-additional-info">
+                                                   @T("ShoppingCart.MaximumDiscountedQty", item.MaximumDiscountedQty.Value)
+                                               </div>
+                                           }
                                        }
                                    </td>
                                </tr>

@@ -22,10 +22,11 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.System.Log.DeleteSelected")
             </button>
-            <button type="submit" name="clearall" class="btn bg-red" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+            <button type="submit" id="clearall" name="clearall" class="btn bg-red">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.System.Log.ClearLog")
             </button>
+            @Html.ActionConfirmation("clearall")
         </div>
     </div>
 
@@ -115,7 +116,8 @@
                                     },
                                     pageable: {
                                         refresh: true,
-                                        pageSizes: [@(gridPageSizes)]
+                                        pageSizes: [@(gridPageSizes)],
+                                        @Html.Partial("_GridPagerMessages")
                                     },
                                     scrollable: false,
                                     dataBound: onDataBound,
@@ -144,7 +146,9 @@
                                         field: "Id",
                                         title: "@T("Admin.Common.View")",
                                         width: 50,
-                                        template: '<a href="View/#=Id#">@T("Admin.Common.View")</a>'
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-default" href="View/#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
                                     }
                                     ]
                                 });
@@ -210,7 +214,7 @@
                                 });
 
                                 //wire up checkboxes.
-                                $('#log-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function(e) {
+                                $('#log-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
                                     var $check = $(this);
                                     if ($check.is(":checked") == true) {
                                         var checked = jQuery.inArray($check.val(), selectedIds);
@@ -243,7 +247,7 @@
                             }
 
                             function onDataBound(e) {
-                                $('#log-grid input[type=checkbox][id!=mastercheckbox]').each(function() {
+                                $('#log-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function() {
                                     var currentId = $(this).val();
                                     var checked = jQuery.inArray(currentId, selectedIds);
                                     //set checked based on if current checkbox's value is in selectedIds.
@@ -254,8 +258,8 @@
                             }
 
                             function updateMasterCheckbox() {
-                                var numChkBoxes = $('#log-grid input[type=checkbox][id!=mastercheckbox]').length;
-                                var numChkBoxesChecked = $('#log-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
+                                var numChkBoxes = $('#log-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
+                                var numChkBoxesChecked = $('#log-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
                                 $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
                             }
                         </script>

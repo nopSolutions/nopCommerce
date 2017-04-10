@@ -75,8 +75,7 @@ namespace Nop.Admin.Models.Orders
         public string OrderNotes { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.List.GoDirectlyToNumber")]
-        [AllowHtml]
-        public int GoDirectlyToNumber { get; set; }
+        public string GoDirectlyToCustomOrderNumber { get; set; }
 
         public bool IsLoggedInAsVendor { get; set; }
 

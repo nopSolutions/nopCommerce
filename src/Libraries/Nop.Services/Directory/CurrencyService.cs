@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Plugins;
 using Nop.Services.Events;
@@ -17,6 +18,7 @@ namespace Nop.Services.Directory
     public partial class CurrencyService : ICurrencyService
     {
         #region Constants
+
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -76,19 +78,23 @@ namespace Nop.Services.Directory
         }
 
         #endregion
-        
+
         #region Methods
+
+        #region Currency
 
         /// <summary>
         /// Gets currency live rates
         /// </summary>
         /// <param name="exchangeRateCurrencyCode">Exchange rate currency code</param>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <returns>Exchange rates</returns>
-        public virtual IList<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
+        public virtual IList<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode, Customer customer = null)
         {
-            var exchangeRateProvider = LoadActiveExchangeRateProvider();
+            var exchangeRateProvider = LoadActiveExchangeRateProvider(customer);
             if (exchangeRateProvider == null)
                 throw new Exception("Active exchange rate provider cannot be loaded");
+
             return exchangeRateProvider.GetCurrencyLiveRates(exchangeRateCurrencyCode);
         }
 
@@ -149,7 +155,7 @@ namespace Nop.Services.Directory
                 var query = _currencyRepository.Table;
                 if (!showHidden)
                     query = query.Where(c => c.Published);
-                query = query.OrderBy(c => c.DisplayOrder);
+                query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
                 return query.ToList();
             });
 
@@ -197,7 +203,9 @@ namespace Nop.Services.Directory
             _eventPublisher.EntityUpdated(currency);
         }
 
+        #endregion
 
+        #region Conversions
 
         /// <summary>
         /// Converts currency
@@ -302,17 +310,7 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException("sourceCurrencyCode");
 
             var primaryStoreCurrency = GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
-            if (primaryStoreCurrency == null)
-                throw new Exception("Primary store currency cannot be loaded");
-
-            decimal result = amount;
-            if (result != decimal.Zero && sourceCurrencyCode.Id != primaryStoreCurrency.Id)
-            {
-                decimal exchangeRate = sourceCurrencyCode.Rate;
-                if (exchangeRate == decimal.Zero)
-                    throw new NopException(string.Format("Exchange rate not found for currency [{0}]", sourceCurrencyCode.Name));
-                result = result / exchangeRate;
-            }
+            var result = ConvertCurrency(amount, sourceCurrencyCode, primaryStoreCurrency);
             return result;
         }
 
@@ -328,17 +326,22 @@ namespace Nop.Services.Directory
             var result = ConvertCurrency(amount, primaryStoreCurrency, targetCurrencyCode);
             return result;
         }
-       
+
+        #endregion
+        
+        #region Exchange rate providers
 
         /// <summary>
         /// Load active exchange rate provider
         /// </summary>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <returns>Active exchange rate provider</returns>
-        public virtual IExchangeRateProvider LoadActiveExchangeRateProvider()
+        public virtual IExchangeRateProvider LoadActiveExchangeRateProvider(Customer customer = null)
         {
             var exchangeRateProvider = LoadExchangeRateProviderBySystemName(_currencySettings.ActiveExchangeRateProviderSystemName);
-            if (exchangeRateProvider == null)
-                exchangeRateProvider = LoadAllExchangeRateProviders().FirstOrDefault();
+            if (exchangeRateProvider == null || !_pluginFinder.AuthorizedForUser(exchangeRateProvider.PluginDescriptor, customer))
+                exchangeRateProvider = LoadAllExchangeRateProviders(customer).FirstOrDefault();
+
             return exchangeRateProvider;
         }
 
@@ -359,14 +362,17 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Load all exchange rate providers
         /// </summary>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <returns>Exchange rate providers</returns>
-        public virtual IList<IExchangeRateProvider> LoadAllExchangeRateProviders()
+        public virtual IList<IExchangeRateProvider> LoadAllExchangeRateProviders(Customer customer = null)
         {
-            var exchangeRateProviders = _pluginFinder.GetPlugins<IExchangeRateProvider>();
-            return exchangeRateProviders
-                .OrderBy(tp => tp.PluginDescriptor)
-                .ToList();
+            var exchangeRateProviders = _pluginFinder.GetPlugins<IExchangeRateProvider>(customer: customer);
+
+            return exchangeRateProviders.OrderBy(tp => tp.PluginDescriptor).ToList();
         }
+        
+        #endregion
+
         #endregion
     }
 }

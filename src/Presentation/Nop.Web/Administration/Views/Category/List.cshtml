@@ -118,10 +118,11 @@
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)]
+                                    pageSizes: [@(gridPageSizes)],
+                                    @Html.Partial("_GridPagerMessages")
                                 },
                                 editable: {
-                                    confirmation: false,
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                     mode: "inline"
                                 },
                                 scrollable: false,
@@ -139,12 +140,14 @@
                                     }, {
                                         field: "DisplayOrder",
                                         title: "@T("Admin.Catalog.Categories.Fields.DisplayOrder")",
-                                        width: 100
+                                        width: 150
                                     }, {
                                         field: "Id",
                                         title: "@T("Admin.Common.Edit")",
                                         width: 100,
-                                        template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
                                     }
                                 ]
                             });
@@ -208,9 +211,11 @@
                         </ul>
                         <div class="form-group">
                             <div class="col-md-2">
-                                <label class="control-label">
-                                    @T("Admin.Common.ExcelFile")
-                                </label>
+                                <div class="label-wrapper">
+                                    <label class="control-label">
+                                        @T("Admin.Common.ExcelFile")
+                                    </label>
+                                </div>
                             </div>
                             <div class="col-md-10">
                                 <input type="file" id="importexcelfile" name="importexcelfile" class="form-control" />

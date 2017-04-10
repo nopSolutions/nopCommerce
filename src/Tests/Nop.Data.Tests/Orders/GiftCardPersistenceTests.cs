@@ -1,10 +1,4 @@
-﻿using System;
-using System.Linq;
-using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Orders;
+﻿using System.Linq;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -16,141 +10,45 @@ namespace Nop.Data.Tests.Orders
         [Test]
         public void Can_save_and_load_giftCard()
         {
-            var giftCard = new GiftCard
-            {
-                GiftCardType = GiftCardType.Physical,
-                Amount = 1.1M,
-                IsGiftCardActivated = true,
-                GiftCardCouponCode = "Secret",
-                RecipientName = "RecipientName 1",
-                RecipientEmail = "a@b.c",
-                SenderName = "SenderName 1",
-                SenderEmail = "d@e.f",
-                Message = "Message 1",
-                IsRecipientNotified = true,
-                CreatedOnUtc = new DateTime(2010, 01, 01),
-            };
+            var giftCard = this.GetTestGiftCard();
 
-            var fromDb = SaveAndLoadEntity(giftCard);
+            var fromDb = SaveAndLoadEntity(this.GetTestGiftCard());
             fromDb.ShouldNotBeNull();
-            fromDb.GiftCardType.ShouldEqual(GiftCardType.Physical);
-            fromDb.Amount.ShouldEqual(1.1M);
-            fromDb.IsGiftCardActivated.ShouldEqual(true);
-            fromDb.GiftCardCouponCode.ShouldEqual("Secret");
-            fromDb.RecipientName.ShouldEqual("RecipientName 1");
-            fromDb.RecipientEmail.ShouldEqual("a@b.c");
-            fromDb.SenderName.ShouldEqual("SenderName 1");
-            fromDb.SenderEmail.ShouldEqual("d@e.f");
-            fromDb.Message.ShouldEqual("Message 1");
-            fromDb.IsRecipientNotified.ShouldEqual(true);
-            fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
+            fromDb.PropertiesShouldEqual(giftCard);
         }
 
         [Test]
         public void Can_save_and_load_giftCard_with_usageHistory()
         {
-            var giftCard = new GiftCard
-            {
-                GiftCardType = GiftCardType.Physical,
-                Amount = 1.1M,
-                IsGiftCardActivated = true,
-                GiftCardCouponCode = "Secret",
-                RecipientName = "RecipientName 1",
-                RecipientEmail = "a@b.c",
-                SenderName = "SenderName 1",
-                SenderEmail = "d@e.f",
-                Message = "Message 1",
-                IsRecipientNotified = true,
-                CreatedOnUtc = new DateTime(2010, 01, 01)
-            };
-            giftCard.GiftCardUsageHistory.Add
-                (
-                    new GiftCardUsageHistory
-                    {
-                        UsedValue = 1.1M,
-                        CreatedOnUtc = new DateTime(2010, 01, 01),
-                        UsedWithOrder = GetTestOrder()
-                    }
-                );
+            var giftCard = this.GetTestGiftCard();
+            var gcuh = this.GetTestGiftCardUsageHistory();
+            gcuh.UsedWithOrder = this.GetTestOrder();
+            gcuh.UsedWithOrder.Customer = this.GetTestCustomer();
+            gcuh.GiftCard = null;
+            giftCard.GiftCardUsageHistory.Add(gcuh);
             var fromDb = SaveAndLoadEntity(giftCard);
             fromDb.ShouldNotBeNull();
-
+            fromDb.PropertiesShouldEqual(this.GetTestGiftCard());
 
             fromDb.GiftCardUsageHistory.ShouldNotBeNull();
             (fromDb.GiftCardUsageHistory.Count == 1).ShouldBeTrue();
-            fromDb.GiftCardUsageHistory.First().UsedValue.ShouldEqual(1.1M);
+            fromDb.GiftCardUsageHistory.First().PropertiesShouldEqual(this.GetTestGiftCardUsageHistory());
         }
         
         [Test]
         public void Can_save_and_load_giftCard_with_associatedItem()
         {
-            var giftCard = new GiftCard
-            {
-                GiftCardType = GiftCardType.Physical,
-                CreatedOnUtc = new DateTime(2010, 01, 01),
-                PurchasedWithOrderItem = GetTestOrderItem()
-            };
-
+            var giftCard = this.GetTestGiftCard();
+            giftCard.PurchasedWithOrderItem = this.GetTestOrderItem();
+            giftCard.PurchasedWithOrderItem.Order = this.GetTestOrder();
+            giftCard.PurchasedWithOrderItem.Order.Customer = this.GetTestCustomer();
             var fromDb = SaveAndLoadEntity(giftCard);
             fromDb.ShouldNotBeNull();
-
+            fromDb.PropertiesShouldEqual(this.GetTestGiftCard());
 
             fromDb.PurchasedWithOrderItem.ShouldNotBeNull();
             fromDb.PurchasedWithOrderItem.Product.ShouldNotBeNull();
-            fromDb.PurchasedWithOrderItem.Product.Name.ShouldEqual("Product name 1");
-        }
-
-        protected Customer GetTestCustomer()
-        {
-            return new Customer
-            {
-                CustomerGuid = Guid.NewGuid(),
-                AdminComment = "some comment here",
-                Active = true,
-                Deleted = false,
-                CreatedOnUtc = new DateTime(2010, 01, 01),
-                LastActivityDateUtc = new DateTime(2010, 01, 02)
-            };
-        }
-
-        protected OrderItem GetTestOrderItem()
-        {
-            return new OrderItem
-            {
-                Order = GetTestOrder(),
-                Product = GetTestProduct(),
-            };
-        }
-
-        protected Product GetTestProduct()
-        {
-            return new Product
-            {
-                Name = "Product name 1",
-                CreatedOnUtc = new DateTime(2010, 01, 03),
-                UpdatedOnUtc = new DateTime(2010, 01, 04),
-            };
-        }
-
-        protected Order GetTestOrder()
-        {
-            return new Order
-            {
-                OrderGuid = Guid.NewGuid(),
-                Customer = GetTestCustomer(),
-                BillingAddress = new Address
-                {
-                    Country = new Country
-                    {
-                        Name = "United States",
-                        TwoLetterIsoCode = "US",
-                        ThreeLetterIsoCode = "USA",
-                    },
-                    CreatedOnUtc = new DateTime(2010, 01, 01),
-                },
-                Deleted = true,
-                CreatedOnUtc = new DateTime(2010, 01, 01)
-            };
+            fromDb.PurchasedWithOrderItem.Product.PropertiesShouldEqual(this.GetTestProduct());
         }
     }
 }

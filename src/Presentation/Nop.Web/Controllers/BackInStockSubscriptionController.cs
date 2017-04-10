@@ -49,7 +49,7 @@ namespace Nop.Web.Controllers
         #region Methods
 
         // Product details page > back in stock subscribe
-        public ActionResult SubscribePopup(int productId)
+        public virtual ActionResult SubscribePopup(int productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted)
@@ -74,10 +74,10 @@ namespace Nop.Web.Controllers
                 model.AlreadySubscribed = _backInStockSubscriptionService
                     .FindSubscription(_workContext.CurrentCustomer.Id, product.Id, _storeContext.CurrentStore.Id) != null;
             }
-            return View(model);
+            return PartialView(model);
         }
-        [HttpPost, ActionName("SubscribePopup")]
-        public ActionResult SubscribePopupPOST(int productId)
+        [HttpPost]
+        public virtual ActionResult SubscribePopupPOST(int productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted)
@@ -99,7 +99,11 @@ namespace Nop.Web.Controllers
                     //subscription already exists
                     //unsubscribe
                     _backInStockSubscriptionService.DeleteSubscription(subscription);
-                    return Content("Unsubscribed");
+
+                    return Json(new
+                    {
+                        result = "Unsubscribed"
+                    });
                 }
 
                 //subscription does not exist
@@ -108,7 +112,10 @@ namespace Nop.Web.Controllers
                     .GetAllSubscriptionsByCustomerId(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, 0, 1)
                     .TotalCount >= _catalogSettings.MaximumBackInStockSubscriptions)
                 {
-                    return Content(string.Format(_localizationService.GetResource("BackInStockSubscriptions.MaxSubscriptions"), _catalogSettings.MaximumBackInStockSubscriptions));
+                    return Json(new
+                    {
+                        result = string.Format(_localizationService.GetResource("BackInStockSubscriptions.MaxSubscriptions"), _catalogSettings.MaximumBackInStockSubscriptions)
+                    });
                 }
                 subscription = new BackInStockSubscription
                 {
@@ -118,7 +125,11 @@ namespace Nop.Web.Controllers
                     CreatedOnUtc = DateTime.UtcNow
                 };
                 _backInStockSubscriptionService.InsertSubscription(subscription);
-                return Content("Subscribed");
+
+                return Json(new
+                {
+                    result = "Subscribed"
+                });
             }
 
             //subscription not possible
@@ -127,7 +138,7 @@ namespace Nop.Web.Controllers
 
 
         // My account / Back in stock subscriptions
-        public ActionResult CustomerSubscriptions(int? page)
+        public virtual ActionResult CustomerSubscriptions(int? page)
         {
             if (_customerSettings.HideBackInStockSubscriptionsTab)
             {
@@ -178,7 +189,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
         [HttpPost, ActionName("CustomerSubscriptions")]
-        public ActionResult CustomerSubscriptionsPOST(FormCollection formCollection)
+        public virtual ActionResult CustomerSubscriptionsPOST(FormCollection formCollection)
         {
             foreach (var key in formCollection.AllKeys)
             {

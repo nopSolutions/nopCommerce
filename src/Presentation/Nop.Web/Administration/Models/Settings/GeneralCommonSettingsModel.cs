@@ -14,18 +14,21 @@ namespace Nop.Admin.Models.Settings
             StoreInformationSettings = new StoreInformationSettingsModel();
             SeoSettings = new SeoSettingsModel();
             SecuritySettings = new SecuritySettingsModel();
+            CaptchaSettings = new CaptchaSettingsModel();
             PdfSettings = new PdfSettingsModel();
             LocalizationSettings = new LocalizationSettingsModel();
             FullTextSettings = new FullTextSettingsModel();
+            DisplayDefaultMenuItemSettings = new DisplayDefaultMenuItemSettingsModel();
         }
 
         public StoreInformationSettingsModel StoreInformationSettings { get; set; }
         public SeoSettingsModel SeoSettings { get; set; }
         public SecuritySettingsModel SecuritySettings { get; set; }
+        public CaptchaSettingsModel CaptchaSettings { get; set; }
         public PdfSettingsModel PdfSettings { get; set; }
         public LocalizationSettingsModel LocalizationSettings { get; set; }
         public FullTextSettingsModel FullTextSettings { get; set; }
-
+        public DisplayDefaultMenuItemSettingsModel DisplayDefaultMenuItemSettings { get; set; }
 
         public int ActiveStoreScopeConfiguration { get; set; }
 
@@ -52,6 +55,12 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.AllowCustomerToSelectTheme")]
             public bool AllowCustomerToSelectTheme { get; set; }
             public bool AllowCustomerToSelectTheme_OverrideForStore { get; set; }
+
+            [UIHint("Picture")]
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.Logo")]
+            public int LogoPictureId { get; set; }
+            public bool LogoPictureId_OverrideForStore { get; set; }
+            
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayEuCookieLawWarning")]
             public bool DisplayEuCookieLawWarning { get; set; }
@@ -80,7 +89,23 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.UseSystemEmailForContactUsForm")]
             public bool UseSystemEmailForContactUsForm { get; set; }
             public bool UseSystemEmailForContactUsForm_OverrideForStore { get; set; }
-            
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SitemapEnabled")]
+            public bool SitemapEnabled { get; set; }
+            public bool SitemapEnabled_OverrideForStore { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SitemapIncludeCategories")]
+            public bool SitemapIncludeCategories { get; set; }
+            public bool SitemapIncludeCategories_OverrideForStore { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SitemapIncludeManufacturers")]
+            public bool SitemapIncludeManufacturers { get; set; }
+            public bool SitemapIncludeManufacturers_OverrideForStore { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SitemapIncludeProducts")]
+            public bool SitemapIncludeProducts { get; set; }
+            public bool SitemapIncludeProducts_OverrideForStore { get; set; }
+
             #region Nested classes
 
             public partial class ThemeConfigurationModel
@@ -157,15 +182,15 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.OpenGraphMetaTags")]
             public bool OpenGraphMetaTags { get; set; }
             public bool OpenGraphMetaTags_OverrideForStore { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CustomHeadTags")]
+            [AllowHtml]
+            public string CustomHeadTags { get; set; }
+            public bool CustomHeadTags_OverrideForStore { get; set; }
         }
 
         public partial class SecuritySettingsModel : BaseNopModel
         {
-            public SecuritySettingsModel()
-            {
-                this.AvailableReCaptchaVersions = new List<SelectListItem>();
-            }
-
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EncryptionKey")]
             [AllowHtml]
             public string EncryptionKey { get; set; }
@@ -184,36 +209,44 @@ namespace Nop.Admin.Models.Settings
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled")]
             public bool HoneypotEnabled { get; set; }
+        }
+
+        public partial class CaptchaSettingsModel : BaseNopModel
+        {
+            public CaptchaSettingsModel()
+            {
+                this.AvailableReCaptchaVersions = new List<SelectListItem>();
+            }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaEnabled")]
-            public bool CaptchaEnabled { get; set; }
+            public bool Enabled { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnLoginPage")]
-            public bool CaptchaShowOnLoginPage { get; set; }
+            public bool ShowOnLoginPage { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnRegistrationPage")]
-            public bool CaptchaShowOnRegistrationPage { get; set; }
+            public bool ShowOnRegistrationPage { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnContactUsPage")]
-            public bool CaptchaShowOnContactUsPage { get; set; }
+            public bool ShowOnContactUsPage { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnEmailWishlistToFriendPage")]
-            public bool CaptchaShowOnEmailWishlistToFriendPage { get; set; }
+            public bool ShowOnEmailWishlistToFriendPage { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnEmailProductToFriendPage")]
-            public bool CaptchaShowOnEmailProductToFriendPage { get; set; }
+            public bool ShowOnEmailProductToFriendPage { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnBlogCommentPage")]
-            public bool CaptchaShowOnBlogCommentPage { get; set; }
+            public bool ShowOnBlogCommentPage { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnNewsCommentPage")]
-            public bool CaptchaShowOnNewsCommentPage { get; set; }
+            public bool ShowOnNewsCommentPage { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnProductReviewPage")]
-            public bool CaptchaShowOnProductReviewPage { get; set; }
+            public bool ShowOnProductReviewPage { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnApplyVendorPage")]
-            public bool CaptchaShowOnApplyVendorPage { get; set; }
+            public bool ShowOnApplyVendorPage { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPublicKey")]
             [AllowHtml]
@@ -286,6 +319,31 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.SearchMode")]
             public int SearchMode { get; set; }
             public SelectList SearchModeValues { get; set; }
+        }
+        
+        public partial class DisplayDefaultMenuItemSettingsModel: BaseNopModel
+        {
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem")]
+            public bool DisplayHomePageMenuItem { get; set; }
+            public bool DisplayHomePageMenuItem_OverrideForStore { get; set; }
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem")]
+            public bool DisplayNewProductsMenuItem { get; set; }
+            public bool DisplayNewProductsMenuItem_OverrideForStore { get; set; }
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem")]
+            public bool DisplayProductSearchMenuItem { get; set; }
+            public bool DisplayProductSearchMenuItem_OverrideForStore { get; set; }
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem")]
+            public bool DisplayCustomerInfoMenuItem { get; set; }
+            public bool DisplayCustomerInfoMenuItem_OverrideForStore { get; set; }
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayBlogMenuItem")]
+            public bool DisplayBlogMenuItem { get; set; }
+            public bool DisplayBlogMenuItem_OverrideForStore { get; set; }
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem")]
+            public bool DisplayForumsMenuItem { get; set; }
+            public bool DisplayForumsMenuItem_OverrideForStore { get; set; }
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem")]
+            public bool DisplayContactUsMenuItem { get; set; }
+            public bool DisplayContactUsMenuItem_OverrideForStore { get; set; }
         }
         
         #endregion

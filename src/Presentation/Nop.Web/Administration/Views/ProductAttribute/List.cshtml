@@ -25,10 +25,13 @@
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
+                <p>
+                    @T("Admin.Catalog.Attributes.ProductAttributes.Description")
+                </p>
                 <div id="productattributes-grid"></div>
 
                 <script>
-                    $(document).ready(function () {
+                    $(document).ready(function() {
                         $("#productattributes-grid").kendoGrid({
                             dataSource: {
                                 type: "json",
@@ -57,23 +60,28 @@
                             },
                             pageable: {
                                 refresh: true,
-                                pageSizes: [@(gridPageSizes)]
+                                pageSizes: [@(gridPageSizes)],
+                                @Html.Partial("_GridPagerMessages")
                             },
                             editable: {
-                                confirmation: false,
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                 mode: "inline"
                             },
                             scrollable: false,
-                            columns: [{
+                            columns: [
+                            {
                                 field: "Name",
                                 title: "@T("Admin.Catalog.Attributes.ProductAttributes.Fields.Name")",
                                 width: 400
                             }, {
                                 field: "Id",
                                 title: "@T("Admin.Common.Edit")",
-                                width: 100,
-                                template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-                            }]
+                                width: 80,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                                }
+                            ]
                         });
                     });
                 </script>

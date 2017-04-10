@@ -9,6 +9,7 @@ using Nop.Services.Common;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Stores;
+using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.UI;
 
@@ -20,6 +21,7 @@ namespace Nop.Web.Framework.Controllers
     [StoreIpAddress]
     [CustomerLastActivity]
     [StoreLastVisitedPage]
+    [ValidatePassword]
     public abstract class BaseController : Controller
     {
         /// <summary>
@@ -135,6 +137,14 @@ namespace Nop.Web.Framework.Controllers
             AddNotification(NotifyType.Error, exception.Message, persistForTheNextRequest);
         }
         /// <summary>
+        /// Display warning notification
+        /// </summary>
+        /// <param name="message">Message</param>
+        /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request</param>
+        protected virtual void WarningNotification(string message, bool persistForTheNextRequest = true) {
+            AddNotification(NotifyType.Warning, message, persistForTheNextRequest);
+        }
+        /// <summary>
         /// Display notification
         /// </summary>
         /// <param name="type">Notification type</param>
@@ -157,7 +167,20 @@ namespace Nop.Web.Framework.Controllers
             }
         }
 
+        /// <summary>
+        /// Error's json data for kendo grid
+        /// </summary>
+        /// <param name="errorMessage">Error message</param>
+        /// <returns>Error's json data</returns>
+        protected JsonResult ErrorForKendoGridJson(string errorMessage)
+        {
+            var gridModel = new DataSourceResult
+            {
+                Errors = errorMessage
+            };
 
+            return Json(gridModel);
+        }
 
         /// <summary>
         /// Display "Edit" (manage) link (in public store)

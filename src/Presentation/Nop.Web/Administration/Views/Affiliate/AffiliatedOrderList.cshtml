@@ -73,7 +73,7 @@
                             type: "json",
                             transport: {
                                 read: {
-                                    url: "@Html.Raw(Url.Action("AffiliatedOrderList", "Affiliate"))",
+                                    url: "@Html.Raw(Url.Action("AffiliatedOrderListGrid", "Affiliate"))",
                                     type: "POST",
                                     dataType: "json",
                                     data: additionalData
@@ -96,17 +96,18 @@
                         },
                         pageable: {
                             refresh: true,
-                            pageSizes: [@(gridPageSizes)]
+                            pageSizes: [@(gridPageSizes)],
+                            @Html.Partial("_GridPagerMessages")
                         },
                         editable: {
-                            confirmation: false,
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
                             mode: "inline"
                         },
                         scrollable: false,
                         columns: [{
-                            field: "Id",
-                            title: "@T("Admin.Affiliates.Orders.Order")",
-                            width: 100
+                            field: "CustomOrderNumber",
+                            title: "@T("Admin.Affiliates.Orders.CustomOrderNumber")",
+                            width: 200
                         }, {
                             field: "OrderStatus",
                             title: "@T("Admin.Affiliates.Orders.OrderStatus")",
@@ -134,7 +135,9 @@
                             field: "Id",
                             title: "@T("Admin.Common.View")",
                             width: 100,
-                            template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
                         }]
                     });
                 });

@@ -13,7 +13,7 @@ namespace Nop.Admin.Validators.Discounts
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Promotions.Discounts.Fields.Name.Required"));
 
-            SetStringPropertiesMaxLength<Discount>(dbContext);
+            SetDatabaseValidationRules<Discount>(dbContext);
         }
     }
 }

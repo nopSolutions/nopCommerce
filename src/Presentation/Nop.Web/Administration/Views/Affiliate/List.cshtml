@@ -44,6 +44,9 @@
         <div class="panel-group">
             <div class="panel panel-default panel-search">
                 <div class="panel-body">
+                    <p>
+                        @T("Admin.Affiliates.Description")
+                    </p>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -141,10 +144,11 @@
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)]
+                                    pageSizes: [@(gridPageSizes)],
+                                    @Html.Partial("_GridPagerMessages")
                                 },
                                 editable: {
-                                    confirmation: false,
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                     mode: "inline"
                                 },
                                 scrollable: false,
@@ -167,8 +171,10 @@
                                 }, {
                                     field: "Id",
                                     title: "@T("Admin.Common.Edit")",
-                                    width: 100,
-                                    template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                                    width: 80,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
                                 }
                                 ]
                             });

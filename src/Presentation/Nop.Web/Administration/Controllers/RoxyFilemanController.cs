@@ -46,10 +46,10 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Methods
 
-        public void ProcessRequest() {
+        public virtual void ProcessRequest() {
             string action = "DIRLIST";
 
             //custom code by nopCommerce team
@@ -161,7 +161,7 @@ namespace Nop.Admin.Controllers
                 filename = "../lang/en.json";
             return filename;
         }
-        protected string LangRes(string name)
+        protected virtual string LangRes(string name)
         {
             string ret = name;
             if (_lang == null)
@@ -171,7 +171,7 @@ namespace Nop.Admin.Controllers
 
             return ret;
         }
-        protected string GetFileType(string ext){
+        protected virtual string GetFileType(string ext){
             string ret = "file";
             ext = ext.ToLower();
             if(ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".gif")
@@ -180,7 +180,7 @@ namespace Nop.Admin.Controllers
                 ret = "flash";
             return ret;
         }
-        protected bool CanHandleFile(string filename)
+        protected virtual bool CanHandleFile(string filename)
         {
             bool ret = false;
             FileInfo file = new FileInfo(filename);
@@ -204,7 +204,7 @@ namespace Nop.Admin.Controllers
         
             return ret;
         }
-        protected Dictionary<string, string> ParseJSON(string file){
+        protected virtual Dictionary<string, string> ParseJSON(string file){
             Dictionary<string, string> ret = new Dictionary<string,string>();
             string json = "";
             try{
@@ -232,7 +232,7 @@ namespace Nop.Admin.Controllers
             }
             return ret;
         }
-        protected string GetFilesRoot(){
+        protected virtual string GetFilesRoot(){
             string ret = GetSetting("FILES_ROOT");
             if (GetSetting("SESSION_PATH_KEY") != "" && _context.Session[GetSetting("SESSION_PATH_KEY")] != null)
                 ret = (string)_context.Session[GetSetting("SESSION_PATH_KEY")];
@@ -243,11 +243,11 @@ namespace Nop.Admin.Controllers
                 ret = FixPath(ret);
             return ret;
         }
-        protected void LoadConf(){
+        protected virtual void LoadConf(){
             if(_settings == null)
                 _settings = ParseJSON(confFile);
         }
-        protected string GetSetting(string name){
+        protected virtual string GetSetting(string name){
             string ret = "";
             LoadConf();
             if(_settings.ContainsKey(name))
@@ -255,14 +255,14 @@ namespace Nop.Admin.Controllers
         
             return ret;
         }
-        protected void CheckPath(string path)
+        protected virtual void CheckPath(string path)
         {
             if (FixPath(path).IndexOf(GetFilesRoot()) != 0)
             {
                 throw new Exception("Access to " + path + " is denied");
             }
         }
-        protected void VerifyAction(string action)
+        protected virtual void VerifyAction(string action)
         {
             string setting = GetSetting(action);
             if (setting.IndexOf("?") > -1)
@@ -274,19 +274,19 @@ namespace Nop.Admin.Controllers
             if (_context.Server.MapPath(setting) != _context.Server.MapPath(_context.Request.Url.LocalPath))
                 throw new Exception(LangRes("E_ActionDisabled"));
         }
-        protected string GetResultStr(string type, string msg)
+        protected virtual string GetResultStr(string type, string msg)
         {
             return "{\"res\":\"" + type + "\",\"msg\":\"" + msg.Replace("\"","\\\"") + "\"}";
         }
-        protected string GetSuccessRes(string msg)
+        protected virtual string GetSuccessRes(string msg)
         {
             return GetResultStr("ok", msg);
         }
-        protected string GetSuccessRes()
+        protected virtual string GetSuccessRes()
         {
             return GetSuccessRes("");
         }
-        protected string GetErrorRes(string msg)
+        protected virtual string GetErrorRes(string msg)
         {
             return GetResultStr("error", msg);
         }
@@ -306,7 +306,7 @@ namespace Nop.Admin.Controllers
                 _copyDir(d, Path.Combine(dest, dir.Name));
             }
         }
-        protected void CopyDir(string path, string newPath)
+        protected virtual void CopyDir(string path, string newPath)
         {
             CheckPath(path);
             CheckPath(newPath);
@@ -326,7 +326,7 @@ namespace Nop.Admin.Controllers
             }
             _r.Write(GetSuccessRes());
         }
-        protected string MakeUniqueFilename(string dir, string filename){
+        protected virtual string MakeUniqueFilename(string dir, string filename){
             string ret = filename;
             int i = 0;
             while (System.IO.File.Exists(Path.Combine(dir, ret)))
@@ -336,7 +336,7 @@ namespace Nop.Admin.Controllers
             }
             return ret;
         }
-        protected void CopyFile(string path, string newPath)
+        protected virtual void CopyFile(string path, string newPath)
         {
             CheckPath(path);
             FileInfo file = new FileInfo(FixPath(path));
@@ -354,7 +354,7 @@ namespace Nop.Admin.Controllers
                 }
             }
         }
-        protected void CreateDir(string path, string name)
+        protected virtual void CreateDir(string path, string name)
         {
             CheckPath(path);
             path = FixPath(path);
@@ -374,7 +374,7 @@ namespace Nop.Admin.Controllers
                 }
             }
         }
-        protected void DeleteDir(string path)
+        protected virtual void DeleteDir(string path)
         {
             CheckPath(path);
             path = FixPath(path);
@@ -397,7 +397,7 @@ namespace Nop.Admin.Controllers
                 }
             }
         }
-        protected void DeleteFile(string path)
+        protected virtual void DeleteFile(string path)
         {
             CheckPath(path);
             path = FixPath(path);
@@ -436,7 +436,7 @@ namespace Nop.Admin.Controllers
             }
             return ret;
         }
-        protected void ListDirTree(string type)
+        protected virtual void ListDirTree(string type)
         {
             DirectoryInfo d = new DirectoryInfo(GetFilesRoot());
             if(!d.Exists)
@@ -455,14 +455,14 @@ namespace Nop.Admin.Controllers
             }
             _r.Write("]");
         }
-        protected double LinuxTimestamp(DateTime d){
+        protected virtual double LinuxTimestamp(DateTime d){
             DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0).ToLocalTime();
             TimeSpan timeSpan = (d.ToLocalTime() - epoch);
         
             return timeSpan.TotalSeconds;
 
         }
-        protected void ListFiles(string path, string type)
+        protected virtual void ListFiles(string path, string type)
         {
             CheckPath(path);
             string fullPath = FixPath(path);
@@ -496,7 +496,7 @@ namespace Nop.Admin.Controllers
             }
             _r.Write("]");
         }
-        public void DownloadDir(string path)
+        public virtual void DownloadDir(string path)
         {
             path = FixPath(path);
             if(!Directory.Exists(path))
@@ -514,7 +514,7 @@ namespace Nop.Admin.Controllers
             System.IO.File.Delete(tmpZip);
             _r.End();
         }
-        protected void DownloadFile(string path)
+        protected virtual void DownloadFile(string path)
         {
             CheckPath(path);
             FileInfo file = new FileInfo(FixPath(path));
@@ -527,7 +527,7 @@ namespace Nop.Admin.Controllers
                 _r.End();
             }
         }
-        protected void MoveDir(string path, string newPath)
+        protected virtual void MoveDir(string path, string newPath)
         {
             CheckPath(path);
             CheckPath(newPath);
@@ -550,7 +550,7 @@ namespace Nop.Admin.Controllers
             }
         
         }
-        protected void MoveFile(string path, string newPath)
+        protected virtual void MoveFile(string path, string newPath)
         {
             CheckPath(path);
             CheckPath(newPath);
@@ -573,7 +573,7 @@ namespace Nop.Admin.Controllers
                 }
             }
         }
-        protected void RenameDir(string path, string name)
+        protected virtual void RenameDir(string path, string name)
         {
             CheckPath(path);
             DirectoryInfo source = new DirectoryInfo(FixPath(path));
@@ -597,7 +597,7 @@ namespace Nop.Admin.Controllers
                 }
             }
         }
-        protected void RenameFile(string path, string name)
+        protected virtual void RenameFile(string path, string name)
         {
             CheckPath(path);
             FileInfo source = new FileInfo(FixPath(path));
@@ -619,12 +619,12 @@ namespace Nop.Admin.Controllers
                 }
             }
         }
-        public bool ThumbnailCallback()
+        public virtual bool ThumbnailCallback()
         {
             return false;
         }
 
-        protected void ShowThumbnail(string path, int width, int height)
+        protected virtual void ShowThumbnail(string path, int width, int height)
         {
             CheckPath(path);
             FileStream fs = new FileStream(FixPath(path), FileMode.Open);
@@ -681,7 +681,7 @@ namespace Nop.Admin.Controllers
             }
             return ret;
         }
-        protected void ImageResize(string path, string dest, int width, int height)
+        protected virtual void ImageResize(string path, string dest, int width, int height)
         {
             FileStream fs = new FileStream(path, FileMode.Open);
             Image img = Image.FromStream(fs);
@@ -709,11 +709,11 @@ namespace Nop.Admin.Controllers
             }
             newImg.Dispose();
         }
-        protected bool IsAjaxUpload()
+        protected virtual bool IsAjaxUpload()
         {
             return (_context.Request["method"] != null && _context.Request["method"].ToString() == "ajax");
         }
-        protected void Upload(string path)
+        protected virtual void Upload(string path)
         {
             CheckPath(path);
             path = FixPath(path);

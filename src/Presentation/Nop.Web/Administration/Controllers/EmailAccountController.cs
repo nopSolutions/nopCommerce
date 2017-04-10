@@ -7,6 +7,7 @@ using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
@@ -23,12 +24,14 @@ namespace Nop.Admin.Controllers
         private readonly IStoreContext _storeContext;
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly IPermissionService _permissionService;
+        private readonly ICustomerActivityService _customerActivityService;
 
-		public EmailAccountController(IEmailAccountService emailAccountService,
+        public EmailAccountController(IEmailAccountService emailAccountService,
             ILocalizationService localizationService, ISettingService settingService,
             IEmailSender emailSender, IStoreContext storeContext,
-            EmailAccountSettings emailAccountSettings, IPermissionService permissionService)
-		{
+            EmailAccountSettings emailAccountSettings, IPermissionService permissionService,
+            ICustomerActivityService customerActivityService)
+        {
             this._emailAccountService = emailAccountService;
             this._localizationService = localizationService;
             this._emailAccountSettings = emailAccountSettings;
@@ -36,9 +39,10 @@ namespace Nop.Admin.Controllers
             this._settingService = settingService;
             this._storeContext = storeContext;
             this._permissionService = permissionService;
-		}
+            this._customerActivityService = customerActivityService;
+        }
 
-		public ActionResult List()
+		public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
@@ -47,10 +51,10 @@ namespace Nop.Admin.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult List(DataSourceRequest command)
+		public virtual ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var emailAccountModels = _emailAccountService.GetAllEmailAccounts()
                                     .Select(x => x.ToModel())
@@ -64,13 +68,10 @@ namespace Nop.Admin.Controllers
                 Total = emailAccountModels.Count()
             };
 
-			return new JsonResult
-			{
-				Data = gridModel
-			};
-		}
+            return Json(gridModel);
+        }
 
-        public ActionResult MarkAsDefaultEmail(int id)
+        public virtual ActionResult MarkAsDefaultEmail(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
@@ -84,7 +85,7 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
-		public ActionResult Create()
+		public virtual ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
@@ -96,7 +97,7 @@ namespace Nop.Admin.Controllers
 		}
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-		public ActionResult Create(EmailAccountModel model, bool continueEditing)
+		public virtual ActionResult Create(EmailAccountModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
@@ -108,6 +109,9 @@ namespace Nop.Admin.Controllers
                 emailAccount.Password = model.Password;
                 _emailAccountService.InsertEmailAccount(emailAccount);
 
+                //activity log
+                _customerActivityService.InsertActivity("AddNewEmailAccount", _localizationService.GetResource("ActivityLog.AddNewEmailAccount"), emailAccount.Id);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
             }
@@ -116,7 +120,7 @@ namespace Nop.Admin.Controllers
             return View(model);
 		}
 
-		public ActionResult Edit(int id)
+		public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
@@ -131,7 +135,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public ActionResult Edit(EmailAccountModel model, bool continueEditing)
+        public virtual ActionResult Edit(EmailAccountModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
@@ -146,6 +150,9 @@ namespace Nop.Admin.Controllers
                 emailAccount = model.ToEntity(emailAccount);
                 _emailAccountService.UpdateEmailAccount(emailAccount);
 
+                //activity log
+                _customerActivityService.InsertActivity("EditEmailAccount", _localizationService.GetResource("ActivityLog.EditEmailAccount"), emailAccount.Id);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
             }
@@ -156,7 +163,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("changepassword")]
-        public ActionResult ChangePassword(EmailAccountModel model)
+        public virtual ActionResult ChangePassword(EmailAccountModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
@@ -175,7 +182,7 @@ namespace Nop.Admin.Controllers
         
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("sendtestemail")]
-        public ActionResult SendTestEmail(EmailAccountModel model)
+        public virtual ActionResult SendTestEmail(EmailAccountModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
@@ -184,6 +191,12 @@ namespace Nop.Admin.Controllers
             if (emailAccount == null)
                 //No email account found with the specified id
                 return RedirectToAction("List");
+
+            if (!CommonHelper.IsValidEmail(model.SendTestEmailTo))
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Common.WrongEmail"), false);
+                return View(model);
+            }
 
             try
             {
@@ -205,7 +218,7 @@ namespace Nop.Admin.Controllers
         }
 
 	    [HttpPost]
-	    public ActionResult Delete(int id)
+	    public virtual ActionResult Delete(int id)
 	    {
 	        if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
 	            return AccessDeniedView();
@@ -219,7 +232,10 @@ namespace Nop.Admin.Controllers
 	        {
 	            _emailAccountService.DeleteEmailAccount(emailAccount);
 
-	            SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Deleted"));
+                //activity log
+                _customerActivityService.InsertActivity("DeleteEmailAccount", _localizationService.GetResource("ActivityLog.DeleteEmailAccount"), emailAccount.Id);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Deleted"));
 
                 return RedirectToAction("List");
 	        }

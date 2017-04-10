@@ -153,7 +153,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
                             }
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         //if the size or weight of the parcel exceeds the allowable, 
                         //and if for example the set(or not set) the wrong postal code, 
@@ -204,16 +204,16 @@ namespace Nop.Plugin.Shipping.AustraliaPost
                 return response;
             }
 
+            if (getShippingOptionRequest.ShippingAddress == null)
+            {
+                response.AddError("Shipping address is not set");
+                return response;
+            }
+
             var country = getShippingOptionRequest.ShippingAddress.Country;
             if (country == null)
             {
                 response.AddError("Shipping country is not specified");
-                return response;
-            }
-
-            if (getShippingOptionRequest.ShippingAddress == null)
-            {
-                response.AddError("Shipping address is not set");
                 return response;
             }
 

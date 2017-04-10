@@ -44,7 +44,7 @@ namespace Nop.Admin.Controllers
 
         #region Category templates
 
-        public ActionResult CategoryTemplates()
+        public virtual ActionResult CategoryTemplates()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -53,10 +53,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult CategoryTemplates(DataSourceRequest command)
+        public virtual ActionResult CategoryTemplates(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var templatesModel = _categoryTemplateService.GetAllCategoryTemplates()
                 .Select(x => x.ToModel())
@@ -71,7 +71,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult CategoryTemplateUpdate(CategoryTemplateModel model)
+        public virtual ActionResult CategoryTemplateUpdate(CategoryTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -91,7 +91,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult CategoryTemplateAdd([Bind(Exclude = "Id")] CategoryTemplateModel model)
+        public virtual ActionResult CategoryTemplateAdd([Bind(Exclude = "Id")] CategoryTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -109,7 +109,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult CategoryTemplateDelete(int id)
+        public virtual ActionResult CategoryTemplateDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -127,7 +127,7 @@ namespace Nop.Admin.Controllers
 
         #region Manufacturer templates
 
-        public ActionResult ManufacturerTemplates()
+        public virtual ActionResult ManufacturerTemplates()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -136,10 +136,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ManufacturerTemplates(DataSourceRequest command)
+        public virtual ActionResult ManufacturerTemplates(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var templatesModel = _manufacturerTemplateService.GetAllManufacturerTemplates()
                 .Select(x => x.ToModel())
@@ -154,7 +154,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ManufacturerTemplateUpdate(ManufacturerTemplateModel model)
+        public virtual ActionResult ManufacturerTemplateUpdate(ManufacturerTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -174,7 +174,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ManufacturerTemplateAdd([Bind(Exclude = "Id")] ManufacturerTemplateModel model)
+        public virtual ActionResult ManufacturerTemplateAdd([Bind(Exclude = "Id")] ManufacturerTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -192,7 +192,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ManufacturerTemplateDelete(int id)
+        public virtual ActionResult ManufacturerTemplateDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -210,7 +210,7 @@ namespace Nop.Admin.Controllers
 
         #region Product templates
 
-        public ActionResult ProductTemplates()
+        public virtual ActionResult ProductTemplates()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -219,28 +219,25 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductTemplates(DataSourceRequest command)
+        public virtual ActionResult ProductTemplates(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var templatesModel = _productTemplateService.GetAllProductTemplates()
                 .Select(x => x.ToModel())
                 .ToList();
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = templatesModel,
                 Total = templatesModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
-        public ActionResult ProductTemplateUpdate(ProductTemplateModel model)
+        public virtual ActionResult ProductTemplateUpdate(ProductTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -260,7 +257,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductTemplateAdd([Bind(Exclude = "Id")] ProductTemplateModel model)
+        public virtual ActionResult ProductTemplateAdd([Bind(Exclude = "Id")] ProductTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -278,7 +275,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductTemplateDelete(int id)
+        public virtual ActionResult ProductTemplateDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -296,7 +293,7 @@ namespace Nop.Admin.Controllers
 
         #region Topic templates
 
-        public ActionResult TopicTemplates()
+        public virtual ActionResult TopicTemplates()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -305,10 +302,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult TopicTemplates(DataSourceRequest command)
+        public virtual ActionResult TopicTemplates(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var templatesModel = _topicTemplateService.GetAllTopicTemplates()
                 .Select(x => x.ToModel())
@@ -323,7 +320,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult TopicTemplateUpdate(TopicTemplateModel model)
+        public virtual ActionResult TopicTemplateUpdate(TopicTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -343,7 +340,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult TopicTemplateAdd([Bind(Exclude = "Id")] TopicTemplateModel model)
+        public virtual ActionResult TopicTemplateAdd([Bind(Exclude = "Id")] TopicTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -361,7 +358,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult TopicTemplateDelete(int id)
+        public virtual ActionResult TopicTemplateDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();

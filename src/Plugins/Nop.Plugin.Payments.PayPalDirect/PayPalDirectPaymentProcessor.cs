@@ -1,27 +1,27 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Net;
-using System.Text;
-using System.Web;
+using System.Linq;
 using System.Web.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
 using Nop.Plugin.Payments.PayPalDirect.Controllers;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
-using PayPal.PayPalAPIInterfaceService;
-using PayPal.PayPalAPIInterfaceService.Model;
+using Nop.Services.Tax;
+using PayPal.Api;
 
 namespace Nop.Plugin.Payments.PayPalDirect
 {
@@ -32,33 +32,54 @@ namespace Nop.Plugin.Payments.PayPalDirect
     {
         #region Fields
 
-        private readonly PayPalDirectPaymentSettings _paypalDirectPaymentSettings;
-        private readonly ISettingService _settingService;
-        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly CurrencySettings _currencySettings;
+        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
-        private readonly CurrencySettings _currencySettings;
-        private readonly IWebHelper _webHelper;
+        private readonly ILocalizationService _localizationService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly IPaymentService _paymentService;
+        private readonly IPriceCalculationService _priceCalculationService;
+        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly ISettingService _settingService;
+        private readonly IStoreContext _storeContext;
+        private readonly ITaxService _taxService;
+        private readonly IWebHelper _webHelper;
+        private readonly PayPalDirectPaymentSettings _paypalDirectPaymentSettings;
+
         #endregion
 
         #region Ctor
 
-        public PayPalDirectPaymentProcessor(PayPalDirectPaymentSettings paypalDirectPaymentSettings,
+        public PayPalDirectPaymentProcessor(CurrencySettings currencySettings,
+            ICheckoutAttributeParser checkoutAttributeParser,
+            ICurrencyService currencyService,
+            ICustomerService customerService,
+            ILocalizationService localizationService,
+            IOrderTotalCalculationService orderTotalCalculationService,
+            IPaymentService paymentService,
+            IPriceCalculationService priceCalculationService,
+            IProductAttributeParser productAttributeParser,
             ISettingService settingService, 
-            IGenericAttributeService genericAttributeService,
-            ICurrencyService currencyService, ICustomerService customerService,
-            CurrencySettings currencySettings, IWebHelper webHelper, 
-            IOrderTotalCalculationService orderTotalCalculationService)
+            IStoreContext storeContext,
+            ITaxService taxService,
+            IWebHelper webHelper,
+            PayPalDirectPaymentSettings paypalDirectPaymentSettings)
         {
-            this._paypalDirectPaymentSettings = paypalDirectPaymentSettings;
-            this._settingService = settingService;
-            this._genericAttributeService = genericAttributeService;
+            this._currencySettings = currencySettings;
+            this._checkoutAttributeParser = checkoutAttributeParser;
             this._currencyService = currencyService;
             this._customerService = customerService;
-            this._currencySettings = currencySettings;
-            this._webHelper = webHelper;
+            this._localizationService = localizationService;
             this._orderTotalCalculationService = orderTotalCalculationService;
+            this._paymentService = paymentService;
+            this._priceCalculationService = priceCalculationService;
+            this._productAttributeParser = productAttributeParser;
+            this._settingService = settingService;
+            this._storeContext = storeContext;
+            this._taxService = taxService;
+            this._webHelper = webHelper;
+            this._paypalDirectPaymentSettings = paypalDirectPaymentSettings;
         }
 
         #endregion
@@ -66,223 +87,305 @@ namespace Nop.Plugin.Payments.PayPalDirect
         #region Utilities
 
         /// <summary>
-        /// Gets Paypal URL
+        /// Gets a payment status
         /// </summary>
-        /// <returns></returns>
-        private string GetPaypalUrl()
+        /// <param name="state">PayPal state</param>
+        /// <returns>Payment status</returns>
+        protected PaymentStatus GetPaymentStatus(string state)
         {
-            return _paypalDirectPaymentSettings.UseSandbox ? "https://www.sandbox.paypal.com/us/cgi-bin/webscr" :
-                "https://www.paypal.com/us/cgi-bin/webscr";
-        }
+            state = state ?? string.Empty;
+            var result = PaymentStatus.Pending;
 
-        protected PayPalAPIInterfaceServiceService GetService()
-        {
-            var config = new Dictionary<string, string>();
-            var url = _paypalDirectPaymentSettings.UseSandbox ? "https://api-3t.sandbox.paypal.com/2.0" : "https://api-3t.paypal.com/2.0";
-            var mode = _paypalDirectPaymentSettings.UseSandbox ? "sandbox" : "live";
-
-            config.Add("PayPalAPI", url);
-            config.Add("mode", mode);
-            config.Add("account0.apiUsername", _paypalDirectPaymentSettings.ApiAccountName);
-            config.Add("account0.apiPassword", _paypalDirectPaymentSettings.ApiAccountPassword);
-            config.Add("account0.apiSignature", _paypalDirectPaymentSettings.Signature);
-
-            var service = new PayPalAPIInterfaceServiceService(config);
-            return service;
-        }
-
-        /// <summary>
-        /// Get Paypal country code
-        /// </summary>
-        /// <param name="country">Country</param>
-        /// <returns>Paypal country code</returns>
-        protected CountryCodeType GetPaypalCountryCodeType(Country country)
-        {
-            var payerCountry = CountryCodeType.US;
-            try
+            switch (state.ToLowerInvariant())
             {
-                payerCountry = (CountryCodeType)Enum.Parse(typeof(CountryCodeType), country.TwoLetterIsoCode.ToUpperInvariant());
-            }
-            catch
-            {
-            }
-            return payerCountry;
-        }
-
-        /// <summary>
-        /// Get Paypal credit card type
-        /// </summary>
-        /// <param name="creditCardType">Credit card type</param>
-        /// <returns>Paypal credit card type</returns>
-        protected CreditCardTypeType GetPaypalCreditCardType(string creditCardType)
-        {
-            if (String.IsNullOrEmpty(creditCardType))
-                return CreditCardTypeType.VISA;
-
-            if (creditCardType.Equals("VISA", StringComparison.InvariantCultureIgnoreCase))
-                return CreditCardTypeType.VISA;
-            if (creditCardType.Equals("MASTERCARD", StringComparison.InvariantCultureIgnoreCase))
-                return CreditCardTypeType.MASTERCARD;
-            if (creditCardType.Equals("DISCOVER", StringComparison.InvariantCultureIgnoreCase))
-                return CreditCardTypeType.DISCOVER;
-            if (creditCardType.Equals("AMEX", StringComparison.InvariantCultureIgnoreCase))
-                return CreditCardTypeType.AMEX;
-            if (creditCardType.Equals("MAESTRO", StringComparison.InvariantCultureIgnoreCase))
-                return CreditCardTypeType.MAESTRO;
-            if (creditCardType.Equals("SOLO", StringComparison.InvariantCultureIgnoreCase))
-                return CreditCardTypeType.SOLO;
-            if (creditCardType.Equals("SWITCH", StringComparison.InvariantCultureIgnoreCase))
-                return CreditCardTypeType.SWITCH;
-
-            return (CreditCardTypeType)Enum.Parse(typeof(CreditCardTypeType), creditCardType);
-        }
-
-        protected string GetApiVersion()
-        {
-            return "117";
-        }
-
-        protected ProcessPaymentResult AuthorizeOrSale(ProcessPaymentRequest processPaymentRequest, bool authorizeOnly)
-        {
-            var result = new ProcessPaymentResult();
-
-            var customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId);
-            if (customer == null)
-                throw new Exception("Customer cannot be loaded");
-
-            var req = new DoDirectPaymentReq();
-            req.DoDirectPaymentRequest = new DoDirectPaymentRequestType();
-            req.DoDirectPaymentRequest.Version = GetApiVersion();
-            var details = new DoDirectPaymentRequestDetailsType();
-            req.DoDirectPaymentRequest.DoDirectPaymentRequestDetails = details;
-            details.IPAddress = _webHelper.GetCurrentIpAddress() ?? "";
-            if (authorizeOnly)
-                details.PaymentAction = PaymentActionCodeType.AUTHORIZATION;
-            else
-                details.PaymentAction = PaymentActionCodeType.SALE;
-            //credit card
-            details.CreditCard = new CreditCardDetailsType();
-            details.CreditCard.CreditCardNumber = processPaymentRequest.CreditCardNumber;
-            details.CreditCard.CreditCardType = GetPaypalCreditCardType(processPaymentRequest.CreditCardType);
-            details.CreditCard.ExpMonth = processPaymentRequest.CreditCardExpireMonth;
-            details.CreditCard.ExpYear = processPaymentRequest.CreditCardExpireYear;
-            details.CreditCard.CVV2 = processPaymentRequest.CreditCardCvv2;
-            details.CreditCard.CardOwner = new PayerInfoType();
-            details.CreditCard.CardOwner.PayerCountry = GetPaypalCountryCodeType(customer.BillingAddress.Country);
-            //billing address
-            details.CreditCard.CardOwner.Address = new AddressType();
-            details.CreditCard.CardOwner.Address.Street1 = customer.BillingAddress.Address1;
-            details.CreditCard.CardOwner.Address.Street2 = customer.BillingAddress.Address2;
-            details.CreditCard.CardOwner.Address.CityName = customer.BillingAddress.City;
-            if (customer.BillingAddress.StateProvince != null)
-                details.CreditCard.CardOwner.Address.StateOrProvince = customer.BillingAddress.StateProvince.Abbreviation;
-            else
-                details.CreditCard.CardOwner.Address.StateOrProvince = "CA";
-            details.CreditCard.CardOwner.Address.Country = GetPaypalCountryCodeType(customer.BillingAddress.Country);
-            details.CreditCard.CardOwner.Address.PostalCode = customer.BillingAddress.ZipPostalCode;
-            details.CreditCard.CardOwner.Payer = customer.BillingAddress.Email;
-            details.CreditCard.CardOwner.PayerName = new PersonNameType();
-            details.CreditCard.CardOwner.PayerName.FirstName = customer.BillingAddress.FirstName;
-            details.CreditCard.CardOwner.PayerName.LastName = customer.BillingAddress.LastName;
-            //order totals
-            var payPalCurrency = PaypalHelper.GetPaypalCurrency(_currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId));
-            details.PaymentDetails = new PaymentDetailsType();
-            details.PaymentDetails.OrderTotal = new BasicAmountType();
-            details.PaymentDetails.OrderTotal.value = Math.Round(processPaymentRequest.OrderTotal, 2).ToString("N", new CultureInfo("en-us"));
-            details.PaymentDetails.OrderTotal.currencyID = payPalCurrency;
-            details.PaymentDetails.Custom = processPaymentRequest.OrderGuid.ToString();
-            details.PaymentDetails.ButtonSource = "nopCommerceCart";
-            //shipping
-            if (customer.ShippingAddress != null)
-            {
-                if (customer.ShippingAddress.StateProvince != null && customer.ShippingAddress.Country != null)
-                {
-                    var shippingAddress = new AddressType();
-                    shippingAddress.Name = customer.ShippingAddress.FirstName + " " + customer.ShippingAddress.LastName;
-                    shippingAddress.Street1 = customer.ShippingAddress.Address1;
-                    shippingAddress.Street2 = customer.ShippingAddress.Address2;
-                    shippingAddress.CityName = customer.ShippingAddress.City;
-                    shippingAddress.StateOrProvince = customer.ShippingAddress.StateProvince.Abbreviation;
-                    shippingAddress.PostalCode = customer.ShippingAddress.ZipPostalCode;
-                    shippingAddress.Country = (CountryCodeType)Enum.Parse(typeof(CountryCodeType), customer.ShippingAddress.Country.TwoLetterIsoCode, true);
-                    details.PaymentDetails.ShipToAddress = shippingAddress;
-                }
+                case "pending":
+                    result = PaymentStatus.Pending;
+                    break;
+                case "authorized":
+                    result = PaymentStatus.Authorized;
+                    break;
+                case "captured":
+                case "completed":
+                    result = PaymentStatus.Paid;
+                    break;
+                case "expired":
+                case "voided":
+                    result = PaymentStatus.Voided;
+                    break;
+                case "refunded":
+                    result = PaymentStatus.Refunded;
+                    break;
+                case "partially_refunded":
+                    result = PaymentStatus.PartiallyRefunded;
+                    break;
+                default:
+                    break;
             }
 
-            //send request
-            var service = GetService();
-            DoDirectPaymentResponseType response = service.DoDirectPayment(req);
-
-            string error;
-            bool success = PaypalHelper.CheckSuccess(response, out error);
-            if (success)
-            {
-                result.AvsResult = response.AVSCode;
-                result.AuthorizationTransactionCode = response.CVV2Code;
-                if (authorizeOnly)
-                {
-                    result.AuthorizationTransactionId = response.TransactionID;
-                    result.AuthorizationTransactionResult = response.Ack.ToString();
-
-                    result.NewPaymentStatus = PaymentStatus.Authorized;
-                }
-                else
-                {
-                    result.CaptureTransactionId = response.TransactionID;
-                    result.CaptureTransactionResult = response.Ack.ToString();
-
-                    result.NewPaymentStatus = PaymentStatus.Paid;
-                }
-            }
-            else
-            {
-                result.AddError(error);
-            }
             return result;
         }
 
         /// <summary>
-        /// Verifies IPN
+        /// Get start date of recurring payments
         /// </summary>
-        /// <param name="formString">Form string</param>
-        /// <param name="values">Values</param>
-        /// <returns>Result</returns>
-        public bool VerifyIpn(string formString, out Dictionary<string, string> values)
+        /// <param name="period">Cycle period</param>
+        /// <param name="length">Cycle length</param>
+        /// <returns>Start date in ISO8601 format</returns>
+        protected string GetStartDate(RecurringProductCyclePeriod period, int length)
         {
-            var req = (HttpWebRequest)WebRequest.Create(GetPaypalUrl());
-            req.Method = WebRequestMethods.Http.Post;
-            req.ContentType = MimeTypes.ApplicationXWwwFormUrlencoded;
-            //now PayPal requires user-agent. otherwise, we can get 403 error
-            req.UserAgent = HttpContext.Current.Request.UserAgent;
-
-            string formContent = string.Format("{0}&cmd=_notify-validate", formString);
-            req.ContentLength = formContent.Length;
-
-            //PayPal requires TLS 1.2 since January 2016
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-            using (var sw = new StreamWriter(req.GetRequestStream(), Encoding.ASCII))
+            //PayPal expects date in PDT timezone (UTC -7)
+            var startDate = DateTime.UtcNow.AddHours(-7);
+            switch (period)
             {
-                sw.Write(formContent);
+                case RecurringProductCyclePeriod.Days:
+                    startDate = startDate.AddDays(length);
+                    break;
+                case RecurringProductCyclePeriod.Weeks:
+                    startDate = startDate.AddDays(length * 7);
+                    break;
+                case RecurringProductCyclePeriod.Months:
+                    startDate = startDate.AddMonths(length);
+                    break;
+                case RecurringProductCyclePeriod.Years:
+                    startDate = startDate.AddYears(length);
+                    break;
             }
 
-            string response;
-            using (var sr = new StreamReader(req.GetResponse().GetResponseStream()))
-            {
-                response = HttpUtility.UrlDecode(sr.ReadToEnd());
-            }
-            bool success = response.Trim().Equals("VERIFIED", StringComparison.OrdinalIgnoreCase);
+            return string.Format("{0}Z", startDate.ToString("s"));
+        }
 
-            values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            foreach (string l in formString.Split('&'))
-            {
-                string line = l.Trim();
-                int equalPox = line.IndexOf('=');
-                if (equalPox >= 0)
-                    values.Add(line.Substring(0, equalPox), line.Substring(equalPox + 1));
-            }
+        #region Items
 
-            return success;
+        /// <summary>
+        /// Get PayPal items
+        /// </summary>
+        /// <param name="shoppingCart">Shopping cart</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="currencyCode">Currency code</param>
+        /// <returns>List of PayPal items</returns>
+        protected List<Item> GetItems(IList<ShoppingCartItem> shoppingCart, Customer customer, int storeId, string currencyCode)
+        {
+            var items = new List<Item>();
+
+            if (!_paypalDirectPaymentSettings.PassPurchasedItems)
+                return items;
+
+            //create PayPal items from shopping cart items
+            items.AddRange(CreateItems(shoppingCart));
+
+            //create PayPal items from checkout attributes
+            items.AddRange(CreateItemsForCheckoutAttributes(customer, storeId));
+
+            //create PayPal item for payment method additional fee
+            items.Add(CreateItemForPaymentAdditionalFee(shoppingCart, customer));
+
+            //currently there are no ways to add discount for all order directly to amount details, so we add them as extra items 
+            //create PayPal item for subtotal discount
+            items.Add(CreateItemForSubtotalDiscount(shoppingCart));
+
+            //create PayPal item for total discount
+            items.Add(CreateItemForTotalDiscount(shoppingCart));
+
+            items.RemoveAll(item => item == null);
+
+            //add currency code for all items
+            items.ForEach(item => item.currency = currencyCode);
+
+            return items;
+        }
+
+        /// <summary>
+        /// Create items from shopping cart
+        /// </summary>
+        /// <param name="shoppingCart">Shopping cart</param>
+        /// <returns>Collection of PayPal items</returns>
+        protected IEnumerable<Item> CreateItems(IEnumerable<ShoppingCartItem> shoppingCart)
+        {
+            return shoppingCart.Select(shoppingCartItem =>
+            {
+                if (shoppingCartItem.Product == null)
+                    return null;
+
+                var item = new Item();
+
+                //name
+                item.name = shoppingCartItem.Product.Name;
+
+                //sku
+                if (!string.IsNullOrEmpty(shoppingCartItem.AttributesXml))
+                {
+                    var combination = _productAttributeParser.FindProductAttributeCombination(shoppingCartItem.Product, shoppingCartItem.AttributesXml);
+                    item.sku = combination != null && !string.IsNullOrEmpty(combination.Sku) ? combination.Sku : shoppingCartItem.Product.Sku;
+                }
+                else
+                    item.sku = shoppingCartItem.Product.Sku;
+
+                //item price
+                decimal taxRate;
+                var unitPrice = _priceCalculationService.GetUnitPrice(shoppingCartItem);
+                var price = _taxService.GetProductPrice(shoppingCartItem.Product, unitPrice, false, shoppingCartItem.Customer, out taxRate);
+                item.price = price.ToString("N", new CultureInfo("en-US"));
+
+                //quantity
+                item.quantity = shoppingCartItem.Quantity.ToString();
+
+                return item;
+            });
+        }
+
+        /// <summary>
+        /// Create items for checkout attributes
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <returns>Collection of PayPal items</returns>
+        protected IEnumerable<Item> CreateItemsForCheckoutAttributes(Customer customer, int storeId)
+        {
+            var checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, storeId);
+            if (string.IsNullOrEmpty(checkoutAttributesXml))
+                return new List<Item>();
+
+            //get attribute values
+            var attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);
+
+            return attributeValues.Select(checkoutAttributeValue =>
+            {
+                if (checkoutAttributeValue.CheckoutAttribute == null)
+                    return null;
+
+                //get price
+                var attributePrice = _taxService.GetCheckoutAttributePrice(checkoutAttributeValue, false, customer);
+
+                //create item
+                return new Item
+                {
+                    name = string.Format("{0} ({1})", checkoutAttributeValue.CheckoutAttribute.Name, checkoutAttributeValue.Name),
+                    price = attributePrice.ToString("N", new CultureInfo("en-US")),
+                    quantity = "1"
+                };
+            });
+        }
+
+        /// <summary>
+        /// Create item for payment method additional fee
+        /// </summary>
+        /// <param name="shoppingCart">Shopping cart</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>PayPal item</returns>
+        protected Item CreateItemForPaymentAdditionalFee(IList<ShoppingCartItem> shoppingCart, Customer customer)
+        {
+            //get price
+            var paymentAdditionalFee = _paymentService.GetAdditionalHandlingFee(shoppingCart, PluginDescriptor.SystemName);
+            var paymentPrice = _taxService.GetPaymentMethodAdditionalFee(paymentAdditionalFee, false, customer);
+
+            if (paymentPrice <= decimal.Zero)
+                return null;
+
+            //create item
+            return new Item
+            {
+                name = string.Format("Payment method ({0}) additional fee", PluginDescriptor.FriendlyName),
+                price = paymentPrice.ToString("N", new CultureInfo("en-US")),
+                quantity = "1"
+            };
+        }
+
+        /// <summary>
+        /// Create item for discount to order subtotal
+        /// </summary>
+        /// <param name="shoppingCart">Shopping cart</param>
+        /// <returns>PayPal item</returns>
+        protected Item CreateItemForSubtotalDiscount(IList<ShoppingCartItem> shoppingCart)
+        {
+            //get subtotal discount amount
+            decimal discountAmount;
+            List<DiscountForCaching> discounts;
+            decimal withoutDiscount;
+            decimal subtotal;
+            _orderTotalCalculationService.GetShoppingCartSubTotal(shoppingCart, false, out discountAmount, out discounts, out withoutDiscount, out subtotal);
+
+            if (discountAmount <= decimal.Zero)
+                return null;
+
+            //create item with negative price
+            return new Item
+            {
+                name = "Discount for the subtotal of order",
+                price = (-discountAmount).ToString("N", new CultureInfo("en-US")),
+                quantity = "1"
+            };
+        }
+
+        /// <summary>
+        /// Create item for discount to order total 
+        /// </summary>
+        /// <param name="shoppingCart">Shopping cart</param>
+        /// <returns>PayPal item</returns>
+        protected Item CreateItemForTotalDiscount(IList<ShoppingCartItem> shoppingCart)
+        {
+            //get total discount amount
+            decimal discountAmount;
+            List<AppliedGiftCard> giftCards;
+            List<DiscountForCaching> discounts;
+            int rewardPoints;
+            decimal rewardPointsAmount;
+            var orderTotal = _orderTotalCalculationService.GetShoppingCartTotal(shoppingCart, out discountAmount,
+                out discounts, out giftCards, out rewardPoints, out rewardPointsAmount);
+
+            if (discountAmount <= decimal.Zero)
+                return null;
+
+            //create item with negative price
+            return new Item
+            {
+                name = "Discount for the total of order",
+                price = (-discountAmount).ToString("N", new CultureInfo("en-US")),
+                quantity = "1"
+            };
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Get transaction amount details
+        /// </summary>
+        /// <param name="paymentRequest">Payment info required for an order processing</param>
+        /// <param name="shoppingCart">Shopping cart</param>
+        /// <param name="items">List of PayPal items</param>
+        /// <returns>Amount details object</returns>
+        protected Details GetAmountDetails(ProcessPaymentRequest paymentRequest, IList<ShoppingCartItem> shoppingCart, IList<Item> items)
+        {
+            //get shipping total
+            var shipping = _orderTotalCalculationService.GetShoppingCartShippingTotal(shoppingCart, false);
+            var shippingTotal = shipping.HasValue ? shipping.Value : 0;
+
+            //get tax total
+            SortedDictionary<decimal, decimal> taxRatesDictionary;
+            var taxTotal = _orderTotalCalculationService.GetTaxTotal(shoppingCart, out taxRatesDictionary);
+
+            //get subtotal
+            var subTotal = decimal.Zero;
+            if (items != null && items.Any())
+            {
+                //items passed to PayPal, so calculate subtotal based on them
+                var tmpPrice = decimal.Zero;
+                var tmpQuantity = 0;
+                subTotal = items.Sum(item => !decimal.TryParse(item.price, out tmpPrice) || !int.TryParse(item.quantity, out tmpQuantity) ? 0 : tmpPrice * tmpQuantity);
+            }
+            else
+                subTotal = paymentRequest.OrderTotal - shippingTotal - taxTotal;
+
+            //adjust order total to avoid PayPal payment error: "Transaction amount details (subtotal, tax, shipping) must add up to specified amount total"
+            paymentRequest.OrderTotal = Math.Round(shippingTotal, 2) + Math.Round(subTotal, 2) + Math.Round(taxTotal, 2);
+
+            //create amount details
+            return new Details
+            {
+                shipping = shippingTotal.ToString("N", new CultureInfo("en-US")),
+                subtotal = subTotal.ToString("N", new CultureInfo("en-US")),
+                tax = taxTotal.ToString("N", new CultureInfo("en-US"))
+            };
         }
 
         #endregion
@@ -296,12 +399,197 @@ namespace Nop.Plugin.Payments.PayPalDirect
         /// <returns>Process payment result</returns>
         public ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
         {
-            if (_paypalDirectPaymentSettings.TransactMode == TransactMode.Authorize)
+            var result = new ProcessPaymentResult();
+
+            var customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId);
+            if (customer == null)
+                throw new Exception("Customer cannot be loaded");
+
+            try
             {
-                return AuthorizeOrSale(processPaymentRequest, true);
+                var apiContext = PaypalHelper.GetApiContext(_paypalDirectPaymentSettings);
+                
+                //currency
+                var currency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+
+                //get current shopping cart
+                var shoppingCart = customer.ShoppingCartItems
+                    .Where(shoppingCartItem => shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .LimitPerStore(processPaymentRequest.StoreId).ToList();
+
+                //items
+                var items = GetItems(shoppingCart, customer, processPaymentRequest.StoreId, currency.CurrencyCode);
+
+                //amount details
+                var amountDetails = GetAmountDetails(processPaymentRequest, shoppingCart, items);
+
+                //payment
+                var payment = new Payment()
+                {
+                    #region payer
+
+                    payer = new Payer()
+                    {
+                        payment_method = "credit_card",
+
+                        #region credit card info
+
+                        funding_instruments = new List<FundingInstrument>
+                        {
+                            new FundingInstrument
+                            {
+                                credit_card = new CreditCard
+                                {
+                                    type = processPaymentRequest.CreditCardType.ToLowerInvariant(),
+                                    number = processPaymentRequest.CreditCardNumber,
+                                    cvv2 = processPaymentRequest.CreditCardCvv2,
+                                    expire_month = processPaymentRequest.CreditCardExpireMonth,
+                                    expire_year = processPaymentRequest.CreditCardExpireYear
+                                }
+                            }
+                        },
+
+                        #endregion
+
+                        #region payer info
+
+                        payer_info = new PayerInfo
+                        {
+                            #region billing address
+
+                            billing_address = customer.BillingAddress == null ? null : new Address
+                            {
+                                country_code = customer.BillingAddress.Country != null ? customer.BillingAddress.Country.TwoLetterIsoCode : null,
+                                state = customer.BillingAddress.StateProvince != null ? customer.BillingAddress.StateProvince.Abbreviation : null,
+                                city = customer.BillingAddress.City,
+                                line1 = customer.BillingAddress.Address1,
+                                line2 = customer.BillingAddress.Address2,
+                                phone = customer.BillingAddress.PhoneNumber,
+                                postal_code = customer.BillingAddress.ZipPostalCode
+                            },
+
+                            #endregion
+
+                            email = customer.BillingAddress != null ? customer.BillingAddress.Email : null,
+                            first_name = customer.BillingAddress != null ? customer.BillingAddress.FirstName : null,
+                            last_name = customer.BillingAddress != null ? customer.BillingAddress.LastName : null
+                        }
+
+                        #endregion
+                    },
+
+                    #endregion
+
+                    #region transaction
+
+                    transactions = new List<Transaction>()
+                    {
+                        new Transaction
+                        {
+                            #region amount
+
+                            amount = new Amount
+                            {
+                                details = amountDetails,
+                                total = processPaymentRequest.OrderTotal.ToString("N", new CultureInfo("en-US")),
+                                currency = currency != null ? currency.CurrencyCode : null
+                            },
+
+                            #endregion
+
+                            item_list = new ItemList
+                            {
+                                items = items,
+
+                                #region shipping address
+
+                                shipping_address = customer.ShippingAddress == null ? null : new ShippingAddress
+                                {
+                                    country_code = customer.ShippingAddress.Country != null ? customer.ShippingAddress.Country.TwoLetterIsoCode : null,
+                                    state = customer.ShippingAddress.StateProvince != null ? customer.ShippingAddress.StateProvince.Abbreviation : null,
+                                    city = customer.ShippingAddress.City,
+                                    line1 = customer.ShippingAddress.Address1,
+                                    line2 = customer.ShippingAddress.Address2,
+                                    phone = customer.ShippingAddress.PhoneNumber,
+                                    postal_code = customer.ShippingAddress.ZipPostalCode,
+                                    recipient_name = string.Format("{0} {1}", customer.ShippingAddress.FirstName, customer.ShippingAddress.LastName)
+                                }
+
+                                #endregion
+                            },
+
+                            invoice_number = processPaymentRequest.OrderGuid != Guid.Empty ? processPaymentRequest.OrderGuid.ToString() : null
+                        }
+                    },
+
+                    #endregion
+
+                    intent = _paypalDirectPaymentSettings.TransactMode == TransactMode.Authorize ? "authorize" : "sale",
+                }.Create(apiContext);
+
+                if (payment.transactions[0].related_resources.Any() && payment.transactions[0].related_resources[0] != null)
+                    if (_paypalDirectPaymentSettings.TransactMode == TransactMode.Authorize)
+                    {
+                        var authorization = payment.transactions[0].related_resources[0].authorization;
+                        if (authorization != null)
+                        {
+                            if (authorization.fmf_details != null && !string.IsNullOrEmpty(authorization.fmf_details.filter_id))
+                            {
+                                result.AuthorizationTransactionResult = string.Format("Authorization is {0}. Based on fraud filter: {1}. {2}",
+                                    authorization.fmf_details.filter_type, authorization.fmf_details.name, authorization.fmf_details.description);
+                                result.NewPaymentStatus = GetPaymentStatus(Authorization.Get(apiContext, authorization.id).state);
+                            }
+                            else
+                            {
+                                result.AuthorizationTransactionResult = authorization.state;
+                                result.NewPaymentStatus = GetPaymentStatus(authorization.state);
+                            }
+                            result.AuthorizationTransactionId = authorization.id;
+                        }
+                    }
+                    else
+                    {
+                        var sale = payment.transactions[0].related_resources[0].sale;
+                        if (sale != null)
+                        {
+                            if (sale.fmf_details != null && !string.IsNullOrEmpty(sale.fmf_details.filter_id))
+                            {
+                                result.CaptureTransactionResult = string.Format("Sale is {0}. Based on fraud filter: {1}. {2}",
+                                    sale.fmf_details.filter_type, sale.fmf_details.name, sale.fmf_details.description);
+                                result.NewPaymentStatus = GetPaymentStatus(Sale.Get(apiContext, sale.id).state);
+                            }
+                            else
+                            {
+                                result.CaptureTransactionResult = sale.state;
+                                result.NewPaymentStatus = GetPaymentStatus(sale.state);
+                            }
+                            result.CaptureTransactionId = sale.id;
+                            result.AvsResult = sale.processor_response != null ? sale.processor_response.avs_code : string.Empty;
+
+                        }
+                    }
+                else
+                    result.AddError("PayPal error");
+            }
+            catch (PayPal.PayPalException exc)
+            {
+                if (exc is PayPal.ConnectionException)
+                {
+                    var error = JsonFormatter.ConvertFromJson<Error>((exc as PayPal.ConnectionException).Response);
+                    if (error != null)
+                    {
+                        result.AddError(string.Format("PayPal error: {0} ({1})", error.message, error.name));
+                        if (error.details != null)
+                            error.details.ForEach(x => result.AddError(string.Format("{0} {1}", x.field, x.issue)));
+                    }
+                }
+
+                //if there are not the specific errors add exception message
+                if (result.Success)
+                    result.AddError(exc.InnerException != null ? exc.InnerException.Message : exc.Message);
             }
             
-            return AuthorizeOrSale(processPaymentRequest, false);
+            return result;
         }
 
         /// <summary>
@@ -328,12 +616,13 @@ namespace Nop.Plugin.Payments.PayPalDirect
         /// <summary>
         /// Gets additional handling fee
         /// </summary>
-        /// <param name="cart">Shoping cart</param>
+        /// <param name="cart">Shopping cart</param>
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
             var result = this.CalculateAdditionalFee(_orderTotalCalculationService, cart,
                 _paypalDirectPaymentSettings.AdditionalFee, _paypalDirectPaymentSettings.AdditionalFeePercentage);
+
             return result;
         }
 
@@ -346,31 +635,44 @@ namespace Nop.Plugin.Payments.PayPalDirect
         {
             var result = new CapturePaymentResult();
 
-            string authorizationId = capturePaymentRequest.Order.AuthorizationTransactionId;
-            var req = new DoCaptureReq();
-            req.DoCaptureRequest = new DoCaptureRequestType();
-            req.DoCaptureRequest.Version = GetApiVersion();
-            req.DoCaptureRequest.AuthorizationID = authorizationId;
-            req.DoCaptureRequest.Amount = new BasicAmountType();
-            req.DoCaptureRequest.Amount.value = Math.Round(capturePaymentRequest.Order.OrderTotal, 2).ToString("N", new CultureInfo("en-us"));
-            req.DoCaptureRequest.Amount.currencyID = PaypalHelper.GetPaypalCurrency(_currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId));
-            req.DoCaptureRequest.CompleteType = CompleteCodeType.COMPLETE;
-
-            var service = GetService();
-            DoCaptureResponseType response = service.DoCapture(req);
-
-            string error;
-            bool success = PaypalHelper.CheckSuccess(response, out error);
-            if (success)
+            try
             {
-                result.NewPaymentStatus = PaymentStatus.Paid;
-                result.CaptureTransactionId = response.DoCaptureResponseDetails.PaymentInfo.TransactionID;
-                result.CaptureTransactionResult = response.Ack.ToString();
+                var apiContext = PaypalHelper.GetApiContext(_paypalDirectPaymentSettings);
+                var authorization = Authorization.Get(apiContext, capturePaymentRequest.Order.AuthorizationTransactionId);
+                var currency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+                var capture = new Capture
+                {
+                    amount = new Amount
+                    {
+                        total = capturePaymentRequest.Order.OrderTotal.ToString("N", new CultureInfo("en-US")),
+                        currency = currency != null ? currency.CurrencyCode : null
+                    },
+                    is_final_capture = true
+                };
+                capture = authorization.Capture(apiContext, capture);
+
+                result.CaptureTransactionId = capture.id;
+                result.CaptureTransactionResult = capture.state;
+                result.NewPaymentStatus = GetPaymentStatus(capture.state);
             }
-            else
+            catch (PayPal.PayPalException exc)
             {
-                result.AddError(error);
+                if (exc is PayPal.ConnectionException)
+                {
+                    var error = JsonFormatter.ConvertFromJson<Error>((exc as PayPal.ConnectionException).Response);
+                    if (error != null)
+                    {
+                        result.AddError(string.Format("PayPal error: {0} ({1})", error.message, error.name));
+                        if (error.details != null)
+                            error.details.ForEach(x => result.AddError(string.Format("{0} {1}", x.field, x.issue)));
+                    }
+                }
+
+                //if there are not the specific errors add exception message
+                if (result.Success)
+                    result.AddError(exc.InnerException != null ? exc.InnerException.Message : exc.Message);
             }
+
             return result;
         }
 
@@ -383,43 +685,39 @@ namespace Nop.Plugin.Payments.PayPalDirect
         {
             var result = new RefundPaymentResult();
 
-            string transactionId = refundPaymentRequest.Order.CaptureTransactionId;
-
-            var req = new RefundTransactionReq();
-            req.RefundTransactionRequest = new RefundTransactionRequestType
+            try
             {
-                Version = GetApiVersion(),
-                TransactionID = transactionId
-            };
-
-            if (refundPaymentRequest.IsPartialRefund)
-            {
-                req.RefundTransactionRequest.RefundType = RefundType.PARTIAL;
-                req.RefundTransactionRequest.Amount = new BasicAmountType
+                var apiContext = PaypalHelper.GetApiContext(_paypalDirectPaymentSettings);
+                var currency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+                var refundRequest = new RefundRequest
                 {
-                    currencyID = PaypalHelper.GetPaypalCurrency(_currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)),
-                    value = refundPaymentRequest.AmountToRefund.ToString()
+                    amount = new Amount
+                    {
+                        total = refundPaymentRequest.AmountToRefund.ToString("N", new CultureInfo("en-US")),
+                        currency = currency != null ? currency.CurrencyCode : null
+                    }
                 };
+                PayPal.Api.Capture.Refund(apiContext, refundPaymentRequest.Order.CaptureTransactionId, refundRequest);
+                var capture = PayPal.Api.Capture.Get(apiContext, refundPaymentRequest.Order.CaptureTransactionId);
+                result.NewPaymentStatus = GetPaymentStatus(capture.state);
             }
-            else
-                req.RefundTransactionRequest.RefundType = RefundType.FULL;
-
-            var service = GetService();
-            RefundTransactionResponseType response = service.RefundTransaction(req);
-
-            string error;
-            bool success = PaypalHelper.CheckSuccess(response, out error);
-            if (success)
+            catch (PayPal.PayPalException exc)
             {
-                result.NewPaymentStatus = (refundPaymentRequest.IsPartialRefund &&
-                    refundPaymentRequest.Order.RefundedAmount + refundPaymentRequest.AmountToRefund < refundPaymentRequest.Order.OrderTotal) ?
-                    PaymentStatus.PartiallyRefunded : PaymentStatus.Refunded;
+                if (exc is PayPal.ConnectionException)
+                {
+                    var error = JsonFormatter.ConvertFromJson<Error>((exc as PayPal.ConnectionException).Response);
+                    if (error != null)
+                    {
+                        result.AddError(string.Format("PayPal error: {0} ({1})", error.message, error.name));
+                        if (error.details != null)
+                            error.details.ForEach(x => result.AddError(string.Format("{0} {1}", x.field, x.issue)));
+                    }
+                }
 
-                //set refund transaction id for preventing refund twice
-                _genericAttributeService.SaveAttribute(refundPaymentRequest.Order, "RefundTransactionId", response.RefundTransactionID);
+                //if there are not the specific errors add exception message
+                if (result.Success)
+                    result.AddError(exc.InnerException != null ? exc.InnerException.Message : exc.Message);
             }
-            else
-                result.AddError(error);
 
             return result;
         }
@@ -433,29 +731,32 @@ namespace Nop.Plugin.Payments.PayPalDirect
         {
             var result = new VoidPaymentResult();
 
-            string transactionId = voidPaymentRequest.Order.AuthorizationTransactionId;
-            if (String.IsNullOrEmpty(transactionId))
-                transactionId = voidPaymentRequest.Order.CaptureTransactionId;
-
-            var req = new DoVoidReq();
-            req.DoVoidRequest = new DoVoidRequestType();
-            req.DoVoidRequest.Version = GetApiVersion();
-            req.DoVoidRequest.AuthorizationID = transactionId;
-
-            var service = GetService();
-            DoVoidResponseType response = service.DoVoid(req);
-
-            string error;
-            bool success = PaypalHelper.CheckSuccess(response, out error);
-            if (success)
+            try
             {
-                result.NewPaymentStatus = PaymentStatus.Voided;
-                //result.VoidTransactionID = response.RefundTransactionID;
+                var apiContext = PaypalHelper.GetApiContext(_paypalDirectPaymentSettings);
+                var authorization = Authorization.Get(apiContext, voidPaymentRequest.Order.AuthorizationTransactionId);
+                authorization = authorization.Void(apiContext);
+
+                result.NewPaymentStatus = GetPaymentStatus(authorization.state);
             }
-            else
+            catch (PayPal.PayPalException exc)
             {
-                result.AddError(error);
+                if (exc is PayPal.ConnectionException)
+                {
+                    var error = JsonFormatter.ConvertFromJson<Error>((exc as PayPal.ConnectionException).Response);
+                    if (error != null)
+                    {
+                        result.AddError(string.Format("PayPal error: {0} ({1})", error.message, error.name));
+                        if (error.details != null)
+                            error.details.ForEach(x => result.AddError(string.Format("{0} {1}", x.field, x.issue)));
+                    }
+                }
+
+                //if there are not the specific errors add exception message
+                if (result.Success)
+                    result.AddError(exc.InnerException != null ? exc.InnerException.Message : exc.Message);
             }
+
             return result;
         }
 
@@ -469,88 +770,183 @@ namespace Nop.Plugin.Payments.PayPalDirect
             var result = new ProcessPaymentResult();
 
             var customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId);
+            if (customer == null)
+                throw new Exception("Customer cannot be loaded");
 
-            var req = new CreateRecurringPaymentsProfileReq();
-            req.CreateRecurringPaymentsProfileRequest = new CreateRecurringPaymentsProfileRequestType();
-            req.CreateRecurringPaymentsProfileRequest.Version = GetApiVersion();
-            var details = new CreateRecurringPaymentsProfileRequestDetailsType();
-            req.CreateRecurringPaymentsProfileRequest.CreateRecurringPaymentsProfileRequestDetails = details;
-
-            details.CreditCard = new CreditCardDetailsType();
-            details.CreditCard.CreditCardNumber = processPaymentRequest.CreditCardNumber;
-            details.CreditCard.CreditCardType = GetPaypalCreditCardType(processPaymentRequest.CreditCardType);
-            details.CreditCard.ExpMonth = processPaymentRequest.CreditCardExpireMonth;
-            details.CreditCard.ExpYear = processPaymentRequest.CreditCardExpireYear;
-            details.CreditCard.CVV2 = processPaymentRequest.CreditCardCvv2;
-            details.CreditCard.CardOwner = new PayerInfoType();
-            details.CreditCard.CardOwner.PayerCountry = GetPaypalCountryCodeType(customer.BillingAddress.Country);
-
-            details.CreditCard.CardOwner.Address = new AddressType();
-            details.CreditCard.CardOwner.Address.Street1 = customer.BillingAddress.Address1;
-            details.CreditCard.CardOwner.Address.Street2 = customer.BillingAddress.Address2;
-            details.CreditCard.CardOwner.Address.CityName = customer.BillingAddress.City;
-            if (customer.BillingAddress.StateProvince != null)
-                details.CreditCard.CardOwner.Address.StateOrProvince = customer.BillingAddress.StateProvince.Abbreviation;
-            else
-                details.CreditCard.CardOwner.Address.StateOrProvince = "CA";
-            details.CreditCard.CardOwner.Address.Country = GetPaypalCountryCodeType(customer.BillingAddress.Country);
-            details.CreditCard.CardOwner.Address.PostalCode = customer.BillingAddress.ZipPostalCode;
-            details.CreditCard.CardOwner.Payer = customer.BillingAddress.Email;
-            details.CreditCard.CardOwner.PayerName = new PersonNameType();
-            details.CreditCard.CardOwner.PayerName.FirstName = customer.BillingAddress.FirstName;
-            details.CreditCard.CardOwner.PayerName.LastName = customer.BillingAddress.LastName;
-
-            //start date
-            details.RecurringPaymentsProfileDetails = new RecurringPaymentsProfileDetailsType();
-            details.RecurringPaymentsProfileDetails.BillingStartDate = DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture);
-            details.RecurringPaymentsProfileDetails.ProfileReference = processPaymentRequest.OrderGuid.ToString();
-
-            //schedule
-            details.ScheduleDetails = new ScheduleDetailsType();
-            details.ScheduleDetails.Description = "Recurring payment";
-            details.ScheduleDetails.PaymentPeriod = new BillingPeriodDetailsType();
-            details.ScheduleDetails.PaymentPeriod.Amount = new BasicAmountType();
-            details.ScheduleDetails.PaymentPeriod.Amount.value = Math.Round(processPaymentRequest.OrderTotal, 2).ToString("N", new CultureInfo("en-us"));
-            details.ScheduleDetails.PaymentPeriod.Amount.currencyID = PaypalHelper.GetPaypalCurrency(_currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId));
-            details.ScheduleDetails.PaymentPeriod.BillingFrequency = processPaymentRequest.RecurringCycleLength;
-            switch (processPaymentRequest.RecurringCyclePeriod)
+            try
             {
-                case RecurringProductCyclePeriod.Days:
-                    details.ScheduleDetails.PaymentPeriod.BillingPeriod = BillingPeriodType.DAY;
-                    break;
-                case RecurringProductCyclePeriod.Weeks:
-                    details.ScheduleDetails.PaymentPeriod.BillingPeriod = BillingPeriodType.WEEK;
-                    break;
-                case RecurringProductCyclePeriod.Months:
-                    details.ScheduleDetails.PaymentPeriod.BillingPeriod = BillingPeriodType.MONTH;
-                    break;
-                case RecurringProductCyclePeriod.Years:
-                    details.ScheduleDetails.PaymentPeriod.BillingPeriod = BillingPeriodType.YEAR;
-                    break;
-                default:
-                    throw new NopException("Not supported cycle period");
-            }
-            details.ScheduleDetails.PaymentPeriod.TotalBillingCycles = processPaymentRequest.RecurringTotalCycles;
+                var apiContext = PaypalHelper.GetApiContext(_paypalDirectPaymentSettings);
+                var currency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
 
-
-
-            var service = GetService();
-            CreateRecurringPaymentsProfileResponseType response = service.CreateRecurringPaymentsProfile(req);
-
-            string error;
-            bool success = PaypalHelper.CheckSuccess(response, out error);
-            if (success)
-            {
-                result.NewPaymentStatus = PaymentStatus.Pending;
-                if (response.CreateRecurringPaymentsProfileResponseDetails != null)
+                //check that webhook exists
+                if (string.IsNullOrEmpty(_paypalDirectPaymentSettings.WebhookId))
                 {
-                    result.SubscriptionTransactionId = response.CreateRecurringPaymentsProfileResponseDetails.ProfileID;
+                    result.AddError("Recurring payments are not available until you create a webhook");
+                    return result;
                 }
+
+                Webhook.Get(apiContext, _paypalDirectPaymentSettings.WebhookId);
+
+                //create the plan
+                var url = _webHelper.GetStoreLocation(_storeContext.CurrentStore.SslEnabled);
+                var billingPlan = new Plan
+                {
+                    name = processPaymentRequest.OrderGuid.ToString(),
+                    description = string.Format("nopCommerce billing plan for the {0} order", processPaymentRequest.OrderGuid),
+                    type = "fixed",
+                    merchant_preferences = new MerchantPreferences
+                    {
+                        return_url = url,
+                        cancel_url = url,
+                        auto_bill_amount = "YES",
+                        //setting setup fee as the first payment (workaround for the processing first payment immediately)
+                        setup_fee = new PayPal.Api.Currency
+                        {
+                            currency = currency != null ? currency.CurrencyCode : null,
+                            value = processPaymentRequest.OrderTotal.ToString("N", new CultureInfo("en-US"))
+                        }
+                    },
+                    payment_definitions = new List<PaymentDefinition>
+                    {
+                        new PaymentDefinition
+                        {
+                             name = "nopCommerce payment for the billing plan",
+                             type = "REGULAR",
+                             frequency_interval = processPaymentRequest.RecurringCycleLength.ToString(),
+                             frequency = processPaymentRequest.RecurringCyclePeriod.ToString().TrimEnd('s'),
+                             cycles = (processPaymentRequest.RecurringTotalCycles - 1).ToString(),
+                             amount = new PayPal.Api.Currency
+                             {
+                                 currency = currency != null ? currency.CurrencyCode : null,
+                                 value = processPaymentRequest.OrderTotal.ToString("N", new CultureInfo("en-US"))
+                             }
+                        }
+                    }
+                }.Create(apiContext);
+
+                //activate the plan
+                var patchRequest = new PatchRequest()
+                {
+                    new Patch()
+                    {
+                        op = "replace",
+                        path = "/",
+                        value = new Plan
+                        {
+                            state = "ACTIVE"
+                        }
+                    }
+                };
+                billingPlan.Update(apiContext, patchRequest);
+
+                //create subscription
+                var subscription = new Agreement
+                {
+                    name = string.Format("nopCommerce subscription for the {0} order", processPaymentRequest.OrderGuid),
+                    //we set order guid in the description, then use it in the webhook handler
+                    description = processPaymentRequest.OrderGuid.ToString(),
+                    //setting start date as the next date of recurring payments as the setup fee was the first payment
+                    start_date = GetStartDate(processPaymentRequest.RecurringCyclePeriod, processPaymentRequest.RecurringCycleLength),
+                    
+                    #region payer
+
+                    payer = new Payer()
+                    {
+                        payment_method = "credit_card",
+                        
+                        #region credit card info
+
+                        funding_instruments = new List<FundingInstrument>
+                        {
+                            new FundingInstrument
+                            {
+                                credit_card = new CreditCard
+                                {
+                                    type = processPaymentRequest.CreditCardType.ToLowerInvariant(),
+                                    number = processPaymentRequest.CreditCardNumber,
+                                    cvv2 = processPaymentRequest.CreditCardCvv2,
+                                    expire_month = processPaymentRequest.CreditCardExpireMonth,
+                                    expire_year = processPaymentRequest.CreditCardExpireYear
+                                }
+                            }
+                        },
+
+                        #endregion
+
+                        #region payer info
+
+                        payer_info = new PayerInfo
+                        {
+                            #region billing address
+
+                            billing_address = customer.BillingAddress == null ? null : new Address
+                            {
+                                country_code = customer.BillingAddress.Country != null ? customer.BillingAddress.Country.TwoLetterIsoCode : null,
+                                state = customer.BillingAddress.StateProvince != null ? customer.BillingAddress.StateProvince.Abbreviation : null,
+                                city = customer.BillingAddress.City,
+                                line1 = customer.BillingAddress.Address1,
+                                line2 = customer.BillingAddress.Address2,
+                                phone = customer.BillingAddress.PhoneNumber,
+                                postal_code = customer.BillingAddress.ZipPostalCode
+                            },
+
+                            #endregion
+
+                            email = customer.BillingAddress.Email,
+                            first_name = customer.BillingAddress.FirstName,
+                            last_name = customer.BillingAddress.LastName
+                        }
+
+                        #endregion
+                    },
+
+                    #endregion
+
+                    #region shipping address
+
+                    shipping_address = customer.ShippingAddress == null ? null : new ShippingAddress
+                    {
+                        country_code = customer.ShippingAddress.Country != null ? customer.ShippingAddress.Country.TwoLetterIsoCode : null,
+                        state = customer.ShippingAddress.StateProvince != null ? customer.ShippingAddress.StateProvince.Abbreviation : null,
+                        city = customer.ShippingAddress.City,
+                        line1 = customer.ShippingAddress.Address1,
+                        line2 = customer.ShippingAddress.Address2,
+                        phone = customer.ShippingAddress.PhoneNumber,
+                        postal_code = customer.ShippingAddress.ZipPostalCode
+                    },
+
+                    #endregion
+
+                    plan = new Plan
+                    {
+                        id = billingPlan.id
+                    }
+                }.Create(apiContext);
+
+                //if first payment failed, try again
+                if (string.IsNullOrEmpty(subscription.agreement_details.last_payment_date))
+                    subscription.BillBalance(apiContext, new AgreementStateDescriptor { amount = subscription.agreement_details.outstanding_balance });
+
+                result.SubscriptionTransactionId = subscription.id;
             }
-            else
+            catch (PayPal.PayPalException exc)
             {
-                result.AddError(error);
+                if (exc is PayPal.ConnectionException)
+                {
+                    var error = JsonFormatter.ConvertFromJson<Error>((exc as PayPal.ConnectionException).Response);
+                    if (error != null)
+                    {
+                        result.AddError(string.Format("PayPal error: {0} ({1})", error.message, error.name));
+                        if (error.details != null)
+                            error.details.ForEach(x => result.AddError(string.Format("{0} {1}", x.field, x.issue)));
+                    }
+                }
+
+                //if there are not the specific errors add exception message
+                if (result.Success)
+                    result.AddError(exc.InnerException != null ? exc.InnerException.Message : exc.Message);
             }
+
             return result;
         }
 
@@ -562,24 +958,33 @@ namespace Nop.Plugin.Payments.PayPalDirect
         public CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
         {
             var result = new CancelRecurringPaymentResult();
-            var order = cancelPaymentRequest.Order;
 
-            var req = new ManageRecurringPaymentsProfileStatusReq();
-            req.ManageRecurringPaymentsProfileStatusRequest = new ManageRecurringPaymentsProfileStatusRequestType();
-            req.ManageRecurringPaymentsProfileStatusRequest.Version = GetApiVersion();
-            var details = new ManageRecurringPaymentsProfileStatusRequestDetailsType();
-            req.ManageRecurringPaymentsProfileStatusRequest.ManageRecurringPaymentsProfileStatusRequestDetails = details;
-
-            details.Action = StatusChangeActionType.CANCEL;
-            //Recurring payments profile ID returned in the CreateRecurringPaymentsProfile response
-            details.ProfileID = order.SubscriptionTransactionId;
-
-            var service = GetService();
-            var response = service.ManageRecurringPaymentsProfileStatus(req);
-            string error;
-            if (!PaypalHelper.CheckSuccess(response, out error))
+            try
             {
-                result.AddError(error);
+                var apiContext = PaypalHelper.GetApiContext(_paypalDirectPaymentSettings);
+                var subscription = Agreement.Get(apiContext, cancelPaymentRequest.Order.SubscriptionTransactionId);
+                var reason = new AgreementStateDescriptor
+                {
+                    note = string.Format("Cancel subscription {0}", cancelPaymentRequest.Order.OrderGuid)
+                };
+                subscription.Cancel(apiContext, reason);
+            }
+            catch (PayPal.PayPalException exc)
+            {
+                if (exc is PayPal.ConnectionException)
+                {
+                    var error = JsonFormatter.ConvertFromJson<Error>((exc as PayPal.ConnectionException).Response);
+                    if (error != null)
+                    {
+                        result.AddError(string.Format("PayPal error: {0} ({1})", error.message, error.name));
+                        if (error.details != null)
+                            error.details.ForEach(x => result.AddError(string.Format("{0} {1}", x.field, x.issue)));
+                    }
+                }
+
+                //if there are not the specific errors add exception message
+                if (result.Success)
+                    result.AddError(exc.InnerException != null ? exc.InnerException.Message : exc.Message);
             }
 
             return result;
@@ -590,7 +995,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>Result</returns>
-        public bool CanRePostProcessPayment(Order order)
+        public bool CanRePostProcessPayment(Core.Domain.Orders.Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -625,11 +1030,18 @@ namespace Nop.Plugin.Payments.PayPalDirect
             routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.PayPalDirect.Controllers" }, { "area", null } };
         }
 
+        /// <summary>
+        /// Get type of controller
+        /// </summary>
+        /// <returns>Type</returns>
         public Type GetControllerType()
         {
             return typeof(PaymentPayPalDirectController);
         }
 
+        /// <summary>
+        /// Install the plugin
+        /// </summary>
         public override void Install()
         {
             //settings
@@ -641,45 +1053,72 @@ namespace Nop.Plugin.Payments.PayPalDirect
             _settingService.SaveSetting(settings);
 
             //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.UseSandbox", "Use Sandbox");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.UseSandbox.Hint", "Check to enable Sandbox (testing environment).");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.TransactMode", "Transaction mode");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.TransactMode.Hint", "Specify transaction mode.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.ApiAccountName", "API Account Name");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.ApiAccountName.Hint", "Specify API account name.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.ApiAccountPassword", "API Account Password");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.ApiAccountPassword.Hint", "Specify API account password.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.Signature", "Signature");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.Signature.Hint", "Specify signature.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFee", "Additional fee");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFeePercentage", "Additional fee. Use percentage");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
-           
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.ClientId", "Client ID");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.ClientId.Hint", "Specify client ID.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.ClientSecret", "Client secret");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.ClientSecret.Hint", "Specify secret key.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.PassPurchasedItems", "Pass purchased items");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.PassPurchasedItems.Hint", "Check to pass information about purchased items to PayPal.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.TransactMode", "Transaction mode");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.TransactMode.Hint", "Choose transaction mode.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.UseSandbox", "Use Sandbox");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.UseSandbox.Hint", "Check to enable Sandbox (testing environment).");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.WebhookId", "Webhook ID");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.WebhookId.Hint", "Specify webhook ID.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Instructions", "<p><b>If you're using this gateway ensure that your primary store currency is supported by Paypal.</b><br /><br />To configure plugin follow these steps:<br />1. Log into your Developer PayPal account (click <a href=\"https://www.paypal.com/us/webapps/mpp/referral/paypal-business-account2?partner_id=9JJPJNNPQ7PZ8\" target=\"_blank\">here</a> to create your account).<br />2. Click on My Apps & Credentials from the Dashboard.<br />3. Create new REST API app.<br />4. Copy your Client ID and Secret key below.<br />5. To be able to use recurring payments you need to set the webhook ID. You can get it manually in your PayPal account (enter the URL https://www.yourStore.com/Plugins/PaymentPayPalDirect/Webhook below REST API application credentials), or automatically by pressing \"@T(\"Plugins.Payments.PayPalDirect.WebhookCreate\")\" button (not visible when running the site locally).<br /></p>");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.PaymentMethodDescription", "Pay by credit / debit card");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.WebhookCreate", "Get webhook ID");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.WebhookError", "Webhook was not created (see details in the log)");
+
             base.Install();
         }
         
+        /// <summary>
+        /// Uninstall the plugin
+        /// </summary>
         public override void Uninstall()
         {
+            //delete webhook
+            var settings = _settingService.LoadSetting<PayPalDirectPaymentSettings>();
+            if (!string.IsNullOrEmpty(settings.WebhookId))
+            {
+                try
+                {
+                    var apiContext = PaypalHelper.GetApiContext(settings);
+                    Webhook.Delete(apiContext, settings.WebhookId);
+                }
+                catch (PayPal.PayPalException) { }
+            }
+
             //settings
             _settingService.DeleteSetting<PayPalDirectPaymentSettings>();
 
             //locales
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.UseSandbox");
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.UseSandbox.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.TransactMode");
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.TransactMode.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.ApiAccountName");
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.ApiAccountName.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.ApiAccountPassword");
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.ApiAccountPassword.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.Signature");
-            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.Signature.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFee");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFee.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFeePercentage");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFeePercentage.Hint");
-           
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.ClientId");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.ClientId.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.ClientSecret");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.ClientSecret.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.PassPurchasedItems");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.PassPurchasedItems.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.TransactMode");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.TransactMode.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.UseSandbox");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.UseSandbox.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.WebhookId");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.WebhookId.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Instructions");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.PaymentMethodDescription");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.WebhookCreate");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.WebhookError");
+
             base.Uninstall();
         }
 
@@ -692,10 +1131,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         /// </summary>
         public bool SupportCapture
         {
-            get
-            {
-                return true;
-            }
+            get { return true; }
         }
 
         /// <summary>
@@ -703,10 +1139,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         /// </summary>
         public bool SupportPartiallyRefund
         {
-            get
-            {
-                return true;
-            }
+            get { return true; }
         }
 
         /// <summary>
@@ -714,10 +1147,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         /// </summary>
         public bool SupportRefund
         {
-            get
-            {
-                return true;
-            }
+            get { return true; }
         }
 
         /// <summary>
@@ -725,10 +1155,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         /// </summary>
         public bool SupportVoid
         {
-            get
-            {
-                return true;
-            }
+            get { return true; }
         }
 
         /// <summary>
@@ -736,10 +1163,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         /// </summary>
         public RecurringPaymentType RecurringPaymentType
         {
-            get
-            {
-                return RecurringPaymentType.Automatic;
-            }
+            get { return RecurringPaymentType.Automatic; }
         }
 
         /// <summary>
@@ -747,10 +1171,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         /// </summary>
         public PaymentMethodType PaymentMethodType
         {
-            get
-            {
-                return PaymentMethodType.Standard;
-            }
+            get { return PaymentMethodType.Standard; }
         }
 
         /// <summary>
@@ -758,10 +1179,17 @@ namespace Nop.Plugin.Payments.PayPalDirect
         /// </summary>
         public bool SkipPaymentInfo
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
+        }
+
+        /// <summary>
+        /// Gets a payment method description that will be displayed on checkout pages in the public store
+        /// </summary>
+        public string PaymentMethodDescription
+        {
+            //return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
+            //for example, for a redirection payment method, description may be like this: "You will be redirected to PayPal site to complete the payment"
+            get { return _localizationService.GetResource("Plugins.Payments.PayPalDirect.PaymentMethodDescription"); }
         }
 
         #endregion

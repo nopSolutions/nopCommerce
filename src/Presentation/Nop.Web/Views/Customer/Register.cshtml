@@ -6,7 +6,7 @@
     //title
     Html.AddTitleParts(T("PageTitle.Register").Text);
     //page class
-    Html.AddPageCssClassParts("html-registration-page");
+    Html.AppendPageCssClassParts("html-registration-page");
 }
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
@@ -114,6 +114,15 @@
                         @Html.RequiredHint()
                         @Html.ValidationMessageFor(model => model.Email)
                     </div>
+                    @if (Model.EnteringEmailTwice)
+                    {
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.ConfirmEmail, new { }, ":")
+                            @Html.EditorFor(model => model.ConfirmEmail)
+                            @Html.RequiredHint()
+                            @Html.ValidationMessageFor(model => model.ConfirmEmail)
+                        </div>
+                    }
                     @if (Model.UsernamesEnabled)
                     {
                         <div class="inputs">
@@ -127,15 +136,6 @@
                             }
                         </div>
 
-                    }
-                    @if (Model.EnteringEmailTwice)
-                    {
-                        <div class="inputs">
-                            @Html.LabelFor(model => model.ConfirmEmail, new { }, ":")
-                            @Html.EditorFor(model => model.ConfirmEmail)
-                            @Html.RequiredHint()
-                            @Html.ValidationMessageFor(model => model.ConfirmEmail)
-                        </div>
                     }
                 </div>
             </div>
@@ -376,11 +376,21 @@
                 <div class="accept-privacy-policy">
                     <input id="accept-privacy-policy" type="checkbox" name="accept-privacy-policy" />
                     <label for="accept-privacy-policy">@T("Account.Fields.AcceptPrivacyPolicy")</label>
-                    <span class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "privacyinfo" })', 450, 500, true)">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
+                    <span class="read" id="read-privacyinfo">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
+                    <script>
+                        $(document).ready(function() {
+                            $('#read-privacyinfo').on('click', function (e) {
+                                displayPopupContentFromUrl('@Url.RouteUrl("TopicPopup", new { SystemName = "privacyinfo" })', '@T("Account.Fields.AcceptPrivacyPolicy")');
+                            });
+                        });
+                    </script>
                 </div>
             }
             <div class="buttons">
                 <input type="submit" id="register-button" class="button-1 register-next-step-button" value="@T("Account.Register.Button")" name="register-button" />
+            </div>
+            <div class="external-authentication">
+                @Html.Action("ExternalMethods", "ExternalAuthentication")
             </div>
         </div>
     </div>

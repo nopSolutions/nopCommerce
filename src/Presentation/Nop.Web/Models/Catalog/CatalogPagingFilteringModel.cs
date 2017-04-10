@@ -200,7 +200,7 @@ namespace Nop.Web.Models.Catalog
             public virtual void LoadPriceRangeFilters(string priceRangeStr, IWebHelper webHelper, IPriceFormatter priceFormatter)
             {
                 var priceRangeList = GetPriceRangeList(priceRangeStr);
-                if (priceRangeList.Count > 0)
+                if (priceRangeList.Any())
                 {
                     this.Enabled = true;
 
@@ -408,7 +408,7 @@ namespace Nop.Web.Models.Catalog
                         SpecificationAttributeOptionDisplayOrder = sao.DisplayOrder
                     }).ToList());
 
-                if (allFilters.Count == 0)
+                if (!allFilters.Any())
                     return;
 
                 //sort loaded options

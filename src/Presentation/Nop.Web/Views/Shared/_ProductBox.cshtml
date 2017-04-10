@@ -1,5 +1,6 @@
 ﻿@model ProductOverviewModel
 @using Nop.Core
+@using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Orders
 @using Nop.Core.Domain.Tax
 @using Nop.Core.Infrastructure
@@ -29,14 +30,20 @@
     </div>
     <div class="details">
         <h2 class="product-title">
-            <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a>
+            <a href="@Url.RouteUrl("Product", new {SeName = Model.SeName})">@Model.Name</a>
         </h2>
+        @if (EngineContext.Current.Resolve<CatalogSettings>().ShowSkuOnCatalogPages && !string.IsNullOrEmpty(Model.Sku))
+        {
+            <div class="sku">
+                @Model.Sku
+            </div>
+        }
         @if (Model.ReviewOverviewModel.AllowCustomerReviews)
         {
             int ratingPercent = 0;
             if (Model.ReviewOverviewModel.TotalReviews != 0)
             {
-                ratingPercent = ((Model.ReviewOverviewModel.RatingSum * 100) / Model.ReviewOverviewModel.TotalReviews) / 5;
+                ratingPercent = ((Model.ReviewOverviewModel.RatingSum*100)/Model.ReviewOverviewModel.TotalReviews)/5;
             }
             <div class="product-rating-box" title="@string.Format(T("Reviews.TotalReviews").Text, Model.ReviewOverviewModel.TotalReviews)">
                 <div class="rating">
@@ -64,7 +71,13 @@
                     <span class="tax-shipping-info">
                         @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
                     </span>
-                    }
+                }
+                @if (!String.IsNullOrEmpty(Model.ProductPrice.BasePricePAngV))
+                {
+                    <div class="base-price-pangv">
+                        @Model.ProductPrice.BasePricePAngV
+                    </div>
+                }
             </div>
             @Html.Widget("productbox_addinfo_middle", Model.Id)
             <div class="buttons">

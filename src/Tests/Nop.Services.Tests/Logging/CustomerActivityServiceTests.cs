@@ -66,12 +66,13 @@ namespace Nop.Services.Tests.Logging
             _activity2 = new ActivityLog
             {
                 Id = 2,
-                ActivityLogType = _activityType1,
+                ActivityLogType = _activityType2,
                 CustomerId = _customer2.Id,
                 Customer = _customer2
             };
             _cacheManager = new NopNullCache();
             _workContext = MockRepository.GenerateMock<IWorkContext>();
+            _webHelper = MockRepository.GenerateMock<IWebHelper>();
             _activityLogRepository = MockRepository.GenerateMock<IRepository<ActivityLog>>();
             _activityLogTypeRepository = MockRepository.GenerateMock<IRepository<ActivityLogType>>();
             _activityLogTypeRepository.Expect(x => x.Table).Return(new List<ActivityLogType> { _activityType1, _activityType2 }.AsQueryable());

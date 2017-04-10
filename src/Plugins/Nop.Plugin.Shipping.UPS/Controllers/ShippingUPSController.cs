@@ -4,9 +4,9 @@ using System.Web.Mvc;
 using Nop.Core;
 using Nop.Plugin.Shipping.UPS.Domain;
 using Nop.Plugin.Shipping.UPS.Models;
+using Nop.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Shipping.UPS.Controllers
@@ -79,7 +79,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
                 foreach (string service in UPSServices.Services)
                 {
                     string serviceId = UPSServices.GetServiceId(service);
-                    if (!String.IsNullOrEmpty(serviceId) && !String.IsNullOrEmpty(carrierServicesOfferedDomestic))
+                    if (!String.IsNullOrEmpty(serviceId))
                     {
                         // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs
                         if (carrierServicesOfferedDomestic.Contains(String.Format("[{0}]", serviceId)))
@@ -87,7 +87,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
                     }
                 }
 
-            return View("~/Plugins/Shipping.UPS/Views/ShippingUPS/Configure.cshtml", model);
+            return View("~/Plugins/Shipping.UPS/Views/Configure.cshtml", model);
         }
 
         [HttpPost]

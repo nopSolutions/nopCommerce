@@ -7,7 +7,7 @@
     //title
     Html.AddTitleParts(Model.Subject);
     //page class
-    Html.AddPageCssClassParts("html-forum-topic-page");
+    Html.AppendPageCssClassParts("html-forum-topic-page");
 }
 <div class="page forum-topic-page">
     @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })

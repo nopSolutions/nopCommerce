@@ -21,6 +21,7 @@ namespace Nop.Data.Mapping.Orders
             this.Property(o => o.OrderDiscount).HasPrecision(18, 4);
             this.Property(o => o.OrderTotal).HasPrecision(18, 4);
             this.Property(o => o.RefundedAmount).HasPrecision(18, 4);
+            this.Property(o => o.CustomOrderNumber).IsRequired();
 
             this.Ignore(o => o.OrderStatus);
             this.Ignore(o => o.PaymentStatus);
@@ -42,6 +43,10 @@ namespace Nop.Data.Mapping.Orders
             this.HasOptional(o => o.ShippingAddress)
                 .WithMany()
                 .HasForeignKey(o => o.ShippingAddressId)
+                .WillCascadeOnDelete(false);
+            this.HasOptional(o => o.PickupAddress)
+                .WithMany()
+                .HasForeignKey(o => o.PickupAddressId)
                 .WillCascadeOnDelete(false);
         }
     }

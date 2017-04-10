@@ -24,7 +24,7 @@ namespace Nop.Web.Models.Catalog
             Breadcrumb = new ProductBreadcrumbModel();
             ProductTags = new List<ProductTagModel>();
             ProductSpecifications= new List<ProductSpecificationModel>();
-            ProductManufacturers = new List<ManufacturerModel>();
+            ProductManufacturers = new List<ManufacturerBriefInfoModel>();
             ProductReviewOverview = new ProductReviewOverviewModel();
             TierPrices = new List<TierPriceModel>();
         }
@@ -37,7 +37,6 @@ namespace Nop.Web.Models.Catalog
         public string Name { get; set; }
         public string ShortDescription { get; set; }
         public string FullDescription { get; set; }
-        public string ProductTemplateViewPath { get; set; }
         public string MetaKeywords { get; set; }
         public string MetaDescription { get; set; }
         public string MetaTitle { get; set; }
@@ -71,6 +70,8 @@ namespace Nop.Web.Models.Catalog
         public DateTime? RentalStartDate { get; set; }
         public DateTime? RentalEndDate { get; set; }
 
+        public ManageInventoryMethod ManageInventoryMethod { get; set; }
+
         public string StockAvailability { get; set; }
 
         public bool DisplayBackInStockSubscription { get; set; }
@@ -92,7 +93,7 @@ namespace Nop.Web.Models.Catalog
 
         public IList<ProductSpecificationModel> ProductSpecifications { get; set; }
 
-        public IList<ManufacturerModel> ProductManufacturers { get; set; }
+        public IList<ManufacturerBriefInfoModel> ProductManufacturers { get; set; }
 
         public ProductReviewOverviewModel ProductReviewOverview { get; set; }
 
@@ -280,7 +281,6 @@ namespace Nop.Web.Models.Catalog
             public ProductAttributeValueModel()
             {
                 ImageSquaresPictureModel = new PictureModel();
-                PictureModel = new PictureModel();
             }
 
             public string Name { get; set; }
@@ -296,8 +296,12 @@ namespace Nop.Web.Models.Catalog
 
             public bool IsPreSelected { get; set; }
 
-            //picture model is used when we want to override a default product picture when some attribute is selected
-            public PictureModel PictureModel { get; set; }
+            //product picture ID (associated to this value)
+            public int PictureId { get; set; }
+
+            public bool CustomerEntersQty { get; set; }
+
+            public int Quantity { get; set; }
         }
 
 		#endregion

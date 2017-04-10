@@ -12,7 +12,7 @@ namespace Nop.Admin.Validators.Catalog
         public ProductAttributeValidator(ILocalizationService localizationService, IDbContext dbContext)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Fields.Name.Required"));
-            SetStringPropertiesMaxLength<ProductAttribute>(dbContext);
+            SetDatabaseValidationRules<ProductAttribute>(dbContext);
         }
     }
 }

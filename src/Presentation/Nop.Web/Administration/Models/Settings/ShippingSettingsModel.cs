@@ -7,15 +7,23 @@ namespace Nop.Admin.Models.Settings
     public partial class ShippingSettingsModel : BaseNopModel
     {
         public int ActiveStoreScopeConfiguration { get; set; }
+        
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.ShipToSameAddress")]
+        public bool ShipToSameAddress { get; set; }
+        public bool ShipToSameAddress_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.AllowPickUpInStore")]
         public bool AllowPickUpInStore { get; set; }
         public bool AllowPickUpInStore_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.PickUpInStoreFee")]
-        public decimal PickUpInStoreFee { get; set; }
-        public bool PickUpInStoreFee_OverrideForStore { get; set; }
-    
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.DisplayPickupPointsOnMap")]
+        public bool DisplayPickupPointsOnMap { get; set; }
+        public bool DisplayPickupPointsOnMap_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.GoogleMapsApiKey")]
+        public string GoogleMapsApiKey { get; set; }
+        public bool GoogleMapsApiKey_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.UseWarehouseLocation")]
         public bool UseWarehouseLocation { get; set; }
         public bool UseWarehouseLocation_OverrideForStore { get; set; }
@@ -48,11 +56,18 @@ namespace Nop.Admin.Models.Settings
         public bool DisplayShipmentEventsToStoreOwner { get; set; }
         public bool DisplayShipmentEventsToStoreOwner_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.HideShippingTotal")]
+        public bool HideShippingTotal { get; set; }
+        public bool HideShippingTotal_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.BypassShippingMethodSelectionIfOnlyOne")]
         public bool BypassShippingMethodSelectionIfOnlyOne { get; set; }
         public bool BypassShippingMethodSelectionIfOnlyOne_OverrideForStore { get; set; }
-        
-        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.ShippingOriginAddress")]
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.ConsiderAssociatedProductsDimensions")]
+        public bool ConsiderAssociatedProductsDimensions { get; set; }
+        public bool ConsiderAssociatedProductsDimensions_OverrideForStore { get; set; }
+
         public AddressModel ShippingOriginAddress { get; set; }
         public bool ShippingOriginAddress_OverrideForStore { get; set; }
     }

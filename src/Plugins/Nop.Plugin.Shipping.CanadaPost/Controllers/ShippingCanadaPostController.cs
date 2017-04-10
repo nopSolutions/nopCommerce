@@ -9,28 +9,41 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
     [AdminAuthorize]
     public class ShippingCanadaPostController : BasePluginController
     {
-        private readonly CanadaPostSettings _canadaPostSettings;
-        private readonly ISettingService _settingService;
-        private readonly ILocalizationService _localizationService;
+        #region Fields
 
-        public ShippingCanadaPostController(CanadaPostSettings canadaPostSettings, 
-            ISettingService settingService,
-            ILocalizationService localizationService)
+        private readonly CanadaPostSettings _canadaPostSettings;
+        private readonly ILocalizationService _localizationService;
+        private readonly ISettingService _settingService;
+
+        #endregion
+
+        #region Ctor
+
+        public ShippingCanadaPostController(CanadaPostSettings canadaPostSettings,
+            ILocalizationService localizationService,
+            ISettingService settingService)
         {
             this._canadaPostSettings = canadaPostSettings;
-            this._settingService = settingService;
             this._localizationService = localizationService;
+            this._settingService = settingService;            
         }
+
+        #endregion
+
+        #region Methods
 
         [ChildActionOnly]
         public ActionResult Configure()
         {
-            var model = new CanadaPostShippingModel();
-            model.Url = _canadaPostSettings.Url;
-            model.Port = _canadaPostSettings.Port;
-            model.CustomerId = _canadaPostSettings.CustomerId;
+            var model = new CanadaPostShippingModel
+            {
+                CustomerNumber = _canadaPostSettings.CustomerNumber,
+                ContractId = _canadaPostSettings.ContractId,
+                ApiKey = _canadaPostSettings.ApiKey,
+                UseSandbox = _canadaPostSettings.UseSandbox
+            };
 
-            return View("~/Plugins/Shipping.CanadaPost/Views/ShippingCanadaPost/Configure.cshtml", model);
+            return View("~/Plugins/Shipping.CanadaPost/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -38,20 +51,23 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
         public ActionResult Configure(CanadaPostShippingModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return Configure();
-            }
-            
+
+            //Canada Post page provides the API key with extra spaces
+            model.ApiKey = model.ApiKey.Replace(" : ", ":");
+
             //save settings
-            _canadaPostSettings.Url = model.Url;
-            _canadaPostSettings.Port = model.Port;
-            _canadaPostSettings.CustomerId = model.CustomerId;
+            _canadaPostSettings.CustomerNumber = model.CustomerNumber;
+            _canadaPostSettings.ContractId = model.ContractId;
+            _canadaPostSettings.ApiKey = model.ApiKey;
+            _canadaPostSettings.UseSandbox = model.UseSandbox;
             _settingService.SaveSetting(_canadaPostSettings);
 
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return View("~/Plugins/Shipping.CanadaPost/Views/ShippingCanadaPost/Configure.cshtml", model);
+            return View("~/Plugins/Shipping.CanadaPost/Views/Configure.cshtml", model);
         }
 
+        #endregion
     }
 }

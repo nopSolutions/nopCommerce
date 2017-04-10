@@ -14,8 +14,10 @@ using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Date;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
@@ -36,12 +38,14 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILanguageService _languageService;
+        private readonly IDateRangeService _dateRangeService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IWebHelper _webHelper;
+        private readonly ICustomerActivityService _customerActivityService;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Ctor
 
         public ShippingController(IShippingService shippingService, 
             ShippingSettings shippingSettings,
@@ -53,9 +57,11 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService,
              ILocalizedEntityService localizedEntityService,
             ILanguageService languageService,
+            IDateRangeService dateRangeService,
             IPluginFinder pluginFinder,
-            IWebHelper webHelper)
-		{
+            IWebHelper webHelper,
+            ICustomerActivityService customerActivityService)
+        {
             this._shippingService = shippingService;
             this._shippingSettings = shippingSettings;
             this._settingService = settingService;
@@ -66,9 +72,11 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
             this._localizedEntityService = localizedEntityService;
             this._languageService = languageService;
+            this._dateRangeService = dateRangeService;
             this._pluginFinder = pluginFinder;
             this._webHelper = webHelper;
-		}
+            this._customerActivityService = customerActivityService;
+        }
 
 		#endregion 
         
@@ -79,15 +87,8 @@ namespace Nop.Admin.Controllers
         {
             foreach (var localized in model.Locales)
             {
-                _localizedEntityService.SaveLocalizedValue(shippingMethod,
-                                                               x => x.Name,
-                                                               localized.Name,
-                                                               localized.LanguageId);
-
-                _localizedEntityService.SaveLocalizedValue(shippingMethod,
-                                                           x => x.Description,
-                                                           localized.Description,
-                                                           localized.LanguageId);
+                _localizedEntityService.SaveLocalizedValue(shippingMethod, x => x.Name, localized.Name, localized.LanguageId);
+                _localizedEntityService.SaveLocalizedValue(shippingMethod, x => x.Description, localized.Description, localized.LanguageId);
             }
         }
 
@@ -96,10 +97,16 @@ namespace Nop.Admin.Controllers
         {
             foreach (var localized in model.Locales)
             {
-                _localizedEntityService.SaveLocalizedValue(deliveryDate,
-                                                               x => x.Name,
-                                                               localized.Name,
-                                                               localized.LanguageId);
+                _localizedEntityService.SaveLocalizedValue(deliveryDate, x => x.Name, localized.Name, localized.LanguageId);
+            }
+        }
+
+        [NonAction]
+        protected virtual void UpdateLocales(ProductAvailabilityRange productAvailabilityRange, ProductAvailabilityRangeModel model)
+        {
+            foreach (var localized in model.Locales)
+            {
+                _localizedEntityService.SaveLocalizedValue(productAvailabilityRange, x => x.Name, localized.Name, localized.LanguageId);
             }
         }
 
@@ -107,7 +114,7 @@ namespace Nop.Admin.Controllers
 
         #region Shipping rate computation methods
 
-        public ActionResult Providers()
+        public virtual ActionResult Providers()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -116,10 +123,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Providers(DataSourceRequest command)
+        public virtual ActionResult Providers(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var shippingProvidersModel = new List<ShippingRateComputationMethodModel>();
             var shippingProviders = _shippingService.LoadAllShippingRateComputationMethods();
@@ -141,7 +148,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProviderUpdate([Bind(Exclude = "ConfigurationRouteValues")] ShippingRateComputationMethodModel model)
+        public virtual ActionResult ProviderUpdate([Bind(Exclude = "ConfigurationRouteValues")] ShippingRateComputationMethodModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -175,7 +182,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public ActionResult ConfigureProvider(string systemName)
+        public virtual ActionResult ConfigureProvider(string systemName)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -196,10 +203,10 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-        
-        #region Shipping methods
 
-        public ActionResult Methods()
+        #region Pickup point providers
+
+        public virtual ActionResult PickupPointProviders()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -208,10 +215,101 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Methods(DataSourceRequest command)
+        public virtual ActionResult PickupPointProviders(DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedKendoGridJson();
+
+            var pickupPointProviderModel = new List<PickupPointProviderModel>();
+            var allProviders = _shippingService.LoadAllPickupPointProviders();
+            foreach (var provider in allProviders)
+            {
+                var model = provider.ToModel();
+                model.IsActive = provider.IsPickupPointProviderActive(_shippingSettings);
+                model.LogoUrl = provider.PluginDescriptor.GetLogoUrl(_webHelper);
+                pickupPointProviderModel.Add(model);
+            }
+
+            var gridModel = new DataSourceResult
+            {
+                Data = pickupPointProviderModel,
+                Total = pickupPointProviderModel.Count
+            };
+
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        public virtual ActionResult PickupPointProviderUpdate([Bind(Exclude = "ConfigurationRouteValues")] PickupPointProviderModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
+
+            var pickupPointProvider = _shippingService.LoadPickupPointProviderBySystemName(model.SystemName);
+            if (pickupPointProvider.IsPickupPointProviderActive(_shippingSettings))
+            {
+                if (!model.IsActive)
+                {
+                    //mark as disabled
+                    _shippingSettings.ActivePickupPointProviderSystemNames.Remove(pickupPointProvider.PluginDescriptor.SystemName);
+                    _settingService.SaveSetting(_shippingSettings);
+                }
+            }
+            else
+            {
+                if (model.IsActive)
+                {
+                    //mark as active
+                    _shippingSettings.ActivePickupPointProviderSystemNames.Add(pickupPointProvider.PluginDescriptor.SystemName);
+                    _settingService.SaveSetting(_shippingSettings);
+                }
+            }
+            var pluginDescriptor = pickupPointProvider.PluginDescriptor;
+            pluginDescriptor.DisplayOrder = model.DisplayOrder;
+            PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
+            //reset plugin cache
+            _pluginFinder.ReloadPlugins();
+
+            return new NullJsonResult();
+        }
+
+        public virtual ActionResult ConfigurePickupPointProvider(string systemName)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            var pickupPointProvider = _shippingService.LoadPickupPointProviderBySystemName(systemName);
+            if (pickupPointProvider == null)
+                return RedirectToAction("PickupPointProviders");
+
+            var model = pickupPointProvider.ToModel();
+            string actionName;
+            string controllerName;
+            RouteValueDictionary routeValues;
+            pickupPointProvider.GetConfigurationRoute(out actionName, out controllerName, out routeValues);
+            model.ConfigurationActionName = actionName;
+            model.ConfigurationControllerName = controllerName;
+            model.ConfigurationRouteValues = routeValues;
+            return View(model);
+        }
+
+        #endregion
+
+        #region Shipping methods
+
+        public virtual ActionResult Methods()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            return View();
+        }
+
+        [HttpPost]
+        public virtual ActionResult Methods(DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedKendoGridJson();
 
             var shippingMethodsModel = _shippingService.GetAllShippingMethods()
                 .Select(x => x.ToModel())
@@ -226,7 +324,7 @@ namespace Nop.Admin.Controllers
         }
 
 
-        public ActionResult CreateMethod()
+        public virtual ActionResult CreateMethod()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -238,7 +336,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult CreateMethod(ShippingMethodModel model, bool continueEditing)
+        public virtual ActionResult CreateMethod(ShippingMethodModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -258,7 +356,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult EditMethod(int id)
+        public virtual ActionResult EditMethod(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -280,7 +378,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult EditMethod(ShippingMethodModel model, bool continueEditing)
+        public virtual ActionResult EditMethod(ShippingMethodModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -306,7 +404,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteMethod(int id)
+        public virtual ActionResult DeleteMethod(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -321,12 +419,12 @@ namespace Nop.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Methods.Deleted"));
             return RedirectToAction("Methods");
         }
-        
+
         #endregion
 
-        #region Delivery dates
+        #region Dates and ranges
 
-        public ActionResult DeliveryDates()
+        public virtual ActionResult DatesAndRanges()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -334,15 +432,15 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
+        #region Delivery dates
+
         [HttpPost]
-        public ActionResult DeliveryDates(DataSourceRequest command)
+        public virtual ActionResult DeliveryDates(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
-            var deliveryDatesModel = _shippingService.GetAllDeliveryDates()
-                .Select(x => x.ToModel())
-                .ToList();
+            var deliveryDatesModel = _dateRangeService.GetAllDeliveryDates().Select(x => x.ToModel()).ToList();
             var gridModel = new DataSourceResult
             {
                 Data = deliveryDatesModel,
@@ -353,19 +451,21 @@ namespace Nop.Admin.Controllers
         }
 
 
-        public ActionResult CreateDeliveryDate()
+        public virtual ActionResult CreateDeliveryDate()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             var model = new DeliveryDateModel();
+            
             //locales
             AddLocales(_languageService, model.Locales);
+
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult CreateDeliveryDate(DeliveryDateModel model, bool continueEditing)
+        public virtual ActionResult CreateDeliveryDate(DeliveryDateModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -373,29 +473,32 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var deliveryDate = model.ToEntity();
-                _shippingService.InsertDeliveryDate(deliveryDate);
+                _dateRangeService.InsertDeliveryDate(deliveryDate);
+                
                 //locales
                 UpdateLocales(deliveryDate, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Added"));
-                return continueEditing ? RedirectToAction("EditDeliveryDate", new { id = deliveryDate.Id }) : RedirectToAction("DeliveryDates");
+
+                return continueEditing ? RedirectToAction("EditDeliveryDate", new { id = deliveryDate.Id }) : RedirectToAction("DatesAndRanges");
             }
 
             //If we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public ActionResult EditDeliveryDate(int id)
+        public virtual ActionResult EditDeliveryDate(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            var deliveryDate = _shippingService.GetDeliveryDateById(id);
+            var deliveryDate = _dateRangeService.GetDeliveryDateById(id);
             if (deliveryDate == null)
                 //No delivery date found with the specified id
-                return RedirectToAction("DeliveryDates");
+                return RedirectToAction("DatesAndRanges");
 
             var model = deliveryDate.ToModel();
+            
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -406,53 +509,181 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult EditDeliveryDate(DeliveryDateModel model, bool continueEditing)
+        public virtual ActionResult EditDeliveryDate(DeliveryDateModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            var deliveryDate = _shippingService.GetDeliveryDateById(model.Id);
+            var deliveryDate = _dateRangeService.GetDeliveryDateById(model.Id);
             if (deliveryDate == null)
                 //No delivery date found with the specified id
-                return RedirectToAction("DeliveryDates");
+                return RedirectToAction("DatesAndRanges");
 
             if (ModelState.IsValid)
             {
                 deliveryDate = model.ToEntity(deliveryDate);
-                _shippingService.UpdateDeliveryDate(deliveryDate);
+                _dateRangeService.UpdateDeliveryDate(deliveryDate);
+                
                 //locales
                 UpdateLocales(deliveryDate, model);
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Updated"));
-                return continueEditing ? RedirectToAction("EditDeliveryDate", deliveryDate.Id) : RedirectToAction("DeliveryDates");
-            }
 
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Updated"));
+
+                return continueEditing ? RedirectToAction("EditDeliveryDate", deliveryDate.Id) : RedirectToAction("DatesAndRanges");
+            }
 
             //If we got this far, something failed, redisplay form
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult DeleteDeliveryDate(int id)
+        public virtual ActionResult DeleteDeliveryDate(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            var deliveryDate = _shippingService.GetDeliveryDateById(id);
+            var deliveryDate = _dateRangeService.GetDeliveryDateById(id);
             if (deliveryDate == null)
                 //No delivery date found with the specified id
-                return RedirectToAction("DeliveryDates");
+                return RedirectToAction("DatesAndRanges");
 
-            _shippingService.DeleteDeliveryDate(deliveryDate);
+            _dateRangeService.DeleteDeliveryDate(deliveryDate);
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Deleted"));
-            return RedirectToAction("DeliveryDates");
+
+            return RedirectToAction("DatesAndRanges");
         }
+
+        #endregion
+
+        #region Product availability ranges
+
+        [HttpPost]
+        public virtual ActionResult ProductAvailabilityRanges(DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedKendoGridJson();
+
+            var productAvailabilityRangesModel = _dateRangeService.GetAllProductAvailabilityRanges().Select(range => range.ToModel()).ToList();
+            var gridModel = new DataSourceResult
+            {
+                Data = productAvailabilityRangesModel,
+                Total = productAvailabilityRangesModel.Count
+            };
+
+            return Json(gridModel);
+        }
+
+        public virtual ActionResult CreateProductAvailabilityRange()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            var model = new ProductAvailabilityRangeModel();
+            
+            //locales
+            AddLocales(_languageService, model.Locales);
+
+            return View(model);
+        }
+
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public virtual ActionResult CreateProductAvailabilityRange(ProductAvailabilityRangeModel model, bool continueEditing)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            if (ModelState.IsValid)
+            {
+                var productAvailabilityRange = model.ToEntity();
+                _dateRangeService.InsertProductAvailabilityRange(productAvailabilityRange);
+                
+                //locales
+                UpdateLocales(productAvailabilityRange, model);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.ProductAvailabilityRanges.Added"));
+
+                return continueEditing ? RedirectToAction("EditProductAvailabilityRange", new { id = productAvailabilityRange.Id }) : RedirectToAction("DatesAndRanges");
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        public virtual ActionResult EditProductAvailabilityRange(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(id);
+            if (productAvailabilityRange == null)
+                //No availability range found with the specified id
+                return RedirectToAction("DatesAndRanges");
+
+            var model = productAvailabilityRange.ToModel();
+            
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Name = productAvailabilityRange.GetLocalized(x => x.Name, languageId, false, false);
+            });
+
+            return View(model);
+        }
+
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public virtual ActionResult EditProductAvailabilityRange(ProductAvailabilityRangeModel model, bool continueEditing)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(model.Id);
+            if (productAvailabilityRange == null)
+                //No availability range found with the specified id
+                return RedirectToAction("DatesAndRanges");
+
+            if (ModelState.IsValid)
+            {
+                productAvailabilityRange = model.ToEntity(productAvailabilityRange);
+                _dateRangeService.UpdateProductAvailabilityRange(productAvailabilityRange);
+                
+                //locales
+                UpdateLocales(productAvailabilityRange, model);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.ProductAvailabilityRanges.Updated"));
+
+                return continueEditing ? RedirectToAction("EditProductAvailabilityRange", productAvailabilityRange.Id) : RedirectToAction("DatesAndRanges");
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        [HttpPost]
+        public virtual ActionResult DeleteProductAvailabilityRange(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(id);
+            if (productAvailabilityRange == null)
+                //No availability range found with the specified id
+                return RedirectToAction("DatesAndRanges");
+
+            _dateRangeService.DeleteProductAvailabilityRange(productAvailabilityRange);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.ProductAvailabilityRanges.Deleted"));
+
+            return RedirectToAction("DatesAndRanges");
+        }
+
+        #endregion
 
         #endregion
 
         #region Warehouses
 
-        public ActionResult Warehouses()
+        public virtual ActionResult Warehouses()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -461,10 +692,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Warehouses(DataSourceRequest command)
+        public virtual ActionResult Warehouses(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var warehousesModel = _shippingService.GetAllWarehouses()
                 .Select(x =>
@@ -488,7 +719,7 @@ namespace Nop.Admin.Controllers
         }
 
 
-        public ActionResult CreateWarehouse()
+        public virtual ActionResult CreateWarehouse()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -499,6 +730,7 @@ namespace Nop.Admin.Controllers
                 model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
             model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
             model.Address.CountryEnabled = true;
+            model.Address.CountryRequired = true;
             model.Address.StateProvinceEnabled = true;
             model.Address.CityEnabled = true;
             model.Address.StreetAddressEnabled = true;
@@ -509,7 +741,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult CreateWarehouse(WarehouseModel model, bool continueEditing)
+        public virtual ActionResult CreateWarehouse(WarehouseModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -527,6 +759,9 @@ namespace Nop.Admin.Controllers
                 };
 
                 _shippingService.InsertWarehouse(warehouse);
+                
+                //activity log
+                _customerActivityService.InsertActivity("AddNewWarehouse", _localizationService.GetResource("ActivityLog.AddNewWarehouse"), warehouse.Id);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Warehouses.Added"));
                 return continueEditing ? RedirectToAction("EditWarehouse", new { id = warehouse.Id }) : RedirectToAction("Warehouses");
@@ -539,7 +774,7 @@ namespace Nop.Admin.Controllers
                 model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.Address.CountryId) });
             //states
             var states = model.Address.CountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId.Value, showHidden: true).ToList() : new List<StateProvince>();
-            if (states.Count > 0)
+            if (states.Any())
             {
                 foreach (var s in states)
                     model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.Address.StateProvinceId) });
@@ -550,7 +785,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult EditWarehouse(int id)
+        public virtual ActionResult EditWarehouse(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -578,7 +813,7 @@ namespace Nop.Admin.Controllers
                 model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (address != null && c.Id == address.CountryId) });
             //states
             var states = address != null && address.Country != null ? _stateProvinceService.GetStateProvincesByCountryId(address.Country.Id, showHidden: true).ToList() : new List<StateProvince>();
-            if (states.Count > 0)
+            if (states.Any())
             {
                 foreach (var s in states)
                     model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
@@ -586,6 +821,7 @@ namespace Nop.Admin.Controllers
             else
                 model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
             model.Address.CountryEnabled = true;
+            model.Address.CountryRequired = true;
             model.Address.StateProvinceEnabled = true;
             model.Address.CityEnabled = true;
             model.Address.StreetAddressEnabled = true;
@@ -596,7 +832,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult EditWarehouse(WarehouseModel model, bool continueEditing)
+        public virtual ActionResult EditWarehouse(WarehouseModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -625,6 +861,10 @@ namespace Nop.Admin.Controllers
                 warehouse.AddressId = address.Id;
 
                 _shippingService.UpdateWarehouse(warehouse);
+
+                //activity log
+                _customerActivityService.InsertActivity("EditWarehouse", _localizationService.GetResource("ActivityLog.EditWarehouse"), warehouse.Id);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Warehouses.Updated"));
                 return continueEditing ? RedirectToAction("EditWarehouse", warehouse.Id) : RedirectToAction("Warehouses");
             }
@@ -638,7 +878,7 @@ namespace Nop.Admin.Controllers
                 model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.Address.CountryId) });
             //states
             var states = model.Address.CountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId.Value, showHidden: true).ToList() : new List<StateProvince>();
-            if (states.Count > 0)
+            if (states.Any())
             {
                 foreach (var s in states)
                     model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.Address.StateProvinceId) });
@@ -650,7 +890,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteWarehouse(int id)
+        public virtual ActionResult DeleteWarehouse(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -662,6 +902,9 @@ namespace Nop.Admin.Controllers
 
             _shippingService.DeleteWarehouse(warehouse);
 
+            //activity log
+            _customerActivityService.InsertActivity("DeleteWarehouse", _localizationService.GetResource("ActivityLog.DeleteWarehouse"), warehouse.Id);
+
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.warehouses.Deleted"));
             return RedirectToAction("Warehouses");
         }
@@ -670,7 +913,7 @@ namespace Nop.Admin.Controllers
         
         #region Restrictions
 
-        public ActionResult Restrictions()
+        public virtual ActionResult Restrictions()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -708,7 +951,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ActionName("Restrictions")]
-        public ActionResult RestrictionSave(FormCollection form)
+        public virtual ActionResult RestrictionSave(FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();

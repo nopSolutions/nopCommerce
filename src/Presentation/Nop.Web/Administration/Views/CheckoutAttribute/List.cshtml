@@ -22,10 +22,13 @@
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
+                <p>
+                    @T("Admin.Catalog.Attributes.CheckoutAttributes.Description")
+                </p>
                 <div id="checkoutattributes-grid"></div>
 
                 <script>
-                    $(document).ready(function () {
+                    $(document).ready(function() {
                         $("#checkoutattributes-grid").kendoGrid({
                             dataSource: {
                                 type: "json",
@@ -42,7 +45,7 @@
                                     total: "Total",
                                     errors: "Errors"
                                 },
-                                error: function (e) {
+                                error: function(e) {
                                     display_kendoui_grid_error(e);
                                     // Cancel the changes
                                     this.cancelChanges();
@@ -55,14 +58,16 @@
                                 refresh: true,
                                 numeric: false,
                                 previousNext: false,
-                                info: false
+                                info: false,
+                                @Html.Partial("_GridPagerMessages")
                             },
                             editable: {
-                                confirmation: false,
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                 mode: "inline"
                             },
                             scrollable: false,
-                            columns: [{
+                            columns: [
+                            {
                                 field: "Name",
                                 title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.Name")"
                             }, {
@@ -84,8 +89,11 @@
                                 field: "Id",
                                 title: "@T("Admin.Common.Edit")",
                                 width: 100,
-                                template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-                            }]
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                                }
+                            ]
                         });
                     });
                 </script>

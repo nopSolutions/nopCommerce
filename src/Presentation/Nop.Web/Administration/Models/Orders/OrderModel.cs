@@ -19,16 +19,18 @@ namespace Nop.Admin.Models.Orders
             GiftCards = new List<GiftCard>();
             Items = new List<OrderItemModel>();
             UsedDiscounts = new List<UsedDiscountModel>();
+            Warnings = new List<string>();
         }
 
         public bool IsLoggedInAsVendor { get; set; }
 
         //identifiers
-        [NopResourceDisplayName("Admin.Orders.Fields.ID")]
         public override int Id { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.OrderGuid")]
         public Guid OrderGuid { get; set; }
-
+        [NopResourceDisplayName("Admin.Orders.Fields.CustomOrderNumber")]
+        public string CustomOrderNumber { get; set; }
+        
         //store
         [NopResourceDisplayName("Admin.Orders.Fields.Store")]
         public string StoreName { get; set; }
@@ -169,6 +171,9 @@ namespace Nop.Admin.Models.Orders
         //shipping info
         public bool IsShippable { get; set; }
         public bool PickUpInStore { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.PickupAddress")]
+        public AddressModel PickupAddress { get; set; }
+        public string PickupAddressGoogleMapsUrl { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.ShippingStatus")]
         public string ShippingStatus { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.ShippingStatus")]
@@ -228,6 +233,9 @@ namespace Nop.Admin.Models.Orders
         public bool CanPartiallyRefundOffline { get; set; }
         public bool CanVoid { get; set; }
         public bool CanVoidOffline { get; set; }
+
+        //warnings
+        public List<string> Warnings { get; set; }
 
         #region Nested Classes
 
@@ -405,6 +413,7 @@ namespace Nop.Admin.Models.Orders
                 /// </summary>
                 public bool HasCondition { get; set; }
 
+                public bool AutoUpdateOrderTotals { get; set; }
             }
 
             public partial class ProductAttributeModel : BaseNopEntityModel
@@ -439,6 +448,14 @@ namespace Nop.Admin.Models.Orders
                 public string Name { get; set; }
 
                 public bool IsPreSelected { get; set; }
+
+                public string PriceAdjustment { get; set; }
+
+                public decimal PriceAdjustmentValue { get; set; }
+
+                public bool CustomerEntersQty { get; set; }
+
+                public int Quantity { get; set; }
             }
 
 

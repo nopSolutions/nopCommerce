@@ -13,7 +13,7 @@ namespace Nop.Admin.Validators.Common
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Address.AddressAttributes.Fields.Name.Required"));
 
-            SetStringPropertiesMaxLength<AddressAttribute>(dbContext);
+            SetDatabaseValidationRules<AddressAttribute>(dbContext);
         }
     }
 }

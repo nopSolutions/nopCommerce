@@ -66,12 +66,12 @@ namespace Nop.Admin.Controllers
         #region Methods
 
         //list
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
@@ -96,10 +96,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult GiftCardList(DataSourceRequest command, GiftCardListModel model)
+        public virtual ActionResult GiftCardList(DataSourceRequest command, GiftCardListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             bool? isGiftCardActivated = null;
             if (model.ActivatedId == 1)
@@ -126,19 +126,19 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        public ActionResult Create()
+        public virtual ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
 
             var model = new GiftCardModel();
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-
+           
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult Create(GiftCardModel model, bool continueEditing)
+        public virtual ActionResult Create(GiftCardModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
@@ -161,7 +161,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult Edit(int id)
+        public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
@@ -177,13 +177,14 @@ namespace Nop.Admin.Controllers
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.PurchasedWithOrderNumber = giftCard.PurchasedWithOrderItem != null ? giftCard.PurchasedWithOrderItem.Order.CustomOrderNumber : null;
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public ActionResult Edit(GiftCardModel model, bool continueEditing)
+        public virtual ActionResult Edit(GiftCardModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
@@ -195,6 +196,7 @@ namespace Nop.Admin.Controllers
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.PurchasedWithOrderNumber = giftCard.PurchasedWithOrderItem != null ? giftCard.PurchasedWithOrderItem.Order.CustomOrderNumber : null;
 
             if (ModelState.IsValid)
             {
@@ -221,14 +223,14 @@ namespace Nop.Admin.Controllers
         }
         
         [HttpPost]
-        public ActionResult GenerateCouponCode()
+        public virtual ActionResult GenerateCouponCode()
         {
             return Json(new { CouponCode = _giftCardService.GenerateGiftCardCode() }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("notifyRecipient")]
-        public ActionResult NotifyRecipient(GiftCardModel model)
+        public virtual ActionResult NotifyRecipient(GiftCardModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
@@ -241,6 +243,7 @@ namespace Nop.Admin.Controllers
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.PurchasedWithOrderNumber = giftCard.PurchasedWithOrderItem != null ? giftCard.PurchasedWithOrderItem.Order.CustomOrderNumber : null;
 
             try
             {
@@ -280,7 +283,7 @@ namespace Nop.Admin.Controllers
         }
         
         [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
@@ -301,10 +304,10 @@ namespace Nop.Admin.Controllers
         
         //Gif card usage history
         [HttpPost]
-        public ActionResult UsageHistoryList(int giftCardId, DataSourceRequest command)
+        public virtual ActionResult UsageHistoryList(int giftCardId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var giftCard = _giftCardService.GetGiftCardById(giftCardId);
             if (giftCard == null)
@@ -316,7 +319,8 @@ namespace Nop.Admin.Controllers
                     Id = x.Id,
                     OrderId = x.UsedWithOrderId,
                     UsedValue = _priceFormatter.FormatPrice(x.UsedValue, true, false),
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
+                    CustomOrderNumber = x.UsedWithOrder.CustomOrderNumber
                 })
                 .ToList();
             var gridModel = new DataSourceResult

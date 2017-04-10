@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -24,7 +25,6 @@ namespace Nop.Services.Tests.Shipping
     public class ShippingServiceTests : ServiceTest
     {
         private IRepository<ShippingMethod> _shippingMethodRepository;
-        private IRepository<DeliveryDate> _deliveryDateRepository;
         private IRepository<Warehouse> _warehouseRepository;
         private ILogger _logger;
         private IProductAttributeParser _productAttributeParser;
@@ -48,7 +48,6 @@ namespace Nop.Services.Tests.Shipping
             _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add("FixedRateTestShippingRateComputationMethod");
 
             _shippingMethodRepository = MockRepository.GenerateMock<IRepository<ShippingMethod>>();
-            _deliveryDateRepository = MockRepository.GenerateMock<IRepository<DeliveryDate>>();
             _warehouseRepository = MockRepository.GenerateMock<IRepository<Warehouse>>();
             _logger = new NullLogger();
             _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
@@ -72,7 +71,6 @@ namespace Nop.Services.Tests.Shipping
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _shippingService = new ShippingService(_shippingMethodRepository,
-                _deliveryDateRepository,
                 _warehouseRepository,
                 _logger,
                 _productService,
@@ -94,7 +92,7 @@ namespace Nop.Services.Tests.Shipping
         {
             var srcm = _shippingService.LoadAllShippingRateComputationMethods();
             srcm.ShouldNotBeNull();
-            (srcm.Count > 0).ShouldBeTrue();
+            (srcm.Any()).ShouldBeTrue();
         }
 
         [Test]
@@ -109,7 +107,7 @@ namespace Nop.Services.Tests.Shipping
         {
             var srcm = _shippingService.LoadActiveShippingRateComputationMethods();
             srcm.ShouldNotBeNull();
-            (srcm.Count > 0).ShouldBeTrue();
+            (srcm.Any()).ShouldBeTrue();
         }
         
         [Test]

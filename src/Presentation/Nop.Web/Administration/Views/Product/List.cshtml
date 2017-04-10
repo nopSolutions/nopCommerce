@@ -65,7 +65,7 @@
                     </li>
                 </ul>
             </div>
-            @if (!Model.IsLoggedInAsVendor)
+            @if (!Model.IsLoggedInAsVendor || Model.AllowVendorsToImportProducts)
             {
                 //a vendor cannot import products
                 <button type="button" name="importexcel" class="btn bg-olive" data-toggle="modal" data-target="#importexcel-window">
@@ -223,10 +223,11 @@
                                     },
                                     pageable: {
                                         refresh: true,
-                                        pageSizes: [@(gridPageSizes)]
+                                        pageSizes: [@(gridPageSizes)],
+                                        @Html.Partial("_GridPagerMessages")
                                     },
                                     editable: {
-                                        confirmation: false,
+                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                         mode: "inline"
                                     },
                                     scrollable: false,
@@ -272,14 +273,14 @@
                                             field: "Published",
                                             title: "@T("Admin.Catalog.Products.Fields.Published")",
                                             width: 100,
-                                            headerAttributes: { style: "text-align:center" },
-                                            attributes: { style: "text-align:center" },
                                             template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                         }, {
                                             field: "Id",
                                             title: "@T("Admin.Common.Edit")",
                                             width: 100,
-                                            template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                            template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
                                         }
                                     ]
                                 });
@@ -352,7 +353,7 @@
                     });
 
                     //wire up checkboxes.
-                    $('#products-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function (e) {
+                    $('#products-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
                         var $check = $(this);
                         if ($check.is(":checked") == true) {
                             var checked = jQuery.inArray($check.val(), selectedIds);
@@ -391,7 +392,7 @@
                 }
 
                 function onDataBound(e) {
-                    $('#products-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
+                    $('#products-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function () {
                         var currentId = $(this).val();
                         var checked = jQuery.inArray(currentId, selectedIds);
                         //set checked based on if current checkbox's value is in selectedIds.
@@ -402,8 +403,8 @@
                 }
 
                 function updateMasterCheckbox() {
-                    var numChkBoxes = $('#products-grid input[type=checkbox][id!=mastercheckbox]').length;
-                    var numChkBoxesChecked = $('#products-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
+                    var numChkBoxes = $('#products-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
+                    var numChkBoxesChecked = $('#products-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
                     $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
                 }
             </script>
@@ -432,9 +433,11 @@
                         </ul>
                         <div class="form-group">
                             <div class="col-md-2">
-                                <label class="control-label">
-                                    @T("Admin.Common.ExcelFile")
-                                </label>
+                                <div class="label-wrapper">
+                                    <label class="control-label">
+                                        @T("Admin.Common.ExcelFile")
+                                    </label>
+                                </div>
                             </div>
                             <div class="col-md-10">
                                 <input type="file" id="importexcelfile" name="importexcelfile" class="form-control" />

@@ -65,9 +65,12 @@ namespace Nop.Admin.Models.Settings
 
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.CustomerNameFormat")]
             public int CustomerNameFormat { get; set; }
-
+            
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PasswordMinLength")]
             public int PasswordMinLength { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UnduplicatedPasswordsNumber")]
+            public int UnduplicatedPasswordsNumber { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PasswordRecoveryLinkDaysValid")]
             public int PasswordRecoveryLinkDaysValid { get; set; }
@@ -75,6 +78,15 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.DefaultPasswordFormat")]
             public int DefaultPasswordFormat { get; set; }
 
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PasswordLifetime")]
+            public int PasswordLifetime { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.FailedPasswordAllowedAttempts")]
+            public int FailedPasswordAllowedAttempts { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.FailedPasswordLockoutMinutes")]
+            public int FailedPasswordLockoutMinutes { get; set; }
+            
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.NewsletterEnabled")]
             public bool NewsletterEnabled { get; set; }
 

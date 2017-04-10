@@ -27,7 +27,7 @@ function displayAjaxLoading(display) {
 }
 
 function displayPopupNotification(message, messagetype, modal) {
-    //types: success, error
+    //types: success, error, warning
     var container;
     if (messagetype == 'success') {
         //success
@@ -36,6 +36,10 @@ function displayPopupNotification(message, messagetype, modal) {
     else if (messagetype == 'error') {
         //error
         container = $('#dialog-notifications-error');
+    }
+    else if (messagetype == 'warning') {
+        //warning
+        container = $('#dialog-notifications-warning');
     }
     else {
         //other
@@ -55,15 +59,34 @@ function displayPopupNotification(message, messagetype, modal) {
     container.html(htmlcode);
 
     var isModal = (modal ? true : false);
-    container.dialog({modal:isModal});
+    container.dialog({
+        modal: isModal,
+        width: 350
+    });
 }
+function displayPopupContentFromUrl(url, title, modal, width) {
+    var isModal = (modal ? true : false);
+    var targetWidth = (width ? width : 550);
+    var maxHeight = $(window).height() - 20;
 
+    $('<div></div>').load(url)
+        .dialog({
+            modal: isModal,
+            position: ['center', 20],
+            width: targetWidth,
+            maxHeight: maxHeight,
+            title: title,
+            close: function(event, ui) {
+                $(this).dialog('destroy').remove();
+            }
+        });
+}
 
 var barNotificationTimeout;
 function displayBarNotification(message, messagetype, timeout) {
     clearTimeout(barNotificationTimeout);
 
-    //types: success, error
+    //types: success, error, warning
     var cssclass = 'success';
     if (messagetype == 'success') {
         cssclass = 'success';
@@ -71,10 +94,14 @@ function displayBarNotification(message, messagetype, timeout) {
     else if (messagetype == 'error') {
         cssclass = 'error';
     }
+    else if (messagetype == 'warning') {
+        cssclass = 'warning';
+    }
     //remove previous CSS classes and notifications
     $('#bar-notification')
         .removeClass('success')
-        .removeClass('error');
+        .removeClass('error')
+        .removeClass('warning');
     $('#bar-notification .content').remove();
 
     //we do not encode displayed message

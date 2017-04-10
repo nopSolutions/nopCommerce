@@ -87,8 +87,15 @@
                            @if (Model.IsEditable)
                            {
                                <td class="remove-from-cart">
-                                   <label class="td-title">@T("ShoppingCart.Remove"):</label>
-                                   <input type="checkbox" name="removefromcart" value="@(item.Id)" />
+                                   @if (item.DisableRemoval)
+                                   {
+                                       <text>&nbsp;</text>
+                                    }
+                                    else
+                                    {
+                                       <label class="td-title">@T("ShoppingCart.Remove"):</label>
+                                       <input type="checkbox" name="removefromcart" value="@(item.Id)" />
+                                   }
                                </td>
                            }
                            @if (Model.ShowSku)
@@ -178,8 +185,14 @@
                                @if (!String.IsNullOrEmpty(item.Discount))
                                {
                                    <div class="discount">
-                                       @T("ShoppingCart.ItemYouSave"): @item.Discount
+                                       @T("ShoppingCart.ItemYouSave", item.Discount)
                                    </div>
+                                   if (item.MaximumDiscountedQty.HasValue)
+                                   {
+                                    <div class="discount-additional-info">
+                                        @T("ShoppingCart.MaximumDiscountedQty", item.MaximumDiscountedQty.Value)
+                                    </div>
+                                   }
                                }
                            </td>
                        </tr>
@@ -243,16 +256,25 @@
                {
                    if (Model.TermsOfServiceOnShoppingCartPage)
                    {
-                       <div id="terms-of-service-warning-box" title="@T("Checkout.TermsOfService")" style="display:none;">
+                       <div id="terms-of-service-warning-box" title="@T("Checkout.TermsOfService")" style="display: none;">
                            <p>@T("Checkout.TermsOfService.PleaseAccept")</p>
                        </div>
                        <div class="terms-of-service">
-                           <input id="termsofservice" type="checkbox" name="termsofservice" />
-                           <span>@T("Checkout.TermsOfService.IAccept")<a class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "conditionsofuse" })', 450, 500, true)">@T("Checkout.TermsOfService.Read")</a></span>
+                           <input id="termsofservice" type="checkbox" name="termsofservice"/>
+                           <label for="termsofservice">@T("Checkout.TermsOfService.IAccept")</label>
+                           <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
+                           <script>
+                               $(document).ready(function() {
+                                   $('#read-terms').on('click', function(e) {
+                                       e.preventDefault();
+                                       displayPopupContentFromUrl('@Url.RouteUrl("TopicPopup", new {SystemName = "conditionsofuse"})', '@T("Checkout.TermsOfService")');
+                                   });
+                               });
+                           </script>
                        </div>
                    }
                    <div class="checkout-buttons">
-                       @if (String.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
+                       @if (String.IsNullOrEmpty(Model.MinOrderSubtotalWarning) && !Model.HideCheckoutButton)
                        {
                            <script type="text/javascript">
                                $(document).ready(function () {

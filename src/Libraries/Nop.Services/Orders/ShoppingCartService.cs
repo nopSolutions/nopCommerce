@@ -14,6 +14,7 @@ using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
+using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 
 namespace Nop.Services.Orders
@@ -40,6 +41,7 @@ namespace Nop.Services.Orders
         private readonly IEventPublisher _eventPublisher;
         private readonly IPermissionService _permissionService;
         private readonly IAclService _aclService;
+        private readonly IDateRangeService _dateRangeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IProductAttributeService _productAttributeService;
@@ -67,6 +69,7 @@ namespace Nop.Services.Orders
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="permissionService">Permission service</param>
         /// <param name="aclService">ACL service</param>
+        /// <param name="dateRangeService">Date range service</param>
         /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="productAttributeService">Product attribute service</param>
@@ -86,6 +89,7 @@ namespace Nop.Services.Orders
             IEventPublisher eventPublisher,
             IPermissionService permissionService, 
             IAclService aclService,
+            IDateRangeService dateRangeService,
             IStoreMappingService storeMappingService,
             IGenericAttributeService genericAttributeService,
             IProductAttributeService productAttributeService,
@@ -106,6 +110,7 @@ namespace Nop.Services.Orders
             this._eventPublisher = eventPublisher;
             this._permissionService = permissionService;
             this._aclService = aclService;
+            this._dateRangeService = dateRangeService;
             this._storeMappingService = storeMappingService;
             this._genericAttributeService = genericAttributeService;
             this._productAttributeService = productAttributeService;
@@ -141,7 +146,7 @@ namespace Nop.Services.Orders
             _sciRepository.Delete(shoppingCartItem);
 
             //reset "HasShoppingCartItems" property used for performance optimization
-            customer.HasShoppingCartItems = customer.ShoppingCartItems.Count > 0;
+            customer.HasShoppingCartItems = customer.ShoppingCartItems.Any();
             _customerService.UpdateCustomer(customer);
 
             //validate checkout attributes
@@ -243,7 +248,7 @@ namespace Nop.Services.Orders
                                     shoppingCartType: shoppingCartType,
                                     storeId: storeId,
                                     automaticallyAddRequiredProductsIfEnabled: false);
-                                if (addToCartWarnings.Count > 0)
+                                if (addToCartWarnings.Any())
                                 {
                                     //a product wasn't atomatically added for some reasons
 
@@ -389,7 +394,13 @@ namespace Nop.Services.Orders
                                 if (maximumQuantityCanBeAdded < quantity)
                                 {
                                     if (maximumQuantityCanBeAdded <= 0)
-                                        warnings.Add(_localizationService.GetResource("ShoppingCart.OutOfStock"));
+                                    {
+                                        var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
+                                        var warning = productAvailabilityRange == null ? _localizationService.GetResource("ShoppingCart.OutOfStock")
+                                            : string.Format(_localizationService.GetResource("ShoppingCart.AvailabilityRange"),
+                                                productAvailabilityRange.GetLocalized(range => range.Name));
+                                        warnings.Add(warning);
+                                    }
                                     else
                                         warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
                                 }
@@ -408,7 +419,11 @@ namespace Nop.Services.Orders
                                     int maximumQuantityCanBeAdded = combination.StockQuantity;
                                     if (maximumQuantityCanBeAdded <= 0)
                                     {
-                                        warnings.Add(_localizationService.GetResource("ShoppingCart.OutOfStock"));
+                                        var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
+                                        var warning = productAvailabilityRange == null ? _localizationService.GetResource("ShoppingCart.OutOfStock")
+                                            : string.Format(_localizationService.GetResource("ShoppingCart.AvailabilityRange"),
+                                                productAvailabilityRange.GetLocalized(range => range.Name));
+                                        warnings.Add(warning);
                                     }
                                     else
                                     {
@@ -422,7 +437,11 @@ namespace Nop.Services.Orders
                                 if (product.AllowAddingOnlyExistingAttributeCombinations)
                                 {
                                     //maybe, is it better  to display something like "No such product/combination" message?
-                                    warnings.Add(_localizationService.GetResource("ShoppingCart.OutOfStock"));
+                                    var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
+                                    var warning = productAvailabilityRange == null ? _localizationService.GetResource("ShoppingCart.OutOfStock")
+                                        : string.Format(_localizationService.GetResource("ShoppingCart.AvailabilityRange"),
+                                            productAvailabilityRange.GetLocalized(range => range.Name));
+                                    warnings.Add(warning);
                                 }
                             }
                         }
@@ -606,7 +625,7 @@ namespace Nop.Services.Orders
                 }
             }
 
-            if (warnings.Count > 0)
+            if (warnings.Any())
                 return warnings;
 
             //validate bundled products
@@ -865,6 +884,14 @@ namespace Nop.Services.Orders
 
                 //existing checkout attributes
                 var attributes2 = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !shoppingCart.RequiresShipping());
+
+                //validate conditional attributes only (if specified)
+                attributes2 = attributes2.Where(x =>
+                {
+                    var conditionMet = _checkoutAttributeParser.IsConditionMet(x, checkoutAttributesXml);
+                    return !conditionMet.HasValue || conditionMet.Value;
+                }).ToList();
+
                 foreach (var a2 in attributes2)
                 {
                     if (a2.IsRequired)
@@ -969,7 +996,7 @@ namespace Nop.Services.Orders
                 if (sci.ProductId == product.Id)
                 {
                     //attributes
-                    bool attributesEqual = _productAttributeParser.AreProductAttributesEqual(sci.AttributesXml, attributesXml, false);
+                    bool attributesEqual = _productAttributeParser.AreProductAttributesEqual(sci.AttributesXml, attributesXml, false, false);
 
                     //gift cards
                     bool giftCardInfoSame = true;
@@ -1091,7 +1118,7 @@ namespace Nop.Services.Orders
                     customerEnteredPrice, rentalStartDate, rentalEndDate,
                     newQuantity, automaticallyAddRequiredProductsIfEnabled));
 
-                if (warnings.Count == 0)
+                if (!warnings.Any())
                 {
                     shoppingCartItem.AttributesXml = attributesXml;
                     shoppingCartItem.Quantity = newQuantity;
@@ -1109,7 +1136,7 @@ namespace Nop.Services.Orders
                     storeId, attributesXml, customerEnteredPrice,
                     rentalStartDate, rentalEndDate, 
                     quantity, automaticallyAddRequiredProductsIfEnabled));
-                if (warnings.Count == 0)
+                if (!warnings.Any())
                 {
                     //maximum items validation
                     switch (shoppingCartType)
@@ -1155,7 +1182,7 @@ namespace Nop.Services.Orders
 
 
                     //updated "HasShoppingCartItems" property used for performance optimization
-                    customer.HasShoppingCartItems = customer.ShoppingCartItems.Count > 0;
+                    customer.HasShoppingCartItems = customer.ShoppingCartItems.Any();
                     _customerService.UpdateCustomer(customer);
 
                     //event notification
@@ -1204,7 +1231,7 @@ namespace Nop.Services.Orders
                         shoppingCartItem.Product, shoppingCartItem.StoreId,
                         attributesXml, customerEnteredPrice, 
                         rentalStartDate, rentalEndDate, quantity, false));
-                    if (warnings.Count == 0)
+                    if (!warnings.Any())
                     {
                         //if everything is OK, then update a shopping cart item
                         shoppingCartItem.Quantity = quantity;
@@ -1259,18 +1286,17 @@ namespace Nop.Services.Orders
                 var sci = fromCart[i];
                 DeleteShoppingCartItem(sci);
             }
-            
-            //migrate gift card and discount coupon codes
+
+            //copy discount and gift card coupon codes
             if (includeCouponCodes)
             {
                 //discount
-                var discountCouponCode  = fromCustomer.GetAttribute<string>(SystemCustomerAttributeNames.DiscountCouponCode);
-                if (!String.IsNullOrEmpty(discountCouponCode))
-                    _genericAttributeService.SaveAttribute(toCustomer, SystemCustomerAttributeNames.DiscountCouponCode, discountCouponCode);
-                
+                foreach (var code in fromCustomer.ParseAppliedDiscountCouponCodes())
+                    toCustomer.ApplyDiscountCouponCode(code);
+
                 //gift card
-                foreach (var gcCode in fromCustomer.ParseAppliedGiftCardCouponCodes())
-                    toCustomer.ApplyGiftCardCouponCode(gcCode);
+                foreach (var code in fromCustomer.ParseAppliedGiftCardCouponCodes())
+                    toCustomer.ApplyGiftCardCouponCode(code);
 
                 //save customer
                 _customerService.UpdateCustomer(toCustomer);

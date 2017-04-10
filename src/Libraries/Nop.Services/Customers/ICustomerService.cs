@@ -30,6 +30,7 @@ namespace Nop.Services.Customers
         /// <param name="company">Company; null to load all customers</param>
         /// <param name="phone">Phone; null to load all customers</param>
         /// <param name="zipPostalCode">Phone; null to load all customers</param>
+        /// <param name="ipAddress">IP address; null to load all customers</param>
         /// <param name="loadOnlyWithShoppingCart">Value indicating whether to load customers only with shopping cart</param>
         /// <param name="sct">Value indicating what shopping cart type to filter; userd when 'loadOnlyWithShoppingCart' param is 'true'</param>
         /// <param name="pageIndex">Page index</param>
@@ -43,13 +44,6 @@ namespace Nop.Services.Customers
             string company = null, string phone = null, string zipPostalCode = null,
             string ipAddress = null, bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
-        
-        /// <summary>
-        /// Gets all customers by customer format (including deleted ones)
-        /// </summary>
-        /// <param name="passwordFormat">Password format</param>
-        /// <returns>Customers</returns>
-        IList<Customer> GetAllCustomersByPasswordFormat(PasswordFormat passwordFormat);
 
         /// <summary>
         /// Gets online customers
@@ -81,7 +75,7 @@ namespace Nop.Services.Customers
         /// <param name="customerIds">Customer identifiers</param>
         /// <returns>Customers</returns>
         IList<Customer> GetCustomersByIds(int[] customerIds);
-
+        
         /// <summary>
         /// Gets a customer by GUID
         /// </summary>
@@ -194,6 +188,39 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerRole">Customer role</param>
         void UpdateCustomerRole(CustomerRole customerRole);
+
+        #endregion
+
+        #region Customer passwords
+
+        /// <summary>
+        /// Gets customer passwords
+        /// </summary>
+        /// <param name="customerId">Customer identifier; pass null to load all records</param>
+        /// <param name="passwordFormat">Password format; pass null to load all records</param>
+        /// <param name="passwordsToReturn">Number of returning passwords; pass null to load all records</param>
+        /// <returns>List of customer passwords</returns>
+        IList<CustomerPassword> GetCustomerPasswords(int? customerId = null,
+            PasswordFormat? passwordFormat = null, int? passwordsToReturn = null);
+
+        /// <summary>
+        /// Get current customer password
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <returns>Customer password</returns>
+        CustomerPassword GetCurrentPassword(int customerId);
+
+        /// <summary>
+        /// Insert a customer password
+        /// </summary>
+        /// <param name="customerPassword">Customer password</param>
+        void InsertCustomerPassword(CustomerPassword customerPassword);
+
+        /// <summary>
+        /// Update a customer password
+        /// </summary>
+        /// <param name="customerPassword">Customer password</param>
+        void UpdateCustomerPassword(CustomerPassword customerPassword);
 
         #endregion
     }

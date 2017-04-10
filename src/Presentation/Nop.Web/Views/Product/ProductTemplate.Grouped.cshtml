@@ -11,7 +11,7 @@
     Html.AddMetaDescriptionParts(Model.MetaDescription);
     Html.AddMetaKeywordParts(Model.MetaKeywords);
     //page class
-    Html.AddPageCssClassParts("html-product-details-page");
+    Html.AppendPageCssClassParts("html-product-details-page");
 
     var seoSettings = EngineContext.Current.Resolve<SeoSettings>();
 

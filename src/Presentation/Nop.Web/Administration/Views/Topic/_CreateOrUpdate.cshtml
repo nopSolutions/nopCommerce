@@ -11,18 +11,21 @@
 
 <div class="content">
     <div class="form-horizontal">
+        <div class="row">
+            <div class="col-md-12 clearfix">
+                <div class="pull-left">
+                    @Html.Action("Mode", "Setting", new { modeName = "topic-advanced-mode" })
+                </div>
+            </div>
+        </div>
         <div id="topic-edit" class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.ContentManagement.Topics.Info"), true)
-                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"))
-                @Html.RenderBootstrapTabHeader("tab-acl", @T("Admin.ContentManagement.Topics.Acl"))
-                @Html.RenderBootstrapTabHeader("tab-stores", @T("Admin.ContentManagement.Topics.Stores"))
+                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"), customCssClass: "advanced-setting")
             </ul>
             <div class="tab-content">
                 @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
                 @Html.RenderBootstrapTabContent("tab-seo", @TabSeo())
-                @Html.RenderBootstrapTabContent("tab-acl", @TabAcl())
-                @Html.RenderBootstrapTabContent("tab-stores", @TabStores())
             </div>
         </div>
     </div>
@@ -59,9 +62,10 @@
     </script>
 
     <div class="panel-group">
-        @(Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-info-localized",
-            @<div class="panel panel-default">
-                <div class="panel-body">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @(Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-info-localized",
+                @<div>
                     <div class="form-group">
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Locales[item].Title)
@@ -82,10 +86,8 @@
                     </div>
                     @Html.HiddenFor(model => model.Locales[item].LanguageId)
                 </div>
-            </div>
     ,
-            @<div class="panel panel-default">
-                <div class="panel-body">
+                @<div>
                     <div class="form-group">
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Title)
@@ -105,12 +107,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
     ))
-
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.SystemName)
                     </div>
@@ -130,7 +128,7 @@
                         </div>
                     </div>
                 }
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Published)
                     </div>
@@ -139,7 +137,7 @@
                         @Html.ValidationMessageFor(model => model.Published)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IsPasswordProtected)
                     </div>
@@ -148,22 +146,13 @@
                         @Html.ValidationMessageFor(model => model.IsPasswordProtected)
                     </div>
                 </div>
-                <div class="form-group" id="pnlPasswordEnabled">
+                <div class="form-group advanced-setting" id="pnlPasswordEnabled">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Password)
                     </div>
                     <div class="col-md-9">
                         @Html.NopEditorFor(model => model.Password)
                         @Html.ValidationMessageFor(model => model.Password)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.IncludeInSitemap)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(x => x.IncludeInSitemap)
-                        @Html.ValidationMessageFor(model => model.IncludeInSitemap)
                     </div>
                 </div>
                 <div class="form-group">
@@ -202,7 +191,86 @@
                         @Html.ValidationMessageFor(model => model.IncludeInFooterColumn3)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.IncludeInSitemap)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(x => x.IncludeInSitemap)
+                        @Html.ValidationMessageFor(model => model.IncludeInSitemap)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.SelectedCustomerRoleIds)
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.SelectedCustomerRoleIds, new {SelectList = Model.AvailableCustomerRoles})
+                                <script>
+                                    $(document).ready(function() {
+                                        var rolesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                                        rolesIdsInput.setOptions({
+                                            autoClose: false
+                                        });
+
+                                        @if (Model.AvailableCustomerRoles.Count == 0)
+                                        {
+                                            <text>
+                                rolesIdsInput.setOptions({
+                                    enable: false,
+                                    placeholder: 'No customer roles available'
+                                });
+                                rolesIdsInput._placeholder();
+                                rolesIdsInput._enable();
+                                </text>
+                                        }
+                                    });
+                                </script>
+                            </div>
+                            <div class="col-md-8">
+                                @Html.Action("AclDisabledWarning", "Common")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.SelectedStoreIds)
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.SelectedStoreIds, new {SelectList = Model.AvailableStores})
+                                <script>
+                                    $(document).ready(function() {
+                                        var storesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                                        storesIdsInput.setOptions({
+                                            autoClose: false
+                                        });
+
+                                        @if (Model.AvailableStores.Count == 0)
+                                        {
+                                            <text>
+                                    storesIdsInput.setOptions({
+                                        enable: false,
+                                        placeholder: 'No stores available'
+                                    });
+                                    storesIdsInput._placeholder();
+                                    storesIdsInput._enable();
+                                    </text>
+                                        }
+                                    });
+                                </script>
+                            </div>
+                            <div class="col-md-8">
+                                @Html.Action("MultistoreDisabledWarning", "Common")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.DisplayOrder)
                     </div>
@@ -211,7 +279,7 @@
                         @Html.ValidationMessageFor(model => model.DisplayOrder)
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group advanced-setting">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AccessibleWhenStoreClosed)
                     </div>
@@ -220,7 +288,7 @@
                         @Html.ValidationMessageFor(model => model.AccessibleWhenStoreClosed)
                     </div>
                 </div>
-                <div class="form-group" @(Model.AvailableTopicTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                <div class="form-group advanced-setting" @(Model.AvailableTopicTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.TopicTemplateId)
                     </div>
@@ -237,9 +305,10 @@
 @helper TabSeo()
 {
     <div class="panel-group">
-        @(Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-seo-localized",
-            @<div class="panel panel-default">
-                <div class="panel-body">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @(Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-seo-localized",
+                @<div>
                     <div class="form-group">
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Locales[item].MetaKeywords)
@@ -276,12 +345,22 @@
                             @Html.ValidationMessageFor(model => model.Locales[item].SeName)
                         </div>
                     </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#@Html.FieldIdFor(model => model.Locales[item].SeName)').on('input propertychange paste', function () {
+                                var parameters = {
+                                    entityId: '@Model.Id',
+                                    entityName: 'Topic',
+                                    seName: $(this).val()
+                                };
+                                warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.FieldNameFor(model => model.Locales[item].SeName)', parameters);
+                            });
+                        });
+                    </script>
                     @Html.HiddenFor(model => model.Locales[item].LanguageId)
                 </div>
-            </div>
     ,
-            @<div class="panel panel-default">
-                <div class="panel-body">
+                @<div>
                     <div class="form-group">
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.MetaKeywords)
@@ -318,122 +397,19 @@
                             @Html.ValidationMessageFor(model => model.SeName)
                         </div>
                     </div>
-                </div>
-            </div>))
-    </div>
-}
-
-@helper TabAcl()
-{
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#@Html.FieldIdFor(model => model.SubjectToAcl)").click(toggleAcl);
-            toggleAcl();
-        });
-
-        function toggleAcl() {
-            if ($('#@Html.FieldIdFor(model => model.SubjectToAcl)').is(':checked')) {
-                $('#pnl-acl').show();
-            } else {
-                $('#pnl-acl').hide();
-            }
-        }
-    </script>
-
-    <div class="panel-group">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.SubjectToAcl)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.SubjectToAcl)
-                        @Html.ValidationMessageFor(model => model.SubjectToAcl)
-                    </div>
-                </div>
-                <div class="form-group" id="pnl-acl">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.AvailableCustomerRoles)
-                    </div>
-                    <div class="col-md-9">
-                        @if (Model.AvailableCustomerRoles != null && Model.AvailableCustomerRoles.Count > 0)
-                        {
-                            @Html.Action("AclDisabledWarning", "Common")
-                            foreach (var customerRole in Model.AvailableCustomerRoles)
-                            {
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id" checked="@(Model.SelectedCustomerRoleIds != null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))" />
-                                        @customerRole.Name
-                                    </label>
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <text>No customer roles defined</text>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-}
-
-@helper TabStores()
-{
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
-            toggleStoreMapping();
-        });
-
-        function toggleStoreMapping() {
-            if ($('#@Html.FieldIdFor(model => model.LimitedToStores)').is(':checked')) {
-                $('#pnl-available-stores').show();
-            } else {
-                $('#pnl-available-stores').hide();
-            }
-        }
-    </script>
-
-    <div class="panel-group">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.LimitedToStores)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.LimitedToStores)
-                        @Html.ValidationMessageFor(model => model.LimitedToStores)
-                    </div>
-                </div>
-                <div class="form-group" id="pnl-available-stores">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.AvailableStores)
-                    </div>
-                    <div class="col-md-9">
-                        @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
-                        {
-                            @Html.Action("MultistoreDisabledWarning", "Common")
-                            foreach (var store in Model.AvailableStores)
-                            {
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />
-                                        @store.Name
-                                    </label>
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <text>No stores defined</text>
-                        }
-                    </div>
-                </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#@Html.FieldIdFor(model => model.SeName)').on('input propertychange paste', function () {
+                                var parameters = {
+                                    entityId: '@Model.Id',
+                                    entityName: 'Topic',
+                                    seName: $(this).val()
+                                };
+                                warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.FieldNameFor(model => model.SeName)', parameters);
+                            });
+                        });
+                    </script>
+                </div>))
             </div>
         </div>
     </div>

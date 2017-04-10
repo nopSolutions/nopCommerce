@@ -40,7 +40,7 @@ namespace Nop.Admin.Controllers
 
         #region Activity log types
 
-        public ActionResult ListTypes()
+        public virtual ActionResult ListTypes()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
@@ -53,10 +53,13 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult SaveTypes(FormCollection form)
+        public virtual ActionResult SaveTypes(FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
+
+            //activity log
+            _customerActivityService.InsertActivity("EditActivityLogTypes", _localizationService.GetResource("ActivityLog.EditActivityLogTypes"));
 
             string formKey = "checkbox_activity_types";
             var checkedActivityTypes = form[formKey] != null ? form[formKey].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x)).ToList() : new List<int>();
@@ -67,15 +70,16 @@ namespace Nop.Admin.Controllers
                 activityType.Enabled = checkedActivityTypes.Contains(activityType.Id);
                 _customerActivityService.UpdateActivityType(activityType);
             }
+
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.ActivityLog.ActivityLogType.Updated"));
             return RedirectToAction("ListTypes");
         }
 
         #endregion
-        
+
         #region Activity log
-        
-        public ActionResult ListLogs()
+
+        public virtual ActionResult ListLogs()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
@@ -100,10 +104,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ListLogs(DataSourceRequest command, ActivityLogSearchModel model)
+        public virtual ActionResult ListLogs(DataSourceRequest command, ActivityLogSearchModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             DateTime? startDateValue = (model.CreatedOnFrom == null) ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
@@ -126,7 +130,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        public ActionResult AcivityLogDelete(int id)
+        public virtual ActionResult AcivityLogDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
@@ -138,19 +142,25 @@ namespace Nop.Admin.Controllers
             }
             _customerActivityService.DeleteActivity(activityLog);
 
+            //activity log
+            _customerActivityService.InsertActivity("DeleteActivityLog", _localizationService.GetResource("ActivityLog.DeleteActivityLog"));
+
             return new NullJsonResult();
         }
 
-        public ActionResult ClearAll()
+        public virtual ActionResult ClearAll()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
 
             _customerActivityService.ClearAllActivities();
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteActivityLog", _localizationService.GetResource("ActivityLog.DeleteActivityLog"));
+
             return RedirectToAction("ListLogs");
         }
 
         #endregion
-
     }
 }

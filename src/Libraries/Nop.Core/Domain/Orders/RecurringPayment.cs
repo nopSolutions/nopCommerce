@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Core.Domain.Orders
@@ -35,6 +36,11 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether the payment is active
         /// </summary>
         public bool IsActive { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the last payment failed
+        /// </summary>
+        public bool LastPaymentFailed { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity has been deleted
@@ -121,7 +127,7 @@ namespace Nop.Core.Domain.Orders
                 //}
                 //else
                 //{
-                    if (historyCollection.Count > 0)
+                    if (historyCollection.Any())
                     {
                         switch (this.CyclePeriod)
                         {

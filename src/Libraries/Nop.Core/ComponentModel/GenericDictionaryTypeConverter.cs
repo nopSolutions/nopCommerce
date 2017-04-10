@@ -66,7 +66,7 @@ namespace Nop.Core.ComponentModel
                     if (keyValueStr.Length == 2)
                     {
                         object dictionaryKey = (K)typeConverterKey.ConvertFromInvariantString(keyValueStr[0]);
-                        object dictionaryValue = typeConverterKey.ConvertFromInvariantString(keyValueStr[1]);
+                        object dictionaryValue = (V)typeConverterValue.ConvertFromInvariantString(keyValueStr[1]);
                         if (dictionaryKey != null && dictionaryValue != null)
                         {
                             if (!result.ContainsKey((K)dictionaryKey))

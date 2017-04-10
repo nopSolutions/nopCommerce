@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
@@ -36,9 +37,9 @@ namespace Nop.Services.Tests.Payments
         [Test]
         public void Can_load_paymentMethods()
         {
-            var srcm = _paymentService.LoadActivePaymentMethods();
+            var srcm = _paymentService.LoadAllPaymentMethods();
             srcm.ShouldNotBeNull();
-            (srcm.Count > 0).ShouldBeTrue();
+            (srcm.Any()).ShouldBeTrue();
         }
 
         [Test]
@@ -53,7 +54,7 @@ namespace Nop.Services.Tests.Payments
         {
             var srcm = _paymentService.LoadActivePaymentMethods();
             srcm.ShouldNotBeNull();
-            (srcm.Count > 0).ShouldBeTrue();
+            (srcm.Any()).ShouldBeTrue();
         }
 
         [Test]

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
-using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Blogs;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
@@ -16,6 +15,9 @@ namespace Nop.Admin.Models.Blogs
         public BlogPostModel()
         {
             AvailableLanguages = new List<SelectListItem>();
+
+            SelectedStoreIds = new List<int>();
+            AvailableStores = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Language")]
@@ -45,8 +47,8 @@ namespace Nop.Admin.Models.Blogs
         [AllowHtml]
         public string Tags { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments")]
-        public int Comments { get; set; }
+        public int ApprovedComments { get; set; }
+        public int NotApprovedComments { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate")]
         [UIHint("DateTimeNullable")]
@@ -75,13 +77,12 @@ namespace Nop.Admin.Models.Blogs
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
 
-        //Store mapping
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.LimitedToStores")]
-        public bool LimitedToStores { get; set; }
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.AvailableStores")]
-        public List<StoreModel> AvailableStores { get; set; }
-        public int[] SelectedStoreIds { get; set; }
 
+        //store mapping
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.LimitedToStores")]
+        [UIHint("MultiSelect")]
+        public IList<int> SelectedStoreIds { get; set; }
+        public IList<SelectListItem> AvailableStores { get; set; }
 
     }
 }

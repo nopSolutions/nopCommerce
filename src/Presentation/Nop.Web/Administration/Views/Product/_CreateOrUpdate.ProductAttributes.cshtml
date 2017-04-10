@@ -1,8 +1,12 @@
 ﻿@model ProductModel
 
 @using Nop.Core.Domain.Catalog
+@using Nop.Services
 
 <div class="panel-group">
+    <p>
+        @T("Admin.Catalog.Products.ProductAttributes.Hint")
+    </p>
     @if (Model.Id > 0)
     {
         if (Model.AvailableProductAttributes.Count > 0)
@@ -114,7 +118,8 @@
                             refresh: true,
                             numeric: false,
                             previousNext: false,
-                            info: false
+                            info: false,
+                            @Html.Partial("_GridPagerMessages")
                         },
                         toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
                         edit: function(e) {
@@ -132,7 +137,7 @@
                             }
                         },
                         editable: {
-                            confirmation: false,
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
                             mode: "inline"
                         },
                         scrollable: false,
@@ -140,7 +145,7 @@
                             {
                                 field: "ProductAttributeId",
                                 title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.Attribute")",
-                                width: 250,
+                                width: 200,
                                 editor: productAttributeDropDownEditor,
                                 template: "#:ProductAttribute#"
                             }, {
@@ -150,7 +155,7 @@
                             }, {
                                 field: "IsRequired",
                                 title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.IsRequired")",
-                                width: 150,
+                                width: 100,
                                 headerAttributes: { style: "text-align:center" },
                                 attributes: { style: "text-align:center" },
                                 template: '# if(IsRequired) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
@@ -172,19 +177,25 @@
                                 field: "ShouldHaveValues",
                                 title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values")",
                                 width: 150,
-                                template: '# if(ShouldHaveValues) {# <a href="@Url.Content("~/Admin/Product/EditAttributeValues/")?productAttributeMappingId=#=Id#">@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.ViewLink")</a> <div>@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.TotalValues") #=TotalValues#</div>#}  #'
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '# if(ShouldHaveValues) {# <a class="btn btn-default" href="@Url.Content("~/Admin/Product/EditAttributeValues/")?productAttributeMappingId=#=Id#">@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.ViewLink")</a> <div>@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.TotalValues") #=TotalValues#</div>#}  #'
                             },
                             {
                                 field: "ValidationRulesAllowed",
                                 title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules")",
                                 width: 150,
-                                template: "# if(ValidationRulesAllowed) {# <a href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeValidationRulesPopup/")#=Id#?btnId=btnRefreshProductAttributes&formId=product-form\", 800, 320, true);'>@T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.ViewLink")</a> <div>#=ValidationRulesString#</div>#}  #"
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: "# if(ValidationRulesAllowed) {# <a class=\"btn btn-default\" href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeValidationRulesPopup/")#=Id#?btnId=btnRefreshProductAttributes&formId=product-form\", 800, 320, true);'>@T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.ViewLink")</a> <div>#=ValidationRulesString#</div>#}  #"
                             },
                             {
                                 field: "ConditionAllowed",
                                 title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition")",
                                 width: 150,
-                                template: "# if(ConditionAllowed) {# <a href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeConditionPopup/")?productAttributeMappingId=#=Id#&btnId=btnRefreshProductAttributes&formId=product-form\", 800, 400, true);'>@T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition.ViewLink")</a> <div>#=ConditionString#</div>#}  #"
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: "# if(ConditionAllowed) {# <a class=\"btn btn-default\" href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeConditionPopup/")?productAttributeMappingId=#=Id#&btnId=btnRefreshProductAttributes&formId=product-form\", 800, 400, true);'>@T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition.ViewLink")</a> <div>#=ConditionString#</div>#}  #"
                             },
                             {
                                 command: [
@@ -285,10 +296,7 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <p>
-                <strong>@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Description")</strong>
-            </p>
-            <p>
-                @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Description2")
+                @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Description")
             </p>
 
             <div id="attributecombinations-grid"></div>
@@ -357,10 +365,11 @@
                             refresh: true,
                             numeric: false,
                             previousNext: false,
-                            info: false
+                            info: false,
+                            @Html.Partial("_GridPagerMessages")
                         },
                         editable: {
-                            confirmation: false,
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
                             mode: "inline"
                         },
                         scrollable: false,

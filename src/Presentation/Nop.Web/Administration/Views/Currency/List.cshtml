@@ -38,9 +38,11 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                <label class="control-label">
-                                    @T("Admin.Configuration.Currencies.Fields.ExchangeRateProvider")
-                                </label>
+                                <div class="label-wrapper">
+                                    <label class="control-label">
+                                        @T("Admin.Configuration.Currencies.Fields.ExchangeRateProvider")
+                                    </label>
+                                </div>
                             </div>
                             <div class="col-md-9">
                                 @(Html.NopDropDownList("exchangeRateProvider", ViewBag.ExchangeRateProviders as IEnumerable<SelectListItem>))
@@ -48,9 +50,11 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                <label class="control-label">
-                                    @T("Admin.Configuration.Currencies.Fields.CurrencyRateAutoUpdateEnabled")
-                                </label>
+                                <div class="label-wrapper">
+                                    <label class="control-label">
+                                        @T("Admin.Configuration.Currencies.Fields.CurrencyRateAutoUpdateEnabled")
+                                    </label>
+                                </div>
                             </div>
                             <div class="col-md-9">
                                 @(Html.CheckBox("autoUpdateEnabled", autoUpdateEnabled))
@@ -92,10 +96,11 @@
                                         refresh: true,
                                         numeric: false,
                                         previousNext: false,
-                                        info: false
+                                        info: false,
+                                        @Html.Partial("_GridPagerMessages")
                                     },
                                     editable: {
-                                        confirmation: false,
+                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                         mode: "inline"
                                     },
                                     scrollable: false,
@@ -151,7 +156,9 @@
                                             field: "Id",
                                             title: "@T("Admin.Common.Edit")",
                                             width: 100,
-                                            template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                            template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
                                         }
                                     ]
                                 });
@@ -236,7 +243,8 @@
                                             refresh: true,
                                             numeric: false,
                                             previousNext: false,
-                                            info: false
+                                            info: false,
+                                            @Html.Partial("_GridPagerMessages")
                                         },
                                         scrollable: false,
                                         columns: [

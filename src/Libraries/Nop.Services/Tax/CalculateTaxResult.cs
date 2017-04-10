@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Nop.Services.Tax
 {
@@ -32,7 +33,7 @@ namespace Nop.Services.Tax
         {
             get 
             { 
-                return this.Errors.Count == 0; 
+                return !this.Errors.Any(); 
             }
         }
 

@@ -128,6 +128,20 @@ namespace Nop.Core.Plugins
                             }
                         }
                         break;
+                    case "LimitedToCustomerRoles":
+                        {
+                            //parse list of customer role IDs
+                            foreach (var id in value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()))
+                            {
+                                int roleId;
+                                if (int.TryParse(id, out roleId))
+                                    descriptor.LimitedToCustomerRoles.Add(roleId);
+                            }
+                        }
+                        break;
+                    case "Description":
+                            descriptor.Description = value;
+                        break;
                     default:
                         break;
                 }
@@ -135,7 +149,7 @@ namespace Nop.Core.Plugins
 
             //nopCommerce 2.00 didn't have 'SupportedVersions' parameter
             //so let's set it to "2.00"
-            if (descriptor.SupportedVersions.Count == 0)
+            if (!descriptor.SupportedVersions.Any())
                 descriptor.SupportedVersions.Add("2.00");
 
             return descriptor;
@@ -162,11 +176,13 @@ namespace Nop.Core.Plugins
             keyValues.Add(new KeyValuePair<string, string>("Author", plugin.Author));
             keyValues.Add(new KeyValuePair<string, string>("DisplayOrder", plugin.DisplayOrder.ToString()));
             keyValues.Add(new KeyValuePair<string, string>("FileName", plugin.PluginFileName));
-            if (plugin.LimitedToStores.Count > 0)
-            {
-                var storeList = string.Join(",", plugin.LimitedToStores);
-                keyValues.Add(new KeyValuePair<string, string>("LimitedToStores", storeList));
-            }
+            keyValues.Add(new KeyValuePair<string, string>("Description", plugin.Description));            
+
+            if (plugin.LimitedToStores.Any())
+                keyValues.Add(new KeyValuePair<string, string>("LimitedToStores", string.Join(",", plugin.LimitedToStores)));
+
+            if (plugin.LimitedToCustomerRoles.Any())
+                keyValues.Add(new KeyValuePair<string, string>("LimitedToCustomerRoles", string.Join(",", plugin.LimitedToCustomerRoles)));
 
             var sb = new StringBuilder();
             for (int i = 0; i < keyValues.Count; i++)

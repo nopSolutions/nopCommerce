@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
-using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Localization;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
@@ -13,8 +13,9 @@ namespace Nop.Admin.Models.Localization
     {
         public LanguageModel()
         {
-            FlagFileNames = new List<string>();
             AvailableCurrencies = new List<SelectListItem>();
+            SelectedStoreIds = new List<int>();
+            AvailableStores = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.Name")]
@@ -31,9 +32,8 @@ namespace Nop.Admin.Models.Localization
         
         //flags
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.FlagImageFileName")]
-        [AllowHtml]
         public string FlagImageFileName { get; set; }
-        public IList<string> FlagFileNames { get; set; }
+
 
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.Rtl")]
         public bool Rtl { get; set; }
@@ -51,12 +51,11 @@ namespace Nop.Admin.Models.Localization
         public int DisplayOrder { get; set; }
 
 
-        //Store mapping
+        //store mapping
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.LimitedToStores")]
-        public bool LimitedToStores { get; set; }
-        [NopResourceDisplayName("Admin.Configuration.Languages.Fields.AvailableStores")]
-        public List<StoreModel> AvailableStores { get; set; }
-        public int[] SelectedStoreIds { get; set; }
+        [UIHint("MultiSelect")]
+        public IList<int> SelectedStoreIds { get; set; }
+        public IList<SelectListItem> AvailableStores { get; set; }
 
         // search
         public LanguageResourcesListModel Search { get; set; }

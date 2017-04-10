@@ -71,7 +71,7 @@ namespace Nop.Web.Framework.Localization
         /// </summary>
         /// <param name="url">URL</param>
         /// <param name="applicationPath">Application path</param>
-        /// <param name="isRawPath">A value indicating whether war URL is passed</param>
+        /// <param name="isRawPath">A value indicating whether raw URL is passed</param>
         /// <returns>Result</returns>
         public static bool IsLocalizedUrl(this string url, string applicationPath, bool isRawPath)
         {
@@ -140,7 +140,7 @@ namespace Nop.Web.Framework.Localization
                 result = url.Substring(_seoCodeLength + 1); //urls like "/en/" or "/en/somethingelse"
 
             if (applicationPath.IsVirtualDirectory())
-                result = applicationPath + result;  //add back applciation path
+                result = applicationPath + result;  //add back application path
             return result;
         }
 

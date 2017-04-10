@@ -85,7 +85,7 @@ namespace Nop.Services.Messages
                     message.Headers.Add(header.Key, header.Value);
                 }
 
-            //create  the file attachment for this e-mail message
+            //create the file attachment for this e-mail message
             if (!String.IsNullOrEmpty(attachmentFilePath) &&
                 File.Exists(attachmentFilePath))
             {

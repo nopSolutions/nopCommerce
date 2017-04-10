@@ -27,6 +27,8 @@
                 </div>
                 @using (Html.BeginForm())
                 {
+                    var canRetryRecurringOrders = Model.RecurringOrders.Any(recurring => recurring.CanRetryLastPayment);
+
                     @Html.AntiForgeryToken()
                     <div class="table-wrapper">
                         <table class="data-table">
@@ -37,6 +39,7 @@
                                 <col />
                                 <col />
                                 <col />
+                                @if (canRetryRecurringOrders) { <col /> }
                                 <col />
                             </colgroup>
                             <thead>
@@ -59,6 +62,12 @@
                                     <th class="initial-order">
                                         @T("Account.CustomerOrders.RecurringOrders.InitialOrder")
                                     </th>
+                                    @if (canRetryRecurringOrders)
+                                    {
+                                        <th class="retry">
+                                            @T("Account.CustomerOrders.RecurringOrders.RetryLastPayment")
+                                        </th>
+                                    }
                                     <th class="cancel">
                                         @T("Account.CustomerOrders.RecurringOrders.Cancel")
                                     </th>
@@ -84,8 +93,17 @@
                                             @item.CyclesRemaining
                                         </td>
                                         <td class="initial-order">
-                                            <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.InitialOrderId })">@string.Format(T("Account.CustomerOrders.RecurringOrders.ViewInitialOrder").Text, item.InitialOrderId)</a>
+                                            <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.InitialOrderId })">@string.Format(T("Account.CustomerOrders.RecurringOrders.ViewInitialOrder").Text, item.InitialOrderNumber)</a>
                                         </td>
+                                        @if (canRetryRecurringOrders)
+                                        {
+                                            <td class="retry">
+                                                @if (item.CanRetryLastPayment)
+                                                {
+                                                    <input type="submit" name="retryLastPayment_@(item.Id)" value="@T("Account.CustomerOrders.RecurringOrders.RetryLastPayment")" class="button-2 retry-recurring-order-button" />
+                                                }
+                                            </td>
+                                        }
                                         <td class="cancel">
                                             @if (item.CanCancel)
                                             {
@@ -99,16 +117,16 @@
                     </div>
                 }
             </div>
-            if (Model.CancelRecurringPaymentErrors.Count > 0)
+            if (Model.RecurringPaymentErrors.Any())
             {
-            <div class="message-error">
-                <ul>
-                    @foreach (var error in Model.CancelRecurringPaymentErrors)
-                    {
-                        <li>@error</li>
-                    }
-                </ul>
-            </div>
+                <div class="message-error">
+                    <ul>
+                        @foreach (var error in Model.RecurringPaymentErrors)
+                        {
+                            <li>@error</li>
+                        }
+                    </ul>
+                </div>
             }
         }
         
@@ -119,7 +137,7 @@
                 {
                 <div class="section order-item">
                     <div class="title">
-                        <strong>@T("Account.CustomerOrders.OrderNumber"): @order.Id</strong>
+                        <strong>@T("Account.CustomerOrders.OrderNumber"): @order.CustomOrderNumber</strong>
                     </div>
                     <ul class="info">
                         <li>@T("Account.CustomerOrders.OrderStatus"): <span class="order-status @order.OrderStatusEnum.ToString().ToLowerInvariant()">@order.OrderStatus</span></li>

@@ -111,7 +111,7 @@ namespace Nop.Services.Common
             return _cacheManager.Get(key, () =>
             {
                 var query = from aa in _addressAttributeRepository.Table
-                            orderby aa.DisplayOrder
+                            orderby aa.DisplayOrder, aa.Id
                             select aa;
                 return query.ToList();
             });
@@ -196,7 +196,7 @@ namespace Nop.Services.Common
             return _cacheManager.Get(key, () =>
             {
                 var query = from aav in _addressAttributeValueRepository.Table
-                            orderby aav.DisplayOrder
+                            orderby aav.DisplayOrder, aav.Id
                             where aav.AddressAttributeId == addressAttributeId
                             select aav;
                 var addressAttributeValues = query.ToList();

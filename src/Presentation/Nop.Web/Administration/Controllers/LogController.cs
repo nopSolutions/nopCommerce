@@ -5,11 +5,11 @@ using System.Web.Mvc;
 using Nop.Admin.Models.Logging;
 using Nop.Core;
 using Nop.Core.Domain.Logging;
+using Nop.Services;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 
@@ -34,12 +34,12 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
         }
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();
@@ -52,11 +52,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult LogList(DataSourceRequest command, LogListModel model)
+        public virtual ActionResult LogList(DataSourceRequest command, LogListModel model)
         {
-
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             DateTime? createdOnFromValue = (model.CreatedOnFrom == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
@@ -76,12 +75,7 @@ namespace Nop.Admin.Controllers
                     Id = x.Id,
                     LogLevel = x.LogLevel.GetLocalizedEnum(_localizationService, _workContext),
                     ShortMessage = x.ShortMessage,
-                    //little hack here:
-                    //ensure that FullMessage is not returned
-                    //otherwise, we can get the following error if log records have too long FullMessage:
-                    //"Error during serialization or deserialization using the JSON JavaScriptSerializer. The length of the string exceeds the value set on the maxJsonLength property. "
-                    //also it improves performance
-                    //FullMessage = x.FullMessage,
+                    //little performance optimization: ensure that "FullMessage" is not returned
                     FullMessage = "",
                     IpAddress = x.IpAddress,
                     CustomerId = x.CustomerId,
@@ -98,7 +92,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("clearall")]
-        public ActionResult ClearAll()
+        public virtual ActionResult ClearAll()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();
@@ -109,7 +103,7 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public ActionResult View(int id)
+        public virtual ActionResult View(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();
@@ -137,7 +131,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();
@@ -155,7 +149,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteSelected(ICollection<int> selectedIds)
+        public virtual ActionResult DeleteSelected(ICollection<int> selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();

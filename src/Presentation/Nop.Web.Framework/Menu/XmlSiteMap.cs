@@ -23,7 +23,6 @@ namespace Nop.Web.Framework.Menu
 
         public virtual void LoadFrom(string physicalPath)
         {
-            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             string filePath = CommonHelper.MapPath(physicalPath);
             string content = File.ReadAllText(filePath);
 
@@ -110,6 +109,14 @@ namespace Nop.Web.Framework.Menu
             else
             {
                 siteMapNode.Visible = true;
+            }
+
+            // Open URL in new tab
+            var openUrlInNewTabValue = GetStringValueFromAttribute(xmlNode, "OpenUrlInNewTab");
+            bool booleanResult;
+            if (!string.IsNullOrWhiteSpace(openUrlInNewTabValue) && bool.TryParse(openUrlInNewTabValue, out booleanResult))
+            {
+                siteMapNode.OpenUrlInNewTab = booleanResult;
             }
         }
 

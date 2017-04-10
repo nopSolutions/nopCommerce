@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Messages;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Stores;
@@ -29,7 +29,7 @@ namespace Nop.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly EmailAccountSettings _emailAccountSettings;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion Fields
 
@@ -45,7 +45,7 @@ namespace Nop.Admin.Controllers
             IStoreService storeService,
             IStoreMappingService storeMappingService,
             IWorkflowMessageService workflowMessageService,
-            EmailAccountSettings emailAccountSettings)
+            ICustomerActivityService customerActivityService)
         {
             this._messageTemplateService = messageTemplateService;
             this._emailAccountService = emailAccountService;
@@ -57,26 +57,12 @@ namespace Nop.Admin.Controllers
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
             this._workflowMessageService = workflowMessageService;
-            this._emailAccountSettings = emailAccountSettings;
+            this._customerActivityService = customerActivityService;
         }
 
         #endregion
         
         #region Utilities
-
-        private string FormatTokens(string[] tokens)
-        {
-            var sb = new StringBuilder();
-            for (int i = 0; i < tokens.Length; i++)
-            {
-                string token = tokens[i];
-                sb.Append(token);
-                if (i != tokens.Length - 1)
-                    sb.Append(", ");
-            }
-
-            return sb.ToString();
-        }
 
         [NonAction]
         protected virtual void UpdateLocales(MessageTemplate mt, MessageTemplateModel model)
@@ -98,41 +84,44 @@ namespace Nop.Admin.Controllers
                                                            localized.Body,
                                                            localized.LanguageId);
 
-                _localizedEntityService.SaveLocalizedValue(mt,
-                                                           x => x.EmailAccountId,
-                                                           localized.EmailAccountId,
-                                                           localized.LanguageId);
+               _localizedEntityService.SaveLocalizedValue(mt,
+                                                            x => x.EmailAccountId,
+                                                            localized.EmailAccountId,
+                                                            localized.LanguageId);
             }
         }
-
-
+        
         [NonAction]
         protected virtual void PrepareStoresMappingModel(MessageTemplateModel model, MessageTemplate messageTemplate, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
+            if (!excludeProperties && messageTemplate != null)
+                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(messageTemplate).ToList();
+
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
             {
-                if (messageTemplate != null)
+                model.AvailableStores.Add(new SelectListItem
                 {
-                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(messageTemplate);
-                }
+                    Text = store.Name,
+                    Value = store.Id.ToString(),
+                    Selected = model.SelectedStoreIds.Contains(store.Id)
+                });
             }
         }
 
         [NonAction]
         protected virtual void SaveStoreMappings(MessageTemplate messageTemplate, MessageTemplateModel model)
         {
+            messageTemplate.LimitedToStores = model.SelectedStoreIds.Any();
+
             var existingStoreMappings = _storeMappingService.GetStoreMappings(messageTemplate);
             var allStores = _storeService.GetAllStores();
             foreach (var store in allStores)
             {
-                if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
+                if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
@@ -152,12 +141,12 @@ namespace Nop.Admin.Controllers
         
         #region Methods
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult List()
+        public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
@@ -172,10 +161,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult List(DataSourceRequest command, MessageTemplateListModel model)
+        public virtual ActionResult List(DataSourceRequest command, MessageTemplateListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
-                return AccessDeniedView();
+                return AccessDeniedKendoGridJson();
 
             var messageTemplates = _messageTemplateService.GetAllMessageTemplates(model.SearchStoreId);
             var gridModel = new DataSourceResult
@@ -202,7 +191,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        public ActionResult Edit(int id)
+        public virtual ActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
@@ -215,10 +204,12 @@ namespace Nop.Admin.Controllers
             var model = messageTemplate.ToModel();
             model.SendImmediately = !model.DelayBeforeSend.HasValue;
             model.HasAttachedDownload = model.AttachedDownloadId > 0;
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
+            var allowedTokens = string.Join(", ", _messageTokenProvider.GetListOfAllowedTokens(messageTemplate.GetTokenGroups()));
+            model.AllowedTokens = string.Format("{0}{1}{1}{2}{1}", allowedTokens, Environment.NewLine,
+                _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Tokens.ConditionalStatement"));
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
-                model.AvailableEmailAccounts.Add(ea.ToModel());
+                model.AvailableEmailAccounts.Add(new SelectListItem { Text = ea.DisplayName, Value = ea.Id.ToString() });
             //Store
             PrepareStoresMappingModel(model, messageTemplate, false);
             //locales
@@ -228,8 +219,20 @@ namespace Nop.Admin.Controllers
                 locale.Subject = messageTemplate.GetLocalized(x => x.Subject, languageId, false, false);
                 locale.Body = messageTemplate.GetLocalized(x => x.Body, languageId, false, false);
 
-                var emailAccountId = messageTemplate.GetLocalized(x => x.EmailAccountId, languageId, false, false);
-                locale.EmailAccountId = emailAccountId > 0 ? emailAccountId : _emailAccountSettings.DefaultEmailAccountId;
+                locale.EmailAccountId = messageTemplate.GetLocalized(x => x.EmailAccountId, languageId, false, false);
+                //available email accounts (we add "Standard" value for localizable field)
+                locale.AvailableEmailAccounts.Add(new SelectListItem
+                {
+                    Text = _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Fields.EmailAccount.Standard"),
+                    Value = "0"
+                });
+                foreach (var ea in _emailAccountService.GetAllEmailAccounts())
+                    locale.AvailableEmailAccounts.Add(new SelectListItem
+                    {
+                        Text = ea.DisplayName,
+                        Value = ea.Id.ToString(),
+                        Selected =  ea.Id == locale.EmailAccountId
+                    });
             });
 
             return View(model);
@@ -237,7 +240,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public ActionResult Edit(MessageTemplateModel model, bool continueEditing)
+        public virtual ActionResult Edit(MessageTemplateModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
@@ -256,6 +259,10 @@ namespace Nop.Admin.Controllers
                 if (model.SendImmediately)
                     messageTemplate.DelayBeforeSend = null;
                 _messageTemplateService.UpdateMessageTemplate(messageTemplate);
+
+                //activity log
+                _customerActivityService.InsertActivity("EditMessageTemplate", _localizationService.GetResource("ActivityLog.EditMessageTemplate"), messageTemplate.Id);
+
                 //Stores
                 SaveStoreMappings(messageTemplate, model);
                 //locales
@@ -265,9 +272,6 @@ namespace Nop.Admin.Controllers
                 
                 if (continueEditing)
                 {
-                    //selected tab
-                    SaveSelectedTabName();
-
                     return RedirectToAction("Edit",  new {id = messageTemplate.Id});
                 }
                 return RedirectToAction("List");
@@ -276,17 +280,36 @@ namespace Nop.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             model.HasAttachedDownload = model.AttachedDownloadId > 0;
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
+            var allowedTokens = string.Join(", ", _messageTokenProvider.GetListOfAllowedTokens(messageTemplate.GetTokenGroups()));
+            model.AllowedTokens = string.Format("{0}{1}{1}{2}{1}", allowedTokens, Environment.NewLine,
+                _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Tokens.ConditionalStatement"));
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
-                model.AvailableEmailAccounts.Add(ea.ToModel());
+                model.AvailableEmailAccounts.Add(new SelectListItem { Text = ea.DisplayName, Value = ea.Id.ToString() });
+            //locales (update email account dropdownlists)
+            foreach (var locale in model.Locales)
+            {
+                //available email accounts (we add "Standard" value for localizable field)
+                locale.AvailableEmailAccounts.Add(new SelectListItem
+                {
+                    Text = _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Fields.EmailAccount.Standard"),
+                    Value = "0"
+                });
+                foreach (var ea in _emailAccountService.GetAllEmailAccounts())
+                    locale.AvailableEmailAccounts.Add(new SelectListItem
+                    {
+                        Text = ea.DisplayName,
+                        Value = ea.Id.ToString(),
+                        Selected = ea.Id == locale.EmailAccountId
+                    });
+            }
             //Store
             PrepareStoresMappingModel(model, messageTemplate, true);
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
@@ -297,14 +320,17 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             _messageTemplateService.DeleteMessageTemplate(messageTemplate);
-            
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteMessageTemplate", _localizationService.GetResource("ActivityLog.DeleteMessageTemplate"), messageTemplate.Id);
+
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Deleted"));
             return RedirectToAction("List");
         }
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("message-template-copy")]
-        public ActionResult CopyTemplate(MessageTemplateModel model)
+        public virtual ActionResult CopyTemplate(MessageTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
@@ -317,7 +343,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 var newMessageTemplate = _messageTemplateService.CopyMessageTemplate(messageTemplate);
-                SuccessNotification("The message template has been copied successfully");
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Copied"));
                 return RedirectToAction("Edit", new { id = newMessageTemplate.Id });
             }
             catch (Exception exc)
@@ -327,7 +353,7 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        public ActionResult TestTemplate(int id, int languageId = 0)
+        public virtual ActionResult TestTemplate(int id, int languageId = 0)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
@@ -342,14 +368,11 @@ namespace Nop.Admin.Controllers
                 Id = messageTemplate.Id,
                 LanguageId = languageId
             };
-            var tokens = _messageTokenProvider.GetListOfAllowedTokens().Distinct().ToList();
-            //filter them to the current template
+
+            //filter tokens to the current template
             var subject = messageTemplate.GetLocalized(mt => mt.Subject, languageId);
             var body = messageTemplate.GetLocalized(mt => mt.Body, languageId);
-            //subject = messageTemplate.Subject;
-            //body = messageTemplate.Body;
-            tokens = tokens.Where(x => subject.Contains(x) || body.Contains(x)).ToList();
-            model.Tokens = tokens;
+            model.Tokens = _messageTokenProvider.GetListOfAllowedTokens().Where(x => subject.Contains(x) || body.Contains(x)).ToList();
 
             return View(model);
         }
@@ -357,7 +380,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("TestTemplate")]
         [FormValueRequired("send-test")]
         [ValidateInput(false)]
-        public ActionResult TestTemplate(TestMessageTemplateModel model, FormCollection form)
+        public virtual ActionResult TestTemplate(TestMessageTemplateModel model, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
@@ -372,7 +395,22 @@ namespace Nop.Admin.Controllers
                 if (formKey.StartsWith("token_", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var tokenKey = formKey.Substring("token_".Length).Replace("%", "");
-                    var tokenValue = form[formKey];
+                    var stringValue = form[formKey];
+
+                    //try get non-string value
+                    object tokenValue;
+                    bool boolValue;
+                    int intValue;
+                    decimal decimalValue;
+                    if (bool.TryParse(stringValue, out boolValue))
+                        tokenValue = boolValue;
+                    else if (int.TryParse(stringValue, out intValue))
+                        tokenValue = intValue;
+                    else if (decimal.TryParse(stringValue, out decimalValue))
+                        tokenValue = decimalValue;
+                    else
+                        tokenValue = stringValue;
+
                     tokens.Add(new Token(tokenKey, tokenValue));
                 }
 

@@ -15,12 +15,10 @@
             <ul class="nav nav-tabs">
                 @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Configuration.Countries.Info"), true)
                 @Html.RenderBootstrapTabHeader("tab-states", @T("Admin.Configuration.Countries.States"))
-                @Html.RenderBootstrapTabHeader("tab-stores", @T("Admin.Configuration.Countries.Stores"))
             </ul>
             <div class="tab-content">
                 @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
                 @Html.RenderBootstrapTabContent("tab-states", @TabStates())
-                @Html.RenderBootstrapTabContent("tab-stores", @TabStores())
             </div>
         </div>
     </div>
@@ -39,13 +37,13 @@
 
 @*save selected tab name*@
 <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
-
 @helper TabInfo()
 {
     <div class="panel-group">
-        @(Html.LocalizedEditor<CountryModel, CountryLocalizedModel>("country-info-localized",
-            @<div class="panel panel-default">
-                <div class="panel-body">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @(Html.LocalizedEditor<CountryModel, CountryLocalizedModel>("country-info-localized",
+                @<div>
                     <div class="form-group">
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Locales[item].Name)
@@ -59,24 +57,19 @@
                         @Html.HiddenFor(model => model.Locales[item].LanguageId)
                     </div>
                 </div>
-            </div>
     ,
-            @<div class="panel panel-default">
-                <div class="panel-body">
+                @<div>
                     <div class="form-group">
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Name)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.Name)
+                            @Html.NopEditorFor(model => model.Name, required: true)
                             @Html.ValidationMessageFor(model => model.Name)
                         </div>
                     </div>
                 </div>
-            </div>
     ))
-        <div class="panel panel-default">
-            <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AllowsBilling)
@@ -100,7 +93,7 @@
                         @Html.NopLabelFor(model => model.TwoLetterIsoCode)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.TwoLetterIsoCode)
+                        @Html.NopEditorFor(model => model.TwoLetterIsoCode, required: true)
                         @Html.ValidationMessageFor(model => model.TwoLetterIsoCode)
                     </div>
                 </div>
@@ -109,7 +102,7 @@
                         @Html.NopLabelFor(model => model.ThreeLetterIsoCode)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.ThreeLetterIsoCode)
+                        @Html.NopEditorFor(model => model.ThreeLetterIsoCode, required: true)
                         @Html.ValidationMessageFor(model => model.ThreeLetterIsoCode)
                     </div>
                 </div>
@@ -129,6 +122,41 @@
                     <div class="col-md-9">
                         @Html.NopEditorFor(model => model.SubjectToVat)
                         @Html.ValidationMessageFor(model => model.SubjectToVat)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.SelectedStoreIds)
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.SelectedStoreIds, new {SelectList = Model.AvailableStores})
+                                <script>
+                                    $(document).ready(function() {
+                                        var storesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                                        storesIdsInput.setOptions({
+                                            autoClose: false
+                                        });
+
+                                        @if (Model.AvailableStores.Count == 0)
+                                        {
+                                            <text>
+                                    storesIdsInput.setOptions({
+                                        enable: false,
+                                        placeholder: 'No stores available'
+                                    });
+                                    storesIdsInput._placeholder();
+                                    storesIdsInput._enable();
+                                    </text>
+                                        }
+                                    });
+                                </script>
+                            </div>
+                            <div class="col-md-8">
+                                @Html.Action("MultistoreDisabledWarning", "Common")
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -153,7 +181,6 @@
         </div>
     </div>
 }
-
 @helper TabStates()
 {
     <div class="panel-group">
@@ -203,10 +230,11 @@
                                     refresh: true,
                                     numeric: false,
                                     previousNext: false,
-                                    info: false
+                                    info: false,
+                                    @Html.Partial("_GridPagerMessages")
                                 },
                                 editable: {
-                                    confirmation: false,
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                     mode: "inline"
                                 },
                                 scrollable: false,
@@ -232,11 +260,15 @@
                                 }, {
                                     field: "Id",
                                     title: "@T("Admin.Common.Edit")",
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
                                     width: 100,
-                                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Country/StateEditPopup/")#=Id#?btnId=btnRefresh&formId=country-form', 800, 450, true); return false;\" class='btn btn-default' />"
+                                    template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Country/StateEditPopup/")#=Id#?btnId=btnRefresh&formId=country-form', 800, 450, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
                                 }, {
                                     command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                     title: "@T("Admin.Common.Delete")",
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
                                     width: 100
                                 }]
                             });
@@ -272,63 +304,6 @@
                     @T("Admin.Configuration.Countries.States.SaveBeforeEdit")
                 </div>
             }
-        </div>
-    </div>
-}
-
-@helper TabStores()
-{
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
-            toggleStoreMapping();
-        });
-
-        function toggleStoreMapping() {
-            if ($('#@Html.FieldIdFor(model => model.LimitedToStores)').is(':checked')) {
-                $('#pnl-available-stores').show();
-            } else {
-                $('#pnl-available-stores').hide();
-            }
-        }
-    </script>
-
-    <div class="panel-group">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.LimitedToStores)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.LimitedToStores)
-                        @Html.ValidationMessageFor(model => model.LimitedToStores)
-                    </div>
-                </div>
-                <div class="form-group" id="pnl-available-stores">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.AvailableStores)
-                    </div>
-                    <div class="col-md-9">
-                        @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
-                        {
-                            @Html.Action("MultistoreDisabledWarning", "Common")
-                            foreach (var store in Model.AvailableStores)
-                            {
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
-                                    </label>
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <text>No stores defined</text>
-                        }
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 }

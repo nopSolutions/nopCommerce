@@ -11,6 +11,7 @@ namespace Nop.Web.Models.Catalog
         public string ProductSeName { get; set; }
         public string Title { get; set; }
         public string ReviewText { get; set; }
+        public string ReplyText { get; set; }
         public int Rating { get; set; }
         public string WrittenOnStr { get; set; }
         public string ApprovalStatus { get; set; }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
@@ -23,7 +24,7 @@ namespace Nop.Web.Framework.Security
                 return;
             bool ok = false;
             var ipAddresses = EngineContext.Current.Resolve<SecuritySettings>().AdminAreaAllowedIpAddresses;
-            if (ipAddresses != null && ipAddresses.Count > 0)
+            if (ipAddresses != null && ipAddresses.Any())
             {
                 var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                 foreach (string ip in ipAddresses)

@@ -1,6 +1,5 @@
 ﻿using System;
-using AutoMapper;
-using Nop.Admin.Infrastructure.Mapper;
+using System.Linq;
 using Nop.Admin.Models.Blogs;
 using Nop.Admin.Models.Catalog;
 using Nop.Admin.Models.Cms;
@@ -44,13 +43,16 @@ using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Infrastructure.Mapper;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
 using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
+using Nop.Web.Framework.Security.Captcha;
 
 namespace Nop.Admin.Extensions
 {
@@ -492,6 +494,15 @@ namespace Nop.Admin.Extensions
 
         #endregion
 
+        #region Pickup point providers
+
+        public static PickupPointProviderModel ToModel(this IPickupPointProvider entity)
+        {
+            return entity.MapTo<IPickupPointProvider, PickupPointProviderModel>();
+        }
+
+        #endregion
+
         #region Shipping methods
 
         public static ShippingMethodModel ToModel(this ShippingMethod entity)
@@ -529,7 +540,26 @@ namespace Nop.Admin.Extensions
         }
 
         #endregion
-        
+
+        #region Product availability ranges
+
+        public static ProductAvailabilityRangeModel ToModel(this ProductAvailabilityRange entity)
+        {
+            return entity.MapTo<ProductAvailabilityRange, ProductAvailabilityRangeModel>();
+        }
+
+        public static ProductAvailabilityRange ToEntity(this ProductAvailabilityRangeModel model)
+        {
+            return model.MapTo<ProductAvailabilityRangeModel, ProductAvailabilityRange>();
+        }
+
+        public static ProductAvailabilityRange ToEntity(this ProductAvailabilityRangeModel model, ProductAvailabilityRange destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
         #region Payment methods
 
         public static PaymentMethodModel ToModel(this IPaymentMethod entity)
@@ -648,7 +678,7 @@ namespace Nop.Admin.Extensions
                             if (!String.IsNullOrEmpty(selectedAddressAttributes))
                             {
                                 var enteredText = addressAttributeParser.ParseValues(selectedAddressAttributes, attribute.Id);
-                                if (enteredText.Count > 0)
+                                if (enteredText.Any())
                                     attributeModel.DefaultValue = enteredText[0];
                             }
                         }
@@ -999,6 +1029,30 @@ namespace Nop.Admin.Extensions
             return entity.MapTo<AddressSettings, CustomerUserSettingsModel.AddressSettingsModel>();
         }
         public static AddressSettings ToEntity(this CustomerUserSettingsModel.AddressSettingsModel model, AddressSettings destination)
+        {
+            return model.MapTo(destination);
+        }
+
+
+
+        //general (captcha) settings
+        public static GeneralCommonSettingsModel.CaptchaSettingsModel ToModel(this CaptchaSettings entity)
+        {
+            return entity.MapTo<CaptchaSettings, GeneralCommonSettingsModel.CaptchaSettingsModel>();
+        }
+        public static CaptchaSettings ToEntity(this GeneralCommonSettingsModel.CaptchaSettingsModel model, CaptchaSettings destination)
+        {
+            return model.MapTo(destination);
+        }
+
+
+
+        //product editor settings
+        public static ProductEditorSettingsModel ToModel(this ProductEditorSettings entity)
+        {
+            return entity.MapTo<ProductEditorSettings, ProductEditorSettingsModel>();
+        }
+        public static ProductEditorSettings ToEntity(this ProductEditorSettingsModel model, ProductEditorSettings destination)
         {
             return model.MapTo(destination);
         }

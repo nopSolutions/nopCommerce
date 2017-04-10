@@ -1,6 +1,7 @@
 ﻿@model CustomerAttributeModel
 
 @using Nop.Core.Domain.Catalog;
+@using Nop.Services
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 
@@ -40,39 +41,60 @@
 
 @helper TabInfo()
 {
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").change(toggleAttributeControlType);
+
+            toggleAttributeControlType();
+        });
+
+        function toggleAttributeControlType() {
+            var selectedAttributeControlTypeId = $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").val();
+           
+            //values
+            if (selectedAttributeControlTypeId == @(((int) AttributeControlType.DropdownList).ToString()) ||
+                selectedAttributeControlTypeId == @(((int) AttributeControlType.RadioList).ToString()) ||
+                selectedAttributeControlTypeId == @(((int) AttributeControlType.Checkboxes).ToString()) ||
+                selectedAttributeControlTypeId == @(((int) AttributeControlType.ColorSquares).ToString()) ||
+                selectedAttributeControlTypeId == @(((int) AttributeControlType.ImageSquares).ToString()) ||
+                selectedAttributeControlTypeId == @(((int) AttributeControlType.ReadonlyCheckboxes).ToString())) {
+                 $('[data-tab-name=tab-values]').show();
+            } else {
+                $('[data-tab-name=tab-values]').hide();
+            }
+        }
+    </script>
+
     <div class="panel-group">
-        @(Html.LocalizedEditor<CustomerAttributeModel, CustomerAttributeLocalizedModel>("customerattribute-localized",
-        @<div class="panel panel-default">
-            <div class="panel-body">
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.Locales[item].Name)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.Locales[item].Name)
-                        @Html.ValidationMessageFor(model => model.Locales[item].Name)
-                    </div>
-                </div>
-                @Html.HiddenFor(model => model.Locales[item].LanguageId)
-            </div>
-        </div>
-    ,
-        @<div class="panel panel-default">
-            <div class="panel-body">
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.Name)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.Name)
-                        @Html.ValidationMessageFor(model => model.Name)
-                    </div>
-                </div>
-            </div>
-        </div>
-            ))
         <div class="panel panel-default">
             <div class="panel-body">
+                @(Html.LocalizedEditor<CustomerAttributeModel, CustomerAttributeLocalizedModel>("customerattribute-localized",
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Locales[item].Name)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Locales[item].Name)
+                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                        </div>
+                    </div>
+                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                </div>
+    ,
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Name)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Name, required: true)
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                    </div>
+                </div>
+            ))
                 <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IsRequired)
@@ -162,10 +184,11 @@
                                     refresh: true,
                                     numeric: false,
                                     previousNext: false,
-                                    info: false
+                                    info: false,
+                                    @Html.Partial("_GridPagerMessages")
                                 },
                                 editable: {
-                                    confirmation: false,
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                     mode: "inline"
                                 },
                                 scrollable: false,
@@ -187,11 +210,15 @@
                                     field: "Id",
                                     title: "@T("Admin.Common.Edit")",
                                     width: 100,
-                                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/CustomerAttribute/ValueEditPopup/")#=Id#?btnId=btnRefresh&formId=customerattribute-form', 800, 400, true); return false;\" class='btn btn-default' />"
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/CustomerAttribute/ValueEditPopup/")#=Id#?btnId=btnRefresh&formId=customerattribute-form', 800, 400, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
                                 }, {
                                     command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                     title: "@T("Admin.Common.Delete")",
-                                    width: 100
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" }
                                 }]
                             });
                         });

@@ -13,13 +13,9 @@ namespace Nop.Admin.Models.Affiliates
             Address = new AddressModel();
         }
 
-        [NopResourceDisplayName("Admin.Affiliates.Fields.ID")]
-        public override int Id { get; set; }
-
         [NopResourceDisplayName("Admin.Affiliates.Fields.URL")]
         public string Url { get; set; }
-
-
+        
         [NopResourceDisplayName("Admin.Affiliates.Fields.AdminComment")]
         [AllowHtml]
         public string AdminComment { get; set; }
@@ -37,8 +33,9 @@ namespace Nop.Admin.Models.Affiliates
         
         public partial class AffiliatedOrderModel : BaseNopEntityModel
         {
-            [NopResourceDisplayName("Admin.Affiliates.Orders.Order")]
             public override int Id { get; set; }
+            [NopResourceDisplayName("Admin.Affiliates.Orders.CustomOrderNumber")]
+            public string CustomOrderNumber { get; set; }
 
             [NopResourceDisplayName("Admin.Affiliates.Orders.OrderStatus")]
             public string OrderStatus { get; set; }

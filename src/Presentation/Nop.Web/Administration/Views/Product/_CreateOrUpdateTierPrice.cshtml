@@ -1,0 +1,78 @@
+﻿@model ProductModel.TierPriceModel
+
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-popup">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Quantity)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.Quantity)
+                            @Html.ValidationMessageFor(model => model.Quantity)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Price)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.Price)
+                            @Html.ValidationMessageFor(model => model.Price)
+                        </div>
+                    </div>
+                    <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.StoreId)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopDropDownListFor(model => model.StoreId, Model.AvailableStores)
+                            @Html.ValidationMessageFor(model => model.StoreId)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.CustomerRoleId)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopDropDownListFor(model => model.CustomerRoleId, Model.AvailableCustomerRoles)
+                            @Html.ValidationMessageFor(model => model.CustomerRoleId)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.StartDateTimeUtc)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.StartDateTimeUtc)
+                            @Html.ValidationMessageFor(model => model.StartDateTimeUtc)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.EndDateTimeUtc)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.EndDateTimeUtc)
+                            @Html.ValidationMessageFor(model => model.EndDateTimeUtc)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -11,7 +11,7 @@ namespace Nop.Admin.Models.Settings
         public TaxSettingsModel()
         {
             PaymentMethodAdditionalFeeTaxCategories = new List<SelectListItem>();
-            ShippingTaxCategories = new List<SelectListItem>();
+            TaxCategories = new List<SelectListItem>();
             EuVatShopCountries = new List<SelectListItem>();
             DefaultTaxAddress = new AddressModel();
         }
@@ -52,23 +52,23 @@ namespace Nop.Admin.Models.Settings
         public bool ForceTaxExclusionFromOrderSubtotal { get; set; }
         public bool ForceTaxExclusionFromOrderSubtotal_OverrideForStore { get; set; }
 
-
-
-
+        [NopResourceDisplayName("Admin.Configuration.Settings.Tax.DefaultTaxCategory")]
+        public int DefaultTaxCategoryId { get; set; }
+        public bool DefaultTaxCategoryId_OverrideForStore { get; set; }
+        public IList<SelectListItem> TaxCategories { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.TaxBasedOn")]
         public int TaxBasedOn { get; set; }
         public bool TaxBasedOn_OverrideForStore { get; set; }
         public SelectList TaxBasedOnValues { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Tax.DefaultTaxAddress")]
+        [NopResourceDisplayName("Admin.Configuration.Settings.Tax.TaxBasedOnPickupPointAddress")]
+        public bool TaxBasedOnPickupPointAddress { get; set; }
+        public bool TaxBasedOnPickupPointAddress_OverrideForStore { get; set; }
+
         public AddressModel DefaultTaxAddress { get; set; }
         public bool DefaultTaxAddress_OverrideForStore { get; set; }
        
-
-
-
-
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.ShippingIsTaxable")]
         public bool ShippingIsTaxable { get; set; }
         public bool ShippingIsTaxable_OverrideForStore { get; set; }
@@ -80,11 +80,6 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.ShippingTaxClass")]
         public int ShippingTaxClassId { get; set; }
         public bool ShippingTaxClassId_OverrideForStore { get; set; }
-        public IList<SelectListItem> ShippingTaxCategories { get; set; }
-
-
-
-
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.PaymentMethodAdditionalFeeIsTaxable")]
         public bool PaymentMethodAdditionalFeeIsTaxable { get; set; }
@@ -98,9 +93,6 @@ namespace Nop.Admin.Models.Settings
         public int PaymentMethodAdditionalFeeTaxClassId { get; set; }
         public bool PaymentMethodAdditionalFeeTaxClassId_OverrideForStore { get; set; }
         public IList<SelectListItem> PaymentMethodAdditionalFeeTaxCategories { get; set; }
-
-
-
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.EuVatEnabled")]
         public bool EuVatEnabled { get; set; }

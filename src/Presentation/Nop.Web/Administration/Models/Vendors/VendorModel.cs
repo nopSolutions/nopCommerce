@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
+using Nop.Admin.Models.Common;
 using Nop.Admin.Validators.Vendors;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
@@ -19,6 +20,7 @@ namespace Nop.Admin.Models.Vendors
             {
                 PageSize = 5;
             }
+            Address = new AddressModel();
 
             Locales = new List<VendorLocalizedModel>();
             AssociatedCustomers = new List<AssociatedCustomerInfo>();
@@ -43,6 +45,8 @@ namespace Nop.Admin.Models.Vendors
         [NopResourceDisplayName("Admin.Vendors.Fields.AdminComment")]
         [AllowHtml]
         public string AdminComment { get; set; }
+
+        public AddressModel Address { get; set; }
 
         [NopResourceDisplayName("Admin.Vendors.Fields.Active")]
         public bool Active { get; set; }

@@ -14,7 +14,7 @@ namespace Nop.Admin.Validators.Messages
             RuleFor(x => x.Subject).NotEmpty().WithMessage(localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Fields.Subject.Required"));
             RuleFor(x => x.Body).NotEmpty().WithMessage(localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Fields.Body.Required"));
 
-            SetStringPropertiesMaxLength<MessageTemplate>(dbContext);
+            SetDatabaseValidationRules<MessageTemplate>(dbContext);
         }
     }
 }
