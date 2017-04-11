@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+#if NET451
 using System.Web.Mvc;
+#endif
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
@@ -13,6 +15,7 @@ namespace Nop.Services
     /// </summary>
     public static class Extensions
     {
+#if NET451
         public static SelectList ToSelectList<TEnum>(this TEnum enumObj,
            bool markCurrentAsSelected = true, int[] valuesToExclude = null, bool useLocalization = true) where TEnum : struct
         {
@@ -34,5 +37,6 @@ namespace Nop.Services
         {
             return new SelectList(objList.Select(p => new { ID = p.Id, Name = selector(p) }), "ID", "Name");
         }
+#endif
     }
 }

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+#if NET451
 using System.Web.Routing;
+#endif
 using Nop.Core.Domain.Orders;
 using Nop.Core.Plugins;
 
@@ -82,6 +84,7 @@ namespace Nop.Services.Payments
         /// <returns>Result</returns>
         bool CanRePostProcessPayment(Order order);
 
+#if NET451
         /// <summary>
         /// Gets a route for provider configuration
         /// </summary>
@@ -98,11 +101,12 @@ namespace Nop.Services.Payments
         /// <param name="routeValues">Route values</param>
         void GetPaymentInfoRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues);
 
+#endif
         Type GetControllerType();
 
-        #endregion
+#endregion
 
-        #region Properties
+#region Properties
 
         /// <summary>
         /// Gets a value indicating whether capture is supported
@@ -144,6 +148,6 @@ namespace Nop.Services.Payments
         /// </summary>
         string PaymentMethodDescription { get; }
 
-        #endregion
+#endregion
     }
 }

@@ -11,6 +11,7 @@ namespace Nop.Services.Authentication.External
     /// </summary>
     public static partial class ExternalAuthorizerHelper
     {
+#if NET451
         private static HttpSessionStateBase GetSession()
         {
             var session = EngineContext.Current.Resolve<HttpSessionStateBase>();
@@ -58,5 +59,6 @@ namespace Nop.Services.Authentication.External
                 session.Remove("nop.externalauth.errors");
             return errors;
         }
+#endif
     }
 }

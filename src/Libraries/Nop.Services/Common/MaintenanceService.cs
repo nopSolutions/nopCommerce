@@ -23,7 +23,10 @@ namespace Nop.Services.Common
         private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
         private readonly CommonSettings _commonSettings;
+#if NET451
         private readonly HttpContextBase _httpContext;
+#endif
+
         #endregion
 
         #region Ctor
@@ -36,12 +39,17 @@ namespace Nop.Services.Common
         /// <param name="commonSettings">Common settings</param>
         /// <param name="httpContext">HTTP context</param>
         public MaintenanceService(IDataProvider dataProvider, IDbContext dbContext,
-            CommonSettings commonSettings, HttpContextBase httpContext)
+            CommonSettings commonSettings)
+#if NET451
+            ,HttpContextBase httpContext)
+#endif
         {
             this._dataProvider = dataProvider;
             this._dbContext = dbContext;
             this._commonSettings = commonSettings;
-            this._httpContext = httpContext;
+#if NET451
+        this._httpContext = httpContext;
+#endif
         }
 
         #endregion
@@ -50,7 +58,11 @@ namespace Nop.Services.Common
 
         protected virtual string GetBackupDirectoryPath()
         {
+#if NET451
             return string.Format("{0}Administration\\db_backups\\", _httpContext.Request.PhysicalApplicationPath);
+#else
+            return string.Format("{0}Administration\\db_backups\\", string.Empty);
+#endif
         }
 
         protected virtual void CheckBackupSupported()
@@ -60,9 +72,9 @@ namespace Nop.Services.Common
             throw new DataException("This database does not support backup");
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         /// <summary>
         /// Get the current ident value
@@ -197,6 +209,6 @@ namespace Nop.Services.Common
             return Path.Combine(GetBackupDirectoryPath(), backupFileName);
         }
 
-        #endregion
+#endregion
     }
 }

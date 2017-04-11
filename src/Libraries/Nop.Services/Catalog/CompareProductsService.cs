@@ -10,6 +10,7 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial class CompareProductsService : ICompareProductsService
     {
+#if NET451
         #region Constants
 
         /// <summary>
@@ -159,5 +160,27 @@ namespace Nop.Services.Catalog
         }
 
         #endregion
+
+#else
+        public void AddProductToCompareList(int productId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ClearCompareProducts()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IList<Product> GetComparedProducts()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveProductFromCompareList(int productId)
+        {
+            throw new NotImplementedException();
+        }
+#endif
     }
 }

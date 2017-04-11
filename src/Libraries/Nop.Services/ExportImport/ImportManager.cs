@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+#if NET451
 using System.Web.WebPages;
+#endif
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -148,7 +150,11 @@ namespace Nop.Services.ExportImport
 
         protected virtual string GetMimeTypeFromFilePath(string filePath)
         {
+#if NET451
             var mimeType = MimeMapping.GetMimeMapping(filePath);
+#else
+            var mimeType = MimeTypes.ImageJpeg;
+#endif
 
             //little hack here because MimeMapping does not contain all mappings (e.g. PNG)
             if (mimeType == MimeTypes.ApplicationOctetStream)
@@ -339,17 +345,21 @@ namespace Nop.Services.ExportImport
                         new PropertyByName<ExportProductAttribute>("AttributeName"),
                         new PropertyByName<ExportProductAttribute>("AttributeTextPrompt"),
                         new PropertyByName<ExportProductAttribute>("AttributeIsRequired"),
+#if NET451
                         new PropertyByName<ExportProductAttribute>("AttributeControlType")
                         {
                             DropDownElements = AttributeControlType.TextBox.ToSelectList(useLocalization: false)
                         },
+#endif
                         new PropertyByName<ExportProductAttribute>("AttributeDisplayOrder"), 
                         new PropertyByName<ExportProductAttribute>("ProductAttributeValueId"),
                         new PropertyByName<ExportProductAttribute>("ValueName"),
+#if NET451
                         new PropertyByName<ExportProductAttribute>("AttributeValueType")
                         {
                             DropDownElements = AttributeValueType.Simple.ToSelectList(useLocalization: false)
                         },
+#endif
                         new PropertyByName<ExportProductAttribute>("AssociatedProductId"),
                         new PropertyByName<ExportProductAttribute>("ColorSquaresRgb"),
                         new PropertyByName<ExportProductAttribute>("ImageSquaresPictureId"),
@@ -379,6 +389,7 @@ namespace Nop.Services.ExportImport
                 tempProperty = manager.GetProperty("Manufacturers");
                 var manufacturerCellNum = tempProperty.Return(p => p.PropertyOrderPosition, -1);
 
+#if NET451
                 manager.SetSelectList("ProductType", ProductType.SimpleProduct.ToSelectList(useLocalization: false));
                 manager.SetSelectList("GiftCardType", GiftCardType.Virtual.ToSelectList(useLocalization: false));
                 manager.SetSelectList("DownloadActivationType", DownloadActivationType.Manually.ToSelectList(useLocalization: false));
@@ -396,6 +407,7 @@ namespace Nop.Services.ExportImport
                 manager.SetSelectList("BasepriceUnit", _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p =>(p as MeasureWeight).Return(mw => mw.Name, String.Empty)));
                 manager.SetSelectList("BasepriceBaseUnit", _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p => (p as MeasureWeight).Return(mw => mw.Name, String.Empty)));
 
+#endif
                 var allAttributeIds = new List<int>();
                 var attributeIdCellNum = managerProductAttribute.GetProperty("AttributeId").PropertyOrderPosition + ExportProductAttribute.ProducAttributeCellOffset;
 
@@ -447,7 +459,7 @@ namespace Nop.Services.ExportImport
                     { 
                         var categoryIds = worksheet.Cells[endRow, categoryCellNum].Value.Return(p => p.ToString(), string.Empty);
 
-                        if (!categoryIds.IsEmpty())
+                        if (!string.IsNullOrEmpty(categoryIds))
                             allCategoriesNames.AddRange(categoryIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()));
                     }
 
@@ -455,14 +467,14 @@ namespace Nop.Services.ExportImport
                     {
                         var sku = worksheet.Cells[endRow, skuCellNum].Value.Return(p => p.ToString(), string.Empty);
 
-                        if (!sku.IsEmpty())
+                        if (!string.IsNullOrEmpty(sku))
                             allSku.Add(sku);
                     }
 
                     if (manufacturerCellNum > 0)
                     { 
                         var manufacturerIds = worksheet.Cells[endRow, manufacturerCellNum].Value.Return(p => p.ToString(), string.Empty);
-                        if (!manufacturerIds.IsEmpty())
+                        if (!string.IsNullOrEmpty(manufacturerIds))
                             allManufacturersNames.AddRange(manufacturerIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()));
                     }
 
@@ -1480,9 +1492,9 @@ namespace Nop.Services.ExportImport
             }
         }
 
-        #endregion
+#endregion
 
-        #region Nested classes
+#region Nested classes
 
         protected class ProductPictureMetadata
         {
@@ -1493,6 +1505,6 @@ namespace Nop.Services.ExportImport
             public bool IsNew { get; set; }
         }
 
-        #endregion
+#endregion
     }
 }

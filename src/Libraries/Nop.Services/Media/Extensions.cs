@@ -13,6 +13,7 @@ namespace Nop.Services.Media
     /// </summary>
     public static class Extensions
     {
+#if NET451
         /// <summary>
         /// Gets the download binary array
         /// </summary>
@@ -41,6 +42,7 @@ namespace Nop.Services.Media
             return img;
         }
 
+#endif
         /// <summary>
         /// Get product picture (for shopping cart and order details pages)
         /// </summary>

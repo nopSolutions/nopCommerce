@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+#if NET451
 using System.Web.Mvc;
+#endif
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 
@@ -186,13 +188,19 @@ namespace Nop.Services.ExportImport.Help
         }
 
 
+#if NET451
         public void SetSelectList(string propertyName, SelectList list)
+#else
+        public void SetSelectList(string propertyName, IEnumerable<object> list)
+#endif
         {
+#if NET451
             var tempProperty = GetProperty(propertyName);
             if (tempProperty != null)
                 tempProperty.DropDownElements = list;
+#endif
         }
-        
+
         public bool IsCaption
         {
             get { return _properties.Values.All(p => p.IsCaption); }

@@ -125,9 +125,11 @@ namespace Nop.Services.Tasks
                                 });
 
                                 //execute task with lock
+#if NET451
                                 var redisWrapper = EngineContext.Current.ContainerManager.Resolve<IRedisConnectionWrapper>(scope: scope);
                                 if (!redisWrapper.PerformActionWithLock(scheduleTask.Type, TimeSpan.FromSeconds(expirationInSeconds), executeTaskAction))
                                     return;
+#endif
                             }
                             else
                             {

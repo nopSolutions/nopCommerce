@@ -218,7 +218,7 @@ namespace Nop.Services.Tax
                     calculateTaxRequest.Address = _addressService.GetAddressById(_taxSettings.DefaultTaxAddressId);
                     break;
             }
-            
+
             return calculateTaxRequest;
         }
 
@@ -255,7 +255,7 @@ namespace Nop.Services.Tax
         /// <param name="price">Price (taxable value)</param>
         /// <param name="taxRate">Calculated tax rate</param>
         /// <param name="isTaxable">A value indicating whether a request is taxable</param>
-        protected virtual void GetTaxRate(Product product, int taxCategoryId, 
+        protected virtual void GetTaxRate(Product product, int taxCategoryId,
             Customer customer, decimal price, out decimal taxRate, out bool isTaxable)
         {
             taxRate = decimal.Zero;
@@ -275,7 +275,7 @@ namespace Nop.Services.Tax
                 isTaxable = false;
             }
             //make EU VAT exempt validation (the European Union Value Added Tax)
-            if (isTaxable && 
+            if (isTaxable &&
                 _taxSettings.EuVatEnabled &&
                 IsVatExempt(calculateTaxRequest.Address, calculateTaxRequest.Customer))
             {
@@ -290,17 +290,17 @@ namespace Nop.Services.Tax
                 //ensure that tax is equal or greater than zero
                 if (calculateTaxResult.TaxRate < decimal.Zero)
                     calculateTaxResult.TaxRate = decimal.Zero;
-                
+
                 taxRate = calculateTaxResult.TaxRate;
             }
-            else 
+            else
                 if (_taxSettings.LogErrors)
+            {
+                foreach (var error in calculateTaxResult.Errors)
                 {
-                    foreach (var error in calculateTaxResult.Errors)
-                    {
-                        _logger.Error(string.Format("{0} - {1}", activeTaxProvider.PluginDescriptor.FriendlyName, error), null, customer);
-                    }
-                }   
+                    _logger.Error(string.Format("{0} - {1}", activeTaxProvider.PluginDescriptor.FriendlyName, error), null, customer);
+                }
+            }
         }
 
         #endregion
@@ -357,13 +357,13 @@ namespace Nop.Services.Tax
         /// <param name="price">Price</param>
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        public virtual decimal GetProductPrice(Product product, decimal price, 
+        public virtual decimal GetProductPrice(Product product, decimal price,
             out decimal taxRate)
         {
             var customer = _workContext.CurrentCustomer;
             return GetProductPrice(product, price, customer, out taxRate);
         }
-        
+
         /// <summary>
         /// Gets price
         /// </summary>
@@ -393,10 +393,10 @@ namespace Nop.Services.Tax
         {
             bool priceIncludesTax = _taxSettings.PricesIncludeTax;
             int taxCategoryId = 0;
-            return GetProductPrice(product, taxCategoryId, price, includingTax, 
+            return GetProductPrice(product, taxCategoryId, price, includingTax,
                 customer, priceIncludesTax, out taxRate);
         }
-        
+
         /// <summary>
         /// Gets price
         /// </summary>
@@ -462,7 +462,7 @@ namespace Nop.Services.Tax
                 //we return 0% tax rate in case a request is not taxable
                 taxRate = decimal.Zero;
             }
-            
+
             //allowed to support negative price adjustments
             //if (price < decimal.Zero)
             //    price = decimal.Zero;
@@ -673,7 +673,7 @@ namespace Nop.Services.Tax
             if (String.IsNullOrWhiteSpace(fullVatNumber))
                 return VatNumberStatus.Empty;
             fullVatNumber = fullVatNumber.Trim();
-            
+
             //GB 111 1111 111 or GB 1111111111
             //more advanced regex - http://codeigniter.com/wiki/European_Vat_Checker
             var r = new Regex(@"^(\w{2})(.*)");
@@ -685,7 +685,7 @@ namespace Nop.Services.Tax
 
             return GetVatNumberStatus(twoLetterIsoCode, vatNumber, out name, out address);
         }
-        
+
         /// <summary>
         /// Gets VAT Number status
         /// </summary>
@@ -697,7 +697,7 @@ namespace Nop.Services.Tax
             string name, address;
             return GetVatNumberStatus(twoLetterIsoCode, vatNumber, out name, out address);
         }
-        
+
         /// <summary>
         /// Gets VAT Number status
         /// </summary>
@@ -752,6 +752,7 @@ namespace Nop.Services.Tax
             if (!String.IsNullOrEmpty(twoLetterIsoCode))
                 //The service returns INVALID_INPUT for country codes that are not uppercase.
                 twoLetterIsoCode = twoLetterIsoCode.ToUpper();
+#if NET451
 
             EuropaCheckVatService.checkVatService s = null;
 
@@ -781,6 +782,10 @@ namespace Nop.Services.Tax
                 if (s != null)
                     s.Dispose();
             }
+#else
+            exception = null;
+            return VatNumberStatus.Empty;
+#endif
         }
 
         #endregion

@@ -11,6 +11,7 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial class RecentlyViewedProductsService : IRecentlyViewedProductsService
     {
+#if NET451
         #region Fields
 
         private readonly HttpContextBase _httpContext;
@@ -134,7 +135,18 @@ namespace Nop.Services.Catalog
             recentlyViewedCookie.Expires = DateTime.Now.AddDays(10.0);
             _httpContext.Response.Cookies.Set(recentlyViewedCookie);
         }
-        
+
         #endregion
+#else
+        public void AddProductToRecentlyViewedList(int productId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IList<Product> GetRecentlyViewedProducts(int number)
+        {
+            throw new NotImplementedException();
+        }
+#endif
     }
 }

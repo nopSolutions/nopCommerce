@@ -1,6 +1,8 @@
 using System;
 using System.Web;
+#if NET451
 using System.Web.Security;
+#endif
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 
@@ -11,6 +13,7 @@ namespace Nop.Services.Authentication
     /// </summary>
     public partial class FormsAuthenticationService : IAuthenticationService
     {
+#if NET451
         #region Fields
 
         private readonly HttpContextBase _httpContext;
@@ -139,5 +142,21 @@ namespace Nop.Services.Authentication
 
         #endregion
 
+#else
+        public Customer GetAuthenticatedCustomer()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SignIn(Customer customer, bool createPersistentCookie)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SignOut()
+        {
+            throw new NotImplementedException();
+        }
+#endif
     }
 }

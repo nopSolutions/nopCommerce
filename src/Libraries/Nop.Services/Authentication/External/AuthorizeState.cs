@@ -2,7 +2,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
+#if NET451
 using System.Web.Mvc;
+#endif
 
 namespace Nop.Services.Authentication.External
 {
@@ -16,9 +18,11 @@ namespace Nop.Services.Authentication.External
             Errors = new List<string>();
             AuthenticationStatus = openAuthenticationStatus;
 
+#if NET451
             //in way SEO friendly language URLs will be persisted
             if (AuthenticationStatus == OpenAuthenticationStatus.Authenticated)
                 Result = new RedirectResult(!string.IsNullOrEmpty(returnUrl) ? returnUrl : "~/");
+#endif
         }
 
         public AuthorizeState(string returnUrl, AuthorizationResult authorizationResult)
@@ -51,9 +55,11 @@ namespace Nop.Services.Authentication.External
         /// </summary>
         public IList<string> Errors { get; set; }
 
+#if NET451
         /// <summary>
         /// Result
         /// </summary>
         public ActionResult Result { get; set; }
+#endif
     }
 }

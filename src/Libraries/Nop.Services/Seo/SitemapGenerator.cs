@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+#if NET451
 using System.Web.Mvc;
+#endif
 using System.Xml;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
@@ -22,6 +24,7 @@ namespace Nop.Services.Seo
     /// </summary>
     public partial class SitemapGenerator : ISitemapGenerator
     {
+#if NET451
         #region Constants
 
         private const string DateFormat = @"yyyy-MM-dd";
@@ -390,5 +393,6 @@ namespace Nop.Services.Seo
         }
 
         #endregion
+#endif
     }
 }

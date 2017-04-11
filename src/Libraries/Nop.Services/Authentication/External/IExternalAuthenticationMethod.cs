@@ -1,6 +1,8 @@
 //Contributor:  Nicholas Mayne
 
+#if NET451
 using System.Web.Routing;
+#endif
 using Nop.Core.Plugins;
 
 namespace Nop.Services.Authentication.External
@@ -10,6 +12,7 @@ namespace Nop.Services.Authentication.External
     /// </summary>
     public partial interface IExternalAuthenticationMethod : IPlugin
     {
+#if NET451
         /// <summary>
         /// Gets a route for plugin configuration
         /// </summary>
@@ -26,5 +29,6 @@ namespace Nop.Services.Authentication.External
         /// <param name="controllerName">Controller name</param>
         /// <param name="routeValues">Route values</param>
         void GetPublicInfoRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues);
+#endif
     }
 }

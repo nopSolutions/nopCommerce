@@ -1,4 +1,6 @@
+#if NET451
 using System.Web.Routing;
+#endif
 using Nop.Core.Plugins;
 
 namespace Nop.Services.Tax
@@ -15,6 +17,7 @@ namespace Nop.Services.Tax
         /// <returns>Tax</returns>
         CalculateTaxResult GetTaxRate(CalculateTaxRequest calculateTaxRequest);
 
+#if NET451
         /// <summary>
         /// Gets a route for provider configuration
         /// </summary>
@@ -22,5 +25,6 @@ namespace Nop.Services.Tax
         /// <param name="controllerName">Controller name</param>
         /// <param name="routeValues">Route values</param>
         void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues);
+#endif
     }
 }

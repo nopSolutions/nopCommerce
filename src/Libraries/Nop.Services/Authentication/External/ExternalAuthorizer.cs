@@ -123,7 +123,9 @@ namespace Nop.Services.Authentication.External
             }
             if (AccountDoesNotExistAndUserIsNotLoggedOn(userFound, userLoggedIn))
             {
+#if NET451
                 ExternalAuthorizerHelper.StoreParametersForRoundTrip(parameters);
+#endif
 
                 if (AutoRegistrationIsEnabled())
                 {
@@ -160,7 +162,9 @@ namespace Nop.Services.Authentication.External
 
                         userFound = currentCustomer;
                         _openAuthenticationService.AssociateExternalAccountWithUser(currentCustomer, parameters);
+#if NET451
                         ExternalAuthorizerHelper.RemoveParameters();
+#endif
 
                         //code below is copied from CustomerController.Register method
 
@@ -204,7 +208,9 @@ namespace Nop.Services.Authentication.External
                     }
                     else
                     {
+#if NET451
                         ExternalAuthorizerHelper.RemoveParameters();
+#endif
 
                         var result = new AuthorizationResult(OpenAuthenticationStatus.Error);
                         foreach (var error in registrationResult.Errors)
@@ -220,7 +226,9 @@ namespace Nop.Services.Authentication.External
                 }
                 else
                 {
+#if NET451
                     ExternalAuthorizerHelper.RemoveParameters();
+#endif
 
                     var result = new AuthorizationResult(OpenAuthenticationStatus.Error);
                     result.AddError("Registration is disabled");

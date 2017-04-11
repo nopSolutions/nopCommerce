@@ -13,6 +13,7 @@ namespace Nop.Services.Helpers
     /// </summary>
     public partial class UserAgentHelper : IUserAgentHelper
     {
+#if NET451
         private readonly NopConfig _config;
         private readonly HttpContextBase _httpContext;
         private static readonly object _locker = new object();
@@ -84,5 +85,11 @@ namespace Nop.Services.Helpers
 
             return false;
         }
+#else
+        public bool IsSearchEngine()
+        {
+            throw new NotImplementedException();
+        }
+#endif
     }
 }

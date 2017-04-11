@@ -87,6 +87,7 @@ namespace Nop.Services.Messages
                 //wrap the value in quotes
                 if (stringWithQuotes && tokenValue is string)
                     tokenValue = string.Format("\"{0}\"", tokenValue);
+#if NET451
                 else
                 {
                     //do not encode URLs
@@ -94,6 +95,7 @@ namespace Nop.Services.Messages
                         tokenValue = HttpUtility.HtmlEncode(tokenValue);
                 }
 
+#endif
                 template = Replace(template, string.Format(@"%{0}%", token.Key), tokenValue.ToString());
             }
 
@@ -149,9 +151,9 @@ namespace Nop.Services.Messages
             return template;
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         /// <summary>
         /// Replace all of the token key occurences inside the specified template text with corresponded token values
@@ -177,6 +179,6 @@ namespace Nop.Services.Messages
             return template;
         }
 
-        #endregion
+#endregion
     }
 }

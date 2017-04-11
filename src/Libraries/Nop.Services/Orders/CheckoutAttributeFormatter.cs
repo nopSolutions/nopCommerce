@@ -93,8 +93,10 @@ namespace Nop.Services.Orders
                             //multiline textbox
                             var attributeName = attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
                             //encode (if required)
+#if NET451
                             if (htmlEncode)
                                 attributeName = HttpUtility.HtmlEncode(attributeName);
+#endif
                             formattedAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr, false, true, false, false, false, false));
                             //we never encode multiline textbox input
                         }
@@ -112,8 +114,10 @@ namespace Nop.Services.Orders
                                     download.Filename ?? download.DownloadGuid.ToString(),
                                     download.Extension);
                                 //encode (if required)
+#if NET451
                                 if (htmlEncode)
                                     fileName = HttpUtility.HtmlEncode(fileName);
+#endif
                                 if (allowHyperlinks)
                                 {
                                     //hyperlinks are allowed
@@ -127,8 +131,10 @@ namespace Nop.Services.Orders
                                 }
                                 var attributeName = attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
                                 //encode (if required)
+#if NET451
                                 if (htmlEncode)
                                     attributeName = HttpUtility.HtmlEncode(attributeName);
+#endif
                                 formattedAttribute = string.Format("{0}: {1}", attributeName, attributeText);
                             }
                         }
@@ -137,8 +143,10 @@ namespace Nop.Services.Orders
                             //other attributes (textbox, datepicker)
                             formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), valueStr);
                             //encode (if required)
+#if NET451
                             if (htmlEncode)
                                 formattedAttribute = HttpUtility.HtmlEncode(formattedAttribute);
+#endif
                         }
                     }
                     else
@@ -162,8 +170,10 @@ namespace Nop.Services.Orders
                                 }
                             }
                             //encode (if required)
+#if NET451
                             if (htmlEncode)
                                 formattedAttribute = HttpUtility.HtmlEncode(formattedAttribute);
+#endif
                         }
                     }
 
