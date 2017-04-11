@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using Nop.Core;
@@ -27,3 +28,4 @@ namespace Nop.Web.Framework.Mvc
         }
     }
 }
+#endif

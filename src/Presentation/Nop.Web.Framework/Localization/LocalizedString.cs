@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Web;
 
 namespace Nop.Web.Framework.Localization
@@ -79,3 +80,4 @@ namespace Nop.Web.Framework.Localization
 
     }
 }
+#endif

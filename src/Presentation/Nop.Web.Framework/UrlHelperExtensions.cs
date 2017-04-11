@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿#if NET451
+using System.Web.Mvc;
 
 namespace Nop.Web.Framework
 {
@@ -19,3 +20,4 @@ namespace Nop.Web.Framework
         }
     }
 }
+#endif

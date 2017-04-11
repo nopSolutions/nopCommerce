@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Text;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
@@ -31,3 +32,4 @@ namespace Nop.Web.Framework.Security.Honeypot
         }
     }
 }
+#endif

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿#if NET451
+using System.IO;
 using System.Web.Mvc;
 using System.Web.UI;
 using Nop.Core.Infrastructure;
@@ -25,3 +26,4 @@ namespace Nop.Web.Framework.Security.Captcha
         }
     }
 }
+#endif

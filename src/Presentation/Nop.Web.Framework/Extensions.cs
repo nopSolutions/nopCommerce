@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+#if NET451
 using System.Web.Mvc;
+#endif
 using Nop.Core.Infrastructure;
 using Nop.Services.Helpers;
 using Nop.Web.Framework.Kendoui;
@@ -18,6 +20,7 @@ namespace Nop.Web.Framework
             return current.Skip((command.Page - 1) * command.PageSize).Take(command.PageSize);
         }
 
+#if NET451
         /// <summary>
         /// Returns a value indicating whether real selection is not possible
         /// </summary>
@@ -32,6 +35,7 @@ namespace Nop.Web.Framework
             //we ignore items with "0" value? Usually it's something like "Select All", "etc
             return items.Count(x => !ignoreZeroValue || !x.Value.ToString().Equals("0")) < 2;
         }
+#endif
 
         /// <summary>
         /// Relative formatting of DateTime (e.g. 2 hours ago, a month ago)

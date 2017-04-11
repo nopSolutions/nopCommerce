@@ -1,6 +1,8 @@
 ﻿using System.Linq;
+#if NET451
 using System.Web.Mvc;
 using System.Web.UI;
+#endif
 using Nop.Core;
 using Nop.Core.Infrastructure;
 
@@ -24,6 +26,7 @@ namespace Nop.Web.Framework.Security.Captcha
             _version = version;
         }
 
+#if NET451
         public void RenderControl(HtmlTextWriter writer)
         {
             SetTheme();
@@ -62,6 +65,7 @@ namespace Nop.Web.Framework.Security.Captcha
                 writer.Write(scriptLoadApiTag.ToString(TagRenderMode.Normal));
             }
         }
+#endif
 
         private void SetTheme()
         {

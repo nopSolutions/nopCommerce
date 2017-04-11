@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿#if NET451
+using System.Text;
 using System.Web.Mvc;
 using System.Xml;
 
@@ -41,3 +42,4 @@ namespace Nop.Web.Framework.Mvc
         }
     }
 }
+#endif

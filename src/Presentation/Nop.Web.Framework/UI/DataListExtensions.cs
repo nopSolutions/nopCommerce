@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Web;
@@ -57,3 +58,4 @@ namespace Nop.Web.Framework.UI
         }
     }
 }
+#endif

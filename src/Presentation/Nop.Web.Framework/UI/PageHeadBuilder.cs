@@ -4,8 +4,10 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+#if NET451
 using System.Web.Mvc;
 using System.Web.Optimization;
+#endif
 using Nop.Core;
 using Nop.Core.Domain.Seo;
 using Nop.Services.Seo;
@@ -17,6 +19,7 @@ namespace Nop.Web.Framework.UI
     /// </summary>
     public partial class PageHeadBuilder : IPageHeadBuilder
     {
+#if NET451
         #region Fields
 
         private static readonly object s_lock = new object();
@@ -545,5 +548,136 @@ namespace Nop.Web.Framework.UI
             public string Part { get; set; }
         }
         #endregion
+#else
+        public void AddCanonicalUrlParts(string part)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddCssFileParts(ResourceLocation location, string part, bool excludeFromBundle = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddEditPageUrl(string url)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddHeadCustomParts(string part)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddMetaDescriptionParts(string part)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddMetaKeywordParts(string part)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddPageCssClassParts(string part)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddScriptParts(ResourceLocation location, string part, bool excludeFromBundle, bool isAync)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddTitleParts(string part)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AppendCanonicalUrlParts(string part)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AppendCssFileParts(ResourceLocation location, string part, bool excludeFromBundle = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AppendHeadCustomParts(string part)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AppendMetaDescriptionParts(string part)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AppendMetaKeywordParts(string part)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AppendPageCssClassParts(string part)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AppendScriptParts(ResourceLocation location, string part, bool excludeFromBundle, bool isAsync)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AppendTitleParts(string part)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GenerateCanonicalUrls()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GenerateHeadCustom()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GenerateMetaDescription()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GenerateMetaKeywords()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GeneratePageCssClasses()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GenerateTitle(bool addDefaultTitle)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetActiveMenuItemSystemName()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetEditPageUrl()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetActiveMenuItemSystemName(string systemName)
+        {
+            throw new NotImplementedException();
+        }
+#endif
     }
 }

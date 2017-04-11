@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Web.Mvc;
 using Nop.Core.Data;
 using Nop.Core.Domain.Security;
@@ -46,3 +47,4 @@ namespace Nop.Web.Framework.Security
         }
     }
 }
+#endif

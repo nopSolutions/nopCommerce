@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿#if NET451
+using System.Web.Mvc;
+#endif
 
 namespace Nop.Web.Framework.UI
 {
@@ -21,12 +23,16 @@ namespace Nop.Web.Framework.UI
 
         void AddScriptParts(ResourceLocation location, string part, bool excludeFromBundle, bool isAync);
         void AppendScriptParts(ResourceLocation location, string part, bool excludeFromBundle, bool isAsync);
+#if NET451
         string GenerateScripts(UrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null);
+#endif
 
         void AddCssFileParts(ResourceLocation location, string part, bool excludeFromBundle = false);
         void AppendCssFileParts(ResourceLocation location, string part, bool excludeFromBundle = false);
+#if NET451
         string GenerateCssFiles(UrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null);
-        
+#endif
+
         void AddCanonicalUrlParts(string part);
         void AppendCanonicalUrlParts(string part);
         string GenerateCanonicalUrls();

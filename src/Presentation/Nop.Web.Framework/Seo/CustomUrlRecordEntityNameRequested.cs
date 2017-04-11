@@ -1,4 +1,4 @@
-﻿
+﻿#if NET451
 using System.Web.Routing;
 using Nop.Services.Seo;
 
@@ -19,3 +19,4 @@ namespace Nop.Web.Framework.Seo
         public UrlRecordService.UrlRecordForCaching UrlRecord { get; private set; }
     }
 }
+#endif

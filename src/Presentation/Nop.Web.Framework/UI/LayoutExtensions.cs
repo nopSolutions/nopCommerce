@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿#if NET451
+using System.Web.Mvc;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.UI
@@ -364,3 +365,4 @@ namespace Nop.Web.Framework.UI
         }
     }
 }
+#endif

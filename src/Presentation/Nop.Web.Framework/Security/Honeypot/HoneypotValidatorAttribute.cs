@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Security;
@@ -35,3 +36,4 @@ namespace Nop.Web.Framework.Security.Honeypot
         }
     }
 }
+#endif

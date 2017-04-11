@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+#if NET451
 using System.Web.Mvc;
+#endif
 
 namespace Nop.Web.Framework.Events
 {
@@ -8,6 +10,7 @@ namespace Nop.Web.Framework.Events
     /// </summary>
     public class AdminTabStripCreated
     {
+#if NET451
         public AdminTabStripCreated(HtmlHelper helper, string tabStripName)
         {
             this.Helper = helper;
@@ -18,5 +21,6 @@ namespace Nop.Web.Framework.Events
         public HtmlHelper Helper { get; private set; }
         public string TabStripName { get; private set; }
         public IList<MvcHtmlString> BlocksToRender { get; set; }
+#endif
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.ServiceModel.Syndication;
 using System.Web.Mvc;
 using System.Xml;
@@ -40,3 +41,4 @@ namespace Nop.Web.Framework
         }
     }
 }
+#endif

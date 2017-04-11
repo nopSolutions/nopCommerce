@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if NET451
+using System.Collections.Generic;
 using System.Web.Mvc;
 
 namespace Nop.Web.Framework.Themes
@@ -99,3 +100,4 @@ namespace Nop.Web.Framework.Themes
         }
     }
 }
+#endif

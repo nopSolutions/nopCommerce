@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,3 +56,4 @@ namespace Nop.Web.Framework.Mvc
         }
     }
 }
+#endif

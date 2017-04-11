@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿#if NET451
+using System.Web;
 using System.Web.Routing;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
@@ -153,3 +154,4 @@ namespace Nop.Web.Framework.Localization
         #endregion
     }
 }
+#endif

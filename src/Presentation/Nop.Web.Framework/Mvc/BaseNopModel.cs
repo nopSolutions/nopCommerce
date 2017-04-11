@@ -1,12 +1,16 @@
 ﻿using System.Collections.Generic;
+#if NET451
 using System.Web.Mvc;
+#endif
 
 namespace Nop.Web.Framework.Mvc
 {
     /// <summary>
     /// Base nopCommerce model
     /// </summary>
+#if NET451
     [ModelBinder(typeof(NopModelBinder))]
+#endif
     public partial class BaseNopModel
     {
         public BaseNopModel()
@@ -15,9 +19,11 @@ namespace Nop.Web.Framework.Mvc
             PostInitialize();
         }
 
+#if NET451
         public virtual void BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
         {
         }
+#endif
 
         /// <summary>
         /// Developers can override this method in custom partial classes

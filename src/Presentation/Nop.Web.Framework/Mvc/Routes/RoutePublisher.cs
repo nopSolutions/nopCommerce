@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+#if NET451
 using System.Web.Routing;
+#endif
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 
@@ -45,6 +47,7 @@ namespace Nop.Web.Framework.Mvc.Routes
             return null;
         }
 
+#if NET451
         /// <summary>
         /// Register routes
         /// </summary>
@@ -66,5 +69,6 @@ namespace Nop.Web.Framework.Mvc.Routes
             routeProviders = routeProviders.OrderByDescending(rp => rp.Priority).ToList();
             routeProviders.ForEach(rp => rp.RegisterRoutes(routes));
         }
+#endif
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿#if NET451
+using System.Collections.Specialized;
 using System.Web;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -126,3 +127,4 @@ namespace Nop.Web.Framework
         }
     }
 }
+#endif

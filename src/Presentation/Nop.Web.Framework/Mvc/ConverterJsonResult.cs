@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using Nop.Core;
@@ -10,22 +11,22 @@ namespace Nop.Web.Framework.Mvc
     /// </summary>
     public class ConverterJsonResult : JsonResult
     {
-        #region Fields
+#region Fields
 
         private readonly JsonConverter[] _converters;
 
-        #endregion
+#endregion
 
-        #region Ctor
+#region Ctor
 
         public ConverterJsonResult(params JsonConverter[] converters)
         {
             _converters = converters;
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         /// <summary>
         /// Enables processing of the result of an action method
@@ -48,6 +49,7 @@ namespace Nop.Web.Framework.Mvc
                 context.HttpContext.Response.Write(JsonConvert.SerializeObject(Data, _converters));
         }
 
-        #endregion
+#endregion
     }
 }
+#endif

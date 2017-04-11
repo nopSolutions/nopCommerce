@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if NET451
+using System.Collections.Generic;
 using System.Web.Mvc;
 using Nop.Services.Payments;
 
@@ -13,3 +14,4 @@ namespace Nop.Web.Framework.Controllers
         public abstract ProcessPaymentRequest GetPaymentInfo(FormCollection form);
     }
 }
+#endif

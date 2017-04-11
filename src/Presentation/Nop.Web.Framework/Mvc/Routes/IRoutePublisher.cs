@@ -1,4 +1,6 @@
-﻿using System.Web.Routing;
+﻿#if NET451
+using System.Web.Routing;
+#endif
 
 namespace Nop.Web.Framework.Mvc.Routes
 {
@@ -7,10 +9,12 @@ namespace Nop.Web.Framework.Mvc.Routes
     /// </summary>
     public interface IRoutePublisher
     {
+#if NET451
         /// <summary>
         /// Register routes
         /// </summary>
         /// <param name="routes">Routes</param>
         void RegisterRoutes(RouteCollection routes);
+#endif
     }
 }

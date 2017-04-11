@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Web;
 using System.Web.Routing;
 using Nop.Core;
@@ -225,3 +226,4 @@ namespace Nop.Web.Framework.Seo
         #endregion
     }
 }
+#endif

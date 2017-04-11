@@ -1,3 +1,4 @@
+#if NET451
 //Contributor : MVCContrib
 
 using System;
@@ -293,3 +294,4 @@ namespace Nop.Web.Framework.UI.Paging
 		}
 	}
 }
+#endif

@@ -1,4 +1,5 @@
-﻿namespace Nop.Web.Framework.Controllers
+﻿#if NET451
+namespace Nop.Web.Framework.Controllers
 {
     /// <summary>
     /// Base controller for plugins
@@ -7,3 +8,4 @@
     {
     }
 }
+#endif

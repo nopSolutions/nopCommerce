@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿#if NET451
+using System.IO;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Data;
@@ -108,3 +109,4 @@ namespace Nop.Web.Framework.ViewEngines.Razor
     {
     }
 }
+#endif

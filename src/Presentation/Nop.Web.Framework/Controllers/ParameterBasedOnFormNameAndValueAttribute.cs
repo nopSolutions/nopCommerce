@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Web.Mvc;
 
 namespace Nop.Web.Framework.Controllers
@@ -29,3 +30,4 @@ namespace Nop.Web.Framework.Controllers
         }
     }
 }
+#endif

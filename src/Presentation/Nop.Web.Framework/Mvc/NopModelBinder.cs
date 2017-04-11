@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿#if NET451
+using System.ComponentModel;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -34,3 +35,4 @@ namespace Nop.Web.Framework.Mvc
         }
     }
 }
+#endif

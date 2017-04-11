@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -56,3 +57,4 @@ namespace Nop.Web.Framework.Seo
         }
     }
 }
+#endif

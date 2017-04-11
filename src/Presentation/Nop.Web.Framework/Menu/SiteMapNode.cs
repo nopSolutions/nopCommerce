@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+#if NET451
 using System.Web.Routing;
+#endif
 
 //code from Telerik MVC Extensions
 namespace Nop.Web.Framework.Menu
@@ -11,7 +13,9 @@ namespace Nop.Web.Framework.Menu
         /// </summary>
         public SiteMapNode()
         {
+#if NET451
             RouteValues = new RouteValueDictionary();
+#endif
             ChildNodes = new List<SiteMapNode>();
         }
 
@@ -35,10 +39,12 @@ namespace Nop.Web.Framework.Menu
         /// </summary>
         public string ActionName { get; set; }
 
+#if NET451
         /// <summary>
         /// Gets or sets the route values.
         /// </summary>
         public RouteValueDictionary RouteValues { get; set; }
+#endif
 
         /// <summary>
         /// Gets or sets the URL.

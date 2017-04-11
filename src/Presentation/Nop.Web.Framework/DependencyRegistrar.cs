@@ -6,7 +6,9 @@ using System.Web;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
+#if NET451
 using Autofac.Integration.Mvc;
+#endif
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
@@ -69,6 +71,7 @@ namespace Nop.Web.Framework
         /// <param name="config">Config</param>
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
         {
+#if NET451
             //HTTP context and other related stuff
             builder.Register(c => 
                 //register FakeHttpContext when HttpContext is not available
@@ -89,15 +92,18 @@ namespace Nop.Web.Framework
             builder.Register(c => c.Resolve<HttpContextBase>().Session)
                 .As<HttpSessionStateBase>()
                 .InstancePerLifetimeScope();
+#endif
 
             //web helper
             builder.RegisterType<WebHelper>().As<IWebHelper>().InstancePerLifetimeScope();
             //user agent helper
             builder.RegisterType<UserAgentHelper>().As<IUserAgentHelper>().InstancePerLifetimeScope();
 
-            
+
+#if NET451
             //controllers
             builder.RegisterControllers(typeFinder.GetAssemblies().ToArray());
+#endif
 
             //data layer
             var dataSettingsManager = new DataSettingsManager();
@@ -131,8 +137,10 @@ namespace Nop.Web.Framework
             //cache managers
             if (config.RedisCachingEnabled)
             {
+#if NET451
                 builder.RegisterType<RedisConnectionWrapper>().As<IRedisConnectionWrapper>().SingleInstance();
                 builder.RegisterType<RedisCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_static").InstancePerLifetimeScope();
+#endif
             }
             else
             {

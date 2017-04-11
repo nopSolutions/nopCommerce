@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if NET451
+using System.Collections.Generic;
 using System.Web.Optimization;
 
 namespace Nop.Web.Framework.UI
@@ -11,3 +12,4 @@ namespace Nop.Web.Framework.UI
         }
     }
 }
+#endif

@@ -25,6 +25,7 @@ namespace Nop.Web.Framework
     /// </summary>
     public partial class WebWorkContext : IWorkContext
     {
+#if NET451
         #region Const
 
         private const string CustomerCookieName = "Nop.customer";
@@ -489,5 +490,17 @@ namespace Nop.Web.Framework
         public virtual bool IsAdmin { get; set; }
 
         #endregion
+#else
+        public Customer CurrentCustomer { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public Customer OriginalCustomerIfImpersonated => throw new NotImplementedException();
+
+        public Vendor CurrentVendor => throw new NotImplementedException();
+
+        public Language WorkingLanguage { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Currency WorkingCurrency { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public TaxDisplayType TaxDisplayType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public bool IsAdmin { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+#endif
     }
 }

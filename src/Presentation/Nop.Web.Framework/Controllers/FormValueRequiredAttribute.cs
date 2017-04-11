@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -96,3 +97,4 @@ namespace Nop.Web.Framework.Controllers
         StartsWith
     }
 }
+#endif
