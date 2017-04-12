@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+#if NET451
 using System.Web.Mvc;
+#endif
 
 namespace Nop.Web.Models.Boards
 {
@@ -7,15 +9,20 @@ namespace Nop.Web.Models.Boards
     {
         public SearchModel()
         {
+#if NET451
             LimitList = new List<SelectListItem>();
             ForumList = new List<SelectListItem>();
             WithinList = new List<SelectListItem>();
+#endif
             this.ForumTopics = new List<ForumTopicRowModel>();
         }
 
         public bool ShowAdvancedSearch { get; set; }
 
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         public string SearchTerms { get; set; }
 
         public int? ForumId { get; set; }
@@ -29,11 +36,13 @@ namespace Nop.Web.Models.Boards
         public int TopicTotalRecords { get; set; }
         public int TopicPageIndex { get; set; }
 
+#if NET451
         public List<SelectListItem> LimitList { get; set; }
 
         public List<SelectListItem> ForumList { get; set; }
 
         public List<SelectListItem> WithinList { get; set; }
+#endif
 
         public int ForumIdSelected { get; set; }
 

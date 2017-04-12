@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+#if NET451
 using System.Web.Mvc;
+#endif
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
@@ -12,9 +14,11 @@ namespace Nop.Web.Models.Catalog
             this.PagingFilteringContext = new CatalogPagingFilteringModel();
             this.Products = new List<ProductOverviewModel>();
 
+#if NET451
             this.AvailableCategories = new List<SelectListItem>();
             this.AvailableManufacturers = new List<SelectListItem>();
             this.AvailableVendors = new List<SelectListItem>();
+#endif
         }
 
         public string Warning { get; set; }
@@ -25,7 +29,10 @@ namespace Nop.Web.Models.Catalog
         /// Query string
         /// </summary>
         [NopResourceDisplayName("Search.SearchTerm")]
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         public string q { get; set; }
         /// <summary>
         /// Category ID
@@ -47,12 +54,18 @@ namespace Nop.Web.Models.Catalog
         /// <summary>
         /// Price - From 
         /// </summary>
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         public string pf { get; set; }
         /// <summary>
         /// Price - To
         /// </summary>
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         public string pt { get; set; }
         /// <summary>
         /// A value indicating whether to search in descriptions
@@ -68,21 +81,23 @@ namespace Nop.Web.Models.Catalog
         /// A value indicating whether "allow search by vendor" is enabled
         /// </summary>
         public bool asv { get; set; }
+#if NET451
         public IList<SelectListItem> AvailableCategories { get; set; }
         public IList<SelectListItem> AvailableManufacturers { get; set; }
         public IList<SelectListItem> AvailableVendors { get; set; }
+#endif
 
 
         public CatalogPagingFilteringModel PagingFilteringContext { get; set; }
         public IList<ProductOverviewModel> Products { get; set; }
 
-        #region Nested classes
+#region Nested classes
 
         public class CategoryModel : BaseNopEntityModel
         {
             public string Breadcrumb { get; set; }
         }
 
-        #endregion
+#endregion
     }
 }

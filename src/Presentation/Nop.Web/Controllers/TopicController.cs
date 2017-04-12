@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿#if NET451
+using System.Web.Mvc;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Stores;
@@ -117,3 +118,4 @@ namespace Nop.Web.Controllers
         #endregion
     }
 }
+#endif

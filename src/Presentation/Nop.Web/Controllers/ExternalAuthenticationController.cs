@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿#if NET451
+using System.Web.Mvc;
 using Nop.Services.Authentication.External;
 using Nop.Web.Factories;
 
@@ -43,3 +44,4 @@ namespace Nop.Web.Controllers
         #endregion
     }
 }
+#endif

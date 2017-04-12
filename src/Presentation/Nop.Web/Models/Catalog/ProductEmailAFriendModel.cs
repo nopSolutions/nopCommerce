@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿#if NET451using System.Web.Mvc;
+#endif
 using FluentValidation.Attributes;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
@@ -15,15 +16,24 @@ namespace Nop.Web.Models.Catalog
 
         public string ProductSeName { get; set; }
 
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         [NopResourceDisplayName("Products.EmailAFriend.FriendEmail")]
         public string FriendEmail { get; set; }
 
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         [NopResourceDisplayName("Products.EmailAFriend.YourEmailAddress")]
         public string YourEmailAddress { get; set; }
 
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         [NopResourceDisplayName("Products.EmailAFriend.PersonalMessage")]
         public string PersonalMessage { get; set; }
 

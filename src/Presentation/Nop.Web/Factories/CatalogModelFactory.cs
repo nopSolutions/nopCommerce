@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+#if NET451
 using System.Web.Mvc;
+#endif
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
@@ -55,7 +57,9 @@ namespace Nop.Web.Factories
         private readonly ITopicService _topicService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ISearchTermService _searchTermService;
+#if NET451
         private readonly HttpContextBase _httpContext;
+#endif
         private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly VendorSettings _vendorSettings;
@@ -89,7 +93,9 @@ namespace Nop.Web.Factories
             ITopicService topicService,
             IEventPublisher eventPublisher,
             ISearchTermService searchTermService,
+#if NET451
             HttpContextBase httpContext,
+#endif
             MediaSettings mediaSettings,
             CatalogSettings catalogSettings,
             VendorSettings vendorSettings,
@@ -119,7 +125,9 @@ namespace Nop.Web.Factories
             this._topicService = topicService;
             this._eventPublisher = eventPublisher;
             this._searchTermService = searchTermService;
+#if NET451
             this._httpContext = httpContext;
+#endif
             this._mediaSettings = mediaSettings;
             this._catalogSettings = catalogSettings;
             this._vendorSettings = vendorSettings;
@@ -196,12 +204,14 @@ namespace Nop.Web.Factories
                     var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + (option.Key).ToString(), null);
 
                     var sortValue = ((ProductSortingEnum)option.Key).GetLocalizedEnum(_localizationService, _workContext);
+#if NET451
                     pagingFilteringModel.AvailableSortOptions.Add(new SelectListItem
                     {
                         Text = sortValue,
                         Value = sortUrl,
                         Selected = option.Key == command.OrderBy
                     });
+#endif
                 }
             }
         }
@@ -227,6 +237,7 @@ namespace Nop.Web.Factories
             pagingFilteringModel.ViewMode = viewMode;
             if (pagingFilteringModel.AllowProductViewModeChanging)
             {
+#if NET451
                 var currentPageUrl = _webHelper.GetThisPageUrl(true);
                 //grid
                 pagingFilteringModel.AvailableViewModes.Add(new SelectListItem
@@ -242,6 +253,7 @@ namespace Nop.Web.Factories
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
                     Selected = viewMode == "list"
                 });
+#endif
             }
 
         }
@@ -303,14 +315,17 @@ namespace Nop.Web.Factories
                             continue;
                         }
 
+#if NET451
                         pagingFilteringModel.PageSizeOptions.Add(new SelectListItem
                         {
                             Text = pageSize,
                             Value = String.Format(sortUrl, pageSize),
                             Selected = pageSize.Equals(command.PageSize.ToString(), StringComparison.InvariantCultureIgnoreCase)
                         });
+#endif
                     }
 
+#if NET451
                     if (pagingFilteringModel.PageSizeOptions.Any())
                     {
                         pagingFilteringModel.PageSizeOptions = pagingFilteringModel.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
@@ -321,6 +336,7 @@ namespace Nop.Web.Factories
                             command.PageSize = int.Parse(pagingFilteringModel.PageSizeOptions.FirstOrDefault().Text);
                         }
                     }
+#endif
                 }
             }
             else
@@ -1283,6 +1299,7 @@ namespace Nop.Web.Factories
                 }
                 return categoriesModel;
             });
+#if NET451
             if (categories.Any())
             {
                 //first empty entry
@@ -1340,13 +1357,16 @@ namespace Nop.Web.Factories
                         });
                 }
             }
+#endif
 
             IPagedList<Product> products = new PagedList<Product>(new List<Product>(), 0, 1);
             var isSearchTermSpecified = false;
             try
             {
+#if NET451
                 // only search if query string search keyword is set (used to avoid searching or displaying search term min length error message on /search page load)
                 isSearchTermSpecified = _httpContext.Request.Params["q"] != null;
+#endif
             }
             catch
             {
@@ -1484,6 +1504,6 @@ namespace Nop.Web.Factories
             return model;
         }
 
-        #endregion
+#endregion
     }
 }

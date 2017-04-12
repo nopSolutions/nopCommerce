@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Collections.Generic;
 using System.ServiceModel.Syndication;
 using System.Web.Mvc;
@@ -253,3 +254,4 @@ namespace Nop.Web.Controllers
         #endregion
     }
 }
+#endif

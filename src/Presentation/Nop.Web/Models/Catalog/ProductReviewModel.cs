@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+#if NET451
 using System.Web.Mvc;
+#endif
 using FluentValidation.Attributes;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
@@ -69,11 +71,17 @@ namespace Nop.Web.Models.Catalog
 
     public partial class AddProductReviewModel : BaseNopModel
     {
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         [NopResourceDisplayName("Reviews.Fields.Title")]
         public string Title { get; set; }
 
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         [NopResourceDisplayName("Reviews.Fields.ReviewText")]
         public string ReviewText { get; set; }
 

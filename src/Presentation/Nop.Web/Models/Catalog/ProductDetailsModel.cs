@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+#if NET451
 using System.Web.Mvc;
+#endif
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Web.Framework;
@@ -126,7 +128,9 @@ namespace Nop.Web.Models.Catalog
         {
             public AddToCartModel()
             {
+#if NET451
                 this.AllowedQuantities = new List<SelectListItem>();
+#endif
             }
             public int ProductId { get; set; }
 
@@ -134,7 +138,9 @@ namespace Nop.Web.Models.Catalog
             [NopResourceDisplayName("Products.Qty")]
             public int EnteredQuantity { get; set; }
             public string MinimumQuantityNotification { get; set; }
+#if NET451
             public List<SelectListItem> AllowedQuantities { get; set; }
+#endif
 
             //price entered by customers
             [NopResourceDisplayName("Products.EnterProductPrice")]
@@ -198,19 +204,34 @@ namespace Nop.Web.Models.Catalog
             public bool IsGiftCard { get; set; }
 
             [NopResourceDisplayName("Products.GiftCard.RecipientName")]
-            [AllowHtml]
+            	
+#if NET451
+		[AllowHtml]
+#endif
             public string RecipientName { get; set; }
             [NopResourceDisplayName("Products.GiftCard.RecipientEmail")]
-            [AllowHtml]
+            	
+#if NET451
+		[AllowHtml]
+#endif
             public string RecipientEmail { get; set; }
             [NopResourceDisplayName("Products.GiftCard.SenderName")]
-            [AllowHtml]
+            	
+#if NET451
+		[AllowHtml]
+#endif
             public string SenderName { get; set; }
             [NopResourceDisplayName("Products.GiftCard.SenderEmail")]
-            [AllowHtml]
+            	
+#if NET451
+		[AllowHtml]
+#endif
             public string SenderEmail { get; set; }
             [NopResourceDisplayName("Products.GiftCard.Message")]
-            [AllowHtml]
+            	
+#if NET451
+		[AllowHtml]
+#endif
             public string Message { get; set; }
 
             public GiftCardType GiftCardType { get; set; }
@@ -304,6 +325,6 @@ namespace Nop.Web.Models.Catalog
             public int Quantity { get; set; }
         }
 
-		#endregion
+#endregion
     }
 }

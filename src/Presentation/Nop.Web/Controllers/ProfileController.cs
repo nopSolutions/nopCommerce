@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿#if NET451
+using System.Web.Mvc;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 using Nop.Services.Security;
@@ -82,3 +83,4 @@ namespace Nop.Web.Controllers
         }
     }
 }
+#endif

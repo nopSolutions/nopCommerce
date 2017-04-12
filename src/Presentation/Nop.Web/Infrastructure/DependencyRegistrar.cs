@@ -4,7 +4,9 @@ using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
+#if NET451
 using Nop.Web.Controllers;
+#endif
 using Nop.Web.Factories;
 using Nop.Web.Infrastructure.Installation;
 
@@ -29,11 +31,13 @@ namespace Nop.Web.Infrastructure
 
 
 
+#if NET451
             //controllers (we cache some data between HTTP requests)
             builder.RegisterType<ProductController>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
             builder.RegisterType<ShoppingCartController>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
+#endif
 
 
 

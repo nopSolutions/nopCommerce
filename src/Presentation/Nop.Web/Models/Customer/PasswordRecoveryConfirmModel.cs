@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
+#if NET451using System.Web.Mvc;
+#endif
 using FluentValidation.Attributes;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
@@ -10,13 +11,19 @@ namespace Nop.Web.Models.Customer
     [Validator(typeof(PasswordRecoveryConfirmValidator))]
     public partial class PasswordRecoveryConfirmModel : BaseNopModel
     {
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         [DataType(DataType.Password)]
         [NoTrim]
         [NopResourceDisplayName("Account.PasswordRecovery.NewPassword")]
         public string NewPassword { get; set; }
 
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         [NoTrim]
         [DataType(DataType.Password)]
         [NopResourceDisplayName("Account.PasswordRecovery.ConfirmNewPassword")]

@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿#if NET451
+using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Core.Infrastructure;
 using Nop.Web.Framework;
@@ -32,3 +33,4 @@ namespace Nop.Web.Controllers
 
     }
 }
+#endif

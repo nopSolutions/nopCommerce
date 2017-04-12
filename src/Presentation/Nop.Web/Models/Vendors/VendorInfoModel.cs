@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿#if NET451
+using System.Web.Mvc;
+#endif
 using FluentValidation.Attributes;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
@@ -10,15 +12,24 @@ namespace Nop.Web.Models.Vendors
     public class VendorInfoModel : BaseNopModel
     {
         [NopResourceDisplayName("Account.VendorInfo.Name")]
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         public string Name { get; set; }
 
         [NopResourceDisplayName("Account.VendorInfo.Email")]
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         public string Email { get; set; }
 
         [NopResourceDisplayName("Account.VendorInfo.Description")]
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         public string Description { get; set; }
 
         [NopResourceDisplayName("Account.VendorInfo.Picture")]

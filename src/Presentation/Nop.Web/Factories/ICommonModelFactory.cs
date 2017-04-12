@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿#if NET451
+using System.Web.Mvc;
+#endif
 using Nop.Core.Domain.Vendors;
 using Nop.Web.Models.Common;
 
@@ -81,6 +83,7 @@ namespace Nop.Web.Factories
         /// <returns>Sitemap model</returns>
         SitemapModel PrepareSitemapModel();
 
+#if NET451
         /// <summary>
         /// Get the sitemap in XML format
         /// </summary>
@@ -88,6 +91,7 @@ namespace Nop.Web.Factories
         /// <param name="id">Sitemap identifier; pass null to load the first sitemap or sitemap index file</param>
         /// <returns>Sitemap as string in XML format</returns>
         string PrepareSitemapXml(UrlHelper url, int? id);
+#endif
 
         /// <summary>
         /// Prepare the store theme selector model

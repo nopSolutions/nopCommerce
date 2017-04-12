@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿#if NET451
+using System.Linq;
 using System.Web.Mvc;
 using Nop.Web.Factories;
 
@@ -38,3 +39,4 @@ namespace Nop.Web.Controllers
         #endregion
     }
 }
+#endif

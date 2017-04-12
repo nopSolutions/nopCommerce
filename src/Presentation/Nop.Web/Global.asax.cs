@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Globalization;
 using System.Net;
 using System.Threading;
@@ -246,3 +247,4 @@ namespace Nop.Web
         }
     }
 }
+#endif

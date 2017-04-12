@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+#if NET451
 using System.Web.Mvc;
+#endif
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -26,8 +28,10 @@ using Nop.Services.Stores;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Customer;
+#if NET451
 using WebGrease.Css.Extensions;
 
+#endif
 namespace Nop.Web.Factories
 {
     /// <summary>
@@ -256,8 +260,10 @@ namespace Nop.Web.Factories
                 throw new ArgumentNullException("customer");
 
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
+#if NET451
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == _dateTimeHelper.CurrentTimeZone.Id) });
+#endif
 
             if (!excludeProperties)
             {
@@ -300,6 +306,7 @@ namespace Nop.Web.Factories
             if (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation)
                 model.EmailToRevalidate = customer.EmailToRevalidate;
 
+#if NET451
             //countries and states
             if (_customerSettings.CountryEnabled)
             {
@@ -340,6 +347,7 @@ namespace Nop.Web.Factories
 
                 }
             }
+#endif
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             model.VatNumberStatusNote = ((VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId))
                 .GetLocalizedEnum(_localizationService, _workContext);
@@ -390,8 +398,10 @@ namespace Nop.Web.Factories
 
             //custom customer attributes
             var customAttributes = PrepareCustomCustomerAttributes(customer, overrideCustomCustomerAttributesXml);
+#if NET451
             customAttributes.ForEach(model.CustomerAttributes.Add);
 
+#endif
             return model;
         }
 
@@ -410,9 +420,11 @@ namespace Nop.Web.Factories
                 throw new ArgumentNullException("model");
 
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
+#if NET451
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == _dateTimeHelper.CurrentTimeZone.Id) });
-            
+#endif
+
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
@@ -449,6 +461,7 @@ namespace Nop.Web.Factories
                 model.Newsletter = _customerSettings.NewsletterTickedByDefault;
             }
 
+#if NET451
             //countries and states
             if (_customerSettings.CountryEnabled)
             {
@@ -495,6 +508,7 @@ namespace Nop.Web.Factories
             var customAttributes = PrepareCustomCustomerAttributes(_workContext.CurrentCustomer, overrideCustomCustomerAttributesXml);
             customAttributes.ForEach(model.CustomerAttributes.Add);
 
+#endif
             return model;
         }
 

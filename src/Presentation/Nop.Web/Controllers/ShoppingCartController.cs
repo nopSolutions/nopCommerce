@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -1847,3 +1848,4 @@ namespace Nop.Web.Controllers
         #endregion
     }
 }
+#endif

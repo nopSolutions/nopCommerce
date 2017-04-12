@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿#if NET451
+using System.Web.Mvc;
+#endif
 using FluentValidation.Attributes;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Validators.PrivateMessages;
@@ -14,10 +16,16 @@ namespace Nop.Web.Models.PrivateMessages
 
         public int ReplyToMessageId { get; set; }
 
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         public string Subject { get; set; }
 
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         public string Message { get; set; }
     }
 }

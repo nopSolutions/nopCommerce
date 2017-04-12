@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -263,3 +264,4 @@ namespace Nop.Web.Controllers
         #endregion
     }
 }
+#endif

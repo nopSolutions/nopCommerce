@@ -4,7 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web;
+#if NET451
 using System.Web.Mvc;
+#endif
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
@@ -64,7 +66,9 @@ namespace Nop.Web.Factories
         private readonly ICacheManager _cacheManager;
         private readonly IPageHeadBuilder _pageHeadBuilder;
         private readonly IPictureService _pictureService;
+#if NET451
         private readonly HttpContextBase _httpContext;
+#endif
 
         private readonly CatalogSettings _catalogSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
@@ -99,7 +103,9 @@ namespace Nop.Web.Factories
             ICacheManager cacheManager,
             IPageHeadBuilder pageHeadBuilder,
             IPictureService pictureService,
+#if NET451
             HttpContextBase httpContext,
+#endif
             CatalogSettings catalogSettings,
             StoreInformationSettings storeInformationSettings,
             CommonSettings commonSettings,
@@ -129,7 +135,9 @@ namespace Nop.Web.Factories
             this._cacheManager = cacheManager;
             this._pageHeadBuilder = pageHeadBuilder;
             this._pictureService = pictureService;
+#if NET451
             this._httpContext = httpContext;
+#endif
 
             this._catalogSettings = catalogSettings;
             this._storeInformationSettings = storeInformationSettings;
@@ -553,6 +561,7 @@ namespace Nop.Web.Factories
             return cachedModel;
         }
 
+#if NET451
         /// <summary>
         /// Get the sitemap in XML format
         /// </summary>
@@ -568,6 +577,7 @@ namespace Nop.Web.Factories
             var siteMap = _cacheManager.Get(cacheKey, () => _sitemapGenerator.Generate(url, id));
             return siteMap;
         }
+#endif
 
         /// <summary>
         /// Prepare the store theme selector model
@@ -602,6 +612,7 @@ namespace Nop.Web.Factories
 
             //try loading a store specific favicon
             var faviconFileName = string.Format("favicon-{0}.ico", _storeContext.CurrentStore.Id);
+#if NET451
             var localFaviconPath = System.IO.Path.Combine(_httpContext.Request.PhysicalApplicationPath, faviconFileName);
             if (!System.IO.File.Exists(localFaviconPath))
             {
@@ -613,6 +624,7 @@ namespace Nop.Web.Factories
                     return model;
                 }
             }
+#endif
 
             model.FaviconUrl = _webHelper.GetStoreLocation() + faviconFileName;
             return model;
@@ -766,6 +778,6 @@ namespace Nop.Web.Factories
             return sb.ToString();
         }
         
-        #endregion
+#endregion
     }
 }

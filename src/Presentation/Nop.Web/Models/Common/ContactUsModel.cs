@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿#if NET451using System.Web.Mvc;
+#endif
 using FluentValidation.Attributes;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
@@ -9,20 +10,32 @@ namespace Nop.Web.Models.Common
     [Validator(typeof(ContactUsValidator))]
     public partial class ContactUsModel : BaseNopModel
     {
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         [NopResourceDisplayName("ContactUs.Email")]
         public string Email { get; set; }
 
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         [NopResourceDisplayName("ContactUs.Subject")]
         public string Subject { get; set; }
         public bool SubjectEnabled { get; set; }
 
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         [NopResourceDisplayName("ContactUs.Enquiry")]
         public string Enquiry { get; set; }
 
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         [NopResourceDisplayName("ContactUs.FullName")]
         public string FullName { get; set; }
 

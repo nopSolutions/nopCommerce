@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿#if NET451
+using System.Web.Mvc;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.News;
@@ -111,3 +112,4 @@ namespace Nop.Web.Controllers
         #endregion
     }
 }
+#endif

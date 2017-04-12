@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Nop.Services.Blogs;
@@ -269,3 +270,4 @@ namespace Nop.Web.Controllers
         #endregion
     }
 }
+#endif

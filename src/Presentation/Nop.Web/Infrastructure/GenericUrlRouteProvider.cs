@@ -1,4 +1,5 @@
-﻿using System.Web.Routing;
+﻿#if NET451
+using System.Web.Routing;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc.Routes;
 using Nop.Web.Framework.Seo;
@@ -73,3 +74,4 @@ namespace Nop.Web.Infrastructure
         }
     }
 }
+#endif

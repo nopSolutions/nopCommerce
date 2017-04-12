@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Web.Routing;
+#if NET451using System.Web.Routing;
+#endif
 using Nop.Core;
 using Nop.Services.Authentication.External;
 using Nop.Web.Models.Customer;
@@ -47,6 +48,7 @@ namespace Nop.Web.Factories
             {
                 var eamModel = new ExternalAuthenticationMethodModel();
 
+#if NET451
                 string actionName;
                 string controllerName;
                 RouteValueDictionary routeValues;
@@ -54,6 +56,7 @@ namespace Nop.Web.Factories
                 eamModel.ActionName = actionName;
                 eamModel.ControllerName = controllerName;
                 eamModel.RouteValues = routeValues;
+#endif
 
                 model.Add(eamModel);
             }

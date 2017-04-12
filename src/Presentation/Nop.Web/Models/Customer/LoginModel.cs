@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
+#if NET451using System.Web.Mvc;
+#endif
 using FluentValidation.Attributes;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
@@ -13,18 +14,27 @@ namespace Nop.Web.Models.Customer
         public bool CheckoutAsGuest { get; set; }
 
         [NopResourceDisplayName("Account.Login.Fields.Email")]
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         public string Email { get; set; }
 
         public bool UsernamesEnabled { get; set; }
         [NopResourceDisplayName("Account.Login.Fields.UserName")]
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         public string Username { get; set; }
 
         [DataType(DataType.Password)]
         [NoTrim]
         [NopResourceDisplayName("Account.Login.Fields.Password")]
-        [AllowHtml]
+        	
+#if NET451
+		[AllowHtml]
+#endif
         public string Password { get; set; }
 
         [NopResourceDisplayName("Account.Login.Fields.RememberMe")]

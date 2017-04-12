@@ -1,4 +1,6 @@
-﻿using System.Web.Routing;
+﻿#if NET451
+using System.Web.Routing;
+#endif
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Checkout
@@ -7,7 +9,9 @@ namespace Nop.Web.Models.Checkout
     {
         public string PaymentInfoActionName { get; set; }
         public string PaymentInfoControllerName { get; set; }
+#if NET451
         public RouteValueDictionary PaymentInfoRouteValues { get; set; }
+#endif
 
         /// <summary>
         /// Used on one-page checkout page

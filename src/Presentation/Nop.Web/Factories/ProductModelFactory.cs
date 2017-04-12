@@ -4,7 +4,9 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Web;
+#if NET451
 using System.Web.Mvc;
+#endif
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -668,12 +670,14 @@ namespace Nop.Web.Factories
             var allowedQuantities = product.ParseAllowedQuantities();
             foreach (var qty in allowedQuantities)
             {
+#if NET451
                 model.AllowedQuantities.Add(new SelectListItem
                 {
                     Text = qty.ToString(),
                     Value = qty.ToString(),
                     Selected = updatecartitem != null && updatecartitem.Quantity == qty
                 });
+#endif
             }
             //minimum quantity notification
             if (product.OrderMinimumQuantity > 1)
@@ -1536,12 +1540,14 @@ namespace Nop.Web.Factories
 
                     switch (psa.AttributeType)
                     {
+#if NET451
                         case SpecificationAttributeType.Option:
                             m.ValueRaw = HttpUtility.HtmlEncode(psa.SpecificationAttributeOption.GetLocalized(x => x.Name));
                             break;
                         case SpecificationAttributeType.CustomText:
                             m.ValueRaw = HttpUtility.HtmlEncode(psa.CustomValue);
                             break;
+#endif
                         case SpecificationAttributeType.CustomHtmlText:
                             m.ValueRaw = psa.CustomValue;
                             break;

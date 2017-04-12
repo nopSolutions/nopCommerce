@@ -52,6 +52,7 @@ namespace Nop.Web.Infrastructure.Installation
         /// <returns>Current language</returns>
         public virtual InstallationLanguage GetCurrentLanguage()
         {
+#if NET451
             var httpContext = EngineContext.Current.Resolve<HttpContextBase>();
 
             var cookieLanguageCode = "";
@@ -89,6 +90,9 @@ namespace Nop.Web.Infrastructure.Installation
             //return any available language
             language = availableLanguages.FirstOrDefault();
             return language;
+#else 
+            return null;
+#endif
         }
 
         /// <summary>
@@ -97,6 +101,7 @@ namespace Nop.Web.Infrastructure.Installation
         /// <param name="languageCode">Language code</param>
         public virtual void SaveCurrentLanguage(string languageCode)
         {
+#if NET451
             var httpContext = EngineContext.Current.Resolve<HttpContextBase>();
 
             var cookie = new HttpCookie(LanguageCookieName);
@@ -105,6 +110,7 @@ namespace Nop.Web.Infrastructure.Installation
             cookie.Expires = DateTime.Now.AddHours(24);
             httpContext.Response.Cookies.Remove(LanguageCookieName);
             httpContext.Response.Cookies.Add(cookie);
+#endif
         }
 
         /// <summary>
