@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Infrastructure.Mapper;
@@ -14,10 +16,14 @@ namespace Nop.Core.Infrastructure
     /// </summary>
     public class NopEngine : IEngine
     {
+        #region Properties
+
         /// <summary>
-        /// Get service provider
+        /// Gets or sets service provider
         /// </summary>
-        private IServiceProvider _container => HttpContext.Current.RequestServices;
+        public IServiceProvider ServiceProvider { get; set; }
+
+        #endregion
 
         #region Utilities
 
@@ -41,9 +47,11 @@ namespace Nop.Core.Infrastructure
         /// Register dependencies using Autofac
         /// </summary>
         /// <param name="nopConfiguration">Startup Nop configuration parameters</param>
-        /// <param name="containerBuilder">Container builder used to build an Autofac.IContainer from component registrations</param>
-        protected virtual void RegisterDependencies(NopConfig nopConfiguration, ContainerBuilder containerBuilder)
+        /// <param name="services">The contract for a collection of service descriptors</param>
+        protected virtual void RegisterDependencies(NopConfig nopConfiguration, IServiceCollection services)
         {
+            var containerBuilder = new ContainerBuilder();
+
             //register engine
             containerBuilder.RegisterInstance(this).As<IEngine>().SingleInstance();
 
@@ -62,6 +70,12 @@ namespace Nop.Core.Infrastructure
             //register all provided dependencies
             foreach (var dependencyRegistrar in instances)
                 dependencyRegistrar.Register(containerBuilder, typeFinder, nopConfiguration);
+
+            //populate Autofac container builder with the set of registered service descriptors
+            containerBuilder.Populate(services);
+
+            //create service provider
+            ServiceProvider = new AutofacServiceProvider(containerBuilder.Build());
         }
 
         /// <summary>
@@ -96,11 +110,11 @@ namespace Nop.Core.Infrastructure
         /// Initialize components and plugins in the nop environment.
         /// </summary>
         /// <param name="nopConfiguration">Startup Nop configuration parameters</param>
-        /// <param name="containerBuilder">Container builder used to build an Autofac.IContainer from component registrations</param>
-        public void Initialize(NopConfig nopConfiguration, ContainerBuilder containerBuilder)
+        /// <param name="services">The contract for a collection of service descriptors</param>
+        public void Initialize(NopConfig nopConfiguration, IServiceCollection services)
         {
             //register dependencies
-            RegisterDependencies(nopConfiguration, containerBuilder);
+            RegisterDependencies(nopConfiguration, services);
 
             //register mapper configurations
             RegisterMapperConfiguration(nopConfiguration);
@@ -108,7 +122,6 @@ namespace Nop.Core.Infrastructure
             //startup tasks
             if (!nopConfiguration.IgnoreStartupTasks)
                 RunStartupTasks();
-
         }
 
         /// <summary>
@@ -118,7 +131,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>Resolved service</returns>
         public T Resolve<T>() where T : class
 		{
-            return (T)_container.GetService(typeof(T));
+            return (T)ServiceProvider.GetRequiredService(typeof(T));
         }
 
         /// <summary>
@@ -128,7 +141,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>Resolved service</returns>
         public object Resolve(Type type)
         {
-            return _container.GetService(type);
+            return ServiceProvider.GetRequiredService(type);
         }
 
         /// <summary>
@@ -138,7 +151,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>Collection of resolved services</returns>
         public IEnumerable<T> ResolveAll<T>()
         {
-            return (IEnumerable<T>)_container.GetService(typeof(IEnumerable<T>));
+            return (IEnumerable<T>)ServiceProvider.GetRequiredService(typeof(IEnumerable<T>));
         }
 
         /// <summary>

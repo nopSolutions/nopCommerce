@@ -12,8 +12,10 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.5.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.0.0" />
     <PackageReference Include="AutoMapper" Version="6.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
   </ItemGroup>
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Autofac;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 
 namespace Nop.Core.Infrastructure
@@ -14,11 +14,16 @@ namespace Nop.Core.Infrastructure
     public interface IEngine
     {
         /// <summary>
+        /// Gets or sets service provider
+        /// </summary>
+        IServiceProvider ServiceProvider { get; set; }
+
+        /// <summary>
         /// Initialize components and plugins in the nop environment.
         /// </summary>
         /// <param name="nopConfiguration">Startup Nop configuration parameters</param>
-        /// <param name="containerBuilder">Container builder used to build an Autofac.IContainer from component registrations</param>
-        void Initialize(NopConfig config, ContainerBuilder containerBuilder);
+        /// <param name="services">The contract for a collection of service descriptors</param>
+        void Initialize(NopConfig config, IServiceCollection services);
 
         /// <summary>
         /// Resolve dependency

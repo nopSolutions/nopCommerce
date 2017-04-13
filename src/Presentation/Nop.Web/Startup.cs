@@ -1,6 +1,4 @@
 ﻿using System;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -55,14 +53,11 @@ namespace Nop.Web
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
 
-            //initialize engine with Autofac as IoC container
-            var containerBuilder = new ContainerBuilder();
-            EngineContext.Initialize(nopConfig, containerBuilder);
-            
-            //add Autofac container
-            containerBuilder.Populate(services);
-            var container = containerBuilder.Build();
-            return new AutofacServiceProvider(container);
+            //initialize engine
+            var engine = EngineContext.Initialize(nopConfig, services);
+
+            //return service provider provided by engine
+            return engine.ServiceProvider;
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
-using Autofac;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 
 namespace Nop.Core.Infrastructure
@@ -15,14 +15,14 @@ namespace Nop.Core.Infrastructure
         /// Initializes a static instance of the Nop factory.
         /// </summary>
         /// <param name="nopConfiguration">Startup Nop configuration parameters</param>
-        /// <param name="containerBuilder">Container builder used to build an Autofac.IContainer from component registrations</param>
+        /// <param name="services">The contract for a collection of service descriptors</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static IEngine Initialize(NopConfig nopConfiguration, ContainerBuilder containerBuilder)
+        public static IEngine Initialize(NopConfig nopConfiguration, IServiceCollection services)
         {
             if (Singleton<IEngine>.Instance == null)
-            { 
+            {
                 Singleton<IEngine>.Instance = new NopEngine();
-                Singleton<IEngine>.Instance.Initialize(nopConfiguration, containerBuilder);
+                Singleton<IEngine>.Instance.Initialize(nopConfiguration, services);
             }
 
             return Singleton<IEngine>.Instance;
