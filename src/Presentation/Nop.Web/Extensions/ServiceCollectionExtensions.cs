@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -34,6 +35,15 @@ namespace Nop.Web.Extensions
             services.AddSingleton(config);
 
             return config;
+        }
+
+        /// <summary>
+        /// Register HttpContextAccessor
+        /// </summary>
+        /// <param name="services">The contract for a collection of service descriptors</param>
+        public static void AddHttpContextAccessor(this IServiceCollection services)
+        {
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
     }
 }

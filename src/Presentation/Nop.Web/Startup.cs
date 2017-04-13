@@ -53,7 +53,7 @@ namespace Nop.Web
             services.ConfigureStartupConfig<HostingConfig>(Configuration.GetSection("Hosting"));
 
             //add accessor to HttpContext
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddHttpContextAccessor();
 
             //initialize engine with Autofac as IoC container
             var containerBuilder = new ContainerBuilder();
@@ -71,22 +71,21 @@ namespace Nop.Web
         /// <param name="application">Builder that provides the mechanisms to configure an application's request pipeline</param>
         /// <param name="environment">Provides information about the web hosting environment an application is running in</param>
         /// <param name="loggerFactory">Object used to configure the logging system</param>
-        /// <param name="httpContextAccessor">Object that provides access to HttpContext</param>
-        public void Configure(IApplicationBuilder application, IHostingEnvironment environment, 
-            ILoggerFactory loggerFactory, IHttpContextAccessor httpContextAccessor)
+        public void Configure(IApplicationBuilder application, IHostingEnvironment environment, ILoggerFactory loggerFactory)
         {
+            //get detailed exceptions
             if (environment.IsDevelopment())
             {
                 application.UseDeveloperExceptionPage();
             }
 
+            //get access to HttpContext
+            application.UseStaticHttpContext();
+
             application.Run(async (context) =>
             {
                 await context.Response.WriteAsync("Hello World!");
             });
-
-            //add custom service locator
-            EngineContext.Current.ContainerAccessor = () => httpContextAccessor.HttpContext.RequestServices;
         }
     }
 }

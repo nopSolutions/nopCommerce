@@ -15,14 +15,9 @@ namespace Nop.Core.Infrastructure
     public class NopEngine : IEngine
     {
         /// <summary>
-        /// Gets or sets function that provides access to service provider
-        /// </summary>
-        public Func<IServiceProvider> ContainerAccessor { get; set; }
-
-        /// <summary>
         /// Get service provider
         /// </summary>
-        private IServiceProvider _container => ContainerAccessor();
+        private IServiceProvider _container => HttpContext.Current.RequestServices;
 
         #region Utilities
 

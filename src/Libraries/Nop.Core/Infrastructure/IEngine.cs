@@ -14,11 +14,6 @@ namespace Nop.Core.Infrastructure
     public interface IEngine
     {
         /// <summary>
-        /// Gets or sets function that provides access to service provider
-        /// </summary>
-        Func<IServiceProvider> ContainerAccessor { get; set; }
-
-        /// <summary>
         /// Initialize components and plugins in the nop environment.
         /// </summary>
         /// <param name="nopConfiguration">Startup Nop configuration parameters</param>
