@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Nop.Core;
+using Nop.Core.Extensions;
 using Nop.Core.Domain.Common;
 
 namespace Nop.Services.Common

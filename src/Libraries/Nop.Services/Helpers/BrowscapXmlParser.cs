@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using Nop.Core;
+using Nop.Core.Extensions;
 
 namespace Nop.Services.Helpers
 {

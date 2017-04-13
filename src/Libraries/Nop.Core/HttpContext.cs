@@ -15,7 +15,7 @@ namespace Nop.Core
 
         #region Methods
 
-        public static void Configure(IHttpContextAccessor contextAccessor)
+        internal static void Configure(IHttpContextAccessor contextAccessor)
         {
             _contextAccessor = contextAccessor;
         }

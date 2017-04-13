@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Infrastructure;
 
-namespace Nop.Web.Extensions
+namespace Nop.Core.Extensions
 {
     /// <summary>
     /// Represents extensions of IApplicationBuilder
     /// </summary>
-    public static class MiddlewareExtensions
+    public static class ApplicationBuilderExtensions
     {
         /// <summary>
         /// Configure access to static HTTP context
@@ -20,7 +20,7 @@ namespace Nop.Web.Extensions
             var httpContextAccessor = EngineContext.Current.Resolve<IHttpContextAccessor>();
             
             //configure HTTP context
-            Core.HttpContext.Configure(httpContextAccessor);
+            HttpContext.Configure(httpContextAccessor);
 
             return application;
         }

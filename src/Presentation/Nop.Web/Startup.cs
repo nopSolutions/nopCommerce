@@ -6,8 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nop.Core.Configuration;
-using Nop.Core.Infrastructure;
-using Nop.Web.Extensions;
+using Nop.Core.Extensions;
 
 namespace Nop.Web
 {
@@ -54,8 +53,8 @@ namespace Nop.Web
             services.AddHttpContextAccessor();
 
             //initialize engine
-            var engine = EngineContext.Initialize(nopConfig, services);
-
+            var engine = services.InitializeNopEngine(nopConfig);
+            
             //return service provider provided by engine
             return engine.ServiceProvider;
         }
