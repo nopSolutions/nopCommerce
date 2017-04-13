@@ -19,7 +19,7 @@ namespace Nop.Web.Framework
                     //that's why we do not cache validators
                     //var instance = _cache.GetOrCreateInstance(attribute.ValidatorType,
                     //                           x => EngineContext.Current.ContainerManager.ResolveUnregistered(x));
-                    var instance = EngineContext.Current.ContainerManager.ResolveUnregistered(attribute.ValidatorType);
+                    var instance = EngineContext.Current.ResolveUnregistered(attribute.ValidatorType);
                     return instance as IValidator;
                 }
             }

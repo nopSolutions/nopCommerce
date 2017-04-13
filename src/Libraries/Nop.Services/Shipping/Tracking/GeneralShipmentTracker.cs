@@ -43,7 +43,7 @@ namespace Nop.Services.Shipping.Tracking
             return _typeFinder.FindClassesOfType<IShipmentTracker>()
                 //exclude this one
                 .Where(x => x != typeof(GeneralShipmentTracker))
-                .Select(x => EngineContext.Current.ContainerManager.ResolveUnregistered(x) as IShipmentTracker)
+                .Select(x => EngineContext.Current.ResolveUnregistered(x) as IShipmentTracker)
                 .ToList();
         }
 

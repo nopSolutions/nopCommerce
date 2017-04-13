@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using Autofac;
 using Nop.Core.Configuration;
 
 namespace Nop.Core.Infrastructure
@@ -14,15 +15,16 @@ namespace Nop.Core.Infrastructure
         /// Initializes a static instance of the Nop factory.
         /// </summary>
         /// <param name="nopConfiguration">Startup Nop configuration parameters</param>
-        /// <param name="forceRecreate">Creates a new factory instance even though the factory has been previously initialized.</param>
+        /// <param name="containerBuilder">Container builder used to build an Autofac.IContainer from component registrations</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static IEngine Initialize(NopConfig nopConfiguration, bool forceRecreate)
+        public static IEngine Initialize(NopConfig nopConfiguration, ContainerBuilder containerBuilder)
         {
-            if (Singleton<IEngine>.Instance == null || forceRecreate)
-            {
+            if (Singleton<IEngine>.Instance == null)
+            { 
                 Singleton<IEngine>.Instance = new NopEngine();
-                Singleton<IEngine>.Instance.Initialize(nopConfiguration);
+                Singleton<IEngine>.Instance.Initialize(nopConfiguration, containerBuilder);
             }
+
             return Singleton<IEngine>.Instance;
         }
 
@@ -45,14 +47,7 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         public static IEngine Current
         {
-            get
-            {
-                if (Singleton<IEngine>.Instance == null)
-                {
-                    Initialize(new NopConfig(), false);
-                }
-                return Singleton<IEngine>.Instance;
-            }
+            get { return Singleton<IEngine>.Instance; }
         }
 
         #endregion

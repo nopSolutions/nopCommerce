@@ -17,7 +17,7 @@ namespace Nop.Core.Infrastructure.DependencyManagement
         void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config);
 
         /// <summary>
-        /// Order of this dependency registrar implementation
+        /// Gets order of this dependency registrar implementation (less is better)
         /// </summary>
         int Order { get; }
     }

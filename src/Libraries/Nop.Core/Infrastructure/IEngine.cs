@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using Autofac;
 using Nop.Core.Configuration;
-using Nop.Core.Infrastructure.DependencyManagement;
 
 namespace Nop.Core.Infrastructure
 {
@@ -13,35 +14,43 @@ namespace Nop.Core.Infrastructure
     public interface IEngine
     {
         /// <summary>
-        /// Container manager
+        /// Gets or sets function that provides access to service provider
         /// </summary>
-        ContainerManager ContainerManager { get; }
-        
+        Func<IServiceProvider> ContainerAccessor { get; set; }
+
         /// <summary>
         /// Initialize components and plugins in the nop environment.
         /// </summary>
-        /// <param name="config">Config</param>
-        void Initialize(NopConfig config);
+        /// <param name="nopConfiguration">Startup Nop configuration parameters</param>
+        /// <param name="containerBuilder">Container builder used to build an Autofac.IContainer from component registrations</param>
+        void Initialize(NopConfig config, ContainerBuilder containerBuilder);
 
         /// <summary>
         /// Resolve dependency
         /// </summary>
-        /// <typeparam name="T">T</typeparam>
-        /// <returns></returns>
+        /// <typeparam name="T">Type of resolved service</typeparam>
+        /// <returns>Resolved service</returns>
         T Resolve<T>() where T : class;
 
         /// <summary>
-        ///  Resolve dependency
+        /// Resolve dependency
         /// </summary>
-        /// <param name="type">Type</param>
-        /// <returns></returns>
+        /// <param name="type">Type of resolved service</param>
+        /// <returns>Resolved service</returns>
         object Resolve(Type type);
 
         /// <summary>
         /// Resolve dependencies
         /// </summary>
-        /// <typeparam name="T">T</typeparam>
-        /// <returns></returns>
-        T[] ResolveAll<T>();
+        /// <typeparam name="T">Type of resolved services</typeparam>
+        /// <returns>Collection of resolved services</returns>
+        IEnumerable<T> ResolveAll<T>();
+
+        /// <summary>
+        /// Resolve unregistered service
+        /// </summary>
+        /// <param name="type">Type of service</param>
+        /// <returns>Resolved service</returns>
+        object ResolveUnregistered(Type type);
     }
 }

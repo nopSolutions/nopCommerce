@@ -19,8 +19,7 @@ namespace Nop.Web.Framework.Mvc
         /// <param name="builder">Builder</param>
         /// <param name="contextName">Context name</param>
         public static void RegisterPluginDataContext<T>(this IDependencyRegistrar dependencyRegistrar,
-            ContainerBuilder builder, string contextName)
-             where T: IDbContext
+            ContainerBuilder builder, string contextName) where T: IDbContext
         {
             //data layer
             var dataSettingsManager = new DataSettingsManager();

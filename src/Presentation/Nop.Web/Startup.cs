@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Nop.Core.Infrastructure;
 using Nop.Core.Configuration;
+using Nop.Core.Infrastructure;
 using Nop.Web.Extensions;
 
 namespace Nop.Web
@@ -38,7 +41,7 @@ namespace Nop.Web
         /// Add services to the container
         /// </summary>
         /// <param name="services">The contract for a collection of service descriptors</param>
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             //add options feature
             services.AddOptions();
@@ -49,8 +52,17 @@ namespace Nop.Web
             //add hosting configuration parameters
             services.ConfigureStartupConfig<HostingConfig>(Configuration.GetSection("Hosting"));
 
-            //initialize engine context
-            EngineContext.Initialize(nopConfig, false);
+            //add accessor to HttpContext
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            //initialize engine with Autofac as IoC container
+            var containerBuilder = new ContainerBuilder();
+            EngineContext.Initialize(nopConfig, containerBuilder);
+            
+            //add Autofac container
+            containerBuilder.Populate(services);
+            var container = containerBuilder.Build();
+            return new AutofacServiceProvider(container);
         }
 
         /// <summary>
@@ -59,7 +71,9 @@ namespace Nop.Web
         /// <param name="application">Builder that provides the mechanisms to configure an application's request pipeline</param>
         /// <param name="environment">Provides information about the web hosting environment an application is running in</param>
         /// <param name="loggerFactory">Object used to configure the logging system</param>
-        public void Configure(IApplicationBuilder application, IHostingEnvironment environment, ILoggerFactory loggerFactory)
+        /// <param name="httpContextAccessor">Object that provides access to HttpContext</param>
+        public void Configure(IApplicationBuilder application, IHostingEnvironment environment, 
+            ILoggerFactory loggerFactory, IHttpContextAccessor httpContextAccessor)
         {
             if (environment.IsDevelopment())
             {
@@ -70,6 +84,9 @@ namespace Nop.Web
             {
                 await context.Response.WriteAsync("Hello World!");
             });
+
+            //add custom service locator
+            EngineContext.Current.ContainerAccessor = () => httpContextAccessor.HttpContext.RequestServices;
         }
     }
 }

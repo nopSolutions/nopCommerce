@@ -155,8 +155,10 @@ namespace Nop.Web.Infrastructure.Cache
 
         public ModelCacheEventConsumer(CatalogSettings catalogSettings)
         {
+#if NET451
             //TODO inject static cache manager using constructor
             this._cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+#endif
             this._catalogSettings = catalogSettings;
         }
         
