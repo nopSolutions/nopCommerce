@@ -1,34 +1,72 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Nop.Core.Infrastructure;
+using Nop.Core.Configuration;
+using Nop.Web.Extensions;
 
 namespace Nop.Web
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services)
+        #region Properties
+
+        /// <summary>
+        /// Get configuration root
+        /// </summary>
+        public IConfigurationRoot Configuration { get; }
+
+        #endregion
+
+        #region Ctor
+
+        public Startup(IHostingEnvironment environment)
         {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(environment.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddEnvironmentVariables();
+            Configuration = builder.Build();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
-        {
-            loggerFactory.AddConsole();
+        #endregion
 
-            if (env.IsDevelopment())
+        /// <summary>
+        /// Add services to the container
+        /// </summary>
+        /// <param name="services">The contract for a collection of service descriptors</param>
+        public void ConfigureServices(IServiceCollection services)
+        {
+            //add options feature
+            services.AddOptions();
+
+            //add NopConfig configuration parameters
+            var nopConfig = services.ConfigureStartupConfig<NopConfig>(Configuration.GetSection("Nop"));
+
+            //add hosting configuration parameters
+            services.ConfigureStartupConfig<HostingConfig>(Configuration.GetSection("Hosting"));
+
+            //initialize engine context
+            EngineContext.Initialize(nopConfig, false);
+        }
+
+        /// <summary>
+        /// Configure the HTTP request pipeline
+        /// </summary>
+        /// <param name="application">Builder that provides the mechanisms to configure an application's request pipeline</param>
+        /// <param name="environment">Provides information about the web hosting environment an application is running in</param>
+        /// <param name="loggerFactory">Object used to configure the logging system</param>
+        public void Configure(IApplicationBuilder application, IHostingEnvironment environment, ILoggerFactory loggerFactory)
+        {
+            if (environment.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                application.UseDeveloperExceptionPage();
             }
 
-            app.Run(async (context) =>
+            application.Run(async (context) =>
             {
                 await context.Response.WriteAsync("Hello World!");
             });

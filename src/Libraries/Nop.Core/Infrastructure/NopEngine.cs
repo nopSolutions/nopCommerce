@@ -20,13 +20,13 @@ namespace Nop.Core.Infrastructure
     /// </summary>
     public class NopEngine : IEngine
     {
-#region Fields
+        #region Fields
 
         private ContainerManager _containerManager;
 
-#endregion
+        #endregion
 
-#region Utilities
+        #region Utilities
 
         /// <summary>
         /// Run startup tasks
@@ -54,7 +54,6 @@ namespace Nop.Core.Infrastructure
             
             //dependencies
             var typeFinder = new WebAppTypeFinder();
-            builder.RegisterInstance(config).As<NopConfig>().SingleInstance();
             builder.RegisterInstance(this).As<IEngine>().SingleInstance();
             builder.RegisterInstance(typeFinder).As<ITypeFinder>().SingleInstance();
 
@@ -101,9 +100,9 @@ namespace Nop.Core.Infrastructure
             AutoMapperConfiguration.Init(configurationActions);
         }
 
-#endregion
+        #endregion
 
-#region Methods
+        #region Methods
 
         /// <summary>
         /// Initialize components and plugins in the nop environment.
@@ -155,9 +154,9 @@ namespace Nop.Core.Infrastructure
             return ContainerManager.ResolveAll<T>();
         }
 
-#endregion
+        #endregion
 
-#region Properties
+        #region Properties
 
         /// <summary>
         /// Container manager
@@ -167,6 +166,6 @@ namespace Nop.Core.Infrastructure
             get { return _containerManager; }
         }
 
-#endregion
+        #endregion
     }
 }

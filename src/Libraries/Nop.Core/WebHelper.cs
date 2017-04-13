@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
+using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 
@@ -18,19 +18,17 @@ namespace Nop.Core
 #if NET451
         #region Fields 
 
+        private readonly HostingConfig _hostingConfig;
         private readonly HttpContextBase _httpContext;
         private readonly string[] _staticFileExtensions;
 
         #endregion
 
-        #region Constructor
+        #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="httpContext">HTTP context</param>
-        public WebHelper(HttpContextBase httpContext)
+        public WebHelper(HostingConfig hostingConfig, HttpContextBase httpContext)
         {
+            this._hostingConfig = hostingConfig;
             this._httpContext = httpContext;
             this._staticFileExtensions = new[] { ".axd", ".ashx", ".bmp", ".css", ".gif", ".htm", ".html", ".ico", ".jpeg", ".jpg", ".js", ".png", ".rar", ".zip" };
         }
@@ -129,12 +127,12 @@ namespace Nop.Core
                     //for identifying the originating IP address of a client
                     //connecting to a web server through an HTTP proxy or load balancer.
                     var forwardedHttpHeader = "X-FORWARDED-FOR";
-                    if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["ForwardedHTTPheader"]))
+                    if (!string.IsNullOrEmpty(_hostingConfig.ForwardedHttpHeader))
                     {
                         //but in some cases server use other HTTP header
                         //in these cases an administrator can specify a custom Forwarded HTTP header
                         //e.g. CF-Connecting-IP, X-FORWARDED-PROTO, etc
-                        forwardedHttpHeader = ConfigurationManager.AppSettings["ForwardedHTTPheader"];
+                        forwardedHttpHeader = _hostingConfig.ForwardedHttpHeader;
                     }
 
                     //it's used for identifying the originating IP address of a client connecting to a web server
@@ -219,21 +217,14 @@ namespace Nop.Core
                 //when your hosting uses a load balancer on their server then the Request.IsSecureConnection is never got set to true
 
                 //1. use HTTP_CLUSTER_HTTPS?
-                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["Use_HTTP_CLUSTER_HTTPS"]) &&
-                   Convert.ToBoolean(ConfigurationManager.AppSettings["Use_HTTP_CLUSTER_HTTPS"]))
-                {
+                if (_hostingConfig.UseHttpClusterHttps.HasValue && _hostingConfig.UseHttpClusterHttps.Value)
                     useSsl = ServerVariables("HTTP_CLUSTER_HTTPS") == "on";
-                }
+
                 //2. use HTTP_X_FORWARDED_PROTO?
-                else if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["Use_HTTP_X_FORWARDED_PROTO"]) &&
-                   Convert.ToBoolean(ConfigurationManager.AppSettings["Use_HTTP_X_FORWARDED_PROTO"]))
-                {
+                else if (_hostingConfig.UseHttpXForwardedProto.HasValue && _hostingConfig.UseHttpXForwardedProto.Value)
                     useSsl = string.Equals(ServerVariables("HTTP_X_FORWARDED_PROTO"), "https", StringComparison.OrdinalIgnoreCase);
-                }
                 else
-                {
                     useSsl = _httpContext.Request.IsSecureConnection;
-                }
             }
 
             return useSsl;
