@@ -1,20 +1,16 @@
-﻿#if NET451
-using System.Web.Routing;
-#endif
+﻿using Microsoft.AspNetCore.Routing;
 
 namespace Nop.Web.Framework.Mvc.Routes
 {
     /// <summary>
-    /// Route publisher
+    /// Represents route publisher
     /// </summary>
     public interface IRoutePublisher
     {
-#if NET451
         /// <summary>
         /// Register routes
         /// </summary>
-        /// <param name="routes">Routes</param>
-        void RegisterRoutes(RouteCollection routes);
-#endif
+        /// <param name="routeBuilder">Route builder</param>
+        void RegisterRoutes(IRouteBuilder routeBuilder);
     }
 }

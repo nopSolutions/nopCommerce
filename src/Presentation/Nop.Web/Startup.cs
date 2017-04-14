@@ -1,12 +1,14 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nop.Core.Configuration;
 using Nop.Core.Extensions;
+using Nop.Core.Infrastructure;
+using Nop.Web.Framework.Mvc.Routes;
 
 namespace Nop.Web
 {
@@ -40,6 +42,8 @@ namespace Nop.Web
         /// <param name="services">The contract for a collection of service descriptors</param>
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc();
+
             //add options feature
             services.AddOptions();
 
@@ -69,16 +73,21 @@ namespace Nop.Web
         {
             //get detailed exceptions
             if (environment.IsDevelopment())
-            {
                 application.UseDeveloperExceptionPage();
-            }
+            else
+                application.UseExceptionHandler("/Home/Error");
 
             //get access to HttpContext
             application.UseStaticHttpContext();
 
-            application.Run(async (context) =>
+            //use MVC routing
+            application.UseMvc(routeBuilder =>
             {
-                await context.Response.WriteAsync("Hello World!");
+                //register all routes
+                EngineContext.Current.Resolve<IRoutePublisher>()?.RegisterRoutes(routeBuilder);
+
+                //default route
+                routeBuilder.MapRoute("Default", "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
