@@ -42,7 +42,11 @@ namespace Nop.Web
         /// <param name="services">The contract for a collection of service descriptors</param>
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            //add MVC feature
             services.AddMvc();
+
+            //add memory cache feature
+            services.AddMemoryCache();
 
             //add options feature
             services.AddOptions();
@@ -58,7 +62,7 @@ namespace Nop.Web
 
             //initialize engine
             var engine = services.InitializeNopEngine(nopConfig);
-            
+
             //return service provider provided by engine
             return engine.ServiceProvider;
         }

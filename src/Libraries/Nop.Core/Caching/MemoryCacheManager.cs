@@ -1,81 +1,81 @@
 using System;
-using System.Linq;
-#if NET451
-using System.Runtime.Caching;
-#endif
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Nop.Core.Caching
 {
     /// <summary>
-    /// Represents a manager for caching between HTTP requests (long term caching)
+    /// Represents a memory cache manager 
     /// </summary>
     public partial class MemoryCacheManager : ICacheManager
     {
-#if NET451
-        /// <summary>
-        /// Cache object
-        /// </summary>
-        protected ObjectCache Cache
+        #region Fields
+
+        private readonly IMemoryCache _cache;
+
+        #endregion
+
+        #region Ctor
+
+        public MemoryCacheManager(IMemoryCache cache)
         {
-            get
-            {
-                return MemoryCache.Default;
-            }
+            _cache = cache;
         }
-        
+
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Gets or sets the value associated with the specified key.
         /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="key">The key of the value to get.</param>
-        /// <returns>The value associated with the specified key.</returns>
+        /// <typeparam name="T">Type of cached item</typeparam>
+        /// <param name="key">Key of cached item</param>
+        /// <returns>The cached value associated with the specified key</returns>
         public virtual T Get<T>(string key)
         {
-            return (T)Cache[key];
+            return _cache.Get<T>(key);
         }
 
         /// <summary>
-        /// Adds the specified key and object to the cache.
+        /// Adds the specified key and object to the cache
         /// </summary>
-        /// <param name="key">key</param>
-        /// <param name="data">Data</param>
-        /// <param name="cacheTime">Cache time</param>
+        /// <param name="key">Key of cached item</param>
+        /// <param name="data">Value for caching</param>
+        /// <param name="cacheTime">Cache time in minutes</param>
         public virtual void Set(string key, object data, int cacheTime)
         {
-            if (data == null)
-                return;
-
-            var policy = new CacheItemPolicy();
-            policy.AbsoluteExpiration = DateTime.Now + TimeSpan.FromMinutes(cacheTime);
-            Cache.Add(new CacheItem(key, data), policy);
+            if (data != null)
+                _cache.Set(key, data, TimeSpan.FromMinutes(cacheTime));
         }
 
         /// <summary>
         /// Gets a value indicating whether the value associated with the specified key is cached
         /// </summary>
-        /// <param name="key">key</param>
-        /// <returns>Result</returns>
+        /// <param name="key">Key of cached item</param>
+        /// <returns>True if item already is in cache; otherwise false</returns>
         public virtual bool IsSet(string key)
         {
-            return (Cache.Contains(key));
+            return (_cache.TryGetValue(key, out object value));
         }
 
         /// <summary>
         /// Removes the value with the specified key from the cache
         /// </summary>
-        /// <param name="key">/key</param>
+        /// <param name="key">Key of cached item</param>
         public virtual void Remove(string key)
         {
-            Cache.Remove(key);
+            _cache.Remove(key);
         }
 
         /// <summary>
-        /// Removes items by pattern
+        /// Removes items by key pattern
         /// </summary>
-        /// <param name="pattern">pattern</param>
+        /// <param name="pattern">String key pattern</param>
         public virtual void RemoveByPattern(string pattern)
         {
-            this.RemoveByPattern(pattern, Cache.Select(p => p.Key));
+#if NET451
+            //todo
+#endif
         }
 
         /// <summary>
@@ -83,51 +83,19 @@ namespace Nop.Core.Caching
         /// </summary>
         public virtual void Clear()
         {
-            foreach (var item in Cache)
-                Remove(item.Key);
+#if NET451
+            //todo
+#endif
         }
 
         /// <summary>
-        /// Dispose
+        /// Dispose cache manager
         /// </summary>
         public virtual void Dispose()
         {
-        }
-#else
-        public void Clear()
-        {
-            throw new NotImplementedException();
+            //nothing special
         }
 
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-
-        public T Get<T>(string key)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsSet(string key)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Remove(string key)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RemoveByPattern(string pattern)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Set(string key, object data, int cacheTime)
-        {
-            throw new NotImplementedException();
-        }
-#endif
+        #endregion
     }
 }

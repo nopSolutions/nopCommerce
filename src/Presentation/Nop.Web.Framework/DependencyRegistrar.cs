@@ -131,20 +131,20 @@ namespace Nop.Web.Framework
             builder.RegisterType<PluginFinder>().As<IPluginFinder>().InstancePerLifetimeScope();
             builder.RegisterType<OfficialFeedManager>().As<IOfficialFeedManager>().InstancePerLifetimeScope();
 
-#if NET451
             //cache managers
             if (config.RedisCachingEnabled)
             {
+#if NET451
                 builder.RegisterType<RedisConnectionWrapper>().As<IRedisConnectionWrapper>().SingleInstance();
-                builder.RegisterType<RedisCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_static").InstancePerLifetimeScope();
+                builder.RegisterType<RedisCacheManager>().As<ICacheManager>().InstancePerLifetimeScope();
+#endif
             }
             else
             {
-                builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_static").SingleInstance();
+                builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().SingleInstance();
             }
-            builder.RegisterType<PerRequestCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_per_request").InstancePerLifetimeScope();
+            builder.RegisterType<PerRequestCacheManager>().As<ICacheManager>().InstancePerLifetimeScope();
                 
-#endif
             if (config.RunOnAzureWebApps)
             {
                 builder.RegisterType<AzureWebAppsMachineNameProvider>().As<IMachineNameProvider>().SingleInstance();
