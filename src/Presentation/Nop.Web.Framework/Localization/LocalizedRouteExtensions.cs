@@ -1,75 +1,106 @@
-﻿#if NET451
-using System;
-using System.Web.Mvc;
-using System.Web.Routing;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Routing;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.Localization
 {
+    /// <summary>
+    /// Represents extensions of LocalizedRoute
+    /// </summary>
     public static class LocalizedRouteExtensions
     {
-        //Override for localized route
-        public static Route MapLocalizedRoute(this RouteCollection routes, string name, string url)
+        /// <summary>
+        /// Adds a route to the route builder with the specified name and template
+        /// </summary>
+        /// <param name="routeBuilder">The route builder to add the route to</param>
+        /// <param name="name">The name of the route</param>
+        /// <param name="template">The URL pattern of the route</param>
+        /// <returns>Route builder</returns>
+        public static IRouteBuilder MapLocalizedRoute(this IRouteBuilder routeBuilder, string name, string template)
         {
-            return MapLocalizedRoute(routes, name, url, null /* defaults */, (object)null /* constraints */);
+            return MapLocalizedRoute(routeBuilder, name, template, defaults: null);
         }
-        public static Route MapLocalizedRoute(this RouteCollection routes, string name, string url, object defaults)
+
+        /// <summary>
+        /// Adds a route to the route builder with the specified name, template, and default values
+        /// </summary>
+        /// <param name="routeBuilder">The route builder to add the route to</param>
+        /// <param name="name">The name of the route</param>
+        /// <param name="template">The URL pattern of the route</param>
+        /// <param name="defaults">An object that contains default values for route parameters. 
+        /// The object's properties represent the names and values of the default values</param>
+        /// <returns>Route builder</returns>
+        public static IRouteBuilder MapLocalizedRoute(this IRouteBuilder routeBuilder, string name, string template, object defaults)
         {
-            return MapLocalizedRoute(routes, name, url, defaults, (object)null /* constraints */);
+            return MapLocalizedRoute(routeBuilder, name, template, defaults, constraints: null);
         }
-        public static Route MapLocalizedRoute(this RouteCollection routes, string name, string url, object defaults, object constraints)
+
+        /// <summary>
+        /// Adds a route to the route builder with the specified name, template, default values, and constraints.
+        /// </summary>
+        /// <param name="routeBuilder">The route builder to add the route to</param>
+        /// <param name="name">The name of the route</param>
+        /// <param name="template">The URL pattern of the route</param>
+        /// <param name="defaults"> An object that contains default values for route parameters. 
+        /// The object's properties represent the names and values of the default values</param>
+        /// <param name="constraints">An object that contains constraints for the route. 
+        /// The object's properties represent the names and values of the constraints</param>
+        /// <returns>Route builder</returns>
+        public static IRouteBuilder MapLocalizedRoute(this IRouteBuilder routeBuilder,
+            string name, string template, object defaults, object constraints)
         {
-            return MapLocalizedRoute(routes, name, url, defaults, constraints, null /* namespaces */);
+            return MapLocalizedRoute(routeBuilder, name, template, defaults, constraints, dataTokens: null);
         }
-        public static Route MapLocalizedRoute(this RouteCollection routes, string name, string url, string[] namespaces)
+
+        /// <summary>
+        /// Adds a route to the route builder with the specified name, template, default values, constraints anddata tokens.
+        /// </summary>
+        //// <param name="routeBuilder">The route builder to add the route to</param>
+        /// <param name="name">The name of the route</param>
+        /// <param name="template">The URL pattern of the route</param>
+        /// <param name="defaults"> An object that contains default values for route parameters. 
+        /// The object's properties represent the names and values of the default values</param>
+        /// <param name="constraints">An object that contains constraints for the route. 
+        /// The object's properties represent the names and values of the constraints</param>
+        /// <param name="dataTokens">An object that contains data tokens for the route. 
+        /// The object's properties represent the names and values of the data tokens</param>
+        /// <returns>Route builder</returns>
+        public static IRouteBuilder MapLocalizedRoute(this IRouteBuilder routeBuilder,
+            string name, string template, object defaults, object constraints, object dataTokens)
         {
-            return MapLocalizedRoute(routes, name, url, null /* defaults */, null /* constraints */, namespaces);
+            if (routeBuilder.DefaultHandler == null)
+                throw new ArgumentNullException(nameof(routeBuilder));
+
+            //get registered InlineConstraintResolver
+            var inlineConstraintResolver = EngineContext.Current.Resolve<IInlineConstraintResolver>();
+
+            //create new localized route
+            var localizedRoute = new LocalizedRoute(routeBuilder.DefaultHandler, name, template,
+                new RouteValueDictionary(defaults), new RouteValueDictionary(constraints),
+                new RouteValueDictionary(dataTokens), inlineConstraintResolver);
+
+            //and add it to route collection
+            routeBuilder.Routes.Add(localizedRoute);
+
+            return routeBuilder;
         }
-        public static Route MapLocalizedRoute(this RouteCollection routes, string name, string url, object defaults, string[] namespaces)
-        {
-            return MapLocalizedRoute(routes, name, url, defaults, null /* constraints */, namespaces);
-        }
-        public static Route MapLocalizedRoute(this RouteCollection routes, string name, string url, object defaults, object constraints, string[] namespaces)
+
+        /// <summary>
+        /// Clear _seoFriendlyUrlsForLanguagesEnabled cached value for the routes
+        /// </summary>
+        /// <param name="routes">Collection of routes</param>
+        public static void ClearSeoFriendlyUrlsCachedValueForRoutes(this IEnumerable<IRouter> routes)
         {
             if (routes == null)
-            {
-                throw new ArgumentNullException("routes");
-            }
-            if (url == null)
-            {
-                throw new ArgumentNullException("url");
-            }
+                throw new ArgumentNullException(nameof(routes));
 
-            var route = new LocalizedRoute(url, new MvcRouteHandler())
-            {
-                Defaults = new RouteValueDictionary(defaults),
-                Constraints = new RouteValueDictionary(constraints),
-                DataTokens = new RouteValueDictionary()
-            };
-
-            if ((namespaces != null) && (namespaces.Length > 0))
-            {
-                route.DataTokens["Namespaces"] = namespaces;
-            }
-
-            routes.Add(name, route);
-
-            return route;
-        }
-        
-        public static void ClearSeoFriendlyUrlsCachedValueForRoutes(this RouteCollection routes)
-        {
-            if (routes == null)
-            {
-                throw new ArgumentNullException("routes");
-            }
+            //clear cached settings
             foreach (var route in routes)
             {
                 if (route is LocalizedRoute)
-                {
-                    ((LocalizedRoute) route).ClearSeoFriendlyUrlsCachedValue();
-                }
+                    ((LocalizedRoute)route).ClearSeoFriendlyUrlsCachedValue();
             }
         }
     }
 }
-#endif
