@@ -14,10 +14,7 @@ namespace Nop.Services.Caching
         /// </summary>
         public void Execute()
         {
-#if NET451
-            var cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
-            cacheManager.Clear();
-#endif
+            EngineContext.Current.Resolve<IStaticCacheManager>().Clear();
         }
     }
 }

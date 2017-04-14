@@ -53,7 +53,7 @@ namespace Nop.Web.Controllers
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
 
         #endregion
 
@@ -79,7 +79,7 @@ namespace Nop.Web.Controllers
             ShoppingCartSettings shoppingCartSettings,
             LocalizationSettings localizationSettings,
             CaptchaSettings captchaSettings,
-            ICacheManager cacheManager)
+            IStaticCacheManager cacheManager)
         {
             this._productModelFactory = productModelFactory;
             this._productService = productService;

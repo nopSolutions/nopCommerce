@@ -73,7 +73,7 @@ namespace Nop.Web.Factories
         private readonly CustomerSettings _customerSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly SeoSettings _seoSettings;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
 
         #endregion
 
@@ -110,7 +110,7 @@ namespace Nop.Web.Factories
             CustomerSettings customerSettings,
             CaptchaSettings captchaSettings,
             SeoSettings seoSettings,
-            ICacheManager cacheManager)
+            IStaticCacheManager cacheManager)
         {
             this._specificationAttributeService = specificationAttributeService;
             this._categoryService = categoryService;

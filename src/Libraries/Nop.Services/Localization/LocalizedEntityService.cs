@@ -41,7 +41,7 @@ namespace Nop.Services.Localization
         #region Fields
 
         private readonly IRepository<LocalizedProperty> _localizedPropertyRepository;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly LocalizationSettings _localizationSettings;
 
         #endregion
@@ -51,10 +51,10 @@ namespace Nop.Services.Localization
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
+        /// <param name="cacheManager">Static cache manager</param>
         /// <param name="localizedPropertyRepository">Localized property repository</param>
         /// <param name="localizationSettings">Localization settings</param>
-        public LocalizedEntityService(ICacheManager cacheManager,
+        public LocalizedEntityService(IStaticCacheManager cacheManager,
             IRepository<LocalizedProperty> localizedPropertyRepository,
             LocalizationSettings localizationSettings)
         {

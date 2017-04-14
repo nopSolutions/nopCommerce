@@ -19,7 +19,7 @@ namespace Nop.Web.Factories
 
         private readonly IWorkContext _workContext;
         private readonly IPollService _pollService;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
 
         #endregion
 
@@ -27,7 +27,7 @@ namespace Nop.Web.Factories
 
         public PollModelFactory(IWorkContext workContext,
             IPollService pollService,
-            ICacheManager cacheManager)
+            IStaticCacheManager cacheManager)
         {
             this._workContext = workContext;
             this._pollService = pollService;

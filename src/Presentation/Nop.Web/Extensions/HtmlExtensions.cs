@@ -237,7 +237,7 @@ namespace Nop.Web.Extensions
             var storeContext = EngineContext.Current.Resolve<IStoreContext>();
 
             //static cache manager
-            var cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+            var cacheManager = EngineContext.Current.ContainerManager.Resolve<IStaticCacheManager>();
             var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_SENAME_BY_SYSTEMNAME, systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id);
             var cachedSeName = cacheManager.Get(cacheKey, () =>
             {

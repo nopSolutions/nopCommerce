@@ -30,7 +30,7 @@ namespace Nop.Web.Factories
         private readonly IStoreContext _storeContext;
         private readonly IPictureService _pictureService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
 
         private readonly MediaSettings _mediaSettings;
         private readonly BlogSettings _blogSettings;
@@ -46,7 +46,7 @@ namespace Nop.Web.Factories
             IStoreContext storeContext,
             IPictureService pictureService,
             IDateTimeHelper dateTimeHelper,
-            ICacheManager cacheManager,
+            IStaticCacheManager cacheManager,
             MediaSettings mediaSettings,
             BlogSettings blogSettings,
             CustomerSettings customerSettings,

@@ -6,7 +6,7 @@ namespace Nop.Core.Caching
     /// <summary>
     /// Represents a memory cache manager 
     /// </summary>
-    public partial class MemoryCacheManager : ICacheManager
+    public partial class MemoryCacheManager : IStaticCacheManager
     {
         #region Fields
 

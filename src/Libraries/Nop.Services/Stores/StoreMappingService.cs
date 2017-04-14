@@ -36,7 +36,7 @@ namespace Nop.Services.Stores
 
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStoreContext _storeContext;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly CatalogSettings _catalogSettings;
 
@@ -47,12 +47,12 @@ namespace Nop.Services.Stores
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
+        /// <param name="cacheManager">Static cache manager</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="eventPublisher">Event publisher</param>
-        public StoreMappingService(ICacheManager cacheManager, 
+        public StoreMappingService(IStaticCacheManager cacheManager, 
             IStoreContext storeContext,
             IRepository<StoreMapping> storeMappingRepository,
             CatalogSettings catalogSettings,

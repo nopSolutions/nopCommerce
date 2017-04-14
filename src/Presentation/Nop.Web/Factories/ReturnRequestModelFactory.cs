@@ -34,7 +34,7 @@ namespace Nop.Web.Factories
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDownloadService _downloadService;
         private readonly OrderSettings _orderSettings;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
 
         #endregion
 
@@ -50,7 +50,7 @@ namespace Nop.Web.Factories
             IDateTimeHelper dateTimeHelper,
             IDownloadService downloadService, 
             OrderSettings orderSettings,
-            ICacheManager cacheManager)
+            IStaticCacheManager cacheManager)
         {
             this._returnRequestService = returnRequestService;
             this._orderService = orderService;

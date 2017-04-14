@@ -31,10 +31,7 @@ namespace Nop.Services.Logging
 
         #region Fields
 
-        /// <summary>
-        /// Cache manager
-        /// </summary>
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
         private readonly IWorkContext _workContext;
@@ -42,6 +39,7 @@ namespace Nop.Services.Logging
         private readonly IDataProvider _dataProvider;
         private readonly CommonSettings _commonSettings;
         private readonly IWebHelper _webHelper;
+
         #endregion
         
         #region Ctor
@@ -49,7 +47,7 @@ namespace Nop.Services.Logging
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
+        /// <param name="cacheManager">Static cache manager</param>
         /// <param name="activityLogRepository">Activity log repository</param>
         /// <param name="activityLogTypeRepository">Activity log type repository</param>
         /// <param name="workContext">Work context</param>
@@ -57,7 +55,7 @@ namespace Nop.Services.Logging
         /// <param name="dataProvider">WeData provider</param>
         /// <param name="commonSettings">Common settings</param>
         /// <param name="webHelper">Web helper</param>
-        public CustomerActivityService(ICacheManager cacheManager,
+        public CustomerActivityService(IStaticCacheManager cacheManager,
             IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
             IWorkContext workContext,

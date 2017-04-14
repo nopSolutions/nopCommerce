@@ -69,7 +69,7 @@ namespace Nop.Web.Factories
         private readonly IPaymentService _paymentService;
         private readonly IPermissionService _permissionService;
         private readonly IDownloadService _downloadService;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IWebHelper _webHelper;
         private readonly IGenericAttributeService _genericAttributeService;
 #if NET451
@@ -114,7 +114,7 @@ namespace Nop.Web.Factories
             IPaymentService paymentService,
             IPermissionService permissionService, 
             IDownloadService downloadService,
-            ICacheManager cacheManager,
+            IStaticCacheManager cacheManager,
             IWebHelper webHelper, 
             IGenericAttributeService genericAttributeService,
 #if NET451

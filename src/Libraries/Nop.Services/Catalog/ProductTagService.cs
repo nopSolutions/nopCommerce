@@ -42,7 +42,7 @@ namespace Nop.Services.Catalog
         private readonly IDbContext _dbContext;
         private readonly CommonSettings _commonSettings;
         private readonly CatalogSettings _catalogSettings;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly IProductService _productService;
 
@@ -57,7 +57,7 @@ namespace Nop.Services.Catalog
         /// <param name="dataProvider">Data provider</param>
         /// <param name="dbContext">Database Context</param>
         /// <param name="commonSettings">Common settings</param>
-        /// <param name="cacheManager">Cache manager</param>
+        /// <param name="cacheManager">Static cache manager</param>
         /// <param name="eventPublisher">Event published</param>
         /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="catalogSettings">Catalog settings</param>
@@ -68,7 +68,7 @@ namespace Nop.Services.Catalog
             IDbContext dbContext,
             CommonSettings commonSettings,
             CatalogSettings catalogSettings,
-            ICacheManager cacheManager,
+            IStaticCacheManager cacheManager,
             IEventPublisher eventPublisher,
             IProductService productService)
         {

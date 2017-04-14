@@ -22,14 +22,14 @@ namespace Nop.Web.Controllers
 {
     public partial class InstallController : BasePublicController
     {
-        #region Fields
+#region Fields
 
         private readonly IInstallationLocalizationService _locService;
         private readonly NopConfig _config;
 
-        #endregion
+#endregion
 
-        #region Ctor
+#region Ctor
 
         public InstallController(IInstallationLocalizationService locService, NopConfig config)
         {
@@ -37,9 +37,9 @@ namespace Nop.Web.Controllers
             this._config = config;
         }
 
-        #endregion
+#endregion
 
-        #region Utilities
+#region Utilities
 
         /// <summary>
         /// A value indicating whether we use MARS (Multiple Active Result Sets)
@@ -169,9 +169,9 @@ namespace Nop.Web.Controllers
             return builder.ConnectionString;
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         public virtual ActionResult Index()
         {
@@ -421,7 +421,7 @@ namespace Nop.Web.Controllers
                     //reset cache
                     DataSettingsHelper.ResetCache();
 
-                    var cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+                    var cacheManager = EngineContext.Current.ContainerManager.Resolve<IStaticCacheManager>();
                     cacheManager.Clear();
 
                     //clear provider settings if something got wrong
@@ -462,7 +462,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("HomePage");
         }
 
-        #endregion
+#endregion
     }
 }
 #endif

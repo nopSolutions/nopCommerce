@@ -19,7 +19,7 @@ namespace Nop.Web.Factories
         private readonly IStateProvinceService _stateProvinceService;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
 
 	    #endregion
 
@@ -29,7 +29,7 @@ namespace Nop.Web.Factories
             IStateProvinceService stateProvinceService, 
             ILocalizationService localizationService, 
             IWorkContext workContext,
-            ICacheManager cacheManager)
+            IStaticCacheManager cacheManager)
 		{
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;

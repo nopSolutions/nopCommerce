@@ -46,7 +46,7 @@ namespace Nop.Services.Seo
         #region Fields
 
         private readonly IRepository<UrlRecord> _urlRecordRepository;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly LocalizationSettings _localizationSettings;
 
         #endregion
@@ -56,10 +56,10 @@ namespace Nop.Services.Seo
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
+        /// <param name="cacheManager">Static cache manager</param>
         /// <param name="urlRecordRepository">URL record repository</param>
         /// <param name="localizationSettings">Localization settings</param>
-        public UrlRecordService(ICacheManager cacheManager,
+        public UrlRecordService(IStaticCacheManager cacheManager,
             IRepository<UrlRecord> urlRecordRepository,
             LocalizationSettings localizationSettings)
         {

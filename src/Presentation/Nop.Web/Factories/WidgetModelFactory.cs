@@ -21,7 +21,7 @@ namespace Nop.Web.Factories
         private readonly IWidgetService _widgetService;
         private readonly IStoreContext _storeContext;
         private readonly IThemeContext _themeContext;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IWorkContext _workContext;
 
         #endregion
@@ -31,7 +31,7 @@ namespace Nop.Web.Factories
         public WidgetModelFactory(IWidgetService widgetService, 
             IStoreContext storeContext,
             IThemeContext themeContext,
-            ICacheManager cacheManager,
+            IStaticCacheManager cacheManager,
             IWorkContext workContext)
         {
             this._widgetService = widgetService;

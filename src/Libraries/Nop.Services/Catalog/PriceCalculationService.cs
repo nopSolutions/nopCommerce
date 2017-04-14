@@ -28,7 +28,7 @@ namespace Nop.Services.Catalog
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
 
@@ -43,7 +43,7 @@ namespace Nop.Services.Catalog
             IManufacturerService manufacturerService,
             IProductAttributeParser productAttributeParser, 
             IProductService productService,
-            ICacheManager cacheManager,
+            IStaticCacheManager cacheManager,
             ShoppingCartSettings shoppingCartSettings, 
             CatalogSettings catalogSettings)
         {

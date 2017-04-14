@@ -63,7 +63,7 @@ namespace Nop.Web.Factories
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
         private readonly IPermissionService _permissionService;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IPageHeadBuilder _pageHeadBuilder;
         private readonly IPictureService _pictureService;
 #if NET451
@@ -100,7 +100,7 @@ namespace Nop.Web.Factories
             IGenericAttributeService genericAttributeService,
             IWebHelper webHelper,
             IPermissionService permissionService,
-            ICacheManager cacheManager,
+            IStaticCacheManager cacheManager,
             IPageHeadBuilder pageHeadBuilder,
             IPictureService pictureService,
 #if NET451

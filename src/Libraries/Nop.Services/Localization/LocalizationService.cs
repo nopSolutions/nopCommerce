@@ -51,7 +51,7 @@ namespace Nop.Services.Localization
         private readonly IWorkContext _workContext;
         private readonly ILogger _logger;
         private readonly ILanguageService _languageService;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
         private readonly CommonSettings _commonSettings;
@@ -65,7 +65,7 @@ namespace Nop.Services.Localization
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
+        /// <param name="cacheManager">Static cache manager</param>
         /// <param name="logger">Logger</param>
         /// <param name="workContext">Work context</param>
         /// <param name="lsrRepository">Locale string resource repository</param>
@@ -75,12 +75,16 @@ namespace Nop.Services.Localization
         /// <param name="commonSettings">Common settings</param>
         /// <param name="localizationSettings">Localization settings</param>
         /// <param name="eventPublisher">Event published</param>
-        public LocalizationService(ICacheManager cacheManager,
-            ILogger logger, IWorkContext workContext,
+        public LocalizationService(IStaticCacheManager cacheManager,
+            ILogger logger,
+            IWorkContext workContext,
             IRepository<LocaleStringResource> lsrRepository, 
             ILanguageService languageService,
-            IDataProvider dataProvider, IDbContext dbContext, CommonSettings commonSettings,
-            LocalizationSettings localizationSettings, IEventPublisher eventPublisher)
+            IDataProvider dataProvider,
+            IDbContext dbContext,
+            CommonSettings commonSettings,
+            LocalizationSettings localizationSettings, 
+            IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
             this._logger = logger;

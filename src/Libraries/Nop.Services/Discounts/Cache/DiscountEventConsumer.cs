@@ -73,16 +73,11 @@ namespace Nop.Services.Discounts.Cache
         public const string DISCOUNT_MANUFACTURER_IDS_MODEL_KEY = "Nop.discounts.manufacturerids-{0}-{1}-{2}";
         public const string DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY = "Nop.discounts.manufacturerids";
 
+        private readonly IStaticCacheManager _cacheManager;
 
-
-        private readonly ICacheManager _cacheManager;
-
-        public DiscountEventConsumer()
+        public DiscountEventConsumer(IStaticCacheManager cacheManager)
         {
-#if NET451
-            //TODO inject static cache manager using constructor
-            this._cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
-#endif
+            this._cacheManager = cacheManager;
         }
 
         //discounts
