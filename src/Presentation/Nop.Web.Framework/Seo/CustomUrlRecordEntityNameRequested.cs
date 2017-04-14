@@ -1,22 +1,35 @@
-﻿#if NET451
-using System.Web.Routing;
+﻿using Microsoft.AspNetCore.Routing;
 using Nop.Services.Seo;
 
 namespace Nop.Web.Framework.Seo
 {
     /// <summary>
-    /// Event to handle unknow URL record entity names
+    /// Represents event to handle unknow URL record entity names
     /// </summary>
     public class CustomUrlRecordEntityNameRequested
     {
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets information about the current routing path
+        /// </summary>
+        public RouteData RouteData { get; private set; }
+
+        /// <summary>
+        /// Gets or sets URL record
+        /// </summary>
+        public UrlRecordService.UrlRecordForCaching UrlRecord { get; private set; }
+
+        #endregion
+
+        #region Ctor
+
         public CustomUrlRecordEntityNameRequested(RouteData routeData, UrlRecordService.UrlRecordForCaching urlRecord)
         {
-            this.RouteData = routeData;
-            this.UrlRecord = urlRecord;
+            RouteData = routeData;
+            UrlRecord = urlRecord;
         }
 
-        public RouteData RouteData { get; private set; }
-        public UrlRecordService.UrlRecordForCaching UrlRecord { get; private set; }
+        #endregion
     }
 }
-#endif
