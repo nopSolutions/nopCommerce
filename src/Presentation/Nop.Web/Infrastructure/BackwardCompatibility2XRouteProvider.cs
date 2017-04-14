@@ -23,32 +23,32 @@ namespace Nop.Web.Infrastructure
                 return;
 
             //products
-            routeBuilder.MapLocalizedRoute("", "p/{productId}/{SeName?}",
-                new { controller = "BackwardCompatibility2X", action = "RedirectProductById" }, new { productId = @"\d+" });
+            routeBuilder.MapLocalizedRoute("", "p/{productId:min(0)}/{SeName?}",
+                new { controller = "BackwardCompatibility2X", action = "RedirectProductById" });
 
             //categories
-            routeBuilder.MapLocalizedRoute("", "c/{categoryId}/{SeName?}",
-                new { controller = "BackwardCompatibility2X", action = "RedirectCategoryById" }, new { categoryId = @"\d+" });
+            routeBuilder.MapLocalizedRoute("", "c/{categoryId:min(0)}/{SeName?}",
+                new { controller = "BackwardCompatibility2X", action = "RedirectCategoryById" });
 
             //manufacturers
-            routeBuilder.MapLocalizedRoute("", "m/{manufacturerId}/{SeName?}",
-                new { controller = "BackwardCompatibility2X", action = "RedirectManufacturerById" }, new { manufacturerId = @"\d+" });
+            routeBuilder.MapLocalizedRoute("", "m/{manufacturerId:min(0)}/{SeName?}",
+                new { controller = "BackwardCompatibility2X", action = "RedirectManufacturerById" });
 
             //news
-            routeBuilder.MapLocalizedRoute("", "news/{newsItemId}/{SeName?}",
-                new { controller = "BackwardCompatibility2X", action = "RedirectNewsItemById" }, new { newsItemId = @"\d+" });
+            routeBuilder.MapLocalizedRoute("", "news/{newsItemId:min(0)}/{SeName?}",
+                new { controller = "BackwardCompatibility2X", action = "RedirectNewsItemById" });
 
             //blog
-            routeBuilder.MapLocalizedRoute("", "blog/{blogPostId}/{SeName?}",
-                new { controller = "BackwardCompatibility2X", action = "RedirectBlogPostById" }, new { blogPostId = @"\d+" });
+            routeBuilder.MapLocalizedRoute("", "blog/{blogPostId:min(0)}/{SeName?}",
+                new { controller = "BackwardCompatibility2X", action = "RedirectBlogPostById" });
 
             //topic
             routeBuilder.MapLocalizedRoute("", "t/{SystemName}",
                 new { controller = "BackwardCompatibility2X", action = "RedirectTopicBySystemName" });
 
             //vendors
-            routeBuilder.MapLocalizedRoute("", "vendor/{vendorId}/{SeName?}",
-                new { controller = "BackwardCompatibility2X", action = "RedirectVendorById" }, new { vendorId = @"\d+" });
+            routeBuilder.MapLocalizedRoute("", "vendor/{vendorId:min(0)}/{SeName?}",
+                new { controller = "BackwardCompatibility2X", action = "RedirectVendorById" });
         }
 
         #endregion
