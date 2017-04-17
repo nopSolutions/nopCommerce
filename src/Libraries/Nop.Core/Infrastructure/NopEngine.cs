@@ -5,7 +5,6 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
-using Nop.Core.Extensions;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Plugins;
 
@@ -32,15 +31,18 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         protected virtual void RunStartupTasks()
         {
-            var typeFinder = Resolve<ITypeFinder>();
-            var startUpTaskTypes = typeFinder.FindClassesOfType<IStartupTask>();
-            var startUpTasks = new List<IStartupTask>();
-            foreach (var startUpTaskType in startUpTaskTypes)
-                startUpTasks.Add((IStartupTask)Activator.CreateInstance(startUpTaskType));
-            //sort
-            startUpTasks = startUpTasks.AsQueryable().OrderBy(st => st.Order).ToList();
-            foreach (var startUpTask in startUpTasks)
-                startUpTask.Execute();
+            //find startup tasks provided by other assemblies
+            var startupTasks = Resolve<ITypeFinder>().FindClassesOfType<IStartupTask>();
+
+            //create and sort instances of startup tasks
+            var instances = startupTasks
+                .Where(startupTask => PluginManager.PluginInstalled(startupTask)) //ignore not installed plugins
+                .Select(startupTask => (IStartupTask)Activator.CreateInstance(startupTask))
+                .OrderBy(startupTask => startupTask.Order);
+
+            //execute tasks
+            foreach (var task in instances)
+                task.Execute();
         }
 
         /// <summary>
@@ -92,9 +94,6 @@ namespace Nop.Core.Infrastructure
         {
             //register dependencies
             RegisterDependencies(nopConfiguration, services);
-
-            //register mapper configurations
-            services.AddAutoMapper();
 
             //startup tasks
             if (!nopConfiguration.IgnoreStartupTasks)

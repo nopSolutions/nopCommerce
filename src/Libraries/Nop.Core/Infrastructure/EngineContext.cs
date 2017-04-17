@@ -1,6 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
-using Microsoft.Extensions.DependencyInjection;
-using Nop.Core.Configuration;
 
 namespace Nop.Core.Infrastructure
 {
@@ -12,18 +10,14 @@ namespace Nop.Core.Infrastructure
         #region Methods
 
         /// <summary>
-        /// Initializes a static instance of the Nop factory.
+        /// Create a static instance of the Nop engine.
         /// </summary>
-        /// <param name="nopConfiguration">Startup Nop configuration parameters</param>
-        /// <param name="services">The contract for a collection of service descriptors</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static IEngine Initialize(NopConfig nopConfiguration, IServiceCollection services)
+        public static IEngine Create()
         {
+            //create NopEngine as engine
             if (Singleton<IEngine>.Instance == null)
-            {
                 Singleton<IEngine>.Instance = new NopEngine();
-                Singleton<IEngine>.Instance.Initialize(nopConfiguration, services);
-            }
 
             return Singleton<IEngine>.Instance;
         }

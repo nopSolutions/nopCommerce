@@ -63,6 +63,9 @@ namespace Nop.Web
             //initialize engine
             var engine = services.InitializeNopEngine(nopConfig);
 
+            //register mapper configurations
+            services.AddAutoMapper();
+
             //return service provider provided by engine
             return engine.ServiceProvider;
         }

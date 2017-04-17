@@ -24,7 +24,13 @@ namespace Nop.Core.Extensions
         /// <returns>Engine instance</returns>
         public static IEngine InitializeNopEngine(this IServiceCollection services, NopConfig nopConfiguration)
         {
-            return EngineContext.Initialize(nopConfiguration, services);
+            //create engine
+            var engine = EngineContext.Create();
+
+            //and initialize it
+            engine.Initialize(nopConfiguration, services);
+
+            return engine;
         }
 
         /// <summary>
