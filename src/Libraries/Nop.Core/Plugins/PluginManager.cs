@@ -259,6 +259,21 @@ namespace Nop.Core.Plugins
                 File.Delete(filePath);
         }
 
+        /// <summary>
+        /// Check whether a plugin that found by some type which is located into its assembly is installed
+        /// </summary>
+        /// <param name="typeInAssembly">Some type which is located into the same assembly as plugin</param>
+        /// <returns>True if plugin exists and is installed; otherwise false</returns>
+        public static bool PluginInstalled(Type typeInAssembly)
+        {
+            if (typeInAssembly == null)
+                throw new ArgumentNullException("typeInAssembly");
+
+            return ReferencedPlugins.Any(plugin => plugin.Installed
+                && plugin.ReferencedAssembly != null
+                && plugin.ReferencedAssembly.FullName.Equals(typeInAssembly.Assembly.FullName, StringComparison.InvariantCultureIgnoreCase));
+        }
+
         #endregion
 
         #region Utilities

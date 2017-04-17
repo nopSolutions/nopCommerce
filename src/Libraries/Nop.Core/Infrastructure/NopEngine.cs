@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Infrastructure.Mapper;
+using Nop.Core.Plugins;
 
 namespace Nop.Core.Infrastructure
 {
@@ -64,6 +65,7 @@ namespace Nop.Core.Infrastructure
 
             //create and sort instances of dependency registrars
             var instances = dependencyRegistrars
+                .Where(dependencyRegistrar => PluginManager.PluginInstalled(dependencyRegistrar)) //ignore not installed plugins
                 .Select(dependencyRegistrar => (IDependencyRegistrar)Activator.CreateInstance(dependencyRegistrar))
                 .OrderBy(dependencyRegistrar => dependencyRegistrar.Order);
 
