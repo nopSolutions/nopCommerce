@@ -4,10 +4,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Nop.Core.Configuration;
 using Nop.Core.Extensions;
-using Nop.Core.Infrastructure;
 using Nop.Web.Framework.Mvc.Routes;
 
 namespace Nop.Web
@@ -75,8 +73,8 @@ namespace Nop.Web
         /// </summary>
         /// <param name="application">Builder that provides the mechanisms to configure an application's request pipeline</param>
         /// <param name="environment">Provides information about the web hosting environment an application is running in</param>
-        /// <param name="loggerFactory">Object used to configure the logging system</param>
-        public void Configure(IApplicationBuilder application, IHostingEnvironment environment, ILoggerFactory loggerFactory)
+        /// <param name="routePublisher">Route publisher</param>
+        public void Configure(IApplicationBuilder application, IHostingEnvironment environment, IRoutePublisher routePublisher)
         {
             //get detailed exceptions
             if (environment.IsDevelopment())
@@ -91,7 +89,7 @@ namespace Nop.Web
             application.UseMvc(routeBuilder =>
             {
                 //register all routes
-                EngineContext.Current.Resolve<IRoutePublisher>()?.RegisterRoutes(routeBuilder);
+                routePublisher.RegisterRoutes(routeBuilder);
 
                 //default route
                 routeBuilder.MapRoute("Default", "{controller=Home}/{action=Index}/{id?}");
