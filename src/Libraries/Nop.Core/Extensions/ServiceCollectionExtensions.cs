@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Linq;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
+using Nop.Core.Infrastructure.Mapper;
+using Nop.Core.Plugins;
 
 namespace Nop.Core.Extensions
 {
@@ -57,6 +61,32 @@ namespace Nop.Core.Extensions
         public static void AddHttpContextAccessor(this IServiceCollection services)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        }
+
+        /// <summary>
+        /// Register and configure AutoMapper
+        /// </summary>
+        /// <param name="services">The contract for a collection of service descriptors</param>
+        public static void AddAutoMapper(this IServiceCollection services)
+        {
+            //find mapper configurations provided by other assemblies
+            var mapperConfigurations = EngineContext.Current.Resolve<ITypeFinder>().FindClassesOfType<IMapperConfiguration>();
+
+            //create and sort instances of mapper configurations
+            var instances = mapperConfigurations
+                .Where(mapperConfiguration => PluginManager.PluginInstalled(mapperConfiguration)) //ignore not installed plugins
+                .Select(mapperConfiguration => (IMapperConfiguration)Activator.CreateInstance(mapperConfiguration))
+                .OrderBy(mapperConfiguration => mapperConfiguration.Order);
+
+            //get all configuration actions
+            var configurationActions = instances.Select(mapperConfiguration => mapperConfiguration.GetConfiguration());
+
+            //register AutoMapper with provided configurations
+            services.AddAutoMapper(mapperConfigurationExpression =>
+            {
+                foreach (var action in configurationActions)
+                    action(mapperConfigurationExpression);
+            });
         }
     }
 }

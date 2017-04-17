@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
+using Nop.Core.Extensions;
 using Nop.Core.Infrastructure.DependencyManagement;
-using Nop.Core.Infrastructure.Mapper;
 using Nop.Core.Plugins;
 
 namespace Nop.Core.Infrastructure
@@ -80,30 +79,6 @@ namespace Nop.Core.Infrastructure
             ServiceProvider = new AutofacServiceProvider(containerBuilder.Build());
         }
 
-        /// <summary>
-        /// Register mapping
-        /// </summary>
-        /// <param name="config">Config</param>
-        protected virtual void RegisterMapperConfiguration(NopConfig config)
-        {
-            //dependencies
-            var typeFinder = new WebAppTypeFinder();
-
-            //register mapper configurations provided by other assemblies
-            var mcTypes = typeFinder.FindClassesOfType<IMapperConfiguration>();
-            var mcInstances = new List<IMapperConfiguration>();
-            foreach (var mcType in mcTypes)
-                mcInstances.Add((IMapperConfiguration)Activator.CreateInstance(mcType));
-            //sort
-            mcInstances = mcInstances.AsQueryable().OrderBy(t => t.Order).ToList();
-            //get configurations
-            var configurationActions = new List<Action<IMapperConfigurationExpression>>();
-            foreach (var mc in mcInstances)
-                configurationActions.Add(mc.GetConfiguration());
-            //register
-            AutoMapperConfiguration.Init(configurationActions);
-        }
-
         #endregion
 
         #region Methods
@@ -119,7 +94,7 @@ namespace Nop.Core.Infrastructure
             RegisterDependencies(nopConfiguration, services);
 
             //register mapper configurations
-            RegisterMapperConfiguration(nopConfiguration);
+            services.AddAutoMapper();
 
             //startup tasks
             if (!nopConfiguration.IgnoreStartupTasks)
