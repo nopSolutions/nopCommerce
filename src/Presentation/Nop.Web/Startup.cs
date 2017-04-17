@@ -40,12 +40,6 @@ namespace Nop.Web
         /// <param name="services">The contract for a collection of service descriptors</param>
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            //add MVC feature
-            services.AddMvc();
-
-            //add memory cache feature
-            services.AddMemoryCache();
-
             //add options feature
             services.AddOptions();
 
@@ -55,14 +49,26 @@ namespace Nop.Web
             //add hosting configuration parameters
             services.ConfigureStartupConfig<HostingConfig>(Configuration.GetSection("Hosting"));
 
-            //add accessor to HttpContext
-            services.AddHttpContextAccessor();
-
             //initialize engine
             var engine = services.InitializeNopEngine(nopConfig);
 
+            //add MVC feature
+            services.AddMvc();
+
+            //add memory cache
+            services.AddMemoryCache();
+
+            //add Redis distributed cache
+            services.AddDistributedRedisCache(options =>
+            {
+                options.Configuration = nopConfig.RedisCachingConnectionString;
+            });
+
             //register mapper configurations
             services.AddAutoMapper();
+
+            //add accessor to HttpContext
+            services.AddHttpContextAccessor();
 
             //return service provider provided by engine
             return engine.ServiceProvider;

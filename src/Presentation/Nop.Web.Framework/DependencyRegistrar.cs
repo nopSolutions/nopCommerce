@@ -128,12 +128,7 @@ namespace Nop.Web.Framework
 
             //static cache manager
             if (config.RedisCachingEnabled)
-            {
-#if NET451
-                builder.RegisterType<RedisConnectionWrapper>().As<IRedisConnectionWrapper>().SingleInstance();
                 builder.RegisterType<RedisCacheManager>().As<IStaticCacheManager>().InstancePerLifetimeScope();
-#endif
-            }
             else
                 builder.RegisterType<MemoryCacheManager>().As<IStaticCacheManager>().SingleInstance();
 
