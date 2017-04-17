@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
+using Nop.Core.Extensions;
 using Nop.Core.Infrastructure.DependencyManagement;
+using Nop.Core.Infrastructure.Mapper;
 using Nop.Core.Plugins;
 
 namespace Nop.Core.Infrastructure
@@ -81,22 +85,77 @@ namespace Nop.Core.Infrastructure
             ServiceProvider = new AutofacServiceProvider(containerBuilder.Build());
         }
 
+        /// <summary>
+        /// Register and configure AutoMapper
+        /// </summary>
+        /// <param name="services">The contract for a collection of service descriptors</param>
+        protected virtual void AddAutoMapper(IServiceCollection services)
+        {
+            //find mapper configurations provided by other assemblies
+            var mapperConfigurations = Resolve<ITypeFinder>().FindClassesOfType<IMapperConfiguration>();
+
+            //create and sort instances of mapper configurations
+            var instances = mapperConfigurations
+                .Where(mapperConfiguration => PluginManager.PluginInstalled(mapperConfiguration)) //ignore not installed plugins
+                .Select(mapperConfiguration => (IMapperConfiguration)Activator.CreateInstance(mapperConfiguration))
+                .OrderBy(mapperConfiguration => mapperConfiguration.Order);
+
+            //get all configuration actions
+            var configurationActions = instances.Select(mapperConfiguration => mapperConfiguration.GetConfiguration());
+
+            //register AutoMapper with provided configurations
+            services.AddAutoMapper(mapperConfigurationExpression =>
+            {
+                foreach (var action in configurationActions)
+                    action(mapperConfigurationExpression);
+            });
+        }
+
         #endregion
 
         #region Methods
 
         /// <summary>
-        /// Initialize components and plugins in the nop environment.
+        /// Configure components in the nop environment
         /// </summary>
-        /// <param name="nopConfiguration">Startup Nop configuration parameters</param>
         /// <param name="services">The contract for a collection of service descriptors</param>
-        public void Initialize(NopConfig nopConfiguration, IServiceCollection services)
+        /// <param name="configuration">The root of an configuration hierarchy</param>
+        public void Configure(IServiceCollection services, IConfigurationRoot configuration)
         {
+            //add options feature
+            services.AddOptions();
+
+            //add NopConfig configuration parameters
+            var nopConfig = services.ConfigureStartupConfig<NopConfig>(configuration.GetSection("Nop"));
+
+            //add hosting configuration parameters
+            services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));
+
+            if (nopConfig.RedisCachingEnabled)
+            {
+                //add Redis distributed cache
+                services.AddDistributedRedisCache(options =>
+                {
+                    options.Configuration = nopConfig.RedisCachingConnectionString;
+                });
+            }
+            else
+            {
+                //add memory cache
+                services.AddMemoryCache();
+            }
+
+            //add accessor to HttpContext
+            services.AddHttpContextAccessor();
+
             //register dependencies
-            RegisterDependencies(nopConfiguration, services);
+            RegisterDependencies(nopConfig, services);
+
+            //register mapper configurations
+            AddAutoMapper(services);
 
             //startup tasks
-            if (!nopConfiguration.IgnoreStartupTasks)
+            if (!nopConfig.IgnoreStartupTasks)
                 RunStartupTasks();
         }
 

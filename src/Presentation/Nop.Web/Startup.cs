@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Nop.Core.Configuration;
 using Nop.Core.Extensions;
 using Nop.Web.Framework.Mvc.Routes;
 
@@ -25,11 +24,11 @@ namespace Nop.Web
 
         public Startup(IHostingEnvironment environment)
         {
-            var builder = new ConfigurationBuilder()
+            Configuration = new ConfigurationBuilder()
                 .SetBasePath(environment.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
+                .AddEnvironmentVariables()
+                .Build();
         }
 
         #endregion
@@ -40,35 +39,11 @@ namespace Nop.Web
         /// <param name="services">The contract for a collection of service descriptors</param>
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            //add options feature
-            services.AddOptions();
-
-            //add NopConfig configuration parameters
-            var nopConfig = services.ConfigureStartupConfig<NopConfig>(Configuration.GetSection("Nop"));
-
-            //add hosting configuration parameters
-            services.ConfigureStartupConfig<HostingConfig>(Configuration.GetSection("Hosting"));
-
-            //initialize engine
-            var engine = services.InitializeNopEngine(nopConfig);
-
             //add MVC feature
             services.AddMvc();
 
-            //add memory cache
-            services.AddMemoryCache();
-
-            //add Redis distributed cache
-            services.AddDistributedRedisCache(options =>
-            {
-                options.Configuration = nopConfig.RedisCachingConnectionString;
-            });
-
-            //register mapper configurations
-            services.AddAutoMapper();
-
-            //add accessor to HttpContext
-            services.AddHttpContextAccessor();
+            //add Nop engine
+            var engine = services.AddNopEngine(Configuration);
 
             //return service provider provided by engine
             return engine.ServiceProvider;

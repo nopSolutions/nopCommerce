@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Nop.Core.Configuration;
 
 namespace Nop.Core.Infrastructure
 {
@@ -19,11 +19,11 @@ namespace Nop.Core.Infrastructure
         IServiceProvider ServiceProvider { get; set; }
 
         /// <summary>
-        /// Initialize components and plugins in the nop environment.
+        /// Configure components in the nop environment
         /// </summary>
-        /// <param name="nopConfiguration">Startup Nop configuration parameters</param>
         /// <param name="services">The contract for a collection of service descriptors</param>
-        void Initialize(NopConfig config, IServiceCollection services);
+        /// <param name="configuration">The root of an configuration hierarchy</param>
+        void Configure(IServiceCollection services, IConfigurationRoot configuration);
 
         /// <summary>
         /// Resolve dependency
