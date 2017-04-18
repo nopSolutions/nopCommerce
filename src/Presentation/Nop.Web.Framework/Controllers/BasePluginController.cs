@@ -1,4 +1,4 @@
-﻿#if NET451
+﻿
 namespace Nop.Web.Framework.Controllers
 {
     /// <summary>
@@ -8,4 +8,3 @@ namespace Nop.Web.Framework.Controllers
     {
     }
 }
-#endif

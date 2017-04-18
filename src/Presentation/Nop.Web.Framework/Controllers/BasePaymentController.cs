@@ -1,6 +1,5 @@
-﻿#if NET451
-using System.Collections.Generic;
-using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Nop.Services.Payments;
 
 namespace Nop.Web.Framework.Controllers
@@ -10,8 +9,18 @@ namespace Nop.Web.Framework.Controllers
     /// </summary>
     public abstract class BasePaymentController : BasePluginController
     {
+        /// <summary>
+        /// Validate payment form
+        /// </summary>
+        /// <param name="form">The parsed form values</param>
+        /// <returns>List of validating errors</returns>
         public abstract IList<string> ValidatePaymentForm(FormCollection form);
+
+        /// <summary>
+        /// Get payment information
+        /// </summary>
+        /// <param name="form">The parsed form values</param>
+        /// <returns>Payment info holder</returns>
         public abstract ProcessPaymentRequest GetPaymentInfo(FormCollection form);
     }
 }
-#endif
