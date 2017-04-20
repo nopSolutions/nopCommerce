@@ -1,107 +1,127 @@
-﻿#if NET451
-using System;
-using System.Web.Mvc;
+﻿using System;
+using System.Net;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Seo;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.Seo
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
-    public class WwwRequirementAttribute : FilterAttribute, IAuthorizationFilter
+    /// <summary>
+    /// Represents a filter attribute that checks WWW at the beginning of the URL and properly redirect if necessary
+    /// </summary>
+    public class WwwRequirementAttribute : TypeFilterAttribute
     {
-        public virtual void OnAuthorization(AuthorizationContext filterContext)
+        /// <summary>
+        /// Create instance of the filter attribute
+        /// </summary>
+        public WwwRequirementAttribute() : base(typeof(WwwRequirementFilter))
         {
-            if (filterContext == null)
-                throw new ArgumentNullException("filterContext");
-
-            //don't apply filter to child methods
-            if (filterContext.IsChildAction)
-                return;
-
-            // only redirect for GET requests, 
-            // otherwise the browser might not propagate the verb and request body correctly.
-            if (!String.Equals(filterContext.HttpContext.Request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))
-                return;
-
-            //ignore this rule for localhost
-            if (filterContext.HttpContext.Request.IsLocal)
-                return;
-
-            if (!DataSettingsHelper.DatabaseIsInstalled())
-                return;
-            var seoSettings = EngineContext.Current.Resolve<SeoSettings>();
-
-            switch (seoSettings.WwwRequirement)
-            {
-                case WwwRequirement.WithWww:
-                {
-                    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                    string url = webHelper.GetThisPageUrl(true);
-                    var currentConnectionSecured = webHelper.IsCurrentConnectionSecured();
-                    if (currentConnectionSecured)
-                    {
-                        bool startsWith3W = url.StartsWith("https://www.", StringComparison.OrdinalIgnoreCase);
-                        if (!startsWith3W)
-                        {
-                            url = url.Replace("https://", "https://www.");
-
-                            //301 (permanent) redirection
-                            filterContext.Result = new RedirectResult(url, true);
-                        }
-                    }
-                    else
-                    {
-                        bool startsWith3W = url.StartsWith("http://www.", StringComparison.OrdinalIgnoreCase);
-                        if (!startsWith3W)
-                        {
-                            url = url.Replace("http://", "http://www.");
-
-                            //301 (permanent) redirection
-                            filterContext.Result = new RedirectResult(url, true);
-                        }
-                    }
-                }
-                    break;
-                case WwwRequirement.WithoutWww:
-                {
-                    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                    string url = webHelper.GetThisPageUrl(true);
-                    var currentConnectionSecured = webHelper.IsCurrentConnectionSecured();
-                    if (currentConnectionSecured)
-                    {
-                        bool startsWith3W = url.StartsWith("https://www.", StringComparison.OrdinalIgnoreCase);
-                        if (startsWith3W)
-                        {
-                            url = url.Replace("https://www.", "https://");
-
-                            //301 (permanent) redirection
-                            filterContext.Result = new RedirectResult(url, true);
-                        }
-                    }
-                    else
-                    {
-                        bool startsWith3W = url.StartsWith("http://www.", StringComparison.OrdinalIgnoreCase);
-                        if (startsWith3W)
-                        {
-                            url = url.Replace("http://www.", "http://");
-
-                            //301 (permanent) redirection
-                            filterContext.Result = new RedirectResult(url, true);
-                        }
-                    }
-                }
-                    break;
-                case WwwRequirement.NoMatter:
-                {
-                    //do nothing
-                }
-                break;
-                default:
-                    throw new NopException("Not supported WwwRequirement parameter");
-            }
         }
+
+        #region Nested filter
+
+        /// <summary>
+        /// Represents a filter that checks WWW at the beginning of the URL and properly redirect if necessary
+        /// </summary>
+        private class WwwRequirementFilter : IAuthorizationFilter
+        {
+            #region Fields
+
+            private readonly IWebHelper _webHelper;
+            private readonly SeoSettings _seoSettings;
+
+            #endregion
+
+            #region Ctor
+
+            public WwwRequirementFilter(IWebHelper webHelper,
+                SeoSettings seoSettings)
+            {
+                this._webHelper = webHelper;
+                this._seoSettings = seoSettings;
+            }
+
+            #endregion
+
+            #region Utilities
+
+            /// <summary>
+            /// Check WWW prefix at the beginning of the URL and properly redirect if necessary
+            /// </summary>
+            /// <param name="filterContext">Authorization filter context</param>
+            /// <param name="withWww">Whether URL must start with WWW</param>
+            protected void RedirectRequest(AuthorizationFilterContext filterContext, bool withWww)
+            {
+                //get scheme depending on securing connection
+                var urlScheme = _webHelper.IsCurrentConnectionSecured() ? "https://" : "http://";
+
+                //compose start of URL with WWW
+                var urlWith3W = string.Format("{0}www.", urlScheme);
+
+                //get requested URL
+                var currentUrl = _webHelper.GetThisPageUrl(true);
+
+                //whether requested URL starts with WWW
+                var urlStartsWith3W = currentUrl.StartsWith(urlWith3W, StringComparison.OrdinalIgnoreCase);
+
+                //page should have WWW prefix, so set 301 (permanent) redirection to URL with WWW
+                if (withWww && !urlStartsWith3W)
+                    filterContext.Result = new RedirectResult(currentUrl.Replace(urlScheme, urlWith3W), true);
+
+                //page shouldn't have WWW prefix, so set 301 (permanent) redirection to URL without WWW
+                if (!withWww && urlStartsWith3W)
+                    filterContext.Result = new RedirectResult(currentUrl.Replace(urlWith3W, urlScheme), true);
+            }
+
+            #endregion
+
+            #region Methods
+
+            /// <summary>
+            /// Called early in the filter pipeline to confirm request is authorized
+            /// </summary>
+            /// <param name="filterContext">Authorization filter context</param>
+            public void OnAuthorization(AuthorizationFilterContext filterContext)
+            {
+                if (filterContext == null)
+                    throw new ArgumentNullException("filterContext");
+
+                if (!DataSettingsHelper.DatabaseIsInstalled())
+                    return;
+
+#if NET451
+                //ignore this rule for localhost
+                if (filterContext.HttpContext.Request.IsLocal)
+                    return;
+#endif
+
+                //only in GET requests, otherwise the browser might not propagate the verb and request body correctly.
+                if (!filterContext.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
+                    return;
+
+                switch (_seoSettings.WwwRequirement)
+                {
+                    case WwwRequirement.WithWww:
+                        //redirect to URL with starting WWW
+                        RedirectRequest(filterContext, true);
+                        break;
+                    case WwwRequirement.WithoutWww:
+                        //redirect to URL without starting WWW
+                        RedirectRequest(filterContext, false);
+                        break;
+                    case WwwRequirement.NoMatter:
+                        //do nothing
+                        break;
+                    default:
+                        throw new NopException("Not supported WwwRequirement parameter");
+                }
+            }
+
+            #endregion
+        }
+
+        #endregion
     }
 }
-#endif

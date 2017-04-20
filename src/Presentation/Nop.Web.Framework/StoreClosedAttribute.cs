@@ -1,89 +1,130 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain;
-using Nop.Core.Infrastructure;
 using Nop.Services.Security;
 using Nop.Services.Topics;
 
 namespace Nop.Web.Framework
 {
     /// <summary>
-    /// Store closed attribute
+    /// Represents a filter attribute that confirms access to a closed store
     /// </summary>
-    public class StoreClosedAttribute : ActionFilterAttribute
+    public class StoreClosedAttribute : TypeFilterAttribute
     {
-        private readonly bool _ignore;
+        /// <summary>
+        /// Create instance of the filter attribute
+        /// </summary>
+        /// <param name="ignore">Whether to ignore the execution of filter actions</param>
+        public StoreClosedAttribute(bool ignore = false) : base(typeof(CheckAccessClosedStoreFilter))
+        {
+            this.Arguments = new object[] { ignore };
+        }
+
+        #region Nested filter
 
         /// <summary>
-        /// Ctor 
+        /// Represents a filter that confirms access to closed store
         /// </summary>
-        /// <param name="ignore">Pass false in order to ignore this functionality for a certain action method</param>
-        public StoreClosedAttribute(bool ignore = false)
+        private class CheckAccessClosedStoreFilter : IActionFilter
         {
-            this._ignore = ignore;
-        }
+            #region Fields
 
-        public override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            if (filterContext == null || filterContext.HttpContext == null)
-                return;
+            private readonly bool _ignoreFilter;
+            private readonly IPermissionService _permissionService;
+            private readonly IStoreContext _storeContext;
+            private readonly ITopicService _topicService;
+            private readonly StoreInformationSettings _storeInformationSettings;
 
-            //search the solution by "[StoreClosed(true)]" keyword 
-            //in order to find method available even when a store is closed
-            if (_ignore)
-                return;
+            #endregion
 
-            HttpRequestBase request = filterContext.HttpContext.Request;
-            if (request == null)
-                return;
+            #region Ctor
 
-            string actionName = filterContext.ActionDescriptor.ActionName;
-            if (String.IsNullOrEmpty(actionName))
-                return;
-
-            string controllerName = filterContext.Controller.ToString();
-            if (String.IsNullOrEmpty(controllerName))
-                return;
-
-            //don't apply filter to child methods
-            if (filterContext.IsChildAction)
-                return;
-
-            if (!DataSettingsHelper.DatabaseIsInstalled())
-                return;
-
-            var storeInformationSettings = EngineContext.Current.Resolve<StoreInformationSettings>();
-            if (!storeInformationSettings.StoreClosed)
-                return;
-
-            //topics accessible when a store is closed
-            if (controllerName.Equals("Nop.Web.Controllers.TopicController", StringComparison.InvariantCultureIgnoreCase) &&
-                actionName.Equals("TopicDetails", StringComparison.InvariantCultureIgnoreCase))
+            public CheckAccessClosedStoreFilter(bool ignoreFilter,
+                IPermissionService permissionService,
+                IStoreContext storeContext,
+                ITopicService topicService,
+                StoreInformationSettings storeInformationSettings)
             {
-                var topicService = EngineContext.Current.Resolve<ITopicService>();
-                var storeContext = EngineContext.Current.Resolve<IStoreContext>();
-                var allowedTopicIds = topicService.GetAllTopics(storeContext.CurrentStore.Id)
-                    .Where(t => t.AccessibleWhenStoreClosed)
-                    .Select(t => t.Id)
-                    .ToList();
-                var requestedTopicId = filterContext.RouteData.Values["topicId"] as int?;
-                if (requestedTopicId.HasValue && allowedTopicIds.Contains(requestedTopicId.Value))
-                    return;
+                this._ignoreFilter = ignoreFilter;
+                this._permissionService = permissionService;
+                this._storeContext = storeContext;
+                this._topicService = topicService;
+                this._storeInformationSettings = storeInformationSettings;
             }
 
-            //access to a closed store?
-            var permissionService = EngineContext.Current.Resolve<IPermissionService>();
-            if (permissionService.Authorize(StandardPermissionProvider.AccessClosedStore))
-                return;
+            #endregion
 
-            var storeClosedUrl = new UrlHelper(filterContext.RequestContext).RouteUrl("StoreClosed");
-            filterContext.Result = new RedirectResult(storeClosedUrl);
+            #region Methods
+
+            /// <summary>
+            /// Called before the action executes, after model binding is complete
+            /// </summary>
+            /// <param name="context">A context for action filters</param>
+            public void OnActionExecuting(ActionExecutingContext context)
+            {
+                //ignore filter (the action available even when a store is closed)
+                if (_ignoreFilter)
+                    return;
+
+                if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
+                    return;
+
+                if (!DataSettingsHelper.DatabaseIsInstalled())
+                    return;
+
+                //store isn't closed
+                if (!_storeInformationSettings.StoreClosed)
+                    return;
+
+                //get action and controller names
+                var actionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
+                var actionName = actionDescriptor?.ActionName;
+                var controllerName = actionDescriptor?.ControllerName;
+
+                if (string.IsNullOrEmpty(actionName) || string.IsNullOrEmpty(controllerName))
+                    return;
+
+                //topics accessible when a store is closed
+                if (controllerName.Equals("Topic", StringComparison.InvariantCultureIgnoreCase) &&
+                    actionName.Equals("TopicDetails", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    //get identifiers of topics are accessible when a store is closed
+                    var allowedTopicIds = _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
+                        .Where(topic => topic.AccessibleWhenStoreClosed).Select(topic => topic.Id);
+
+                    //check whether requested topic is allowed
+                    var requestedTopicId = context.RouteData.Values["topicId"] as int?;
+                    if (requestedTopicId.HasValue && allowedTopicIds.Contains(requestedTopicId.Value))
+                        return;
+                }
+
+                //check whether current customer has access to a closed store
+                if (_permissionService.Authorize(StandardPermissionProvider.AccessClosedStore))
+                    return;
+
+                //store is closed and no access, so redirect to 'StoreClosed' page
+                var storeClosedUrl = new UrlHelper(context).RouteUrl("StoreClosed");
+                context.Result = new RedirectResult(storeClosedUrl);
+            }
+
+            /// <summary>
+            /// Called after the action executes, before the action result
+            /// </summary>
+            /// <param name="context">A context for action filters</param>
+            public void OnActionExecuted(ActionExecutedContext context)
+            {
+                //do nothing
+            }
+
+            #endregion
         }
+
+        #endregion
     }
 }
-#endif

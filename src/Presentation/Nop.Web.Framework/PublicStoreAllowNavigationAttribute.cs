@@ -1,62 +1,78 @@
-﻿#if NET451
-using System;
-using System.Web;
-using System.Web.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core.Data;
-using Nop.Core.Infrastructure;
 using Nop.Services.Security;
 
 namespace Nop.Web.Framework
 {
-    public class PublicStoreAllowNavigationAttribute : ActionFilterAttribute
+    /// <summary>
+    /// Represents a filter attribute that confirms access to public store
+    /// </summary>
+    public class PublicStoreAllowNavigationAttribute : TypeFilterAttribute
     {
-        private readonly bool _ignore;
+        /// <summary>
+        /// Create instance of the filter attribute
+        /// </summary>
+        /// <param name="ignore">Whether to ignore the execution of filter actions</param>
+        public PublicStoreAllowNavigationAttribute(bool ignore = false) : base(typeof(CheckAccessPublicStoreFilter))
+        {
+            this.Arguments = new object[] { ignore };
+        }
+
+        #region Nested filter
 
         /// <summary>
-        /// Ctor 
+        /// Represents a filter that confirms access to public store
         /// </summary>
-        /// <param name="ignore">Pass false in order to ignore this functionality for a certain action method</param>
-        public PublicStoreAllowNavigationAttribute(bool ignore = false)
+        private class CheckAccessPublicStoreFilter : IAuthorizationFilter
         {
-            this._ignore = ignore;
+            #region Fields
+
+            private readonly bool _ignoreFilter;
+            private readonly IPermissionService _permissionService;
+
+            #endregion
+
+            #region Ctor
+
+            public CheckAccessPublicStoreFilter(bool ignoreFilter, IPermissionService permissionService)
+            {
+                this._ignoreFilter = ignoreFilter;
+                this._permissionService = permissionService;
+            }
+
+            #endregion
+
+            #region Methods
+
+            /// <summary>
+            /// Called early in the filter pipeline to confirm request is authorized
+            /// </summary>
+            /// <param name="filterContext">Authorization filter context</param>
+            public void OnAuthorization(AuthorizationFilterContext filterContext)
+            {
+                //ignore filter (the action available even when navigation is not allowed)
+                if (_ignoreFilter)
+                    return;
+
+                if (filterContext == null)
+                    throw new ArgumentNullException("filterContext");
+
+                if (!DataSettingsHelper.DatabaseIsInstalled())
+                    return;
+
+                //check whether current customer has access to a public store
+                if (_permissionService.Authorize(StandardPermissionProvider.PublicStoreAllowNavigation))
+                    return;
+
+                //customer hasn't access to a public store
+                filterContext.Result = new UnauthorizedResult();
+            }
+
+            #endregion
         }
-        
-        public override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            if (filterContext == null || filterContext.HttpContext == null)
-                return;
 
-            //search the solution by "[PublicStoreAllowNavigation(true)]" keyword 
-            //in order to find method available even when a store is closed
-            if (_ignore)
-                return;
-
-            HttpRequestBase request = filterContext.HttpContext.Request;
-            if (request == null)
-                return;
-
-            string actionName = filterContext.ActionDescriptor.ActionName;
-            if (String.IsNullOrEmpty(actionName))
-                return;
-
-            string controllerName = filterContext.Controller.ToString();
-            if (String.IsNullOrEmpty(controllerName))
-                return;
-
-            //don't apply filter to child methods
-            if (filterContext.IsChildAction)
-                return;
-
-            if (!DataSettingsHelper.DatabaseIsInstalled())
-                return;
-            
-            var permissionService = EngineContext.Current.Resolve<IPermissionService>();
-            var publicStoreAllowNavigation = permissionService.Authorize(StandardPermissionProvider.PublicStoreAllowNavigation);
-            if (publicStoreAllowNavigation)
-                return;
-
-            filterContext.Result = new HttpUnauthorizedResult();
-        }
+        #endregion
     }
 }
-#endif

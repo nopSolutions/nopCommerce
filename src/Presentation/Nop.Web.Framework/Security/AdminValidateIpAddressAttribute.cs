@@ -1,59 +1,102 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
 using Nop.Core.Domain.Security;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.Security
 {
-    public class AdminValidateIpAddressAttribute : ActionFilterAttribute
+    /// <summary>
+    /// Represents filter attribute that validates IP address
+    /// </summary>
+    public class AdminValidateIpAddressAttribute : TypeFilterAttribute
     {
-        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        /// <summary>
+        /// Create instance of the filter attribute
+        /// </summary>
+        public AdminValidateIpAddressAttribute() : base(typeof(ValidateIpAddressFilter))
         {
-            if (filterContext == null || filterContext.HttpContext == null)
-                return;
+        }
 
-            HttpRequestBase request = filterContext.HttpContext.Request;
-            if (request == null)
-                return;
+        #region Nested filter
 
-            //don't apply filter to child methods
-            if (filterContext.IsChildAction)
-                return;
-            bool ok = false;
-            var ipAddresses = EngineContext.Current.Resolve<SecuritySettings>().AdminAreaAllowedIpAddresses;
-            if (ipAddresses != null && ipAddresses.Any())
+        /// <summary>
+        /// Represents a filter that validates IP address
+        /// </summary>
+        private class ValidateIpAddressFilter : IActionFilter
+        {
+            #region Fields
+            
+            private readonly IWebHelper _webHelper;
+            private readonly SecuritySettings _securitySettings;
+
+            #endregion
+
+            #region Ctor
+
+            public ValidateIpAddressFilter(IWebHelper webHelper,
+                SecuritySettings securitySettings)
             {
-                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                foreach (string ip in ipAddresses)
-                    if (ip.Equals(webHelper.GetCurrentIpAddress(), StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        ok = true;
-                        break;
-                    }
-            }
-            else
-            {
-                //no restrictions
-                ok = true;
+                this._webHelper = webHelper;
+                this._securitySettings = securitySettings;
             }
 
-            if (!ok)
+            #endregion
+
+            #region Methods
+
+            /// <summary>
+            /// Called before the action executes, after model binding is complete
+            /// </summary>
+            /// <param name="context">A context for action filters</param>
+            public void OnActionExecuting(ActionExecutingContext context)
             {
+                if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
+                    return;
+
+                //get action and controller names
+                var actionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
+                var actionName = actionDescriptor?.ActionName;
+                var controllerName = actionDescriptor?.ControllerName;
+
+                if (string.IsNullOrEmpty(actionName) || string.IsNullOrEmpty(controllerName))
+                    return;
+
+                //get allowed IP addresses
+                var ipAddresses = _securitySettings.AdminAreaAllowedIpAddresses;
+
+                //there are no restrictions
+                if (ipAddresses == null || !ipAddresses.Any())
+                    return;
+
+                //whether current IP is allowed
+                var currentIp = _webHelper.GetCurrentIpAddress();
+                if (ipAddresses.Any(ip => ip.Equals(currentIp, StringComparison.InvariantCultureIgnoreCase)))
+                    return;
+
                 //ensure that it's not 'Access denied' page
-                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                var thisPageUrl = webHelper.GetThisPageUrl(false);
-                if (!thisPageUrl.StartsWith(string.Format("{0}admin/security/accessdenied", webHelper.GetStoreLocation()), StringComparison.InvariantCultureIgnoreCase))
+                if (!(controllerName.Equals("Security", StringComparison.InvariantCultureIgnoreCase) &&
+                    actionName.Equals("AccessDenied", StringComparison.InvariantCultureIgnoreCase)))
                 {
                     //redirect to 'Access denied' page
-                    filterContext.Result = new RedirectResult(webHelper.GetStoreLocation() + "admin/security/accessdenied");
-                    //filterContext.Result = RedirectToAction("AccessDenied", "Security");
+                    context.Result = new RedirectToActionResult("AccessDenied", "Security", context.RouteData.Values);
                 }
             }
+
+            /// <summary>
+            /// Called after the action executes, before the action result
+            /// </summary>
+            /// <param name="context">A context for action filters</param>
+            public void OnActionExecuted(ActionExecutedContext context)
+            {
+                //do nothing
+            }
+
+            #endregion
         }
+
+        #endregion
     }
 }
-#endif

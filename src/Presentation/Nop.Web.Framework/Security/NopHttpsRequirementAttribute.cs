@@ -1,85 +1,124 @@
-﻿#if NET451
-using System;
-using System.Web.Mvc;
+﻿using System;
+using System.Net;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Security;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.Security
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
-    public class NopHttpsRequirementAttribute : FilterAttribute, IAuthorizationFilter
+    /// <summary>
+    /// Represents a filter attribute that checks whether current connection is secured and properly redirect if necessary
+    /// </summary>
+    public class NopHttpsRequirementAttribute : TypeFilterAttribute
     {
-        public NopHttpsRequirementAttribute(SslRequirement sslRequirement)
+        /// <summary>
+        /// Create instance of the filter attribute
+        /// </summary>
+        /// <param name="sslRequirement">Whether the page should be secured</param>
+        public NopHttpsRequirementAttribute(SslRequirement sslRequirement) : base(typeof(HttpsRequirementFilter))
         {
-            this.SslRequirement = sslRequirement;
+            this.Arguments = new object[] { sslRequirement };
         }
-        public virtual void OnAuthorization(AuthorizationContext filterContext)
-        {
-            if (filterContext == null)
-                throw new ArgumentNullException("filterContext");
 
-            //don't apply filter to child methods
-            if (filterContext.IsChildAction)
-                return;
-            
-            // only redirect for GET requests, 
-            // otherwise the browser might not propagate the verb and request body correctly.
-            if (!String.Equals(filterContext.HttpContext.Request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))
-                return;
-            
-            if (!DataSettingsHelper.DatabaseIsInstalled())
-                return;
-            var securitySettings = EngineContext.Current.Resolve<SecuritySettings>();
-            if (securitySettings.ForceSslForAllPages)
-                //all pages are forced to be SSL no matter of the specified value
-                this.SslRequirement = SslRequirement.Yes;
-            
-            switch (this.SslRequirement)
+        #region Nested filter
+
+        /// <summary>
+        /// Represents a filter confirming that checks whether current connection is secured and properly redirect if necessary
+        /// </summary>
+        private class HttpsRequirementFilter : IAuthorizationFilter
+        {
+            #region Fields
+
+            private SslRequirement _sslRequirement;
+            private readonly IStoreContext _storeContext;
+            private readonly IWebHelper _webHelper;
+            private readonly SecuritySettings _securitySettings;
+
+            #endregion
+
+            #region Ctor
+
+            public HttpsRequirementFilter(SslRequirement sslRequirement,
+                IStoreContext storeContext,
+                IWebHelper webHelper,
+                SecuritySettings securitySettings)
             {
-                case SslRequirement.Yes:
-                    {
-                        var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                        var currentConnectionSecured = webHelper.IsCurrentConnectionSecured();
-                        if (!currentConnectionSecured)
-                        {
-                            var storeContext = EngineContext.Current.Resolve<IStoreContext>();
-                            if (storeContext.CurrentStore.SslEnabled)
-                            {
-                                //redirect to HTTPS version of page
-                                string url = webHelper.GetThisPageUrl(true, true);
-
-                                //301 (permanent) redirection
-                                filterContext.Result = new RedirectResult(url, true);
-                            }
-                        }
-                    }
-                    break;
-                case SslRequirement.No:
-                    {
-                        var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                        var currentConnectionSecured = webHelper.IsCurrentConnectionSecured();
-                        if (currentConnectionSecured)
-                        {
-                            //redirect to HTTP version of page
-                            string url = webHelper.GetThisPageUrl(true, false);
-                            //301 (permanent) redirection
-                            filterContext.Result = new RedirectResult(url, true);
-                        }
-                    }
-                    break;
-                case SslRequirement.NoMatter:
-                    {
-                        //do nothing
-                    }
-                    break;
-                default:
-                    throw new NopException("Not supported SslProtected parameter");
+                this._sslRequirement = sslRequirement;
+                this._storeContext = storeContext;
+                this._webHelper = webHelper;
+                this._securitySettings = securitySettings;
             }
+
+            #endregion
+
+            #region Utilities
+
+            /// <summary>
+            /// Check whether current connection is secured and properly redirect if necessary
+            /// </summary>
+            /// <param name="filterContext">Authorization filter context</param>
+            /// <param name="useSsl">Whether the page should be secured</param>
+            protected void RedirectRequest(AuthorizationFilterContext filterContext, bool useSsl)
+            {
+                //whether current connection is secured
+                var currentConnectionSecured = _webHelper.IsCurrentConnectionSecured();
+
+                //page should be secured, so redirect (permanent) to HTTPS version of page
+                if (useSsl && !currentConnectionSecured && _storeContext.CurrentStore.SslEnabled)
+                    filterContext.Result = new RedirectResult(_webHelper.GetThisPageUrl(true, true), true);
+
+                //page shouldn't be secured, so redirect (permanent) to HTTP version of page
+                if (!useSsl && currentConnectionSecured)
+                    filterContext.Result = new RedirectResult(_webHelper.GetThisPageUrl(true, false), true);
+            }
+
+            #endregion
+
+            #region Methods
+
+            /// <summary>
+            /// Called early in the filter pipeline to confirm request is authorized
+            /// </summary>
+            /// <param name="filterContext">Authorization filter context</param>
+            public void OnAuthorization(AuthorizationFilterContext filterContext)
+            {
+                if (filterContext == null)
+                    throw new ArgumentNullException("filterContext");
+
+                if (!DataSettingsHelper.DatabaseIsInstalled())
+                    return;
+
+                //only in GET requests, otherwise the browser might not propagate the verb and request body correctly
+                if (!filterContext.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
+                    return;
+
+                //whether all pages will be forced to use SSL no matter of the passed value
+                if (_securitySettings.ForceSslForAllPages)
+                    _sslRequirement = SslRequirement.Yes;
+
+                switch (_sslRequirement)
+                {
+                    case SslRequirement.Yes:
+                        //redirect to HTTPS page
+                        RedirectRequest(filterContext, true);
+                        break;
+                    case SslRequirement.No:
+                        //redirect to HTTP page
+                        RedirectRequest(filterContext, false);
+                        break;
+                    case SslRequirement.NoMatter:
+                        //do nothing
+                        break;
+                    default:
+                        throw new NopException("Not supported SslRequirement parameter");
+                }
+            }
+
+            #endregion
         }
 
-        public SslRequirement SslRequirement { get; set; }
+        #endregion
     }
 }
-#endif

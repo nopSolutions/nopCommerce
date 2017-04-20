@@ -1,73 +1,79 @@
-﻿#if NET451
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Web.Mvc;
-using Nop.Core.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Services.Security;
 
 namespace Nop.Web.Framework.Controllers
 {
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited=true, AllowMultiple=true)]
-    public class AdminAuthorizeAttribute : FilterAttribute, IAuthorizationFilter
+    /// <summary>
+    /// Represents a filter attribute that confirms access to the admin panel
+    /// </summary>
+    public class AdminAuthorizeAttribute : TypeFilterAttribute
     {
-        private readonly bool _dontValidate;
-
-
-        public AdminAuthorizeAttribute()
-            : this(false)
+        /// <summary>
+        /// Create instance of the filter attribute
+        /// </summary>
+        /// <param name="ignore">Whether to ignore the execution of filter actions</param>
+        public AdminAuthorizeAttribute(bool ignore = false) : base(typeof(AuthorizeAdminFilter))
         {
+            this.Arguments = new object[] { ignore };
         }
 
-        public AdminAuthorizeAttribute(bool dontValidate)
+        #region Nested filter
+
+        /// <summary>
+        /// Represents a filter that confirms access to the admin panel
+        /// </summary>
+        private class AuthorizeAdminFilter : IAuthorizationFilter
         {
-            this._dontValidate = dontValidate;
-        }
+            #region Fields
 
-        private void HandleUnauthorizedRequest(AuthorizationContext filterContext)
-        {
-            filterContext.Result = new HttpUnauthorizedResult();
-        }
+            private readonly bool _ignoreFilter;
+            private readonly IPermissionService _permissionService;
 
-        private IEnumerable<AdminAuthorizeAttribute> GetAdminAuthorizeAttributes(ActionDescriptor descriptor)
-        {
-            return descriptor.GetCustomAttributes(typeof(AdminAuthorizeAttribute), true)
-                .Concat(descriptor.ControllerDescriptor.GetCustomAttributes(typeof(AdminAuthorizeAttribute), true))
-                .OfType<AdminAuthorizeAttribute>();
-        }
+            #endregion
 
-        private bool IsAdminPageRequested(AuthorizationContext filterContext)
-        {
-            var adminAttributes = GetAdminAuthorizeAttributes(filterContext.ActionDescriptor);
-            if (adminAttributes != null && adminAttributes.Any())
-                return true;
-            return false;
-        }
+            #region Ctor
 
-        public void OnAuthorization(AuthorizationContext filterContext)
-        {
-            if (_dontValidate)
-                return;
-
-            if (filterContext == null)
-                throw new ArgumentNullException("filterContext");
-
-            if (OutputCacheAttribute.IsChildActionCacheActive(filterContext))
-                throw new InvalidOperationException("You cannot use [AdminAuthorize] attribute when a child action cache is active");
-
-            if (IsAdminPageRequested(filterContext))
+            public AuthorizeAdminFilter(bool ignoreFilter, IPermissionService permissionService)
             {
-                if (!this.HasAdminAccess())
-                    this.HandleUnauthorizedRequest(filterContext);
+                this._ignoreFilter = ignoreFilter;
+                this._permissionService = permissionService;
             }
+
+            #endregion
+
+            #region Methods
+
+            /// <summary>
+            /// Called early in the filter pipeline to confirm request is authorized
+            /// </summary>
+            /// <param name="filterContext">Authorization filter context</param>
+            public void OnAuthorization(AuthorizationFilterContext filterContext)
+            {
+                //ignore filter actions
+                if (_ignoreFilter)
+                    return;
+
+                if (filterContext == null)
+                    throw new ArgumentNullException("filterContext");
+#if NET451
+                if (OutputCacheAttribute.IsChildActionCacheActive(filterContext))
+                    throw new InvalidOperationException("You cannot use [AdminAuthorize] attribute when a child action cache is active");
+#endif
+                //there is AdminAuthorizeFilter, so check access
+                if (filterContext.Filters.Any(filter => filter is AuthorizeAdminFilter))
+                {
+                    //authorize permission of access to the admin area
+                    if (!_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel))
+                        filterContext.Result = new UnauthorizedResult();
+                }
+            }
+
+            #endregion
         }
 
-        public virtual bool HasAdminAccess()
-        {
-            var permissionService = EngineContext.Current.Resolve<IPermissionService>();
-            bool result = permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel);
-            return result;
-        }
+        #endregion
     }
 }
-#endif

@@ -1,37 +1,79 @@
-﻿#if NET451
-using System;
-using System.Linq;
-using System.Web.Mvc;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Nop.Web.Framework.Controllers
 {
     /// <summary>
-    /// If form name exists, then specified "actionParameterName" will be set to "true"
+    /// Represents a filter attribute that check existence of passed form key and return result as an action parameter 
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)] 
-    public class ParameterBasedOnFormNameAttribute : FilterAttribute, IActionFilter
+    public class ParameterBasedOnFormNameAttribute : TypeFilterAttribute
     {
-        private readonly string _name;
-        private readonly string _actionParameterName;
-
-        public ParameterBasedOnFormNameAttribute(string name, string actionParameterName)
+        /// <summary>
+        /// Create instance of the filter attribute 
+        /// </summary>
+        /// <param name="formKeyName">The name of the form key whose existence is to be checked</param>
+        /// <param name="actionParameterName">The name of the action parameter to which the result will be passed</param>
+        public ParameterBasedOnFormNameAttribute(string formKeyName, string actionParameterName) : base(typeof(ParameterBasedOnFormNameFilter))
         {
-            this._name = name;
-            this._actionParameterName = actionParameterName;
+            this.Arguments = new object[] { formKeyName, actionParameterName };
         }
 
-        public void OnActionExecuted(ActionExecutedContext filterContext)
+        #region Nested filter
+
+        /// <summary>
+        /// Represents a filter that check existence of passed form key and return result as an action parameter
+        /// </summary>
+        private class ParameterBasedOnFormNameFilter : IActionFilter
         {
+            #region Fields
+
+            private readonly string _formKeyName;
+            private readonly string _actionParameterName;
+
+            #endregion
+
+            #region Ctor
+
+            public ParameterBasedOnFormNameFilter(string formKeyName, string actionParameterName)
+            {
+                this._formKeyName = formKeyName;
+                this._actionParameterName = actionParameterName;
+            }
+
+            #endregion
+
+            #region Methods
+
+            /// <summary>
+            /// Called before the action executes, after model binding is complete
+            /// </summary>
+            /// <param name="context">A context for action filters</param>
+            public void OnActionExecuting(ActionExecutingContext context)
+            {
+                if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
+                    return;
+
+                //if form key with '_formKeyName' exists, then set specified '_actionParameterName' to true
+                context.ActionArguments[_actionParameterName] = context.HttpContext.Request.Form.Keys.Any(key => key.Equals(_formKeyName));
+
+                //we check whether form key with '_formKeyName' exists only
+                //uncomment the code below if you want to check whether form value is specified
+                //context.ActionArguments[_actionParameterName] = !string.IsNullOrEmpty(context.HttpContext.Request.Form[_formKeyName]);
+            }
+
+            /// <summary>
+            /// Called after the action executes, before the action result
+            /// </summary>
+            /// <param name="context">A context for action filters</param>
+            public void OnActionExecuted(ActionExecutedContext context)
+            {
+                //do nothing
+            }
+
+            #endregion
         }
 
-        public void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            //we check "name" only. uncomment the code below if you want to check whether "value" attribute is specified
-            //var formValue = filterContext.RequestContext.HttpContext.Request.Form[_name];
-            //filterContext.ActionParameters[_actionParameterName] = !string.IsNullOrEmpty(formValue);
-            filterContext.ActionParameters[_actionParameterName] = filterContext.RequestContext
-                .HttpContext.Request.Form.AllKeys.Any(x => x.Equals(_name));
-        }
+        #endregion
     }
 }
-#endif

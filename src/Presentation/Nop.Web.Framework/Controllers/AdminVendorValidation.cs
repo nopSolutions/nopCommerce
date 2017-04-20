@@ -1,49 +1,80 @@
-﻿#if NET451
-using System;
-using System.Web.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.Controllers
 {
     /// <summary>
-    /// Attribute to ensure that users with "Vendor" customer role has appropriate vendor account associated (and active)
+    /// Represents a filter attribute confirming that user with "Vendor" customer role has appropriate vendor account associated (and active)
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited=true, AllowMultiple=true)]
-    public class AdminVendorValidation : FilterAttribute, IAuthorizationFilter
+    public class AdminVendorValidation : TypeFilterAttribute
     {
-        private readonly bool _ignore;
-
-        public AdminVendorValidation(bool ignore = false)
+        /// <summary>
+        /// Create instance of the filter attribute
+        /// </summary>
+        /// <param name="ignore">Whether to ignore the execution of filter actions</param>
+        public AdminVendorValidation(bool ignore = false) : base(typeof(ValidateVendorFilter))
         {
-            this._ignore = ignore;
+            this.Arguments = new object[] { ignore };
         }
 
-        public virtual void OnAuthorization(AuthorizationContext filterContext)
+        #region Nested filter
+
+        /// <summary>
+        /// Represents a filter confirming that user with "Vendor" customer role has appropriate vendor account associated (and active)
+        /// </summary>
+        private class ValidateVendorFilter : IAuthorizationFilter
         {
-            if (filterContext == null)
-                throw new ArgumentNullException("filterContext");
+            #region Fields
 
-            if (_ignore)
-                return;
+            private readonly bool _ignoreFilter;
+            private readonly IWorkContext _workContext;
 
-            //don't apply filter to child methods
-            if (filterContext.IsChildAction)
-                return;
+            #endregion
 
-            if (!DataSettingsHelper.DatabaseIsInstalled())
-                return;
+            #region Ctor
 
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-            if (!workContext.CurrentCustomer.IsVendor())
-                return;
+            public ValidateVendorFilter(bool ignoreFilter, IWorkContext workContext)
+            {
+                this._ignoreFilter = ignoreFilter;
+                this._workContext = workContext;
+            }
 
-            //ensure that this user has active vendor record associated
-            if (workContext.CurrentVendor == null)
-                filterContext.Result = new HttpUnauthorizedResult();
+            #endregion
+
+            #region Methods
+
+            /// <summary>
+            /// Called early in the filter pipeline to confirm request is authorized
+            /// </summary>
+            /// <param name="filterContext">Authorization filter context</param>
+            public void OnAuthorization(AuthorizationFilterContext filterContext)
+            {
+                //ignore filter actions
+                if (_ignoreFilter)
+                    return;
+
+                if (filterContext == null)
+                    throw new ArgumentNullException("filterContext");
+
+                if (!DataSettingsHelper.DatabaseIsInstalled())
+                    return;
+
+                //whether current customer is vendor
+                if (!_workContext.CurrentCustomer.IsVendor())
+                    return;
+
+                //ensure that this user has active vendor record associated
+                if (_workContext.CurrentVendor == null)
+                    filterContext.Result = new UnauthorizedResult();
+            }
+
+            #endregion
         }
+
+        #endregion
     }
 }
-#endif

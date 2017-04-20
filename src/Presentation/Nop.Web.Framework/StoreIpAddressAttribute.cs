@@ -1,47 +1,96 @@
-﻿#if NET451
-using System;
-using System.Web.Mvc;
+﻿using System;
+using System.Net;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
 using Nop.Core.Data;
-using Nop.Core.Infrastructure;
 using Nop.Services.Customers;
 
 namespace Nop.Web.Framework
 {
-    public class StoreIpAddressAttribute : ActionFilterAttribute
+    /// <summary>
+    /// Represents filter attribute that saves last IP address of customer
+    /// </summary>
+    public class StoreIpAddressAttribute : TypeFilterAttribute
     {
-        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        /// <summary>
+        /// Create instance of the filter attribute
+        /// </summary>
+        public StoreIpAddressAttribute() : base(typeof(SaveIpAddressFilter))
         {
-            if (!DataSettingsHelper.DatabaseIsInstalled())
-                return;
+        }
 
-            if (filterContext == null || filterContext.HttpContext == null || filterContext.HttpContext.Request == null)
-                return;
+        #region Nested filter
 
-            //don't apply filter to child methods
-            if (filterContext.IsChildAction)
-                return;
+        /// <summary>
+        /// Represents a filter that saves last IP address of customer
+        /// </summary>
+        private class SaveIpAddressFilter : IActionFilter
+        {
+            #region Fields
 
-            //only GET requests
-            if (!String.Equals(filterContext.HttpContext.Request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))
-                return;
+            private readonly ICustomerService _customerService;
+            private readonly IWebHelper _webHelper;
+            private readonly IWorkContext _workContext;
 
-            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+            #endregion
 
-            //update IP address
-            string currentIpAddress = webHelper.GetCurrentIpAddress();
-            if (!String.IsNullOrEmpty(currentIpAddress))
+            #region Ctor
+
+            public SaveIpAddressFilter(ICustomerService customerService,
+                IWebHelper webHelper,
+                IWorkContext workContext)
             {
-                var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                var customer = workContext.CurrentCustomer;
-                if (!currentIpAddress.Equals(customer.LastIpAddress, StringComparison.InvariantCultureIgnoreCase))
+                this._customerService = customerService;
+                this._webHelper = webHelper;
+                this._workContext = workContext;
+            }
+
+            #endregion
+
+            #region Methods
+
+            /// <summary>
+            /// Called before the action executes, after model binding is complete
+            /// </summary>
+            /// <param name="context">A context for action filters</param>
+            public void OnActionExecuting(ActionExecutingContext context)
+            {
+                if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
+                    return;
+
+                if (!DataSettingsHelper.DatabaseIsInstalled())
+                    return;
+
+                //only in GET requests
+                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
+                    return;
+
+                //get current IP address
+                var currentIpAddress = _webHelper.GetCurrentIpAddress();
+                if (string.IsNullOrEmpty(currentIpAddress))
+                    return;
+                
+                //update customer's IP address
+                if (!currentIpAddress.Equals(_workContext.CurrentCustomer.LastIpAddress, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    var customerService = EngineContext.Current.Resolve<ICustomerService>();
-                    customer.LastIpAddress = currentIpAddress;
-                    customerService.UpdateCustomer(customer);
+                    _workContext.CurrentCustomer.LastIpAddress = currentIpAddress;
+                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                 }
             }
+
+            /// <summary>
+            /// Called after the action executes, before the action result
+            /// </summary>
+            /// <param name="context">A context for action filters</param>
+            public void OnActionExecuted(ActionExecutedContext context)
+            {
+                //do nothing
+            }
+
+            #endregion
         }
+
+        #endregion
     }
 }
-#endif

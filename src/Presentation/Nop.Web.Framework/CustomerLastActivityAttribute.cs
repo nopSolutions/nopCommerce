@@ -1,42 +1,88 @@
-﻿#if NET451
-using System;
-using System.Web.Mvc;
+﻿using System;
+using System.Net;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
 using Nop.Core.Data;
-using Nop.Core.Infrastructure;
 using Nop.Services.Customers;
 
 namespace Nop.Web.Framework
 {
-    public class CustomerLastActivityAttribute : ActionFilterAttribute
+    /// <summary>
+    /// Represents filter attribute that saves last customer activity date
+    /// </summary>
+    public class CustomerLastActivityAttribute : TypeFilterAttribute
     {
-        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        /// <summary>
+        /// Create instance of the filter attribute
+        /// </summary>
+        public CustomerLastActivityAttribute() : base(typeof(SaveLastCustomerActivityFilter))
         {
-            if (!DataSettingsHelper.DatabaseIsInstalled())
-                return;
-
-            if (filterContext == null || filterContext.HttpContext == null || filterContext.HttpContext.Request == null)
-                return;
-
-            //don't apply filter to child methods
-            if (filterContext.IsChildAction)
-                return;
-
-            //only GET requests
-            if (!String.Equals(filterContext.HttpContext.Request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))
-                return;
-
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-            var customer = workContext.CurrentCustomer;
-
-            //update last activity date
-            if (customer.LastActivityDateUtc.AddMinutes(1.0) < DateTime.UtcNow)
-            {
-                var customerService = EngineContext.Current.Resolve<ICustomerService>();
-                customer.LastActivityDateUtc = DateTime.UtcNow;
-                customerService.UpdateCustomer(customer);
-            }
         }
+
+        #region Nested filter
+
+        /// <summary>
+        /// Represents a filter that saves last customer activity date
+        /// </summary>
+        private class SaveLastCustomerActivityFilter : IActionFilter
+        {
+            #region Fields
+
+            private readonly ICustomerService _customerService;
+            private readonly IWorkContext _workContext;
+
+            #endregion
+
+            #region Ctor
+
+            public SaveLastCustomerActivityFilter(ICustomerService customerService,
+                IWorkContext workContext)
+            {
+                this._customerService = customerService;
+                this._workContext = workContext;
+            }
+
+            #endregion
+
+            #region Methods
+
+            /// <summary>
+            /// Called before the action executes, after model binding is complete
+            /// </summary>
+            /// <param name="context">A context for action filters</param>
+            public void OnActionExecuting(ActionExecutingContext context)
+            {
+                if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
+                    return;
+
+                if (!DataSettingsHelper.DatabaseIsInstalled())
+                    return;
+
+                //only in GET requests
+                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
+                    return;
+
+                //update last activity date
+                if (_workContext.CurrentCustomer.LastActivityDateUtc.AddMinutes(1.0) < DateTime.UtcNow)
+                {
+                    _workContext.CurrentCustomer.LastActivityDateUtc = DateTime.UtcNow;
+                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                }
+            }
+
+            /// <summary>
+            /// Called after the action executes, before the action result
+            /// </summary>
+            /// <param name="context">A context for action filters</param>
+            public void OnActionExecuted(ActionExecutedContext context)
+            {
+                //do nothing
+            }
+
+            #endregion
+        }
+
+        #endregion
     }
 }
-#endif
