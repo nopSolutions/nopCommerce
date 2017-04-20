@@ -11,12 +11,12 @@ namespace Nop.Web.Framework
     /// <summary>
     /// Represents filter attribute that saves last customer activity date
     /// </summary>
-    public class CustomerLastActivityAttribute : TypeFilterAttribute
+    public class SaveLastActivityAttribute : TypeFilterAttribute
     {
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
-        public CustomerLastActivityAttribute() : base(typeof(SaveLastCustomerActivityFilter))
+        public SaveLastActivityAttribute() : base(typeof(SaveLastActivityFilter))
         {
         }
 
@@ -25,7 +25,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Represents a filter that saves last customer activity date
         /// </summary>
-        private class SaveLastCustomerActivityFilter : IActionFilter
+        private class SaveLastActivityFilter : IActionFilter
         {
             #region Fields
 
@@ -36,7 +36,7 @@ namespace Nop.Web.Framework
 
             #region Ctor
 
-            public SaveLastCustomerActivityFilter(ICustomerService customerService,
+            public SaveLastActivityFilter(ICustomerService customerService,
                 IWorkContext workContext)
             {
                 this._customerService = customerService;

@@ -11,12 +11,12 @@ namespace Nop.Web.Framework.Security.Honeypot
     /// <summary>
     /// Represents a filter attribute enabling honeypot validation
     /// </summary>
-    public class HoneypotValidatorAttribute : TypeFilterAttribute
+    public class ValidateHoneypotAttribute : TypeFilterAttribute
     {
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
-        public HoneypotValidatorAttribute() : base(typeof(ValidateHoneypotFilter))
+        public ValidateHoneypotAttribute() : base(typeof(ValidateHoneypotFilter))
         {
         }
 

@@ -10,13 +10,13 @@ namespace Nop.Web.Framework.Controllers
     /// <summary>
     /// Represents a filter attribute confirming that user with "Vendor" customer role has appropriate vendor account associated (and active)
     /// </summary>
-    public class AdminVendorValidation : TypeFilterAttribute
+    public class ValidateVendorAttribute : TypeFilterAttribute
     {
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
-        public AdminVendorValidation(bool ignore = false) : base(typeof(ValidateVendorFilter))
+        public ValidateVendorAttribute(bool ignore = false) : base(typeof(ValidateVendorFilter))
         {
             this.Arguments = new object[] { ignore };
         }

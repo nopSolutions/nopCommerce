@@ -15,13 +15,13 @@ namespace Nop.Web.Framework
     /// <summary>
     /// Represents a filter attribute that confirms access to a closed store
     /// </summary>
-    public class StoreClosedAttribute : TypeFilterAttribute
+    public class CheckAccessClosedStoreAttribute : TypeFilterAttribute
     {
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
-        public StoreClosedAttribute(bool ignore = false) : base(typeof(CheckAccessClosedStoreFilter))
+        public CheckAccessClosedStoreAttribute(bool ignore = false) : base(typeof(CheckAccessClosedStoreFilter))
         {
             this.Arguments = new object[] { ignore };
         }

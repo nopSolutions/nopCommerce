@@ -11,13 +11,13 @@ namespace Nop.Web.Framework.Security
     /// <summary>
     /// Represents a filter attribute that checks whether current connection is secured and properly redirect if necessary
     /// </summary>
-    public class NopHttpsRequirementAttribute : TypeFilterAttribute
+    public class HttpsRequirementAttribute : TypeFilterAttribute
     {
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         /// <param name="sslRequirement">Whether the page should be secured</param>
-        public NopHttpsRequirementAttribute(SslRequirement sslRequirement) : base(typeof(HttpsRequirementFilter))
+        public HttpsRequirementAttribute(SslRequirement sslRequirement) : base(typeof(HttpsRequirementFilter))
         {
             this.Arguments = new object[] { sslRequirement };
         }

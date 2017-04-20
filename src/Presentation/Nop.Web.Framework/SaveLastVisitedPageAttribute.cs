@@ -4,32 +4,34 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
 using Nop.Core.Data;
-using Nop.Services.Customers;
+using Nop.Core.Domain.Customers;
+using Nop.Services.Common;
 
 namespace Nop.Web.Framework
 {
     /// <summary>
-    /// Represents filter attribute that saves last IP address of customer
+    /// Represents filter attribute that saves last visited page by customer
     /// </summary>
-    public class StoreIpAddressAttribute : TypeFilterAttribute
+    public class SaveLastVisitedPageAttribute : TypeFilterAttribute
     {
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
-        public StoreIpAddressAttribute() : base(typeof(SaveIpAddressFilter))
+        public SaveLastVisitedPageAttribute() : base(typeof(SaveLastVisitedPageFilter))
         {
         }
 
         #region Nested filter
 
         /// <summary>
-        /// Represents a filter that saves last IP address of customer
+        /// Represents a filter that saves last visited page by customer
         /// </summary>
-        private class SaveIpAddressFilter : IActionFilter
+        private class SaveLastVisitedPageFilter : IActionFilter
         {
             #region Fields
 
-            private readonly ICustomerService _customerService;
+            private readonly CustomerSettings _customerSettings;
+            private readonly IGenericAttributeService _genericAttributeService;
             private readonly IWebHelper _webHelper;
             private readonly IWorkContext _workContext;
 
@@ -37,11 +39,13 @@ namespace Nop.Web.Framework
 
             #region Ctor
 
-            public SaveIpAddressFilter(ICustomerService customerService,
-                IWebHelper webHelper,
+            public SaveLastVisitedPageFilter(CustomerSettings customerSettings,
+                IGenericAttributeService genericAttributeService,
+                IWebHelper webHelper, 
                 IWorkContext workContext)
             {
-                this._customerService = customerService;
+                this._customerSettings = customerSettings;
+                this._genericAttributeService = genericAttributeService;
                 this._webHelper = webHelper;
                 this._workContext = workContext;
             }
@@ -66,17 +70,22 @@ namespace Nop.Web.Framework
                 if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
                     return;
 
-                //get current IP address
-                var currentIpAddress = _webHelper.GetCurrentIpAddress();
-                if (string.IsNullOrEmpty(currentIpAddress))
+                //whether is need to store last visited page URL
+                if (!_customerSettings.StoreLastVisitedPage)
+                    return;
+
+                //get current page
+                var pageUrl = _webHelper.GetThisPageUrl(true);
+                if (string.IsNullOrEmpty(pageUrl))
                     return;
                 
-                //update customer's IP address
-                if (!currentIpAddress.Equals(_workContext.CurrentCustomer.LastIpAddress, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    _workContext.CurrentCustomer.LastIpAddress = currentIpAddress;
-                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
-                }
+                //get previous last page
+                var previousPageUrl = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
+
+                //save new one if don't match
+                if (!pageUrl.Equals(previousPageUrl, StringComparison.InvariantCultureIgnoreCase))
+                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastVisitedPage, pageUrl);
+                
             }
 
             /// <summary>

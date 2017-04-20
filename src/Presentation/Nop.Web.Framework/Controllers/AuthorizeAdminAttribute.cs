@@ -9,13 +9,13 @@ namespace Nop.Web.Framework.Controllers
     /// <summary>
     /// Represents a filter attribute that confirms access to the admin panel
     /// </summary>
-    public class AdminAuthorizeAttribute : TypeFilterAttribute
+    public class AuthorizeAdminAttribute : TypeFilterAttribute
     {
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
-        public AdminAuthorizeAttribute(bool ignore = false) : base(typeof(AuthorizeAdminFilter))
+        public AuthorizeAdminAttribute(bool ignore = false) : base(typeof(AuthorizeAdminFilter))
         {
             this.Arguments = new object[] { ignore };
         }

@@ -7,13 +7,13 @@ namespace Nop.Web.Framework.Security.Captcha
     /// <summary>
     /// Represents a filter attribute enabling CAPTCHA validation
     /// </summary>
-    public class CaptchaValidatorAttribute : TypeFilterAttribute
+    public class ValidateCaptchaAttribute : TypeFilterAttribute
     {
         /// <summary>
         /// Create instance of the filter attribute 
         /// </summary>
         /// <param name="actionParameterName">The name of the action parameter to which the result will be passed</param>
-        public CaptchaValidatorAttribute(string actionParameterName = "captchaValid") : base(typeof(ValidateCaptchaFilter))
+        public ValidateCaptchaAttribute(string actionParameterName = "captchaValid") : base(typeof(ValidateCaptchaFilter))
         {
             this.Arguments = new object[] { actionParameterName };
         }

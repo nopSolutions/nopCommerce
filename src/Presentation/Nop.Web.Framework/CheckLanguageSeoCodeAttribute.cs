@@ -14,12 +14,12 @@ namespace Nop.Web.Framework
     /// <summary>
     /// Represents filter attribute that checks SEO friendly URLs for multiple languages and properly redirect if necessary
     /// </summary>
-    public class LanguageSeoCodeAttribute : TypeFilterAttribute
+    public class CheckLanguageSeoCodeAttribute : TypeFilterAttribute
     {
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
-        public LanguageSeoCodeAttribute() : base(typeof(CheckLanguageSeoCodeFilter))
+        public CheckLanguageSeoCodeAttribute() : base(typeof(CheckLanguageSeoCodeFilter))
         {
         }
 

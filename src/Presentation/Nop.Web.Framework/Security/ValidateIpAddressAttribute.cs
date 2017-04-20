@@ -11,12 +11,12 @@ namespace Nop.Web.Framework.Security
     /// <summary>
     /// Represents filter attribute that validates IP address
     /// </summary>
-    public class AdminValidateIpAddressAttribute : TypeFilterAttribute
+    public class ValidateIpAddressAttribute : TypeFilterAttribute
     {
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
-        public AdminValidateIpAddressAttribute() : base(typeof(ValidateIpAddressFilter))
+        public ValidateIpAddressAttribute() : base(typeof(ValidateIpAddressFilter))
         {
         }
 

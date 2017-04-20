@@ -9,13 +9,13 @@ namespace Nop.Web.Framework
     /// <summary>
     /// Represents a filter attribute that confirms access to public store
     /// </summary>
-    public class PublicStoreAllowNavigationAttribute : TypeFilterAttribute
+    public class CheckAccessPublicStoreAttribute : TypeFilterAttribute
     {
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
-        public PublicStoreAllowNavigationAttribute(bool ignore = false) : base(typeof(CheckAccessPublicStoreFilter))
+        public CheckAccessPublicStoreAttribute(bool ignore = false) : base(typeof(CheckAccessPublicStoreFilter))
         {
             this.Arguments = new object[] { ignore };
         }
