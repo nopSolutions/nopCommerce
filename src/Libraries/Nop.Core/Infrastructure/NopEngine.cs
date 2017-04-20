@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
@@ -122,6 +123,9 @@ namespace Nop.Core.Infrastructure
         /// <param name="configuration">The root of an configuration hierarchy</param>
         public void Configure(IServiceCollection services, IConfigurationRoot configuration)
         {
+            //most of API providers require TLS 1.2 nowadays
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
             //add options feature
             services.AddOptions();
 
