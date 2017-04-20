@@ -1,43 +1,67 @@
-﻿using Nop.Core;
+﻿using System.ComponentModel;
+using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Framework
 {
-    public class NopResourceDisplayName : System.ComponentModel.DisplayNameAttribute, IModelAttribute
+    /// <summary>
+    /// Represents model attribute that specifies the display name by passed key of the locale resource
+    /// </summary>
+    public class NopResourceDisplayName : DisplayNameAttribute, IModelAttribute
     {
-        private string _resourceValue = string.Empty;
-        //private bool _resourceValueRetrived;
+        #region Fields
 
-        public NopResourceDisplayName(string resourceKey)
-            : base(resourceKey)
+        private string _resourceValue = string.Empty;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Create instance of the attribute
+        /// </summary>
+        /// <param name="resourceKey">Key of the locale resource</param>
+        public NopResourceDisplayName(string resourceKey) : base(resourceKey)
         {
             ResourceKey = resourceKey;
         }
 
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets key of the locale resource 
+        /// </summary>
         public string ResourceKey { get; set; }
 
+        /// <summary>
+        /// Getss the display name
+        /// </summary>
         public override string DisplayName
         {
             get
             {
-                //do not cache resources because it causes issues when you have multiple languages
-                //if (!_resourceValueRetrived)
-                //{
-                var langId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
-                    _resourceValue = EngineContext.Current
-                        .Resolve<ILocalizationService>()
-                        .GetResource(ResourceKey, langId, true, ResourceKey);
-                //    _resourceValueRetrived = true;
-                //}
+                //get working language identifier
+                var workingLanguageId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
+
+                //get locale resource value
+                _resourceValue = EngineContext.Current.Resolve<ILocalizationService>().GetResource(ResourceKey, workingLanguageId, true, ResourceKey);
+
                 return _resourceValue;
             }
         }
 
+        /// <summary>
+        /// Gets name of the attribute
+        /// </summary>
         public string Name
         {
-            get { return "NopResourceDisplayName"; }
+            get { return nameof(NopResourceDisplayName); }
         }
+
+        #endregion
     }
 }
