@@ -7,7 +7,7 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Services.Customers;
 
-namespace Nop.Web.Framework
+namespace Nop.Web.Framework.Mvc.Filters
 {
     /// <summary>
     /// Represents filter attribute that validates customer password expiration

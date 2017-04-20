@@ -6,7 +6,7 @@ using Nop.Core;
 using Nop.Core.Domain.Security;
 using Nop.Services.Logging;
 
-namespace Nop.Web.Framework.Security.Honeypot
+namespace Nop.Web.Framework.Mvc.Filters
 {
     /// <summary>
     /// Represents a filter attribute enabling honeypot validation

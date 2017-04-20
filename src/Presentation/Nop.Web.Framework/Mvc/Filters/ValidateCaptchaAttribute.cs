@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
+using Nop.Web.Framework.Security.Captcha;
 
-namespace Nop.Web.Framework.Security.Captcha
+namespace Nop.Web.Framework.Mvc.Filters
 {
     /// <summary>
     /// Represents a filter attribute enabling CAPTCHA validation

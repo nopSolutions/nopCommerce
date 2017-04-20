@@ -5,7 +5,7 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 
-namespace Nop.Web.Framework.Controllers
+namespace Nop.Web.Framework.Mvc.Filters
 {
     /// <summary>
     /// Represents a filter attribute confirming that user with "Vendor" customer role has appropriate vendor account associated (and active)
