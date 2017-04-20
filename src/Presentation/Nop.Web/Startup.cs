@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Extensions;
-using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Extensions;
+using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Routes;
 
 namespace Nop.Web
