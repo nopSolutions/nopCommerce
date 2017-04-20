@@ -1,15 +1,9 @@
-﻿@using Nop.Core.Domain;
+﻿@using StackExchange.Profiling;
 @using Nop.Core.Domain.Common;
 @using Nop.Core.Domain.Seo
 @using Nop.Core.Infrastructure;
-@using Nop.Services.Security;
 
 @{
-    var storeSettings = EngineContext.Current.Resolve<StoreInformationSettings>();
-    var permissionService = EngineContext.Current.Resolve<IPermissionService>();
-    var displayMiniProfiler = storeSettings.DisplayMiniProfilerInPublicStore
-        && (!storeSettings.DisplayMiniProfilerForAdminOnly || permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel));
-
     Html.AppendScriptParts("~/Scripts/public.ajaxcart.js");
     Html.AppendScriptParts("~/Scripts/public.common.js");
     Html.AppendScriptParts("~/Scripts/jquery-migrate-1.2.1.min.js");
@@ -51,10 +45,10 @@
     @Html.Action("RssHeaderLink", "Blog")
     @*Favicon - upload favicon.ico file to the root directory*@
     @Html.Action("Favicon", "Common")
-    @if (displayMiniProfiler)
-    {
-        @StackExchange.Profiling.MiniProfiler.RenderIncludes()
-    }
+
+    @*add mini profiler*@
+    <mini-profiler position="@RenderPosition.Left" />
+
     <!--Powered by nopCommerce - http://www.nopCommerce.com-->
 </head>
 <body>

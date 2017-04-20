@@ -1,0 +1,41 @@
+﻿using System;
+using Microsoft.AspNetCore.Builder;
+using Nop.Core.Domain;
+using Nop.Core.Infrastructure;
+using Nop.Services.Security;
+using StackExchange.Profiling;
+using StackExchange.Profiling.Storage;
+
+namespace Nop.Web.Framework.Mvc.Extensions
+{
+    /// <summary>
+    /// Represents extensions of IApplicationBuilder
+    /// </summary>
+    public static class ApplicationBuilderExtensions
+    {
+        /// <summary>
+        /// Create and configure MiniProfiler service
+        /// </summary>
+        /// <param name="application">Builder that provides the mechanisms to configure an application's request pipeline</param>
+        /// <returns>Builder that provides the mechanisms to configure an application's request pipeline</returns>
+        public static IApplicationBuilder UseMiniProfiler(this IApplicationBuilder application)
+        {
+            //whether MiniProfiler should be displayed
+            if (EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
+            {
+                application.UseMiniProfiler(new MiniProfilerOptions
+                {
+                    //use memory cache provider for storing each result
+                    Storage = new MemoryCacheStorage(TimeSpan.FromMinutes(60)),
+
+                    //determine who can access the MiniProfiler results
+                    ResultsAuthorize = request => 
+                        !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerForAdminOnly || 
+                        EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel)
+                });
+            }
+
+            return application;
+        }
+    }
+}

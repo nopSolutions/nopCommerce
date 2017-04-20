@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Extensions;
+using Nop.Web.Framework.Mvc.Extensions;
 using Nop.Web.Framework.Mvc.Routes;
 
 namespace Nop.Web
@@ -42,6 +43,9 @@ namespace Nop.Web
             //add MVC feature
             services.AddMvc();
 
+            //add MiniProfiler services
+            services.AddMiniProfiler();
+
             //add Nop engine
             var engine = services.AddNopEngine(Configuration);
 
@@ -65,6 +69,9 @@ namespace Nop.Web
 
             //get access to HttpContext
             application.UseStaticHttpContext();
+
+            //add MiniProfiler
+            application.UseMiniProfiler();
 
             //use MVC routing
             application.UseMvc(routeBuilder =>
